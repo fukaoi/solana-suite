@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "incremental": true,
+    "module": "commonjs",
+    "target": "ES5",
+    "declaration": true,
+    "sourceMap": true,
+    "allowJs": true
+  },
+  "include": [
+    "src/**/**.ts"
+  ],
+  "extends": "@tsconfig/node14/tsconfig.json"
+}
