@@ -15,7 +15,9 @@ export namespace Util {
 
   export const getConnection = () => {
     if (connection) return connection;
-    connection = new Connection(Constants.DEVNET_URL);
+    connection = new Connection(Constants.API_URL);
     return connection;
   };
+
+  export const getApiUrl = () => Constants.API_URL;
 }
