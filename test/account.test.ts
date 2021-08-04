@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {Account} from '../src/account';
 import {assert, expect} from 'chai';
-import {Keypair, PublicKey} from '@solana/web3.js';
+import {Keypair} from '@solana/web3.js';
 
 let source: Keypair;
 
@@ -29,10 +29,14 @@ describe('Account', () => {
   });
 
   it('find token address', async () => {
-     const res = await Account.findAssocaiatedTokenAddress(
+    const res = await Account.findAssocaiatedTokenAddress(
       'D7dKBiFxWKiSSew4fzinML1so4vEaSPmtiKV6qWMDUJJ',
       '5hj62erLKeKSM29C5oZR8TGei7RrMG79voFkiCotRZmS',
     );
     console.log(res.toBase58());
+  });
+
+  it.only('Get transaction data from user pubkey', async () => {
+    await Account.getTransaction('7hy48Kc9BZEet6CXkCNHhmqhNCgNRiJ96Mwii9JUREsc');
   });
 })

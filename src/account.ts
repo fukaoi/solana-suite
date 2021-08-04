@@ -8,6 +8,7 @@ import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
 import {Util} from './util';
 import {Constants} from './constants';
+import axios from 'axios';
 
 export namespace Account {
 
@@ -18,10 +19,10 @@ export namespace Account {
 
   export const getBalance = async (pubkey: PublicKey, unit: Unit = 'sol'): Promise<Number> => {
     const balance = await Util.getConnection().getBalance(pubkey);
-    switch(unit) {
+    switch (unit) {
       case 'sol': return balance / LAMPORTS_PER_SOL;
-      case 'lamports': return balance; 
-      default: throw new Error('no match unit');  
+      case 'lamports': return balance;
+      default: throw new Error('no match unit');
     }
   };
 
@@ -46,5 +47,21 @@ export namespace Account {
       ],
       ACCOUNT_PROGRAM_ID
     ))[0];
+  }
+
+  export const getTransaction = async (pubkey: string) => {
+    const url = Util.getApiUrl();
+    axios.post(`${url}`, {
+       "jsonrpc": "2.0",
+       "id": 1,
+       "method": "getAccountBalance",
+       "params": [pubkey],
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }
