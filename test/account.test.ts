@@ -33,10 +33,6 @@ describe('Account', () => {
       'D7dKBiFxWKiSSew4fzinML1so4vEaSPmtiKV6qWMDUJJ',
       '5hj62erLKeKSM29C5oZR8TGei7RrMG79voFkiCotRZmS',
     );
-    console.log(res.toBase58());
-  });
-
-  it('Get transaction data from user pubkey', async () => {
-    await Account.getTransaction('7hy48Kc9BZEet6CXkCNHhmqhNCgNRiJ96Mwii9JUREsc');
+    assert.isNotNull(res.toBase58());
   });
 })

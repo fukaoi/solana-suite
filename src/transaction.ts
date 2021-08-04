@@ -11,8 +11,25 @@ import {
 
 import {Util} from './util';
 import {Constants} from './constants';
+import axios from 'axios';
 
 export namespace Transaction {
+
+  export const get = async (pubkey: string) => {
+    const url = Util.getApiUrl();
+    axios.post(`${url}`, {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "getAccountBalance",
+      "params": [pubkey],
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   export const sendMySelf = async (
     signer: Keypair,

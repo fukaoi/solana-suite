@@ -48,20 +48,4 @@ export namespace Account {
       ACCOUNT_PROGRAM_ID
     ))[0];
   }
-
-  export const getTransaction = async (pubkey: string) => {
-    const url = Util.getApiUrl();
-    axios.post(`${url}`, {
-       "jsonrpc": "2.0",
-       "id": 1,
-       "method": "getAccountBalance",
-       "params": [pubkey],
-    })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
 }
