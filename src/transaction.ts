@@ -15,20 +15,14 @@ import axios from 'axios';
 
 export namespace Transaction {
 
-  export const get = async (pubkey: string) => {
-    const url = Util.getApiUrl();
-    axios.post(`${url}`, {
-      "jsonrpc": "2.0",
-      "id": 1,
-      "method": "getAccountBalance",
-      "params": [pubkey],
+  export const get = async (signature: string) => {
+    const res = await axios.post(`${Util.getApiUrl()}`, {
+      'jsonrpc': '2.0',
+      'id': 1,
+      'method': 'getTransaction',
+      'params': [signature],
     })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    return res.data.result;
   }
 
   export const sendMySelf = async (

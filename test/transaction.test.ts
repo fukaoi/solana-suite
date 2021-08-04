@@ -3,7 +3,8 @@ import {Transaction} from '../src/transaction';
 import {assert, expect} from 'chai';
 
 describe('Transaction', () => {
-  it('Get transaction data from user pubkey', async () => {
-    await Transaction.get('7hy48Kc9BZEet6CXkCNHhmqhNCgNRiJ96Mwii9JUREsc');
+  it('Get transaction data', async () => {
+    const res = await Transaction.get('WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy');
+    assert.isObject(res);
   });
 })
