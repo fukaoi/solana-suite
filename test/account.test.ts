@@ -36,7 +36,7 @@ describe('Account', () => {
     console.log(res.toBase58());
   });
 
-  it.only('Get transaction data from user pubkey', async () => {
+  it('Get transaction data from user pubkey', async () => {
     await Account.getTransaction('7hy48Kc9BZEet6CXkCNHhmqhNCgNRiJ96Mwii9JUREsc');
   });
 })

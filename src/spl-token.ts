@@ -13,7 +13,7 @@ import {
 } from '@solana/web3.js';
 
 import {Util} from './util';
-import {_Transaction} from './_transaction';
+import {Transaction} from './transaction';
 
 export namespace SplToken {
 
@@ -108,7 +108,7 @@ export namespace SplToken {
     );
 
     const instructions = instruction ? new Array(param, instruction) : [param];
-    const fn = await _Transaction.send(
+    const fn = await Transaction.send(
       signer.publicKey,
       [signer],
       destPubkey,

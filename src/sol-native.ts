@@ -6,7 +6,7 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import {_Transaction} from './_transaction';
+import {Transaction} from './transaction';
 
 export namespace SolNative {
   export const transfer = async (
@@ -18,7 +18,7 @@ export namespace SolNative {
   ): Promise<TransactionSignature> => {
     const sol = amount * LAMPORTS_PER_SOL;
 
-    const fn = await _Transaction.send(
+    const fn = await Transaction.send(
       sourcePubKey,
       signers,
       destPubKey,

@@ -5,7 +5,7 @@ import {
   TransactionSignature
 } from '@solana/web3.js';
 
-import {_Transaction} from './_transaction';
+import {Transaction} from './transaction';
 import {Constants} from './constants';
 
 export namespace Memo {
@@ -28,7 +28,7 @@ export namespace Memo {
     instruction: TransactionInstruction,
     signer: Keypair
   ): Promise<TransactionSignature> =>
-    await _Transaction.sendMySelf(signer, instruction);
+    await Transaction.sendMySelf(signer, instruction);
 }
 
 

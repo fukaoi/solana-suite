@@ -12,7 +12,7 @@ import {
 import {Util} from './util';
 import {Constants} from './constants';
 
-export namespace _Transaction {
+export namespace Transaction {
 
   export const sendMySelf = async (
     signer: Keypair,
