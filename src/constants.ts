@@ -4,7 +4,7 @@ import {
 
 export namespace ConstantsFunc {
   export const switchEnvParam = (env: string | undefined) => {
-    let response = {url: ''};
+    const response = {url: ''};
     switch (env) {
       case 'development':
         response.url = 'https://api.devnet.solana.com';

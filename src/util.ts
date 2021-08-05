@@ -5,7 +5,7 @@ import {
 import {Constants} from './constants';
 
 console.debug = (data: any, data2: any = '') =>
-  process.env.NODE_ENV === 'debug' && 
+  process.env.NODE_ENV === 'debug' &&
   console.log(`\u001b[35m${data}`, `\u001b[36m${data2}`);
 
 export namespace Util {

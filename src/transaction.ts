@@ -14,7 +14,7 @@ import {Constants} from './constants';
 
 export namespace Transaction {
 
-  export const get = async (signature: string) => 
+  export const get = async (signature: string) =>
     Util.getConnection().getTransaction(signature);
 
   export const sendMySelf = async (
@@ -32,10 +32,10 @@ export namespace Transaction {
 
   export const send = async (
     sourcePubKey: PublicKey,
-    signers: Array<Signer>,
+    signers: Signer[],
     destPubKey: PublicKey,
     amount: number,
-  ) => (instruction?: Array<TransactionInstruction>): Promise<TransactionSignature> => {
+  ) => (instruction?: TransactionInstruction[]): Promise<TransactionSignature> => {
     const params =
       SystemProgram.transfer({
         fromPubkey: sourcePubKey,

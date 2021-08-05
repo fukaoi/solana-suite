@@ -26,7 +26,7 @@ export namespace Memo {
   };
 
   export const parseInstruction = (tx: TransactionResponse) => {
-    const compiled = tx.transaction.message.instructions.filter((d: any) => d.accounts.length == 0);
+    const compiled = tx.transaction.message.instructions.filter((d: any) => d.accounts.length === 0);
     return decode(compiled[0].data);
   }
 

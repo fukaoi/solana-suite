@@ -16,7 +16,7 @@ export namespace Account {
   const ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey(Constants.SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID);
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 10;
 
-  export const getBalance = async (pubkey: PublicKey, unit: Unit = 'sol'): Promise<Number> => {
+  export const getBalance = async (pubkey: PublicKey, unit: Unit = 'sol'): Promise<number> => {
     const balance = await Util.getConnection().getBalance(pubkey);
     switch (unit) {
       case 'sol': return balance / LAMPORTS_PER_SOL;
