@@ -21,7 +21,7 @@ describe('Memo', () => {
   it('decode', async () => {
     const data = Memo.createInstruction(DUMMY_DATA);
     const res = Memo.decode(data);
-    console.log(`# decode: `, res);
+    console.log(`# decode: `, res, data);
     expect(res).to.equal(DUMMY_DATA);
   });
 

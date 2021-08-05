@@ -27,6 +27,11 @@ cli.command('dec <base58 string>', 'encoded secret key').action((encodedData) =>
   takePubKey(secret);
 });
 
+cli.command('dec-memo <base58 string>', 'encoded memo data').action((encodedData) => {
+  const memo = bs.decode(encodedData);
+  console.log(`\u001b[34m[decode memo base58] \u001b[32m`, memo.toString());
+});
+
 cli.command('findAccount <wallet> <tokenId>').action(async(walletAddress, tokenId) => {
    const res = await Account.findAssocaiatedTokenAddress(walletAddress, tokenId);
   console.log(`\u001b[34m[result] \u001b[32m ${res.toBase58()}`);

@@ -16,13 +16,14 @@ import axios from 'axios';
 export namespace Transaction {
 
   export const get = async (signature: string) => {
-    const res = await axios.post(`${Util.getApiUrl()}`, {
-      'jsonrpc': '2.0',
-      'id': 1,
-      'method': 'getTransaction',
-      'params': [signature],
-    })
-    return res.data.result;
+    return Util.getConnection().getTransaction(signature);
+    // const res = await axios.post(`${Util.getApiUrl()}`, {
+      // 'jsonrpc': '2.0',
+      // 'id': 1,
+      // 'method': 'getTransaction',
+      // 'params': [signature],
+    // })
+    // return res.data.result;
   }
 
   export const sendMySelf = async (
