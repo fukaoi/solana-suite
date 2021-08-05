@@ -3,21 +3,20 @@ import {Transaction} from '../src/transaction';
 import {Memo} from '../src/memo';
 import {assert, expect} from 'chai';
 
-const SIG = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy'
+const SIG = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
+const SIG2 = '2nPdn7AhJiTLaopwxCBzPxSB9ucBeBJbyKttXVBh7CoCQkmhkB12yoT6CuFStbT6X6boi9eFEpJjtRUQYVPcvM3J';
 
 describe('Transaction', () => {
-  // it('Get transaction data', async () => {
-    // const res = await Transaction.get(SIG);
-    // assert.isObject(res);
-  // });
+  it('Get transaction data', async () => {
+    const res = await Transaction.get(SIG);
+    assert.isObject(res);
+  });
 
   it('Transaction decode memo', async () => {
-    const res = await Transaction.get(SIG);
-    // console.log(res?.transaction.message.instructions[0]);
-    // const data = res.transaction.message.instructions[0].data;
-    // const data = '34CCVB3fVcHrwDmKDYkYhX1Kva4cJXoNGwYrZWNSYc7vKqdPhRsTmhd3h6';
-    // const res2 = Memo.decode(data);
-    // console.log(`# decode: `, res2);
-    // expect(res).to.equal(DUMMY_DATA);
+    const txObj = await Transaction.get(SIG2);
+    const instructions = txObj?.transaction.message.instructions || [];
+    const res = Memo.parseInstruction(instructions);
+    console.log(`# decode: `, res);
+    expect(res).to.equal('{"tokenId": "dummy", "serialNo": "15/100"}');
   });
 })

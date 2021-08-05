@@ -12,9 +12,7 @@ import bs from 'bs58';
 export namespace Memo {
   const MEMO_PROGRAMID = new PublicKey(Constants.MEMO_PROGRAMID);
 
-  export const decode = (encoded: string): string =>
-    bs.decode(encoded).toString();
-
+  export const decode = (encoded: string): string => bs.decode(encoded).toString();
 
   export const encode = (data: any): Buffer => Buffer.from(data);
 
@@ -25,6 +23,11 @@ export namespace Memo {
       keys: []
     });
   };
+
+  export const parseInstruction = (data: any) => {
+    const compiled = data.filter((d: any) => d.accounts.length == 0);
+    return decode(compiled[0].data);
+  }
 
   export const own = async (
     instruction: TransactionInstruction,

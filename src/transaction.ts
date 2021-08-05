@@ -14,9 +14,8 @@ import {Constants} from './constants';
 
 export namespace Transaction {
 
-  export const get = async (signature: string) => {
-    return Util.getConnection().getTransaction(signature);
-  }
+  export const get = async (signature: string) => 
+    Util.getConnection().getTransaction(signature);
 
   export const sendMySelf = async (
     signer: Keypair,
