@@ -11,19 +11,11 @@ import {
 
 import {Util} from './util';
 import {Constants} from './constants';
-import axios from 'axios';
 
 export namespace Transaction {
 
   export const get = async (signature: string) => {
     return Util.getConnection().getTransaction(signature);
-    // const res = await axios.post(`${Util.getApiUrl()}`, {
-      // 'jsonrpc': '2.0',
-      // 'id': 1,
-      // 'method': 'getTransaction',
-      // 'params': [signature],
-    // })
-    // return res.data.result;
   }
 
   export const sendMySelf = async (

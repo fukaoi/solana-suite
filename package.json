@@ -13,7 +13,6 @@
   "dependencies": {
     "@solana/spl-token": "^0.1.6",
     "@solana/web3.js": "^1.22.0",
-    "axios": "^0.21.1",
     "ts-node": "^9.1.1"
   },
   "devDependencies": {

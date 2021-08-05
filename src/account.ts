@@ -8,7 +8,6 @@ import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
 import {Util} from './util';
 import {Constants} from './constants';
-import axios from 'axios';
 
 export namespace Account {
 

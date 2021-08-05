@@ -19,10 +19,10 @@ describe('Memo', () => {
   });
 
   it('decode', async () => {
-    const data = Memo.createInstruction(DUMMY_DATA);
+    const data = 'U1Gg9T9EGN5tDRw28wR3GxXWZBkoS3rg2U3iMZdViMJhd5pVNsxh79RW';
     const res = Memo.decode(data);
     console.log(`# decode: `, res, data);
-    expect(res).to.equal(DUMMY_DATA);
+    expect(res).to.equal('{"nft": "art", "url": "http://hoge.hoge"}');
   });
 
   it('send memo by own', async () => {

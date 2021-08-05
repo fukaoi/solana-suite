@@ -7,12 +7,14 @@ import {
 
 import {Transaction} from './transaction';
 import {Constants} from './constants';
+import bs from 'bs58';
 
 export namespace Memo {
   const MEMO_PROGRAMID = new PublicKey(Constants.MEMO_PROGRAMID);
 
-  export const decode = (instruction: TransactionInstruction): string =>
-    instruction.data.toString();
+  export const decode = (encoded: string): string =>
+    bs.decode(encoded).toString();
+
 
   export const encode = (data: any): Buffer => Buffer.from(data);
 
