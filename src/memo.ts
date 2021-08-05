@@ -2,6 +2,7 @@ import {
   Keypair,
   PublicKey,
   TransactionInstruction,
+  TransactionResponse,
   TransactionSignature
 } from '@solana/web3.js';
 
@@ -24,8 +25,8 @@ export namespace Memo {
     });
   };
 
-  export const parseInstruction = (data: any) => {
-    const compiled = data.filter((d: any) => d.accounts.length == 0);
+  export const parseInstruction = (tx: TransactionResponse) => {
+    const compiled = tx.transaction.message.instructions.filter((d: any) => d.accounts.length == 0);
     return decode(compiled[0].data);
   }
 

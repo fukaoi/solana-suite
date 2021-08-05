@@ -13,9 +13,8 @@ describe('Transaction', () => {
   });
 
   it('Transaction decode memo', async () => {
-    const txObj = await Transaction.get(SIG2);
-    const instructions = txObj?.transaction.message.instructions || [];
-    const res = Memo.parseInstruction(instructions);
+    const tx = await Transaction.get(SIG2);
+    const res = Memo.parseInstruction(tx);
     console.log(`# decode: `, res);
     expect(res).to.equal('{"tokenId": "dummy", "serialNo": "15/100"}');
   });
