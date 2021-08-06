@@ -25,7 +25,7 @@ export namespace Memo {
     });
   };
 
-  export const parseInstruction = (tx: TransactionResponse) => {
+  export const parseInstruction = (tx: TransactionResponse): any => {
     const compiled = tx.transaction.message.instructions.filter((d: any) => d.accounts.length === 0);
     return decode(compiled[0].data);
   }

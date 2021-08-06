@@ -5,6 +5,7 @@ import {
 } from '@solana/web3.js';
 
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
+import bs from 'bs58';
 
 import {Util} from './util';
 import {Constants} from './constants';
@@ -13,11 +14,16 @@ export namespace Account {
 
   type Unit = 'sol' | 'lamports';
 
+  export interface PubkeySecret {
+    pubkey: string,
+    secret: string
+  }
+
   const ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey(Constants.SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID);
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 10;
 
-  export const getBalance = async (pubkey: PublicKey, unit: Unit = 'sol'): Promise<number> => {
-    const balance = await Util.getConnection().getBalance(pubkey);
+  export const getBalance = async (pubkey: string, unit: Unit = 'sol'): Promise<number> => {
+    const balance = await Util.getConnection().getBalance(new PublicKey(pubkey));
     switch (unit) {
       case 'sol': return balance / LAMPORTS_PER_SOL;
       case 'lamports': return balance;
@@ -25,11 +31,14 @@ export namespace Account {
     }
   };
 
-  export const createAccount = async (): Promise<Keypair> => {
+  export const createAccount = async (): Promise<PubkeySecret> => {
     const keypair = Keypair.generate();
     await Util.getConnection().requestAirdrop(keypair.publicKey, DEFAULT_AIRDROP_AMOUNT);
-    await Util.sleep(15);
-    return keypair;
+    await Util.sleep(20);
+    return {
+      pubkey: keypair.publicKey.toBase58(),
+      secret: bs.encode(keypair.secretKey)
+    };
   };
 
   export const findAssocaiatedTokenAddress = async (

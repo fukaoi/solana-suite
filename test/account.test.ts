@@ -1,9 +1,8 @@
 import {describe, it} from 'mocha';
 import {Account} from '../src/account';
 import {assert, expect} from 'chai';
-import {Keypair} from '@solana/web3.js';
 
-let source: Keypair;
+let source: Account.PubkeySecret;
 
 describe('Account', () => {
   before(async () => {
@@ -11,19 +10,19 @@ describe('Account', () => {
   });
 
   it('return Account(Keypair) object', async () => {
-    console.log(`created account(pubkey): ${source.publicKey}`);
-    console.log(`created account(secret): ${source.secretKey}`);
+    console.log(`created account(pubkey): ${source.pubkey}`);
+    console.log(`created account(secret): ${source.secret}`);
     assert.isObject(source);
   });
 
   it('Get balance at publicKey', async () => {
-    const res = await Account.getBalance(source.publicKey);
+    const res = await Account.getBalance(source.pubkey);
     console.log(res);
     expect(res).to.equal(10);
   });
 
   it('Get balance at publicKey via lamports', async () => {
-    const res = await Account.getBalance(source.publicKey, 'lamports');
+    const res = await Account.getBalance(source.pubkey, 'lamports');
     console.log(res);
     expect(res).to.equal(Account.DEFAULT_AIRDROP_AMOUNT);
   });

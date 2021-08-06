@@ -18,8 +18,8 @@ export namespace TestUtils {
   const getSourceAndDest = async () => {
     if (fs.existsSync(TEMP_KEYPAIR_FILE)) {
       const obj = await loadTempFile();
-      const sourceBalance = await Account.getBalance(obj.source.publicKey);
-      const destBalance = await Account.getBalance(obj.dest.publicKey);
+      const sourceBalance = await Account.getBalance(obj.source.pubkey);
+      const destBalance = await Account.getBalance(obj.dest.pubkey);
       console.debug(`# source balance: ${sourceBalance}`);
       console.debug(`# dest balance: ${destBalance}`);
       if (sourceBalance < 0.1 || destBalance < 0.1) {
@@ -37,11 +37,7 @@ export namespace TestUtils {
 
   const loadTempFile = async () => {
     const obj = JSON.parse(fs.readFileSync(TEMP_KEYPAIR_FILE, 'utf8'));
-    const secretSource = bs.decode(obj.source.secret);
-    const secretDest = bs.decode(obj.dest.secret);
-    const source = Keypair.fromSecretKey(secretSource);
-    const dest = Keypair.fromSecretKey(secretDest);
-    return {source: source, dest: dest};
+    return {source: obj.source, dest: obj.dest};
   }
 
   const createTempFile = async () => {
@@ -52,15 +48,15 @@ export namespace TestUtils {
     return {source: source, dest: dest};
   }
 
-  const templateKeyPair = (source: Keypair, dest: Keypair) => {
+  const templateKeyPair = (source: Account.PubkeySecret, dest: Account.PubkeySecret) => {
     return {
       source: {
-        pubkey: source.publicKey.toBase58(),
-        secret: bs.encode(source.secretKey),
+        pubkey: source.pubkey,
+        secret: source.secret,
       },
       dest: {
-        pubkey: dest.publicKey.toBase58(),
-        secret: bs.encode(dest.secretKey),
+        pubkey: dest.pubkey,
+        secret: dest.secret,
       },
     };
   }
