@@ -1,12 +1,12 @@
 import {describe, it} from 'mocha';
-import {Account} from '../src/account';
+import {Wallet} from '../src/wallet';
 import {assert, expect} from 'chai';
 
-let source: Account.PubkeySecret;
+let source: Wallet.Keypair;
 
-describe('Account', () => {
+describe('Wallet', () => {
   before(async () => {
-    source = await Account.createAccount();
+    source = await Wallet.create();
   });
 
   it('return Account(Keypair) object', async () => {
@@ -16,19 +16,19 @@ describe('Account', () => {
   });
 
   it('Get balance at publicKey', async () => {
-    const res = await Account.getBalance(source.pubkey);
+    const res = await Wallet.getBalance(source.pubkey);
     console.log(res);
     expect(res).to.equal(10);
   });
 
   it('Get balance at publicKey via lamports', async () => {
-    const res = await Account.getBalance(source.pubkey, 'lamports');
+    const res = await Wallet.getBalance(source.pubkey, 'lamports');
     console.log(res);
-    expect(res).to.equal(Account.DEFAULT_AIRDROP_AMOUNT);
+    expect(res).to.equal(Wallet.DEFAULT_AIRDROP_AMOUNT);
   });
 
   it('find token address', async () => {
-    const res = await Account.findAssocaiatedTokenAddress(
+    const res = await Wallet.findAssocaiatedTokenAddress(
       'D7dKBiFxWKiSSew4fzinML1so4vEaSPmtiKV6qWMDUJJ',
       '5hj62erLKeKSM29C5oZR8TGei7RrMG79voFkiCotRZmS',
     );

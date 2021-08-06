@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {expect, assert} from 'chai'
 import {Memo} from '../src/memo';
-import {Account} from '../src/account';
+import {Wallet} from '../src/wallet';
 
 const DUMMY_DATA = 'dummy memo data';
 
@@ -26,7 +26,7 @@ describe('Memo', () => {
   });
 
   it('send memo by own', async () => {
-    const source = await Account.createAccount();
+    const source = await Wallet.create();
     const memoInst = Memo.createInstruction('{"memo": 123456789}');
     const res = await Memo.own(memoInst, source.secret);
     console.log(`# tx signature: ${res}`);

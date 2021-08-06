@@ -1,26 +1,26 @@
 import {describe, it, before} from 'mocha';
 import {SolNative} from '../src/sol-native';
 import {Memo} from '../src/memo';
+import {Wallet} from '../src/wallet';
 import {assert} from 'chai'
-import {Keypair, PublicKey} from '@solana/web3.js';
 import setupKeyPair from '../test/utils/setupKeyPair';
 
-let source: Keypair;
-let destPubKey: PublicKey;
+let source: Wallet.Keypair;
+let destPubkey: string;
 
 describe('SolNative', () => {
   before(async () => {
     const obj = await setupKeyPair();
     source = obj.source;
-    destPubKey = obj.dest.publicKey;
+    destPubkey = obj.dest.pubkey;
   });
 
   it('transfer transaction', async () => {
     const solAmount = 1;
     const res = await SolNative.transfer(
-      source.publicKey,
-      [source],
-      destPubKey,
+      source.pubkey,
+      [source.secret],
+      destPubkey,
       solAmount,
     );
     console.log(`# tx signature: ${res}`);
@@ -33,9 +33,9 @@ describe('SolNative', () => {
       '{"tokenId": "dummy", "serialNo": "15/100"}'
     );
     const res = await SolNative.transfer(
-      source.publicKey,
-      [source],
-      destPubKey,
+      source.pubkey,
+      [source.secret],
+      destPubkey,
       solAmount,
       instruction
     );

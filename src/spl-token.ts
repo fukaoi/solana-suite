@@ -5,7 +5,6 @@ import {
 
 import {
   Account,
-  Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
   TransactionInstruction,
@@ -25,13 +24,13 @@ export namespace SplToken {
   }
 
   export const create = async (
-    sourceKeypair: Keypair,
+    sourceSecret: string,
     totalAmount: number,
     decimal: number,
-    authority: string = sourceKeypair.publicKey.toBase58(),
+    authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
   ): Promise<CreateResponse> => {
     const connection = Util.getConnection();
-    const signer = new Account(sourceKeypair.secretKey);
+    const signer = new Account(Util.createKeypair(sourceSecret).secretKey);
     const authorityPubKey = new PublicKey(authority);
 
     const token = await Token.createMint(
@@ -56,11 +55,11 @@ export namespace SplToken {
   }
 
   export const createNft = (
-    sourceKeypair: Keypair,
-    authority: string = sourceKeypair.publicKey.toBase58(),
+    sourceSecret: string,
+    authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
   ): Promise<CreateResponse> => {
     return create(
-      sourceKeypair,
+      sourceSecret,
       NFT_AMOUNT,
       NFT_DECIMAL,
       authority
@@ -69,14 +68,14 @@ export namespace SplToken {
 
   export const transferNft = async (
     tokenId: string,
-    sourceKeypair: Keypair,
-    destination: string,
+    sourceSecret: string,
+    destPubkey: string,
     instruction?: TransactionInstruction
   ): Promise<TransactionSignature> => {
     return transfer(
       tokenId,
-      sourceKeypair,
-      destination,
+      sourceSecret,
+      destPubkey,
       NFT_AMOUNT,
       instruction
     );
@@ -84,16 +83,16 @@ export namespace SplToken {
 
   export const transfer = async (
     tokenId: string,
-    sourceKeypair: Keypair,
+    sourceSecret: string,
     destination: string,
     amount: number,
     instruction?: TransactionInstruction
   ): Promise<TransactionSignature> => {
     const tokenPubkey = new PublicKey(tokenId);
     const destPubkey = new PublicKey(destination);
-    const signer = new Account(sourceKeypair.secretKey);
+    const signer = Util.createKeypair(sourceSecret);
     const token = new Token(Util.getConnection(), tokenPubkey, TOKEN_PROGRAM_ID, signer);
-    const sourceTokenAccount = (await token.getOrCreateAssociatedAccountInfo(sourceKeypair.publicKey)).address;
+    const sourceTokenAccount = (await token.getOrCreateAssociatedAccountInfo(signer.publicKey)).address;
     const destTokenAccount = (await token.getOrCreateAssociatedAccountInfo(destPubkey)).address;
 
     console.debug(`[sourceTokenAccount:${sourceTokenAccount.toBase58()}]=>[destTokenAccount:${destTokenAccount.toBase58()}]`);

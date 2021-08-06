@@ -10,11 +10,11 @@ import bs from 'bs58';
 import {Util} from './util';
 import {Constants} from './constants';
 
-export namespace Account {
+export namespace Wallet {
 
   type Unit = 'sol' | 'lamports';
 
-  export interface PubkeySecret {
+  export interface Keypair {
     pubkey: string,
     secret: string
   }
@@ -31,7 +31,7 @@ export namespace Account {
     }
   };
 
-  export const createAccount = async (): Promise<PubkeySecret> => {
+  export const create = async (): Promise<Keypair> => {
     const keypair = Keypair.generate();
     await Util.getConnection().requestAirdrop(keypair.publicKey, DEFAULT_AIRDROP_AMOUNT);
     await Util.sleep(20);

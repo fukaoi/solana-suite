@@ -1,14 +1,15 @@
 import {
-  Keypair,
   PublicKey,
   TransactionInstruction,
   TransactionResponse,
   TransactionSignature
 } from '@solana/web3.js';
 
+import bs from 'bs58';
+
 import {Transaction} from './transaction';
 import {Constants} from './constants';
-import bs from 'bs58';
+import {Util} from './util';
 
 export namespace Memo {
   const MEMO_PROGRAMID = new PublicKey(Constants.MEMO_PROGRAMID);
@@ -34,8 +35,7 @@ export namespace Memo {
     instruction: TransactionInstruction,
     sourceSecret: string
   ): Promise<TransactionSignature> => {
-    const decoded = bs.decode(sourceSecret)
-    return await Transaction.sendMySelf(Keypair.fromSecretKey(decoded), instruction);
+    return await Transaction.sendMySelf(Util.createKeypair(sourceSecret), instruction);
   }
 }
 

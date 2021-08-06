@@ -1,14 +1,13 @@
-import {Keypair} from '@solana/web3.js';
-import bs from 'bs58';
+import {Wallet} from '../../src/wallet';
 
 export namespace TestUtils {
   console.debug(`\u001b[33m === DEBUG MODE ===`);
 
-  export const debugDisp = (source: Keypair, dest: Keypair) => {
-    console.debug(`# sourcePubKey:`, source.publicKey.toString());
-    console.debug(`# sourceSecret: `, bs.encode(source.secretKey));
-    console.debug(`# destPubKey:`, dest.publicKey.toString());
-    console.debug(`# destSecret: `, bs.encode(dest.secretKey));
+  export const debugDisp = (source: Wallet.Keypair, dest: Wallet.Keypair) => {
+    console.debug(`# source.pubkey:`, source.pubkey);
+    console.debug(`# source.secret: `, source.secret);
+    console.debug(`# dest.pubkey:`, dest.pubkey);
+    console.debug(`# dest.secret: `, dest.secret);
   }
 }
 

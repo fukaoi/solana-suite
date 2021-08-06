@@ -14,6 +14,7 @@ describe('Transaction', () => {
 
   it('Transaction decode memo', async () => {
     const tx = await Transaction.get(SIG2);
+    if (!tx) throw new Error('Transaction not found');
     const res = Memo.parseInstruction(tx);
     console.log(`# decode: `, res);
     expect(res).to.equal('{"tokenId": "dummy", "serialNo": "15/100"}');

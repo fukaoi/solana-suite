@@ -2,13 +2,13 @@ import {describe, it} from 'mocha';
 import {SplToken} from '../src/spl-token';
 import {Memo} from '../src/memo';
 import {assert} from 'chai'
-import {Keypair} from '@solana/web3.js';
 import setupKeyPair from '../test/utils/setupKeyPair';
 import fs from 'fs';
+import {Wallet} from '../src/wallet';
 
-let src: Keypair;
-let dest: Keypair;
-let destination: string;
+let source: Wallet.Keypair;
+let dest: Wallet.Keypair;
+let destPubkey: string;
 let tokenId: string;
 let nft: string;
 
@@ -44,9 +44,9 @@ const createNftTempFile = async (data: Object) => {
 describe('SplToken', () => {
   before(async () => {
     const obj = await setupKeyPair();
-    src = obj.source;
+    source = obj.source;
     dest = obj.dest;
-    destination = obj.dest.publicKey.toBase58();
+    destPubkey = obj.dest.pubkey;
     fs.existsSync(TEMP_TOKEN_FILE) && loadTokenTempFile();
     fs.existsSync(TEMP_NFT_FILE) && loadNftTempFile();
   });
@@ -58,7 +58,7 @@ describe('SplToken', () => {
     }
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const TOKEN_DECIMAL = 2;
-    const res = await SplToken.create(src, TOKEN_TOTAL_AMOUNT, TOKEN_DECIMAL);
+    const res = await SplToken.create(source.secret, TOKEN_TOTAL_AMOUNT, TOKEN_DECIMAL);
     console.log(`# tokenId: ${res.tokenId}`);
     tokenId = res.tokenId;
     assert.isObject(res);
@@ -70,7 +70,7 @@ describe('SplToken', () => {
       console.log(`# skip because loaded`);
       return;
     }
-    const res = await SplToken.createNft(src);
+    const res = await SplToken.createNft(source.secret);
     console.log(`# nft: ${res.tokenId}`);
     nft = res.tokenId;
     assert.isObject(res);
@@ -78,35 +78,35 @@ describe('SplToken', () => {
   });
 
   it('Transfer token. source and destination inter send', async () => {
-    const srcRes = await SplToken.transfer(tokenId, src, destination, 1);
+    const srcRes = await SplToken.transfer(tokenId, source.secret, destPubkey, 1);
     console.log(`# tx signature: ${srcRes}`);
-    const destRes = await SplToken.transfer(tokenId, dest, src.publicKey.toBase58(), 1);
+    const destRes = await SplToken.transfer(tokenId, dest.secret, source.pubkey, 1);
     console.log(`# tx signature: ${destRes}`);
     assert.isNotEmpty(destRes);
   });
 
   it('Transfer nft, source and destination inter send', async () => {
-    const srcRes = await SplToken.transferNft(nft, src, destination);
+    const srcRes = await SplToken.transferNft(nft, source.secret, destPubkey);
     console.log(`# tx signature: ${srcRes}`);
     assert.isNotEmpty(srcRes);
-    const destRes = await SplToken.transferNft(nft, dest, src.publicKey.toBase58());
+    const destRes = await SplToken.transferNft(nft, dest.secret, source.pubkey);
     console.log(`# tx signature: ${destRes}`);
     assert.isNotEmpty(destRes);
   });
 
   it('Transfer transaction with memo data', async () => {
     const memoInst = Memo.createInstruction('{"tokenId": "dummy", "serialNo": "15/100"}');
-    const res = await SplToken.transfer(tokenId, src, destination, 5, memoInst);
+    const res = await SplToken.transfer(tokenId, source.secret, destPubkey, 5, memoInst);
     console.log(`# tx signature: ${res}`);
     assert.isNotEmpty(res);
   });
 
   it('Transfer nft with memo data, source and destination inter send', async () => {
     const memoInst = Memo.createInstruction('{"nft": "art", "url": "http://hoge.hoge"}');
-    const srcRes = await SplToken.transferNft(nft, src, destination, memoInst);
+    const srcRes = await SplToken.transferNft(nft, source.secret, destPubkey, memoInst);
     console.log(`# tx signature: ${srcRes}`);
     assert.isNotEmpty(srcRes);
-    const destRes = await SplToken.transferNft(nft, dest, src.publicKey.toBase58(), memoInst);
+    const destRes = await SplToken.transferNft(nft, dest.secret, source.pubkey, memoInst);
     console.log(`# tx signature: ${destRes}`);
     assert.isNotEmpty(destRes);
   });

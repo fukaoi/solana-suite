@@ -31,15 +31,15 @@ export namespace Transaction {
   }
 
   export const send = async (
-    sourcePubKey: PublicKey,
+    sourcePublicKey: PublicKey,
     signers: Signer[],
-    destPubKey: PublicKey,
+    destPublicKey: PublicKey,
     amount: number,
   ) => (instruction?: TransactionInstruction[]): Promise<TransactionSignature> => {
     const params =
       SystemProgram.transfer({
-        fromPubkey: sourcePubKey,
-        toPubkey: destPubKey,
+        fromPubkey: sourcePublicKey,
+        toPubkey: destPublicKey,
         lamports: amount,
       });
 

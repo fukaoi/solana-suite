@@ -1,6 +1,8 @@
 import {
-  Connection,
+  Connection, Keypair,
 } from '@solana/web3.js';
+
+import bs from 'bs58';
 
 import {Constants} from './constants';
 
@@ -20,4 +22,9 @@ export namespace Util {
   };
 
   export const getApiUrl = () => Constants.API_URL;
+
+  export const createKeypair = (secret: string): Keypair => {
+    const decoded = bs.decode(secret);
+    return Keypair.fromSecretKey(decoded);
+  }
 }

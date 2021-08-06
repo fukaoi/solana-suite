@@ -1,7 +1,5 @@
-import {Keypair} from '@solana/web3.js';
 import fs from 'fs';
-import bs from 'bs58';
-import {Account} from '../../src/account';
+import {Wallet} from '../../src/wallet';
 import debugDisp from './debugDisp';
 import '../../src/util';
 
@@ -9,7 +7,7 @@ export namespace TestUtils {
   export const TEMP_KEYPAIR_FILE = '.solana-devnet-keypair';
 
   export const setupKeyPair = async ():
-    Promise<{source: Keypair, dest: Keypair}> => {
+    Promise<{source: Wallet.Keypair, dest: Wallet.Keypair}> => {
     const {source, dest} = await getSourceAndDest();
     debugDisp(source, dest);
     return {source: source, dest: dest};
@@ -18,8 +16,8 @@ export namespace TestUtils {
   const getSourceAndDest = async () => {
     if (fs.existsSync(TEMP_KEYPAIR_FILE)) {
       const obj = await loadTempFile();
-      const sourceBalance = await Account.getBalance(obj.source.pubkey);
-      const destBalance = await Account.getBalance(obj.dest.pubkey);
+      const sourceBalance = await Wallet.getBalance(obj.source.pubkey);
+      const destBalance = await Wallet.getBalance(obj.dest.pubkey);
       console.debug(`# source balance: ${sourceBalance}`);
       console.debug(`# dest balance: ${destBalance}`);
       if (sourceBalance < 0.1 || destBalance < 0.1) {
@@ -41,14 +39,14 @@ export namespace TestUtils {
   }
 
   const createTempFile = async () => {
-    const source = await Account.createAccount();
-    const dest = await Account.createAccount();
+    const source = await Wallet.create();
+    const dest = await Wallet.create();
     const data = templateKeyPair(source, dest);
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));
     return {source: source, dest: dest};
   }
 
-  const templateKeyPair = (source: Account.PubkeySecret, dest: Account.PubkeySecret) => {
+  const templateKeyPair = (source: Wallet.Keypair, dest: Wallet.Keypair) => {
     return {
       source: {
         pubkey: source.pubkey,
