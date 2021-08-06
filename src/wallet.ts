@@ -33,8 +33,10 @@ export namespace Wallet {
 
   export const create = async (): Promise<Keypair> => {
     const keypair = Keypair.generate();
-    await Util.getConnection().requestAirdrop(keypair.publicKey, DEFAULT_AIRDROP_AMOUNT);
-    await Util.sleep(20);
+    if (process.env.NODE_ENV !== 'production') {
+      await Util.getConnection().requestAirdrop(keypair.publicKey, DEFAULT_AIRDROP_AMOUNT);
+      await Util.sleep(20);
+    }
     return {
       pubkey: keypair.publicKey.toBase58(),
       secret: bs.encode(keypair.secretKey)
