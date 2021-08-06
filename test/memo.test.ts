@@ -26,10 +26,9 @@ describe('Memo', () => {
   });
 
   it('send memo by own', async () => {
-    const signer = await Account.createAccount();
-    console.log(`# signer: `, signer);
+    const source = await Account.createAccount();
     const memoInst = Memo.createInstruction('{"memo": 123456789}');
-    const res = await Memo.own(memoInst, signer);
+    const res = await Memo.own(memoInst, source.secret);
     console.log(`# tx signature: ${res}`);
     assert.isNotEmpty(res);
   });
