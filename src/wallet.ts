@@ -1,5 +1,5 @@
 import {
-  Keypair,
+  Keypair as K,
   LAMPORTS_PER_SOL,
   PublicKey,
 } from '@solana/web3.js';
@@ -32,7 +32,7 @@ export namespace Wallet {
   };
 
   export const create = async (): Promise<Keypair> => {
-    const keypair = Keypair.generate();
+    const keypair = K.generate();
     if (process.env.NODE_ENV !== 'production') {
       await Util.getConnection().requestAirdrop(keypair.publicKey, DEFAULT_AIRDROP_AMOUNT);
       await Util.sleep(20);
@@ -44,16 +44,16 @@ export namespace Wallet {
   };
 
   export const findAssocaiatedTokenAddress = async (
-    walletStr: string,
-    tokenIdStr: string
+    sourcePubkey: string,
+    tokenId: string
   ): Promise<PublicKey> => {
-    const walletPubKey = new PublicKey(walletStr);
-    const tokenId = new PublicKey(tokenIdStr);
+    const walletPubKey = new PublicKey(sourcePubkey);
+    const tokenIdPublicKey = new PublicKey(tokenId);
     return (await PublicKey.findProgramAddress(
       [
         walletPubKey.toBuffer(),
         TOKEN_PROGRAM_ID.toBuffer(),
-        tokenId.toBuffer(),
+        tokenIdPublicKey.toBuffer(),
       ],
       ACCOUNT_PROGRAM_ID
     ))[0];
