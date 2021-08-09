@@ -115,4 +115,13 @@ export namespace SplToken {
     );
     return fn(instructions);
   }
+
+  export const setMetaData = (
+    name: string,
+    description: string,
+    image: string,
+    attributes: string[]
+  ): void => {
+    //todo: no implement 
+  }
 }
