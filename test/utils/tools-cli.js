@@ -5,7 +5,7 @@
 const cli = require('cac')();
 const bs = require('bs58');
 const {Keypair} = require('@solana/web3.js');
-const {Account} = require('../../src/account');
+const {Wallet} = require('../../src/wallet');
 
 const takePubKey = (secret) => {
   const res = Keypair.fromSecretKey(secret);

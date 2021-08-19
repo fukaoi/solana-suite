@@ -110,4 +110,9 @@ describe('SplToken', () => {
     console.log(`# tx signature: ${destRes}`);
     assert.isNotEmpty(destRes);
   });
+
+  it('Crate metadata at nft on blockchain', () => {
+
+
+  }); 
 })
