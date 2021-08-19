@@ -111,8 +111,7 @@ describe('SplToken', () => {
     assert.isNotEmpty(destRes);
   });
 
-  it('Crate metadata at nft on blockchain', () => {
-
-
+  it('Set metadata at nft on blockchain', () => {
+    SplToken.setMetaData('', '', '', ['']);
   }); 
 })
