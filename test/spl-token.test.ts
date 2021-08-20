@@ -111,7 +111,8 @@ describe('SplToken', () => {
     assert.isNotEmpty(destRes);
   });
 
-  it('Set metadata at nft on blockchain', () => {
-    SplToken.setMetaData('', '', '', ['']);
-  }); 
+  it.only('Set metadata at nft on blockchain', async () => {
+    const res = await SplToken.setMetaData('test', 'TTT', 'http://example.org', source.pubkey, source.secret);
+    console.log(res);
+  });
 })

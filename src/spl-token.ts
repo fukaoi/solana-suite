@@ -1,7 +1,9 @@
 import {
   Token,
-  TOKEN_PROGRAM_ID
+  TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
+
+import {serialize} from 'borsh';
 
 import {
   Account,
@@ -9,6 +11,8 @@ import {
   PublicKey,
   TransactionInstruction,
   TransactionSignature,
+  SystemProgram,
+  SYSVAR_RENT_PUBKEY,
 } from '@solana/web3.js';
 
 import {Util} from './util';
@@ -116,12 +120,172 @@ export namespace SplToken {
     return fn(instructions);
   }
 
-  export const setMetaData = (
+
+  export class Data {
+    name: string;
+    symbol: string;
+    uri: string;
+    sellerFeeBasisPoints: number;
+    creators: Creator[] | null;
+    constructor(args: {
+      name: string;
+      symbol: string;
+      uri: string;
+      sellerFeeBasisPoints: number;
+      creators: Creator[] | null;
+    }) {
+      this.name = args.name;
+      this.symbol = args.symbol;
+      this.uri = args.uri;
+      this.sellerFeeBasisPoints = args.sellerFeeBasisPoints;
+      this.creators = args.creators;
+    }
+  }
+
+  export class Creator {
+    address: string;
+    verified: boolean;
+    share: number;
+
+    constructor(args: {
+      address: string;
+      verified: boolean;
+      share: number;
+    }) {
+      this.address = args.address;
+      this.verified = args.verified;
+      this.share = args.share;
+    }
+  }
+
+  class CreateMetadataArgs {
+    instruction: number = 0;
+    data: Data;
+    isMutable: boolean;
+
+    constructor(args: {data: Data; isMutable: boolean}) {
+      this.data = args.data;
+      this.isMutable = args.isMutable;
+    }
+  }
+
+  export const findProgramAddress = async (
+    seeds: (Buffer | Uint8Array)[],
+    programId: PublicKey,
+  ) => {
+    const key =
+      'pda-' +
+      seeds.reduce((agg, item) => agg + item.toString('hex'), '') +
+      programId.toString();
+    const result = await PublicKey.findProgramAddress(seeds, programId);
+
+    return [result[0].toBase58(), result[1]] as [string, number];
+  };
+
+  export const METADATA_SCHEMA = new Map<any, any>([
+    [
+      CreateMetadataArgs,
+      {
+        kind: 'struct',
+        fields: [
+          ['instruction', 'u8'],
+          ['data', Data],
+          ['isMutable', 'u8'], // bool
+        ],
+      },
+    ],
+    [
+      Data,
+      {
+        kind: 'struct',
+        fields: [
+          ['name', 'string'],
+          ['symbol', 'string'],
+          ['uri', 'string'],
+          ['sellerFeeBasisPoints', 'u16'],
+          ['creators', {kind: 'option', type: [Creator]}],
+        ],
+      },
+    ],
+  ]
+  );
+
+  export const setMetaData = async (
     name: string,
-    description: string,
-    image: string,
-    attributes: string[]
-  ): void => {
-    //todo: no implement 
+    symbol: string,
+    uri: string,
+    mintKey: string,
+    mintSecret: string,
+    mintAuthorityKey: string = mintKey,
+    updateAuthority: string = mintKey,
+    payer: string = mintKey,
+  ) => {
+    const metadataProgramId = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s';
+
+
+    const args = {name, symbol, uri, sellerFeeBasisPoints: 0, creators: null};
+    const data: Data = new Data(args);
+
+    const metadataAccount = (
+      await findProgramAddress(
+        [
+          Buffer.from('metadata'),
+          new PublicKey(metadataProgramId).toBuffer(),
+          new PublicKey(mintKey).toBuffer(),
+        ],
+        new PublicKey(metadataProgramId),
+      )
+    )[0];
+    const value = new CreateMetadataArgs({data, isMutable: true});
+    // console.log('Data', value, data);
+    // console.log(METADATA_SCHEMA)
+    const txnData = Buffer.from(serialize(METADATA_SCHEMA, value));
+    console.log(txnData);
+
+    const keys = [
+      {
+        pubkey: new PublicKey(metadataAccount),
+        isSigner: false,
+        isWritable: true,
+      },
+      {
+        pubkey: new PublicKey(mintKey),
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: new PublicKey(mintAuthorityKey),
+        isSigner: true,
+        isWritable: false,
+      },
+      {
+        pubkey: new PublicKey(payer),
+        isSigner: true,
+        isWritable: false,
+      },
+      {
+        pubkey: new PublicKey(updateAuthority),
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: SystemProgram.programId,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: SYSVAR_RENT_PUBKEY,
+        isSigner: false,
+        isWritable: false,
+      },
+    ];
+    const inst = new TransactionInstruction({
+      keys,
+      programId: new PublicKey(metadataProgramId),
+      data: txnData,
+    });
+
+    const keypair = Util.createKeypair(mintSecret);
+    return Transaction.sendMySelf(keypair, inst);
   }
 }
