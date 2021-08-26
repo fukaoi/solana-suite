@@ -70,32 +70,6 @@ export namespace SplToken {
     );
   }
 
-  export const createNftMetaplex = async (
-    sourceSecret: string,
-    authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
-  ) => {
-    const mintKey = await create(
-      sourceSecret,
-      NFT_AMOUNT,
-      NFT_DECIMAL,
-      authority
-    );
-    const metadataAccount = await createMetadata(
-      new Data({
-        symbol: 'TEST',
-        name: 'TEST',
-        uri: 'https://hoge.hoge',
-        sellerFeeBasisPoints: 10,
-        creators: [authority],
-      }),
-      authority,
-      mintKey,
-      authority,
-      instructions,
-      wallet.publicKey.toBase58(),
-    );
-  }
-
   export const transferNft = async (
     tokenId: string,
     sourceSecret: string,
@@ -236,21 +210,14 @@ export namespace SplToken {
   ]
   );
 
-  export const setMetaData = async (
-    name: string,
-    symbol: string,
-    uri: string,
+  export const createMetaData = async (
+    data: Data,
+    updateAuthority: string,
     mintKey: string,
-    mintSecret: string,
-    mintAuthorityKey: string = mintKey,
-    updateAuthority: string = mintKey,
-    payer: string = mintKey,
+    mintAuthorityKey: string,
+    payer: string,
   ) => {
     const metadataProgramId = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s';
-
-
-    const args = {name, symbol, uri, sellerFeeBasisPoints: 0, creators: null};
-    const data: Data = new Data(args);
 
     const metadataAccount = (
       await findProgramAddress(
@@ -310,8 +277,41 @@ export namespace SplToken {
       programId: new PublicKey(metadataProgramId),
       data: txnData,
     });
-
-    const keypair = Util.createKeypair(mintSecret);
-    return Transaction.sendMySelf(keypair, inst);
+    return inst;
   }
+
+  export const createNftMetaplex = async (
+    sourceSecret: string,
+    authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
+  ) => {
+    const mintKey = await create(
+      sourceSecret,
+      NFT_AMOUNT,
+      NFT_DECIMAL,
+      authority
+    );
+    const createors = new Creator({
+      address: authority,
+      verified: true,
+      share: 100
+    });
+    const inst = await createMetaData(
+      new Data({
+        symbol: 'TEST',
+        name: 'TEST',
+        uri: 'https://hoge.hoge',
+        sellerFeeBasisPoints: 10,
+        creators: [createors],
+      }),
+      authority,
+      mintKey.tokenId,
+      authority,
+      authority,
+    );
+    const keypair = Util.createKeypair(sourceSecret);
+    return Transaction.sendMySelf(keypair, inst);
+
+  }
+
+
 }
