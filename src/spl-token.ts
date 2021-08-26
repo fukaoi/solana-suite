@@ -70,6 +70,32 @@ export namespace SplToken {
     );
   }
 
+  export const createNftMetaplex = async (
+    sourceSecret: string,
+    authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
+  ) => {
+    const mintKey = await create(
+      sourceSecret,
+      NFT_AMOUNT,
+      NFT_DECIMAL,
+      authority
+    );
+    const metadataAccount = await createMetadata(
+      new Data({
+        symbol: 'TEST',
+        name: 'TEST',
+        uri: 'https://hoge.hoge',
+        sellerFeeBasisPoints: 10,
+        creators: [authority],
+      }),
+      authority,
+      mintKey,
+      authority,
+      instructions,
+      wallet.publicKey.toBase58(),
+    );
+  }
+
   export const transferNft = async (
     tokenId: string,
     sourceSecret: string,
