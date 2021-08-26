@@ -1,6 +1,7 @@
 import {
   Token,
   TOKEN_PROGRAM_ID,
+  SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
 } from '@solana/spl-token';
 
 import {serialize} from 'borsh';
@@ -279,7 +280,58 @@ export namespace SplToken {
     });
     return inst;
   }
-
+  export function createAssociatedTokenAccountInstruction(
+    instructions: TransactionInstruction[],
+    associatedTokenAddress: PublicKey,
+    payer: PublicKey,
+    walletAddress: PublicKey,
+    splTokenMintAddress: PublicKey,
+  ) {
+    const keys = [
+      {
+        pubkey: payer,
+        isSigner: true,
+        isWritable: true,
+      },
+      {
+        pubkey: associatedTokenAddress,
+        isSigner: false,
+        isWritable: true,
+      },
+      {
+        pubkey: walletAddress,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: splTokenMintAddress,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: SystemProgram.programId,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: TOKEN_PROGRAM_ID,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: SYSVAR_RENT_PUBKEY,
+        isSigner: false,
+        isWritable: false,
+      },
+    ];
+    instructions.push(
+      new TransactionInstruction({
+        keys,
+        programId: SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
+        data: Buffer.from([]),
+      }),
+    );
+  }
   export const createNftMetaplex = async (
     sourceSecret: string,
     authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
@@ -290,6 +342,26 @@ export namespace SplToken {
       NFT_DECIMAL,
       authority
     );
+
+    const recipientKey = (
+      await findProgramAddress(
+        [
+          wallet.publicKey.toBuffer(),
+          programIds().token.toBuffer(),
+          toPublicKey(mintKey).toBuffer(),
+        ],
+        programIds().associatedToken,
+      )
+    )[0];
+
+    createAssociatedTokenAccountInstruction(
+      instructions,
+      toPublicKey(recipientKey),
+      wallet.publicKey,
+      wallet.publicKey,
+      toPublicKey(mintKey),
+    );
+
     const createors = new Creator({
       address: authority,
       verified: true,
