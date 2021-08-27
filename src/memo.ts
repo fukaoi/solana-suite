@@ -34,9 +34,8 @@ export namespace Memo {
   export const own = async (
     instruction: TransactionInstruction,
     sourceSecret: string
-  ): Promise<TransactionSignature> => {
-    return await Transaction.sendMySelf(Util.createKeypair(sourceSecret), instruction);
-  }
+  ): Promise<TransactionSignature> =>
+    await Transaction.sendMySelf(Util.createKeypair(sourceSecret), [instruction]);
 }
 
 
