@@ -17,12 +17,17 @@ export namespace Transaction {
   export const get = async (signature: string) =>
     Util.getConnection().getTransaction(signature);
 
+  //todo:  export const sendInstructions = async (
   export const sendMySelf = async (
     signer: Keypair,
-    instruction: TransactionInstruction,
+    instructions: TransactionInstruction[],
   ): Promise<TransactionSignature> => {
     const conn = Util.getConnection();
-    const tx = new SolanaTransaction().add(instruction);
+    instructions.forEach((st: TransactionInstruction) => tx.add(st));
+    const tx = new SolanaTransaction().add(instructions[0]);
+    if (instructions[1]) {
+      instructions.slice(1, instructions.length).forEach((st: TransactionInstruction) => tx.add(st));
+    }
     const options = {
       skipPreflight: true,
       commitment: Constants.COMMITMENT,
@@ -35,7 +40,7 @@ export namespace Transaction {
     signers: Signer[],
     destPublicKey: PublicKey,
     amount: number,
-  ) => (instruction?: TransactionInstruction[]): Promise<TransactionSignature> => {
+  ) => (instructions?: TransactionInstruction[]): Promise<TransactionSignature> => {
     const params =
       SystemProgram.transfer({
         fromPubkey: sourcePublicKey,
@@ -45,8 +50,8 @@ export namespace Transaction {
 
     const conn = Util.getConnection();
     const tx = new SolanaTransaction().add(params);
-    if (instruction) {
-      instruction.forEach((st: TransactionInstruction) => tx.add(st));
+    if (instructions) {
+      instructions.forEach((st: TransactionInstruction) => tx.add(st));
     }
 
     const options = {

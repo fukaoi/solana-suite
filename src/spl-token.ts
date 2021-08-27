@@ -1,7 +1,6 @@
 import {
   Token,
   TOKEN_PROGRAM_ID,
-  SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
 } from '@solana/spl-token';
 
 import {serialize} from 'borsh';
@@ -120,7 +119,6 @@ export namespace SplToken {
     );
     return fn(instructions);
   }
-
 
   export class Data {
     name: string;
@@ -281,7 +279,6 @@ export namespace SplToken {
     return inst;
   }
   export function createAssociatedTokenAccountInstruction(
-    instructions: TransactionInstruction[],
     associatedTokenAddress: PublicKey,
     payer: PublicKey,
     walletAddress: PublicKey,
@@ -324,14 +321,13 @@ export namespace SplToken {
         isWritable: false,
       },
     ];
-    instructions.push(
-      new TransactionInstruction({
+      return new TransactionInstruction({
         keys,
-        programId: SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
+        programId: new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'),
         data: Buffer.from([]),
-      }),
-    );
+      });
   }
+
   export const createNftMetaplex = async (
     sourceSecret: string,
     authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
@@ -343,31 +339,38 @@ export namespace SplToken {
       authority
     );
 
+    const sourcePubKey = Util.createKeypair(sourceSecret).publicKey;
+    let instructions:TransactionInstruction[]  = [];
+
     const recipientKey = (
       await findProgramAddress(
         [
-          wallet.publicKey.toBuffer(),
-          programIds().token.toBuffer(),
-          toPublicKey(mintKey).toBuffer(),
+          sourcePubKey.toBuffer(),
+          new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA').toBuffer(),
+          new PublicKey(mintKey).toBuffer(),
         ],
-        programIds().associatedToken,
+        new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'),
       )
     )[0];
 
-    createAssociatedTokenAccountInstruction(
-      instructions,
-      toPublicKey(recipientKey),
-      wallet.publicKey,
-      wallet.publicKey,
-      toPublicKey(mintKey),
+    console.log("recipientKey", recipientKey);
+
+    const catai = createAssociatedTokenAccountInstruction(
+      new PublicKey(recipientKey),
+      sourcePubKey,
+      sourcePubKey,
+      new PublicKey(mintKey),
     );
+
+    instructions.push(catai);
 
     const createors = new Creator({
       address: authority,
       verified: true,
       share: 100
     });
-    const inst = await createMetaData(
+
+    const cmd = await createMetaData(
       new Data({
         symbol: 'TEST',
         name: 'TEST',
@@ -380,10 +383,10 @@ export namespace SplToken {
       authority,
       authority,
     );
+    
+    instructions.push(cmd);
+
     const keypair = Util.createKeypair(sourceSecret);
-    return Transaction.sendMySelf(keypair, inst);
-
+    return Transaction.sendMySelf(keypair, instructions);
   }
-
-
 }
