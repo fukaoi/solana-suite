@@ -112,7 +112,7 @@ describe('SplToken', () => {
   });
 
   it.only('metadata at nft on blockchain by metaplex protocol', async () => {
-    const res = await SplToken.createNftMetaplex(source.secret);
+    const res = await SplToken.createNftMetaplex2(source.secret);
     console.log(res);
   });
 })

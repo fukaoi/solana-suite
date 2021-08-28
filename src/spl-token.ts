@@ -206,6 +206,17 @@ export namespace SplToken {
         ],
       },
     ],
+    [
+      Creator,
+      {
+        kind: 'struct',
+        fields: [
+          ['address', 'string'],
+          ['verified', 'u8'],
+          ['share', 'u8'],
+        ],
+      },
+    ],
   ]
   );
 
@@ -228,11 +239,10 @@ export namespace SplToken {
         new PublicKey(metadataProgramId),
       )
     )[0];
+    // console.log('# Data: ', data);
+    // console.log('# metadataAccount: ', metadataAccount);
     const value = new CreateMetadataArgs({data, isMutable: true});
-    // console.log('Data', value, data);
-    // console.log(METADATA_SCHEMA)
     const txnData = Buffer.from(serialize(METADATA_SCHEMA, value));
-    console.log(txnData);
 
     const keys = [
       {
@@ -321,13 +331,68 @@ export namespace SplToken {
         isWritable: false,
       },
     ];
-      return new TransactionInstruction({
-        keys,
-        programId: new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'),
-        data: Buffer.from([]),
-      });
+    return new TransactionInstruction({
+      keys,
+      programId: new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'),
+      data: Buffer.from([]),
+    });
   }
 
+  export const createNftMetaplex2 = async (
+    sourceSecret: string,
+    authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
+  ) => {
+    const connection = Util.getConnection();
+    const signer = new Account(Util.createKeypair(sourceSecret).secretKey);
+    const authorityPubKey = new PublicKey(authority);
+
+    const token = await Token.createMint(
+      connection,
+      signer,
+      authorityPubKey,
+      null,
+      0,
+      TOKEN_PROGRAM_ID
+    );
+
+    const tokenAccount = await token.createAssociatedTokenAccount(signer.publicKey);
+
+    // await token.mintTo(
+      // tokenAccount,
+      // authorityPubKey,
+      // [],
+      // 1
+    // );
+
+    const createors = new Creator({
+      address: authority,
+      verified: true,
+      share: 100
+    });
+
+    const cmd = await createMetaData(
+      new Data({
+        symbol: 'TEST',
+        name: 'TEST',
+        uri: 'https://hoge.hoge',
+        sellerFeeBasisPoints: 10,
+        creators: [createors],
+      }),
+      authority,
+      tokenAccount.toBase58(),
+      authority,
+      authority,
+    );
+
+    console.log(cmd);
+
+    const instructions: TransactionInstruction[] = [];
+    instructions.push(cmd);
+
+    const keypair = Util.createKeypair(sourceSecret);
+    return Transaction.sendMySelf(keypair, instructions);
+  }
+  
   export const createNftMetaplex = async (
     sourceSecret: string,
     authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
@@ -339,30 +404,32 @@ export namespace SplToken {
       authority
     );
 
+    console.log("# mintKey:", mintKey);
+
     const sourcePubKey = Util.createKeypair(sourceSecret).publicKey;
-    let instructions:TransactionInstruction[]  = [];
+    let instructions: TransactionInstruction[] = [];
 
     const recipientKey = (
       await findProgramAddress(
         [
           sourcePubKey.toBuffer(),
           new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA').toBuffer(),
-          new PublicKey(mintKey).toBuffer(),
+          new PublicKey(mintKey.tokenId).toBuffer(),
         ],
         new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'),
       )
     )[0];
 
-    console.log("recipientKey", recipientKey);
+    console.log("# recipientKey:", recipientKey);
 
     const catai = createAssociatedTokenAccountInstruction(
       new PublicKey(recipientKey),
       sourcePubKey,
       sourcePubKey,
-      new PublicKey(mintKey),
+      new PublicKey(mintKey.tokenId),
     );
 
-    instructions.push(catai);
+    // instructions.push(catai);
 
     const createors = new Creator({
       address: authority,
@@ -383,7 +450,7 @@ export namespace SplToken {
       authority,
       authority,
     );
-    
+
     instructions.push(cmd);
 
     const keypair = Util.createKeypair(sourceSecret);
