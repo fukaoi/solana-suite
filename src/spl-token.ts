@@ -390,7 +390,7 @@ export namespace SplToken {
     instructions.push(cmd);
 
     const keypair = Util.createKeypair(sourceSecret);
-    return Transaction.sendMySelf(keypair, instructions);
+    return Transaction.sendMySelf([keypair], instructions);
   }
   
   export const createNftMetaplex = async (
@@ -454,6 +454,6 @@ export namespace SplToken {
     instructions.push(cmd);
 
     const keypair = Util.createKeypair(sourceSecret);
-    return Transaction.sendMySelf(keypair, instructions);
+    return Transaction.sendMySelf([keypair], instructions);
   }
 }
