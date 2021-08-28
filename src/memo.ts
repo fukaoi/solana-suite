@@ -35,7 +35,10 @@ export namespace Memo {
     instruction: TransactionInstruction,
     sourceSecret: string
   ): Promise<TransactionSignature> =>
-    await Transaction.sendMySelf(Util.createKeypair(sourceSecret), [instruction]);
+    await Transaction.sendMySelf(
+      [Util.createKeypair(sourceSecret)],
+      [instruction]
+    );
 }
 
 

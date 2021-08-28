@@ -19,11 +19,12 @@ export namespace Transaction {
 
   //todo:  export const sendInstructions = async (
   export const sendMySelf = async (
-    signer: Keypair,
+    signers: Keypair[],
     instructions: TransactionInstruction[],
   ): Promise<TransactionSignature> => {
 
     const conn = Util.getConnection();
+    console.log(signers, instructions);
     const tx = new SolanaTransaction().add(instructions[0]);
     if (instructions[1]) {
       instructions.slice(1, instructions.length).forEach((st: TransactionInstruction) => tx.add(st));
@@ -32,7 +33,7 @@ export namespace Transaction {
       skipPreflight: true,
       commitment: Constants.COMMITMENT,
     };
-    return sendAndConfirmTransaction(conn, tx, [signer], options);
+    return sendAndConfirmTransaction(conn, tx, signers, options);
   }
 
   export const send = async (
