@@ -19,6 +19,10 @@
     "no-consecutive-blank-lines": false,
     "no-console": false,
     "no-namespace": false,
-    "no-trailing-whitespace": true
+    "no-trailing-whitespace": true,
+    "max-classes-per-file": [
+      "error",
+      10
+    ]
   }
 }
