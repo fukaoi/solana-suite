@@ -17,8 +17,7 @@ export namespace Transaction {
   export const get = async (signature: string) =>
     Util.getConnection().getTransaction(signature);
 
-  //todo:  export const sendInstructions = async (
-  export const sendMySelf = async (
+  export const sendInstructions = async (
     signers: Keypair[],
     instructions: TransactionInstruction[],
   ): Promise<TransactionSignature> => {

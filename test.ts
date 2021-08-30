@@ -368,7 +368,7 @@ const main = async () => {
     );
 
 
-  const res = await Transaction.sendMySelf(signers, instructions);
+  const res = await Transaction.sendInstructions(signers, instructions);
   console.log(res);
 }
 
