@@ -3,25 +3,17 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
-import {serialize} from 'borsh';
-
 import {
   Account,
-  LAMPORTS_PER_SOL,
   PublicKey,
   TransactionInstruction,
   TransactionSignature,
-  SystemProgram,
-  SYSVAR_RENT_PUBKEY,
 } from '@solana/web3.js';
 
 import {Util} from './util';
 import {Transaction} from './transaction';
 
 export namespace SplToken {
-
-  const NFT_AMOUNT = 1;
-  const NFT_DECIMAL = 0;
 
   interface CreateResponse {
     tokenId: string,
@@ -56,33 +48,6 @@ export namespace SplToken {
     );
 
     return {tokenId: token.publicKey.toBase58()};
-  }
-
-  export const createNft = (
-    sourceSecret: string,
-    authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
-  ): Promise<CreateResponse> => {
-    return create(
-      sourceSecret,
-      NFT_AMOUNT,
-      NFT_DECIMAL,
-      authority
-    );
-  }
-
-  export const transferNft = async (
-    tokenId: string,
-    sourceSecret: string,
-    destPubkey: string,
-    instruction?: TransactionInstruction
-  ): Promise<TransactionSignature> => {
-    return transfer(
-      tokenId,
-      sourceSecret,
-      destPubkey,
-      NFT_AMOUNT,
-      instruction
-    );
   }
 
   export const transfer = async (
