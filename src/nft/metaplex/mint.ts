@@ -1,13 +1,13 @@
-import {Token, MintLayout} from "@solana/spl-token";
+import {Token, MintLayout} from '@solana/spl-token';
 import {
   Keypair,
   PublicKey,
   SystemProgram,
   TransactionInstruction,
 } from '@solana/web3.js';
-import {Constants} from "../../constants";
-import {Util} from "../../util";
-import {Wallet} from "../../wallet";
+import {Constants} from '../../constants';
+import {Util} from '../../util';
+import {Wallet} from '../../wallet';
 
 export namespace Mint {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
@@ -96,7 +96,7 @@ export namespace Mint {
       payer,
       signers,
     );
-    
+
     await createDestination(
       instructions,
       payer,
