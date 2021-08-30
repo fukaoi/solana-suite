@@ -307,6 +307,8 @@ const main = async () => {
     MintLayout.span,
   );
 
+  console.log("# mint rent exempt: ", mintRentExempt);
+
   const mintKey = createMint(
     instructions,
     payer,
@@ -342,7 +344,7 @@ const main = async () => {
   const metadataAccount = await createMetadata(
     new Data({
       symbol: 'TEST',
-      name: 'TEST content',
+      name: `てすと`,
       uri: 'https://test.hoge.hoge', // size of url for arweave
       sellerFeeBasisPoints: 100,
       creators: null,
@@ -369,7 +371,13 @@ const main = async () => {
 
 
   const res = await Transaction.sendInstructions(signers, instructions);
-  console.log(res);
+  console.log("# Mint sig: ", res);
+  
+  setTimeout(async() => {
+    const destRes = await SplToken.transferNft(mintKey, '2dQ7NGx7f3bNXgJsytZX2SFD3cyzo5FzN5UrwVZz2xrYT65ucBZaNXUSdc3hme2GmA7xPpizaYDT42eGsvDdTp7T', '81fariKMBVi2KvbfM9XBAgTmHJJXnyCzvqsrJ3xGx5WK');
+    console.log("# Transfer sig: ", destRes);
+  }, 1000)
+
 }
 
 main();

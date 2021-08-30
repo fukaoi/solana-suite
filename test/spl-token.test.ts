@@ -94,6 +94,14 @@ describe('SplToken', () => {
     assert.isNotEmpty(destRes);
   });
 
+ it.only('Transfer nft, source and destination inter send', async () => {
+    const secret = '2dQ7NGx7f3bNXgJsytZX2SFD3cyzo5FzN5UrwVZz2xrYT65ucBZaNXUSdc3hme2GmA7xPpizaYDT42eGsvDdTp7T';
+    const mintKey = 'HjZGWSiKjupcfrYjr1hjLq4C5mm29gaXdkng1k3z3gaq';
+    const dest =    '81fariKMBVi2KvbfM9XBAgTmHJJXnyCzvqsrJ3xGx5WK';
+    const srcRes = await SplToken.transferNft(mintKey, secret, dest);
+    console.log(`# tx signature: ${srcRes}`);
+  });
+
   it('Transfer transaction with memo data', async () => {
     const memoInst = Memo.createInstruction('{"tokenId": "dummy", "serialNo": "15/100"}');
     const res = await SplToken.transfer(tokenId, source.secret, destPubkey, 5, memoInst);
