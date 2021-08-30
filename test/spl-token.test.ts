@@ -110,9 +110,4 @@ describe('SplToken', () => {
     console.log(`# tx signature: ${destRes}`);
     assert.isNotEmpty(destRes);
   });
-
-  it.only('metadata at nft on blockchain by metaplex protocol', async () => {
-    const res = await SplToken.createNftMetaplex2(source.secret);
-    console.log(res);
-  });
 })

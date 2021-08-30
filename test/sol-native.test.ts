@@ -16,7 +16,7 @@ describe('SolNative', () => {
   });
 
   it('transfer transaction', async () => {
-    const solAmount = 1;
+    const solAmount = 0.0001;
     const res = await SolNative.transfer(
       source.pubkey,
       [source.secret],
@@ -28,7 +28,7 @@ describe('SolNative', () => {
   });
 
   it('transfer transaction with memo data', async () => {
-    const solAmount = 1;
+    const solAmount = 0.0001;
     const instruction = Memo.createInstruction(
       '{"tokenId": "dummy", "serialNo": "15/100"}'
     );

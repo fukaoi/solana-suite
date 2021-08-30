@@ -24,7 +24,6 @@ export namespace Transaction {
   ): Promise<TransactionSignature> => {
 
     const conn = Util.getConnection();
-    console.log(signers, instructions);
     const tx = new SolanaTransaction().add(instructions[0]);
     if (instructions[1]) {
       instructions.slice(1, instructions.length).forEach((st: TransactionInstruction) => tx.add(st));
