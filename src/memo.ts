@@ -12,7 +12,7 @@ import {Constants} from './constants';
 import {Util} from './util';
 
 export namespace Memo {
-  const MEMO_PROGRAMID = new PublicKey(Constants.MEMO_PROGRAMID);
+  const MEMO_PROGRAM_ID = new PublicKey(Constants.MEMO_PROGRAM_ID);
 
   export const decode = (encoded: string): string => bs.decode(encoded).toString();
 
@@ -20,7 +20,7 @@ export namespace Memo {
 
   export const createInstruction = (data: any): TransactionInstruction => {
     return new TransactionInstruction({
-      programId: MEMO_PROGRAMID,
+      programId: MEMO_PROGRAM_ID,
       data: encode(data),
       keys: []
     });
