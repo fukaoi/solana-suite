@@ -76,12 +76,12 @@ export namespace SplToken {
     );
 
     const instructions = instruction ? new Array(param, instruction) : [param];
-    const fn = await Transaction.send(
+    const fn = Transaction.send(
       signer.publicKey,
       [signer],
       destPubkey,
       amount,
     );
-    return fn(instructions);
+    return await fn(instructions);
   }
 }

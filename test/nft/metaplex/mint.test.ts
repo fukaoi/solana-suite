@@ -15,9 +15,8 @@ describe('MetaplexMint', () => {
   });
 
   it('Create metaplex nft', async () => {
-    const getRes = await MetaplexMint.create(source.pubkey, [source.secret]);
-    const tx = await getRes();
-    const res = await Transaction.sendInstructions(tx.signers, tx.instructions);
+    const txsign = await MetaplexMint.create(source.pubkey, [source.secret])();
+    const res = await Transaction.sendInstructions(txsign.signers, txsign.instructions);
     console.log(`# tx signature: ${res}`);
     assert.isNotEmpty(res);
   });

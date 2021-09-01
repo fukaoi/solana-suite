@@ -34,7 +34,7 @@ export namespace Transaction {
     return sendAndConfirmTransaction(conn, tx, signers, options);
   }
 
-  export const send = async (
+  export const send = (
     sourcePublicKey: PublicKey,
     signers: Signer[],
     destPublicKey: PublicKey,

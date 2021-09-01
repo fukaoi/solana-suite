@@ -20,13 +20,13 @@ export namespace SolNative {
     const sourcePublicKey = new PublicKey(sourcePubkey);
     const destPublicKey = new PublicKey(destPubkey);
     const signers = signerSecrets.map(signer => Util.createKeypair(signer));
-    const fn = await Transaction.send(
+    const fn = Transaction.send(
       sourcePublicKey,
       signers,
       destPublicKey,
       sol,
     );
 
-    return instruction ? fn([instruction]) : fn();
+    return instruction ? await fn([instruction]) : await fn();
   }
 }
