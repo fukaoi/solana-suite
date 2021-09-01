@@ -87,7 +87,7 @@ export namespace MetaplexMint {
   export const create = async (
     payer: string,
     signerSecrets: string[],
-  ) => async (instructions?: TransactionInstruction[]): Promise<TransactionInstruction[]> => {
+  ) => async (instructions?: TransactionInstruction[]) => {
     let inst: TransactionInstruction[] = [];
     inst = instructions ? instructions : inst;
 
@@ -104,6 +104,6 @@ export namespace MetaplexMint {
       payer,
       mintKey,
     );
-    return inst;
+    return {instructions: inst, signers: signers};
   }
 }
