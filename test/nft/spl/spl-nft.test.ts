@@ -4,7 +4,7 @@ import {assert} from 'chai'
 import setupKeyPair from '../../../test/utils/setupKeyPair';
 import fs from 'fs';
 import {Wallet} from '../../../src/wallet';
-import {NftSpl} from '../../../src/nft/spl/nft-spl';
+import {SplNft} from '../../../src/nft/spl/spl-nft';
 
 let source: Wallet.Keypair;
 let dest: Wallet.Keypair;
@@ -40,7 +40,7 @@ describe('NftSpl', () => {
       console.log(`# skip because loaded`);
       return;
     }
-    const res = await NftSpl.createNft(source.secret);
+    const res = await SplNft.createNft(source.secret);
     console.log(`# nft: ${res.tokenId}`);
     nft = res.tokenId;
     assert.isObject(res);
@@ -48,20 +48,20 @@ describe('NftSpl', () => {
   });
 
   it('Transfer nft, source and destination inter send', async () => {
-    const srcRes = await NftSpl.transferNft(nft, source.secret, destPubkey);
+    const srcRes = await SplNft.transferNft(nft, source.secret, destPubkey);
     console.log(`# tx signature: ${srcRes}`);
     assert.isNotEmpty(srcRes);
-    const destRes = await NftSpl.transferNft(nft, dest.secret, source.pubkey);
+    const destRes = await SplNft.transferNft(nft, dest.secret, source.pubkey);
     console.log(`# tx signature: ${destRes}`);
     assert.isNotEmpty(destRes);
   });
 
   it('Transfer nft with memo data, source and destination inter send', async () => {
     const memoInst = Memo.createInstruction('{"nft": "art", "url": "http://hoge.hoge"}');
-    const srcRes = await NftSpl.transferNft(nft, source.secret, destPubkey, memoInst);
+    const srcRes = await SplNft.transferNft(nft, source.secret, destPubkey, memoInst);
     console.log(`# tx signature: ${srcRes}`);
     assert.isNotEmpty(srcRes);
-    const destRes = await NftSpl.transferNft(nft, dest.secret, source.pubkey, memoInst);
+    const destRes = await SplNft.transferNft(nft, dest.secret, source.pubkey, memoInst);
     console.log(`# tx signature: ${destRes}`);
     assert.isNotEmpty(destRes);
   });

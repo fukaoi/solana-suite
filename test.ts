@@ -12,6 +12,7 @@ import {Util} from './src/util';
 import {Transaction} from './src/transaction';
 import {SplToken} from './src/spl-token';
 import {publicDecrypt} from 'crypto';
+import {SplNft} from './src/nft/spl/spl-nft';
 
 const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
 const TOKEN_ASSOCIATED_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
@@ -321,7 +322,7 @@ const main = async () => {
   console.log("# Mint sig: ", res);
   
   setTimeout(async() => {
-    const destRes = await SplToken.transferNft(mintKey, '2dQ7NGx7f3bNXgJsytZX2SFD3cyzo5FzN5UrwVZz2xrYT65ucBZaNXUSdc3hme2GmA7xPpizaYDT42eGsvDdTp7T', '81fariKMBVi2KvbfM9XBAgTmHJJXnyCzvqsrJ3xGx5WK');
+    const destRes = await SplNft.transferNft(mintKey, '2dQ7NGx7f3bNXgJsytZX2SFD3cyzo5FzN5UrwVZz2xrYT65ucBZaNXUSdc3hme2GmA7xPpizaYDT42eGsvDdTp7T', '81fariKMBVi2KvbfM9XBAgTmHJJXnyCzvqsrJ3xGx5WK');
     console.log("# Transfer sig: ", destRes);
   }, 1000)
 

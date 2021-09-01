@@ -6,7 +6,7 @@ import {
 import {Util} from '../../util';
 import {SplToken} from '../../spl-token';
 
-export namespace NftSpl {
+export namespace SplNft {
 
   const NFT_AMOUNT = 1;
   const NFT_DECIMAL = 0;
