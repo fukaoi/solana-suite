@@ -9,7 +9,7 @@ import {Constants} from '../../constants';
 import {Util} from '../../util';
 import {Wallet} from '../../wallet';
 
-export namespace Mint {
+export namespace MetaplexMint {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
 
   const createUninitializedMint = (
@@ -52,8 +52,6 @@ export namespace Mint {
       signers,
     );
 
-    console.log(signers[0].publicKey.toBase58());
-
     instructions.push(
       Token.createInitMintInstruction(
         TOKEN_PROGRAM_ID,
@@ -66,7 +64,7 @@ export namespace Mint {
     return account.toBase58();
   }
 
-  const createDestination = async(
+  const createDestination = async (
     instructions: TransactionInstruction[],
     payer: string,
     mintKey: string,
@@ -87,21 +85,25 @@ export namespace Mint {
   }
 
   export const create = async (
-    instructions: TransactionInstruction[],
     payer: string,
-    signers: Keypair[],
-  ) => {
+    signerSecrets: string[],
+  ) => async (instructions?: TransactionInstruction[]): Promise<TransactionInstruction[]> => {
+    let inst: TransactionInstruction[] = [];
+    inst = instructions ? instructions : inst;
+
+    const signers = signerSecrets.map(s => Util.createKeypair(s));
+
     const mintKey = await init(
-      instructions,
+      inst,
       payer,
       signers,
     );
 
     await createDestination(
-      instructions,
+      inst,
       payer,
       mintKey,
     );
-    return instructions;
+    return inst;
   }
 }

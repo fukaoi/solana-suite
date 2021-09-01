@@ -39,7 +39,7 @@ export namespace Transaction {
     signers: Signer[],
     destPublicKey: PublicKey,
     amount: number,
-  ) => (instructions?: TransactionInstruction[]): Promise<TransactionSignature> => {
+  ) => async (instructions?: TransactionInstruction[]): Promise<TransactionSignature> => {
     const params =
       SystemProgram.transfer({
         fromPubkey: sourcePublicKey,

@@ -2,7 +2,7 @@ import {
   PublicKey,
 } from '@solana/web3.js';
 
-export namespace MetaObject {
+export namespace MetaplexMetaObject {
   export class Creator {
     address: PublicKey;
     verified: boolean;
