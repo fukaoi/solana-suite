@@ -104,6 +104,6 @@ export namespace MetaplexMint {
       payer,
       mintKey,
     );
-    return {instructions: inst, signers};
+    return {instructions: inst, signers, mintKey};
   }
 }

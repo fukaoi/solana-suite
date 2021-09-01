@@ -2,7 +2,7 @@ import {
   PublicKey,
 } from '@solana/web3.js';
 
-export namespace MetaplexMetaObject {
+export namespace MetaplexObject {
   export class Creator {
     address: PublicKey;
     verified: boolean;
@@ -40,7 +40,7 @@ export namespace MetaplexMetaObject {
     }
   }
 
-  class CreateMetadataArgs {
+  export class CreateMetadataArgs {
     instruction: number = 0;
     data: Data;
     isMutable: boolean;

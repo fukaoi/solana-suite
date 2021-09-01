@@ -304,8 +304,6 @@ const main = async () => {
     payer,
   );
 
-  console.log('### metadataAccount: ', metadataAccount);
-
   instructions.push(
       Token.createMintToInstruction(
         TOKEN_PROGRAM_ID,

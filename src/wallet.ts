@@ -15,6 +15,7 @@ import {Constants} from './constants';
 
 export namespace Wallet {
   const TOKEN_ASSOCIATED_PROGRAM_ID = new PublicKey(Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID);
+  const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
   type Unit = 'sol' | 'lamports';
 
@@ -60,6 +61,20 @@ export namespace Wallet {
         tokenIdPublicKey.toBuffer(),
       ],
       ACCOUNT_PROGRAM_ID
+    ))[0];
+  }
+
+  export const findMetaplexAssocaiatedTokenAddress = async (
+    tokenId: string
+  ): Promise<PublicKey> => {
+    const tokenIdPublicKey = new PublicKey(tokenId);
+    return (await PublicKey.findProgramAddress(
+      [
+        Buffer.from('metadata'),
+        new PublicKey(METADATA_PROGRAM_ID).toBuffer(),
+        tokenIdPublicKey.toBuffer(),
+      ],
+      new PublicKey(METADATA_PROGRAM_ID),
     ))[0];
   }
 
