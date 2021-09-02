@@ -16,6 +16,13 @@ import {MetaplexObject} from './object';
 export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
+
+
+  export const get = (mintKey: string) => {
+    
+
+  }
+
   export const create = (
     data: MetaplexObject.Data,
     mintKey: string,
