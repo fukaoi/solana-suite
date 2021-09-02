@@ -51,6 +51,51 @@ export namespace MetaplexObject {
     }
   }
 
+  export enum MetadataKey {
+    Uninitialized = 0,
+    MetadataV1 = 4,
+    EditionV1 = 1,
+    MasterEditionV1 = 2,
+    MasterEditionV2 = 6,
+    EditionMarker = 7,
+  }
+
+  export class Metadata {
+    key: MetadataKey;
+    updateAuthority: string;
+    mint: string;
+    data: Data;
+    primarySaleHappened: boolean;
+    isMutable: boolean;
+    editionNonce: number | null;
+
+    masterEdition?: string;
+    edition?: string;
+
+    constructor(args: {
+      updateAuthority: string;
+      mint: string;
+      data: Data;
+      primarySaleHappened: boolean;
+      isMutable: boolean;
+      editionNonce: number | null;
+    }) {
+      this.key = MetadataKey.MetadataV1;
+      this.updateAuthority = args.updateAuthority;
+      this.mint = args.mint;
+      this.data = args.data;
+      this.primarySaleHappened = args.primarySaleHappened;
+      this.isMutable = args.isMutable;
+      this.editionNonce = args.editionNonce;
+    }
+
+    // public async init() {
+    // const edition = await getEdition(this.mint);
+    // this.edition = edition;
+    // this.masterEdition = edition;
+    // }
+  }
+
   export const SCHEMA = new Map<any, any>([
     [
       CreateMetadataArgs,
@@ -84,6 +129,20 @@ export namespace MetaplexObject {
           ['uri', 'string'],
           ['sellerFeeBasisPoints', 'u16'],
           ['creators', {kind: 'option', type: [Creator]}],
+        ],
+      },
+    ],
+    [
+      Metadata,
+      {
+        kind: 'struct',
+        fields: [
+          ['key', 'u8'],
+          ['updateAuthority', 'pubkeyAsString'],
+          ['mint', 'pubkeyAsString'],
+          ['data', Data],
+          ['primarySaleHappened', 'u8'], // bool
+          ['isMutable', 'u8'], // bool
         ],
       },
     ],

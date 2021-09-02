@@ -7,20 +7,21 @@ import {
   SYSVAR_RENT_PUBKEY,
 } from '@solana/web3.js';
 
-import {serialize} from 'borsh';
+import {deserializeUnchecked, serialize} from 'borsh';
 
 import {Wallet} from '../../wallet';
 import {Constants} from '../../constants';
 import {MetaplexObject} from './object';
+import {Util} from '../../util';
 
 export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
 
-  export const get = (mintKey: string) => {
-    
-
+  export const get = async (mintKey: string) => {
+    const accounts = await Util.getConnection().getProgramAccounts(METADATA_PROGRAM_ID);
+    return decodeMetadata(accounts[0].account.data);
   }
 
   export const create = (
@@ -97,4 +98,18 @@ export namespace MetaplexMetaData {
     );
     return inst;
   }
+  
+  const METADATA_REPLACE = new RegExp('\u0000', 'g');
+
+  const decodeMetadata = (buffer: Buffer): MetaplexObject.Metadata => {
+    const metadata = deserializeUnchecked(
+      MetaplexObject.SCHEMA,
+      MetaplexObject.Metadata,
+      buffer,
+    ) as MetaplexObject.Metadata;
+    metadata.data.name = metadata.data.name.replace(METADATA_REPLACE, '');
+    metadata.data.uri = metadata.data.uri.replace(METADATA_REPLACE, '');
+    metadata.data.symbol = metadata.data.symbol.replace(METADATA_REPLACE, '');
+    return metadata;
+  };
 }

@@ -31,7 +31,7 @@ describe('MetaplexMetaData', () => {
     assert.isNotEmpty(res);
   });
 
-  it('Get metadata', async () => {
+  it.only('Get metadata', async () => {
     const metadata = new MetaplexObject.Data({
       name: 'kawamon',
       symbol: 'KWM',
