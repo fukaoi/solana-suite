@@ -13,18 +13,18 @@ describe('MetaplexMetaData', () => {
   before(async () => {
     const obj = await setupKeyPair();
     source = obj.source;
-    console.log(source);
   });
 
   it('Create metadata', async () => {
     const metadata = new MetaplexObject.Data({
-      name: '',
-      symbol: '',
-      uri: '',
+      name: 'kawamon',
+      symbol: 'KWM',
+      uri: 'https://example.com',
       sellerFeeBasisPoints: 100,
       creators: null
     });
-    const tx = await MetaplexMetaData.create(metadata, source.pubkey, source.secret)();
+    const mintKey = '2nAsUTPybBwiVoEJ1wWj7nT2fyHN9mamTdniCkFCjuGy';
+    const tx = await MetaplexMetaData.create(metadata, mintKey, source.pubkey)();
     const res = await Transaction.sendInstructions([Util.createKeypair(source.secret)], tx);
     console.log(`# tx signature: ${res}`);
     assert.isNotEmpty(res);

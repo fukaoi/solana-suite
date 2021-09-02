@@ -7,13 +7,13 @@ export namespace ConstantsFunc {
     const response = {url: ''};
     switch (env) {
       case 'development':
-        response.url = 'https://api.devnet.solana.com';
+        response.url = 'http://api.devnet.solana.com';
         break;
       case 'production':
         response.url = 'https://api.solana.com';
         break;
       default:
-        response.url = 'https://api.devnet.solana.com';
+        response.url = 'http://api.devnet.solana.com';
     }
     return response;
   }

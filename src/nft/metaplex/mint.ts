@@ -99,6 +99,8 @@ export namespace MetaplexMint {
       signers,
     );
 
+    console.log('# mintKey:', mintKey);
+
     await createDestination(
       inst,
       payer,
