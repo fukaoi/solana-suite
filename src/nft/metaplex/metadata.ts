@@ -16,13 +16,13 @@ import {MetaplexObject} from './object';
 export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
-  export const create = async (
+  export const create = (
     data: MetaplexObject.Data,
     mintKey: string,
     payer: string,
     mintAuthorityKey = payer,
     updateAuthority = payer,
-  ) => {
+  ) => async (instructions?: TransactionInstruction[]) => {
     const metadataAccount = Wallet.findMetaplexAssocaiatedTokenAddress(mintKey);
 
     const value = new MetaplexObject.CreateMetadataArgs({data, isMutable: true});
@@ -65,8 +65,9 @@ export namespace MetaplexMetaData {
         isWritable: false,
       },
     ];
-    const instructions: TransactionInstruction[] = [];
-    instructions.push(
+    let inst: TransactionInstruction[] = [];
+    inst = instructions ? instructions : inst;
+    inst.push(
       new TransactionInstruction({
         keys,
         programId: new PublicKey(METADATA_PROGRAM_ID),
@@ -79,7 +80,7 @@ export namespace MetaplexMetaData {
       mintKey
     );
 
-    instructions.push(
+    inst.push(
       Token.createMintToInstruction(
         TOKEN_PROGRAM_ID,
         new PublicKey(mintKey),
@@ -89,6 +90,6 @@ export namespace MetaplexMetaData {
         1,
       ),
     );
-    return instructions;
+    return inst;
   }
 }
