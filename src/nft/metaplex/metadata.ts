@@ -25,7 +25,6 @@ export namespace MetaplexMetaData {
   ) => async (instructions?: TransactionInstruction[]) => {
     const metadataAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey);
     const value = new MetaplexObject.CreateMetadataArgs({data, isMutable: true});
-    debugger;
     const txnData = Buffer.from(serialize(MetaplexObject.SCHEMA, value));
     const keys = [
       {
