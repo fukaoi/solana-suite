@@ -98,7 +98,7 @@ export namespace MetaplexMetaData {
     );
     return inst;
   }
-  
+
   const METADATA_REPLACE = new RegExp('\u0000', 'g');
 
   const decodeMetadata = (buffer: Buffer): MetaplexObject.Metadata => {
