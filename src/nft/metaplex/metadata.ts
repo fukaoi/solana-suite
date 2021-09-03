@@ -21,7 +21,11 @@ export namespace MetaplexMetaData {
 
   export const get = async (mintKey: string) => {
     const accounts = await Util.getConnection().getProgramAccounts(METADATA_PROGRAM_ID);
-    return decodeMetadata(accounts[0].account.data);
+    // console.log(accounts.map(a => console.log(a.pubkey.toBase58())));
+    // const matches = accounts.filter(account => account.pubkey.toBase58() == '2bonme1B1iAK7vt3aR2XKTiAxzcL6zNXLDDYS6mhWtVi');
+    const matches = accounts.filter(account => account.pubkey.toBase58() == 'CvkCEXowfK8hHJ88a9tW7vLNBfxYJtdGeSPj7xwWmgXL');
+    console.log(matches[0].account.data);
+  return decodeMetadata(matches[0].account.data);
   }
 
   export const create = (
@@ -33,7 +37,10 @@ export namespace MetaplexMetaData {
   ) => async (instructions?: TransactionInstruction[]) => {
     const metadataAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey);
     const value = new MetaplexObject.CreateMetadataArgs({data, isMutable: true});
+    console.log(value);
     const txnData = Buffer.from(serialize(MetaplexObject.SCHEMA, value));
+    console.log(serialize(MetaplexObject.SCHEMA, value));
+    console.log(decodeMetadata(txnData));
     const keys = [
       {
         pubkey: new PublicKey(metadataAccount),
@@ -107,6 +114,7 @@ export namespace MetaplexMetaData {
       MetaplexObject.Metadata,
       buffer,
     ) as MetaplexObject.Metadata;
+    console.log(metadata);
     metadata.data.name = metadata.data.name.replace(METADATA_REPLACE, '');
     metadata.data.uri = metadata.data.uri.replace(METADATA_REPLACE, '');
     metadata.data.symbol = metadata.data.symbol.replace(METADATA_REPLACE, '');

@@ -113,7 +113,7 @@ export namespace MetaplexObject {
       {
         kind: 'struct',
         fields: [
-          ['address', 'pubkeyAsString'],
+          ['address', 'string'],
           ['verified', 'u8'],
           ['share', 'u8'],
         ],
@@ -138,8 +138,7 @@ export namespace MetaplexObject {
         kind: 'struct',
         fields: [
           ['key', 'u8'],
-          ['updateAuthority', 'pubkeyAsString'],
-          ['mint', 'pubkeyAsString'],
+          ['mint', 'u8'],
           ['data', Data],
           ['primarySaleHappened', 'u8'], // bool
           ['isMutable', 'u8'], // bool

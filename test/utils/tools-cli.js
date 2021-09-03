@@ -33,7 +33,13 @@ cli.command('dec-memo <base58 string>', 'encoded memo data').action((encodedData
 });
 
 cli.command('findAccount <wallet> <tokenId>').action(async(walletAddress, tokenId) => {
-   const res = await Account.findAssocaiatedTokenAddress(walletAddress, tokenId);
+   const res = await Wallet.findAssocaiatedTokenAddress(walletAddress, tokenId);
+  console.log(`\u001b[34m[result] \u001b[32m ${res.toBase58()}`);
+
+});
+
+cli.command('findMetaplex <wallet> <tokenId>').action(async(walletAddress, tokenId) => {
+   const res = await Wallet.findMetaplexAssocaiatedTokenAddress(walletAddress, tokenId);
   console.log(`\u001b[34m[result] \u001b[32m ${res.toBase58()}`);
 
 });
