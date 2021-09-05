@@ -10,22 +10,20 @@ import {
 import {deserializeUnchecked, serialize} from 'borsh';
 
 import {Wallet} from '../../wallet';
+import {Transaction} from '../../transaction';
 import {Constants} from '../../constants';
 import {MetaplexObject} from './object';
-import {Util} from '../../util';
 
 export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
-
   export const get = async (mintKey: string) => {
-    const accounts = await Util.getConnection().getProgramAccounts(METADATA_PROGRAM_ID);
-    // console.log(accounts.map(a => console.log(a.pubkey.toBase58())));
-    // const matches = accounts.filter(account => account.pubkey.toBase58() == '2bonme1B1iAK7vt3aR2XKTiAxzcL6zNXLDDYS6mhWtVi');
-    const matches = accounts.filter(account => account.pubkey.toBase58() == 'CvkCEXowfK8hHJ88a9tW7vLNBfxYJtdGeSPj7xwWmgXL');
-    console.log(matches[0].account.data);
-  return decodeMetadata(matches[0].account.data);
+    const accounts = await Transaction.getProgramAccounts(METADATA_PROGRAM_ID);
+    const matches = accounts.filter(account => account.pubkey == 'Ckud9zsj2wA95Xh84o6QaQEjxnvxPHoHqhBaWUsfTbZo');
+    const data = matches[0].account.data;
+    console.log(data);
+    // return decodeMetadata(data);
   }
 
   export const create = (
@@ -37,10 +35,7 @@ export namespace MetaplexMetaData {
   ) => async (instructions?: TransactionInstruction[]) => {
     const metadataAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey);
     const value = new MetaplexObject.CreateMetadataArgs({data, isMutable: true});
-    console.log(value);
     const txnData = Buffer.from(serialize(MetaplexObject.SCHEMA, value));
-    console.log(serialize(MetaplexObject.SCHEMA, value));
-    console.log(decodeMetadata(txnData));
     const keys = [
       {
         pubkey: new PublicKey(metadataAccount),
@@ -108,16 +103,16 @@ export namespace MetaplexMetaData {
 
   const METADATA_REPLACE = new RegExp('\u0000', 'g');
 
-  const decodeMetadata = (buffer: Buffer): MetaplexObject.Metadata => {
+  const decodeMetadata = (buffer: Buffer) => {
     const metadata = deserializeUnchecked(
       MetaplexObject.SCHEMA,
-      MetaplexObject.Metadata,
+      MetaplexObject.Data,
       buffer,
-    ) as MetaplexObject.Metadata;
+    ) as MetaplexObject.Data;
     console.log(metadata);
-    metadata.data.name = metadata.data.name.replace(METADATA_REPLACE, '');
-    metadata.data.uri = metadata.data.uri.replace(METADATA_REPLACE, '');
-    metadata.data.symbol = metadata.data.symbol.replace(METADATA_REPLACE, '');
-    return metadata;
+    // metadata.data.name = metadata.data.name.replace(METADATA_REPLACE, '');
+    // metadata.data.uri = metadata.data.uri.replace(METADATA_REPLACE, '');
+    // metadata.data.symbol = metadata.data.symbol.replace(METADATA_REPLACE, '');
+    // return metadata;
   };
 }

@@ -8,28 +8,37 @@ import {MetaplexObject} from '../../../src/nft/metaplex/object';
 import {MetaplexMint} from '../../../src/nft/metaplex/mint';
 
 let source: Wallet.Keypair;
+let dest: Wallet.Keypair;
 
 describe('MetaplexMetaData', () => {
   before(async () => {
     const obj = await setupKeyPair();
     source = obj.source;
+    dest = obj.dest;
   });
 
-  it.only('Create metadata', async () => {
+  it.skip('Create metadata', async () => {
+    const args = {
+      address: dest.pubkey,
+      verified: true,
+      share: 100
+    };
     const metadata = new MetaplexObject.Data({
-      name: 'kawamon',
+      name: 'kawamon2',
       symbol: 'KWM',
-      uri: 'https://example.com',
+      uri: 'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50',
+      // uri: 'https://arweave.net/1eH7bZS-6HZH4YOc8T_tGp2Rq25dlhclXJkoa6U55mM',
       sellerFeeBasisPoints: 100,
+      // creators: [new MetaplexObject.Creator(args)]
       creators: null
     });
 
-    const txsign = await MetaplexMint.create(source.pubkey, [source.secret])();
-    // console.log('# txsign:', txsign);
-    const tx = await MetaplexMetaData.create(metadata, txsign.mintKey, source.pubkey)(txsign.instructions);
+    const txsign = await MetaplexMint.create(dest.pubkey, [dest.secret])();
+    console.log("owner: ", dest.pubkey);
+    const tx = await MetaplexMetaData.create(metadata, txsign.mintKey, dest.pubkey)(txsign.instructions);
     // todo: already signed. refactoring
-    // const res = await Transaction.sendInstructions(txsign.signers, tx);
-    // console.log(`# tx signature: ${res}`);
+    const res = await Transaction.sendInstructions(txsign.signers, tx);
+    console.log(`# tx signature: ${res}`);
     // assert.isNotEmpty(res);
   });
 

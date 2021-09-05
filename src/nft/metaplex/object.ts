@@ -4,12 +4,12 @@ import {
 
 export namespace MetaplexObject {
   export class Creator {
-    address: PublicKey;
+    address: string;
     verified: boolean;
     share: number;
 
     constructor(args: {
-      address: PublicKey;
+      address: string;
       verified: boolean;
       share: number;
     }) {
@@ -37,6 +37,7 @@ export namespace MetaplexObject {
       this.uri = args.uri;
       this.sellerFeeBasisPoints = args.sellerFeeBasisPoints;
       this.creators = args.creators;
+      console.log(this.creators);
     }
   }
 
@@ -51,17 +52,17 @@ export namespace MetaplexObject {
     }
   }
 
-  export enum MetadataKey {
-    Uninitialized = 0,
-    MetadataV1 = 4,
-    EditionV1 = 1,
-    MasterEditionV1 = 2,
-    MasterEditionV2 = 6,
-    EditionMarker = 7,
-  }
+  // export enum MetadataKey {
+    // Uninitialized = 0,
+    // MetadataV1 = 4,
+    // EditionV1 = 1,
+    // MasterEditionV1 = 2,
+    // MasterEditionV2 = 6,
+    // EditionMarker = 7,
+  // }
 
   export class Metadata {
-    key: MetadataKey;
+    // key: MetadataKey;
     updateAuthority: string;
     mint: string;
     data: Data;
@@ -80,7 +81,7 @@ export namespace MetaplexObject {
       isMutable: boolean;
       editionNonce: number | null;
     }) {
-      this.key = MetadataKey.MetadataV1;
+      // this.key = MetadataKey.MetadataV1;
       this.updateAuthority = args.updateAuthority;
       this.mint = args.mint;
       this.data = args.data;
