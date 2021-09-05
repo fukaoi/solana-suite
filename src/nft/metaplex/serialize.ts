@@ -27,9 +27,8 @@ export namespace MetaplexSerialize {
     i += 4;
     const uriBuffer = struct.unpack(`<${'B'.repeat(uriLength)}`, data.slice(i, i + uriLength)) as number[];
     const uri = textDecoder.decode(Uint8Array.from(uriBuffer)).replace(REPLACE, '');
-    i + uriLength;
+    i += uriLength;
     const fee = struct.unpack('<h', data.slice(i, i + 2))[0];
-    i += 2;
     return {
       ownerPubKey,
       mintKey,
