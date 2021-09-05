@@ -17,7 +17,7 @@ describe('MetaplexMetaData', () => {
     dest = obj.dest;
   });
 
-  it.skip('Create metadata', async () => {
+  it('Create metadata', async () => {
     const args = {
       address: dest.pubkey,
       verified: true,
@@ -35,14 +35,19 @@ describe('MetaplexMetaData', () => {
 
     const txsign = await MetaplexMint.create(dest.pubkey, [dest.secret])();
     console.log("owner: ", dest.pubkey);
-    const tx = await MetaplexMetaData.create(metadata, txsign.mintKey, dest.pubkey)(txsign.instructions);
+    const tx = await MetaplexMetaData.create(
+      metadata, 
+      txsign.mintKey, 
+      dest.pubkey,
+      // '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
+    )(txsign.instructions);
     // todo: already signed. refactoring
     const res = await Transaction.sendInstructions(txsign.signers, tx);
     console.log(`# tx signature: ${res}`);
     // assert.isNotEmpty(res);
   });
 
-  it('Get metadata', async () => {
+  it.only('Get metadata', async () => {
     const metadata = new MetaplexObject.Data({
       name: 'kawamon',
       symbol: 'KWM',

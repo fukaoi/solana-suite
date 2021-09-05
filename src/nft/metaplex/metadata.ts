@@ -19,8 +19,9 @@ export namespace MetaplexMetaData {
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
   export const get = async (mintKey: string) => {
-    const accounts = await Transaction.getProgramAccounts(METADATA_PROGRAM_ID);
-    const matches = accounts.filter(account => account.pubkey == 'Ckud9zsj2wA95Xh84o6QaQEjxnvxPHoHqhBaWUsfTbZo');
+    const accounts = await Transaction.getProgramAccounts(Constants.METAPLEX_PROGRAM_ID);
+    // const matches = accounts.filter(account => account.pubkey == 'DjskgZtivfGEJfZXV5G6vb8RwJMBfv8AxQG2EVUFQKmC');
+    const matches = accounts.filter(account => account.pubkey == 'Ayatd9gxibNXpH1XGFUd6rh1qoH9e1ti1eR2uW4zymo6');
     const data = matches[0].account.data;
     console.log(data);
     // return decodeMetadata(data);
@@ -30,15 +31,22 @@ export namespace MetaplexMetaData {
     data: MetaplexObject.Data,
     mintKey: string,
     payer: string,
+    metadataAccount?: string,
     mintAuthorityKey = payer,
     updateAuthority = payer,
   ) => async (instructions?: TransactionInstruction[]) => {
-    const metadataAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey);
+    let metaAccount = metadataAccount;
+    if (!metadataAccount) {
+      metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey)).toBase58();
+    }
+  
+    console.log('# metaAccount', metaAccount);
+
     const value = new MetaplexObject.CreateMetadataArgs({data, isMutable: true});
     const txnData = Buffer.from(serialize(MetaplexObject.SCHEMA, value));
     const keys = [
       {
-        pubkey: new PublicKey(metadataAccount),
+        pubkey: new PublicKey(metaAccount!),
         isSigner: false,
         isWritable: true,
       },
@@ -78,7 +86,7 @@ export namespace MetaplexMetaData {
     inst.push(
       new TransactionInstruction({
         keys,
-        programId: new PublicKey(METADATA_PROGRAM_ID),
+        programId: METADATA_PROGRAM_ID,
         data: txnData,
       })
     );

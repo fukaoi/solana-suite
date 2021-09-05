@@ -19,9 +19,9 @@ export namespace Transaction {
     Util.getConnection().getTransaction(signature);
 
   export const getProgramAccounts = async (
-    programId: PublicKey,
+    programId: string,
     configOrCommitment?: any,
-  ): Promise<Array<any>> => {
+  ): Promise<any[]> => {
     const extra: any = {};
     let commitment;
 
@@ -42,17 +42,17 @@ export namespace Transaction {
 
     const connection = Util.getConnection();
 
-    const args = connection._buildArgs([programId.toBase58()], commitment, 'base64', extra);
+    const args = connection._buildArgs([programId], commitment, 'base64', extra);
     const unsafeRes = await (connection as any)._rpcRequest(
       'getProgramAccounts',
       args,
     );
 
     const data = (
-      unsafeRes.result as Array<{
+      unsafeRes.result as {
         account: AccountInfo<[string, string]>;
         pubkey: string;
-      }>
+      }[]
     ).map(item => {
       return {
         account: {
