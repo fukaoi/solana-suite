@@ -16,6 +16,9 @@ describe('MetaplexSerialize', () => {
     }
 
     const res = MetaplexSerialize.decode(base64Data);
+
+    console.log('# decode metadata: ', res);
+
     expect(res.name).to.equal(orgData.name);
     expect(res.symbol).to.equal(orgData.symbol);
     expect(res.uri).to.equal(orgData.uri);
