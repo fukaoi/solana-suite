@@ -1,7 +1,3 @@
-import {
-  PublicKey,
-} from '@solana/web3.js';
-
 export namespace MetaplexObject {
   export class Creator {
     address: string;

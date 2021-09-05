@@ -7,7 +7,7 @@ import {
   SYSVAR_RENT_PUBKEY,
 } from '@solana/web3.js';
 
-import {deserializeUnchecked, serialize} from 'borsh';
+import {serialize} from 'borsh';
 
 import {Wallet} from '../../wallet';
 import {Transaction} from '../../transaction';
@@ -24,7 +24,6 @@ export namespace MetaplexMetaData {
     const matches = accounts.filter(account => account.pubkey == 'Ayatd9gxibNXpH1XGFUd6rh1qoH9e1ti1eR2uW4zymo6');
     const data = matches[0].account.data;
     console.log(data);
-    // return decodeMetadata(data);
   }
 
   export const create = (
@@ -108,19 +107,4 @@ export namespace MetaplexMetaData {
     );
     return inst;
   }
-
-  const METADATA_REPLACE = new RegExp('\u0000', 'g');
-
-  const decodeMetadata = (buffer: Buffer) => {
-    const metadata = deserializeUnchecked(
-      MetaplexObject.SCHEMA,
-      MetaplexObject.Data,
-      buffer,
-    ) as MetaplexObject.Data;
-    console.log(metadata);
-    // metadata.data.name = metadata.data.name.replace(METADATA_REPLACE, '');
-    // metadata.data.uri = metadata.data.uri.replace(METADATA_REPLACE, '');
-    // metadata.data.symbol = metadata.data.symbol.replace(METADATA_REPLACE, '');
-    // return metadata;
-  };
 }
