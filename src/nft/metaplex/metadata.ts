@@ -39,7 +39,7 @@ export namespace MetaplexMetaData {
     if (!metadataAccount) {
       metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey)).toBase58();
     }
-  
+
     console.log('# metaAccount', metaAccount);
 
     const value = new MetaplexObject.CreateMetadataArgs({data, isMutable: true});

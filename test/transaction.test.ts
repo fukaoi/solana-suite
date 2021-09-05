@@ -21,8 +21,8 @@ describe('Transaction', () => {
     expect(res).to.equal('{"tokenId": "dummy", "serialNo": "15/100"}');
   });
 
-  it.only('Get all accounts by programId', async () => {
-    const accounts = await Transaction.getProgramAccounts(Constants.METAPLEX_PROGRAM_ID);
-    console.log(accounts);
+  it('Get all accounts by programId', async () => {
+    const res = await Transaction.getProgramAccounts(Constants.METAPLEX_PROGRAM_ID);
+    assert.isArray(res);
   });
 })
