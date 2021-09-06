@@ -13,6 +13,7 @@ describe('MetaplexSerialize', () => {
       name: 'kawamon',
       symbol: 'KWM',
       uri: 'https://fgbhkum5s7iwc7obvepnldfcevzldcpjgyd7sz5ypnt6khltb6oq.arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50/',
+      fee: 100
     }
 
     const res = MetaplexSerialize.decode(base64Data);
@@ -24,5 +25,6 @@ describe('MetaplexSerialize', () => {
     expect(res.uri).to.equal(orgData.uri);
     expect(res.mintKey).to.equal(orgData.mintKey);
     expect(res.ownerPubKey).to.equal(orgData.ownerPubKey);
+    expect(res.fee).to.equal(orgData.fee);
   });
 })

@@ -1,5 +1,5 @@
 import {describe, it} from 'mocha';
-import {expect} from 'chai'
+import {expect, assert} from 'chai'
 import setupKeyPair from '../../../test/utils/setupKeyPair';
 import {Wallet} from '../../../src/wallet';
 import {Transaction} from '../../../src/transaction';
@@ -47,7 +47,7 @@ describe('MetaplexMetaData', () => {
     // assert.isNotEmpty(res);
   });
 
-  it.only('Get metadata', async () => {
+  it('Get metadata by mintKey', async () => {
     const orgData = {
       ownerPubKey: '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
       mintKey: 'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf',
@@ -57,11 +57,21 @@ describe('MetaplexMetaData', () => {
       fee: 0
     };
 
-    const res = await MetaplexMetaData.getByMintKey('Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf');
+    const res = await MetaplexMetaData.getByMintKey(
+      'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'
+    );
     expect(res.name).to.equal(orgData.name);
     expect(res.symbol).to.equal(orgData.symbol);
     expect(res.uri).to.equal(orgData.uri);
     expect(res.mintKey).to.equal(orgData.mintKey);
     expect(res.ownerPubKey).to.equal(orgData.ownerPubKey);
+    expect(res.fee).to.equal(orgData.fee);
+  });
+  
+  it.only('Get metadata by ownerPubKey', async () => {
+    const res = await MetaplexMetaData.getByOwnerPubKey(
+      '81fariKMBVi2KvbfM9XBAgTmHJJXnyCzvqsrJ3xGx5WK'
+    );
+    assert.isNotEmpty(res);
   });
 })

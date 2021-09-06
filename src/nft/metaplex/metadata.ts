@@ -26,10 +26,22 @@ export namespace MetaplexMetaData {
     return mintKey === decodeData.mintKey
   }
 
+  const fetchMetaDataByOwnerPubKey = (ownerPubKey: string, encoded: AccountInfo<string>) => {
+    if (!encoded) return false;
+    const decodeData = MetaplexSerialize.decode(encoded.data);
+    return ownerPubKey === decodeData.ownerPubKey
+  }
+
   export const getByMintKey = async (mintKey: string) => {
     const accounts = await Transaction.getProgramAccounts(Constants.METAPLEX_PROGRAM_ID);
     const matches = accounts.filter(a => fetchMetaDataByMintKey(mintKey, a.account));
     return MetaplexSerialize.decode(matches[0].account.data);
+  }
+
+  export const getByOwnerPubKey = async (ownerPubKey: string) => {
+    const accounts = await Transaction.getProgramAccounts(Constants.METAPLEX_PROGRAM_ID);
+    const matches = accounts.filter(a => fetchMetaDataByOwnerPubKey(ownerPubKey, a.account));
+    return matches.map(match => MetaplexSerialize.decode(match.account.data));
   }
 
   export const create = (
