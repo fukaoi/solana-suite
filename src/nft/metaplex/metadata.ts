@@ -5,6 +5,7 @@ import {
   TransactionInstruction,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
+  AccountInfo,
 } from '@solana/web3.js';
 
 import {serialize} from 'borsh';
@@ -19,20 +20,16 @@ export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
-  const fetchMetaDataByMintKey = (mintKey: string, encoded: any) => {
+  const fetchMetaDataByMintKey = (mintKey: string, encoded: AccountInfo<string>) => {
     if (!encoded) return false;
-    console.log(encoded.accout?.data);
-    // const decodeData = MetaplexSerialize.decode(encoded.accout.data);
-    // return mintKey === decodeData.mintKey
-    return true;
+    const decodeData = MetaplexSerialize.decode(encoded.data);
+    return mintKey === decodeData.mintKey
   }
 
   export const getByMintKey = async (mintKey: string) => {
     const accounts = await Transaction.getProgramAccounts(Constants.METAPLEX_PROGRAM_ID);
-    const matches = accounts.filter(account => fetchMetaDataByMintKey(mintKey, account));
-    // console.log(matches);
-    // const data = matches[0].account.data;
-    // console.log(MetaplexSerialize.decode(data));
+    const matches = accounts.filter(a => fetchMetaDataByMintKey(mintKey, a.account));
+    return MetaplexSerialize.decode(matches[0].account.data);
   }
 
   export const create = (

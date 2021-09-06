@@ -1,5 +1,5 @@
 import {describe, it} from 'mocha';
-import {assert} from 'chai'
+import {expect} from 'chai'
 import setupKeyPair from '../../../test/utils/setupKeyPair';
 import {Wallet} from '../../../src/wallet';
 import {Transaction} from '../../../src/transaction';
@@ -36,8 +36,8 @@ describe('MetaplexMetaData', () => {
     const txsign = await MetaplexMint.create(dest.pubkey, [dest.secret])();
     console.log("owner: ", dest.pubkey);
     const tx = await MetaplexMetaData.create(
-      metadata, 
-      txsign.mintKey, 
+      metadata,
+      txsign.mintKey,
       dest.pubkey,
       // '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
     )(txsign.instructions);
@@ -48,16 +48,20 @@ describe('MetaplexMetaData', () => {
   });
 
   it.only('Get metadata', async () => {
-    const metadata = new MetaplexObject.Data({
-      name: 'kawamon',
-      symbol: 'KWM',
-      uri: 'https://example.com',
-      sellerFeeBasisPoints: 100,
-      creators: null
-    });
+    const orgData = {
+      ownerPubKey: '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
+      mintKey: 'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf',
+      name: 'Gropu1',
+      symbol: '',
+      uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',
+      fee: 0
+    };
 
     const res = await MetaplexMetaData.getByMintKey('Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf');
-    console.log(res);
-    assert.isNotEmpty(res);
+    expect(res.name).to.equal(orgData.name);
+    expect(res.symbol).to.equal(orgData.symbol);
+    expect(res.uri).to.equal(orgData.uri);
+    expect(res.mintKey).to.equal(orgData.mintKey);
+    expect(res.ownerPubKey).to.equal(orgData.ownerPubKey);
   });
 })

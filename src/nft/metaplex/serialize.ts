@@ -6,16 +6,47 @@ export namespace MetaplexSerialize {
   const REPLACE = new RegExp('\u0000', 'g');
 
   export const decode = (base64Data: string) => {
-    console.error(base64Data);
+    if (base64Data[0] !== 'B') {
+      return {
+        ownerPubKey: '',
+        mintKey: '',
+        name: '',
+        symbol: '',
+        uri: '',
+        fee: 0
+      };
+    }
+
     const data = Buffer.from(base64Data, 'base64');
     const textDecoder = new TextDecoder();
     let i = 1;
     const ownerPubKey = bs.encode(struct.unpack(`<${'B'.repeat(32)}`, data.slice(i, i + 32)) as number[]);
     i += 32;
     const mintKey = bs.encode(struct.unpack(`<${'B'.repeat(32)}`, data.slice(i, i + 32)) as number[]);
+    if (mintKey === '11111111111111111111111111111111') {
+      return {
+        ownerPubKey: '',
+        mintKey: '',
+        name: '',
+        symbol: '',
+        uri: '',
+        fee: 0
+      };
+    }
+
     i += 32;
     const nameLength = struct.unpack('<I', data.slice(i, i + 4))[0] as number;
     i += 4;
+    if (nameLength !== 32) {
+      return {
+        ownerPubKey: '',
+        mintKey: '',
+        name: '',
+        symbol: '',
+        uri: '',
+        fee: 0
+      };
+    }
     const nameBuffer = struct.unpack(`<${'B'.repeat(nameLength)}`, data.slice(i, i + nameLength)) as number[];
     const name = textDecoder.decode(Uint8Array.from(nameBuffer)).replace(REPLACE, '');
     i += nameLength
