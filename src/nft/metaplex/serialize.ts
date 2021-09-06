@@ -1,21 +1,14 @@
 import bs from 'bs58';
 import struct from 'python-struct';
 import {TextDecoder} from 'util';
+import {Constants} from '../../constants';
 
 export namespace MetaplexSerialize {
   const REPLACE = new RegExp('\u0000', 'g');
 
   export const decode = (base64Data: string) => {
-    if (base64Data[0] !== 'B') {
-      return {
-        ownerPubKey: '',
-        mintKey: '',
-        name: '',
-        symbol: '',
-        uri: '',
-        fee: 0
-      };
-    }
+
+    if (base64Data[0] !== 'B') return {};
 
     const data = Buffer.from(base64Data, 'base64');
     const textDecoder = new TextDecoder();
@@ -23,30 +16,14 @@ export namespace MetaplexSerialize {
     const ownerPubKey = bs.encode(struct.unpack(`<${'B'.repeat(32)}`, data.slice(i, i + 32)) as number[]);
     i += 32;
     const mintKey = bs.encode(struct.unpack(`<${'B'.repeat(32)}`, data.slice(i, i + 32)) as number[]);
-    if (mintKey === '11111111111111111111111111111111') {
-      return {
-        ownerPubKey: '',
-        mintKey: '',
-        name: '',
-        symbol: '',
-        uri: '',
-        fee: 0
-      };
-    }
+    if (mintKey === Constants.SYSTEM_PROGRAM_ID) return {};
 
     i += 32;
     const nameLength = struct.unpack('<I', data.slice(i, i + 4))[0] as number;
     i += 4;
-    if (nameLength !== 32) {
-      return {
-        ownerPubKey: '',
-        mintKey: '',
-        name: '',
-        symbol: '',
-        uri: '',
-        fee: 0
-      };
-    }
+
+    if (nameLength !== 32) return {};
+
     const nameBuffer = struct.unpack(`<${'B'.repeat(nameLength)}`, data.slice(i, i + nameLength)) as number[];
     const name = textDecoder.decode(Uint8Array.from(nameBuffer)).replace(REPLACE, '');
     i += nameLength

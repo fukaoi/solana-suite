@@ -21,6 +21,7 @@ export namespace ConstantsFunc {
 
 export namespace Constants {
   export const API_URL = ConstantsFunc.switchEnvParam(process.env.NODE_ENV).url;
+  export const SYSTEM_PROGRAM_ID = '11111111111111111111111111111111';
   export const SPL_TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
   export const SPL_ASSOCIATED_TOKEN_PROGRAM_ID = 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL';
   export const MEMO_PROGRAM_ID = 'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo';
