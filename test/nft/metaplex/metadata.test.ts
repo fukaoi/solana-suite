@@ -56,7 +56,7 @@ describe('MetaplexMetaData', () => {
       creators: null
     });
 
-    const res = await MetaplexMetaData.get('');
+    const res = await MetaplexMetaData.getByMintKey('Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf');
     console.log(res);
     assert.isNotEmpty(res);
   });

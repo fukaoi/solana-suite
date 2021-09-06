@@ -6,6 +6,7 @@ export namespace MetaplexSerialize {
   const REPLACE = new RegExp('\u0000', 'g');
 
   export const decode = (base64Data: string) => {
+    console.error(base64Data);
     const data = Buffer.from(base64Data, 'base64');
     const textDecoder = new TextDecoder();
     let i = 1;

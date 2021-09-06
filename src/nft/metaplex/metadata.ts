@@ -13,17 +13,26 @@ import {Wallet} from '../../wallet';
 import {Transaction} from '../../transaction';
 import {Constants} from '../../constants';
 import {MetaplexObject} from './object';
+import {MetaplexSerialize} from './serialize';
 
 export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
-  export const get = async (mintKey: string) => {
+  const fetchMetaDataByMintKey = (mintKey: string, encoded: any) => {
+    if (!encoded) return false;
+    console.log(encoded.accout?.data);
+    // const decodeData = MetaplexSerialize.decode(encoded.accout.data);
+    // return mintKey === decodeData.mintKey
+    return true;
+  }
+
+  export const getByMintKey = async (mintKey: string) => {
     const accounts = await Transaction.getProgramAccounts(Constants.METAPLEX_PROGRAM_ID);
-    // const matches = accounts.filter(account => account.pubkey == 'DjskgZtivfGEJfZXV5G6vb8RwJMBfv8AxQG2EVUFQKmC');
-    const matches = accounts.filter(account => account.pubkey == 'Ayatd9gxibNXpH1XGFUd6rh1qoH9e1ti1eR2uW4zymo6');
-    const data = matches[0].account.data;
-    console.log(data);
+    const matches = accounts.filter(account => fetchMetaDataByMintKey(mintKey, account));
+    // console.log(matches);
+    // const data = matches[0].account.data;
+    // console.log(MetaplexSerialize.decode(data));
   }
 
   export const create = (
