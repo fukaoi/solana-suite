@@ -6,19 +6,23 @@ import {Transaction} from '../../../src/transaction';
 import {MetaplexMetaData} from '../../../src/nft/metaplex/metadata';
 import {MetaplexObject} from '../../../src/nft/metaplex/object';
 import {MetaplexMint} from '../../../src/nft/metaplex/mint';
+import {StorageNftStorage} from '../../../src/nft/storage/nft-storage';
 
 let owner: Wallet.Keypair;
 
 describe('MetaplexMetaData', () => {
-  before(async () => {const obj = await setupKeyPair(); owner = obj.dest;}); it('Create metadata', async () => {
+  before(
+    async () => {
+      const obj = await setupKeyPair();
+      owner = obj.dest;
+    });
+
+  it('Create metadata', async () => {
     const metadata = new MetaplexObject.Data({
-      name: 'Cat', 
-      symbol: 'CAT', 
-      uri: 'https://ipfs.io/ipfs/bafkreidhum26mmvdkkzjecvmtjy2m7pg6ywuril365b4t5qqp6jkrlse54',
-      // uri: 'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50',
-      // uri: 'https://arweave.net/1eH7bZS-6HZH4YOc8T_tGp2Rq25dlhclXJkoa6U55mM',
+      name: 'Cat',
+      symbol: 'CAT',
+      uri: 'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50',
       sellerFeeBasisPoints: 100,
-      // creators: [new MetaplexObject.Creator(args)]
       creators: null
     });
 
@@ -29,6 +33,33 @@ describe('MetaplexMetaData', () => {
       owner.pubkey,
     )(txsign.instructions);
     // todo: already signed. refactoring
+    const res = await Transaction.sendInstructions(txsign.signers, tx);
+    console.log(`# tx signature: ${res}`);
+    assert.isNotEmpty(res);
+  });
+
+  it.only('Create metadata on nft storage', async () => {
+    const name = 'Cat';
+
+    const url = await StorageNftStorage.upload(
+      name,
+      'Cute cat is like',
+      'test/nft/storage/cat.jpeg'
+    );
+    const metadata = new MetaplexObject.Data({
+      name,
+      symbol: 'CAT',
+      uri: url,
+      sellerFeeBasisPoints: 100,
+      creators: null
+    });
+
+    const txsign = await MetaplexMint.create(owner.pubkey, [owner.secret])();
+    const tx = await MetaplexMetaData.create(
+      metadata,
+      txsign.mintKey,
+      owner.pubkey,
+    )(txsign.instructions);
     const res = await Transaction.sendInstructions(txsign.signers, tx);
     console.log(`# tx signature: ${res}`);
     assert.isNotEmpty(res);
