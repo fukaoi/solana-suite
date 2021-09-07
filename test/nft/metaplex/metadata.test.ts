@@ -7,44 +7,31 @@ import {MetaplexMetaData} from '../../../src/nft/metaplex/metadata';
 import {MetaplexObject} from '../../../src/nft/metaplex/object';
 import {MetaplexMint} from '../../../src/nft/metaplex/mint';
 
-let source: Wallet.Keypair;
-let dest: Wallet.Keypair;
+let owner: Wallet.Keypair;
 
 describe('MetaplexMetaData', () => {
-  before(async () => {
-    const obj = await setupKeyPair();
-    source = obj.source;
-    dest = obj.dest;
-  });
-
-  it('Create metadata', async () => {
-    const args = {
-      address: dest.pubkey,
-      verified: true,
-      share: 100
-    };
+  before(async () => {const obj = await setupKeyPair(); owner = obj.dest;}); it('Create metadata', async () => {
     const metadata = new MetaplexObject.Data({
-      name: 'kawamon2',
-      symbol: 'KWM',
-      uri: 'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50',
+      name: 'Cat', 
+      symbol: 'CAT', 
+      uri: 'https://ipfs.io/ipfs/bafkreidhum26mmvdkkzjecvmtjy2m7pg6ywuril365b4t5qqp6jkrlse54',
+      // uri: 'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50',
       // uri: 'https://arweave.net/1eH7bZS-6HZH4YOc8T_tGp2Rq25dlhclXJkoa6U55mM',
       sellerFeeBasisPoints: 100,
       // creators: [new MetaplexObject.Creator(args)]
       creators: null
     });
 
-    const txsign = await MetaplexMint.create(dest.pubkey, [dest.secret])();
-    console.log("owner: ", dest.pubkey);
+    const txsign = await MetaplexMint.create(owner.pubkey, [owner.secret])();
     const tx = await MetaplexMetaData.create(
       metadata,
       txsign.mintKey,
-      dest.pubkey,
-      // '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
+      owner.pubkey,
     )(txsign.instructions);
     // todo: already signed. refactoring
     const res = await Transaction.sendInstructions(txsign.signers, tx);
     console.log(`# tx signature: ${res}`);
-    // assert.isNotEmpty(res);
+    assert.isNotEmpty(res);
   });
 
   it('Get metadata by mintKey', async () => {
@@ -67,8 +54,8 @@ describe('MetaplexMetaData', () => {
     expect(res.ownerPubKey).to.equal(orgData.ownerPubKey);
     expect(res.fee).to.equal(orgData.fee);
   });
-  
-  it.only('Get metadata by ownerPubKey', async () => {
+
+  it('Get metadata by ownerPubKey', async () => {
     const res = await MetaplexMetaData.getByOwnerPubKey(
       '81fariKMBVi2KvbfM9XBAgTmHJJXnyCzvqsrJ3xGx5WK'
     );
