@@ -38,7 +38,7 @@ describe('MetaplexMetaData', () => {
     assert.isNotEmpty(res);
   });
 
-  it.only('Create metadata on nft storage', async () => {
+  it('Create metadata on nft storage', async () => {
     const name = 'Cat';
 
     const url = await StorageNftStorage.upload(

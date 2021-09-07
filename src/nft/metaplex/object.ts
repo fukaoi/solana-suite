@@ -33,7 +33,6 @@ export namespace MetaplexObject {
       this.uri = args.uri;
       this.sellerFeeBasisPoints = args.sellerFeeBasisPoints;
       this.creators = args.creators;
-      console.log(this.creators);
     }
   }
 

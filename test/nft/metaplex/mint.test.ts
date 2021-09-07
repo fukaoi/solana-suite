@@ -1,5 +1,4 @@
 import {describe, it} from 'mocha';
-import {Memo} from '../../../src/memo';
 import {assert} from 'chai'
 import setupKeyPair from '../../../test/utils/setupKeyPair';
 import {Wallet} from '../../../src/wallet';
