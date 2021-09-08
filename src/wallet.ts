@@ -40,6 +40,7 @@ export namespace Wallet {
     const keypair = K.generate();
     if (process.env.NODE_ENV !== 'production') {
       await Util.getConnection().requestAirdrop(keypair.publicKey, DEFAULT_AIRDROP_AMOUNT);
+      console.log('Now airdropping...please wait');
       await Util.sleep(20);
     }
     return {
