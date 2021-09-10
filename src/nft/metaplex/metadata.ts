@@ -1,4 +1,4 @@
-import {Token} from '@solana/spl-token';
+import {ASSOCIATED_TOKEN_PROGRAM_ID, Token} from '@solana/spl-token';
 
 import {
   PublicKey,
@@ -6,6 +6,8 @@ import {
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
   AccountInfo,
+  Transaction as T,
+  Keypair,
 } from '@solana/web3.js';
 
 import {serialize} from 'borsh';
@@ -15,9 +17,12 @@ import {Transaction} from '../../transaction';
 import {Constants} from '../../constants';
 import {MetaplexObject} from './object';
 import {MetaplexSerialize} from './serialize';
+import {publicDecrypt} from 'crypto';
+import {Util} from '../../util';
 
 export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
+  const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
   const fetchMetaDataByMintKey = (mintKey: string, encoded: AccountInfo<string>) => {
@@ -45,18 +50,15 @@ export namespace MetaplexMetaData {
     return matches.map(match => MetaplexSerialize.decode(match.account.data));
   }
 
-  export const create = (
+  export const create = async (
     data: MetaplexObject.Data,
     mintKey: string,
     payer: string,
-    metadataAccount?: string,
+    instructions: TransactionInstruction[],
     mintAuthorityKey = payer,
     updateAuthority = payer,
-  ) => async (instructions?: TransactionInstruction[]) => {
-    let metaAccount = metadataAccount;
-    if (!metadataAccount) {
-      metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey)).toBase58();
-    }
+  ) => {
+    const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey)).toBase58();
 
     console.log('# metaAccount', metaAccount);
 
@@ -64,7 +66,7 @@ export namespace MetaplexMetaData {
     const txnData = Buffer.from(serialize(MetaplexObject.SCHEMA, value));
     const keys = [
       {
-        pubkey: new PublicKey(metaAccount!),
+        pubkey: new PublicKey(metaAccount),
         isSigner: false,
         isWritable: true,
       },
@@ -99,31 +101,91 @@ export namespace MetaplexMetaData {
         isWritable: false,
       },
     ];
-    let inst: TransactionInstruction[] = [];
-    inst = instructions ? instructions : inst;
-    inst.push(
+    instructions.push(
       new TransactionInstruction({
         keys,
         programId: METADATA_PROGRAM_ID,
         data: txnData,
       })
     );
+    return instructions;
+  }
 
-    const recipientKey = await Wallet.findAssocaiatedTokenAddress(
-      payer,
-      mintKey
+  export const update = async (
+    data: MetaplexObject.Data | undefined,
+    newUpdateAuthority: string | undefined,
+    primarySaleHappened: boolean | null | undefined,
+    mintKey: string,
+    updateAuthority: string,
+    recipientKey: string,
+    sourceSecret: string,
+  ) => {
+    const instructions: TransactionInstruction[] = [];
+
+    const associatedTokenAccount = await Wallet.findAssocaiatedTokenAddress(updateAuthority, mintKey);
+    console.log('# associatedTokenAccount: ', associatedTokenAccount.toBase58());
+
+    const associatedTokenAccountInfo = await Util.getConnection().getAccountInfo(associatedTokenAccount);
+    console.log('# associatedTokenAccountInfo: ', associatedTokenAccountInfo);
+    if (!associatedTokenAccountInfo) {
+
+    }
+
+
+    instructions.push(
+      Wallet.createAssociatedTokenAccountInstruction(
+        associatedTokenAccount.toBase58(),
+        updateAuthority,
+        updateAuthority,
+        mintKey
+      )
     );
 
-    inst.push(
+    instructions.push(
       Token.createMintToInstruction(
         TOKEN_PROGRAM_ID,
         new PublicKey(mintKey),
-        new PublicKey(recipientKey),
-        new PublicKey(payer),
-        [],
+        associatedTokenAccount,
+        new PublicKey(updateAuthority),
+        [Util.createKeypair(sourceSecret)],
         1,
       ),
     );
-    return inst;
+
+    const metadata = await Util.getConnection().getAccountInfo(new PublicKey(mintKey));
+    console.log(metadata);
+
+    const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey)).toBase58();
+
+    const value = new MetaplexObject.UpdateMetadataArgs({
+      data,
+      updateAuthority: !newUpdateAuthority ? undefined : newUpdateAuthority,
+      primarySaleHappened:
+        primarySaleHappened === null || primarySaleHappened === undefined
+          ? null
+          : primarySaleHappened,
+    });
+    const txnData = Buffer.from(serialize(MetaplexObject.SCHEMA, value));
+    console.log(value);
+    const keys = [
+      {
+        pubkey: new PublicKey(metaAccount),
+        isSigner: false,
+        isWritable: true,
+      },
+      {
+        pubkey: new PublicKey(updateAuthority),
+        isSigner: true,
+        isWritable: false,
+      },
+    ];
+    instructions.push(
+      new TransactionInstruction({
+        keys,
+        programId: new PublicKey(METADATA_PROGRAM_ID),
+        data: txnData,
+      }),
+    );
+    return instructions;
   }
 }

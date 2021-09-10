@@ -47,17 +47,34 @@ export namespace MetaplexObject {
     }
   }
 
-  // export enum MetadataKey {
-    // Uninitialized = 0,
-    // MetadataV1 = 4,
-    // EditionV1 = 1,
-    // MasterEditionV1 = 2,
-    // MasterEditionV2 = 6,
-    // EditionMarker = 7,
-  // }
+  export class UpdateMetadataArgs {
+    instruction: number = 1;
+    data: Data | null;
+    // Not used by this app, just required for instruction
+    updateAuthority: string | null;
+    primarySaleHappened: boolean | null;
+    constructor(args: {
+      data?: Data;
+      updateAuthority?: string;
+      primarySaleHappened: boolean | null;
+    }) {
+      this.data = args.data ? args.data : null;
+      this.updateAuthority = args.updateAuthority ? args.updateAuthority : null;
+      this.primarySaleHappened = args.primarySaleHappened;
+    }
+  }
+
+  export enum MetadataKey {
+    Uninitialized = 0,
+    MetadataV1 = 4,
+    EditionV1 = 1,
+    MasterEditionV1 = 2,
+    MasterEditionV2 = 6,
+    EditionMarker = 7,
+  }
 
   export class Metadata {
-    // key: MetadataKey;
+    key: MetadataKey;
     updateAuthority: string;
     mint: string;
     data: Data;
@@ -76,7 +93,7 @@ export namespace MetaplexObject {
       isMutable: boolean;
       editionNonce: number | null;
     }) {
-      // this.key = MetadataKey.MetadataV1;
+      this.key = MetadataKey.MetadataV1;
       this.updateAuthority = args.updateAuthority;
       this.mint = args.mint;
       this.data = args.data;
@@ -86,9 +103,9 @@ export namespace MetaplexObject {
     }
 
     // public async init() {
-    // const edition = await getEdition(this.mint);
-    // this.edition = edition;
-    // this.masterEdition = edition;
+      // const edition = await getEdition(this.mint);
+      // this.edition = edition;
+      // this.masterEdition = edition;
     // }
   }
 
@@ -101,6 +118,18 @@ export namespace MetaplexObject {
           ['instruction', 'u8'],
           ['data', Data],
           ['isMutable', 'u8'], // bool
+        ],
+      },
+    ],
+    [
+      UpdateMetadataArgs,
+      {
+        kind: 'struct',
+        fields: [
+          ['instruction', 'u8'],
+          ['data', {kind: 'option', type: Data}],
+          ['updateAuthority', {kind: 'option', type: 'string'}],
+          ['primarySaleHappened', {kind: 'option', type: 'u8'}],
         ],
       },
     ],
