@@ -30,10 +30,10 @@ export namespace Util {
   export const dateFormat = (): string => {
     const t = new Date();
     return t.getFullYear() + '-' +
-      ("0" + (t.getMonth() + 1)).slice(-2) + '-' +
-      ("0" + (t.getDate())).slice(-2) + '/' +
-      ("0" + t.getHours()).slice(-2) + ':' +
-      ("0" + t.getMinutes()).slice(-2) + ':' +
-      ("0" + t.getSeconds()).slice(-2);
+      ('0' + (t.getMonth() + 1)).slice(-2) + '-' +
+      ('0' + (t.getDate())).slice(-2) + '/' +
+      ('0' + t.getHours()).slice(-2) + ':' +
+      ('0' + t.getMinutes()).slice(-2) + ':' +
+      ('0' + t.getSeconds()).slice(-2);
   }
 }
