@@ -4,11 +4,12 @@ import {Metaplex} from '../../../src/nft/metaplex/index';
 import setupKeyPair from '../../../test/utils/setupKeyPair';
 import {Wallet} from '../../../src/wallet';
 import {MetaplexObject} from '../../../src/nft/metaplex/object';
+import {Util} from '../../../src/util';
 
 let source: Wallet.Keypair;
 let dest: Wallet.Keypair;
 
-const tokenKey = 'J6gikJi9rWxqLyEME1S1J2WfFk9x6gMAvz7QPHMhra6e';
+let mintKey = '';
 
 describe('Metaplex', () => {
   before(async () => {
@@ -20,14 +21,14 @@ describe('Metaplex', () => {
   after(async () => {
     // refund nft
     await Metaplex.transfer(
-      tokenKey,
+      mintKey,
       dest.secret,
       source.pubkey
     );
     console.log('# refund finished');
   });
 
-  it('Deploy metaplex nft', async () => {
+  it('Mint nft', async () => {
     const data = new MetaplexObject.Data({
       name: 'Sample',
       symbol: 'SAMPLE',
@@ -36,14 +37,19 @@ describe('Metaplex', () => {
       creators: null
     });
 
-    const tx = await Metaplex.mint(data, source);
-    console.log(`# tx signature: ${tx}`);
-    assert.isNotEmpty(tx);
+    const res = await Metaplex.mint(data, source);
+    mintKey = res.mintKey;
+    console.log(`# mintKey: ${mintKey}`);
+    console.log(`# tx signature: ${res.tx}`);
+    // untile completed in blockchain
+    await Util.getConnection().confirmTransaction(res.tx, 'max');
+    assert.isNotEmpty(res);
   });
 
   it('transfer nft', async () => {
+    if (!mintKey) assert.fail('No mintKey. First of all must execute `Mint nft`')
     const res = await Metaplex.transfer(
-      tokenKey,
+      mintKey,
       source.secret,
       dest.pubkey
     );

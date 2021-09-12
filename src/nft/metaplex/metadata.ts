@@ -39,7 +39,7 @@ export namespace MetaplexMetaData {
   }
 
   // this function is very slowly from returned response. because alglism is liner search
-  export const getByOwnerPubKey = async (ownerPubKey: string) => {
+  export const getByCreatedPubKey = async (ownerPubKey: string) => {
     const accounts = await Transaction.getProgramAccounts(Constants.METAPLEX_PROGRAM_ID);
     const matches = accounts.filter(a => fetchMetaDataByOwnerPubKey(ownerPubKey, a.account));
     return matches.map(match => MetaplexSerialize.decode(match.account.data));

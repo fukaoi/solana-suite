@@ -1,40 +1,15 @@
 import {describe, it} from 'mocha';
 import {expect, assert} from 'chai'
-import setupKeyPair from '../../../test/utils/setupKeyPair';
-import {Wallet} from '../../../src/wallet';
-import {Transaction} from '../../../src/transaction';
 import {MetaplexMetaData} from '../../../src/nft/metaplex/metadata';
-import {MetaplexObject} from '../../../src/nft/metaplex/object';
-import {MetaplexDeploy} from '../../../src/nft/metaplex/deploy';
-
-let owner: Wallet.Keypair;
 
 describe('MetaplexMetaData', () => {
-  before(
-    async () => {
-      const obj = await setupKeyPair();
-      owner = obj.dest;
-    });
 
-  it.only('Create metadata', async () => {
-    const metadata = new MetaplexObject.Data({
-      name: 'Cat',
-      symbol: 'CAT',
-      uri: 'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50',
-      sellerFeeBasisPoints: 100,
-      creators: null
-    });
+  it.skip('Create metadata', async () => {
+    //@see metaplex/index.test.ts
+  });
 
-    const txsign = await MetaplexDeploy.create(owner.pubkey, [owner.secret])();
-    const tx = await MetaplexMetaData.create(
-      metadata,
-      txsign.mintKey,
-      owner.pubkey,
-    )(txsign.instructions);
-    // todo: already signed. refactoring
-    const res = await Transaction.sendInstructions(txsign.signers, tx);
-    console.log(`# tx signature: ${res}`);
-    assert.isNotEmpty(res);
+  it.skip('Update metadata', async () => {
+    //@see metaplex/index.test.ts
   });
 
   it('Get metadata by mintKey', async () => {
@@ -58,10 +33,12 @@ describe('MetaplexMetaData', () => {
     expect(res.fee).to.equal(orgData.fee);
   });
 
-  it('Get metadata by ownerPubKey', async () => {
-    const res = await MetaplexMetaData.getByOwnerPubKey(
+  it('Get metadata by created pubkey', async () => {
+    const res = await MetaplexMetaData.getByCreatedPubKey(
       '81fariKMBVi2KvbfM9XBAgTmHJJXnyCzvqsrJ3xGx5WK'
     );
+
+    console.log('# dump metadata: ', res);
     assert.isNotEmpty(res);
   });
 })

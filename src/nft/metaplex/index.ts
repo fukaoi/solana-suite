@@ -29,7 +29,7 @@ export namespace Metaplex {
   export const mint = async (
     data: MetaplexObject.Data,
     owner: {pubkey: string, secret: string},
-  ): Promise<TransactionSignature> => {
+  ): Promise<{mintKey: string, tx: string}> => {
     const txsign = await MetaplexNft.mint(owner.pubkey, [owner.secret])();
 
     console.log('# mintKey: ', txsign.mintKey);
@@ -55,6 +55,6 @@ export namespace Metaplex {
       updateTx
     );
 
-    return tx;
+    return {mintKey: txsign.mintKey, tx};
   }
 }
