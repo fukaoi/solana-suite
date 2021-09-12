@@ -15,7 +15,7 @@ export namespace SplNft {
     tokenId: string,
   }
 
-  export const createNft = (
+  export const create = (
     sourceSecret: string,
     authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
   ): Promise<CreateResponse> => {
@@ -27,7 +27,7 @@ export namespace SplNft {
     );
   }
 
-  export const transferNft = async (
+  export const transfer = async (
     tokenId: string,
     sourceSecret: string,
     destPubkey: string,

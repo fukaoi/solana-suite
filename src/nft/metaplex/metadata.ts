@@ -17,12 +17,10 @@ import {Transaction} from '../../transaction';
 import {Constants} from '../../constants';
 import {MetaplexObject} from './object';
 import {MetaplexSerialize} from './serialize';
-import {publicDecrypt} from 'crypto';
 import {Util} from '../../util';
 
 export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
-  const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
   const fetchMetaDataByMintKey = (mintKey: string, encoded: AccountInfo<string>) => {

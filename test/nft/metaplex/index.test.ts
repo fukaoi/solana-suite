@@ -1,12 +1,11 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Metaplex} from '../../../src/nft/metaplex/index';
+import {Metaplex} from '../../../src/nft/metaplex';
 import setupKeyPair from '../../../test/utils/setupKeyPair';
 import {Wallet} from '../../../src/wallet';
 
 let source: Wallet.Keypair;
 let dest: Wallet.Keypair;
-// const tokenKey = '2oNxuvU24GUu37Y2Q1yLdGVTpZ7n3HkKWdKZVMskXrC8';
 const tokenKey = 'J6gikJi9rWxqLyEME1S1J2WfFk9x6gMAvz7QPHMhra6e';
 describe('Metaplex', () => {
   before(async () => {
