@@ -20,19 +20,18 @@ describe('MetaplexDeploy', () => {
     const data = new MetaplexObject.Data({
       name: 'Cat',
       symbol: 'CAT',
-      uri: 'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50',
+      uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',
       sellerFeeBasisPoints: 100,
       creators: null
     });
     const txsign = await MetaplexDeploy.create(data, source.pubkey, [source.secret])();
     console.log('# mintKey: ', txsign.mintKey);
-    const res = await Transaction.sendInstructions(txsign.signers, txsign.instructions);
-    console.log(`# tx signature: ${res}`);
-    assert.isNotEmpty(res);
+    // const res = await Transaction.sendInstructions(txsign.signers, txsign.instructions);
+    // console.log(`# tx signature: ${res}`);
+    // assert.isNotEmpty(res);
 
-    await Util.getConnection().confirmTransaction(res, 'max');
+    // await Util.getConnection().confirmTransaction(res, 'max');
 
-    // const updateAuthority = await Wallet.create();
     const updateTx = await MetaplexMetaData.update(
       data,
       undefined,
@@ -41,12 +40,13 @@ describe('MetaplexDeploy', () => {
       source.pubkey,
       source.pubkey,
       source.secret,
-    );
+    )(txsign.instructions);
     const updateRes = await Transaction.sendInstructions(
-      [Util.createKeypair(source.secret)],
+      // [Util.createKeypair(source.secret)],
+      txsign.signers,
       updateTx
     );
-    console.log(updateRes);
-
+    console.log(`# tx signature: ${updateRes}`);
+    assert.isNotEmpty(updateRes);
   });
 })

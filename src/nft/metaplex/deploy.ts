@@ -78,7 +78,7 @@ export namespace MetaplexDeploy {
       payer,
     );
 
-    const insts = await MetaplexMetaData.create(data, mintKey, payer, inst);
+    const insts = await MetaplexMetaData.create(data, mintKey, payer)(inst);
 
     return {instructions: insts, signers, mintKey};
   }
