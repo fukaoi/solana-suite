@@ -1,12 +1,13 @@
 import {describe, it} from 'mocha';
-import {expect} from 'chai'
+import {assert} from 'chai'
 import {Metaplex} from '../../../src/nft/metaplex/index';
 import setupKeyPair from '../../../test/utils/setupKeyPair';
 import {Wallet} from '../../../src/wallet';
 
 let source: Wallet.Keypair;
 let dest: Wallet.Keypair;
-
+// const tokenKey = '2oNxuvU24GUu37Y2Q1yLdGVTpZ7n3HkKWdKZVMskXrC8';
+const tokenKey = 'J6gikJi9rWxqLyEME1S1J2WfFk9x6gMAvz7QPHMhra6e';
 describe('Metaplex', () => {
   before(async () => {
     const obj = await setupKeyPair();
@@ -14,14 +15,23 @@ describe('Metaplex', () => {
     dest = obj.dest;
   });
 
-  it('transfer nft', async() => {
-    // const tokenKey = 'FH9UGNWGQMVhSpprQ9fcP4U8onMuJYhzbunj9DNBFZDu';
-    const tokenKey = '2oNxuvU24GUu37Y2Q1yLdGVTpZ7n3HkKWdKZVMskXrC8';
+  after(async () => {
+    // refund nft
+    await Metaplex.transfer(
+      tokenKey,
+      dest.secret,
+      source.pubkey
+    );
+    console.log('# refund finished');
+  });
+
+  it('transfer nft', async () => {
     const res = await Metaplex.transfer(
       tokenKey,
       source.secret,
       dest.pubkey
     );
-    console.log(res);
+    console.log('# transfer tx:', res);
+    assert.isNotEmpty(res);
   });
 })
