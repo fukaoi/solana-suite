@@ -6,8 +6,6 @@ import {
 } from '@solana/web3.js';
 import {Constants} from '../../constants';
 import {Util} from '../../util';
-import {MetaplexObject} from './object';
-import {MetaplexMetaData} from './metadata';
 
 export namespace MetaplexNft {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
