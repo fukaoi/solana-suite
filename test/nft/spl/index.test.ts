@@ -4,7 +4,7 @@ import {assert} from 'chai'
 import setupKeyPair from '../../../test/utils/setupKeyPair';
 import fs from 'fs';
 import {Wallet} from '../../../src/wallet';
-import {SplNft} from '../../../src/nft/spl/spl-nft';
+import {SplNft} from '../../../src/nft/spl';
 
 let source: Wallet.Keypair;
 let dest: Wallet.Keypair;
@@ -40,7 +40,7 @@ describe('NftSpl', () => {
       console.log(`# skip because loaded`);
       return;
     }
-    const res = await SplNft.createNft(source.secret);
+    const res = await SplNft.create(source.secret);
     console.log(`# nft: ${res.tokenId}`);
     nft = res.tokenId;
     assert.isObject(res);
@@ -48,10 +48,10 @@ describe('NftSpl', () => {
   });
 
   it('Transfer nft, source and destination inter send', async () => {
-    const srcRes = await SplNft.transferNft(nft, source.secret, destPubkey);
+    const srcRes = await SplNft.transfer(nft, source.secret, destPubkey);
     console.log(`# tx signature: ${srcRes}`);
     assert.isNotEmpty(srcRes);
-    const destRes = await SplNft.transferNft(nft, dest.secret, source.pubkey);
+    const destRes = await SplNft.transfer(nft, dest.secret, source.pubkey);
     console.log(`# tx signature: ${destRes}`);
     assert.isNotEmpty(destRes);
   });

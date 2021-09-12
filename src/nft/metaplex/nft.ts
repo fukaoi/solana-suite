@@ -9,7 +9,7 @@ import {Util} from '../../util';
 import {MetaplexObject} from './object';
 import {MetaplexMetaData} from './metadata';
 
-export namespace MetaplexDeploy {
+export namespace MetaplexNft {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
 
   const createMintAccount = async (
@@ -56,8 +56,7 @@ export namespace MetaplexDeploy {
     return mintAccount.toBase58();
   }
 
-  export const create = (
-    data: MetaplexObject.Data,
+  export const mint = (
     payer: string,
     signerSecrets: string[],
   ) => async (instructions?: TransactionInstruction[]) => {
@@ -78,8 +77,6 @@ export namespace MetaplexDeploy {
       payer,
     );
 
-    const insts = await MetaplexMetaData.create(data, mintKey, payer)(inst);
-
-    return {instructions: insts, signers, mintKey};
+    return {instructions: inst, signers, mintKey};
   }
 }
