@@ -19,6 +19,7 @@ describe('Metaplex', () => {
   });
 
   after(async () => {
+    if (!mintKey) return;
     // refund nft
     await Metaplex.transfer(
       mintKey,
@@ -46,7 +47,7 @@ describe('Metaplex', () => {
     assert.isNotEmpty(res);
   });
 
-  it('transfer nft', async () => {
+  it.only('transfer nft', async () => {
     if (!mintKey) assert.fail('No mintKey. First of all must execute `Mint nft`')
     const res = await Metaplex.transfer(
       mintKey,
