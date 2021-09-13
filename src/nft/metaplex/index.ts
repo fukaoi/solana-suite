@@ -88,7 +88,7 @@ export namespace Metaplex {
   export const mint = async (
     data: _mObject.Data,
     owner: {pubkey: string, secret: string},
-  ): Promise<{mintKey: string, tx: string}> => {
+  ): Promise<{mintKey: string, signature: string}> => {
     const txsign = await create(owner.pubkey, [owner.secret])();
 
     console.log('# mintKey: ', txsign.mintKey);
@@ -109,11 +109,11 @@ export namespace Metaplex {
       owner.secret,
     )(metadataInst);
 
-    const tx = await Transaction.sendInstructions(
+    const signature = await Transaction.sendInstructions(
       txsign.signers,
       updateTx
     );
 
-    return {mintKey: txsign.mintKey, tx};
+    return {mintKey: txsign.mintKey, signature};
   }
 }

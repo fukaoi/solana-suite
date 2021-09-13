@@ -64,13 +64,10 @@ describe('##### Integration1 #####', () => {
 
     // this is NFT ID
     console.log('# mintKey: ', res.mintKey);
-
-    // send transaction in solana blockchain
-    const mintSig = await SplNft.transfer(res.mintKey, owner.secret, receipt.pubkey);
-    console.log('# mintSig: ', mintSig);
+    console.log('# mintSignature: ', res.signature);
 
     // untile completed in blockchain
-    await Util.getConnection().confirmTransaction(res.tx, 'max');
+    await Util.getConnection().confirmTransaction(res.signature, 'max');
 
     //////////////////////////////////////////////
     // Display metadata from blockchain(optional)
