@@ -28,13 +28,13 @@ export namespace SplNft {
   }
 
   export const transfer = async (
-    tokenId: string,
+    tokenKey: string,
     sourceSecret: string,
     destPubkey: string,
     instruction?: TransactionInstruction
   ): Promise<TransactionSignature> => {
     return SplToken.transfer(
-      tokenId,
+      tokenKey,
       sourceSecret,
       destPubkey,
       NFT_AMOUNT,

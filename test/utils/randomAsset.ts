@@ -8,7 +8,9 @@ export namespace RandomAsset {
     const index = Math.floor(Math.random() * files.length)
     const asset = files[index];
     const imagePath = `${ASSET_DIR}${asset}`;
+    const created = `created at ${Util.dateFormat()}`;
     const name = `${asset.split(/.jpeg/)[0]}:${Util.dateFormat()}`;
-    return {name, imagePath}; 
+    const description = `This nft is ${name}:${created}`;
+    return {name, description, imagePath}; 
   }
 }

@@ -61,7 +61,7 @@ export namespace Metaplex {
     return mintAccount.toBase58();
   }
 
-  export const create = (
+  const create = (
     payer: string,
     signerSecrets: string[],
   ) => async (instructions?: TransactionInstruction[]) => {

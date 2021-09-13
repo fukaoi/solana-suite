@@ -1,82 +1,95 @@
 import {describe, it} from 'mocha';
 import {Wallet} from '../../src/wallet';
 import {Util} from '../../src/util';
-import {Transaction} from '../../src/transaction';
-import {Metaplex} from '../../src/nft/metaplex';
+import {Metaplex, MetaplexObject, MetaplexMetaData} from '../../src/nft/metaplex';
 import {StorageNftStorage} from '../../src/nft/storage/nft-storage';
+import {SplNft} from '../../src/nft/spl';
+import {RandomAsset} from '../utils/randomAsset';
+import setupKeyPair from '../utils/setupKeyPair';
 
-// describe('##### Integration1 #####', () => {
-  // it('Create Metaplex NFT, transfer NFT', async () => {
+let owner: Wallet.Keypair;
+let receipt: Wallet.Keypair;
 
-    // //////////////////////////////////////////////
-    // // CREATE WALLET 
-    // //////////////////////////////////////////////
 
-    // // create nft owner wallet, receive nft receipt wallet.
+describe('##### Integration1 #####', () => {
+  before(async () => {
+    const obj = await setupKeyPair();
+    owner = obj.source;
+    receipt = obj.dest;
+  });
+  it('Create Metaplex NFT, transfer NFT', async () => {
+
+    //////////////////////////////////////////////
+    // CREATE WALLET 
+    //////////////////////////////////////////////
+
+    // create nft owner wallet, receive nft receipt wallet.
     // const owner = await Wallet.create();
     // const receipt = await Wallet.create();
 
-    // console.log('# owner: ', owner);
-    // console.log('# receipt: ', receipt);
+    console.log('# owner: ', owner);
+    console.log('# receipt: ', receipt);
 
 
-    // //////////////////////////////////////////////
-    // // CREATE NFT, MINT NFT FROM THIS LINE 
-    // //////////////////////////////////////////////
+    //////////////////////////////////////////////
+    // Upload contents 
+    //////////////////////////////////////////////
 
-    // // optional metadata and image upload
-    // const name = `Cat:${Util.dateFormat()}`;
-    // const url = await StorageNftStorage.upload(
-      // name,
-      // 'Cute cat is like',
-      // 'test/nft/storage/cat.jpeg'
-    // );
+    // Only test that call this function   
+    // Usually set custom param
+    const asset = RandomAsset.get();
 
-    // const metadata = new MetaplexObject.Data({
-      // name,
-      // symbol: 'CAT',
-      // uri: url,
-      // sellerFeeBasisPoints: 100,
-      // creators: null
-    // });
+    console.log('# asset: ', asset);
 
-    // )();
+    // metadata and image upload
+    const url = await StorageNftStorage.upload(
+      asset.name,
+      asset.description,
+      asset.imagePath
+    );
 
-    // // this is NFT ID
-    // console.log('# mintKey: ', txsign.mintKey);
+    //////////////////////////////////////////////
+    // CREATE NFT, MINT NFT FROM THIS LINE 
+    //////////////////////////////////////////////
 
-    // // create nft metadata
-    // const tx = await MetaplexMetaData.create(
-      // metadata,
-      // txsign.mintKey,
-      // owner.pubkey,
-    // )(txsign.instructions);
+    const data = new MetaplexObject.Data({
+      name: asset.name,
+      symbol: 'SAMPLE',
+      uri: url,
+      sellerFeeBasisPoints: 100,
+      creators: null
+    });
 
-    // // send transaction in solana blockchain
-    // // txsign.signers: all signers that need to send transaction
-    // // tx: txsign => tx be relied
-    // const mintSig = await Transaction.sendInstructions(
-      // txsign.signers,
-      // tx,
-    // );
-    // console.log('# Create nft sig: ', mintSig);
+    const res = await Metaplex.mint(data, owner);
 
+    // this is NFT ID
+    console.log('# mintKey: ', res.mintKey);
 
-    // //////////////////////////////////////////////
-    // // TRANSFER RECEIPR USER FROM THIS LINE 
-    // //////////////////////////////////////////////
+    // send transaction in solana blockchain
+    const mintSig = await SplNft.transfer(res.mintKey, owner.secret, receipt.pubkey);
+    console.log('# mintSig: ', mintSig);
 
-    // // transfer nft to receipt wallet
-    // // const transferSig = await SplNft.transferNft(
-      // // txsign.mintKey,
-      // // owner.secret,
-      // // receipt.pubkey
-    // // );
+    // untile completed in blockchain
+    await Util.getConnection().confirmTransaction(res.tx, 'max');
 
-    // // console.log('# Transfer nft sig: ', transferSig);
-    // // untile completed in blockchain
-    // await Util.getConnection().confirmTransaction(res.tx, 'max');
-  // //
-  // });
-// })
+    //////////////////////////////////////////////
+    // Display metadata from blockchain(optional)
+    //////////////////////////////////////////////
+
+    // const metadata = MetaplexMetaData.getByMintKey(res.mintKey);
+    // console.log('# metadata: ', metadata);
+
+    //////////////////////////////////////////////
+    // TRANSFER RECEIPR USER FROM THIS LINE 
+    //////////////////////////////////////////////
+
+    // transfer nft to receipt wallet
+    const transferSig = await SplNft.transfer(
+      res.mintKey,
+      owner.secret,
+      receipt.pubkey
+    );
+    console.log('# Transfer nft sig: ', transferSig);
+  });
+})
 
