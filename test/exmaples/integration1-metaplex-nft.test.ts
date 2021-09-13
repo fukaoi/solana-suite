@@ -5,18 +5,8 @@ import {Metaplex, MetaplexObject, MetaplexMetaData} from '../../src/nft/metaplex
 import {StorageNftStorage} from '../../src/nft/storage/nft-storage';
 import {SplNft} from '../../src/nft/spl';
 import {RandomAsset} from '../utils/randomAsset';
-import setupKeyPair from '../utils/setupKeyPair';
-
-let owner: Wallet.Keypair;
-let receipt: Wallet.Keypair;
-
 
 describe('##### Integration1 #####', () => {
-  before(async () => {
-    const obj = await setupKeyPair();
-    owner = obj.source;
-    receipt = obj.dest;
-  });
   it('Create Metaplex NFT, transfer NFT', async () => {
 
     //////////////////////////////////////////////
@@ -24,8 +14,8 @@ describe('##### Integration1 #####', () => {
     //////////////////////////////////////////////
 
     // create nft owner wallet, receive nft receipt wallet.
-    // const owner = await Wallet.create();
-    // const receipt = await Wallet.create();
+    const owner = await Wallet.create();
+    const receipt = await Wallet.create();
 
     console.log('# owner: ', owner);
     console.log('# receipt: ', receipt);
@@ -73,8 +63,8 @@ describe('##### Integration1 #####', () => {
     // Display metadata from blockchain(optional)
     //////////////////////////////////////////////
 
-    // const metadata = MetaplexMetaData.getByMintKey(res.mintKey);
-    // console.log('# metadata: ', metadata);
+    const metadata = await MetaplexMetaData.getByMintKey(res.mintKey);
+    console.log('# metadata: ', metadata);
 
     //////////////////////////////////////////////
     // TRANSFER RECEIPR USER FROM THIS LINE 

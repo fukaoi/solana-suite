@@ -91,8 +91,6 @@ export namespace Metaplex {
   ): Promise<{mintKey: string, signature: string}> => {
     const txsign = await create(owner.pubkey, [owner.secret])();
 
-    console.log('# mintKey: ', txsign.mintKey);
-
     const metadataInst = await MetaplexMetaData.create(
       data,
       txsign.mintKey,
