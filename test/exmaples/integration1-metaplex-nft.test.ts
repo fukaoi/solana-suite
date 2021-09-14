@@ -15,8 +15,8 @@ describe('##### Integration1 #####', () => {
 
     // create nft owner wallet, receive nft receipt wallet.
     const owner = await Wallet.create();
-    const receipt = await Wallet.create();
-
+    // const receipt = await Wallet.create();
+    const receipt = {pubkey: 'FCdMcH77AsQsMKTq6LaLdjQQarmB4RbxDvuoi1M1i9vX'};
     console.log('# owner: ', owner);
     console.log('# receipt: ', receipt);
 

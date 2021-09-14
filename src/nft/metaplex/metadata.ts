@@ -26,23 +26,40 @@ export namespace MetaplexMetaData {
     return mintKey === decodeData.mintKey
   }
 
-  const fetchMetaDataByOwnerPubKey = (ownerPubKey: string, encoded: AccountInfo<string>) => {
-    if (!encoded) return false;
-    const decodeData = MetaplexSerialize.decode(encoded.data);
-    return ownerPubKey === decodeData.ownerPubKey
-  }
-
   export const getByMintKey = async (mintKey: string) => {
     const accounts = await Transaction.getProgramAccounts(Constants.METAPLEX_PROGRAM_ID);
     const matches = accounts.filter(a => fetchMetaDataByMintKey(mintKey, a.account));
     return MetaplexSerialize.decode(matches[0].account.data);
   }
 
-  // this function is very slowly from returned response. because alglism is liner search
-  export const getByCreatedPubKey = async (ownerPubKey: string) => {
-    const accounts = await Transaction.getProgramAccounts(Constants.METAPLEX_PROGRAM_ID);
-    const matches = accounts.filter(a => fetchMetaDataByOwnerPubKey(ownerPubKey, a.account));
-    return matches.map(match => MetaplexSerialize.decode(match.account.data));
+  // owner => recipet
+  export const getByOwner = async (ownerPubKey: string) => {
+    // Get all token by owner
+    const tokens = await Util.getConnection().getParsedTokenAccountsByOwner(
+      new PublicKey(ownerPubKey),
+      {programId: TOKEN_PROGRAM_ID}
+    );
+
+    // Filter only metaplex nft
+    const matches = tokens.value.filter(async (token) => {
+      // Get metalex account
+      const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(
+        token.account.data.parsed.info.mint)
+      ).toBase58();
+
+      // get rent data in a metaAccount
+      const nfts = await Util.getConnection().getParsedAccountInfo(
+        new PublicKey(metaAccount)
+      );
+      if (nfts?.value?.data) {
+        // const data = nfts.value.data as Buffer;
+        // return MetaplexSerialize.decode2(data);
+        return true;
+      } 
+      return false;
+    });
+    console.log(matches.length);
+    return matches;
   }
 
   export const create = (
