@@ -18,55 +18,6 @@ export namespace Transaction {
   export const get = async (signature: string) =>
     Util.getConnection().getTransaction(signature);
 
-  export const getProgramAccounts = async (
-    programId: string,
-    configOrCommitment?: any,
-  ): Promise<any[]> => {
-    const extra: any = {};
-    let commitment;
-
-    if (configOrCommitment) {
-      if (typeof configOrCommitment === 'string') {
-        commitment = configOrCommitment;
-      } else {
-        commitment = configOrCommitment.commitment;
-        if (configOrCommitment.dataSlice) {
-          extra.dataSlice = configOrCommitment.dataSlice;
-        }
-
-        if (configOrCommitment.filters) {
-          extra.filters = configOrCommitment.filters;
-        }
-      }
-    }
-
-    const connection = Util.getConnection();
-
-    const args = connection._buildArgs([programId], commitment, 'base64', extra);
-    const unsafeRes = await (connection as any)._rpcRequest(
-      'getProgramAccounts',
-      args,
-    );
-
-    const data = (
-      unsafeRes.result as {
-        account: AccountInfo<[string, string]>;
-        pubkey: string;
-      }[]
-    ).map(item => {
-      return {
-        account: {
-          data: item.account.data[0],
-          executable: item.account.executable,
-          lamports: item.account.lamports,
-          owner: item.account.owner,
-        },
-        pubkey: item.pubkey,
-      };
-    });
-    return data;
-  }
-
   export const sendInstructions = async (
     signers: Keypair[],
     instructions: TransactionInstruction[],

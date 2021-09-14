@@ -16,7 +16,8 @@ describe('MetaplexSerialize', () => {
       fee: 100
     }
 
-    const res = MetaplexSerialize.decode(base64Data);
+    const bufferData = Buffer.from(base64Data);
+    const res = MetaplexSerialize.decode(bufferData);
 
     console.log('# decode metadata: ', res);
 

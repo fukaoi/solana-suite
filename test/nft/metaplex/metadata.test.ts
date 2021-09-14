@@ -1,5 +1,5 @@
 import {describe, it} from 'mocha';
-import {assert} from 'chai'
+import {assert, expect} from 'chai'
 import {MetaplexMetaData} from '../../../src/nft/metaplex/metadata';
 
 describe('MetaplexMetaData', () => {
@@ -14,7 +14,7 @@ describe('MetaplexMetaData', () => {
 
   it('Get metadata by mintKey', async () => {
     const orgData = {
-      ownerPubKey: '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
+      publishAddress: '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
       mintKey: 'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf',
       name: 'Gropu1',
       symbol: '',
@@ -23,24 +23,33 @@ describe('MetaplexMetaData', () => {
     };
 
     const res = await MetaplexMetaData.getByMintKey(
-      // 'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'
-      'Qm6t82zFQZmv1WFPFdC51MN3mBgs8cSZtDLpEYSh686'
+      'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'
     );
 
-    console.log(res);
-    // expect(res.name).to.equal(orgData.name);
-    // expect(res.symbol).to.equal(orgData.symbol);
-    // expect(res.uri).to.equal(orgData.uri);
-    // expect(res.mintKey).to.equal(orgData.mintKey);
-    // expect(res.ownerPubKey).to.equal(orgData.ownerPubKey);
-    // expect(res.fee).to.equal(orgData.fee);
+    expect(res.name).to.equal(orgData.name);
+    expect(res.symbol).to.equal(orgData.symbol);
+    expect(res.uri).to.equal(orgData.uri);
+    expect(res.mintKey).to.equal(orgData.mintKey);
+    expect(res.publishAddress).to.equal(orgData.publishAddress);
+    expect(res.fee).to.equal(orgData.fee);
   });
 
-  it.only('Get metadata of nft by owner', async () => {
+  it('Get metadata by dummy mintKey', async () => {
+    const res = await MetaplexMetaData.getByMintKey(
+      'E8yK73o1Fcpyn3hxGhaxen3pVRYixzK4Ef2PCbCpHtBN'
+    );
+    assert.isEmpty(res.name);
+    assert.isEmpty(res.symbol);
+    assert.isEmpty(res.uri);
+    assert.isEmpty(res.mintKey);
+    assert.isEmpty(res.publishAddress);
+    assert.equal(res.fee, 0);
+  });
+
+  it('Get metadata of nft by owner', async () => {
     const res = await MetaplexMetaData.getByOwner(
       'FCdMcH77AsQsMKTq6LaLdjQQarmB4RbxDvuoi1M1i9vX'
     );
-    console.log('# dump metadata: ', res);
     assert.isNotEmpty(res);
   });
 })

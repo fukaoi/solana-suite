@@ -3,13 +3,11 @@ import {
   TransactionInstruction,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
-  AccountInfo,
 } from '@solana/web3.js';
 
 import {serialize} from 'borsh';
 
 import {Wallet} from '../../wallet';
-import {Transaction} from '../../transaction';
 import {Constants} from '../../constants';
 import {MetaplexObject} from './object';
 import {MetaplexSerialize} from './serialize';
@@ -20,45 +18,39 @@ export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
-  const fetchMetaDataByMintKey = (mintKey: string, encoded: AccountInfo<string>) => {
-    if (!encoded) return false;
-    const decodeData = MetaplexSerialize.decode(encoded.data);
-    return mintKey === decodeData.mintKey
-  }
+  export const getByMintKey = async (mintKey: string): Promise<MetaplexSerialize.MetaData> => {
+    const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(
+      mintKey)
+    ).toBase58();
 
-  export const getByMintKey = async (mintKey: string) => {
-    const accounts = await Transaction.getProgramAccounts(Constants.METAPLEX_PROGRAM_ID);
-    const matches = accounts.filter(a => fetchMetaDataByMintKey(mintKey, a.account));
-    return MetaplexSerialize.decode(matches[0].account.data);
+    // get rent data in a metaAccount
+    const nfts = await Util.getConnection().getParsedAccountInfo(
+      new PublicKey(metaAccount)
+    );
+    if (nfts?.value?.data) {
+      const data = nfts.value.data as Buffer;
+      return MetaplexSerialize.decode(data);
+    };
+    return MetaplexSerialize.initData();
   }
 
   // owner => recipet
-  export const getByOwner = async (ownerPubKey: string) => {
+  export const getByOwner = async (ownerPubKey: string):
+    Promise<MetaplexSerialize.MetaData[]> => {
     // Get all token by owner
     const tokens = await Util.getConnection().getParsedTokenAccountsByOwner(
       new PublicKey(ownerPubKey),
       {programId: TOKEN_PROGRAM_ID}
     );
 
-    const matches:Array<any> = [];
+    const matches: MetaplexSerialize.MetaData[] = [];
 
     // Filter only metaplex nft
     for (let i = 0; i < tokens.value.length; i++) {
       const token = tokens.value[i];
-      // Get metalex account
-      const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(
-        token.account.data.parsed.info.mint)
-      ).toBase58();
-
-      // get rent data in a metaAccount
-      const nfts = await Util.getConnection().getParsedAccountInfo(
-        new PublicKey(metaAccount)
-      );
-      if (nfts?.value?.data) {
-        const data = nfts.value.data as Buffer;
-        matches.push(MetaplexSerialize.decode2(data));
-      }
-    };
+      const decoded = await getByMintKey(token.account.data.parsed.info.mint);
+      decoded && matches.push(decoded)
+    }
     return matches;
   }
 
@@ -185,7 +177,7 @@ export namespace MetaplexMetaData {
     inst.push(
       new TransactionInstruction({
         keys,
-        programId: new PublicKey(METADATA_PROGRAM_ID),
+        programId: METADATA_PROGRAM_ID,
         data: txnData,
       }),
     );

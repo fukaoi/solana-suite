@@ -13,6 +13,13 @@ console.debug = (data: any, data2: any = '') =>
 export namespace Util {
   let connection: Connection;
 
+  export const isEmpty = (val: any): boolean => {
+    if (val == null || val == undefined) return true;
+    if (Array.isArray(val)) return val.length > 0 ? false : true;
+    if (typeof val === 'number') return false;
+    return !Object.keys(val).length;
+  }
+
   export const sleep = async (sec: number) => new Promise(r => setTimeout(r, sec * 1000));
 
   export const getConnection = () => {
