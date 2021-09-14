@@ -34,7 +34,6 @@ export namespace MetaplexMetaData {
     return MetaplexSerialize.initData();
   }
 
-  // owner => recipet
   export const getByOwner = async (ownerPubKey: string):
     Promise<MetaplexSerialize.MetaData[]> => {
     // Get all token by owner

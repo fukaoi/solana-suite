@@ -14,10 +14,10 @@ describe('##### Integration1 #####', () => {
     //////////////////////////////////////////////
 
     // create nft owner wallet, receive nft receipt wallet.
-    const owner = await Wallet.create();
+    const publish = await Wallet.create();
     // const receipt = await Wallet.create();
     const receipt = {pubkey: 'FCdMcH77AsQsMKTq6LaLdjQQarmB4RbxDvuoi1M1i9vX'};
-    console.log('# owner: ', owner);
+    console.log('# publish: ', publish);
     console.log('# receipt: ', receipt);
 
 
@@ -50,7 +50,7 @@ describe('##### Integration1 #####', () => {
       creators: null
     });
 
-    const res = await Metaplex.mint(data, owner);
+    const res = await Metaplex.mint(data, publish);
 
     // this is NFT ID
     console.log('# mintKey: ', res.mintKey);
@@ -73,7 +73,7 @@ describe('##### Integration1 #####', () => {
     // transfer nft to receipt wallet
     const transferSig = await SplNft.transfer(
       res.mintKey,
-      owner.secret,
+      publish.secret,
       receipt.pubkey
     );
     console.log('# Transfer nft sig: ', transferSig);
