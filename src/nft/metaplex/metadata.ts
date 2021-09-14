@@ -45,8 +45,7 @@ export namespace MetaplexMetaData {
     const matches: MetaplexSerialize.MetaData[] = [];
 
     // Filter only metaplex nft
-    for (let i = 0; i < tokens.value.length; i++) {
-      const token = tokens.value[i];
+    for (const token of tokens.value) {
       const decoded = await getByMintKey(token.account.data.parsed.info.mint);
       decoded && matches.push(decoded)
     }

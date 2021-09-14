@@ -14,7 +14,7 @@ export namespace Util {
   let connection: Connection;
 
   export const isEmpty = (val: any): boolean => {
-    if (val == null || val == undefined) return true;
+    if (val === null || val === undefined) return true;
     if (Array.isArray(val)) return val.length > 0 ? false : true;
     if (typeof val === 'number') return false;
     return !Object.keys(val).length;

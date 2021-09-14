@@ -55,7 +55,7 @@ export namespace MetaplexSerialize {
     const uriBuffer = struct.unpack(`<${'B'.repeat(uriLength)}`, data.slice(i, i + uriLength)) as number[];
     decodeData.uri = textDecoder.decode(Uint8Array.from(uriBuffer)).replace(REPLACE, '');
     i += uriLength;
-    decodeData.fee = parseInt(struct.unpack('<h', data.slice(i, i + 2))[0].toString());
+    decodeData.fee = parseInt(struct.unpack('<h', data.slice(i, i + 2))[0].toString(), 10);
     return decodeData;
   }
 }
