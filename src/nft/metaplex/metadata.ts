@@ -40,8 +40,11 @@ export namespace MetaplexMetaData {
       {programId: TOKEN_PROGRAM_ID}
     );
 
+    const matches:Array<any> = [];
+
     // Filter only metaplex nft
-    const matches = tokens.value.filter(async (token) => {
+    for (let i = 0; i < tokens.value.length; i++) {
+      const token = tokens.value[i];
       // Get metalex account
       const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(
         token.account.data.parsed.info.mint)
@@ -52,13 +55,10 @@ export namespace MetaplexMetaData {
         new PublicKey(metaAccount)
       );
       if (nfts?.value?.data) {
-        // const data = nfts.value.data as Buffer;
-        // return MetaplexSerialize.decode2(data);
-        return true;
-      } 
-      return false;
-    });
-    console.log(matches.length);
+        const data = nfts.value.data as Buffer;
+        matches.push(MetaplexSerialize.decode2(data));
+      }
+    };
     return matches;
   }
 
