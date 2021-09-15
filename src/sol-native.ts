@@ -14,7 +14,7 @@ export namespace SolNative {
     signerSecrets: string[],
     destPubkey: string,
     amount: number, // TODO: add u64 bigint
-  ) => async (instruction?: TransactionInstruction): 
+  ) => async (instruction?: TransactionInstruction):
   Promise<TransactionSignature> => {
     const sol = amount * LAMPORTS_PER_SOL;
     const sourcePublicKey = new PublicKey(sourcePubkey);

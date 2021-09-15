@@ -7,6 +7,7 @@ import {
   TransactionSignature,
   SystemProgram,
   Signer,
+  AccountChangeCallback,
 } from '@solana/web3.js';
 
 import {Util} from './util';
@@ -16,6 +17,12 @@ export namespace Transaction {
 
   export const get = async (signature: string) =>
     Util.getConnection().getTransaction(signature);
+
+  export const subscribeAccount = (pubkey: string, callback: AccountChangeCallback): number =>
+    Util.getConnection().onAccountChange(new PublicKey(pubkey), callback);
+
+  export const unsubscribeAccount = (subscribeId: number): Promise<void> =>
+    Util.getConnection().removeAccountChangeListener(subscribeId);
 
   export const sendInstructions = async (
     signers: Keypair[],
