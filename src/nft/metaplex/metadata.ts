@@ -18,7 +18,7 @@ export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
-  export const getByMintKey = async (mintKey: string): 
+  export const getByMintKey = async (mintKey: string):
   Promise<MetaplexSerialize.MetaData | undefined> => {
     const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(
       mintKey)

@@ -2,21 +2,19 @@ import {describe, it} from 'mocha';
 import {assert, expect} from 'chai'
 import {MetaplexSerialize} from '../../../src/nft/metaplex/serialize';
 
-
-const base64Data = 'BBz/op6YwDJGbas9BKU2EA/YHc2vEGUxUDnDAM5qaD+f+GnBCiAPzZjWCoucrKaXX6I4+Oyah/uYnvag/MHFyk8gAAAAa2F3YW1vbgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAAAAS1dNAAAAAAAAAMgAAABodHRwczovL2ZnYmhrdW01czdpd2M3b2J2ZXBubGRmY2V2emxkY3BqZ3lkN3N6NXlwbnQ2a2hsdGI2b3EuYXJ3ZWF2ZS5uZXQvS1lKMVVaMlgwV0Y5d2FrZTFZeWlKWEt4aWVrMkJfbG51SHRuNVIxekQ1MC8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGQAAAABAf4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==';
+const bufferData = Buffer.from([4, 90, 255, 219, 226, 72, 51, 0, 52, 25, 169, 139, 211, 14, 3, 238, 120, 33, 119, 249, 167, 248, 238, 112, 235, 6, 88, 249, 48, 98, 249, 19, 5, 225, 88, 47, 37, 41, 111, 213, 63, 225, 255, 67, 152, 242, 201, 223, 235, 81, 66, 44, 75, 24, 189, 21, 136, 165, 89, 97, 228, 236, 85, 101, 36, 32, 0, 0, 0, 67, 97, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 67, 65, 84, 0, 0, 0, 0, 0, 0, 0, 200, 0, 0, 0, 104, 116, 116, 112, 115, 58, 47, 47, 97, 114, 119, 101, 97, 118, 101, 46, 110, 101, 116, 47, 75, 89, 74, 49, 85, 90, 50, 88, 48, 87, 70, 57, 119, 97, 107, 101, 49, 89, 121, 105, 74, 88, 75, 120, 105, 101, 107, 50, 66, 95, 108, 110, 117, 72, 116, 110, 53, 82, 49, 122, 68, 53, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 1, 1, 254, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 
 describe('MetaplexSerialize', () => {
   it('Decode serialized data', () => {
-    const orgData = {
-      publisAddress: '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
-      mintKey: 'Hihe2pbN1zbz68szcCUgNTMBC8Cnn94PpFUgt7ZxPNBx',
-      name: 'kawamon',
-      symbol: 'KWM',
-      uri: 'https://fgbhkum5s7iwc7obvepnldfcevzldcpjgyd7sz5ypnt6khltb6oq.arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50/',
+    const orgData: MetaplexSerialize.MetaData = {
+      publishAddress: '78DybLoke46TR6RW1HWZBMYt7qouGggQJjLATsfL7RwA',
+      mintKey: 'GAeiuYNYaTe36wuvsNesTqbeZJxoLRgXkKM6gF5ZFAmy',
+      name: 'Cat',
+      symbol: 'CAT',
+      uri: 'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50',
       fee: 100
     }
 
-    const bufferData = Buffer.from(base64Data);
     const res = MetaplexSerialize.decode(bufferData);
 
     if (!res) assert.fail('None res data');
@@ -27,7 +25,7 @@ describe('MetaplexSerialize', () => {
     expect(res.symbol).to.equal(orgData.symbol);
     expect(res.uri).to.equal(orgData.uri);
     expect(res.mintKey).to.equal(orgData.mintKey);
-    expect(res.publishAddress).to.equal(orgData.publisAddress);
+    expect(res.publishAddress).to.equal(orgData.publishAddress);
     expect(res.fee).to.equal(orgData.fee);
   });
 })
