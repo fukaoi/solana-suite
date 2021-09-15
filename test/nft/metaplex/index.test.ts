@@ -26,7 +26,7 @@ describe('Metaplex', () => {
     const res = await Metaplex.mint(data, source);
     mintKey = res.mintKey;
     console.log(`# mintKey: ${mintKey}`);
-    console.log(`# tx signature: ${res.tx}`);
+    console.log(`# tx signature: ${res.signature}`);
     assert.isNotEmpty(res);
   });
 })

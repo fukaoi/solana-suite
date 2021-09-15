@@ -18,7 +18,8 @@ export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
-  export const getByMintKey = async (mintKey: string): Promise<MetaplexSerialize.MetaData> => {
+  export const getByMintKey = async (mintKey: string): 
+  Promise<MetaplexSerialize.MetaData | undefined> => {
     const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(
       mintKey)
     ).toBase58();
@@ -35,7 +36,7 @@ export namespace MetaplexMetaData {
   }
 
   export const getByOwner = async (ownerPubKey: string):
-    Promise<MetaplexSerialize.MetaData[]> => {
+    Promise<MetaplexSerialize.MetaData[]|undefined> => {
     // Get all token by owner
     const tokens = await Util.getConnection().getParsedTokenAccountsByOwner(
       new PublicKey(ownerPubKey),
@@ -47,7 +48,8 @@ export namespace MetaplexMetaData {
     // Filter only metaplex nft
     for (const token of tokens.value) {
       const decoded = await getByMintKey(token.account.data.parsed.info.mint);
-      decoded && matches.push(decoded)
+      if (!decoded) continue;
+      matches.push(decoded)
     }
     return matches;
   }

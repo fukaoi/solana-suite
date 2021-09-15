@@ -17,6 +17,8 @@ export namespace Util {
     if (val === null || val === undefined) return true;
     if (Array.isArray(val)) return val.length > 0 ? false : true;
     if (typeof val === 'number') return false;
+    console.log(Object.values(val).length);
+    if (!Object.values(val).length) return false;
     return !Object.keys(val).length;
   }
 

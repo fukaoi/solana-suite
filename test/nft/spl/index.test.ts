@@ -58,10 +58,10 @@ describe('NftSpl', () => {
 
   it('Transfer nft with memo data, source and destination inter send', async () => {
     const memoInst = Memo.createInstruction('{"nft": "art", "url": "http://hoge.hoge"}');
-    const srcRes = await SplNft.transferNft(nft, source.secret, destPubkey, memoInst);
+    const srcRes = await SplNft.transfer(nft, source.secret, destPubkey, memoInst);
     console.log(`# tx signature: ${srcRes}`);
     assert.isNotEmpty(srcRes);
-    const destRes = await SplNft.transferNft(nft, dest.secret, source.pubkey, memoInst);
+    const destRes = await SplNft.transfer(nft, dest.secret, source.pubkey, memoInst);
     console.log(`# tx signature: ${destRes}`);
     assert.isNotEmpty(destRes);
   });

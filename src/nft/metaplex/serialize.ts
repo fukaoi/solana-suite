@@ -27,20 +27,20 @@ export namespace MetaplexSerialize {
 
   const REPLACE = new RegExp('\u0000', 'g');
 
-  export const decode = (data: Buffer): MetaData => {
+  export const decode = (data: Buffer): MetaData|undefined => {
     const decodeData = initData();
     const textDecoder = new TextDecoder();
     let i = 1;
     decodeData.publishAddress = bs.encode(struct.unpack(`<${'B'.repeat(32)}`, data.slice(i, i + 32)) as number[]);
     i += 32;
     decodeData.mintKey = bs.encode(struct.unpack(`<${'B'.repeat(32)}`, data.slice(i, i + 32)) as number[]);
-    if (decodeData.mintKey === Constants.SYSTEM_PROGRAM_ID) return decodeData;
+    if (decodeData.mintKey === Constants.SYSTEM_PROGRAM_ID) return undefined;
 
     i += 32;
     const nameLength = struct.unpack('<I', data.slice(i, i + 4))[0] as number;
     i += 4;
 
-    if (nameLength !== 32) return decodeData;
+    if (nameLength !== 32) return undefined;
 
     const nameBuffer = struct.unpack(`<${'B'.repeat(nameLength)}`, data.slice(i, i + nameLength)) as number[];
     decodeData.name = textDecoder.decode(Uint8Array.from(nameBuffer)).replace(REPLACE, '');

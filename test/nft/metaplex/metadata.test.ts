@@ -26,6 +26,9 @@ describe('MetaplexMetaData', () => {
       'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'
     );
 
+    if (!res) assert.fail('None res data');
+
+    console.log('# metadata: ', res);
     expect(res.name).to.equal(orgData.name);
     expect(res.symbol).to.equal(orgData.symbol);
     expect(res.uri).to.equal(orgData.uri);
@@ -38,6 +41,9 @@ describe('MetaplexMetaData', () => {
     const res = await MetaplexMetaData.getByMintKey(
       'E8yK73o1Fcpyn3hxGhaxen3pVRYixzK4Ef2PCbCpHtBN'
     );
+
+    if (!res) assert.fail('None res data');
+
     assert.isEmpty(res.name);
     assert.isEmpty(res.symbol);
     assert.isEmpty(res.uri);
@@ -48,8 +54,9 @@ describe('MetaplexMetaData', () => {
 
   it('Get metadata of nft by owner', async () => {
     const res = await MetaplexMetaData.getByOwner(
-      'FCdMcH77AsQsMKTq6LaLdjQQarmB4RbxDvuoi1M1i9vX'
+      '78DybLoke46TR6RW1HWZBMYt7qouGggQJjLATsfL7RwA'
     );
+    console.log('# metadata: ', res);
     assert.isNotEmpty(res);
   });
 })
