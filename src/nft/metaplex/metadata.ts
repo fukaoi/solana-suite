@@ -122,7 +122,6 @@ export namespace MetaplexMetaData {
     primarySaleHappened: boolean | null | undefined,
     mintKey: string,
     updateAuthority: string,
-    recipientKey: string, // todo:
     sourceSecret: string,
   ) => async (instructions?: TransactionInstruction[]) => {
     let inst: TransactionInstruction[] = [];

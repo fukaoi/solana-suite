@@ -103,7 +103,6 @@ export namespace Metaplex {
       undefined,
       txsign.mintKey,
       owner.pubkey,
-      owner.pubkey,
       owner.secret,
     )(metadataInst);
 
