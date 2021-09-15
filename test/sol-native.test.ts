@@ -22,7 +22,7 @@ describe('SolNative', () => {
       [source.secret],
       destPubkey,
       solAmount,
-    );
+    )();
     console.log(`# tx signature: ${res}`);
     assert.isNotEmpty(res);
   });
@@ -37,8 +37,7 @@ describe('SolNative', () => {
       [source.secret],
       destPubkey,
       solAmount,
-      instruction
-    );
+    )(instruction);
     console.log(`# tx signature: ${res}`);
     assert.isNotEmpty(res);
   });

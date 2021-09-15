@@ -9,13 +9,13 @@ import {Transaction} from './transaction';
 import {Util} from './util';
 
 export namespace SolNative {
-  export const transfer = async (
+  export const transfer = (
     sourcePubkey: string,
     signerSecrets: string[],
     destPubkey: string,
     amount: number, // TODO: add u64 bigint
-    instruction?: TransactionInstruction
-  ): Promise<TransactionSignature> => {
+  ) => async (instruction?: TransactionInstruction): 
+  Promise<TransactionSignature> => {
     const sol = amount * LAMPORTS_PER_SOL;
     const sourcePublicKey = new PublicKey(sourcePubkey);
     const destPublicKey = new PublicKey(destPubkey);
