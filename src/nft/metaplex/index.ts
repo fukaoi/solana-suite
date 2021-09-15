@@ -61,7 +61,7 @@ export namespace Metaplex {
     return mintAccount.toBase58();
   }
 
-  const create = (
+  export const create = (
     payer: string,
     signerSecrets: string[],
   ) => async (instructions?: TransactionInstruction[]) => {
@@ -103,7 +103,7 @@ export namespace Metaplex {
       undefined,
       txsign.mintKey,
       owner.pubkey,
-      owner.secret,
+      [owner.secret],
     )(metadataInst);
 
     const signature = await Transaction.sendInstructions(

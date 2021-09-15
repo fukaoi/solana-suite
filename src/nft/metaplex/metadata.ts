@@ -19,7 +19,7 @@ export namespace MetaplexMetaData {
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
   export const getByMintKey = async (mintKey: string):
-  Promise<MetaplexSerialize.MetaData | undefined> => {
+    Promise<MetaplexSerialize.MetaData | undefined> => {
     const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(
       mintKey)
     ).toBase58();
@@ -36,7 +36,7 @@ export namespace MetaplexMetaData {
   }
 
   export const getByOwner = async (ownerPubKey: string):
-    Promise<MetaplexSerialize.MetaData[]|undefined> => {
+    Promise<MetaplexSerialize.MetaData[] | undefined> => {
     // Get all token by owner
     const tokens = await Util.getConnection().getParsedTokenAccountsByOwner(
       new PublicKey(ownerPubKey),
@@ -122,10 +122,12 @@ export namespace MetaplexMetaData {
     primarySaleHappened: boolean | null | undefined,
     mintKey: string,
     updateAuthority: string,
-    sourceSecret: string,
+    signerSecrets: string[],
   ) => async (instructions?: TransactionInstruction[]) => {
     let inst: TransactionInstruction[] = [];
     inst = instructions ? instructions : inst;
+
+    const signers = Util.createSigners(signerSecrets);
 
     const associatedTokenAccount = await Wallet.findAssocaiatedTokenAddress(updateAuthority, mintKey);
     console.log('# associatedTokenAccount: ', associatedTokenAccount.toBase58());
@@ -145,7 +147,7 @@ export namespace MetaplexMetaData {
         new PublicKey(mintKey),
         associatedTokenAccount,
         new PublicKey(updateAuthority),
-        [Util.createKeypair(sourceSecret)],
+        signers,
         1,
       ),
     );

@@ -1,15 +1,61 @@
 import {describe, it} from 'mocha';
-import {assert, expect} from 'chai'
+import {assert} from 'chai'
 import {MetaplexMetaData} from '../../../src/nft/metaplex/metadata';
+import {MetaplexObject} from '../../../src/nft/metaplex/object';
+import setupKeyPair from '../../../test/utils/setupKeyPair';
+import {Wallet} from '../../../src/wallet';
+
+let source: Wallet.Keypair;
 
 describe('MetaplexMetaData', () => {
-
-  it.skip('Create metadata', async () => {
-    //@see metaplex/index.test.ts
+  before(async () => {
+    const obj = await setupKeyPair();
+    source = obj.source;
   });
 
-  it.skip('Update metadata', async () => {
-    //@see metaplex/index.test.ts
+  it('Create instructions for create metadata', async () => {
+    const data = new MetaplexObject.Data({
+      name: 'Sample',
+      symbol: 'SAMPLE',
+      uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',
+      sellerFeeBasisPoints: 100,
+      creators: null
+    });
+
+    const mintKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM';
+
+    const res = await MetaplexMetaData.create(
+      data,
+      mintKey,
+      source.pubkey,
+      source.pubkey,
+      source.pubkey,
+    )();
+    assert.isArray(res);
+    assert.isObject(typeof res[0]);
+  });
+
+  it('Create instructions for update metadata', async () => {
+    const data = new MetaplexObject.Data({
+      name: 'Sample',
+      symbol: 'SAMPLE',
+      uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',
+      sellerFeeBasisPoints: 100,
+      creators: null
+    });
+
+    const mintKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM';
+
+    const res = await MetaplexMetaData.update(
+      data,
+      undefined,
+      undefined,
+      mintKey,
+      source.pubkey,
+      [source.secret],
+    )();
+    assert.isArray(res);
+    assert.isObject(typeof res[0]);
   });
 
   it('Get metadata by mintKey', async () => {
@@ -29,12 +75,12 @@ describe('MetaplexMetaData', () => {
     if (!res) assert.fail('None res data');
 
     console.log('# metadata: ', res);
-    expect(res.name).to.equal(orgData.name);
-    expect(res.symbol).to.equal(orgData.symbol);
-    expect(res.uri).to.equal(orgData.uri);
-    expect(res.mintKey).to.equal(orgData.mintKey);
-    expect(res.publishAddress).to.equal(orgData.publishAddress);
-    expect(res.fee).to.equal(orgData.fee);
+    assert.equal(res.name, orgData.name)
+    assert.equal(res.symbol, orgData.symbol)
+    assert.equal(res.uri, orgData.uri)
+    assert.equal(res.mintKey, orgData.mintKey)
+    assert.equal(res.publishAddress, orgData.publishAddress)
+    assert.equal(res.fee, orgData.fee)
   });
 
   it('Get metadata by dummy mintKey', async () => {

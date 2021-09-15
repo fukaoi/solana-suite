@@ -3,7 +3,6 @@ import {
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-
 import {Constants} from './constants';
 
 console.debug = (data: any, data2: any = '') =>
@@ -36,6 +35,9 @@ export namespace Util {
     const decoded = bs.decode(secret);
     return Keypair.fromSecretKey(decoded);
   }
+
+  export const createSigners = (signerSecrets: string[]): Keypair[] => signerSecrets.map(s => createKeypair(s));
+
   export const dateFormat = (): string => {
     const t = new Date();
     return t.getFullYear() + '-' +
