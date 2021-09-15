@@ -7,7 +7,6 @@ import {
   TransactionSignature,
   SystemProgram,
   Signer,
-  AccountInfo,
 } from '@solana/web3.js';
 
 import {Util} from './util';
