@@ -4,7 +4,7 @@ import debugDisp from './debugDisp';
 import '../../src/util';
 
 export namespace TestUtils {
-  export const TEMP_KEYPAIR_FILE = '.solana-devnet-keypair';
+  export const TEMP_KEYPAIR_FILE = `.solana-${process.env.NODE_ENV}-keypair`;
 
   export const setupKeyPair = async ():
     Promise<{source: Wallet.Keypair, dest: Wallet.Keypair}> => {

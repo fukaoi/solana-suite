@@ -12,8 +12,12 @@ export namespace ConstantsFunc {
       case 'production':
         response.url = 'https://api.solana.com';
         break;
+      case 'test':
+        response.url = 'https://api.testnet.solana.com';
+        break;
       default:
-        response.url = 'http://api.devnet.solana.com';
+        response.url = 'http://api.testnet.solana.com';
+        process.env.NODE_ENV = 'testnet';
     }
     return response;
   }
