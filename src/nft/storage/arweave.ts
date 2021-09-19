@@ -1,7 +1,6 @@
 import fs from 'fs';
 
 import {
-  Keypair,
   SystemProgram,
   TransactionInstruction,
   PublicKey,
@@ -10,18 +9,20 @@ import {Constants} from '../../constants';
 import crypto from 'crypto';
 import {Transaction} from '../../transaction';
 import {Util} from '../../util';
+import {fetch} from 'node-fetch';
+import  FormData from 'form-data';
 
 export namespace StorageArweave {
-  const MANIFEST_FILE = 'manifest.json';
+    const MANIFEST_FILE = 'manifest.json';
 
   interface ArweaveResult {
     error?: string;
-    messages?: Array<{
+    messages?: {
       filename: string;
       status: 'success' | 'fail';
       transactionId?: string;
       error?: string;
-    }>;
+    }[];
   }
 
   const calculateArFee = () => {
@@ -46,7 +47,21 @@ export namespace StorageArweave {
       [payer],
       inst
     );
-    console.log(signature);
+
+    await Util.getConnection().confirmTransaction(signature, 'max');
+    const uploadData = new FormData();
+    uploadData.append('tags', JSON.stringify({name, description}));
+    uploadData.append('transaction', signature);
+    buffers.map(f => uploadData.append('file[]', f));
+
+    const result = await fetch(
+      Constants.ARWEAVE_UPLOAD_SRV_URL,
+      {
+        method: 'POST',
+        body: data
+      }
+    );
+    console.log(result);
   }
 
   const createPayArweaveCostInst = async (
