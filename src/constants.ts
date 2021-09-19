@@ -19,6 +19,7 @@ export namespace ConstantsFunc {
         response.url = 'http://api.testnet.solana.com';
         process.env.NODE_ENV = 'testnet';
     }
+    console.debug('# This is ENV: ', process.env.NODE_ENV);
     return response;
   }
 }
