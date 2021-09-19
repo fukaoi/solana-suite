@@ -1,32 +1,80 @@
-import Arweave from 'arweave';
 import fs from 'fs';
 
+import {
+  Keypair,
+  SystemProgram,
+  TransactionInstruction,
+  PublicKey,
+} from '@solana/web3.js';
+import {Constants} from '../../constants';
+import crypto from 'crypto';
+import {Transaction} from '../../transaction';
+import {Util} from '../../util';
+
 export namespace StorageArweave {
+  const MANIFEST_FILE = 'manifest.json';
 
-  // const connect = () => {
-    // return Arweave.init({
-      // host: 'arweave.net'
-    // });
-  // }
+  interface ArweaveResult {
+    error?: string;
+    messages?: Array<{
+      filename: string;
+      status: 'success' | 'fail';
+      transactionId?: string;
+      error?: string;
+    }>;
+  }
 
-  // export const upload = async (
-    // name: string,
-    // description: string,
-    // imagePath: string
-  // ) => {
-    // const arweave = connect();
-    // let data = fs.readFileSync(imagePath);
+  const calculateArFee = () => {
+    return 10;
+  }
 
-    // let transaction = await arweave.createTransaction({data: data}, key);
-    // transaction.addTag('Content-Type', 'application/pdf');
+  export const upload = async (
+    payerSecret: string,
+    name: string,
+    description: string,
+    imagePath: string
+  ) => {
+    const buffers: Buffer[] = [];
+    buffers.push(await fs.promises.readFile(imagePath));
+    const data = Buffer.from(JSON.stringify({name, description}));
+    buffers.push(data);
 
-    // await arweave.transactions.sign(transaction, key);
+    const payer = Util.createKeypair(payerSecret);
 
-    // let uploader = await arweave.transactions.getUploader(transaction);
+    const inst = await createPayArweaveCostInst(payer.publicKey, buffers);
+    const signature = await Transaction.sendInstructions(
+      [payer],
+      inst
+    );
+    console.log(signature);
+  }
 
-    // while (!uploader.isComplete) {
-      // await uploader.uploadChunk();
-      // console.log(`${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`);
-    // }
-  // }
+  const createPayArweaveCostInst = async (
+    payerPubKey: PublicKey,
+    buffers: Buffer[],
+  ): Promise<TransactionInstruction[]> => {
+    const instructions: TransactionInstruction[] = [];
+
+    instructions.push(
+      SystemProgram.transfer({
+        fromPubkey: payerPubKey,
+        toPubkey: new PublicKey(Constants.AR_SOL_HOLDER_ID),
+        lamports: calculateArFee(),
+      }),
+    );
+
+    for (const buffer of buffers) {
+      const hashSum = crypto.createHash('sha256');
+      hashSum.update(buffer.toString());
+      const hex = hashSum.digest('hex');
+      instructions.push(
+        new TransactionInstruction({
+          keys: [],
+          programId: new PublicKey(Constants.MEMO_PROGRAM_ID),
+          data: Buffer.from(hex),
+        }),
+      );
+    }
+    return instructions;
+  }
 }

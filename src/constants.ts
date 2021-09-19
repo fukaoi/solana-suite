@@ -22,10 +22,20 @@ export namespace ConstantsFunc {
     console.debug('# This is ENV: ', process.env.NODE_ENV);
     return response;
   }
+
+  export const swtichArweaveUpload = (env: string | undefined) => {
+    switch (env) {
+      case 'production':
+        return 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFileProd2'
+      default:
+        return 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile2'
+    }
+  }
 }
 
 export namespace Constants {
   export const API_URL = ConstantsFunc.switchEnvParam(process.env.NODE_ENV).url;
+  export const ARWEAVE_UPLOAD_SRV_URL = ConstantsFunc.swtichArweaveUpload(process.env.NODE_ENV);
   export const SYSTEM_PROGRAM_ID = '11111111111111111111111111111111';
   export const SPL_TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
   export const SPL_ASSOCIATED_TOKEN_PROGRAM_ID = 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL';
@@ -35,5 +45,7 @@ export namespace Constants {
   // todo: this NFT_STORAGE_API_KEY moved .env file
   // NFT.storage can store NFTs up to 32GB in size!
   export const NFT_STORAGE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE';
+
+  export const AR_SOL_HOLDER_ID = 'HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm';
 }
 

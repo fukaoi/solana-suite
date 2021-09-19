@@ -1,0 +1,5 @@
+namespace Storage {
+  interface Metadata {
+
+  }
+}
