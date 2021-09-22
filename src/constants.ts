@@ -23,7 +23,7 @@ export namespace ConstantsFunc {
     return response;
   }
 
-  export const swtichArweaveUpload = () => 
+  export const swtichArweaveUpload = () =>
     'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile4';
 }
 
