@@ -2,7 +2,8 @@
   "compilerOptions": {
     "lib": [
       "ES6",
-      "es2017"
+      "ES2017",
+      "ESNext"
     ],
     "strict": true,
     "esModuleInterop": true,
@@ -11,7 +12,7 @@
     "outDir": "./dist",
     "incremental": true,
     "module": "commonjs",
-    "target": "ES5",
+    "target": "ES6",
     "declaration": true,
     "sourceMap": true,
     "allowJs": true

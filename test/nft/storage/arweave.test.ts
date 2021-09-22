@@ -19,7 +19,8 @@ describe('StorageArweave', () => {
       source.secret,
       asset.name,
       asset.description,
-      asset.imagePath
+      asset.imagePath,
+      './test/assets/metadata.json'
     );
     console.log(res);
     // console.log('# upload url', res);
