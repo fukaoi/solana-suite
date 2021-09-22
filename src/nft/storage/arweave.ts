@@ -9,11 +9,14 @@ import {Constants} from '../../constants';
 import crypto from 'crypto';
 import {Transaction} from '../../transaction';
 import {Util} from '../../util';
-import {fetch} from 'node-fetch';
-import  FormData from 'form-data';
+import fetch from 'cross-fetch';
+// import fetch from 'node-fetch';
+// import FormData from 'form-data';
+import {FormData as FormData2} from "formdata-node";
+import * as anchor from "@project-serum/anchor";
 
 export namespace StorageArweave {
-    const MANIFEST_FILE = 'manifest.json';
+  const MATADAT_FILE = 'metadata.json';
 
   interface ArweaveResult {
     error?: string;
@@ -35,30 +38,41 @@ export namespace StorageArweave {
     description: string,
     imagePath: string
   ) => {
-    const buffers: Buffer[] = [];
-    buffers.push(await fs.promises.readFile(imagePath));
-    const data = Buffer.from(JSON.stringify({name, description}));
-    buffers.push(data);
-
+    const fileBuffer = await fs.promises.readFile(imagePath, 'utf8');
     const payer = Util.createKeypair(payerSecret);
 
-    const inst = await createPayArweaveCostInst(payer.publicKey, buffers);
-    const signature = await Transaction.sendInstructions(
-      [payer],
-      inst
-    );
+    // const inst = await createPayArweaveCostInst(payer.publicKey, buffers);
+    // const signature = await Transaction.sendInstructions(
+    // [payer],
+    // inst
+    // );
 
-    await Util.getConnection().confirmTransaction(signature, 'max');
-    const uploadData = new FormData();
-    uploadData.append('tags', JSON.stringify({name, description}));
+
+    const inst = [
+      anchor.web3.SystemProgram.transfer({
+        fromPubkey: payer.publicKey,
+        toPubkey: new PublicKey(Constants.AR_SOL_HOLDER_ID),
+        lamports: 10,
+      }),
+    ];
+
+    // const signature = await Transaction.sendInstructions(
+      // [payer],
+      // inst
+    // );
+
+    // await Util.getConnection().confirmTransaction(signature, 'max').then(console.log);
+    const signature = '4sJXEhkzy2H9AT8YK2PcLgaDs6q1qiH5iieU6qLfY4YUipxADNAzfmgeTssP4yH2W2vUTgfUnsmpxqV3j9efPX99';
+    const uploadData = new FormData2();
     uploadData.append('transaction', signature);
-    buffers.map(f => uploadData.append('file[]', f));
+    uploadData.append('env', 'devnet');
+    uploadData.append('text', 'text');
 
     const result = await fetch(
       Constants.ARWEAVE_UPLOAD_SRV_URL,
       {
         method: 'POST',
-        body: data
+        body: uploadData as FormData
       }
     );
     console.log(result);

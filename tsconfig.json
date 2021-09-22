@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "lib": [
+      "ES6",
       "es2017"
     ],
     "strict": true,

@@ -26,9 +26,10 @@ export namespace ConstantsFunc {
   export const swtichArweaveUpload = (env: string | undefined) => {
     switch (env) {
       case 'production':
-        return 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFileProd2'
+        return 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFileProd2';
       default:
-        return 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile2'
+        return 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile4';
+        // return 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile2'
     }
   }
 }
