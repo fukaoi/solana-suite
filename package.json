@@ -1,8 +1,6 @@
 {
-  "main": "src/main.ts",
-  "engines": {
-    "node": "14.17.* < 16.*"
-  },
+  "name": "solana-suite",
+  "version": "0.0.1",
   "scripts": {
     "start": "ts-node .",
     "build": "tsc --build tsconfig.json",
