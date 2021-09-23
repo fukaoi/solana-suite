@@ -3,7 +3,7 @@ import {assert} from 'chai'
 import {Wallet} from '../../../src/wallet';
 import {StorageArweave} from '../../../src/nft/storage/arweave';
 import setupKeyPair from '../../utils/setupKeyPair';
-import {RandomAsset} from '../../utils/randomAsset';
+import randomAsset from '../../utils/randomAsset';
 
 let source: Wallet.Keypair;
 
@@ -14,7 +14,7 @@ describe('StorageArweave', () => {
   });
 
   it('Upload metadata json file and image', async () => {
-    const asset = RandomAsset.get();
+    const asset = randomAsset();
     const res = await StorageArweave.upload(
       source.secret,
       asset.name,

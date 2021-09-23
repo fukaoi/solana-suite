@@ -4,7 +4,7 @@ import {Util} from '../../src/util';
 import {Metaplex, MetaplexObject, MetaplexMetaData} from '../../src/nft/metaplex';
 import {StorageNftStorage} from '../../src/nft/storage/nft-storage';
 import {SplNft} from '../../src/nft/spl';
-import {RandomAsset} from '../utils/randomAsset';
+import randomAsset from '../utils/randomAsset';
 
 describe('##### Integration1 #####', () => {
   it('Create Metaplex NFT, transfer NFT', async () => {
@@ -27,7 +27,7 @@ describe('##### Integration1 #####', () => {
 
     // Only test that call this function   
     // Usually set custom param
-    const asset = RandomAsset.get();
+    const asset = randomAsset();
 
     console.log('# asset: ', asset);
 

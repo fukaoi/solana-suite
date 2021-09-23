@@ -1,9 +1,9 @@
 import fs from 'fs';
 import {Util} from '../../src/util';
 
-export namespace RandomAsset {
+export namespace TestUtils {
   const ASSET_DIR = './test/assets/';
-  export const get = () => {
+  export const randomAsset = () => {
     const files = fs.readdirSync(ASSET_DIR);
     const index = Math.floor(Math.random() * files.length)
     const asset = files[index];
@@ -14,3 +14,6 @@ export namespace RandomAsset {
     return {name, description, imagePath}; 
   }
 }
+
+export default TestUtils.randomAsset;
+
