@@ -61,14 +61,12 @@ export namespace StorageArweave {
     const payer = Util.createKeypair(payerSecret);
     const metadataFilePath = createMetadataJsonFile(name, description, imagePath);
 
-    const signature = await SolNative.transfer(
+    await SolNative.transfer(
       payer.publicKey.toString(),
       [payerSecret],
       Constants.AR_SOL_HOLDER_ID,
       calculateArFee()
     )();
-
-    await Util.getConnection().confirmTransaction(signature, 'confirmed');
 
     const metadata = createUploadData(
       payer.publicKey.toBase58(),
