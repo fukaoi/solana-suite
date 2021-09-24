@@ -34,7 +34,7 @@ describe('Transaction', () => {
     assert.isObject(res);
   });
 
-  it.only('Subscribe a account(pubkey)', async() => {
+  it('Subscribe a account(pubkey)', async() => {
     const subscribeId = Transaction.subscribeAccount(dest.pubkey, console.log);
     console.log('# subscribeId: ', subscribeId);
     for (let i = 0; i < 3; i++) await sendContinuously();

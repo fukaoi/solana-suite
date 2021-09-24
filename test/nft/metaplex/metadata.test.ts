@@ -32,7 +32,7 @@ describe('MetaplexMetaData', () => {
       source.pubkey,
     )();
     assert.isArray(res);
-    assert.isObject(typeof res[0]);
+    assert.isObject(res[0]);
   });
 
   it('Create instructions for update metadata', async () => {
@@ -55,7 +55,7 @@ describe('MetaplexMetaData', () => {
       [source.secret],
     )();
     assert.isArray(res);
-    assert.isObject(typeof res[0]);
+    assert.isObject(res[0]);
   });
 
   it('Get metadata by mintKey', async () => {

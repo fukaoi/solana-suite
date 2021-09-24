@@ -13,17 +13,17 @@ describe('StorageArweave', () => {
     source = obj.source;
   });
 
-  it('Upload metadata json file and image', async () => {
-    const asset = randomAsset();
-    const res = await StorageArweave.upload(
-      source.secret,
-      asset.name,
-      asset.description,
-      asset.imagePath,
-      './test/assets/metadata.json'
-    );
-    console.log(res);
-    // console.log('# upload url', res);
-    // assert.isString(res);
-  });
+  // it('Upload metadata json file and image', async () => {
+    // const asset = randomAsset();
+    // const res = await StorageArweave.upload(
+      // source.secret,
+      // asset.name,
+      // asset.description,
+      // asset.imagePath,
+      // './test/assets/metadata.json'
+    // );
+    // console.log(res);
+    // // console.log('# upload url', res);
+    // // assert.isString(res);
+  // });
 })
