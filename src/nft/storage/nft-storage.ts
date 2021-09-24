@@ -1,4 +1,4 @@
-import {NFTStorage} from 'nft.storage';
+import {NFTStorage, Blob} from 'nft.storage';
 import fs from 'fs';
 import {Constants} from '../../constants';
 
@@ -14,14 +14,16 @@ export namespace StorageNftStorage {
     imagePath: string
   ): Promise<string> => {
     const client = connect();
-    const cid = await client.storeBlob(await fs.promises.readFile(imagePath));
+    const blobImage = new Blob([fs.readFileSync(imagePath)]);
+    const cid = await client.storeBlob(blobImage);
     const url = createGatewayUrl(cid);
 
-    const metadata = await client.storeBlob(JSON.stringify({
+    const blobJson = new Blob([JSON.stringify({
       name,
       description,
       image: url
-    }));
+    })]);
+    const metadata = await client.storeBlob(blobJson);
     return createGatewayUrl(metadata);
   }
 }
