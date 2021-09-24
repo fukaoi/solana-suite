@@ -9,7 +9,7 @@ export namespace TestUtils {
     const asset = files[index];
     const imagePath = `${ASSET_DIR}${asset}`;
     const created = `created at ${Util.dateFormat()}`;
-    const name = (asset.split(/.jpeg|.png|.jpg/)[0]).toUpperCase();
+    const name = (asset.split(/.jpeg|.png|.jpg/i)[0]).toUpperCase();
     const description = `This nft is ${name}:${created}`;
     return {name, description, imagePath}; 
   }

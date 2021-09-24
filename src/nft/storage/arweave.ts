@@ -29,7 +29,7 @@ export namespace StorageArweave {
   }
 
   const isJpegFile = (imageName: string): boolean => {
-    const match = imageName.match(/.+(.jpeg)$/);
+    const match = imageName.match(/.+(.jpeg|.jpg)$/i);
     return Util.isEmpty(match) ? false : true;
   }
 
@@ -46,7 +46,7 @@ export namespace StorageArweave {
       image
     }
     return {
-      buffer: Buffer.from(JSON.stringify(metadata)), 
+      buffer: Buffer.from(JSON.stringify(metadata)),
       pngName: image
     };
   }
