@@ -7,27 +7,25 @@ import './util';
 export namespace ConstantsFunc {
   export const switchApi = (env: string | undefined) => {
     switch (env) {
-      case 'development':
-        return 'http://api.devnet.solana.com';
       case 'production':
         return 'https://api.solana.com';
       case 'test':
         return 'https://api.testnet.solana.com';
       default:
-        throw new Error('Please set NODE_ENV: production or development or test');
+        process.env.NODE_ENV = 'development';
+        return 'http://api.devnet.solana.com';
     }
   }
 
   export const switchNetwork = (env: string | undefined) => {
     switch (env) {
-      case 'development':
-        return 'devnet';
       case 'production':
         return 'mainnet';
       case 'test':
         return 'testnet';
       default:
-        throw new Error('Please set NODE_ENV: production or development or test');
+        process.env.NODE_ENV = 'development';
+        return 'devnet';
     }
   }
 
