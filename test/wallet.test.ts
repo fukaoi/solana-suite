@@ -18,7 +18,7 @@ describe('Wallet', () => {
   it('Get balance at publicKey', async () => {
     const res = await Wallet.getBalance(source.pubkey);
     console.log(res);
-    expect(res).to.equal(10);
+    expect(res).to.equal(1);
   });
 
   it('Get balance at publicKey via lamports', async () => {

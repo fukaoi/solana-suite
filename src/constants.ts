@@ -2,6 +2,8 @@ import {
   Commitment
 } from '@solana/web3.js';
 
+import './util';
+
 export namespace ConstantsFunc {
   export const switchEnvParam = (env: string | undefined) => {
     const response = {url: ''};
@@ -19,7 +21,7 @@ export namespace ConstantsFunc {
         response.url = 'http://api.testnet.solana.com';
         process.env.NODE_ENV = 'testnet';
     }
-    console.debug('# This is ENV: ', process.env.NODE_ENV);
+    console.debug(`### This is ENV: ${process.env.NODE_ENV} ###`);
     return response;
   }
 
