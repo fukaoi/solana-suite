@@ -3,7 +3,7 @@
   "symbol": "FUKAOI",
   "description": "This file is solana-suite that spec test",
   "seller_fee_basis_points": 0,
-  "image": "",
+  "image": "cat.png",
   "animation_url": "",
   "external_url": "https://github.com/fukaoi/solana-suite",
   "attributes": [
@@ -12,8 +12,8 @@
   "properties": {
     "files": [
       {
-        "uri": "",
-        "type": ""
+        "uri": "cat.png",
+        "type": "image/png"
       }
     ],
     "category": "image",

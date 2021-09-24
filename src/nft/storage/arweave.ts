@@ -1,23 +1,12 @@
 import fs from 'fs';
-
-import {
-  SystemProgram,
-  TransactionInstruction,
-  PublicKey,
-} from '@solana/web3.js';
 import {Constants} from '../../constants';
-import crypto from 'crypto';
-import {Transaction} from '../../transaction';
 import {Util} from '../../util';
 import fetch from 'cross-fetch';
-// import fetch from 'node-fetch';
 import FormData from 'form-data';
-// import {FormData as FormData2} from 'formdata-node';
-import * as anchor from '@project-serum/anchor';
 import {SolNative} from '../../sol-native';
 
 export namespace StorageArweave {
-  const MATADAT_FILE = 'metadata.json';
+  const METADATA_FILE = 'metadata.json';
 
   interface ArweaveResult {
     error?: string;
@@ -30,7 +19,37 @@ export namespace StorageArweave {
   }
 
   const calculateArFee = () => {
-    return 10;
+    return 0.00001;
+  }
+
+  const createMetadataJsonFile = (name: string, description: string, image: string) => {
+    return './test/assets/metadata.json';
+  }
+
+  const createUploadData = (
+    payedSignature: string,
+    imagePath: string,
+    metadataJsonFilePath: string
+  ) => {
+    const uploadData = new FormData();
+    const metadata = JSON.parse(fs.readFileSync(metadataJsonFilePath, 'utf8'));
+    const manifestBuffer = Buffer.from(JSON.stringify(metadata));
+    uploadData.append('transaction', payedSignature);
+    uploadData.append('env', Constants.CURRENT_NETWORK);
+    const fileSize = fs.statSync(imagePath).size;
+    uploadData.append('file[]', fs.createReadStream(imagePath), {filename: `image.jpeg`, contentType: 'image/jpeg', knownLength: fileSize});
+    uploadData.append('file[]', manifestBuffer, METADATA_FILE);
+    return uploadData;
+  }
+
+  const uploadServer = async (uploadData: FormData) => {
+    return await (await fetch(
+      Constants.ARWEAVE_UPLOAD_SRV_URL,
+      {
+        method: 'POST',
+        body: uploadData as any,
+      }
+    )).json() as ArweaveResult;
   }
 
   export const upload = async (
@@ -38,82 +57,24 @@ export namespace StorageArweave {
     name: string,
     description: string,
     imagePath: string,
-    metadaFilePath: string
   ) => {
-    const fileBuffer = await fs.promises.readFile(imagePath, 'utf8');
     const payer = Util.createKeypair(payerSecret);
+    const metadataFilePath = createMetadataJsonFile(name, description, imagePath);
 
-    // const inst = await createPayArweaveCostInst(payer.publicKey, buffers);
-    // const signature = await Transaction.sendInstructions(
-    // [payer],
-    // inst
-    // );
+    const signature = await SolNative.transfer(
+      payer.publicKey.toString(),
+      [payerSecret],
+      Constants.AR_SOL_HOLDER_ID,
+      calculateArFee()
+    )();
 
+    await Util.getConnection().confirmTransaction(signature, 'confirmed');
 
-    // const inst = [
-      // anchor.web3.SystemProgram.transfer({
-        // fromPubkey: payer.publicKey,
-        // toPubkey: new PublicKey(Constants.AR_SOL_HOLDER_ID),
-        // lamports: 10,
-      // }),
-    // ];
-
-    // const signature = await Transaction.sendInstructions(
-      // [payer],
-      // inst
-    // );
-
-    const signature = await SolNative.transfer(payer.publicKey.toString(), [payerSecret], Constants.AR_SOL_HOLDER_ID, 10)();
-
-    await Util.getConnection().confirmTransaction(signature, 'max').then(console.log);
-    // const signature = '49oZQT5cXnZUMUQGoiRKPcQwYG1mLiFjtsD8EceLfiaidjdJ2Ui3hGzrEeMxuboxxFizSyv';
-
-    const uploadData = new FormData();
-    const manifestBuffer = Buffer.from(JSON.stringify(metadaFilePath));
-    console.log(manifestBuffer);
-    uploadData.append('transaction', signature);
-    uploadData.append('env', 'devnet');
-    uploadData.append('file[]', fs.createReadStream(imagePath), 'image.jpeg');
-    uploadData.append('file[]', manifestBuffer);
-
-    console.log(uploadData);
-
-    const result = await fetch(
-      Constants.ARWEAVE_UPLOAD_SRV_URL,
-      {
-        method: 'POST',
-        body: uploadData  as any
-      }
+    const metadata = createUploadData(
+      payer.publicKey.toBase58(),
+      imagePath,
+      metadataFilePath
     );
-    console.log(result);
-  }
-
-  const createPayArweaveCostInst = async (
-    payerPubKey: PublicKey,
-    buffers: Buffer[],
-  ): Promise<TransactionInstruction[]> => {
-    const instructions: TransactionInstruction[] = [];
-
-    instructions.push(
-      SystemProgram.transfer({
-        fromPubkey: payerPubKey,
-        toPubkey: new PublicKey(Constants.AR_SOL_HOLDER_ID),
-        lamports: calculateArFee(),
-      }),
-    );
-
-    for (const buffer of buffers) {
-      const hashSum = crypto.createHash('sha256');
-      hashSum.update(buffer.toString());
-      const hex = hashSum.digest('hex');
-      instructions.push(
-        new TransactionInstruction({
-          keys: [],
-          programId: new PublicKey(Constants.MEMO_PROGRAM_ID),
-          data: Buffer.from(hex),
-        }),
-      );
-    }
-    return instructions;
+    return await uploadServer(metadata);
   }
 }

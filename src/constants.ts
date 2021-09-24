@@ -5,24 +5,30 @@ import {
 import './util';
 
 export namespace ConstantsFunc {
-  export const switchEnvParam = (env: string | undefined) => {
-    const response = {url: ''};
+  export const switchApi = (env: string | undefined) => {
     switch (env) {
       case 'development':
-        response.url = 'http://api.devnet.solana.com';
-        break;
+        return 'http://api.devnet.solana.com';
       case 'production':
-        response.url = 'https://api.solana.com';
-        break;
+        return 'https://api.solana.com';
       case 'test':
-        response.url = 'https://api.testnet.solana.com';
-        break;
+        return 'https://api.testnet.solana.com';
       default:
-        response.url = 'http://api.testnet.solana.com';
-        process.env.NODE_ENV = 'testnet';
+        throw new Error('Please set NODE_ENV: production or development or test');
     }
-    console.debug(`### This is ENV: ${process.env.NODE_ENV} ###`);
-    return response;
+  }
+
+  export const switchNetwork = (env: string | undefined) => {
+    switch (env) {
+      case 'development':
+        return 'devnet';
+      case 'production':
+        return 'mainnet';
+      case 'test':
+        return 'testnet';
+      default:
+        throw new Error('Please set NODE_ENV: production or development or test');
+    }
   }
 
   export const swtichArweaveUpload = () =>
@@ -30,7 +36,8 @@ export namespace ConstantsFunc {
 }
 
 export namespace Constants {
-  export const API_URL = ConstantsFunc.switchEnvParam(process.env.NODE_ENV).url;
+  export const CURRENT_NETWORK = ConstantsFunc.switchApi(process.env.NODE_ENV);
+  export const API_URL = ConstantsFunc.switchApi(process.env.NODE_ENV);
   export const ARWEAVE_UPLOAD_SRV_URL = ConstantsFunc.swtichArweaveUpload();
   export const SYSTEM_PROGRAM_ID = '11111111111111111111111111111111';
   export const SPL_TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
