@@ -28,8 +28,18 @@ export namespace StorageArweave {
     return 0.00001;
   }
 
+  const isJpegFile = (imageName: string): boolean => {
+    const match = imageName.match(/[^.jpeg]+$/);
+    return match ? true : false
+  }
+
   const createMetadataBuffer = (name: string, description: string, imagePath: string): Buffer => {
-    const image = path.basename(imagePath);
+    let image = path.basename(imagePath);
+    if (isJpegFile(image)) {
+      const split = image.split('.jpeg');
+      image = `${split[0]}.png`;
+    }
+    console.log(image);
     const metadata: Storage.MetadataFormat = {
       name,
       description,
