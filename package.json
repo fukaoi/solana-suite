@@ -1,5 +1,6 @@
 {
   "name": "solana-suite",
+  "main": "dist/index.js",
   "version": "0.0.1",
   "scripts": {
     "start": "ts-node .",
@@ -7,7 +8,8 @@
     "test": "NODE_ENV=development mocha -t 300000 --require ts-node/register -- ",
     "test-all": "NODE_ENV=development mocha -t 300000 --require ts-node/register \"test/**/*.test.ts\"",
     "lint": "npx tslint --fix --project .",
-    "docs": "typedoc src/ --name solana-suite"
+    "docs": "typedoc src/ --name solana-suite",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@project-serum/anchor": "^0.16.1",
