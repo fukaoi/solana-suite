@@ -29,7 +29,7 @@ export namespace StorageArweave {
   }
 
   const createMetadataBuffer = (name: string, description: string, imagePath: string): Buffer => {
-    const image = path.basename(imagePath); 
+    const image = path.basename(imagePath);
     const metadata: Storage.MetadataFormat = {
       name,
       description,
@@ -42,7 +42,7 @@ export namespace StorageArweave {
     payedSignature: string,
     imagePath: string,
     metadataBuffer: Buffer
-  ) => {
+  ): FormData => {
     const uploadData = new FormData();
     uploadData.append('transaction', payedSignature);
     uploadData.append('env', Constants.CURRENT_NETWORK);
@@ -51,12 +51,12 @@ export namespace StorageArweave {
     return uploadData;
   }
 
-  const uploadServer = async (uploadData: FormData): Promise<ArweaveResult> => {
+  const uploadServer = async (uploadData: BodyInit): Promise<ArweaveResult> => {
     return await (await fetch(
       Constants.ARWEAVE_UPLOAD_SRV_URL,
       {
         method: 'POST',
-        body: uploadData as any,
+        body: uploadData,
       }
     )).json() as ArweaveResult;
   }
@@ -82,7 +82,8 @@ export namespace StorageArweave {
       imagePath,
       buffer
     );
-    const res = await uploadServer(metadata);
+    // todo: No support FormData
+    const res = await uploadServer(metadata as any);
     if (res.error) throw new Error(res.error);
 
     const manifest = res.messages.pop();
