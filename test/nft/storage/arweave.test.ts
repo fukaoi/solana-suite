@@ -1,5 +1,5 @@
 import {describe, it} from 'mocha';
-import {assert} from 'chai'
+import {assert} from 'chai';
 import {Wallet} from '../../../src/wallet';
 import {StorageArweave} from '../../../src/nft/storage/arweave';
 import setupKeyPair from '../../utils/setupKeyPair';

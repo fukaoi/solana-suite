@@ -2,7 +2,10 @@
   "name": "solana-suite",
   "main": "dist/index.js",
   "version": "0.0.1",
-  "files": ["dist", "index.js"],
+  "files": [
+    "dist",
+    "index.js"
+  ],
   "scripts": {
     "start": "ts-node .",
     "build": "npx tsc --build tsconfig.json",

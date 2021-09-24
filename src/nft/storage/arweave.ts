@@ -29,34 +29,38 @@ export namespace StorageArweave {
   }
 
   const isJpegFile = (imageName: string): boolean => {
-    const match = imageName.match(/[^.jpeg]+$/);
-    return match ? true : false
+    const match = imageName.match(/.+(.jpeg)$/);
+    return Util.isEmpty(match) ? false : true;
   }
 
-  const createMetadataBuffer = (name: string, description: string, imagePath: string): Buffer => {
+  const createMetadata = (name: string, description: string, imagePath: string): {buffer: Buffer, pngName: string} => {
     let image = path.basename(imagePath);
     if (isJpegFile(image)) {
       const split = image.split('.jpeg');
       image = `${split[0]}.png`;
     }
-    console.log(image);
+
     const metadata: Storage.MetadataFormat = {
       name,
       description,
       image
     }
-    return Buffer.from(JSON.stringify(metadata));
+    return {
+      buffer: Buffer.from(JSON.stringify(metadata)), 
+      pngName: image
+    };
   }
 
   const createUploadData = (
     payedSignature: string,
     imagePath: string,
+    pngName: string,
     metadataBuffer: Buffer
   ): FormData => {
     const uploadData = new FormData();
     uploadData.append('transaction', payedSignature);
     uploadData.append('env', Constants.CURRENT_NETWORK);
-    uploadData.append('file[]', fs.createReadStream(imagePath), {filename: `image.png`, contentType: 'image/png'});
+    uploadData.append('file[]', fs.createReadStream(imagePath), {filename: pngName, contentType: 'image/png'});
     uploadData.append('file[]', metadataBuffer, METADATA_FILE);
     return uploadData;
   }
@@ -78,7 +82,7 @@ export namespace StorageArweave {
     imagePath: string,
   ) => {
     const payer = Util.createKeypair(payerSecret);
-    const buffer = createMetadataBuffer(name, description, imagePath);
+    const meta = createMetadata(name, description, imagePath);
 
     await SolNative.transfer(
       payer.publicKey.toString(),
@@ -87,13 +91,14 @@ export namespace StorageArweave {
       calculateArFee()
     )();
 
-    const metadata = createUploadData(
+    const formData = createUploadData(
       payer.publicKey.toBase58(),
       imagePath,
-      buffer
+      meta.pngName,
+      meta.buffer
     );
     // todo: No support FormData
-    const res = await uploadServer(metadata as any);
+    const res = await uploadServer(formData as any);
     if (res.error) throw new Error(res.error);
 
     const manifest = res.messages.pop();
