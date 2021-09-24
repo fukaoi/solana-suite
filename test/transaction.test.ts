@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {Transaction} from '../src/transaction';
 import {Memo} from '../src/memo';
-import {assert, expect} from 'chai';
+import {assert} from 'chai';
 import {Wallet} from '../src/wallet';
 import {SolNative} from '../src/sol-native';
 import setupKeyPair from '../test/utils/setupKeyPair';
@@ -48,6 +48,6 @@ describe('Transaction', () => {
     if (!tx) throw new Error('Transaction not found');
     const res = Memo.parseInstruction(tx);
     console.log(`# decode: `, res);
-    expect(res).to.equal('{"tokenId": "dummy", "serialNo": "15/100"}');
+    assert.equal(res, '{"tokenId": "dummy", "serialNo": "15/100"}');
   });
 })

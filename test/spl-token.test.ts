@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {SplToken} from '../src/spl-token';
 import {Memo} from '../src/memo';
-import {assert} from 'chai'
+import {assert} from 'chai';
 import setupKeyPair from '../test/utils/setupKeyPair';
 import fs from 'fs';
 import {Wallet} from '../src/wallet';

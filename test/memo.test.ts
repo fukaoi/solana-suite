@@ -1,5 +1,5 @@
 import {describe, it} from 'mocha';
-import {expect, assert} from 'chai'
+import {assert} from 'chai';
 import {Memo} from '../src/memo';
 import {Wallet} from '../src/wallet';
 
@@ -9,7 +9,7 @@ describe('Memo', () => {
   it('encode', async () => {
     const res = Memo.encode(DUMMY_DATA);
     console.log(`# encoded: ${res}`, res);
-    expect(res.length).to.equal(15);
+    assert.equal(res.length, 15);
   });
 
   it('createInstruction', async () => {
@@ -22,7 +22,7 @@ describe('Memo', () => {
     const data = 'U1Gg9T9EGN5tDRw28wR3GxXWZBkoS3rg2U3iMZdViMJhd5pVNsxh79RW';
     const res = Memo.decode(data);
     console.log(`# decode: `, res, data);
-    expect(res).to.equal('{"nft": "art", "url": "http://hoge.hoge"}');
+    assert.equal(res, '{"nft": "art", "url": "http://hoge.hoge"}');
   });
 
   it('send memo by own', async () => {

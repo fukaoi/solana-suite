@@ -2,7 +2,7 @@ import {describe, it, before} from 'mocha';
 import {SolNative} from '../src/sol-native';
 import {Memo} from '../src/memo';
 import {Wallet} from '../src/wallet';
-import {assert} from 'chai'
+import {assert} from 'chai';
 import setupKeyPair from '../test/utils/setupKeyPair';
 
 let source: Wallet.Keypair;

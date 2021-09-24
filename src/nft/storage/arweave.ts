@@ -25,7 +25,7 @@ export namespace StorageArweave {
   const createGatewayUrl = (cid: string): string => `https://arweave.net/${cid}`
 
   const calculateArFee = () => {
-    return 0.00001;
+    return 0.000001;
   }
 
   const isJpegFile = (imageName: string): boolean => {
