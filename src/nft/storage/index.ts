@@ -1,5 +1,7 @@
-namespace Storage {
-  interface Metadata {
-
+export namespace Storage {
+  export interface MetadataFormat {
+    name: string,
+    description: string,
+    image: string,
   }
 }

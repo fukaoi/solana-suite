@@ -4,45 +4,54 @@ import {Util} from '../../util';
 import fetch from 'cross-fetch';
 import FormData from 'form-data';
 import {SolNative} from '../../sol-native';
+import {Storage} from './index';
+import path from 'path';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
 
   interface ArweaveResult {
-    error?: string;
-    messages?: {
-      filename: string;
-      status: 'success' | 'fail';
-      transactionId?: string;
-      error?: string;
-    }[];
+    error: string;
+    messages: [
+      {
+        filename: string;
+        status: 'success' | 'fail';
+        transactionId: string;
+        error?: string;
+      }
+    ];
   }
+
+  const createGatewayUrl = (cid: string): string => `https://arweave.net/${cid}`
 
   const calculateArFee = () => {
     return 0.00001;
   }
 
-  const createMetadataJsonFile = (name: string, description: string, image: string) => {
-    return './test/assets/metadata.json';
+  const createMetadataBuffer = (name: string, description: string, imagePath: string): Buffer => {
+    const image = path.basename(imagePath); 
+    const metadata: Storage.MetadataFormat = {
+      name,
+      description,
+      image
+    }
+    return Buffer.from(JSON.stringify(metadata));
   }
 
   const createUploadData = (
     payedSignature: string,
     imagePath: string,
-    metadataJsonFilePath: string
+    metadataBuffer: Buffer
   ) => {
     const uploadData = new FormData();
-    const metadata = JSON.parse(fs.readFileSync(metadataJsonFilePath, 'utf8'));
-    const manifestBuffer = Buffer.from(JSON.stringify(metadata));
     uploadData.append('transaction', payedSignature);
     uploadData.append('env', Constants.CURRENT_NETWORK);
-    const fileSize = fs.statSync(imagePath).size;
-    uploadData.append('file[]', fs.createReadStream(imagePath), {filename: `image.jpeg`, contentType: 'image/jpeg', knownLength: fileSize});
-    uploadData.append('file[]', manifestBuffer, METADATA_FILE);
+    uploadData.append('file[]', fs.createReadStream(imagePath), {filename: `image.png`, contentType: 'image/png'});
+    uploadData.append('file[]', metadataBuffer, METADATA_FILE);
     return uploadData;
   }
 
-  const uploadServer = async (uploadData: FormData) => {
+  const uploadServer = async (uploadData: FormData): Promise<ArweaveResult> => {
     return await (await fetch(
       Constants.ARWEAVE_UPLOAD_SRV_URL,
       {
@@ -59,7 +68,7 @@ export namespace StorageArweave {
     imagePath: string,
   ) => {
     const payer = Util.createKeypair(payerSecret);
-    const metadataFilePath = createMetadataJsonFile(name, description, imagePath);
+    const buffer = createMetadataBuffer(name, description, imagePath);
 
     await SolNative.transfer(
       payer.publicKey.toString(),
@@ -71,8 +80,12 @@ export namespace StorageArweave {
     const metadata = createUploadData(
       payer.publicKey.toBase58(),
       imagePath,
-      metadataFilePath
+      buffer
     );
-    return await uploadServer(metadata);
+    const res = await uploadServer(metadata);
+    if (res.error) throw new Error(res.error);
+
+    const manifest = res.messages.pop();
+    return createGatewayUrl(manifest!.transactionId);
   }
 }
