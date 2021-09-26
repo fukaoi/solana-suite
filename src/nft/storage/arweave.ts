@@ -12,6 +12,7 @@ export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
   const LAMPORT_MULTIPLIER = 10 ** 9;
   const WINSTON_MULTIPLIER = 10 ** 12;
+  const DEFAULT_RADIX = 10;
 
   interface ArweaveResult {
     error: string;
@@ -27,33 +28,39 @@ export namespace StorageArweave {
 
   const calculateArFee = async (files: Buffer[]) => {
     const totalBytes = files.reduce((sum, f) => (sum += f.length), 0);
-    console.log('Total bytes', totalBytes);
+
+    console.debug('Total bytes', totalBytes);
+
     const txnFeeInWinstons = parseInt(
       await (
         await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/0`)).text()
-    );
-    console.log('txn fee', txnFeeInWinstons);
+      , DEFAULT_RADIX);
+
+    console.debug('txn fee', txnFeeInWinstons);
+
     const byteCostInWinstons = parseInt(
       await (
         await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/` + totalBytes.toString())
       ).text()
-    );
-    console.log('byte cost', byteCostInWinstons);
+      , DEFAULT_RADIX);
+
+    console.debug('byte cost', byteCostInWinstons);
+
     const totalArCost =
       (txnFeeInWinstons * files.length + byteCostInWinstons) / WINSTON_MULTIPLIER;
 
-    console.log('total ar', totalArCost);
+    console.debug('total ar', totalArCost);
 
     const conversionRates = JSON.parse(await (
       await fetch(`${Constants.COIN_MARKET_URL}?ids=solana,arweave&vs_currencies=usd`)
     ).text());
 
-    console.log(conversionRates);
+    console.debug(JSON.stringify(conversionRates));
 
     // To figure out how many lamports are required, multiply ar byte cost by this number
     const arMultiplier =
-    (conversionRates.arweave.usd / conversionRates.solana.usd) / LAMPORTS_PER_SOL;
-    console.log('Ar mult', arMultiplier);
+      (conversionRates.arweave.usd / conversionRates.solana.usd) / LAMPORTS_PER_SOL;
+    console.debug('Ar mult', arMultiplier);
     // // We also always make a manifest file, which, though tiny, needs payment.
     return LAMPORT_MULTIPLIER * totalArCost * arMultiplier * 1.1;
   }

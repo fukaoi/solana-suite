@@ -5,10 +5,12 @@ import {
 import bs from 'bs58';
 import {Constants} from './constants';
 
-console.debug = (data: any, data2: any = '') =>
-  process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testnet'
-  &&
-  console.log(`\u001b[35m${data}`, `\u001b[36m${data2}`);
+console.debug = (data: any, data2: any = '') => {
+  if (process.env.NODE_ENV === 'development' 
+    || process.env.NODE_ENV === 'testnet') {
+    console.log(`\u001b[35m${data}`, `\u001b[36m${data2}`);
+  }
+}
 
 export namespace Util {
   let connection: Connection;
