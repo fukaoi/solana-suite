@@ -6,6 +6,7 @@ import FormData from 'form-data';
 import {SolNative} from '../../sol-native';
 import {Storage} from './index';
 import path from 'path';
+import {LAMPORTS_PER_SOL} from '@solana/web3.js';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
@@ -24,18 +25,17 @@ export namespace StorageArweave {
     ];
   }
 
-  const createGatewayUrl = (cid: string): string => `https://arweave.net/${cid}`
-
-  const calculateArFee = async (files: File[]) => {
-    const totalBytes = files.reduce((sum, f) => (sum += f.size), 0);
+  const calculateArFee = async (files: Buffer[]) => {
+    const totalBytes = files.reduce((sum, f) => (sum += f.length), 0);
     console.log('Total bytes', totalBytes);
     const txnFeeInWinstons = parseInt(
-      await (await fetch('https://arweave.net/price/0')).text(),
+      await (
+        await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/0`)).text(),
     );
     console.log('txn fee', txnFeeInWinstons);
     const byteCostInWinstons = parseInt(
       await (
-        await fetch('https://arweave.net/price/' + totalBytes.toString())
+        await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/` + totalBytes.toString())
       ).text(),
     );
     console.log('byte cost', byteCostInWinstons);
@@ -44,43 +44,17 @@ export namespace StorageArweave {
 
     console.log('total ar', totalArCost);
 
-    let conversionRates = JSON.parse(
-      localStorage.getItem('conversionRates') || '{}',
-    );
+    const conversionRates = JSON.parse(await (
+      await fetch(`${Constants.COIN_MARKET_URL}?ids=solana,arweave&vs_currencies=usd`)
+    ).text());
 
-    if (
-      !conversionRates ||
-      !conversionRates.expiry ||
-      conversionRates.expiry < Date.now()
-    ) {
-      conversionRates = {
-        value: JSON.parse(
-          await (
-            await fetch(
-              'https://api.coingecko.com/api/v3/simple/price?ids=solana,arweave&vs_currencies=usd',
-            )
-          ).text(),
-        ),
-        expiry: Date.now() + 5 * 60 * 1000,
-      };
-
-      if (conversionRates.value.solana) {
-        try {
-          localStorage.setItem(
-            'conversionRates',
-            JSON.stringify(conversionRates),
-          );
-        } catch {
-          // ignore
-        }
-      }
-    }
+    console.log(conversionRates);
 
     // To figure out how many lamports are required, multiply ar byte cost by this number
     const arMultiplier =
-      conversionRates.value.arweave.usd / conversionRates.value.solana.usd;
+    (conversionRates.arweave.usd / conversionRates.solana.usd) / LAMPORTS_PER_SOL;
     console.log('Ar mult', arMultiplier);
-    // We also always make a manifest file, which, though tiny, needs payment.
+    // // We also always make a manifest file, which, though tiny, needs payment.
     return LAMPORT_MULTIPLIER * totalArCost * arMultiplier * 1.1;
   }
 
@@ -90,8 +64,8 @@ export namespace StorageArweave {
   }
 
   const createMetadata = (
-    name: string, 
-    description: string, 
+    name: string,
+    description: string,
     imagePath: string
   ): {buffer: Buffer, pngName: string} => {
     let image = path.basename(imagePath);
@@ -113,14 +87,14 @@ export namespace StorageArweave {
 
   const createUploadData = (
     payedSignature: string,
-    imagePath: string,
     pngName: string,
+    imageBuffer: Buffer,
     metadataBuffer: Buffer
   ): FormData => {
     const uploadData = new FormData();
     uploadData.append('transaction', payedSignature);
     uploadData.append('env', Constants.CURRENT_NETWORK);
-    uploadData.append('file[]', fs.createReadStream(imagePath), {filename: pngName, contentType: 'image/png'});
+    uploadData.append('file[]', imageBuffer, {filename: pngName, contentType: 'image/png'});
     uploadData.append('file[]', metadataBuffer, METADATA_FILE);
     return uploadData;
   }
@@ -144,24 +118,24 @@ export namespace StorageArweave {
     const payer = Util.createKeypair(payerSecret);
     const meta = createMetadata(name, description, imagePath);
 
-    const fileBuffers: File[] = [];
-    const imageBuffer = fs.createReadStream(imagePath);
+    const fileBuffers: Buffer[] = [];
+    const imageBuffer = fs.readFileSync(imagePath);
     const metadataBuffer = meta.buffer;
-    imageBuffer.size;
+    fileBuffers.push(imageBuffer);
+    fileBuffers.push(metadataBuffer);
 
     const formData = createUploadData(
       payer.publicKey.toBase58(),
-      imagePath,
       meta.pngName,
-      meta.buffer
+      imageBuffer,
+      metadataBuffer
     );
-
 
     await SolNative.transfer(
       payer.publicKey.toString(),
       [payerSecret],
       Constants.AR_SOL_HOLDER_ID,
-      await calculateArFee()
+      await calculateArFee(fileBuffers)
     )();
 
     // todo: No support FormData
@@ -169,6 +143,6 @@ export namespace StorageArweave {
     if (res.error) throw new Error(res.error);
 
     const manifest = res.messages.pop();
-    return createGatewayUrl(manifest!.transactionId);
+    return `${Constants.ARWEAVE_GATEWAY_URL}/${manifest!.transactionId}`
   }
 }

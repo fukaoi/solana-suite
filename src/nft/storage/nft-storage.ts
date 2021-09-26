@@ -4,7 +4,7 @@ import {Constants} from '../../constants';
 
 export namespace StorageNftStorage {
 
-  const createGatewayUrl = (cid: string): string => `https://ipfs.io/ipfs/${cid}`
+  const createGatewayUrl = (cid: string): string => `Constants.NFT_STORAGE_GATEWAY_URL/${cid}`
 
   const connect = () => new NFTStorage({token: Constants.NFT_STORAGE_API_KEY});
 
