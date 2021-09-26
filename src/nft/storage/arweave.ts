@@ -30,13 +30,13 @@ export namespace StorageArweave {
     console.log('Total bytes', totalBytes);
     const txnFeeInWinstons = parseInt(
       await (
-        await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/0`)).text(),
+        await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/0`)).text()
     );
     console.log('txn fee', txnFeeInWinstons);
     const byteCostInWinstons = parseInt(
       await (
         await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/` + totalBytes.toString())
-      ).text(),
+      ).text()
     );
     console.log('byte cost', byteCostInWinstons);
     const totalArCost =

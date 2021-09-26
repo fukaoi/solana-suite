@@ -21,6 +21,7 @@ describe('StorageArweave', () => {
       asset.description,
       asset.imagePath,
     );
-    console.log(res);
+    console.log('# arweave manifest url: ', res);
+    assert.isNotEmpty(res);
   });
 })
