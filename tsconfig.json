@@ -20,6 +20,5 @@
   },
   "include": [
     "src/**/**.ts"
-  ],
-  "extends": "@tsconfig/node14/tsconfig.json"
+  ]
 }

@@ -9,6 +9,8 @@ import path from 'path';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
+  const LAMPORT_MULTIPLIER = 10 ** 9;
+  const WINSTON_MULTIPLIER = 10 ** 12;
 
   interface ArweaveResult {
     error: string;
@@ -24,8 +26,62 @@ export namespace StorageArweave {
 
   const createGatewayUrl = (cid: string): string => `https://arweave.net/${cid}`
 
-  const calculateArFee = () => {
-    return 0.000001;
+  const calculateArFee = async (files: File[]) => {
+    const totalBytes = files.reduce((sum, f) => (sum += f.size), 0);
+    console.log('Total bytes', totalBytes);
+    const txnFeeInWinstons = parseInt(
+      await (await fetch('https://arweave.net/price/0')).text(),
+    );
+    console.log('txn fee', txnFeeInWinstons);
+    const byteCostInWinstons = parseInt(
+      await (
+        await fetch('https://arweave.net/price/' + totalBytes.toString())
+      ).text(),
+    );
+    console.log('byte cost', byteCostInWinstons);
+    const totalArCost =
+      (txnFeeInWinstons * files.length + byteCostInWinstons) / WINSTON_MULTIPLIER;
+
+    console.log('total ar', totalArCost);
+
+    let conversionRates = JSON.parse(
+      localStorage.getItem('conversionRates') || '{}',
+    );
+
+    if (
+      !conversionRates ||
+      !conversionRates.expiry ||
+      conversionRates.expiry < Date.now()
+    ) {
+      conversionRates = {
+        value: JSON.parse(
+          await (
+            await fetch(
+              'https://api.coingecko.com/api/v3/simple/price?ids=solana,arweave&vs_currencies=usd',
+            )
+          ).text(),
+        ),
+        expiry: Date.now() + 5 * 60 * 1000,
+      };
+
+      if (conversionRates.value.solana) {
+        try {
+          localStorage.setItem(
+            'conversionRates',
+            JSON.stringify(conversionRates),
+          );
+        } catch {
+          // ignore
+        }
+      }
+    }
+
+    // To figure out how many lamports are required, multiply ar byte cost by this number
+    const arMultiplier =
+      conversionRates.value.arweave.usd / conversionRates.value.solana.usd;
+    console.log('Ar mult', arMultiplier);
+    // We also always make a manifest file, which, though tiny, needs payment.
+    return LAMPORT_MULTIPLIER * totalArCost * arMultiplier * 1.1;
   }
 
   const isJpegFile = (imageName: string): boolean => {
@@ -33,7 +89,11 @@ export namespace StorageArweave {
     return Util.isEmpty(match) ? false : true;
   }
 
-  const createMetadata = (name: string, description: string, imagePath: string): {buffer: Buffer, pngName: string} => {
+  const createMetadata = (
+    name: string, 
+    description: string, 
+    imagePath: string
+  ): {buffer: Buffer, pngName: string} => {
     let image = path.basename(imagePath);
     if (isJpegFile(image)) {
       const split = image.split('.jpeg');
@@ -84,12 +144,10 @@ export namespace StorageArweave {
     const payer = Util.createKeypair(payerSecret);
     const meta = createMetadata(name, description, imagePath);
 
-    await SolNative.transfer(
-      payer.publicKey.toString(),
-      [payerSecret],
-      Constants.AR_SOL_HOLDER_ID,
-      calculateArFee()
-    )();
+    const fileBuffers: File[] = [];
+    const imageBuffer = fs.createReadStream(imagePath);
+    const metadataBuffer = meta.buffer;
+    imageBuffer.size;
 
     const formData = createUploadData(
       payer.publicKey.toBase58(),
@@ -97,6 +155,15 @@ export namespace StorageArweave {
       meta.pngName,
       meta.buffer
     );
+
+
+    await SolNative.transfer(
+      payer.publicKey.toString(),
+      [payerSecret],
+      Constants.AR_SOL_HOLDER_ID,
+      await calculateArFee()
+    )();
+
     // todo: No support FormData
     const res = await uploadServer(formData as any);
     if (res.error) throw new Error(res.error);
