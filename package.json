@@ -1,10 +1,9 @@
 {
   "name": "solana-suite",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "version": "0.0.1",
   "files": [
-    "dist",
-    "index.js"
+    "lib"
   ],
   "scripts": {
     "build": "tsc -p ./tsconfig.json",
