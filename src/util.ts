@@ -6,7 +6,7 @@ import bs from 'bs58';
 import {Constants} from './constants';
 
 console.debug = (data: any, data2: any = '') => {
-  if (process.env.NODE_ENV === 'development' 
+  if (process.env.NODE_ENV === 'development'
     || process.env.NODE_ENV === 'testnet') {
     console.log(`\u001b[35m${data}`, `\u001b[36m${data2}`);
   }
