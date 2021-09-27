@@ -7,7 +7,7 @@
     "index.js"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --build",
     "test": "NODE_ENV=development mocha -t 300000 --require ts-node/register -- ",
     "test-all": "NODE_ENV=development mocha -t 300000 --require ts-node/register \"test/**/*.test.ts\"",
     "lint": "npx tslint --fix --project .",
