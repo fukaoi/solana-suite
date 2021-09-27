@@ -3,14 +3,31 @@ import {
 } from '@solana/web3.js';
 
 import bs from 'bs58';
+import {StringDecoder} from 'string_decoder';
 import {Constants} from './constants';
 
-console.debug = (data: any, data2: any = '') => {
-  if (process.env.NODE_ENV === 'development'
-    || process.env.NODE_ENV === 'testnet') {
-    console.log(`\u001b[35m${data}`, `\u001b[36m${data2}`);
+/////// GLOBAL SCOPE FUNCTION //////
+
+interface String {
+  toPubKey(): string;
+}
+
+String.prototype.toPubKey = (): string => {
+  return "aaaaa";
+}
+
+export namespace Default {
+  console.debug = (data: any, data2: any = '') => {
+    if (process.env.NODE_ENV === 'development'
+      || process.env.NODE_ENV === 'testnet') {
+      console.log(`\u001b[35m${data}`, `\u001b[36m${data2}`);
+    }
   }
 }
+
+export default module.exports;
+
+/////// GLOBAL FUNCTION //////
 
 export namespace Util {
   let connection: Connection;
