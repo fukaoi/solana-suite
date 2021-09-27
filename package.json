@@ -7,7 +7,6 @@
     "index.js"
   ],
   "scripts": {
-    "start": "ts-node .",
     "build": "tsc",
     "test": "NODE_ENV=development mocha -t 300000 --require ts-node/register -- ",
     "test-all": "NODE_ENV=development mocha -t 300000 --require ts-node/register \"test/**/*.test.ts\"",
