@@ -6,7 +6,7 @@
   }
 
   String.prototype.toPubKey = () => {
-    return "fuck";
+    return 'fuck';
   };
-  console.log("test".toPubKey());
+  console.log('test'.toPubKey());
 // }

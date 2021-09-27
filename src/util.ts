@@ -13,7 +13,7 @@ interface String {
 }
 
 String.prototype.toPubKey = (): string => {
-  return "aaaaa";
+  return 'aaaaa';
 }
 
 export namespace Default {
