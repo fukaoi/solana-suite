@@ -5,6 +5,7 @@ import {
 
 import {
   Account,
+  ParsedInstruction,
   PublicKey,
   TransactionInstruction,
   TransactionSignature,
@@ -14,9 +15,27 @@ import {Util} from './util';
 import {Transaction} from './transaction';
 
 export namespace SplToken {
+  interface TransferHistory {
+    info: {
+      amount: string,
+      authority: string,
+      destination: string,
+      source: string,
+    },
+    type: string
+  }
 
-  interface CreateResponse {
-    tokenId: string,
+  export const getTransferHistory = async (pubkeyStr: string): Promise<TransferHistory[]> => {
+    const transactions = await Transaction.getAll(pubkeyStr);
+    const hist: TransferHistory[] = [];
+    for (const tx of transactions) {
+      for (const inst of tx.transaction.message.instructions) {
+        const value = inst as ParsedInstruction;
+        if (value.program === 'spl-token'
+          && value.parsed.type === 'transfer') hist.push(value.parsed);
+      };
+    }
+    return hist;
   }
 
   export const create = async (
@@ -24,7 +43,7 @@ export namespace SplToken {
     totalAmount: number,
     decimal: number,
     authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
-  ): Promise<CreateResponse> => {
+  ): Promise<string> => {
     const connection = Util.getConnection();
     const signer = new Account(Util.createKeypair(sourceSecret).secretKey);
     const authorityPubKey = new PublicKey(authority);
@@ -47,7 +66,7 @@ export namespace SplToken {
       totalAmount,
     );
 
-    return {tokenId: token.publicKey.toBase58()};
+    return token.publicKey.toBase58();
   }
 
   export const transfer = async (

@@ -6,19 +6,18 @@ import {Wallet} from '../src/wallet';
 import {SolNative} from '../src/sol-native';
 import setupKeyPair from '../test/utils/setupKeyPair';
 import {Util} from '../src/util';
+import {ParsedInstruction} from '@solana/web3.js';
 
 const signature1 = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
 const signature2 = '2nPdn7AhJiTLaopwxCBzPxSB9ucBeBJbyKttXVBh7CoCQkmhkB12yoT6CuFStbT6X6boi9eFEpJjtRUQYVPcvM3J';
 
-const tokenId = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
-
 let source: Wallet.Keypair;
 let dest: Wallet.Keypair;
-const sendContinuously = async(): Promise<void> => {
+const sendContinuously = async (): Promise<void> => {
   await SolNative.transfer(
-    source.pubkey, 
-    [source.secret], 
-    dest.pubkey, 
+    source.pubkey,
+    [source.secret],
+    dest.pubkey,
     0.0001
   )();
 }
@@ -36,12 +35,13 @@ describe('Transaction', () => {
   });
 
   it('Get all transaction data', async () => {
+    const tokenId = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const res = await Transaction.getAll(tokenId);
     assert.isArray(res);
     assert.isObject(res[0]);
   });
 
-  it('Subscribe a account(pubkey)', async() => {
+  it('Subscribe a account(pubkey)', async () => {
     const subscribeId = Transaction.subscribeAccount(dest.pubkey, console.log);
     console.log('# subscribeId: ', subscribeId);
     for (let i = 0; i < 3; i++) await sendContinuously();
