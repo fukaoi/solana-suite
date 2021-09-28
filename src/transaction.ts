@@ -8,7 +8,6 @@ import {
   SystemProgram,
   Signer,
   AccountChangeCallback,
-  ParsedTransaction,
   ParsedConfirmedTransaction,
 } from '@solana/web3.js';
 
