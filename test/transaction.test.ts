@@ -37,8 +37,8 @@ describe('Transaction', () => {
 
   it('Get all transaction data', async () => {
     const res = await Transaction.getAll(tokenId);
-    console.log(res);
-    // assert.isObject(res);
+    assert.isArray(res);
+    assert.isObject(res[0]);
   });
 
   it('Subscribe a account(pubkey)', async() => {
