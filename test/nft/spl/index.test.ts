@@ -41,10 +41,9 @@ describe('NftSpl', () => {
       return;
     }
     const res = await SplNft.create(source.secret);
-    console.log(`# nft: ${res.tokenId}`);
-    nft = res.tokenId;
+    console.log(`# nft: ${res}`);
     assert.isObject(res);
-    createNftTempFile({nft: nft});
+    createNftTempFile({nft: res});
   });
 
   it('Transfer nft, source and destination inter send', async () => {

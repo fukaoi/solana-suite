@@ -74,7 +74,7 @@ export namespace SplToken {
     const transactions = await Transaction.getAll(pubkeyStr);
     const hist: TransferDestinationList[] = [];
     for (const tx of transactions) {
-      const posts = tx.meta?.postTokenBalances as Array<TokenBalance>;
+      const posts = tx.meta?.postTokenBalances as TokenBalance[];
       if (posts.length > 1) {
         posts.forEach((p) => {
           const amount = p!.uiTokenAmount!.uiAmount as number;

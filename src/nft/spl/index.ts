@@ -11,14 +11,10 @@ export namespace SplNft {
   const NFT_AMOUNT = 1;
   const NFT_DECIMAL = 0;
 
-  interface CreateResponse {
-    tokenId: string,
-  }
-
   export const create = (
     sourceSecret: string,
     authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
-  ): Promise<CreateResponse> => {
+  ): Promise<string> => {
     return SplToken.create(
       sourceSecret,
       NFT_AMOUNT,
