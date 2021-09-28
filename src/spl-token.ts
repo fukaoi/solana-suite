@@ -25,15 +25,33 @@ export namespace SplToken {
     type: string
   }
 
+  enum TransactionStatus {
+    Transfer = 'transfer',
+    TransferChecked = 'transferChecked',
+  }
+
+  const isTransfer = (value: ParsedInstruction) => {
+    if (value.program === 'spl-token') {
+      switch (value.parsed.type) {
+        case TransactionStatus.Transfer:
+        case TransactionStatus.TransferChecked:
+          return true;
+        default:
+          return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
   export const getTransferHistory = async (pubkeyStr: string): Promise<TransferHistory[]> => {
     const transactions = await Transaction.getAll(pubkeyStr);
     const hist: TransferHistory[] = [];
     for (const tx of transactions) {
       for (const inst of tx.transaction.message.instructions) {
         const value = inst as ParsedInstruction;
-        if (value.program === 'spl-token'
-          && value.parsed.type === 'transfer') hist.push(value.parsed);
-      };
+        if (isTransfer(value)) hist.push(value.parsed);
+      }
     }
     return hist;
   }

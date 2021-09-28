@@ -6,7 +6,6 @@ import {Wallet} from '../src/wallet';
 import {SolNative} from '../src/sol-native';
 import setupKeyPair from '../test/utils/setupKeyPair';
 import {Util} from '../src/util';
-import {ParsedInstruction} from '@solana/web3.js';
 
 const signature1 = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
 const signature2 = '2nPdn7AhJiTLaopwxCBzPxSB9ucBeBJbyKttXVBh7CoCQkmhkB12yoT6CuFStbT6X6boi9eFEpJjtRUQYVPcvM3J';
