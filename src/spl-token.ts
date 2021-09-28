@@ -7,6 +7,7 @@ import {
   Account,
   ParsedInstruction,
   PublicKey,
+  TokenBalance,
   TransactionInstruction,
   TransactionSignature,
 } from '@solana/web3.js';
@@ -22,7 +23,13 @@ export namespace SplToken {
       destination: string,
       source: string,
     },
-    type: string
+    type: string,
+    date: Date,
+  }
+
+  interface TransferDestinationList {
+    destination: string,
+    date: Date,
   }
 
   enum TransactionStatus {
@@ -44,13 +51,41 @@ export namespace SplToken {
     }
   }
 
+  const convertTimestmapToDate = (blockTime: number) =>
+    new Date(blockTime * 1000);
+
   export const getTransferHistory = async (pubkeyStr: string): Promise<TransferHistory[]> => {
     const transactions = await Transaction.getAll(pubkeyStr);
     const hist: TransferHistory[] = [];
     for (const tx of transactions) {
       for (const inst of tx.transaction.message.instructions) {
         const value = inst as ParsedInstruction;
-        if (isTransfer(value)) hist.push(value.parsed);
+        if (isTransfer(value)) {
+          const v: TransferHistory = value.parsed;
+          v.date = convertTimestmapToDate(tx.blockTime as number);
+          hist.push(v);
+        }
+      }
+    }
+    return hist;
+  }
+
+  export const getTransferDestinationList = async (pubkeyStr: string): Promise<TransferDestinationList[]> => {
+    const transactions = await Transaction.getAll(pubkeyStr);
+    const hist: TransferDestinationList[] = [];
+    for (const tx of transactions) {
+      const posts = tx.meta?.postTokenBalances as Array<TokenBalance>;
+      if (posts.length > 1) {
+        posts.forEach((p) => {
+          const amount = p!.uiTokenAmount!.uiAmount as number;
+          if (amount > 0) {
+            const index = p.accountIndex;
+            const destination = tx.transaction.message.accountKeys[index].pubkey.toString();
+            const date = convertTimestmapToDate(tx.blockTime as number);
+            const v: TransferDestinationList = {destination, date};
+            hist.push(v);
+          }
+        });
       }
     }
     return hist;

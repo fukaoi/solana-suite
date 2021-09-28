@@ -12,6 +12,7 @@ let destPubkey: string;
 let tokenId: string;
 
 const TEMP_TOKEN_FILE = '.solana-spl-token';
+const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
 
 const loadTokenTempFile = () => {
   const res = fs.readFileSync(TEMP_TOKEN_FILE, 'utf8');
@@ -35,15 +36,37 @@ describe('SplToken', () => {
     fs.existsSync(TEMP_TOKEN_FILE) && loadTokenTempFile();
   });
 
-  it.only('Get token transfer history', async () => {
-    const tokenId = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
-    const res = await SplToken.getTransferHistory(tokenId);
+  it('Get token transfer history by tokenKey', async () => {
+    const res = await SplToken.getTransferHistory(tokenKey);
     assert.isArray(res);
     res.forEach((v) => {
       assert.isNotEmpty(v.type);
       assert.isNotEmpty(v.info.source);
       assert.isNotEmpty(v.info.destination);
       assert.isNotEmpty(v.info.authority);
+      assert.isNotNull(v.date);
+    });
+  });
+
+  it('Get token transfer history by owner address', async () => {
+    const ownerPubKey = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
+    const res = await SplToken.getTransferHistory(ownerPubKey);
+    assert.isArray(res);
+    res.forEach((v) => {
+      assert.isNotEmpty(v.type);
+      assert.isNotEmpty(v.info.source);
+      assert.isNotEmpty(v.info.destination);
+      assert.isNotEmpty(v.info.authority);
+      assert.isNotNull(v.date);
+    });
+  });
+
+  it('Get token transfer destination history', async () => {
+    const res = await SplToken.getTransferDestinationList(tokenKey);
+    assert.isArray(res);
+    res.forEach((v) => {
+      assert.isNotEmpty(v.destination);
+      assert.isNotNull(v.date);
     });
   });
 
