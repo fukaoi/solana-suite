@@ -1,10 +1,12 @@
-import {StorageNftStorage} from "./nft-storage"
-import {StorageArweave} from "./arweave"
-
+// tslint:disable-next-line
 export interface Attributes {}
+// tslint:disable-next-line
 export interface Collection {}
+// tslint:disable-next-line
 export interface Properties {}
+// tslint:disable-next-line
 export interface Creators {}
+
 export interface MetadataFormat {
   name: string,
   image: string,

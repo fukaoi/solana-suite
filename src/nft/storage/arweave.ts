@@ -123,8 +123,8 @@ export namespace StorageArweave {
     const payer = Util.createKeypair(payerSecret);
 
     const meta = createMetadata(
-      storageData.name, 
-      storageData.description, 
+      storageData.name,
+      storageData.description,
       storageData.image
     );
 
