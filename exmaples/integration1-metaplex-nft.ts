@@ -1,10 +1,13 @@
+//////////////////////////////////////////////
+//$ npx ts-node exmaples/integration1-metaplex-nft.ts
+//////////////////////////////////////////////
+
 import {
-  Wallet, 
-  Util, 
-  Metaplex, 
-  MetaplexObject, 
+  Wallet,
+  Util,
+  Metaplex,
+  MetaplexObject,
   MetaplexMetaData,
-  Storage,
   StorageNftStorage,
   SplNft
 } from '../src/index';
@@ -36,11 +39,7 @@ import {RandomAsset} from '../test/utils/randomAsset';
   console.log('# asset: ', asset);
 
   // metadata and image upload
-  const storageData = Storage.initStorageData();
-  storageData.name = asset.name;
-  storageData.image = asset.image;
-  storageData.description = asset.description;
-  const url = await StorageNftStorage.upload(storageData);
+  const url = await StorageNftStorage.upload(asset);
 
   //////////////////////////////////////////////
   // CREATE NFT, MINT NFT FROM THIS LINE 
