@@ -30,3 +30,14 @@ describe('Metaplex', () => {
     assert.isNotEmpty(res);
   });
 })
+
+
+// コンテンツ名：title、 => name
+// コンテンツ説明：description、=> description
+// サムネイル：thumnail_url、=> image
+// データ：data_url、=> uri
+// 移転上限回数：tx_limit、 => attributes.limits: transfer 
+//                             attributes.value: 10 
+//
+// 利用上限回数：use_limit => attributes.limits: use_limit
+//                             attributes.value: 10 

@@ -4,11 +4,12 @@ import {
   Metaplex, 
   MetaplexObject, 
   MetaplexMetaData,
+  Storage,
   StorageNftStorage,
   SplNft
 } from '../src/index';
 
-import randomAsset from '../test/utils/randomAsset';
+import {RandomAsset} from '../test/utils/randomAsset';
 
 (async () => {
 
@@ -30,16 +31,16 @@ import randomAsset from '../test/utils/randomAsset';
 
   // Only test that call this function   
   // Usually set custom param
-  const asset = randomAsset();
+  const asset = RandomAsset.storage();
 
   console.log('# asset: ', asset);
 
   // metadata and image upload
-  const url = await StorageNftStorage.upload(
-    asset.name,
-    asset.description,
-    asset.imagePath
-  );
+  const storageData = Storage.initStorageData();
+  storageData.name = asset.name;
+  storageData.image = asset.image;
+  storageData.description = asset.description;
+  const url = await StorageNftStorage.upload(storageData);
 
   //////////////////////////////////////////////
   // CREATE NFT, MINT NFT FROM THIS LINE 
