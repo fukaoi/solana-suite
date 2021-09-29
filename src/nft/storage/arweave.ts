@@ -71,23 +71,16 @@ export namespace StorageArweave {
   }
 
   const createMetadata = (
-    name: string,
-    description: string,
-    imagePath: string
+    storageData: MetadataStorageFormat
   ): {buffer: Buffer, pngName: string} => {
-    let image = path.basename(imagePath);
+    let image = path.basename(storageData.image);
     if (isJpegFile(image)) {
       const split = image.split('.jpeg');
       image = `${split[0]}.png`;
     }
 
-    const metadata: MetadataStorageFormat = {
-      name,
-      description,
-      image
-    }
     return {
-      buffer: Buffer.from(JSON.stringify(metadata)),
+      buffer: Buffer.from(JSON.stringify(storageData)),
       pngName: image
     };
   }
@@ -122,11 +115,7 @@ export namespace StorageArweave {
   ) => {
     const payer = Util.createKeypair(payerSecret);
 
-    const meta = createMetadata(
-      storageData.name,
-      storageData.description,
-      storageData.image
-    );
+    const meta = createMetadata(storageData);
 
     const fileBuffers: Buffer[] = [];
     const imageBuffer = fs.readFileSync(storageData.image);
