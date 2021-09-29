@@ -4,9 +4,9 @@ import {Util} from '../../util';
 import fetch from 'cross-fetch';
 import FormData from 'form-data';
 import {SolNative} from '../../sol-native';
-import {Storage} from './index';
 import path from 'path';
 import {LAMPORTS_PER_SOL} from '@solana/web3.js';
+import {MetadataStorageFormat} from './index';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
@@ -81,7 +81,7 @@ export namespace StorageArweave {
       image = `${split[0]}.png`;
     }
 
-    const metadata: Storage.MetadataFormat = {
+    const metadata: MetadataStorageFormat = {
       name,
       description,
       image
@@ -118,15 +118,18 @@ export namespace StorageArweave {
 
   export const upload = async (
     payerSecret: string,
-    name: string,
-    description: string,
-    imagePath: string,
+    storageData: MetadataStorageFormat
   ) => {
     const payer = Util.createKeypair(payerSecret);
-    const meta = createMetadata(name, description, imagePath);
+
+    const meta = createMetadata(
+      storageData.name, 
+      storageData.description, 
+      storageData.image
+    );
 
     const fileBuffers: Buffer[] = [];
-    const imageBuffer = fs.readFileSync(imagePath);
+    const imageBuffer = fs.readFileSync(storageData.image);
     const metadataBuffer = meta.buffer;
     fileBuffers.push(imageBuffer);
     fileBuffers.push(metadataBuffer);
