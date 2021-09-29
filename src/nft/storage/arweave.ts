@@ -79,6 +79,9 @@ export namespace StorageArweave {
       image = `${split[0]}.png`;
     }
 
+    // update image name
+    storageData.image = image;
+
     return {
       buffer: Buffer.from(JSON.stringify(storageData)),
       pngName: image
@@ -98,7 +101,6 @@ export namespace StorageArweave {
     uploadData.append('file[]', metadataBuffer, METADATA_FILE);
     return uploadData;
   }
-
   const uploadServer = async (uploadData: BodyInit): Promise<ArweaveResult> => {
     return await (await fetch(
       Constants.ARWEAVE_UPLOAD_SRV_URL,
@@ -114,11 +116,11 @@ export namespace StorageArweave {
     storageData: MetadataStorageFormat
   ) => {
     const payer = Util.createKeypair(payerSecret);
-
+    const imagePath = storageData.image;
     const meta = createMetadata(storageData);
 
     const fileBuffers: Buffer[] = [];
-    const imageBuffer = fs.readFileSync(storageData.image);
+    const imageBuffer = fs.readFileSync(imagePath);
     const metadataBuffer = meta.buffer;
     fileBuffers.push(imageBuffer);
     fileBuffers.push(metadataBuffer);
