@@ -9,10 +9,9 @@ export interface Creators {}
 
 export interface MetadataFormat {
   name: string,
-  image: string,
   uri: string,
+  symbol: string,
   update_authority: string,
-  symbol?: string,
   creators?: Creators[],
   seller_fee_basis_points?: number,
   primary_sale_happened?: boolean,
@@ -28,7 +27,7 @@ export interface MetadataStorageFormat {
   external_url?: string,
   category?: string,
   attributes?: Attributes[],
-  collection?: Collection[],
+  collection?: Collection,
   properties?: Properties[],
   creators?: Creators[],
 }
@@ -45,7 +44,7 @@ export namespace Storage {
       external_url: '',
       category: '',
       attributes: [],
-      collection: [],
+      collection: {},
       properties: [],
       creators: [],
     }
