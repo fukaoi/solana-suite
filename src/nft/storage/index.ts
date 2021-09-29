@@ -33,3 +33,22 @@ export interface MetadataStorageFormat {
   creators?: Creators[],
 }
 
+export namespace Storage {
+  export const initStorageData = (): MetadataStorageFormat => {
+    return {
+      name: '',
+      description: '',
+      image: '',
+      symbol: '',
+      seller_fee_basis_points: 0,
+      animation_url: '',
+      external_url: '',
+      category: '',
+      attributes: [],
+      collection: [],
+      properties: [],
+      creators: [],
+    }
+  }
+}
+

@@ -4,7 +4,7 @@ import {Wallet} from '../../../src/wallet';
 import {StorageArweave} from '../../../src/nft/storage/arweave';
 import setupKeyPair from '../../utils/setupKeyPair';
 import randomAsset from '../../utils/randomAsset';
-import {MetadataStorageFormat} from '../../../src/nft/storage';
+import {Storage} from '../../../src/nft/storage';
 
 let source: Wallet.Keypair;
 
@@ -16,11 +16,10 @@ describe('StorageArweave', () => {
 
   it('Upload metadata json file and image', async () => {
     const asset = randomAsset();
-    const storageData: MetadataStorageFormat = {
-      name: asset.name,
-      description: asset.description,
-      image: asset.imagePath,
-    };
+    const storageData = Storage.initStorageData();
+    storageData.name = asset.name;
+    storageData.description = asset.description;
+    storageData.image = asset.imagePath;
     const res = await StorageArweave.upload(
       source.secret,
       storageData
