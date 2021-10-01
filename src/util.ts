@@ -12,7 +12,7 @@ declare global {
     }
 }
 
-String.prototype.toPubKey = function(): string {
+String.prototype.toPubKey = (): string => {
   return 'aaaaa';
 }
 
