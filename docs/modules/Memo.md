@@ -1,18 +1,16 @@
-[solana-suite](../README.md) / [Exports](../modules.md) / [memo](memo.md) / Memo
+[solana-suite](../README.md) / [Exports](../modules.md) / Memo
 
 # Namespace: Memo
-
-[memo](memo.md).Memo
 
 ## Table of contents
 
 ### Functions
 
-- [createInstruction](memo.Memo.md#createinstruction)
-- [decode](memo.Memo.md#decode)
-- [encode](memo.Memo.md#encode)
-- [own](memo.Memo.md#own)
-- [parseInstruction](memo.Memo.md#parseinstruction)
+- [createInstruction](Memo.md#createinstruction)
+- [decode](Memo.md#decode)
+- [encode](Memo.md#encode)
+- [own](Memo.md#own)
+- [parseInstruction](Memo.md#parseinstruction)
 
 ## Functions
 
@@ -32,7 +30,7 @@
 
 #### Defined in
 
-[memo.ts:21](https://github.com/fukaoi/solana-suite/blob/957ccbb/src/memo.ts#L21)
+[src/memo.ts:22](https://github.com/fukaoi/solana-suite/blob/500107f/src/memo.ts#L22)
 
 ___
 
@@ -52,7 +50,7 @@ ___
 
 #### Defined in
 
-[memo.ts:17](https://github.com/fukaoi/solana-suite/blob/957ccbb/src/memo.ts#L17)
+[src/memo.ts:18](https://github.com/fukaoi/solana-suite/blob/500107f/src/memo.ts#L18)
 
 ___
 
@@ -72,7 +70,7 @@ ___
 
 #### Defined in
 
-[memo.ts:19](https://github.com/fukaoi/solana-suite/blob/957ccbb/src/memo.ts#L19)
+[src/memo.ts:20](https://github.com/fukaoi/solana-suite/blob/500107f/src/memo.ts#L20)
 
 ___
 
@@ -93,24 +91,24 @@ ___
 
 #### Defined in
 
-[memo.ts:34](https://github.com/fukaoi/solana-suite/blob/957ccbb/src/memo.ts#L34)
+[src/memo.ts:38](https://github.com/fukaoi/solana-suite/blob/500107f/src/memo.ts#L38)
 
 ___
 
 ### parseInstruction
 
-▸ `Const` **parseInstruction**(`tx`): `any`
+▸ `Const` **parseInstruction**(`tx`): `string`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `tx` | `TransactionResponse` |
+| `tx` | `ParsedConfirmedTransaction` |
 
 #### Returns
 
-`any`
+`string`
 
 #### Defined in
 
-[memo.ts:29](https://github.com/fukaoi/solana-suite/blob/957ccbb/src/memo.ts#L29)
+[src/memo.ts:30](https://github.com/fukaoi/solana-suite/blob/500107f/src/memo.ts#L30)

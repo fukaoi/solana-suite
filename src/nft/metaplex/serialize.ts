@@ -21,7 +21,7 @@ export namespace MetaplexSerialize {
   }
 
   export const serializeUpdateArgs = (
-    data: MetaplexObject.Data, 
+    data: MetaplexObject.Data,
     newUpdateAuthority: string | null | undefined,
     primarySaleHappened: boolean | null | undefined
   ) => {
