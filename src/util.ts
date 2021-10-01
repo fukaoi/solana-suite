@@ -3,16 +3,16 @@ import {
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-import {StringDecoder} from 'string_decoder';
 import {Constants} from './constants';
 
 /////// GLOBAL SCOPE FUNCTION //////
-
-interface String {
-  toPubKey(): string;
+declare global {
+    interface String {
+      toPubKey(): string;
+    }
 }
 
-String.prototype.toPubKey = (): string => {
+String.prototype.toPubKey = function(): string {
   return 'aaaaa';
 }
 

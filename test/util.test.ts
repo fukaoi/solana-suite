@@ -1,6 +1,3 @@
-import {describe, it} from 'mocha';
-import {assert} from 'chai';
-// import {Util} from '../src/util'; 
 import '../src/util';
 
 describe('Util', () => {
@@ -9,6 +6,6 @@ describe('Util', () => {
   });
 
   it('Change type', () => {
-    "Change".toPubKey();
+    console.debug("data".toPubKey());
   });
 })
