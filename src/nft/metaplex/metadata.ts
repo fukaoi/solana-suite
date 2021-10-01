@@ -5,12 +5,9 @@ import {
   SYSVAR_RENT_PUBKEY,
 } from '@solana/web3.js';
 
-import {serialize} from 'borsh';
-
 import {Wallet} from '../../wallet';
 import {Constants} from '../../constants';
-import {MetaplexObject} from './object';
-import {MetaplexSerialize} from './serialize';
+import {Metaplex, MetaplexSerialize} from './index';
 import {Util} from '../../util';
 import {Token} from '@solana/spl-token';
 
@@ -31,7 +28,7 @@ export namespace MetaplexMetaData {
     if (data) {
       return MetaplexSerialize.decode(data);
     }
-    return MetaplexSerialize.initData();
+    return Metaplex.initFormat();
   }
 
   export const getByOwner = async (ownerPubKey: string) => {
@@ -52,7 +49,7 @@ export namespace MetaplexMetaData {
   }
 
   export const create = (
-    data: MetaplexObject.Data,
+    data: Metaplex.Format,
     mintKey: string,
     payer: string,
     mintAuthorityKey = payer,
@@ -114,7 +111,7 @@ export namespace MetaplexMetaData {
   }
 
   export const update = (
-    data: MetaplexObject.Data,
+    data: Metaplex.Format,
     newUpdateAuthority: string | undefined,
     primarySaleHappened: boolean | null | undefined,
     mintKey: string,

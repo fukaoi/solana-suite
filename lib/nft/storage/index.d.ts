@@ -1,4 +1,4 @@
-import { Metaplex } from "../metaplex";
+import { Metaplex } from '../metaplex';
 export interface Attributes {
 }
 export interface Collection {

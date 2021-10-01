@@ -2,6 +2,7 @@ import {Token, MintLayout} from '@solana/spl-token';
 import {Transaction} from '../../transaction';
 import {MetaplexObject as _mObject} from './object';
 import {MetaplexMetaData as _mMetaData} from './metadata';
+import {MetaplexSerialize as _mSerialize} from './serialize';
 import {
   Keypair,
   PublicKey,
@@ -10,13 +11,13 @@ import {
 import {Constants} from '../../constants';
 import {Util} from '../../util';
 
-
-export const MetaplexObject = _mObject;
+// alias submodule 
 export const MetaplexMetaData = _mMetaData;
+export const MetaplexSerialize = _mSerialize;
+export const MetaplexObject = _mObject;
 
 export namespace Metaplex {
-
-
+  export const Object = _mObject;
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
 
   const createMintAccount = async (
@@ -63,9 +64,10 @@ export namespace Metaplex {
     return mintAccount.toBase58();
   }
 
+  // tslint:disable-next-line
   export interface Creators {}
 
-  export interface MetadataFormat {
+  export interface Format {
     name: string,
     uri: string,
     symbol: string,
@@ -73,6 +75,17 @@ export namespace Metaplex {
     creators?: Creators[],
     seller_fee_basis_points?: number,
     primary_sale_happened?: boolean,
+  }
+
+  export const initFormat = () => {
+    return {
+      updateAuthority: '',
+      mint: '',
+      name: '',
+      symbol: '',
+      uri: '',
+      sellerFeeBasisPoints: '',
+    }
   }
 
   export const create = (

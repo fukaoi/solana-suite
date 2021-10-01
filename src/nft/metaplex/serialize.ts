@@ -12,7 +12,6 @@ export namespace MetaplexSerialize {
       name: '',
       symbol: '',
       uri: '',
-      sellerFeeBasisPoints: '',
     }
   }
 
