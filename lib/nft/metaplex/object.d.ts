@@ -58,9 +58,6 @@ export declare namespace MetaplexObject {
         data: Data;
         primarySaleHappened: boolean;
         isMutable: boolean;
-        editionNonce: number | null;
-        masterEdition?: string;
-        edition?: string;
         constructor(args: {
             updateAuthority: string;
             mint: string;

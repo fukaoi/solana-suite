@@ -1,9 +1,9 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Wallet} from '../../../src/wallet';
-import {StorageArweave} from '../../../src/nft/storage/arweave';
+import {StorageArweave} from '../../../src/nft/storage';
 import setupKeyPair from '../../utils/setupKeyPair';
-import randomAsset from '../../utils/randomAsset';
+import {RandomAsset} from '../../utils/randomAsset';
 
 let source: Wallet.Keypair;
 
@@ -14,12 +14,10 @@ describe('StorageArweave', () => {
   });
 
   it('Upload metadata json file and image', async () => {
-    const asset = randomAsset();
+    const asset = RandomAsset.storage();
     const res = await StorageArweave.upload(
       source.secret,
-      asset.name,
-      asset.description,
-      asset.imagePath,
+      asset
     );
     console.log('# arweave manifest url: ', res);
     assert.isNotEmpty(res);

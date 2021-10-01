@@ -1,7 +1,7 @@
 import {Wallet} from '../../src/wallet';
 
 export namespace TestUtils {
-  console.debug(`\u001b[33m === DEBUG MODE ===`);
+  console.debug(`\u001b[33m === DEBUG MODE (${process.env.NODE_ENV}) ===`);
 
   export const debugDisp = (source: Wallet.Keypair, dest: Wallet.Keypair) => {
     console.debug(`# source.pubkey:`, source.pubkey);

@@ -4,9 +4,9 @@ import {Util} from '../../util';
 import fetch from 'cross-fetch';
 import FormData from 'form-data';
 import {SolNative} from '../../sol-native';
-import {Storage} from './index';
 import path from 'path';
 import {LAMPORTS_PER_SOL} from '@solana/web3.js';
+import {Storage} from './index';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
@@ -70,24 +70,18 @@ export namespace StorageArweave {
     return Util.isEmpty(match) ? false : true;
   }
 
-  const createMetadata = (
-    name: string,
-    description: string,
-    imagePath: string
-  ): {buffer: Buffer, pngName: string} => {
-    let image = path.basename(imagePath);
+  const createMetadata = ( storageData: Storage.Format): {buffer: Buffer, pngName: string} => {
+    let image = path.basename(storageData.image);
     if (isJpegFile(image)) {
       const split = image.split('.jpeg');
       image = `${split[0]}.png`;
     }
 
-    const metadata: Storage.MetadataFormat = {
-      name,
-      description,
-      image
-    }
+    // update image name
+    storageData.image = image;
+
     return {
-      buffer: Buffer.from(JSON.stringify(metadata)),
+      buffer: Buffer.from(JSON.stringify(storageData)),
       pngName: image
     };
   }
@@ -105,7 +99,6 @@ export namespace StorageArweave {
     uploadData.append('file[]', metadataBuffer, METADATA_FILE);
     return uploadData;
   }
-
   const uploadServer = async (uploadData: BodyInit): Promise<ArweaveResult> => {
     return await (await fetch(
       Constants.ARWEAVE_UPLOAD_SRV_URL,
@@ -118,12 +111,11 @@ export namespace StorageArweave {
 
   export const upload = async (
     payerSecret: string,
-    name: string,
-    description: string,
-    imagePath: string,
+    storageData: Storage.Format
   ) => {
     const payer = Util.createKeypair(payerSecret);
-    const meta = createMetadata(name, description, imagePath);
+    const imagePath = storageData.image;
+    const meta = createMetadata(storageData);
 
     const fileBuffers: Buffer[] = [];
     const imageBuffer = fs.readFileSync(imagePath);

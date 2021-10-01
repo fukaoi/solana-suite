@@ -5,7 +5,9 @@ import {
 
 import {
   Account,
+  ParsedInstruction,
   PublicKey,
+  TokenBalance,
   TransactionInstruction,
   TransactionSignature,
 } from '@solana/web3.js';
@@ -14,9 +16,79 @@ import {Util} from './util';
 import {Transaction} from './transaction';
 
 export namespace SplToken {
+  interface TransferHistory {
+    info: {
+      amount: string,
+      authority: string,
+      destination: string,
+      source: string,
+    },
+    type: string,
+    date: Date,
+  }
 
-  interface CreateResponse {
-    tokenId: string,
+  interface TransferDestinationList {
+    destination: string,
+    date: Date,
+  }
+
+  enum TransactionStatus {
+    Transfer = 'transfer',
+    TransferChecked = 'transferChecked',
+  }
+
+  const isTransfer = (value: ParsedInstruction) => {
+    if (value.program === 'spl-token') {
+      switch (value.parsed.type) {
+        case TransactionStatus.Transfer:
+        case TransactionStatus.TransferChecked:
+          return true;
+        default:
+          return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  const convertTimestmapToDate = (blockTime: number) =>
+    new Date(blockTime * 1000);
+
+  export const getTransferHistory = async (pubkeyStr: string): Promise<TransferHistory[]> => {
+    const transactions = await Transaction.getAll(pubkeyStr);
+    const hist: TransferHistory[] = [];
+    for (const tx of transactions) {
+      for (const inst of tx.transaction.message.instructions) {
+        const value = inst as ParsedInstruction;
+        if (isTransfer(value)) {
+          const v: TransferHistory = value.parsed;
+          v.date = convertTimestmapToDate(tx.blockTime as number);
+          hist.push(v);
+        }
+      }
+    }
+    return hist;
+  }
+
+  export const getTransferDestinationList = async (pubkeyStr: string): Promise<TransferDestinationList[]> => {
+    const transactions = await Transaction.getAll(pubkeyStr);
+    const hist: TransferDestinationList[] = [];
+    for (const tx of transactions) {
+      const posts = tx.meta?.postTokenBalances as TokenBalance[];
+      if (posts.length > 1) {
+        posts.forEach((p) => {
+          const amount = p!.uiTokenAmount!.uiAmount as number;
+          if (amount > 0) {
+            const index = p.accountIndex;
+            const destination = tx.transaction.message.accountKeys[index].pubkey.toString();
+            const date = convertTimestmapToDate(tx.blockTime as number);
+            const v: TransferDestinationList = {destination, date};
+            hist.push(v);
+          }
+        });
+      }
+    }
+    return hist;
   }
 
   export const create = async (
@@ -24,7 +96,7 @@ export namespace SplToken {
     totalAmount: number,
     decimal: number,
     authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
-  ): Promise<CreateResponse> => {
+  ): Promise<string> => {
     const connection = Util.getConnection();
     const signer = new Account(Util.createKeypair(sourceSecret).secretKey);
     const authorityPubKey = new PublicKey(authority);
@@ -47,7 +119,7 @@ export namespace SplToken {
       totalAmount,
     );
 
-    return {tokenId: token.publicKey.toBase58()};
+    return token.publicKey.toBase58();
   }
 
   export const transfer = async (

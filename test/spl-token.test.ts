@@ -12,6 +12,7 @@ let destPubkey: string;
 let tokenId: string;
 
 const TEMP_TOKEN_FILE = '.solana-spl-token';
+const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
 
 const loadTokenTempFile = () => {
   const res = fs.readFileSync(TEMP_TOKEN_FILE, 'utf8');
@@ -35,6 +36,40 @@ describe('SplToken', () => {
     fs.existsSync(TEMP_TOKEN_FILE) && loadTokenTempFile();
   });
 
+  it('Get token transfer history by tokenKey', async () => {
+    const res = await SplToken.getTransferHistory(tokenKey);
+    assert.isArray(res);
+    res.forEach((v) => {
+      assert.isNotEmpty(v.type);
+      assert.isNotEmpty(v.info.source);
+      assert.isNotEmpty(v.info.destination);
+      assert.isNotEmpty(v.info.authority);
+      assert.isNotNull(v.date);
+    });
+  });
+
+  it('Get token transfer history by owner address', async () => {
+    const ownerPubKey = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
+    const res = await SplToken.getTransferHistory(ownerPubKey);
+    assert.isArray(res);
+    res.forEach((v) => {
+      assert.isNotEmpty(v.type);
+      assert.isNotEmpty(v.info.source);
+      assert.isNotEmpty(v.info.destination);
+      assert.isNotEmpty(v.info.authority);
+      assert.isNotNull(v.date);
+    });
+  });
+
+  it('Get token transfer destination history', async () => {
+    const res = await SplToken.getTransferDestinationList(tokenKey);
+    assert.isArray(res);
+    res.forEach((v) => {
+      assert.isNotEmpty(v.destination);
+      assert.isNotNull(v.date);
+    });
+  });
+
   it('Create token', async () => {
     if (tokenId) {
       console.log(`# skip because loaded`);
@@ -43,10 +78,9 @@ describe('SplToken', () => {
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const TOKEN_DECIMAL = 2;
     const res = await SplToken.create(source.secret, TOKEN_TOTAL_AMOUNT, TOKEN_DECIMAL);
-    console.log(`# tokenId: ${res.tokenId}`);
-    tokenId = res.tokenId;
+    console.log(`# tokenId: ${res}`);
     assert.isObject(res);
-    createTokenTempFile({tokenId: tokenId});
+    createTokenTempFile({tokenId: res});
   });
 
   it('Transfer token. source and destination inter send', async () => {

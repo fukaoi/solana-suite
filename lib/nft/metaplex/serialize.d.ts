@@ -1,13 +1,7 @@
 /// <reference types="node" />
+import { Metaplex, MetaplexInstructure } from './';
 export declare namespace MetaplexSerialize {
-    interface MetaData {
-        publishAddress: string;
-        mintKey: string;
-        name: string;
-        symbol: string;
-        uri: string;
-        fee: number;
-    }
-    const initData: () => MetaData;
-    const decode: (data: Buffer) => MetaData | undefined;
+    const serializeCreateArgs: (data: MetaplexInstructure.Data) => Buffer;
+    const serializeUpdateArgs: (data: MetaplexInstructure.Data, newUpdateAuthority: string | null | undefined, primarySaleHappened: boolean | null | undefined) => Buffer;
+    const decode: (data: Buffer) => Metaplex.Format;
 }

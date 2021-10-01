@@ -8,6 +8,7 @@ import {
   SystemProgram,
   Signer,
   AccountChangeCallback,
+  ParsedConfirmedTransaction,
 } from '@solana/web3.js';
 
 import {Util} from './util';
@@ -15,8 +16,19 @@ import {Constants} from './constants';
 
 export namespace Transaction {
 
-  export const get = async (signature: string) =>
-    Util.getConnection().getTransaction(signature);
+  export const get = async (signature: string): Promise<ParsedConfirmedTransaction | null> =>
+    await Util.getConnection().getParsedConfirmedTransaction(signature);
+
+  export const getAll = async (pubkeyStr: string): Promise<ParsedConfirmedTransaction[]> => {
+    const pubkey = new PublicKey(pubkeyStr);
+    const transactions = await Util.getConnection().getConfirmedSignaturesForAddress2(pubkey);
+    const parsedSig: ParsedConfirmedTransaction[] = [];
+    for (const tx of transactions) {
+      const res = await get(tx!.signature);
+      res !== null && parsedSig.push(res);
+    }
+    return parsedSig;
+  }
 
   export const subscribeAccount = (pubkey: string, callback: AccountChangeCallback): number =>
     Util.getConnection().onAccountChange(new PublicKey(pubkey), callback);

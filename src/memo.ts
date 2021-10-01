@@ -1,7 +1,8 @@
 import {
+  ParsedConfirmedTransaction,
   PublicKey,
+  ParsedInstruction,
   TransactionInstruction,
-  TransactionResponse,
   TransactionSignature
 } from '@solana/web3.js';
 
@@ -26,9 +27,12 @@ export namespace Memo {
     });
   };
 
-  export const parseInstruction = (tx: TransactionResponse): any => {
-    const compiled = tx.transaction.message.instructions.filter((d: any) => d.accounts.length === 0);
-    return decode(compiled[0].data);
+  export const parseInstruction = (tx: ParsedConfirmedTransaction): string => {
+    const res = tx.transaction.message.instructions.filter(d => {
+      const value = d as ParsedInstruction;
+      return value.program === 'spl-memo';
+    }) as ParsedInstruction[];
+    return res[0].parsed;
   }
 
   export const own = async (
