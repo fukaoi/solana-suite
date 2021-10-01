@@ -45,7 +45,7 @@ export namespace Wallet {
     return Keypair.fromSecretKey(decoded);
   }
 
-  export const createSigners = (signerSecrets: string[]): Keypair[] => 
+  export const createSigners = (signerSecrets: string[]): Keypair[] =>
     signerSecrets.map(s => createKeypair(s));
 
   export const getBalance = async (pubkey: string, unit: Unit = 'sol'): Promise<number> => {
