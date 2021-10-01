@@ -18,8 +18,7 @@ export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
-  export const getByMintKey = async (mintKey: string):
-    Promise<MetaplexSerialize.MetaData | undefined> => {
+  export const getByMintKey = async (mintKey: string) => {
     const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(
       mintKey)
     ).toBase58();
@@ -28,22 +27,20 @@ export namespace MetaplexMetaData {
     const nfts = await Util.getConnection().getParsedAccountInfo(
       new PublicKey(metaAccount)
     );
-    if (nfts?.value?.data) {
-      const data = nfts.value.data as Buffer;
+    const data = nfts?.value?.data as Buffer;
+    if (data) {
       return MetaplexSerialize.decode(data);
-    };
+    }
     return MetaplexSerialize.initData();
   }
 
-  export const getByOwner = async (ownerPubKey: string):
-    Promise<MetaplexSerialize.MetaData[] | undefined> => {
+  export const getByOwner = async (ownerPubKey: string) => {
     // Get all token by owner
     const tokens = await Util.getConnection().getParsedTokenAccountsByOwner(
       new PublicKey(ownerPubKey),
       {programId: TOKEN_PROGRAM_ID}
     );
-
-    const matches: MetaplexSerialize.MetaData[] = [];
+    const matches = [];
 
     // Filter only metaplex nft
     for (const token of tokens.value) {
@@ -67,8 +64,8 @@ export namespace MetaplexMetaData {
 
     console.log('# metaAccount', metaAccount);
 
-    const value = new MetaplexObject.CreateMetadataArgs({data, isMutable: true});
-    const txnData = Buffer.from(serialize(MetaplexObject.SCHEMA, value));
+    const txnData = MetaplexSerialize.serializeCreateArgs(data);
+
     const keys = [
       {
         pubkey: new PublicKey(metaAccount),
@@ -117,7 +114,7 @@ export namespace MetaplexMetaData {
   }
 
   export const update = (
-    data: MetaplexObject.Data | undefined,
+    data: MetaplexObject.Data,
     newUpdateAuthority: string | undefined,
     primarySaleHappened: boolean | null | undefined,
     mintKey: string,
@@ -152,17 +149,15 @@ export namespace MetaplexMetaData {
       ),
     );
 
-    const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey)).toBase58();
+    const metaAccount = (
+      await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey)
+    ).toBase58();
 
-    const value = new MetaplexObject.UpdateMetadataArgs({
+    const txnData = MetaplexSerialize.serializeUpdateArgs(
       data,
-      updateAuthority: !newUpdateAuthority ? undefined : newUpdateAuthority,
-      primarySaleHappened:
-        primarySaleHappened === null || primarySaleHappened === undefined
-          ? null
-          : primarySaleHappened,
-    });
-    const txnData = Buffer.from(serialize(MetaplexObject.SCHEMA, value));
+      newUpdateAuthority,
+      primarySaleHappened
+    );
     const keys = [
       {
         pubkey: new PublicKey(metaAccount),
