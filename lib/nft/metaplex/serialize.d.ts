@@ -1,5 +1,4 @@
 /// <reference types="node" />
-import { MetaplexObject } from './object';
 export declare namespace MetaplexSerialize {
     const initData: () => {
         updateAuthority: string;
@@ -8,14 +7,14 @@ export declare namespace MetaplexSerialize {
         symbol: string;
         uri: string;
     };
-    const serializeCreateArgs: (data: MetaplexObject.Data) => Buffer;
-    const serializeUpdateArgs: (data: MetaplexObject.Data, newUpdateAuthority: string | null | undefined, primarySaleHappened: boolean | null | undefined) => Buffer;
+    const serializeCreateArgs: (data: any) => Buffer;
+    const serializeUpdateArgs: (data: any, newUpdateAuthority: string | null | undefined, primarySaleHappened: boolean | null | undefined) => Buffer;
     const decode: (data: Buffer) => {
-        name: string;
-        symbol: string;
-        uri: string;
+        name: any;
+        symbol: any;
+        uri: any;
         updateAuthority: string;
         mint: string;
-        sellerFeeBasisPoints: number;
+        sellerFeeBasisPoints: any;
     };
 }

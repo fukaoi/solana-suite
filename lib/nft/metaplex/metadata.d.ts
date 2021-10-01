@@ -1,36 +1,22 @@
 import { TransactionInstruction } from '@solana/web3.js';
-import { MetaplexObject } from './object';
+import { MetaplexInstructure } from './index';
 export declare namespace MetaplexMetaData {
     const getByMintKey: (mintKey: string) => Promise<{
-        name: string;
-        symbol: string;
-        uri: string;
+        name: any;
+        symbol: any;
+        uri: any;
         updateAuthority: string;
         mint: string;
-        sellerFeeBasisPoints: number;
-    } | {
-        updateAuthority: string;
-        mint: string;
-        name: string;
-        symbol: string;
-        uri: string;
-        sellerFeeBasisPoints: string;
+        sellerFeeBasisPoints: any;
     }>;
-    const getByOwner: (ownerPubKey: string) => Promise<({
-        name: string;
-        symbol: string;
-        uri: string;
+    const getByOwner: (ownerPubKey: string) => Promise<{
+        name: any;
+        symbol: any;
+        uri: any;
         updateAuthority: string;
         mint: string;
-        sellerFeeBasisPoints: number;
-    } | {
-        updateAuthority: string;
-        mint: string;
-        name: string;
-        symbol: string;
-        uri: string;
-        sellerFeeBasisPoints: string;
-    })[]>;
-    const create: (data: MetaplexObject.Data, mintKey: string, payer: string, mintAuthorityKey?: string, updateAuthority?: string) => (instructions?: TransactionInstruction[] | undefined) => Promise<TransactionInstruction[]>;
-    const update: (data: MetaplexObject.Data, newUpdateAuthority: string | undefined, primarySaleHappened: boolean | null | undefined, mintKey: string, updateAuthority: string, signerSecrets: string[]) => (instructions?: TransactionInstruction[] | undefined) => Promise<TransactionInstruction[]>;
+        sellerFeeBasisPoints: any;
+    }[]>;
+    const create: (data: MetaplexInstructure.Data, mintKey: string, payer: string, mintAuthorityKey?: string, updateAuthority?: string) => (instructions?: TransactionInstruction[] | undefined) => Promise<TransactionInstruction[]>;
+    const update: (data: MetaplexInstructure.Data, newUpdateAuthority: string | undefined, primarySaleHappened: boolean | null | undefined, mintKey: string, updateAuthority: string, signerSecrets: string[]) => (instructions?: TransactionInstruction[] | undefined) => Promise<TransactionInstruction[]>;
 }
