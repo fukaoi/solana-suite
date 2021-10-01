@@ -1,9 +1,8 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Metaplex} from '../../../src/nft/metaplex/index';
+import {Metaplex, MetaplexInstructure} from '../../../src/nft/metaplex/index';
 import setupKeyPair from '../../../test/utils/setupKeyPair';
 import {Wallet} from '../../../src/wallet';
-import {MetaplexObject} from '../../../src/nft/metaplex/object';
 
 let source: Wallet.Keypair;
 let mintKey = '';
@@ -15,7 +14,7 @@ describe('Metaplex', () => {
   });
 
   it('Mint nft', async () => {
-    const data = new MetaplexObject.Data({
+    const data = new MetaplexInstructure.Data({
       name: 'Sample',
       symbol: 'SAMPLE',
       uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',

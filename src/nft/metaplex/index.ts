@@ -1,23 +1,21 @@
 import {Token, MintLayout} from '@solana/spl-token';
 import {Transaction} from '../../transaction';
-import {MetaplexObject as _mObject} from './object';
-import {MetaplexMetaData as _mMetaData} from './metadata';
-import {MetaplexSerialize as _mSerialize} from './serialize';
 import {
   Keypair,
   PublicKey,
   SystemProgram, TransactionInstruction,
 } from '@solana/web3.js';
+
 import {Constants} from '../../constants';
 import {Util} from '../../util';
+import {MetaplexMetaData} from './metadata';
+import {MetaplexInstructure} from './instructure';
 
-// alias submodule
-export const MetaplexMetaData = _mMetaData;
-export const MetaplexSerialize = _mSerialize;
-export const MetaplexObject = _mObject;
+export * from './instructure';
+export * from './metadata';
+export * from './serialize';
 
 export namespace Metaplex {
-  export const Object = _mObject;
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
 
   const createMintAccount = async (
@@ -113,7 +111,7 @@ export namespace Metaplex {
   }
 
   export const mint = async (
-    data: _mObject.Data,
+    data: MetaplexInstructure.Data,
     owner: {pubkey: string, secret: string},
   ): Promise<{mintKey: string, signature: string}> => {
     const txsign = await create(owner.pubkey, [owner.secret])();

@@ -1,4 +1,4 @@
-export namespace MetaplexObject {
+export namespace MetaplexInstructure {
   export class Creator {
     address: string;
     verified: boolean;

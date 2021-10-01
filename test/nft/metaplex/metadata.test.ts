@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
 import {MetaplexMetaData} from '../../../src/nft/metaplex/metadata';
-import {MetaplexObject} from '../../../src/nft/metaplex/object';
+import {MetaplexInstructure} from '../../../src/nft/metaplex';
 import setupKeyPair from '../../../test/utils/setupKeyPair';
 import {Wallet} from '../../../src/wallet';
 
@@ -14,7 +14,7 @@ describe('MetaplexMetaData', () => {
   });
 
   it('Create instructions for create metadata', async () => {
-    const data = new MetaplexObject.Data({
+    const data = new MetaplexInstructure.Data({
       name: 'Sample',
       symbol: 'SAMPLE',
       uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',
@@ -36,7 +36,7 @@ describe('MetaplexMetaData', () => {
   });
 
   it('Create instructions for update metadata', async () => {
-    const data = new MetaplexObject.Data({
+    const data = new MetaplexInstructure.Data({
       name: 'Sample',
       symbol: 'SAMPLE',
       uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',
