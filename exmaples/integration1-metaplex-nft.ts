@@ -6,7 +6,7 @@ import {
   Wallet,
   Util,
   Metaplex,
-  MetaplexObject,
+  MetaplexInstructure,
   MetaplexMetaData,
   StorageNftStorage,
   SplNft
@@ -45,7 +45,7 @@ import {RandomAsset} from '../test/utils/randomAsset';
   // CREATE NFT, MINT NFT FROM THIS LINE 
   //////////////////////////////////////////////
 
-  const data = new MetaplexObject.Data({
+  const data = new MetaplexInstructure.Data({
     name: asset.name,
     symbol: 'SAMPLE',
     uri: url,

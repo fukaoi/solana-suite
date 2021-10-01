@@ -1,4 +1,4 @@
-export namespace MetaplexObject {
+export namespace MetaplexInstructure {
   export class Creator {
     address: string;
     verified: boolean;
@@ -80,10 +80,6 @@ export namespace MetaplexObject {
     data: Data;
     primarySaleHappened: boolean;
     isMutable: boolean;
-    editionNonce: number | null;
-
-    masterEdition?: string;
-    edition?: string;
 
     constructor(args: {
       updateAuthority: string;
@@ -99,14 +95,7 @@ export namespace MetaplexObject {
       this.data = args.data;
       this.primarySaleHappened = args.primarySaleHappened;
       this.isMutable = args.isMutable;
-      this.editionNonce = args.editionNonce;
     }
-
-    // public async init() {
-      // const edition = await getEdition(this.mint);
-      // this.edition = edition;
-      // this.masterEdition = edition;
-    // }
   }
 
   export const SCHEMA = new Map<any, any>([
@@ -138,7 +127,7 @@ export namespace MetaplexObject {
       {
         kind: 'struct',
         fields: [
-          ['address', 'string'],
+          ['address', [32]],
           ['verified', 'u8'],
           ['share', 'u8'],
         ],
@@ -163,7 +152,8 @@ export namespace MetaplexObject {
         kind: 'struct',
         fields: [
           ['key', 'u8'],
-          ['mint', 'u8'],
+          ['updateAuthority', [32]],
+          ['mint', [32]],
           ['data', Data],
           ['primarySaleHappened', 'u8'], // bool
           ['isMutable', 'u8'], // bool

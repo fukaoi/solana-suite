@@ -1,4 +1,4 @@
-import { MetadataStorageFormat } from './index';
+import { Storage } from './index';
 export declare namespace StorageNftStorage {
-    const upload: (storageData: MetadataStorageFormat) => Promise<string>;
+    const upload: (storageData: Storage.Format) => Promise<string>;
 }

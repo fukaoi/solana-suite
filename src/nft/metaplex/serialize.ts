@@ -1,61 +1,51 @@
-import bs from 'bs58';
-import struct from 'python-struct';
-import {TextDecoder} from 'util';
-import {Constants} from '../../constants';
+import {deserializeUnchecked, serialize} from 'borsh';
+import {Metaplex, MetaplexInstructure} from './';
+import {PublicKey} from '@solana/web3.js';
 
 export namespace MetaplexSerialize {
-
-  export interface MetaData {
-    publishAddress: string,
-    mintKey: string,
-    name: string,
-    symbol: string,
-    uri: string,
-    fee: number
-  }
-
-  export const initData = (): MetaData => {
-    return {
-      publishAddress: '',
-      mintKey: '',
-      name: '',
-      symbol: '',
-      uri: '',
-      fee: 0
-    }
-  }
-
   const REPLACE = new RegExp('\u0000', 'g');
 
-  export const decode = (data: Buffer): MetaData|undefined => {
-    const decodeData = initData();
-    const textDecoder = new TextDecoder();
-    let i = 1;
-    decodeData.publishAddress = bs.encode(struct.unpack(`<${'B'.repeat(32)}`, data.slice(i, i + 32)) as number[]);
-    i += 32;
-    decodeData.mintKey = bs.encode(struct.unpack(`<${'B'.repeat(32)}`, data.slice(i, i + 32)) as number[]);
-    if (decodeData.mintKey === Constants.SYSTEM_PROGRAM_ID) return undefined;
+  export const serializeCreateArgs = (data: MetaplexInstructure.Data) => {
+    const value = new MetaplexInstructure.CreateMetadataArgs({data, isMutable: true});
+    return Buffer.from(serialize(MetaplexInstructure.SCHEMA, value));
+  }
 
-    i += 32;
-    const nameLength = struct.unpack('<I', data.slice(i, i + 4))[0] as number;
-    i += 4;
+  export const serializeUpdateArgs = (
+    data: MetaplexInstructure.Data,
+    newUpdateAuthority: string | null | undefined,
+    primarySaleHappened: boolean | null | undefined
+  ) => {
+    const value = new MetaplexInstructure.UpdateMetadataArgs({
+      data,
+      updateAuthority: !newUpdateAuthority ? undefined : newUpdateAuthority,
+      primarySaleHappened:
+        primarySaleHappened === null || primarySaleHappened === undefined
+          ? null
+          : primarySaleHappened,
+    });
+    return Buffer.from(serialize(MetaplexInstructure.SCHEMA, value));
+  }
 
-    if (nameLength !== 32) return undefined;
-
-    const nameBuffer = struct.unpack(`<${'B'.repeat(nameLength)}`, data.slice(i, i + nameLength)) as number[];
-    decodeData.name = textDecoder.decode(Uint8Array.from(nameBuffer)).replace(REPLACE, '');
-    i += nameLength
-    const symbolLength = struct.unpack('<I', data.slice(i, i + 4))[0] as number;
-    i += 4;
-    const symbolBuffer = struct.unpack(`<${'B'.repeat(symbolLength)}`, data.slice(i, i + symbolLength)) as number[];
-    decodeData.symbol = textDecoder.decode(Uint8Array.from(symbolBuffer)).replace(REPLACE, '');
-    i += symbolLength
-    const uriLength = struct.unpack('<I', data.slice(i, i + 4))[0] as number;
-    i += 4;
-    const uriBuffer = struct.unpack(`<${'B'.repeat(uriLength)}`, data.slice(i, i + uriLength)) as number[];
-    decodeData.uri = textDecoder.decode(Uint8Array.from(uriBuffer)).replace(REPLACE, '');
-    i += uriLength;
-    decodeData.fee = parseInt(struct.unpack('<h', data.slice(i, i + 2))[0].toString(), 10);
-    return decodeData;
+  export const decode = (data: Buffer): Metaplex.Format => {
+    const decoded = deserializeUnchecked(
+      MetaplexInstructure.SCHEMA,
+      MetaplexInstructure.Metadata,
+      data
+    ) as MetaplexInstructure.Metadata;
+    const name = decoded.data.name.replace(REPLACE, '');
+    const symbol = decoded.data.symbol.replace(REPLACE, '');
+    const uri = decoded.data.uri.replace(REPLACE, '');
+    // tslint:disable-next-line
+    const update_authority = new PublicKey(decoded.updateAuthority).toBase58();
+    // tslint:disable-next-line
+    const seller_fee_basis_points = decoded.data.sellerFeeBasisPoints;
+    // info: metaplex protocl is snake style parameter
+    return {
+      name,
+      symbol,
+      uri,
+      update_authority,
+      seller_fee_basis_points,
+    }
   }
 }

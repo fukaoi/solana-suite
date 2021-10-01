@@ -6,7 +6,7 @@ import FormData from 'form-data';
 import {SolNative} from '../../sol-native';
 import path from 'path';
 import {LAMPORTS_PER_SOL} from '@solana/web3.js';
-import {MetadataStorageFormat} from './index';
+import {Storage} from './index';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
@@ -70,9 +70,7 @@ export namespace StorageArweave {
     return Util.isEmpty(match) ? false : true;
   }
 
-  const createMetadata = (
-    storageData: MetadataStorageFormat
-  ): {buffer: Buffer, pngName: string} => {
+  const createMetadata = ( storageData: Storage.Format): {buffer: Buffer, pngName: string} => {
     let image = path.basename(storageData.image);
     if (isJpegFile(image)) {
       const split = image.split('.jpeg');
@@ -113,7 +111,7 @@ export namespace StorageArweave {
 
   export const upload = async (
     payerSecret: string,
-    storageData: MetadataStorageFormat
+    storageData: Storage.Format
   ) => {
     const payer = Util.createKeypair(payerSecret);
     const imagePath = storageData.image;

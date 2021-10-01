@@ -1,39 +1,32 @@
-// tslint:disable-next-line
-export interface Attributes {}
-// tslint:disable-next-line
-export interface Collection {}
-// tslint:disable-next-line
-export interface Properties {}
-// tslint:disable-next-line
-export interface Creators {}
+import {Metaplex} from '../metaplex'
 
-export interface MetadataFormat {
-  name: string,
-  uri: string,
-  symbol: string,
-  update_authority: string,
-  creators?: Creators[],
-  seller_fee_basis_points?: number,
-  primary_sale_happened?: boolean,
-}
-
-export interface MetadataStorageFormat {
-  name: string,
-  description: string,
-  image: string,
-  symbol?: string,
-  seller_fee_basis_points?: number,
-  animation_url?: string,
-  external_url?: string,
-  category?: string,
-  attributes?: Attributes[],
-  collection?: Collection,
-  properties?: Properties[],
-  creators?: Creators[],
-}
+export * from './arweave';
+export * from './nft-storage';
 
 export namespace Storage {
-  export const initStorageData = (): MetadataStorageFormat => {
+  // tslint:disable-next-line
+  export interface Attributes {}
+  // tslint:disable-next-line
+  export interface Collection {}
+  // tslint:disable-next-line
+  export interface Properties {}
+
+  export interface Format {
+    name: string,
+    description: string,
+    image: string,
+    symbol?: string,
+    seller_fee_basis_points?: number,
+    animation_url?: string,
+    external_url?: string,
+    category?: string,
+    attributes?: Attributes[],
+    collection?: Collection,
+    properties?: Properties[],
+    creators?: Metaplex.Creators[],
+  }
+
+  export const initStorageData = (): Format => {
     return {
       name: '',
       description: '',

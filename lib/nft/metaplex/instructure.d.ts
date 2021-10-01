@@ -1,4 +1,4 @@
-export declare namespace MetaplexObject {
+export declare namespace MetaplexInstructure {
     class Creator {
         address: string;
         verified: boolean;

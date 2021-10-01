@@ -1,4 +1,4 @@
-import { MetadataStorageFormat } from './index';
+import { Storage } from './index';
 export declare namespace StorageArweave {
-    const upload: (payerSecret: string, storageData: MetadataStorageFormat) => Promise<string>;
+    const upload: (payerSecret: string, storageData: Storage.Format) => Promise<string>;
 }

@@ -1,18 +1,19 @@
 import {Token, MintLayout} from '@solana/spl-token';
 import {Transaction} from '../../transaction';
-import {MetaplexObject as _mObject} from './object';
-import {MetaplexMetaData as _mMetaData} from './metadata';
 import {
   Keypair,
   PublicKey,
   SystemProgram, TransactionInstruction,
 } from '@solana/web3.js';
+
 import {Constants} from '../../constants';
 import {Util} from '../../util';
+import {MetaplexMetaData} from './metadata';
+import {MetaplexInstructure} from './instructure';
 
-
-export const MetaplexObject = _mObject;
-export const MetaplexMetaData = _mMetaData;
+export * from './instructure';
+export * from './metadata';
+export * from './serialize';
 
 export namespace Metaplex {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
@@ -61,6 +62,31 @@ export namespace Metaplex {
     return mintAccount.toBase58();
   }
 
+  // tslint:disable-next-line
+  export interface Creators {}
+
+  export interface Format {
+    name: string,
+    uri: string,
+    symbol: string,
+    update_authority: string,
+    creators?: Creators[],
+    seller_fee_basis_points?: number,
+    primary_sale_happened?: boolean,
+  }
+
+  export const initFormat = (): Format => {
+    return {
+      name: '',
+      uri: '',
+      symbol: '',
+      update_authority: '',
+      creators: [],
+      seller_fee_basis_points: 0,
+      primary_sale_happened: false
+    }
+  }
+
   export const create = (
     payer: string,
     signerSecrets: string[],
@@ -86,7 +112,7 @@ export namespace Metaplex {
   }
 
   export const mint = async (
-    data: _mObject.Data,
+    data: MetaplexInstructure.Data,
     owner: {pubkey: string, secret: string},
   ): Promise<{mintKey: string, signature: string}> => {
     const txsign = await create(owner.pubkey, [owner.secret])();
