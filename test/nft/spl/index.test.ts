@@ -6,8 +6,8 @@ import fs from 'fs';
 import {Wallet} from '../../../src/wallet';
 import {SplNft} from '../../../src/nft/spl';
 
-let source: Wallet.Keypair;
-let dest: Wallet.Keypair;
+let source: Wallet.KeyPair;
+let dest: Wallet.KeyPair;
 let destPubkey: string;
 let nft: string;
 

@@ -10,8 +10,8 @@ import {Util} from '../src/util';
 const signature1 = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
 const signature2 = '2nPdn7AhJiTLaopwxCBzPxSB9ucBeBJbyKttXVBh7CoCQkmhkB12yoT6CuFStbT6X6boi9eFEpJjtRUQYVPcvM3J';
 
-let source: Wallet.Keypair;
-let dest: Wallet.Keypair;
+let source: Wallet.KeyPair;
+let dest: Wallet.KeyPair;
 const sendContinuously = async (): Promise<void> => {
   await SolNative.transfer(
     source.pubkey,

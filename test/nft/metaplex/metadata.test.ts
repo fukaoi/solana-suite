@@ -5,7 +5,7 @@ import {MetaplexInstructure} from '../../../src/nft/metaplex';
 import setupKeyPair from '../../../test/utils/setupKeyPair';
 import {Wallet} from '../../../src/wallet';
 
-let source: Wallet.Keypair;
+let source: Wallet.KeyPair;
 
 describe('MetaplexMetaData', () => {
   before(async () => {

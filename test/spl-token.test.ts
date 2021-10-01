@@ -6,8 +6,8 @@ import setupKeyPair from '../test/utils/setupKeyPair';
 import fs from 'fs';
 import {Wallet} from '../src/wallet';
 
-let source: Wallet.Keypair;
-let dest: Wallet.Keypair;
+let source: Wallet.KeyPair;
+let dest: Wallet.KeyPair;
 let destPubkey: string;
 let tokenId: string;
 

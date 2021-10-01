@@ -5,7 +5,7 @@ import {Wallet} from '../src/wallet';
 import {assert} from 'chai';
 import setupKeyPair from '../test/utils/setupKeyPair';
 
-let source: Wallet.Keypair;
+let source: Wallet.KeyPair;
 let destPubkey: string;
 
 describe('SolNative', () => {

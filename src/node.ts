@@ -4,7 +4,7 @@ import {
 } from '@solana/web3.js';
 
 export namespace Node {
-  let connection: Connection; 
+  let connection: Connection;
 
   export const getConnection = () => {
     if (connection) return connection;

@@ -5,7 +5,7 @@ import {StorageArweave} from '../../../src/nft/storage';
 import setupKeyPair from '../../utils/setupKeyPair';
 import {RandomAsset} from '../../utils/randomAsset';
 
-let source: Wallet.Keypair;
+let source: Wallet.KeyPair;
 
 describe('StorageArweave', () => {
   before(async () => {

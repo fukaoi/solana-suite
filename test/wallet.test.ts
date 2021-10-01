@@ -2,7 +2,7 @@ import {describe, it} from 'mocha';
 import {Wallet} from '../src/wallet';
 import {assert} from 'chai';
 
-let source: Wallet.Keypair;
+let source: Wallet.KeyPair;
 
 describe('Wallet', () => {
   before(async () => {
