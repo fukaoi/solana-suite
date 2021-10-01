@@ -10,6 +10,7 @@ import {
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 import bs from 'bs58';
 
+import {Node} from './node';
 import {Util} from './util';
 import {Constants} from './constants';
 
@@ -49,7 +50,7 @@ export namespace Wallet {
     signerSecrets.map(s => createKeypair(s));
 
   export const getBalance = async (pubkey: string, unit: Unit = 'sol'): Promise<number> => {
-    const balance = await Util.getConnection().getBalance(new PublicKey(pubkey));
+    const balance = await Node.getConnection().getBalance(new PublicKey(pubkey));
     switch (unit) {
       case 'sol': return balance / LAMPORTS_PER_SOL;
       case 'lamports': return balance;
@@ -60,7 +61,7 @@ export namespace Wallet {
   export const create = async (): Promise<KeyPair> => {
     const keypair = Keypair.generate();
     if (process.env.NODE_ENV !== 'production') {
-      await Util.getConnection().requestAirdrop(keypair.publicKey, DEFAULT_AIRDROP_AMOUNT);
+      await Node.getConnection().requestAirdrop(keypair.publicKey, DEFAULT_AIRDROP_AMOUNT);
       console.log('Now airdropping...please wait');
       await Util.sleep(20);
     }

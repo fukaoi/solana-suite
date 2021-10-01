@@ -11,17 +11,17 @@ import {
   ParsedConfirmedTransaction,
 } from '@solana/web3.js';
 
-import {Util} from './util';
+import {Node} from './node';
 import {Constants} from './constants';
 
 export namespace Transaction {
 
   export const get = async (signature: string): Promise<ParsedConfirmedTransaction | null> =>
-    await Util.getConnection().getParsedConfirmedTransaction(signature);
+    await Node.getConnection().getParsedConfirmedTransaction(signature);
 
   export const getAll = async (pubkeyStr: string): Promise<ParsedConfirmedTransaction[]> => {
     const pubkey = new PublicKey(pubkeyStr);
-    const transactions = await Util.getConnection().getConfirmedSignaturesForAddress2(pubkey);
+    const transactions = await Node.getConnection().getConfirmedSignaturesForAddress2(pubkey);
     const parsedSig: ParsedConfirmedTransaction[] = [];
     for (const tx of transactions) {
       const res = await get(tx!.signature);
@@ -31,17 +31,17 @@ export namespace Transaction {
   }
 
   export const subscribeAccount = (pubkey: string, callback: AccountChangeCallback): number =>
-    Util.getConnection().onAccountChange(new PublicKey(pubkey), callback);
+    Node.getConnection().onAccountChange(new PublicKey(pubkey), callback);
 
   export const unsubscribeAccount = (subscribeId: number): Promise<void> =>
-    Util.getConnection().removeAccountChangeListener(subscribeId);
+    Node.getConnection().removeAccountChangeListener(subscribeId);
 
   export const sendInstructions = async (
     signers: Keypair[],
     instructions: TransactionInstruction[],
   ): Promise<TransactionSignature> => {
 
-    const conn = Util.getConnection();
+    const conn = Node.getConnection();
     const tx = new SolanaTransaction().add(instructions[0]);
     if (instructions[1]) {
       instructions.slice(1, instructions.length).forEach((st: TransactionInstruction) => tx.add(st));
@@ -66,7 +66,7 @@ export namespace Transaction {
         lamports: amount,
       });
 
-    const conn = Util.getConnection();
+    const conn = Node.getConnection();
     const tx = new SolanaTransaction().add(params);
     if (instructions) {
       instructions.forEach((st: TransactionInstruction) => tx.add(st));

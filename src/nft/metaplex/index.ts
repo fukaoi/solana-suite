@@ -7,7 +7,7 @@ import {
 } from '@solana/web3.js';
 
 import {Constants} from '../../constants';
-import {Util} from '../../util';
+import {Node} from '../../node';
 import {MetaplexMetaData} from './metadata';
 import {MetaplexInstructure} from './instructure';
 import {Wallet} from '../../wallet';
@@ -24,7 +24,7 @@ export namespace Metaplex {
     payer: PublicKey,
     signers: Keypair[],
   ) => {
-    const mintRentExempt = await Util.getConnection().getMinimumBalanceForRentExemption(
+    const mintRentExempt = await Node.getConnection().getMinimumBalanceForRentExemption(
       MintLayout.span,
     );
     const mintAccount = Keypair.generate();

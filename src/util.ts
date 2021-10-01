@@ -1,10 +1,3 @@
-import {
-  Connection,
-} from '@solana/web3.js';
-
-import bs from 'bs58';
-import {Constants} from './constants';
-
 /////// GLOBAL FUNCTION //////
 export namespace Default {
   console.debug = (data: any, data2: any = '') => {
@@ -20,26 +13,9 @@ export default module.exports;
 /////// GLOBAL FUNCTION //////
 
 export namespace Util {
-  let connection: Connection; export const isEmpty = (val: any): boolean => {
-    if (val === null || val === undefined) return true;
-    if (Array.isArray(val)) return val.length > 0 ? false : true;
-    if (typeof val === 'number') return false;
-    console.log(Object.values(val).length);
-    if (!Object.values(val).length) return false;
-    return !Object.keys(val).length;
-  }
-
   export const sleep = async (sec: number) => new Promise(r => setTimeout(r, sec * 1000));
 
-  export const getConnection = () => {
-    if (connection) return connection;
-    connection = new Connection(Constants.API_URL);
-    return connection;
-  };
-
-  export const getApiUrl = () => Constants.API_URL;
-
-   export const dateFormat = (): string => {
+  export const dateFormat = (): string => {
     const t = new Date();
     return t.getFullYear() + '-' +
       ('0' + (t.getMonth() + 1)).slice(-2) + '-' +
@@ -47,5 +23,14 @@ export namespace Util {
       ('0' + t.getHours()).slice(-2) + ':' +
       ('0' + t.getMinutes()).slice(-2) + ':' +
       ('0' + t.getSeconds()).slice(-2);
+  }
+
+  export const isEmpty = (val: any): boolean => {
+    if (val === null || val === undefined) return true;
+    if (Array.isArray(val)) return val.length > 0 ? false : true;
+    if (typeof val === 'number') return false;
+    console.log(Object.values(val).length);
+    if (!Object.values(val).length) return false;
+    return !Object.keys(val).length;
   }
 }

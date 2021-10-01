@@ -12,9 +12,9 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import {Util} from './util';
 import {Transaction} from './transaction';
 import {Wallet} from './wallet';
+import {Node} from './node';
 
 export namespace SplToken {
   interface TransferHistory {
@@ -98,7 +98,7 @@ export namespace SplToken {
     decimal: number,
     authority: string = Wallet.createKeypair(sourceSecret).publicKey.toBase58(),
   ): Promise<string> => {
-    const connection = Util.getConnection();
+    const connection = Node.getConnection();
     const signer = new Account(Wallet.createKeypair(sourceSecret).secretKey);
     const authorityPubKey = new PublicKey(authority);
 
@@ -133,7 +133,7 @@ export namespace SplToken {
     const tokenPubkey = new PublicKey(tokenId);
     const destPubkey = new PublicKey(destination);
     const signer = Wallet.createKeypair(sourceSecret);
-    const token = new Token(Util.getConnection(), tokenPubkey, TOKEN_PROGRAM_ID, signer);
+    const token = new Token(Node.getConnection(), tokenPubkey, TOKEN_PROGRAM_ID, signer);
     const sourceTokenAccount = (await token.getOrCreateAssociatedAccountInfo(signer.publicKey)).address;
     const destTokenAccount = (await token.getOrCreateAssociatedAccountInfo(destPubkey)).address;
 

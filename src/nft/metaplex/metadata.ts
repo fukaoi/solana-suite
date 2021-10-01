@@ -8,8 +8,8 @@ import {
 import {Wallet} from '../../wallet';
 import {Constants} from '../../constants';
 import {Metaplex, MetaplexSerialize, MetaplexInstructure} from './index';
-import {Util} from '../../util';
 import {Token} from '@solana/spl-token';
+import {Node} from '../../node';
 
 export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
@@ -21,7 +21,7 @@ export namespace MetaplexMetaData {
     ).toBase58();
 
     // get rent data in a metaAccount
-    const nfts = await Util.getConnection().getParsedAccountInfo(
+    const nfts = await Node.getConnection().getParsedAccountInfo(
       new PublicKey(metaAccount)
     );
     const data = nfts?.value?.data as Buffer;
@@ -33,7 +33,7 @@ export namespace MetaplexMetaData {
 
   export const getByOwner = async (ownerPubKey: string): Promise<Metaplex.Format[]> => {
     // Get all token by owner
-    const tokens = await Util.getConnection().getParsedTokenAccountsByOwner(
+    const tokens = await Node.getConnection().getParsedTokenAccountsByOwner(
       new PublicKey(ownerPubKey),
       {programId: TOKEN_PROGRAM_ID}
     );
