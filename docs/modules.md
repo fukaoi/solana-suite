@@ -54,7 +54,7 @@ node_modules/@types/node/globals.d.ts:589
 
 #### Defined in
 
-[src/nft/metaplex/index.ts:15](https://github.com/fukaoi/solana-suite/blob/500107f/src/nft/metaplex/index.ts#L15)
+[src/nft/metaplex/index.ts:15](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/metaplex/index.ts#L15)
 
 ___
 
@@ -64,4 +64,4 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/index.ts:14](https://github.com/fukaoi/solana-suite/blob/500107f/src/nft/metaplex/index.ts#L14)
+[src/nft/metaplex/index.ts:14](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/metaplex/index.ts#L14)

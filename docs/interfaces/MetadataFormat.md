@@ -22,7 +22,7 @@
 
 #### Defined in
 
-[src/nft/storage/index.ts:15](https://github.com/fukaoi/solana-suite/blob/500107f/src/nft/storage/index.ts#L15)
+[src/nft/storage/index.ts:15](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/storage/index.ts#L15)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-[src/nft/storage/index.ts:11](https://github.com/fukaoi/solana-suite/blob/500107f/src/nft/storage/index.ts#L11)
+[src/nft/storage/index.ts:11](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/storage/index.ts#L11)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[src/nft/storage/index.ts:17](https://github.com/fukaoi/solana-suite/blob/500107f/src/nft/storage/index.ts#L17)
+[src/nft/storage/index.ts:17](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/storage/index.ts#L17)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[src/nft/storage/index.ts:16](https://github.com/fukaoi/solana-suite/blob/500107f/src/nft/storage/index.ts#L16)
+[src/nft/storage/index.ts:16](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/storage/index.ts#L16)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[src/nft/storage/index.ts:13](https://github.com/fukaoi/solana-suite/blob/500107f/src/nft/storage/index.ts#L13)
+[src/nft/storage/index.ts:13](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/storage/index.ts#L13)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[src/nft/storage/index.ts:14](https://github.com/fukaoi/solana-suite/blob/500107f/src/nft/storage/index.ts#L14)
+[src/nft/storage/index.ts:14](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/storage/index.ts#L14)
 
 ___
 
@@ -82,4 +82,4 @@ ___
 
 #### Defined in
 
-[src/nft/storage/index.ts:12](https://github.com/fukaoi/solana-suite/blob/500107f/src/nft/storage/index.ts#L12)
+[src/nft/storage/index.ts:12](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/storage/index.ts#L12)

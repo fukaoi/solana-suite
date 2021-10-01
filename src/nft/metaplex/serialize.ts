@@ -12,6 +12,7 @@ export namespace MetaplexSerialize {
       name: '',
       symbol: '',
       uri: '',
+      sellerFeeBasisPoints: '',
     }
   }
 
@@ -47,12 +48,14 @@ export namespace MetaplexSerialize {
     const uri = decoded.data.uri.replace(REPLACE, '');
     const updateAuthority = new PublicKey(decoded.updateAuthority).toBase58();
     const mint = new PublicKey(decoded.mint).toBase58();
+    const sellerFeeBasisPoints = decoded.data.sellerFeeBasisPoints;
     return {
       name,
       symbol,
       uri,
       updateAuthority,
-      mint
+      mint,
+      sellerFeeBasisPoints
     }
   }
 }

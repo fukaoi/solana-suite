@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[src/wallet.ts:23](https://github.com/fukaoi/solana-suite/blob/500107f/src/wallet.ts#L23)
+[src/wallet.ts:23](https://github.com/fukaoi/solana-suite/blob/614964e/src/wallet.ts#L23)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:24](https://github.com/fukaoi/solana-suite/blob/500107f/src/wallet.ts#L24)
+[src/wallet.ts:24](https://github.com/fukaoi/solana-suite/blob/614964e/src/wallet.ts#L24)

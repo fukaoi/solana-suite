@@ -15,6 +15,8 @@ export const MetaplexObject = _mObject;
 export const MetaplexMetaData = _mMetaData;
 
 export namespace Metaplex {
+
+
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
 
   const createMintAccount = async (
@@ -59,6 +61,18 @@ export namespace Metaplex {
       ),
     );
     return mintAccount.toBase58();
+  }
+
+  export interface Creators {}
+
+  export interface MetadataFormat {
+    name: string,
+    uri: string,
+    symbol: string,
+    update_authority: string,
+    creators?: Creators[],
+    seller_fee_basis_points?: number,
+    primary_sale_happened?: boolean,
   }
 
   export const create = (

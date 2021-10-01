@@ -65,7 +65,7 @@ describe('MetaplexMetaData', () => {
       name: 'Gropu1',
       symbol: '',
       uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',
-      fee: 0
+      sellerFeeBasisPoints: 0
     };
 
     const res = await MetaplexMetaData.getByMintKey(
@@ -76,6 +76,7 @@ describe('MetaplexMetaData', () => {
     assert.equal(res.uri, orgData.uri)
     assert.equal(res.mint, orgData.mint)
     assert.equal(res.updateAuthority, orgData.updateAuthority)
+    assert.equal(res.sellerFeeBasisPoints, orgData.sellerFeeBasisPoints)
   });
 
   it('Get metadata of nft by owner', async () => {
