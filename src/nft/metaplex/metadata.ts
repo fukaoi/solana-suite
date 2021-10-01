@@ -121,7 +121,7 @@ export namespace MetaplexMetaData {
     let inst: TransactionInstruction[] = [];
     inst = instructions ? instructions : inst;
 
-    const signers = Util.createSigners(signerSecrets);
+    const signers = Wallet.createSigners(signerSecrets);
 
     const associatedTokenAccount = await Wallet.findAssocaiatedTokenAddress(updateAuthority, mintKey);
     console.log('# associatedTokenAccount: ', associatedTokenAccount.toBase58());

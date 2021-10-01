@@ -7,7 +7,7 @@ export namespace TestUtils {
   export const TEMP_KEYPAIR_FILE = `.solana-${process.env.NODE_ENV}-keypair`;
 
   export const setupKeyPair = async ():
-    Promise<{source: Wallet.Keypair, dest: Wallet.Keypair}> => {
+    Promise<{source: Wallet.KeyPair, dest: Wallet.KeyPair}> => {
     const {source, dest} = await getSourceAndDest();
     debugDisp(source, dest);
     return {source: source, dest: dest};
@@ -46,7 +46,7 @@ export namespace TestUtils {
     return {source: source, dest: dest};
   }
 
-  const templateKeyPair = (source: Wallet.Keypair, dest: Wallet.Keypair) => {
+  const templateKeyPair = (source: Wallet.KeyPair, dest: Wallet.KeyPair) => {
     return {
       source: {
         pubkey: source.pubkey,

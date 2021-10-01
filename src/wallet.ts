@@ -1,5 +1,5 @@
 import {
-  Keypair as K,
+  Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
   TransactionInstruction,
@@ -13,19 +13,40 @@ import bs from 'bs58';
 import {Util} from './util';
 import {Constants} from './constants';
 
+/////// GLOBAL SCOPE FUNCTION //////
+declare global {
+  interface String {
+    toPubKey(): string;
+  }
+}
+
+String.prototype.toPubKey = (): string => {
+  return 'aaaaa';
+}
+/////// GLOBAL SCOPE FUNCTION //////
+
+
 export namespace Wallet {
   const TOKEN_ASSOCIATED_PROGRAM_ID = new PublicKey(Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
+  const ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey(Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID);
 
   type Unit = 'sol' | 'lamports';
 
-  export interface Keypair {
+  export interface KeyPair {
     pubkey: string,
     secret: string
   }
 
-  const ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey(Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID);
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
+
+  export const createKeypair = (secret: string): Keypair => {
+    const decoded = bs.decode(secret);
+    return Keypair.fromSecretKey(decoded);
+  }
+
+  export const createSigners = (signerSecrets: string[]): Keypair[] => 
+    signerSecrets.map(s => createKeypair(s));
 
   export const getBalance = async (pubkey: string, unit: Unit = 'sol'): Promise<number> => {
     const balance = await Util.getConnection().getBalance(new PublicKey(pubkey));
@@ -36,8 +57,8 @@ export namespace Wallet {
     }
   };
 
-  export const create = async (): Promise<Keypair> => {
-    const keypair = K.generate();
+  export const create = async (): Promise<KeyPair> => {
+    const keypair = Keypair.generate();
     if (process.env.NODE_ENV !== 'production') {
       await Util.getConnection().requestAirdrop(keypair.publicKey, DEFAULT_AIRDROP_AMOUNT);
       console.log('Now airdropping...please wait');

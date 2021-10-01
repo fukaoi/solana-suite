@@ -1,21 +1,11 @@
 import {
-  Connection, Keypair,
+  Connection,
 } from '@solana/web3.js';
 
 import bs from 'bs58';
 import {Constants} from './constants';
 
-/////// GLOBAL SCOPE FUNCTION //////
-declare global {
-    interface String {
-      toPubKey(): string;
-    }
-}
-
-String.prototype.toPubKey = (): string => {
-  return 'aaaaa';
-}
-
+/////// GLOBAL FUNCTION //////
 export namespace Default {
   console.debug = (data: any, data2: any = '') => {
     if (process.env.NODE_ENV === 'development'
@@ -30,9 +20,7 @@ export default module.exports;
 /////// GLOBAL FUNCTION //////
 
 export namespace Util {
-  let connection: Connection;
-
-  export const isEmpty = (val: any): boolean => {
+  let connection: Connection; export const isEmpty = (val: any): boolean => {
     if (val === null || val === undefined) return true;
     if (Array.isArray(val)) return val.length > 0 ? false : true;
     if (typeof val === 'number') return false;
@@ -51,14 +39,7 @@ export namespace Util {
 
   export const getApiUrl = () => Constants.API_URL;
 
-  export const createKeypair = (secret: string): Keypair => {
-    const decoded = bs.decode(secret);
-    return Keypair.fromSecretKey(decoded);
-  }
-
-  export const createSigners = (signerSecrets: string[]): Keypair[] => signerSecrets.map(s => createKeypair(s));
-
-  export const dateFormat = (): string => {
+   export const dateFormat = (): string => {
     const t = new Date();
     return t.getFullYear() + '-' +
       ('0' + (t.getMonth() + 1)).slice(-2) + '-' +

@@ -10,6 +10,7 @@ import {Constants} from '../../constants';
 import {Util} from '../../util';
 import {MetaplexMetaData} from './metadata';
 import {MetaplexInstructure} from './instructure';
+import {Wallet} from '../../wallet';
 
 export * from './instructure';
 export * from './metadata';
@@ -94,7 +95,7 @@ export namespace Metaplex {
     let inst: TransactionInstruction[] = [];
     inst = instructions ? instructions : inst;
 
-    const signers = signerSecrets.map(s => Util.createKeypair(s));
+    const signers = signerSecrets.map(s => Wallet.createKeypair(s));
 
     const mintAccount = await createMintAccount(
       inst,

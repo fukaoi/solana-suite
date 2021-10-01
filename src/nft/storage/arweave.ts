@@ -7,6 +7,7 @@ import {SolNative} from '../../sol-native';
 import path from 'path';
 import {LAMPORTS_PER_SOL} from '@solana/web3.js';
 import {Storage} from './index';
+import {Wallet} from '../../wallet';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
@@ -113,7 +114,7 @@ export namespace StorageArweave {
     payerSecret: string,
     storageData: Storage.Format
   ) => {
-    const payer = Util.createKeypair(payerSecret);
+    const payer = Wallet.createKeypair(payerSecret);
     const imagePath = storageData.image;
     const meta = createMetadata(storageData);
 

@@ -14,6 +14,7 @@ import {
 
 import {Util} from './util';
 import {Transaction} from './transaction';
+import {Wallet} from './wallet';
 
 export namespace SplToken {
   interface TransferHistory {
@@ -95,10 +96,10 @@ export namespace SplToken {
     sourceSecret: string,
     totalAmount: number,
     decimal: number,
-    authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
+    authority: string = Wallet.createKeypair(sourceSecret).publicKey.toBase58(),
   ): Promise<string> => {
     const connection = Util.getConnection();
-    const signer = new Account(Util.createKeypair(sourceSecret).secretKey);
+    const signer = new Account(Wallet.createKeypair(sourceSecret).secretKey);
     const authorityPubKey = new PublicKey(authority);
 
     const token = await Token.createMint(
@@ -131,7 +132,7 @@ export namespace SplToken {
   ): Promise<TransactionSignature> => {
     const tokenPubkey = new PublicKey(tokenId);
     const destPubkey = new PublicKey(destination);
-    const signer = Util.createKeypair(sourceSecret);
+    const signer = Wallet.createKeypair(sourceSecret);
     const token = new Token(Util.getConnection(), tokenPubkey, TOKEN_PROGRAM_ID, signer);
     const sourceTokenAccount = (await token.getOrCreateAssociatedAccountInfo(signer.publicKey)).address;
     const destTokenAccount = (await token.getOrCreateAssociatedAccountInfo(destPubkey)).address;

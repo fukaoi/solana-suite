@@ -10,7 +10,7 @@ import bs from 'bs58';
 
 import {Transaction} from './transaction';
 import {Constants} from './constants';
-import {Util} from './util';
+import {Wallet} from './wallet';
 
 export namespace Memo {
   const MEMO_PROGRAM_ID = new PublicKey(Constants.MEMO_PROGRAM_ID);
@@ -40,7 +40,7 @@ export namespace Memo {
     sourceSecret: string
   ): Promise<TransactionSignature> =>
     await Transaction.sendInstructions(
-      [Util.createKeypair(sourceSecret)],
+      [Wallet.createKeypair(sourceSecret)],
       [instruction]
     );
 }

@@ -6,7 +6,7 @@ import {
 } from '@solana/web3.js';
 
 import {Transaction} from './transaction';
-import {Util} from './util';
+import {Wallet} from './wallet';
 
 export namespace SolNative {
   export const transfer = (
@@ -19,7 +19,7 @@ export namespace SolNative {
     const sol = amount * LAMPORTS_PER_SOL;
     const sourcePublicKey = new PublicKey(sourcePubkey);
     const destPublicKey = new PublicKey(destPubkey);
-    const signers = signerSecrets.map(signer => Util.createKeypair(signer));
+    const signers = signerSecrets.map(signer => Wallet.createKeypair(signer));
     const fn = Transaction.send(
       sourcePublicKey,
       signers,

@@ -3,8 +3,8 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import {Util} from '../../util';
 import {SplToken} from '../../spl-token';
+import {Wallet} from '../../wallet';
 
 export namespace SplNft {
 
@@ -13,7 +13,7 @@ export namespace SplNft {
 
   export const create = (
     sourceSecret: string,
-    authority: string = Util.createKeypair(sourceSecret).publicKey.toBase58(),
+    authority: string = Wallet.createKeypair(sourceSecret).publicKey.toBase58(),
   ): Promise<string> => {
     return SplToken.create(
       sourceSecret,
