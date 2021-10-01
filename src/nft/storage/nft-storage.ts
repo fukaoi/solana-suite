@@ -1,7 +1,7 @@
 import {NFTStorage, Blob} from 'nft.storage';
 import fs from 'fs';
 import {Constants} from '../../constants';
-import {MetadataStorageFormat} from './index';
+import {Storage} from './index';
 
 export namespace StorageNftStorage {
 
@@ -16,7 +16,7 @@ export namespace StorageNftStorage {
   }
 
   export const upload = async (
-    storageData: MetadataStorageFormat
+    storageData: Storage.Format
   ): Promise<string> => {
     const client = connect();
     storageData.image = await preUploadImage(client, storageData.image);

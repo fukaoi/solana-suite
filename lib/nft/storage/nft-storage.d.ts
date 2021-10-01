@@ -1,3 +1,4 @@
+import { Storage } from './index';
 export declare namespace StorageNftStorage {
-    const upload: (storageData: any) => Promise<string>;
+    const upload: (storageData: Storage.Format) => Promise<string>;
 }
