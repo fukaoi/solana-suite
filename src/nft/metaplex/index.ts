@@ -11,7 +11,7 @@ import {
 import {Constants} from '../../constants';
 import {Util} from '../../util';
 
-// alias submodule 
+// alias submodule
 export const MetaplexMetaData = _mMetaData;
 export const MetaplexSerialize = _mSerialize;
 export const MetaplexObject = _mObject;

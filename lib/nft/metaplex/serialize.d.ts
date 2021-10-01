@@ -7,7 +7,6 @@ export declare namespace MetaplexSerialize {
         name: string;
         symbol: string;
         uri: string;
-        sellerFeeBasisPoints: string;
     };
     const serializeCreateArgs: (data: MetaplexObject.Data) => Buffer;
     const serializeUpdateArgs: (data: MetaplexObject.Data, newUpdateAuthority: string | null | undefined, primarySaleHappened: boolean | null | undefined) => Buffer;

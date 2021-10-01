@@ -10,6 +10,8 @@ import {Constants} from '../../constants';
 import {Metaplex, MetaplexSerialize} from './index';
 import {Util} from '../../util';
 import {Token} from '@solana/spl-token';
+import {MetaplexObject} from './object';
+
 
 export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
@@ -49,7 +51,7 @@ export namespace MetaplexMetaData {
   }
 
   export const create = (
-    data: Metaplex.Format,
+    data: MetaplexObject.Data,
     mintKey: string,
     payer: string,
     mintAuthorityKey = payer,
@@ -111,7 +113,7 @@ export namespace MetaplexMetaData {
   }
 
   export const update = (
-    data: Metaplex.Format,
+    data: MetaplexObject.Data,
     newUpdateAuthority: string | undefined,
     primarySaleHappened: boolean | null | undefined,
     mintKey: string,
