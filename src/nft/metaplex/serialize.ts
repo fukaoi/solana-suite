@@ -1,19 +1,9 @@
 import {deserializeUnchecked, serialize} from 'borsh';
-import {MetaplexInstructure} from './';
+import {Metaplex, MetaplexInstructure} from './';
 import {PublicKey} from '@solana/web3.js';
 
 export namespace MetaplexSerialize {
   const REPLACE = new RegExp('\u0000', 'g');
-
-  export const initData = () => {
-    return {
-      updateAuthority: '',
-      mint: '',
-      name: '',
-      symbol: '',
-      uri: '',
-    }
-  }
 
   export const serializeCreateArgs = (data: MetaplexInstructure.Data) => {
     const value = new MetaplexInstructure.CreateMetadataArgs({data, isMutable: true});
@@ -36,7 +26,7 @@ export namespace MetaplexSerialize {
     return Buffer.from(serialize(MetaplexInstructure.SCHEMA, value));
   }
 
-  export const decode = (data: Buffer) => {
+  export const decode = (data: Buffer): Metaplex.Format => {
     const decoded = deserializeUnchecked(
       MetaplexInstructure.SCHEMA,
       MetaplexInstructure.Metadata,
@@ -45,16 +35,15 @@ export namespace MetaplexSerialize {
     const name = decoded.data.name.replace(REPLACE, '');
     const symbol = decoded.data.symbol.replace(REPLACE, '');
     const uri = decoded.data.uri.replace(REPLACE, '');
-    const updateAuthority = new PublicKey(decoded.updateAuthority).toBase58();
-    const mint = new PublicKey(decoded.mint).toBase58();
-    const sellerFeeBasisPoints = decoded.data.sellerFeeBasisPoints;
+    const update_authority = new PublicKey(decoded.updateAuthority).toBase58();
+    const seller_fee_basis_points = decoded.data.sellerFeeBasisPoints;
+    //info: metaplex protocl is snake style parameter
     return {
       name,
       symbol,
       uri,
-      updateAuthority,
-      mint,
-      sellerFeeBasisPoints
+      update_authority,
+      seller_fee_basis_points,
     }
   }
 }

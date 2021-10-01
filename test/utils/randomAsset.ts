@@ -1,6 +1,6 @@
 import fs from 'fs';
 import {Util} from '../../src/util';
-import {MetadataStorageFormat, Storage} from '../../src/nft/storage';
+import {Storage} from '../../src/nft/storage';
 
 export namespace RandomAsset {
   const ASSET_DIR = './test/assets/';
@@ -26,7 +26,7 @@ export namespace RandomAsset {
     storageData.symbol = commonAsset.symbol;
   }
 
-  export const storage = (): MetadataStorageFormat => {
+  export const storage = (): Storage.Format => {
     const storageData = Storage.initStorageData();
     const commonAsset = createCommonAsset();
     storageData.name = commonAsset.name;

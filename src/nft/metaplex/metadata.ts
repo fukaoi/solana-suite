@@ -15,7 +15,7 @@ export namespace MetaplexMetaData {
   const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
-  export const getByMintKey = async (mintKey: string) => {
+  export const getByMintKey = async (mintKey: string): Promise<Metaplex.Format> => {
     const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(
       mintKey)
     ).toBase58();
@@ -31,7 +31,7 @@ export namespace MetaplexMetaData {
     return Metaplex.initFormat();
   }
 
-  export const getByOwner = async (ownerPubKey: string) => {
+  export const getByOwner = async (ownerPubKey: string): Promise<Metaplex.Format[]> => {
     // Get all token by owner
     const tokens = await Util.getConnection().getParsedTokenAccountsByOwner(
       new PublicKey(ownerPubKey),

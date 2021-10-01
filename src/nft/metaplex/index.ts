@@ -75,14 +75,15 @@ export namespace Metaplex {
     primary_sale_happened?: boolean,
   }
 
-  export const initFormat = () => {
+  export const initFormat = (): Format => {
     return {
-      updateAuthority: '',
-      mint: '',
       name: '',
-      symbol: '',
       uri: '',
-      sellerFeeBasisPoints: '',
+      symbol: '',
+      update_authority: '',
+      creators: [],
+      seller_fee_basis_points: 0,
+      primary_sale_happened: false
     }
   }
 

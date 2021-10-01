@@ -15,14 +15,7 @@ export declare namespace Metaplex {
         seller_fee_basis_points?: number;
         primary_sale_happened?: boolean;
     }
-    const initFormat: () => {
-        updateAuthority: string;
-        mint: string;
-        name: string;
-        symbol: string;
-        uri: string;
-        sellerFeeBasisPoints: string;
-    };
+    const initFormat: () => Format;
     const create: (payer: string, signerSecrets: string[]) => (instructions?: TransactionInstruction[] | undefined) => Promise<{
         instructions: TransactionInstruction[];
         signers: Keypair[];

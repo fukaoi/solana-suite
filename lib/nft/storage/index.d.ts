@@ -1,4 +1,6 @@
 import { Metaplex } from '../metaplex';
+export * from './arweave';
+export * from './nft-storage';
 export declare namespace Storage {
     interface Attributes {
     }

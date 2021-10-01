@@ -1,5 +1,8 @@
 import {Metaplex} from '../metaplex'
 
+export * from './arweave';
+export * from './nft-storage';
+
 export namespace Storage {
   // tslint:disable-next-line
   export interface Attributes {}

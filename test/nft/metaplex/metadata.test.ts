@@ -61,7 +61,6 @@ describe('MetaplexMetaData', () => {
   it('Get metadata by mintKey', async () => {
     const orgData = {
       updateAuthority: '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
-      mint: 'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf',
       name: 'Gropu1',
       symbol: '',
       uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',
@@ -74,9 +73,8 @@ describe('MetaplexMetaData', () => {
     assert.equal(res.name, orgData.name)
     assert.equal(res.symbol, orgData.symbol)
     assert.equal(res.uri, orgData.uri)
-    assert.equal(res.mint, orgData.mint)
-    assert.equal(res.updateAuthority, orgData.updateAuthority)
-    assert.equal(res.sellerFeeBasisPoints, orgData.sellerFeeBasisPoints)
+    assert.equal(res.update_authority, orgData.updateAuthority)
+    assert.equal(res.seller_fee_basis_points, orgData.sellerFeeBasisPoints)
   });
 
   it('Get metadata of nft by owner', async () => {
