@@ -4,6 +4,11 @@
 
 ## Table of contents
 
+### Interfaces
+
+- [Creators](../interfaces/Metaplex.Creators.md)
+- [MetadataFormat](../interfaces/Metaplex.MetadataFormat.md)
+
 ### Functions
 
 - [create](Metaplex.md#create)
@@ -40,7 +45,7 @@
 
 #### Defined in
 
-[src/nft/metaplex/index.ts:64](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/metaplex/index.ts#L64)
+[src/nft/metaplex/index.ts:78](https://github.com/fukaoi/solana-suite/blob/262aa17/src/nft/metaplex/index.ts#L78)
 
 ___
 
@@ -63,4 +68,4 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/index.ts:88](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/metaplex/index.ts#L88)
+[src/nft/metaplex/index.ts:102](https://github.com/fukaoi/solana-suite/blob/262aa17/src/nft/metaplex/index.ts#L102)

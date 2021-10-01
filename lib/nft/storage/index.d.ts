@@ -1,19 +1,9 @@
+import { Metaplex } from "../metaplex";
 export interface Attributes {
 }
 export interface Collection {
 }
 export interface Properties {
-}
-export interface Creators {
-}
-export interface MetadataFormat {
-    name: string;
-    uri: string;
-    symbol: string;
-    update_authority: string;
-    creators?: Creators[];
-    seller_fee_basis_points?: number;
-    primary_sale_happened?: boolean;
 }
 export interface MetadataStorageFormat {
     name: string;
@@ -27,7 +17,7 @@ export interface MetadataStorageFormat {
     attributes?: Attributes[];
     collection?: Collection;
     properties?: Properties[];
-    creators?: Creators[];
+    creators?: Metaplex.Creators[];
 }
 export declare namespace Storage {
     const initStorageData: () => MetadataStorageFormat;

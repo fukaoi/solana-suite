@@ -22,8 +22,6 @@
 
 - [Attributes](interfaces/Attributes.md)
 - [Collection](interfaces/Collection.md)
-- [Creators](interfaces/Creators.md)
-- [MetadataFormat](interfaces/MetadataFormat.md)
 - [MetadataStorageFormat](interfaces/MetadataStorageFormat.md)
 - [Properties](interfaces/Properties.md)
 
@@ -54,7 +52,7 @@ node_modules/@types/node/globals.d.ts:589
 
 #### Defined in
 
-[src/nft/metaplex/index.ts:15](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/metaplex/index.ts#L15)
+[src/nft/metaplex/index.ts:15](https://github.com/fukaoi/solana-suite/blob/262aa17/src/nft/metaplex/index.ts#L15)
 
 ___
 
@@ -64,4 +62,4 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/index.ts:14](https://github.com/fukaoi/solana-suite/blob/614964e/src/nft/metaplex/index.ts#L14)
+[src/nft/metaplex/index.ts:14](https://github.com/fukaoi/solana-suite/blob/262aa17/src/nft/metaplex/index.ts#L14)

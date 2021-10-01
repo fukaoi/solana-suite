@@ -1,4 +1,4 @@
-import {Metaplex} from "../metaplex"
+import {Metaplex} from '../metaplex'
 
 // tslint:disable-next-line
 export interface Attributes {}
