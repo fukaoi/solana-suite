@@ -17,12 +17,12 @@ import {Constants} from './constants';
 /////// GLOBAL SCOPE FUNCTION //////
 declare global {
   interface String {
-    toPubKey(): string;
+    toPubKey(): PublicKey;
   }
 }
 
-String.prototype.toPubKey = (): string => {
-  return 'aaaaa';
+String.prototype.toPubKey = function() {
+  return new PublicKey(this);
 }
 /////// GLOBAL SCOPE FUNCTION //////
 
