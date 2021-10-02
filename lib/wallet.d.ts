@@ -1,7 +1,7 @@
 import { Keypair, PublicKey, TransactionInstruction } from '@solana/web3.js';
 declare global {
     interface String {
-        toPubKey(): string;
+        toPubKey(): PublicKey;
     }
 }
 export declare namespace Wallet {

@@ -14,19 +14,6 @@ import {Node} from './node';
 import {Util} from './util';
 import {Constants} from './constants';
 
-/////// GLOBAL SCOPE FUNCTION //////
-declare global {
-  interface String {
-    toPubKey(): PublicKey;
-  }
-}
-
-String.prototype.toPubKey = function() {
-  return new PublicKey(this);
-}
-/////// GLOBAL SCOPE FUNCTION //////
-
-
 export namespace Wallet {
   const TOKEN_ASSOCIATED_PROGRAM_ID = new PublicKey(Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID);
   const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
@@ -42,6 +29,7 @@ export namespace Wallet {
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
 
   export const createKeypair = (secret: string): Keypair => {
+    console.warn('--- DEPRECATED ---');
     const decoded = bs.decode(secret);
     return Keypair.fromSecretKey(decoded);
   }
