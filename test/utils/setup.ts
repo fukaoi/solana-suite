@@ -1,15 +1,17 @@
 import fs from 'fs';
 import {Wallet} from '../../src/wallet';
-import debugDisp from './debugDisp';
+import {Debug} from './debug';
 import '../../src/util';
 
-export namespace TestUtils {
+console.debug(`\u001b[33m === DEBUG MODE (${process.env.NODE_ENV}) ===`);
+
+export namespace Setup {
   export const TEMP_KEYPAIR_FILE = `.solana-${process.env.NODE_ENV}-keypair`;
 
-  export const setupKeyPair = async ():
+  export const keyPair = async ():
     Promise<{source: Wallet.KeyPair, dest: Wallet.KeyPair}> => {
     const {source, dest} = await getSourceAndDest();
-    debugDisp(source, dest);
+    Debug.display(source, dest);
     return {source: source, dest: dest};
   }
 

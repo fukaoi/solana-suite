@@ -1,7 +1,6 @@
 import {describe, it} from 'mocha';
-import  '../src/global';
 import {assert} from 'chai';
-
+import '../src/global';
 
 describe('Global', () => {
   it('Convert string to PublicKey', async () => {

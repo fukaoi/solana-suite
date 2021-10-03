@@ -4,7 +4,7 @@ import {Memo} from '../src/memo';
 import {assert} from 'chai';
 import {Wallet} from '../src/wallet';
 import {SolNative} from '../src/sol-native';
-import setupKeyPair from '../test/utils/setupKeyPair';
+import {Setup} from '../test/utils/setup';
 import {Util} from '../src/util';
 
 const signature1 = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
@@ -24,7 +24,7 @@ const sendContinuously = async (): Promise<void> => {
 
 describe('Transaction', () => {
   before(async () => {
-    const obj = await setupKeyPair();
+    const obj = await Setup.keyPair();
     source = obj.source;
     destination = obj.dest;
   });

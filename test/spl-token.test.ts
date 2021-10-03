@@ -2,9 +2,9 @@ import {describe, it} from 'mocha';
 import {SplToken} from '../src/spl-token';
 import {Memo} from '../src/memo';
 import {assert} from 'chai';
-import setupKeyPair from '../test/utils/setupKeyPair';
-import fs from 'fs';
+import {Setup} from '../test/utils/setup';
 import {Wallet} from '../src/wallet';
+import fs from 'fs';
 
 let source: Wallet.KeyPair;
 let dest: Wallet.KeyPair;
@@ -28,7 +28,7 @@ const createTokenTempFile = async (data: Object) => {
 
 describe('SplToken', () => {
   before(async () => {
-    const obj = await setupKeyPair();
+    const obj = await Setup.keyPair();
     source = obj.source;
     dest = obj.dest;
     fs.existsSync(TEMP_TOKEN_FILE) && loadTokenTempFile();
