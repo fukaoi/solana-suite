@@ -2,14 +2,14 @@ import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Wallet} from '../../../src/wallet';
 import {StorageArweave} from '../../../src/nft/storage';
-import setupKeyPair from '../../utils/setupKeyPair';
+import {Setup} from '../../utils/setup';
 import {RandomAsset} from '../../utils/randomAsset';
 
 let source: Wallet.KeyPair;
 
 describe('StorageArweave', () => {
   before(async () => {
-    const obj = await setupKeyPair();
+    const obj = await Setup.keyPair();
     source = obj.source;
   });
 

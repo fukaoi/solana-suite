@@ -1,10 +1,11 @@
 import {
+  Keypair,
+  PublicKey,
   TransactionInstruction,
   TransactionSignature,
 } from '@solana/web3.js';
 
 import {SplToken} from '../../spl-token';
-import {Wallet} from '../../wallet';
 
 export namespace SplNft {
 
@@ -12,11 +13,11 @@ export namespace SplNft {
   const NFT_DECIMAL = 0;
 
   export const create = (
-    sourceSecret: string,
-    authority: string = Wallet.createKeypair(sourceSecret).publicKey.toBase58(),
+    source: Keypair,
+    authority: PublicKey = source.publicKey,
   ): Promise<string> => {
     return SplToken.create(
-      sourceSecret,
+      source,
       NFT_AMOUNT,
       NFT_DECIMAL,
       authority
@@ -24,15 +25,15 @@ export namespace SplNft {
   }
 
   export const transfer = async (
-    tokenKey: string,
-    sourceSecret: string,
-    destPubkey: string,
+    tokenKey: PublicKey,
+    source: Keypair,
+    dest: PublicKey,
     instruction?: TransactionInstruction
   ): Promise<TransactionSignature> => {
     return SplToken.transfer(
       tokenKey,
-      sourceSecret,
-      destPubkey,
+      source,
+      dest,
       NFT_AMOUNT,
       instruction
     );

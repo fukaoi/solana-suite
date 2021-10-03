@@ -1,9 +1,4 @@
 import { Keypair, PublicKey, TransactionInstruction } from '@solana/web3.js';
-declare global {
-    interface String {
-        toPubKey(): PublicKey;
-    }
-}
 export declare namespace Wallet {
     type Unit = 'sol' | 'lamports';
     export interface KeyPair {
@@ -11,7 +6,6 @@ export declare namespace Wallet {
         secret: string;
     }
     export const DEFAULT_AIRDROP_AMOUNT: number;
-    export const createKeypair: (secret: string) => Keypair;
     export const createSigners: (signerSecrets: string[]) => Keypair[];
     export const getBalance: (pubkey: string, unit?: Unit) => Promise<number>;
     export const create: () => Promise<KeyPair>;

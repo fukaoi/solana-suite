@@ -1,4 +1,5 @@
 import {
+  Keypair,
   ParsedConfirmedTransaction,
   ParsedInstruction,
   TransactionInstruction,
@@ -9,7 +10,6 @@ import bs from 'bs58';
 
 import {Transaction} from './transaction';
 import {Constants} from './constants';
-import {Wallet} from './wallet';
 
 export namespace Memo {
   export const decode = (encoded: string): string => bs.decode(encoded).toString();
@@ -34,10 +34,10 @@ export namespace Memo {
 
   export const own = async (
     instruction: TransactionInstruction,
-    sourceSecret: string
+    source: Keypair
   ): Promise<TransactionSignature> =>
     await Transaction.sendInstructions(
-      [Wallet.createKeypair(sourceSecret)],
+      [source],
       [instruction]
     );
 }

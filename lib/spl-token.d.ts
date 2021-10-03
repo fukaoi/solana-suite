@@ -1,22 +1,22 @@
-import { TransactionInstruction, TransactionSignature } from '@solana/web3.js';
+import { Keypair, PublicKey, TransactionInstruction, TransactionSignature } from '@solana/web3.js';
 export declare namespace SplToken {
     interface TransferHistory {
         info: {
             amount: string;
-            authority: string;
-            destination: string;
-            source: string;
+            authority: PublicKey;
+            destination: PublicKey;
+            source: PublicKey;
         };
         type: string;
         date: Date;
     }
     interface TransferDestinationList {
-        destination: string;
+        dest: PublicKey;
         date: Date;
     }
-    export const getTransferHistory: (pubkeyStr: string) => Promise<TransferHistory[]>;
-    export const getTransferDestinationList: (pubkeyStr: string) => Promise<TransferDestinationList[]>;
-    export const create: (sourceSecret: string, totalAmount: number, decimal: number, authority?: string) => Promise<string>;
-    export const transfer: (tokenId: string, sourceSecret: string, destination: string, amount: number, instruction?: TransactionInstruction | undefined) => Promise<TransactionSignature>;
+    export const getTransferHistory: (pubkey: PublicKey) => Promise<TransferHistory[]>;
+    export const getTransferDestinationList: (pubkey: PublicKey) => Promise<TransferDestinationList[]>;
+    export const create: (source: Keypair, totalAmount: number, decimal: number, authority?: PublicKey) => Promise<string>;
+    export const transfer: (tokenKey: PublicKey, source: Keypair, dest: PublicKey, amount: number, instruction?: TransactionInstruction | undefined) => Promise<TransactionSignature>;
     export {};
 }

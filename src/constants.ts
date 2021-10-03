@@ -37,11 +37,11 @@ export namespace ConstantsFunc {
 export namespace Constants {
   export const CURRENT_NETWORK = ConstantsFunc.switchApi(process.env.NODE_ENV);
   export const API_URL = ConstantsFunc.switchApi(process.env.NODE_ENV);
-  export const SYSTEM_PROGRAM_ID = '11111111111111111111111111111111';
-  export const SPL_TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
-  export const SPL_ASSOCIATED_TOKEN_PROGRAM_ID = 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL';
+  export const SYSTEM_PROGRAM_ID = '11111111111111111111111111111111'.toPubKey();
+  export const SPL_TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'.toPubKey();
+  export const SPL_ASSOCIATED_TOKEN_PROGRAM_ID = 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'.toPubKey();
   export const MEMO_PROGRAM_ID = 'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo'.toPubKey();
-  export const METAPLEX_PROGRAM_ID = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s';
+  export const METAPLEX_PROGRAM_ID = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'.toPubKey();
   export const COMMITMENT: Commitment = 'singleGossip';
   // todo: this NFT_STORAGE_API_KEY moved .env file
   // NFT.storage can store NFTs up to 32GB in size!
@@ -50,7 +50,7 @@ export namespace Constants {
   export const NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
   export const ARWEAVE_UPLOAD_SRV_URL = ConstantsFunc.swtichArweaveUpload();
   export const ARWEAVE_GATEWAY_URL = 'https://arweave.net';
-  export const AR_SOL_HOLDER_ID = 'HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm';
+  export const AR_SOL_HOLDER_ID = 'HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm'.toPubKey();
 
   export const COIN_MARKET_URL =  'https://api.coingecko.com/api/v3/simple/price';
 }

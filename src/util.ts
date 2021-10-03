@@ -8,7 +8,7 @@ export namespace Default {
   }
 }
 
-export default module.exports;
+// export default module.exports;
 
 /////// GLOBAL FUNCTION //////
 

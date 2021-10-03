@@ -15,9 +15,6 @@ import {Util} from './util';
 import {Constants} from './constants';
 
 export namespace Wallet {
-  const TOKEN_ASSOCIATED_PROGRAM_ID = new PublicKey(Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID);
-  const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
-  const ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey(Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID);
 
   type Unit = 'sol' | 'lamports';
 
@@ -28,14 +25,8 @@ export namespace Wallet {
 
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
 
-  export const createKeypair = (secret: string): Keypair => {
-    console.warn('--- DEPRECATED ---');
-    const decoded = bs.decode(secret);
-    return Keypair.fromSecretKey(decoded);
-  }
-
   export const createSigners = (signerSecrets: string[]): Keypair[] =>
-    signerSecrets.map(s => createKeypair(s));
+    signerSecrets.map(s => s.toKeypair());
 
   export const getBalance = async (pubkey: string, unit: Unit = 'sol'): Promise<number> => {
     const balance = await Node.getConnection().getBalance(new PublicKey(pubkey));
@@ -71,7 +62,7 @@ export namespace Wallet {
         TOKEN_PROGRAM_ID.toBuffer(),
         tokenIdPublicKey.toBuffer(),
       ],
-      ACCOUNT_PROGRAM_ID
+      Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID
     ))[0];
   }
 
@@ -82,10 +73,10 @@ export namespace Wallet {
     return (await PublicKey.findProgramAddress(
       [
         Buffer.from('metadata'),
-        new PublicKey(METADATA_PROGRAM_ID).toBuffer(),
+        new PublicKey(Constants.METAPLEX_PROGRAM_ID).toBuffer(),
         tokenIdPublicKey.toBuffer(),
       ],
-      new PublicKey(METADATA_PROGRAM_ID),
+      new PublicKey(Constants.METAPLEX_PROGRAM_ID),
     ))[0];
   }
 
@@ -134,7 +125,7 @@ export namespace Wallet {
     ];
     return new TransactionInstruction({
       keys,
-      programId: TOKEN_ASSOCIATED_PROGRAM_ID,
+      programId: Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID,
       data: Buffer.from([]),
     });
   }

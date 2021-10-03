@@ -10,14 +10,12 @@ import {Constants} from '../../constants';
 import {Node} from '../../node';
 import {MetaplexMetaData} from './metadata';
 import {MetaplexInstructure} from './instructure';
-import {Wallet} from '../../wallet';
 
 export * from './instructure';
 export * from './metadata';
 export * from './serialize';
 
 export namespace Metaplex {
-  const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
 
   const createMintAccount = async (
     instructions: TransactionInstruction[],
@@ -34,7 +32,7 @@ export namespace Metaplex {
         newAccountPubkey: mintAccount.publicKey,
         lamports: mintRentExempt,
         space: MintLayout.span,
-        programId: TOKEN_PROGRAM_ID,
+        programId: Constants.SPL_TOKEN_PROGRAM_ID,
       }),
     );
 
@@ -53,7 +51,7 @@ export namespace Metaplex {
 
     instructions.push(
       Token.createInitMintInstruction(
-        TOKEN_PROGRAM_ID,
+        Constants.SPL_TOKEN_PROGRAM_ID,
         mintAccount,
         decimals,
         new PublicKey(owner),
@@ -95,7 +93,7 @@ export namespace Metaplex {
     let inst: TransactionInstruction[] = [];
     inst = instructions ? instructions : inst;
 
-    const signers = signerSecrets.map(s => Wallet.createKeypair(s));
+    const signers = signerSecrets.map(s => s.toKeypair());
 
     const mintAccount = await createMintAccount(
       inst,

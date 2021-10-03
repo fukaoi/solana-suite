@@ -12,8 +12,6 @@ import {Token} from '@solana/spl-token';
 import {Node} from '../../node';
 
 export namespace MetaplexMetaData {
-  const TOKEN_PROGRAM_ID = new PublicKey(Constants.SPL_TOKEN_PROGRAM_ID);
-  const METADATA_PROGRAM_ID = new PublicKey(Constants.METAPLEX_PROGRAM_ID);
 
   export const getByMintKey = async (mintKey: string): Promise<Metaplex.Format> => {
     const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(
@@ -35,7 +33,7 @@ export namespace MetaplexMetaData {
     // Get all token by owner
     const tokens = await Node.getConnection().getParsedTokenAccountsByOwner(
       new PublicKey(ownerPubKey),
-      {programId: TOKEN_PROGRAM_ID}
+      {programId: Constants.SPL_TOKEN_PROGRAM_ID}
     );
     const matches = [];
 
@@ -103,7 +101,7 @@ export namespace MetaplexMetaData {
     inst.push(
       new TransactionInstruction({
         keys,
-        programId: METADATA_PROGRAM_ID,
+        programId: Constants.METAPLEX_PROGRAM_ID,
         data: txnData,
       })
     );
@@ -137,7 +135,7 @@ export namespace MetaplexMetaData {
 
     inst.push(
       Token.createMintToInstruction(
-        TOKEN_PROGRAM_ID,
+        Constants.SPL_TOKEN_PROGRAM_ID,
         new PublicKey(mintKey),
         associatedTokenAccount,
         new PublicKey(updateAuthority),
@@ -170,7 +168,7 @@ export namespace MetaplexMetaData {
     inst.push(
       new TransactionInstruction({
         keys,
-        programId: METADATA_PROGRAM_ID,
+        programId: Constants.METAPLEX_PROGRAM_ID,
         data: txnData,
       }),
     );

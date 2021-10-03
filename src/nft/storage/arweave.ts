@@ -5,9 +5,8 @@ import fetch from 'cross-fetch';
 import FormData from 'form-data';
 import {SolNative} from '../../sol-native';
 import path from 'path';
-import {LAMPORTS_PER_SOL} from '@solana/web3.js';
+import {Keypair, LAMPORTS_PER_SOL} from '@solana/web3.js';
 import {Storage} from './index';
-import {Wallet} from '../../wallet';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
@@ -111,10 +110,9 @@ export namespace StorageArweave {
   }
 
   export const upload = async (
-    payerSecret: string,
+    payer: Keypair,
     storageData: Storage.Format
   ) => {
-    const payer = Wallet.createKeypair(payerSecret);
     const imagePath = storageData.image;
     const meta = createMetadata(storageData);
 
@@ -132,8 +130,8 @@ export namespace StorageArweave {
     );
 
     await SolNative.transfer(
-      payer.publicKey.toString(),
-      [payerSecret],
+      payer.publicKey,
+      [payer],
       Constants.AR_SOL_HOLDER_ID,
       await calculateArFee(fileBuffers)
     )();

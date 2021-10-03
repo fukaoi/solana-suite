@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
 import {Metaplex, MetaplexInstructure} from '../../../src/nft/metaplex/index';
-import setupKeyPair from '../../../test/utils/setupKeyPair';
+import {Setup} from '../../../test/utils/setup';
 import {Wallet} from '../../../src/wallet';
 
 let source: Wallet.KeyPair;
@@ -9,7 +9,7 @@ let mintKey = '';
 
 describe('Metaplex', () => {
   before(async () => {
-    const obj = await setupKeyPair();
+    const obj = await Setup.keyPair();
     source = obj.source;
   });
 
