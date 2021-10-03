@@ -27,7 +27,7 @@ const createNftTempFile = async (data: Object) => {
 
 describe('NftSpl', () => {
   before(async () => {
-    const obj = await Setup.keyPair();
+    const obj = await Setup.generatekeyPair();
     source = obj.source;
     destination = obj.dest;
     fs.existsSync(TEMP_NFT_FILE) && loadNftTempFile();

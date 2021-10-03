@@ -28,7 +28,7 @@ const createTokenTempFile = async (data: Object) => {
 
 describe('SplToken', () => {
   before(async () => {
-    const obj = await Setup.keyPair();
+    const obj = await Setup.generatekeyPair();
     source = obj.source;
     dest = obj.dest;
     fs.existsSync(TEMP_TOKEN_FILE) && loadTokenTempFile();

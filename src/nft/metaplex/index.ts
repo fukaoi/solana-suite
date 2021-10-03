@@ -43,7 +43,7 @@ export namespace Metaplex {
   const init = async (
     instructions: TransactionInstruction[],
     mintAccount: PublicKey,
-    payer: string,
+    payer: PublicKey,
     owner = payer,
     freezeAuthority = payer
   ) => {
@@ -87,48 +87,46 @@ export namespace Metaplex {
   }
 
   export const create = (
-    payer: string,
-    signerSecrets: string[],
+    payer: PublicKey,
+    signers: Keypair[],
   ) => async (instructions?: TransactionInstruction[]) => {
     let inst: TransactionInstruction[] = [];
     inst = instructions ? instructions : inst;
 
-    const signers = signerSecrets.map(s => s.toKeypair());
-
     const mintAccount = await createMintAccount(
       inst,
-      new PublicKey(payer),
+      payer,
       signers,
     );
 
-    const mintKey = await init(
+    const tokenKey = await init(
       inst,
       mintAccount,
       payer,
     );
 
-    return {instructions: inst, signers, mintKey};
+    return {instructions: inst, signers, tokenKey};
   }
 
   export const mint = async (
     data: MetaplexInstructure.Data,
-    owner: {pubkey: string, secret: string},
-  ): Promise<{mintKey: string, signature: string}> => {
-    const txsign = await create(owner.pubkey, [owner.secret])();
+    owner: Keypair,
+  ): Promise<{tokenKey: string, signature: string}> => {
+    const txsign = await create(owner.publicKey, [owner])();
 
     const metadataInst = await MetaplexMetaData.create(
       data,
-      txsign.mintKey,
-      owner.pubkey,
+      txsign.tokenKey.toPubKey(),
+      owner.publicKey,
     )(txsign.instructions);
 
     const updateTx = await MetaplexMetaData.update(
       data,
       undefined,
       undefined,
-      txsign.mintKey,
-      owner.pubkey,
-      [owner.secret],
+      txsign.tokenKey.toPubKey(),
+      owner.publicKey,
+      [owner],
     )(metadataInst);
 
     const signature = await Transaction.sendInstructions(
@@ -136,6 +134,6 @@ export namespace Metaplex {
       updateTx
     );
 
-    return {mintKey: txsign.mintKey, signature};
+    return {tokenKey: txsign.tokenKey, signature};
   }
 }

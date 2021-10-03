@@ -1,4 +1,4 @@
-import { Keypair, TransactionInstruction } from '@solana/web3.js';
+import { Keypair, PublicKey, TransactionInstruction } from '@solana/web3.js';
 import { MetaplexInstructure } from './instructure';
 export * from './instructure';
 export * from './metadata';
@@ -16,15 +16,12 @@ export declare namespace Metaplex {
         primary_sale_happened?: boolean;
     }
     const initFormat: () => Format;
-    const create: (payer: string, signerSecrets: string[]) => (instructions?: TransactionInstruction[] | undefined) => Promise<{
+    const create: (payer: PublicKey, signers: Keypair[]) => (instructions?: TransactionInstruction[] | undefined) => Promise<{
         instructions: TransactionInstruction[];
         signers: Keypair[];
-        mintKey: string;
+        tokenKey: string;
     }>;
-    const mint: (data: MetaplexInstructure.Data, owner: {
-        pubkey: string;
-        secret: string;
-    }) => Promise<{
+    const mint: (data: MetaplexInstructure.Data, owner: Keypair) => Promise<{
         mintKey: string;
         signature: string;
     }>;

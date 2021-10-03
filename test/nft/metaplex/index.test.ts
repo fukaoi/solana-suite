@@ -5,11 +5,11 @@ import {Setup} from '../../../test/utils/setup';
 import {Wallet} from '../../../src/wallet';
 
 let source: Wallet.KeyPair;
-let mintKey = '';
+let tokenKey = '';
 
 describe('Metaplex', () => {
   before(async () => {
-    const obj = await Setup.keyPair();
+    const obj = await Setup.generatekeyPair();
     source = obj.source;
   });
 
@@ -22,9 +22,9 @@ describe('Metaplex', () => {
       creators: null
     });
 
-    const res = await Metaplex.mint(data, source);
-    mintKey = res.mintKey;
-    console.log(`# mintKey: ${mintKey}`);
+    const res = await Metaplex.mint(data, source.secret.toKeypair());
+    tokenKey = res.tokenKey;
+    console.log(`# tokenKey: ${tokenKey}`);
     console.log(`# tx signature: ${res.signature}`);
     assert.isNotEmpty(res);
   });

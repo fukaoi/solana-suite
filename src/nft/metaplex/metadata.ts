@@ -3,6 +3,7 @@ import {
   TransactionInstruction,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
+  Keypair,
 } from '@solana/web3.js';
 
 import {Wallet} from '../../wallet';
@@ -13,15 +14,12 @@ import {Node} from '../../node';
 
 export namespace MetaplexMetaData {
 
-  export const getByMintKey = async (mintKey: string): Promise<Metaplex.Format> => {
-    const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(
-      mintKey)
-    ).toBase58();
+  export const getByMintKey = async (tokenKey: PublicKey): Promise<Metaplex.Format> => {
+    console.log(tokenKey);
+    const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
 
     // get rent data in a metaAccount
-    const nfts = await Node.getConnection().getParsedAccountInfo(
-      new PublicKey(metaAccount)
-    );
+    const nfts = await Node.getConnection().getParsedAccountInfo(metaAccount);
     const data = nfts?.value?.data as Buffer;
     if (data) {
       return MetaplexSerialize.decode(data);
@@ -29,17 +27,17 @@ export namespace MetaplexMetaData {
     return Metaplex.initFormat();
   }
 
-  export const getByOwner = async (ownerPubKey: string): Promise<Metaplex.Format[]> => {
+  export const getByOwner = async (owner: PublicKey): Promise<Metaplex.Format[]> => {
     // Get all token by owner
     const tokens = await Node.getConnection().getParsedTokenAccountsByOwner(
-      new PublicKey(ownerPubKey),
+      owner,
       {programId: Constants.SPL_TOKEN_PROGRAM_ID}
     );
     const matches = [];
 
     // Filter only metaplex nft
     for (const token of tokens.value) {
-      const decoded = await getByMintKey(token.account.data.parsed.info.mint);
+      const decoded = await getByMintKey(token.account.data.parsed.info.mint.toPubKey());
       if (!decoded) continue;
       matches.push(decoded)
     }
@@ -48,14 +46,14 @@ export namespace MetaplexMetaData {
 
   export const create = (
     data: MetaplexInstructure.Data,
-    mintKey: string,
-    payer: string,
+    tokenKey: PublicKey,
+    payer: PublicKey,
     mintAuthorityKey = payer,
     updateAuthority = payer,
   ) => async (instructions?: TransactionInstruction[]) => {
     let inst: TransactionInstruction[] = [];
     inst = instructions ? instructions : inst;
-    const metaAccount = (await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey)).toBase58();
+    const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
 
     console.log('# metaAccount', metaAccount);
 
@@ -63,27 +61,27 @@ export namespace MetaplexMetaData {
 
     const keys = [
       {
-        pubkey: new PublicKey(metaAccount),
+        pubkey: metaAccount,
         isSigner: false,
         isWritable: true,
       },
       {
-        pubkey: new PublicKey(mintKey),
+        pubkey: tokenKey,
         isSigner: false,
         isWritable: false,
       },
       {
-        pubkey: new PublicKey(mintAuthorityKey),
+        pubkey: mintAuthorityKey,
         isSigner: true,
         isWritable: false,
       },
       {
-        pubkey: new PublicKey(payer),
+        pubkey: payer,
         isSigner: true,
         isWritable: false,
       },
       {
-        pubkey: new PublicKey(updateAuthority),
+        pubkey: updateAuthority,
         isSigner: false,
         isWritable: false,
       },
@@ -110,34 +108,34 @@ export namespace MetaplexMetaData {
 
   export const update = (
     data: MetaplexInstructure.Data,
-    newUpdateAuthority: string | undefined,
+    newUpdateAuthority: PublicKey | null | undefined,
     primarySaleHappened: boolean | null | undefined,
-    mintKey: string,
-    updateAuthority: string,
-    signerSecrets: string[],
+    tokenKey: PublicKey,
+    updateAuthority: PublicKey,
+    signers: Keypair[],
   ) => async (instructions?: TransactionInstruction[]) => {
     let inst: TransactionInstruction[] = [];
     inst = instructions ? instructions : inst;
 
-    const signers = Wallet.createSigners(signerSecrets);
-
-    const associatedTokenAccount = await Wallet.findAssocaiatedTokenAddress(updateAuthority, mintKey);
-    console.log('# associatedTokenAccount: ', associatedTokenAccount.toBase58());
+    const associatedToken = await Wallet.findAssocaiatedTokenAddress(
+      updateAuthority, 
+      tokenKey
+    );
 
     inst.push(
       Wallet.createAssociatedTokenAccountInstruction(
-        associatedTokenAccount.toBase58(),
+        associatedToken,
         updateAuthority,
         updateAuthority,
-        mintKey
+        tokenKey
       )
     );
 
     inst.push(
       Token.createMintToInstruction(
         Constants.SPL_TOKEN_PROGRAM_ID,
-        new PublicKey(mintKey),
-        associatedTokenAccount,
+        new PublicKey(tokenKey),
+        associatedToken,
         new PublicKey(updateAuthority),
         signers,
         1,
@@ -145,7 +143,7 @@ export namespace MetaplexMetaData {
     );
 
     const metaAccount = (
-      await Wallet.findMetaplexAssocaiatedTokenAddress(mintKey)
+      await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey)
     ).toBase58();
 
     const txnData = MetaplexSerialize.serializeUpdateArgs(

@@ -25,11 +25,8 @@ export namespace Wallet {
 
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
 
-  export const createSigners = (signerSecrets: string[]): Keypair[] =>
-    signerSecrets.map(s => s.toKeypair());
-
-  export const getBalance = async (pubkey: string, unit: Unit = 'sol'): Promise<number> => {
-    const balance = await Node.getConnection().getBalance(new PublicKey(pubkey));
+  export const getBalance = async (pubkey: PublicKey, unit: Unit = 'sol'): Promise<number> => {
+    const balance = await Node.getConnection().getBalance(pubkey);
     switch (unit) {
       case 'sol': return balance / LAMPORTS_PER_SOL;
       case 'lamports': return balance;
@@ -51,11 +48,11 @@ export namespace Wallet {
   };
 
   export const findAssocaiatedTokenAddress = async (
-    sourcePubkey: string,
-    tokenId: string
+    source: PublicKey,
+    tokenKey: PublicKey
   ): Promise<PublicKey> => {
-    const walletPubKey = new PublicKey(sourcePubkey);
-    const tokenIdPublicKey = new PublicKey(tokenId);
+    const walletPubKey = new PublicKey(source);
+    const tokenIdPublicKey = new PublicKey(tokenKey);
     return (await PublicKey.findProgramAddress(
       [
         walletPubKey.toBuffer(),
@@ -67,43 +64,42 @@ export namespace Wallet {
   }
 
   export const findMetaplexAssocaiatedTokenAddress = async (
-    tokenId: string
+    tokenKey: PublicKey
   ): Promise<PublicKey> => {
-    const tokenIdPublicKey = new PublicKey(tokenId);
     return (await PublicKey.findProgramAddress(
       [
         Buffer.from('metadata'),
-        new PublicKey(Constants.METAPLEX_PROGRAM_ID).toBuffer(),
-        tokenIdPublicKey.toBuffer(),
+        Constants.METAPLEX_PROGRAM_ID.toBuffer(),
+        tokenKey.toBuffer(),
       ],
-      new PublicKey(Constants.METAPLEX_PROGRAM_ID),
+      Constants.METAPLEX_PROGRAM_ID,
     ))[0];
   }
 
   export const createAssociatedTokenAccountInstruction = (
-    associatedTokenAddress: string,
-    payer: string,
-    sourcePubkey: string,
-    mintKey: string,
+    associatedToken: PublicKey,
+    payer: PublicKey,
+    source: PublicKey,
+    mintKey: PublicKey,
   ) => {
     const keys = [
       {
-        pubkey: new PublicKey(payer),
+        pubkey: payer,
         isSigner: true,
         isWritable: true,
       },
       {
-        pubkey: new PublicKey(associatedTokenAddress),
+        pubkey: associatedToken,
         isSigner: false,
         isWritable: true,
       },
       {
-        pubkey: new PublicKey(sourcePubkey),
+        pubkey: source,
         isSigner: false,
         isWritable: false,
       },
       {
-        pubkey: new PublicKey(mintKey),
+        pubkey: mintKey,
         isSigner: false,
         isWritable: false,
       },

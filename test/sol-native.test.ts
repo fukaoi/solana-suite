@@ -3,14 +3,14 @@ import {SolNative} from '../src/sol-native';
 import {Memo} from '../src/memo';
 import {Wallet} from '../src/wallet';
 import {assert} from 'chai';
-import setupKeyPair from '../test/utils/setupKeyPair';
+import {Setup} from '../test/utils/setup';
 
 let source: Wallet.KeyPair;
 let destinationStr: string;
 
 describe('SolNative', () => {
   before(async () => {
-    const obj = await setupKeyPair();
+    const obj = await Setup.generatekeyPair();
     source = obj.source;
     destinationStr = obj.dest.pubkey;
   });

@@ -24,7 +24,7 @@ const sendContinuously = async (): Promise<void> => {
 
 describe('Transaction', () => {
   before(async () => {
-    const obj = await Setup.keyPair();
+    const obj = await Setup.generatekeyPair();
     source = obj.source;
     destination = obj.dest;
   });

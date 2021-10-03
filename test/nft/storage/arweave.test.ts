@@ -9,14 +9,14 @@ let source: Wallet.KeyPair;
 
 describe('StorageArweave', () => {
   before(async () => {
-    const obj = await Setup.keyPair();
+    const obj = await Setup.generatekeyPair();
     source = obj.source;
   });
 
   it('Upload metadata json file and image', async () => {
     const asset = RandomAsset.storage();
     const res = await StorageArweave.upload(
-      source.secret,
+      source.secret.toKeypair(),
       asset
     );
     console.log('# arweave manifest url: ', res);
