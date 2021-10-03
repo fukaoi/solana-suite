@@ -1,25 +1,33 @@
 import fs from 'fs';
 import {Wallet} from '../../src/wallet';
-import debugDisp from './debugDisp';
 import '../../src/util';
 
-export namespace TestUtils {
+console.debug(`\u001b[33m === DEBUG MODE (${process.env.NODE_ENV}) ===`);
+
+export namespace Setup {
   export const TEMP_KEYPAIR_FILE = `.solana-${process.env.NODE_ENV}-keypair`;
 
-  export const setupKeyPair = async ():
-    Promise<{source: Wallet.Keypair, dest: Wallet.Keypair}> => {
+  export const generatekeyPair = async ():
+    Promise<{source: Wallet.KeyPair, dest: Wallet.KeyPair}> => {
     const {source, dest} = await getSourceAndDest();
-    debugDisp(source, dest);
+    debug(source, dest);
     return {source: source, dest: dest};
+  }
+
+  const debug = (source: Wallet.KeyPair, dest: Wallet.KeyPair) => {
+    console.debug(`# source.pubkey:`, source.pubkey);
+    console.debug(`# source.secret: `, source.secret);
+    console.debug(`# destination.pubkey:`, dest.pubkey);
+    console.debug(`# destination.secret: `, dest.secret);
   }
 
   const getSourceAndDest = async () => {
     if (fs.existsSync(TEMP_KEYPAIR_FILE)) {
       const obj = await loadTempFile();
-      const sourceBalance = await Wallet.getBalance(obj.source.pubkey);
-      const destBalance = await Wallet.getBalance(obj.dest.pubkey);
+      const sourceBalance = await Wallet.getBalance(obj.source.pubkey.toPubKey());
+      const destBalance = await Wallet.getBalance(obj.dest.pubkey.toPubKey());
       console.debug(`# source balance: ${sourceBalance}`);
-      console.debug(`# dest balance: ${destBalance}`);
+      console.debug(`# destination balance: ${destBalance}`);
       if (sourceBalance < 0.1 || destBalance < 0.1) {
         console.warn(`[Warning]source or dest balance is under 0.1 amount`);
         console.warn(`Reset setupKeyPair`);
@@ -46,7 +54,7 @@ export namespace TestUtils {
     return {source: source, dest: dest};
   }
 
-  const templateKeyPair = (source: Wallet.Keypair, dest: Wallet.Keypair) => {
+  const templateKeyPair = (source: Wallet.KeyPair, dest: Wallet.KeyPair) => {
     return {
       source: {
         pubkey: source.pubkey,
@@ -59,5 +67,3 @@ export namespace TestUtils {
     };
   }
 }
-
-export default TestUtils.setupKeyPair;

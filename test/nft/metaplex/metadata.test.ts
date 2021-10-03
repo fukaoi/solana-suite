@@ -2,14 +2,14 @@ import {describe, it} from 'mocha';
 import {assert} from 'chai'
 import {MetaplexMetaData} from '../../../src/nft/metaplex/metadata';
 import {MetaplexInstructure} from '../../../src/nft/metaplex';
-import setupKeyPair from '../../../test/utils/setupKeyPair';
+import {Setup} from '../../../test/utils/setup';
 import {Wallet} from '../../../src/wallet';
 
-let source: Wallet.Keypair;
+let source: Wallet.KeyPair;
 
 describe('MetaplexMetaData', () => {
   before(async () => {
-    const obj = await setupKeyPair();
+    const obj = await Setup.generatekeyPair();
     source = obj.source;
   });
 
@@ -22,14 +22,15 @@ describe('MetaplexMetaData', () => {
       creators: null
     });
 
-    const mintKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM';
+    const tokenKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM'.toPubKey();
+    const sourceStr = source.pubkey.toPubKey();
 
     const res = await MetaplexMetaData.create(
       data,
-      mintKey,
-      source.pubkey,
-      source.pubkey,
-      source.pubkey,
+      tokenKey,
+      sourceStr,
+      sourceStr,
+      sourceStr,
     )();
     assert.isArray(res);
     assert.isObject(res[0]);
@@ -44,21 +45,21 @@ describe('MetaplexMetaData', () => {
       creators: null
     });
 
-    const mintKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM';
+    const tokenKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM'.toPubKey();
 
     const res = await MetaplexMetaData.update(
       data,
       undefined,
       undefined,
-      mintKey,
-      source.pubkey,
-      [source.secret],
+      tokenKey,
+      source.pubkey.toPubKey(),
+      [source.secret.toKeypair()],
     )();
     assert.isArray(res);
     assert.isObject(res[0]);
   });
 
-  it('Get metadata by mintKey', async () => {
+  it('Get metadata by tokenKey', async () => {
     const orgData = {
       updateAuthority: '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
       name: 'Gropu1',
@@ -67,8 +68,8 @@ describe('MetaplexMetaData', () => {
       sellerFeeBasisPoints: 0
     };
 
-    const res = await MetaplexMetaData.getByMintKey(
-      'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'
+    const res = await MetaplexMetaData.getByTokenKey(
+      'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'.toPubKey()
     );
     assert.equal(res.name, orgData.name)
     assert.equal(res.symbol, orgData.symbol)
@@ -79,7 +80,7 @@ describe('MetaplexMetaData', () => {
 
   it('Get metadata of nft by owner', async () => {
     const res = await MetaplexMetaData.getByOwner(
-      '78DybLoke46TR6RW1HWZBMYt7qouGggQJjLATsfL7RwA'
+      '78DybLoke46TR6RW1HWZBMYt7qouGggQJjLATsfL7RwA'.toPubKey()
     );
     assert.isNotEmpty(res);
   });

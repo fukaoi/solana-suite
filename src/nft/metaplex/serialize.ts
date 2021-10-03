@@ -12,17 +12,19 @@ export namespace MetaplexSerialize {
 
   export const serializeUpdateArgs = (
     data: MetaplexInstructure.Data,
-    newUpdateAuthority: string | null | undefined,
+    newUpdateAuthority: PublicKey | null | undefined,
     primarySaleHappened: boolean | null | undefined
   ) => {
-    const value = new MetaplexInstructure.UpdateMetadataArgs({
-      data,
-      updateAuthority: !newUpdateAuthority ? undefined : newUpdateAuthority,
-      primarySaleHappened:
-        primarySaleHappened === null || primarySaleHappened === undefined
-          ? null
-          : primarySaleHappened,
-    });
+    const value = new MetaplexInstructure.UpdateMetadataArgs(
+      {
+        data,
+        updateAuthority: !newUpdateAuthority ? undefined : newUpdateAuthority.toString(),
+        primarySaleHappened:
+          primarySaleHappened === null || primarySaleHappened === undefined
+            ? null
+            : primarySaleHappened,
+      }
+    );
     return Buffer.from(serialize(MetaplexInstructure.SCHEMA, value));
   }
 

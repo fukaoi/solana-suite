@@ -1,5 +1,5 @@
-import { TransactionInstruction, TransactionSignature } from '@solana/web3.js';
+import { Keypair, PublicKey, TransactionInstruction, TransactionSignature } from '@solana/web3.js';
 export declare namespace SplNft {
-    const create: (sourceSecret: string, authority?: string) => Promise<string>;
-    const transfer: (tokenKey: string, sourceSecret: string, destPubkey: string, instruction?: TransactionInstruction | undefined) => Promise<TransactionSignature>;
+    const create: (source: Keypair, authority?: PublicKey) => Promise<string>;
+    const transfer: (tokenKey: PublicKey, source: Keypair, dest: PublicKey, instruction?: TransactionInstruction | undefined) => Promise<TransactionSignature>;
 }

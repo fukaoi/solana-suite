@@ -1,15 +1,15 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
 import {Metaplex, MetaplexInstructure} from '../../../src/nft/metaplex/index';
-import setupKeyPair from '../../../test/utils/setupKeyPair';
+import {Setup} from '../../../test/utils/setup';
 import {Wallet} from '../../../src/wallet';
 
-let source: Wallet.Keypair;
-let mintKey = '';
+let source: Wallet.KeyPair;
+let tokenKey = '';
 
 describe('Metaplex', () => {
   before(async () => {
-    const obj = await setupKeyPair();
+    const obj = await Setup.generatekeyPair();
     source = obj.source;
   });
 
@@ -22,9 +22,9 @@ describe('Metaplex', () => {
       creators: null
     });
 
-    const res = await Metaplex.mint(data, source);
-    mintKey = res.mintKey;
-    console.log(`# mintKey: ${mintKey}`);
+    const res = await Metaplex.mint(data, source.secret.toKeypair());
+    tokenKey = res.tokenKey;
+    console.log(`# tokenKey: ${tokenKey}`);
     console.log(`# tx signature: ${res.signature}`);
     assert.isNotEmpty(res);
   });
