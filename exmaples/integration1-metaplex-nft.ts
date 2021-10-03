@@ -4,7 +4,7 @@
 
 import {
   Wallet,
-  Util,
+  Node,
   Metaplex,
   MetaplexInstructure,
   MetaplexMetaData,
@@ -53,20 +53,22 @@ import {RandomAsset} from '../test/utils/randomAsset';
     creators: null
   });
 
-  const res = await Metaplex.mint(data, publish);
+  const res = await Metaplex.mint(data, publish.secret.toKeypair());
 
   // this is NFT ID
-  console.log('# mintKey: ', res.mintKey);
+  console.log('# tokenKey: ', res.tokenKey);
   console.log('# mintSignature: ', res.signature);
 
   // untile completed in blockchain
-  await Util.getConnection().confirmTransaction(res.signature, 'max');
+  await Node.getConnection().confirmTransaction(res.signature, 'max');
 
   //////////////////////////////////////////////
   // Display metadata from blockchain(optional)
   //////////////////////////////////////////////
 
-  const metadata = await MetaplexMetaData.getByMintKey(res.mintKey);
+  const metadata = await MetaplexMetaData.getByTokenKey(
+    res.tokenKey.toPubKey()
+  );
   console.log('# metadata: ', metadata);
 
   //////////////////////////////////////////////
@@ -75,9 +77,9 @@ import {RandomAsset} from '../test/utils/randomAsset';
 
   // transfer nft to receipt wallet
   const transferSig = await SplNft.transfer(
-    res.mintKey,
-    publish.secret,
-    receipt.pubkey
+    res.tokenKey.toPubKey(),
+    publish.secret.toKeypair(),
+    receipt.pubkey.toPubKey()
   );
   console.log('# Transfer nft sig: ', transferSig);
 

@@ -22,7 +22,7 @@ export declare namespace Metaplex {
         tokenKey: string;
     }>;
     const mint: (data: MetaplexInstructure.Data, owner: Keypair) => Promise<{
-        mintKey: string;
+        tokenKey: string;
         signature: string;
     }>;
 }

@@ -31,7 +31,7 @@ export namespace Transaction {
     return {
       token: new PublicKey(data.slice(0, 32)),
       owner: new PublicKey(data.slice(32, 64)),
-      amount: amount
+      amount
     }
   }
 
@@ -50,7 +50,7 @@ export namespace Transaction {
 
   export const subscribeAccount = (
     pubkey: PublicKey,
-    // callback: (data: SubscribeData<Buffer>) => void 
+    // callback: (data: SubscribeData<Buffer>) => void
     callback: AccountChangeCallback
   ): number => {
     return Node.getConnection().onAccountChange(pubkey, callback, 'confirmed')

@@ -1,4 +1,4 @@
-import { Keypair, PublicKey, TransactionInstruction, TransactionSignature, Signer, AccountChangeCallback, ParsedConfirmedTransaction } from '@solana/web3.js';
+import { Keypair, PublicKey, TransactionInstruction, TransactionSignature, Signer, ParsedConfirmedTransaction, AccountChangeCallback } from '@solana/web3.js';
 export declare namespace Transaction {
     const get: (signature: string) => Promise<ParsedConfirmedTransaction | null>;
     const getAll: (pubkey: PublicKey) => Promise<ParsedConfirmedTransaction[]>;
