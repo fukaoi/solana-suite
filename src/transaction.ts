@@ -19,8 +19,7 @@ export namespace Transaction {
   export const get = async (signature: string): Promise<ParsedConfirmedTransaction | null> =>
     await Node.getConnection().getParsedConfirmedTransaction(signature);
 
-  export const getAll = async (pubkeyStr: string): Promise<ParsedConfirmedTransaction[]> => {
-    const pubkey = new PublicKey(pubkeyStr);
+  export const getAll = async (pubkey: PublicKey): Promise<ParsedConfirmedTransaction[]> => {
     const transactions = await Node.getConnection().getConfirmedSignaturesForAddress2(pubkey);
     const parsedSig: ParsedConfirmedTransaction[] = [];
     for (const tx of transactions) {

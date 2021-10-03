@@ -6,21 +6,21 @@ import {assert} from 'chai';
 import setupKeyPair from '../test/utils/setupKeyPair';
 
 let source: Wallet.KeyPair;
-let destPubkey: string;
+let destinationStr: string;
 
 describe('SolNative', () => {
   before(async () => {
     const obj = await setupKeyPair();
     source = obj.source;
-    destPubkey = obj.dest.pubkey;
+    destinationStr = obj.dest.pubkey;
   });
 
   it('transfer transaction', async () => {
     const solAmount = 0.0001;
     const res = await SolNative.transfer(
-      source.pubkey,
-      [source.secret],
-      destPubkey,
+      source.pubkey.toPubKey(),
+      [source.secret.toKeypair()],
+      destinationStr.toPubKey(),
       solAmount,
     )();
     console.log(`# tx signature: ${res}`);
@@ -33,9 +33,9 @@ describe('SolNative', () => {
       '{"tokenId": "dummy", "serialNo": "15/100"}'
     );
     const res = await SolNative.transfer(
-      source.pubkey,
-      [source.secret],
-      destPubkey,
+      source.pubkey.toPubKey(),
+      [source.secret.toKeypair()],
+      destinationStr.toPubKey(),
       solAmount,
     )(instruction);
     console.log(`# tx signature: ${res}`);

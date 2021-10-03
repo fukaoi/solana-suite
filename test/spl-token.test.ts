@@ -8,19 +8,18 @@ import {Wallet} from '../src/wallet';
 
 let source: Wallet.KeyPair;
 let dest: Wallet.KeyPair;
-let destPubkey: string;
-let tokenId: string;
+let tokenKeyStr: string;
 
 const TEMP_TOKEN_FILE = '.solana-spl-token';
-const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
+const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6'.toPubKey();
 
 const loadTokenTempFile = () => {
   const res = fs.readFileSync(TEMP_TOKEN_FILE, 'utf8');
   if (res) {
     const obj = JSON.parse(res);
-    tokenId = obj.tokenId;
+    tokenKeyStr = obj.tokenId;
   }
-  console.log(`# tokenId: ${tokenId}`);
+  console.log(`# tokenId: ${tokenKeyStr}`);
 }
 
 const createTokenTempFile = async (data: Object) => {
@@ -32,12 +31,12 @@ describe('SplToken', () => {
     const obj = await setupKeyPair();
     source = obj.source;
     dest = obj.dest;
-    destPubkey = obj.dest.pubkey;
     fs.existsSync(TEMP_TOKEN_FILE) && loadTokenTempFile();
   });
 
   it('Get token transfer history by tokenKey', async () => {
     const res = await SplToken.getTransferHistory(tokenKey);
+    console.log(res);
     assert.isArray(res);
     res.forEach((v) => {
       assert.isNotEmpty(v.type);
@@ -49,8 +48,8 @@ describe('SplToken', () => {
   });
 
   it('Get token transfer history by owner address', async () => {
-    const ownerPubKey = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
-    const res = await SplToken.getTransferHistory(ownerPubKey);
+    const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu'.toPubKey();
+    const res = await SplToken.getTransferHistory(owner);
     assert.isArray(res);
     res.forEach((v) => {
       assert.isNotEmpty(v.type);
@@ -65,35 +64,39 @@ describe('SplToken', () => {
     const res = await SplToken.getTransferDestinationList(tokenKey);
     assert.isArray(res);
     res.forEach((v) => {
-      assert.isNotEmpty(v.destination);
+      assert.isNotEmpty(v.dest);
       assert.isNotNull(v.date);
     });
   });
 
   it('Create token', async () => {
-    if (tokenId) {
+    if (tokenKeyStr) {
       console.log(`# skip because loaded`);
       return;
     }
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const TOKEN_DECIMAL = 2;
-    const res = await SplToken.create(source.secret, TOKEN_TOTAL_AMOUNT, TOKEN_DECIMAL);
+    const res = await SplToken.create(source.secret.toKeypair(), TOKEN_TOTAL_AMOUNT, TOKEN_DECIMAL);
     console.log(`# tokenId: ${res}`);
     assert.isObject(res);
     createTokenTempFile({tokenId: res});
   });
 
   it('Transfer token. source and destination inter send', async () => {
-    const srcRes = await SplToken.transfer(tokenId, source.secret, destPubkey, 1);
+    const srcRes = await SplToken.transfer(
+      tokenKeyStr.toPubKey(),
+      source.secret.toKeypair(),
+      dest.pubkey.toPubKey(), 1
+    );
     console.log(`# tx signature: ${srcRes}`);
-    const destRes = await SplToken.transfer(tokenId, dest.secret, source.pubkey, 1);
+    const destRes = await SplToken.transfer(tokenKeyStr.toPubKey(), dest.secret.toKeypair(), source.pubkey.toPubKey(), 1);
     console.log(`# tx signature: ${destRes}`);
     assert.isNotEmpty(destRes);
   });
 
   it('Transfer transaction with memo data', async () => {
     const memoInst = Memo.createInstruction('{"tokenId": "dummy", "serialNo": "15/100"}');
-    const res = await SplToken.transfer(tokenId, source.secret, destPubkey, 5, memoInst);
+    const res = await SplToken.transfer(tokenKeyStr.toPubKey(), source.secret.toKeypair(), dest.pubkey.toPubKey(), 5, memoInst);
     console.log(`# tx signature: ${res}`);
     assert.isNotEmpty(res);
   });
