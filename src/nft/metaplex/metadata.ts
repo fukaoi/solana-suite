@@ -14,8 +14,7 @@ import {Node} from '../../node';
 
 export namespace MetaplexMetaData {
 
-  export const getByMintKey = async (tokenKey: PublicKey): Promise<Metaplex.Format> => {
-    console.log(tokenKey);
+  export const getByTokenKey = async (tokenKey: PublicKey): Promise<Metaplex.Format> => {
     const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
 
     // get rent data in a metaAccount
@@ -37,7 +36,7 @@ export namespace MetaplexMetaData {
 
     // Filter only metaplex nft
     for (const token of tokens.value) {
-      const decoded = await getByMintKey(token.account.data.parsed.info.mint.toPubKey());
+      const decoded = await getByTokenKey(token.account.data.parsed.info.mint.toPubKey());
       if (!decoded) continue;
       matches.push(decoded)
     }
@@ -54,8 +53,6 @@ export namespace MetaplexMetaData {
     let inst: TransactionInstruction[] = [];
     inst = instructions ? instructions : inst;
     const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
-
-    console.log('# metaAccount', metaAccount);
 
     const txnData = MetaplexSerialize.serializeCreateArgs(data);
 

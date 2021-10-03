@@ -17,9 +17,9 @@ const loadTokenTempFile = () => {
   const res = fs.readFileSync(TEMP_TOKEN_FILE, 'utf8');
   if (res) {
     const obj = JSON.parse(res);
-    tokenKeyStr = obj.tokenId;
+    tokenKeyStr = obj.tokenKey;
   }
-  console.log(`# tokenId: ${tokenKeyStr}`);
+  console.log(`# tokenKey: ${tokenKeyStr}`);
 }
 
 const createTokenTempFile = async (data: Object) => {
@@ -36,7 +36,6 @@ describe('SplToken', () => {
 
   it('Get token transfer history by tokenKey', async () => {
     const res = await SplToken.getTransferHistory(tokenKey);
-    console.log(res);
     assert.isArray(res);
     res.forEach((v) => {
       assert.isNotEmpty(v.type);
@@ -77,9 +76,9 @@ describe('SplToken', () => {
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const TOKEN_DECIMAL = 2;
     const res = await SplToken.create(source.secret.toKeypair(), TOKEN_TOTAL_AMOUNT, TOKEN_DECIMAL);
-    console.log(`# tokenId: ${res}`);
+    console.log(`# tokenKey: ${res}`);
     assert.isObject(res);
-    createTokenTempFile({tokenId: res});
+    createTokenTempFile({tokenKey: res});
   });
 
   it('Transfer token. source and destination inter send', async () => {

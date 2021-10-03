@@ -59,7 +59,7 @@ describe('MetaplexMetaData', () => {
     assert.isObject(res[0]);
   });
 
-  it('Get metadata by mintKey', async () => {
+  it('Get metadata by tokenKey', async () => {
     const orgData = {
       updateAuthority: '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
       name: 'Gropu1',
@@ -68,7 +68,7 @@ describe('MetaplexMetaData', () => {
       sellerFeeBasisPoints: 0
     };
 
-    const res = await MetaplexMetaData.getByMintKey(
+    const res = await MetaplexMetaData.getByTokenKey(
       'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'.toPubKey()
     );
     assert.equal(res.name, orgData.name)
