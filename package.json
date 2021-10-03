@@ -29,7 +29,6 @@
     "@types/mocha": "^8.2.3",
     "@types/node": "^14.17.5",
     "@types/python-struct": "^1.0.0",
-    "cac": "^6.7.3",
     "chai": "^4.3.4",
     "mocha": "^8.4.0",
     "ts-jest": "^26.5.6",
