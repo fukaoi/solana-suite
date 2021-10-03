@@ -29,7 +29,7 @@ export namespace Transaction {
     return parsedSig;
   }
 
-  export const subscribeAccount = (pubkey: string, callback: AccountChangeCallback): number =>
+  export const subscribeAccount = (pubkey: PublicKey, callback: AccountChangeCallback): number =>
     Node.getConnection().onAccountChange(new PublicKey(pubkey), callback);
 
   export const unsubscribeAccount = (subscribeId: number): Promise<void> =>
@@ -53,15 +53,15 @@ export namespace Transaction {
   }
 
   export const send = (
-    sourcePublicKey: PublicKey,
+    source: PublicKey,
     signers: Signer[],
-    destPublicKey: PublicKey,
+    destination: PublicKey,
     amount: number,
   ) => async (instructions?: TransactionInstruction[]): Promise<TransactionSignature> => {
     const params =
       SystemProgram.transfer({
-        fromPubkey: sourcePublicKey,
-        toPubkey: destPublicKey,
+        fromPubkey: source,
+        toPubkey: destination,
         lamports: amount,
       });
 

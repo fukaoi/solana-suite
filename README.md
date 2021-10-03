@@ -5,3 +5,5 @@
 | --- | --- |
 | source  | todo |
 | destination  | todo |
+| pubkey  | todo |
+| tokenKey  | todo |
