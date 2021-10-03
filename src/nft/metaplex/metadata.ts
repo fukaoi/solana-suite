@@ -118,7 +118,7 @@ export namespace MetaplexMetaData {
     inst = instructions ? instructions : inst;
 
     const associatedToken = await Wallet.findAssocaiatedTokenAddress(
-      updateAuthority, 
+      updateAuthority,
       tokenKey
     );
 
