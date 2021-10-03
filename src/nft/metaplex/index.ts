@@ -54,8 +54,8 @@ export namespace Metaplex {
         Constants.SPL_TOKEN_PROGRAM_ID,
         mintAccount,
         decimals,
-        new PublicKey(owner),
-        new PublicKey(freezeAuthority),
+        owner,
+        freezeAuthority,
       ),
     );
     return mintAccount.toBase58();

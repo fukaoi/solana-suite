@@ -98,12 +98,11 @@ export namespace SplToken {
     authority: PublicKey = source.publicKey,
   ): Promise<string> => {
     const connection = Node.getConnection();
-    const authorityPubKey = new PublicKey(authority);
 
     const token = await Token.createMint(
       connection,
       source,
-      authorityPubKey,
+      authority,
       null,
       decimal,
       TOKEN_PROGRAM_ID
@@ -113,12 +112,12 @@ export namespace SplToken {
 
     await token.mintTo(
       tokenAccount,
-      authorityPubKey,
+      authority,
       [],
       totalAmount,
     );
 
-    return token.publicKey.toString();
+    return token.publicKey.toBase58();
   }
 
   export const transfer = async (

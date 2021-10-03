@@ -42,16 +42,20 @@ describe('Transaction', () => {
   });
 
   it('Subscribe a account(pubkey)', async () => {
-    const subscribeId = Transaction.subscribeAccount(destination.pubkey.toPubKey(), console.log);
+    const subscribeId = Transaction.subscribeAccount(
+      destination.pubkey.toPubKey(), 
+      console.log
+    );
     console.log('# subscribeId: ', subscribeId);
     for (let i = 0; i < 3; i++) await sendContinuously();
-    await Util.sleep(15);
+    await Util.sleep(25);
     Transaction.unsubscribeAccount(subscribeId);
     assert.ok('success subscribe');
   });
 
   it('Transaction decode memo', async () => {
     const tx = await Transaction.get(signature2);
+    console.log(tx);
     const res = Memo.parseInstruction(tx!);
     console.log(`# decode: `, res);
     assert.equal(res, '{"tokenId": "dummy", "serialNo": "15/100"}');

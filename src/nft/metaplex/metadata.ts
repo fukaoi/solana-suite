@@ -131,9 +131,9 @@ export namespace MetaplexMetaData {
     inst.push(
       Token.createMintToInstruction(
         Constants.SPL_TOKEN_PROGRAM_ID,
-        new PublicKey(tokenKey),
+        tokenKey,
         associatedToken,
-        new PublicKey(updateAuthority),
+        updateAuthority,
         signers,
         1,
       ),
@@ -141,7 +141,7 @@ export namespace MetaplexMetaData {
 
     const metaAccount = (
       await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey)
-    ).toBase58();
+    );
 
     const txnData = MetaplexSerialize.serializeUpdateArgs(
       data,
@@ -150,12 +150,12 @@ export namespace MetaplexMetaData {
     );
     const keys = [
       {
-        pubkey: new PublicKey(metaAccount),
+        pubkey: metaAccount,
         isSigner: false,
         isWritable: true,
       },
       {
-        pubkey: new PublicKey(updateAuthority),
+        pubkey: updateAuthority,
         isSigner: true,
         isWritable: false,
       },

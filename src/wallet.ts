@@ -51,13 +51,11 @@ export namespace Wallet {
     source: PublicKey,
     tokenKey: PublicKey
   ): Promise<PublicKey> => {
-    const walletPubKey = new PublicKey(source);
-    const tokenIdPublicKey = new PublicKey(tokenKey);
     return (await PublicKey.findProgramAddress(
       [
-        walletPubKey.toBuffer(),
+        source.toBuffer(),
         TOKEN_PROGRAM_ID.toBuffer(),
-        tokenIdPublicKey.toBuffer(),
+        tokenKey.toBuffer(),
       ],
       Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID
     ))[0];
