@@ -48,7 +48,7 @@ describe('Transaction', () => {
     );
     console.log('# subscribeId: ', subscribeId);
     for (let i = 0; i < 3; i++) await sendContinuously();
-    await Util.sleep(25);
+    await Util.sleep(15);
     Transaction.unsubscribeAccount(subscribeId);
     assert.ok('success subscribe');
   });
