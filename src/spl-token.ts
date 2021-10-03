@@ -96,7 +96,7 @@ export namespace SplToken {
     totalAmount: number,
     decimal: number,
     authority: PublicKey = source.publicKey,
-  ): Promise<PublicKey> => {
+  ): Promise<string> => {
     const connection = Node.getConnection();
     const authorityPubKey = new PublicKey(authority);
 
@@ -118,7 +118,7 @@ export namespace SplToken {
       totalAmount,
     );
 
-    return token.publicKey;
+    return token.publicKey.toString();
   }
 
   export const transfer = async (
