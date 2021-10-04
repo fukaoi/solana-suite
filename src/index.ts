@@ -1,3 +1,4 @@
+export * from './global';
 export * from './util';
 export * from './node';
 export * from './wallet';
