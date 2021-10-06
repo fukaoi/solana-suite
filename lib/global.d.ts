@@ -3,5 +3,7 @@ declare global {
     interface String {
         toPubKey(): PublicKey;
         toKeypair(): Keypair;
+        toSigUrl(): string;
+        toAddressUrl(): string;
     }
 }

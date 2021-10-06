@@ -1,29 +1,27 @@
 import {describe, it} from 'mocha';
 import {Wallet} from '../src/wallet';
 import {assert} from 'chai';
+import '../src/global';
 
 let source: Wallet.KeyPair;
 
 describe('Wallet', () => {
   before(async () => {
     source = await Wallet.create();
+    console.log('# source address: ', source.pubkey.toAddressUrl());
   });
 
-  it('return Account(Keypair) object', async () => {
-    console.log(`created account(pubkey): ${source.pubkey}`);
-    console.log(`created account(secret): ${source.secret}`);
-    assert.isObject(source);
-  });
-
-  it('Get balance at publicKey', async () => {
+  it('Get balance at publicKey and request airdrop', async () => {
+    const dropSol = 1;
     const res = await Wallet.getBalance(source.pubkey.toPubKey());
-    console.log(res);
-    assert.equal(res, 1);
+    assert.equal(res, dropSol);
   });
 
   it('Get balance at publicKey via lamports', async () => {
-    const res = await Wallet.getBalance(source.pubkey.toPubKey(), 'lamports');
-    console.log(res);
+    const res = await Wallet.getBalance(
+      source.pubkey.toPubKey(),
+      'lamports'
+    );
     assert.equal(res, Wallet.DEFAULT_AIRDROP_AMOUNT);
   });
 

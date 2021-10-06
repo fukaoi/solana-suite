@@ -12,6 +12,7 @@ let tokenKeyStr: string;
 
 const TEMP_TOKEN_FILE = '.solana-spl-token';
 const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6'.toPubKey();
+const MINT_DECIMAL = 2;
 
 const loadTokenTempFile = () => {
   const res = fs.readFileSync(TEMP_TOKEN_FILE, 'utf8');
@@ -74,8 +75,11 @@ describe('SplToken', () => {
       return;
     }
     const TOKEN_TOTAL_AMOUNT = 10000000;
-    const TOKEN_DECIMAL = 2;
-    const res = await SplToken.create(source.secret.toKeypair(), TOKEN_TOTAL_AMOUNT, TOKEN_DECIMAL);
+    const res = await SplToken.create(
+      source.secret.toKeypair(),
+      TOKEN_TOTAL_AMOUNT,
+      MINT_DECIMAL
+    );
     console.log(`# tokenKey: ${res}`);
     assert.isObject(res);
     createTokenTempFile({tokenKey: res});
@@ -85,18 +89,33 @@ describe('SplToken', () => {
     const srcRes = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
       source.secret.toKeypair(),
-      dest.pubkey.toPubKey(), 1
+      dest.pubkey.toPubKey(),
+      1,
+      MINT_DECIMAL
     );
-    console.log(`# tx signature: ${srcRes}`);
-    const destRes = await SplToken.transfer(tokenKeyStr.toPubKey(), dest.secret.toKeypair(), source.pubkey.toPubKey(), 1);
-    console.log(`# tx signature: ${destRes}`);
+    console.log(`# tx signature: ${srcRes.toSigUrl()}`);
+    const destRes = await SplToken.transfer(
+      tokenKeyStr.toPubKey(),
+      dest.secret.toKeypair(),
+      source.pubkey.toPubKey(),
+      1,
+      MINT_DECIMAL
+    );
+    console.log(`# tx signature: ${destRes.toSigUrl()}`);
     assert.isNotEmpty(destRes);
   });
 
   it('Transfer transaction with memo data', async () => {
     const memoInst = Memo.createInstruction('{"tokenId": "dummy", "serialNo": "15/100"}');
-    const res = await SplToken.transfer(tokenKeyStr.toPubKey(), source.secret.toKeypair(), dest.pubkey.toPubKey(), 5, memoInst);
-    console.log(`# tx signature: ${res}`);
+    const res = await SplToken.transfer(
+      tokenKeyStr.toPubKey(),
+      source.secret.toKeypair(),
+      dest.pubkey.toPubKey(),
+      5,
+      MINT_DECIMAL,
+      memoInst
+    );
+    console.log(`# tx signature: ${res.toSigUrl()}`);
     assert.isNotEmpty(res);
   });
 })

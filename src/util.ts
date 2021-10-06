@@ -1,17 +1,3 @@
-/////// GLOBAL FUNCTION //////
-export namespace Default {
-  console.debug = (data: any, data2: any = '') => {
-    if (process.env.NODE_ENV === 'development'
-      || process.env.NODE_ENV === 'testnet') {
-      console.log(`\u001b[35m${data}`, `\u001b[36m${data2}`);
-    }
-  }
-}
-
-// export default module.exports;
-
-/////// GLOBAL FUNCTION //////
-
 export namespace Util {
   export const sleep = async (sec: number) => new Promise(r => setTimeout(r, sec * 1000));
 

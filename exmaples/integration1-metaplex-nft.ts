@@ -4,7 +4,7 @@
 
 import {
   Wallet,
-  Node,
+  Transaction,
   Metaplex,
   MetaplexInstructure,
   MetaplexMetaData,
@@ -57,10 +57,9 @@ import {RandomAsset} from '../test/utils/randomAsset';
 
   // this is NFT ID
   console.log('# tokenKey: ', res.tokenKey);
-  console.log('# mintSignature: ', res.signature);
 
   // untile completed in blockchain
-  await Node.getConnection().confirmTransaction(res.signature, 'max');
+  await Transaction.confirmedSig(res.signature);
 
   //////////////////////////////////////////////
   // Display metadata from blockchain(optional)
@@ -81,6 +80,6 @@ import {RandomAsset} from '../test/utils/randomAsset';
     publish.secret.toKeypair(),
     receipt.pubkey.toPubKey()
   );
-  console.log('# Transfer nft sig: ', transferSig);
+  console.log('# Transfer nft sig: ', transferSig.toSigUrl());
 
 })();

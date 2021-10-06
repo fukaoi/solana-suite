@@ -16,7 +16,7 @@ export declare namespace SplToken {
     }
     export const getTransferHistory: (pubkey: PublicKey) => Promise<TransferHistory[]>;
     export const getTransferDestinationList: (pubkey: PublicKey) => Promise<TransferDestinationList[]>;
-    export const create: (source: Keypair, totalAmount: number, decimal: number, authority?: PublicKey) => Promise<string>;
-    export const transfer: (tokenKey: PublicKey, source: Keypair, dest: PublicKey, amount: number, instruction?: TransactionInstruction | undefined) => Promise<TransactionSignature>;
+    export const create: (source: Keypair, totalAmount: number, mintDecimal: number, authority?: PublicKey) => Promise<string>;
+    export const transfer: (tokenKey: PublicKey, source: Keypair, dest: PublicKey, amount: number, mintDecimal: number, instruction?: TransactionInstruction | undefined) => Promise<TransactionSignature>;
     export {};
 }
