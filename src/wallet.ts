@@ -13,6 +13,7 @@ import bs from 'bs58';
 import {Node} from './node';
 import {Util} from './util';
 import {Constants} from './constants';
+import {Transaction} from './transaction';
 
 export namespace Wallet {
 
@@ -35,15 +36,21 @@ export namespace Wallet {
   };
 
   export const requestAirdrop = async (pubkey: PublicKey, airdropAmount: number = DEFAULT_AIRDROP_AMOUNT) => {
-    await Node.getConnection().requestAirdrop(pubkey, airdropAmount);
-    console.log('Now airdropping...please wait');
-    await Util.sleep(20);
+    let amount = 0;
+    if (airdropAmount) {
+      amount = airdropAmount * LAMPORTS_PER_SOL;
+    } else {
+      amount = DEFAULT_AIRDROP_AMOUNT;
+    }
+    console.debug('Now airdropping...please wait: ', pubkey.toBase58());
+    const sig = await Node.getConnection().requestAirdrop(pubkey, amount);
+    await Transaction.confirmedSig(sig);
   }
 
   export const create = async (): Promise<KeyPair> => {
     const keypair = Keypair.generate();
     if (process.env.NODE_ENV !== Constants.ENV.prd) {
-      requestAirdrop(keypair.publicKey);
+      await requestAirdrop(keypair.publicKey);
     }
     return {
       pubkey: keypair.publicKey.toBase58(),

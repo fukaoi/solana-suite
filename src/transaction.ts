@@ -11,6 +11,7 @@ import {
   AccountChangeCallback,
   ParsedAccountData,
   AccountInfo,
+  Commitment,
 } from '@solana/web3.js';
 
 import {Node} from './node';
@@ -56,19 +57,23 @@ export namespace Transaction {
     return Node.getConnection().onAccountChange(pubkey, callback, 'confirmed')
 
     // return Node.getConnection().onAccountChange(pubkey, (data, _) => {
-      // callback(data, _);
-      // console.log(parseAccountData(data.data));
-      // // const subscribeData: SubscribeData<ParsedAccountData> = {
-      // // lamports: data.lamports,
-      // // owner: data.owner.toBase58(),
-      // // parsed: data
-      // // }
-      // // callback(subscribeData);
+    // callback(data, _);
+    // console.log(parseAccountData(data.data));
+    // // const subscribeData: SubscribeData<ParsedAccountData> = {
+    // // lamports: data.lamports,
+    // // owner: data.owner.toBase58(),
+    // // parsed: data
+    // // }
+    // // callback(subscribeData);
     // }, 'singleGossip');
   }
 
   export const unsubscribeAccount = (subscribeId: number): Promise<void> =>
     Node.getConnection().removeAccountChangeListener(subscribeId);
+
+  export const confirmedSig = async (signature: string, commitment: Commitment = 'max') => {
+    await Node.getConnection().confirmTransaction(signature, commitment);
+  }
 
   export const sendInstructions = async (
     signers: Keypair[],

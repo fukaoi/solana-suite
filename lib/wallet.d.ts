@@ -7,6 +7,7 @@ export declare namespace Wallet {
     }
     export const DEFAULT_AIRDROP_AMOUNT: number;
     export const getBalance: (pubkey: PublicKey, unit?: Unit) => Promise<number>;
+    export const requestAirdrop: (pubkey: PublicKey, airdropAmount?: number) => Promise<void>;
     export const create: () => Promise<KeyPair>;
     export const findAssocaiatedTokenAddress: (source: PublicKey, tokenKey: PublicKey) => Promise<PublicKey>;
     export const findMetaplexAssocaiatedTokenAddress: (tokenKey: PublicKey) => Promise<PublicKey>;
