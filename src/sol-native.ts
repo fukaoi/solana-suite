@@ -13,7 +13,7 @@ export namespace SolNative {
     source: PublicKey,
     signers: Keypair[],
     destination: PublicKey,
-    amount: number, // TODO: add u64 bigint
+    amount: number, 
   ) => async (instruction?: TransactionInstruction):
       Promise<TransactionSignature> => {
       const sol = amount * LAMPORTS_PER_SOL;

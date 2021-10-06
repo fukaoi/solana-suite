@@ -6,6 +6,8 @@ import {Wallet} from '../src/wallet';
 import {SolNative} from '../src/sol-native';
 import {Setup} from '../test/utils/setup';
 import {Util} from '../src/util';
+import '../src/global';
+import {Commitment} from '@solana/web3.js';
 
 const signature1 = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
 const signature2 = '2nPdn7AhJiTLaopwxCBzPxSB9ucBeBJbyKttXVBh7CoCQkmhkB12yoT6CuFStbT6X6boi9eFEpJjtRUQYVPcvM3J';
@@ -41,9 +43,21 @@ describe('Transaction', () => {
     assert.isObject(res[0]);
   });
 
+  it.only('Confirmed signagure: `max`', async () => {
+    await confirmedSigTest('max');
+ });
+
+  it.only('Confirmed signagure: `confirmed`', async () => {
+    await confirmedSigTest('confirmed');
+ });
+
+  it.only('Confirmed signagure: `singleGossip`', async () => {
+    await confirmedSigTest('singleGossip');
+ });
+
   it('Subscribe a account(pubkey)', async () => {
     const subscribeId = Transaction.subscribeAccount(
-      destination.pubkey.toPubKey(), 
+      destination.pubkey.toPubKey(),
       console.log
     );
     console.log('# subscribeId: ', subscribeId);
@@ -61,3 +75,21 @@ describe('Transaction', () => {
     assert.equal(res, '{"tokenId": "dummy", "serialNo": "15/100"}');
   });
 })
+
+const confirmedSigTest = async(commitment: Commitment) => {
+    const beforeBalance = await Wallet.getBalance(source.pubkey.toPubKey());
+    console.log('# before balance: ', beforeBalance);
+    const amount = 0.001;
+
+    const sig = await SolNative.transfer(
+      source.pubkey.toPubKey(),
+      [source.secret.toKeypair()],
+      destination.pubkey.toPubKey(),
+      amount
+    )();
+    await Transaction.confirmedSig(sig, commitment);
+
+    const afterBalance = await Wallet.getBalance(source.pubkey.toPubKey());
+    console.log('# after balance: ', afterBalance);
+    assert.equal(afterBalance, beforeBalance - amount);
+}
