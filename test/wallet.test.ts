@@ -8,22 +8,20 @@ let source: Wallet.KeyPair;
 describe('Wallet', () => {
   before(async () => {
     source = await Wallet.create();
+    console.log('# source address: ', source.pubkey.toAddressUrl());
   });
-
-  it('return Account(Keypair) object', async () => {
-    assert.isObject(source);
-  }) 
 
   it('Get balance at publicKey and request airdrop', async () => {
     const dropSol = 1;
     const res = await Wallet.getBalance(source.pubkey.toPubKey());
-    console.log(res);
     assert.equal(res, dropSol);
   });
 
   it('Get balance at publicKey via lamports', async () => {
-    const res = await Wallet.getBalance(source.pubkey.toPubKey(), 'lamports');
-    console.log(res);
+    const res = await Wallet.getBalance(
+      source.pubkey.toPubKey(),
+      'lamports'
+    );
     assert.equal(res, Wallet.DEFAULT_AIRDROP_AMOUNT);
   });
 

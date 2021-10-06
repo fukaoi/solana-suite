@@ -11,7 +11,6 @@ import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 import bs from 'bs58';
 
 import {Node} from './node';
-import {Util} from './util';
 import {Constants} from './constants';
 import {Transaction} from './transaction';
 
@@ -36,14 +35,8 @@ export namespace Wallet {
   };
 
   export const requestAirdrop = async (pubkey: PublicKey, airdropAmount: number = DEFAULT_AIRDROP_AMOUNT) => {
-    let amount = 0;
-    if (airdropAmount) {
-      amount = airdropAmount * LAMPORTS_PER_SOL;
-    } else {
-      amount = DEFAULT_AIRDROP_AMOUNT;
-    }
-    console.debug('Now airdropping...please wait: ', pubkey.toBase58());
-    const sig = await Node.getConnection().requestAirdrop(pubkey, amount);
+    console.debug('Now airdropping...please wait');
+    const sig = await Node.getConnection().requestAirdrop(pubkey, airdropAmount);
     await Transaction.confirmedSig(sig);
   }
 

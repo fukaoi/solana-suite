@@ -11,6 +11,7 @@ declare global {
     toPubKey(): PublicKey;
     toKeypair(): Keypair;
     toSigUrl(): string;
+    toAddressUrl(): string;
   }
 }
 
@@ -25,6 +26,10 @@ String.prototype.toKeypair = function () {
 
 String.prototype.toSigUrl = function () {
   return `https://explorer.solana.com/tx/${this}?cluster=${ConstantsFunc.switchNetwork(process.env.NODE_ENV)}`;
+}
+
+String.prototype.toAddressUrl = function () {
+  return `https://explorer.solana.com/address/${this}?cluster=${ConstantsFunc.switchNetwork(process.env.NODE_ENV)}`;
 }
 
 console.debug = (data: any, data2: any = '') => {
