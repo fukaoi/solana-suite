@@ -1,9 +1,7 @@
 import {
-  Commitment
+  Commitment,
+  PublicKey
 } from '@solana/web3.js';
-
-import './util';
-import './global';
 
 export namespace Constants {
   export const ENV = {
@@ -29,7 +27,7 @@ export namespace ConstantsFunc {
   export const switchNetwork = (env: string | undefined) => {
     switch (env) {
       case Constants.ENV.prd:
-        return 'mainnet';
+        return 'mainnet-beta';
       case Constants.ENV.test:
         return 'testnet';
       default:
@@ -40,6 +38,9 @@ export namespace ConstantsFunc {
 }
 
 export namespace Constants {
+  String.prototype.toPubKey = function () {
+    return new PublicKey(this);
+  }
   export const CURRENT_NETWORK = ConstantsFunc.switchApi(process.env.NODE_ENV);
   export const API_URL = ConstantsFunc.switchApi(process.env.NODE_ENV);
   export const SYSTEM_PROGRAM_ID = '11111111111111111111111111111111'.toPubKey();

@@ -76,8 +76,8 @@ describe('SplToken', () => {
     }
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const res = await SplToken.create(
-      source.secret.toKeypair(), 
-      TOKEN_TOTAL_AMOUNT, 
+      source.secret.toKeypair(),
+      TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL
     );
     console.log(`# tokenKey: ${res}`);
@@ -89,15 +89,15 @@ describe('SplToken', () => {
     const srcRes = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
       source.secret.toKeypair(),
-      dest.pubkey.toPubKey(), 
+      dest.pubkey.toPubKey(),
       1,
       MINT_DECIMAL
     );
     console.log(`# tx signature: ${srcRes.toSigUrl()}`);
     const destRes = await SplToken.transfer(
-      tokenKeyStr.toPubKey(), 
-      dest.secret.toKeypair(), 
-      source.pubkey.toPubKey(), 
+      tokenKeyStr.toPubKey(),
+      dest.secret.toKeypair(),
+      source.pubkey.toPubKey(),
       1,
       MINT_DECIMAL
     );
@@ -108,24 +108,12 @@ describe('SplToken', () => {
   it('Transfer transaction with memo data', async () => {
     const memoInst = Memo.createInstruction('{"tokenId": "dummy", "serialNo": "15/100"}');
     const res = await SplToken.transfer(
-      tokenKeyStr.toPubKey(), 
-      source.secret.toKeypair(), 
-      dest.pubkey.toPubKey(), 
-      5, 
-      MINT_DECIMAL,
-      memoInst
-    );
-    console.log(`# tx signature: ${res.toSigUrl()}`);
-    assert.isNotEmpty(res);
-  });
-
-  it('Transfer checked transaction', async () => {
-    const res = await SplToken.transferChecked(
       tokenKeyStr.toPubKey(),
       source.secret.toKeypair(),
       dest.pubkey.toPubKey(),
       5,
-      MINT_DECIMAL
+      MINT_DECIMAL,
+      memoInst
     );
     console.log(`# tx signature: ${res.toSigUrl()}`);
     assert.isNotEmpty(res);
