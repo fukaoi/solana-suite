@@ -137,9 +137,9 @@ export namespace SplToken {
       sourceTokenAccount,
       tokenKey,
       destTokenAccount,
-      source.publicKey, 
-      [source], 
-      amount, 
+      source.publicKey,
+      [source],
+      amount,
       mintDecimal
     );
 

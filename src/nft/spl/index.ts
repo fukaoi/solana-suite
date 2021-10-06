@@ -1,11 +1,18 @@
 import {
+  Token,
+  TOKEN_PROGRAM_ID,
+} from '@solana/spl-token';
+
+import {
   Keypair,
   PublicKey,
   TransactionInstruction,
   TransactionSignature,
 } from '@solana/web3.js';
 
+import {Transaction} from '../../transaction';
 import {SplToken} from '../../spl-token';
+import {Node} from '../../node';
 
 export namespace SplNft {
 
@@ -30,12 +37,25 @@ export namespace SplNft {
     dest: PublicKey,
     instruction?: TransactionInstruction
   ): Promise<TransactionSignature> => {
-    return SplToken.transfer(
+    const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, source);
+    const sourceTokenAccount = (await token.getOrCreateAssociatedAccountInfo(source.publicKey)).address;
+    const destTokenAccount = (await token.getOrCreateAssociatedAccountInfo(dest)).address;
+
+    const param = Token.createTransferCheckedInstruction(
+      TOKEN_PROGRAM_ID,
+      sourceTokenAccount,
       tokenKey,
-      source,
-      dest,
+      destTokenAccount,
+      source.publicKey,
+      [source],
       NFT_AMOUNT,
-      instruction
+      NFT_DECIMAL
+    );
+
+    const instructions = instruction ? new Array(param, instruction) : [param];
+    return Transaction.sendInstructions(
+      [source],
+      instructions
     );
   }
 }
