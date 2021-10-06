@@ -1,11 +1,19 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
+import {Setup} from '../test/utils/setup';
 import {Memo} from '../src/memo';
 import {Wallet} from '../src/wallet';
+import '../src/global';
 
+let source: Wallet.KeyPair;
 const DUMMY_DATA = 'dummy memo data';
 
 describe('Memo', () => {
+  before(async () => {
+    const obj = await Setup.generatekeyPair();
+    source = obj.source;
+  });
+
   it('encode', async () => {
     const res = Memo.encode(DUMMY_DATA);
     console.log(`# encoded: ${res}`, res);
@@ -26,7 +34,6 @@ describe('Memo', () => {
   });
 
   it('send memo by own', async () => {
-    const source = await Wallet.create();
     const memoInst = Memo.createInstruction('{"memo": 123456789}');
     const res = await Memo.own(memoInst, source.secret.toKeypair());
     console.log(`# tx signature: ${res}`);
