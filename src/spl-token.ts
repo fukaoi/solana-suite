@@ -125,19 +125,22 @@ export namespace SplToken {
     source: Keypair,
     dest: PublicKey,
     amount: number,
+    mintDecimal: number,
     instruction?: TransactionInstruction
   ): Promise<TransactionSignature> => {
     const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, source);
     const sourceTokenAccount = (await token.getOrCreateAssociatedAccountInfo(source.publicKey)).address;
     const destTokenAccount = (await token.getOrCreateAssociatedAccountInfo(dest)).address;
 
-    const param = Token.createTransferInstruction(
+    const param = Token.createTransferCheckedInstruction(
       TOKEN_PROGRAM_ID,
       sourceTokenAccount,
+      tokenKey,
       destTokenAccount,
-      source.publicKey,
-      [],
-      amount
+      source.publicKey, 
+      [source], 
+      amount, 
+      mintDecimal
     );
 
     const instructions = instruction ? new Array(param, instruction) : [param];

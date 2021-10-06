@@ -89,16 +89,19 @@ describe('SplToken', () => {
     const srcRes = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
       source.secret.toKeypair(),
-      dest.pubkey.toPubKey(), 1
+      dest.pubkey.toPubKey(), 
+      1,
+      MINT_DECIMAL
     );
-    console.log(`# tx signature: ${srcRes}`);
+    console.log(`# tx signature: ${srcRes.toSigUrl()}`);
     const destRes = await SplToken.transfer(
       tokenKeyStr.toPubKey(), 
       dest.secret.toKeypair(), 
       source.pubkey.toPubKey(), 
-      1
+      1,
+      MINT_DECIMAL
     );
-    console.log(`# tx signature: ${destRes}`);
+    console.log(`# tx signature: ${destRes.toSigUrl()}`);
     assert.isNotEmpty(destRes);
   });
 
@@ -109,6 +112,7 @@ describe('SplToken', () => {
       source.secret.toKeypair(), 
       dest.pubkey.toPubKey(), 
       5, 
+      MINT_DECIMAL,
       memoInst
     );
     console.log(`# tx signature: ${res.toSigUrl()}`);
