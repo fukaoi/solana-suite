@@ -115,7 +115,7 @@ describe('SplToken', () => {
     assert.isNotEmpty(res);
   });
 
-  it.only('Transfer checked transaction', async () => {
+  it('Transfer checked transaction', async () => {
     const res = await SplToken.transferChecked(
       tokenKeyStr.toPubKey(),
       source.secret.toKeypair(),
