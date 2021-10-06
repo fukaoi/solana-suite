@@ -4,5 +4,6 @@ declare global {
         toPubKey(): PublicKey;
         toKeypair(): Keypair;
         toSigUrl(): string;
+        toAddressUrl(): string;
     }
 }
