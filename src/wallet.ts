@@ -34,12 +34,16 @@ export namespace Wallet {
     }
   };
 
+  export const requestAirdrop = async (pubkey: PublicKey, airdropAmount: number = DEFAULT_AIRDROP_AMOUNT) => {
+    await Node.getConnection().requestAirdrop(pubkey, airdropAmount);
+    console.log('Now airdropping...please wait');
+    await Util.sleep(20);
+  }
+
   export const create = async (): Promise<KeyPair> => {
     const keypair = Keypair.generate();
-    if (process.env.NODE_ENV !== 'production') {
-      await Node.getConnection().requestAirdrop(keypair.publicKey, DEFAULT_AIRDROP_AMOUNT);
-      console.log('Now airdropping...please wait');
-      await Util.sleep(20);
+    if (process.env.NODE_ENV !== Constants.ENV.prd) {
+      requestAirdrop(keypair.publicKey);
     }
     return {
       pubkey: keypair.publicKey.toBase58(),
