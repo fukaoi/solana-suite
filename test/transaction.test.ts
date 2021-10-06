@@ -43,17 +43,17 @@ describe('Transaction', () => {
     assert.isObject(res[0]);
   });
 
-  it.only('Confirmed signagure: `max`', async () => {
-    await confirmedSigTest('max');
- });
+  // it.only('Confirmed signagure: `max`', async () => {
+    // await confirmedSigTest('max');
+ // });
 
-  it.only('Confirmed signagure: `confirmed`', async () => {
-    await confirmedSigTest('confirmed');
- });
+  // it.only('Confirmed signagure: `confirmed`', async () => {
+    // await confirmedSigTest('confirmed');
+ // });
 
-  it.only('Confirmed signagure: `singleGossip`', async () => {
-    await confirmedSigTest('singleGossip');
- });
+  // it.only('Confirmed signagure: `singleGossip`', async () => {
+    // await confirmedSigTest('singleGossip');
+ // });
 
   it('Subscribe a account(pubkey)', async () => {
     const subscribeId = Transaction.subscribeAccount(
