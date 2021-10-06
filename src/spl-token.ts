@@ -94,7 +94,7 @@ export namespace SplToken {
   export const create = async (
     source: Keypair,
     totalAmount: number,
-    decimal: number,
+    mintDecimal: number,
     authority: PublicKey = source.publicKey,
   ): Promise<string> => {
     const connection = Node.getConnection();
@@ -104,7 +104,7 @@ export namespace SplToken {
       source,
       authority,
       null,
-      decimal,
+      mintDecimal,
       TOKEN_PROGRAM_ID
     );
 
@@ -148,5 +148,25 @@ export namespace SplToken {
       amount,
     );
     return await fn(instructions);
+  }
+
+  export const transferChecked = async (
+    tokenKey: PublicKey,
+    source: Keypair,
+    dest: PublicKey,
+    amount: number,
+    mintDecimal: number
+  ): Promise<TransactionSignature> => {
+    const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, source);
+    const sourceTokenAccount = (await token.getOrCreateAssociatedAccountInfo(source.publicKey)).address;
+    const destTokenAccount = (await token.getOrCreateAssociatedAccountInfo(dest)).address;
+    return token.transferChecked(
+      sourceTokenAccount,
+      destTokenAccount,
+      source,
+      [source],
+      amount,
+      mintDecimal
+    );
   }
 }
