@@ -22,8 +22,7 @@ import {RandomAsset} from '../test/utils/randomAsset';
 
   // create nft owner wallet, receive nft receipt wallet.
   const publish = await Wallet.create();
-  // const receipt = await Wallet.create();
-  const receipt = {pubkey: 'FCdMcH77AsQsMKTq6LaLdjQQarmB4RbxDvuoi1M1i9vX'};
+  const receipt = await Wallet.create();
   console.log('# publish: ', publish);
   console.log('# receipt: ', receipt);
 
