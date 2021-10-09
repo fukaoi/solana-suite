@@ -7,6 +7,7 @@ let source: Wallet.KeyPair;
 describe('Wallet', () => {
   before(async () => {
     source = await Wallet.create();
+    await Wallet.requestAirdrop(source.pubkey.toPubKey());
     console.log('# source address: ', source.pubkey.toAddressUrl());
   });
 

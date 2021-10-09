@@ -118,7 +118,7 @@ describe('SplToken', () => {
     assert.isNotEmpty(res);
   });
 
-  it.only('Subscribe a account(pubkey)', async () => {
+  it('Subscribe a account(pubkey)', async () => {
     const subscribeId = SplToken.subscribeAccount(
       destination.pubkey.toPubKey(),
       (v: SplToken.TransferHistory) => {
