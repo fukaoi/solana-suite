@@ -30,7 +30,7 @@
 
 #### Defined in
 
-[src/memo.ts:22](https://github.com/fukaoi/solana-suite/blob/262aa17/src/memo.ts#L22)
+[src/memo.ts:19](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/memo.ts#L19)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[src/memo.ts:18](https://github.com/fukaoi/solana-suite/blob/262aa17/src/memo.ts#L18)
+[src/memo.ts:15](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/memo.ts#L15)
 
 ___
 
@@ -70,20 +70,20 @@ ___
 
 #### Defined in
 
-[src/memo.ts:20](https://github.com/fukaoi/solana-suite/blob/262aa17/src/memo.ts#L20)
+[src/memo.ts:17](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/memo.ts#L17)
 
 ___
 
 ### own
 
-▸ `Const` **own**(`instruction`, `sourceSecret`): `Promise`<`string`\>
+▸ `Const` **own**(`instruction`, `source`): `Promise`<`string`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `instruction` | `TransactionInstruction` |
-| `sourceSecret` | `string` |
+| `source` | `Keypair` |
 
 #### Returns
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[src/memo.ts:38](https://github.com/fukaoi/solana-suite/blob/262aa17/src/memo.ts#L38)
+[src/memo.ts:35](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/memo.ts#L35)
 
 ___
 
@@ -111,4 +111,4 @@ ___
 
 #### Defined in
 
-[src/memo.ts:30](https://github.com/fukaoi/solana-suite/blob/262aa17/src/memo.ts#L30)
+[src/memo.ts:27](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/memo.ts#L27)

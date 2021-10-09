@@ -12,14 +12,14 @@
 
 ### upload
 
-▸ `Const` **upload**(`payerSecret`, `storageData`): `Promise`<`string`\>
+▸ `Const` **upload**(`payer`, `storageData`): `Promise`<`string`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `payerSecret` | `string` |
-| `storageData` | [`MetadataStorageFormat`](../interfaces/MetadataStorageFormat.md) |
+| `payer` | `Keypair` |
+| `storageData` | [`Format`](../interfaces/Storage.Format.md) |
 
 #### Returns
 
@@ -27,4 +27,4 @@
 
 #### Defined in
 
-[src/nft/storage/arweave.ts:114](https://github.com/fukaoi/solana-suite/blob/262aa17/src/nft/storage/arweave.ts#L114)
+[src/nft/storage/arweave.ts:112](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/nft/storage/arweave.ts#L112)

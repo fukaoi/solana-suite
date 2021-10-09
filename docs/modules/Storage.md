@@ -4,6 +4,13 @@
 
 ## Table of contents
 
+### Interfaces
+
+- [Attributes](../interfaces/Storage.Attributes.md)
+- [Collection](../interfaces/Storage.Collection.md)
+- [Format](../interfaces/Storage.Format.md)
+- [Properties](../interfaces/Storage.Properties.md)
+
 ### Functions
 
 - [initStorageData](Storage.md#initstoragedata)
@@ -12,12 +19,12 @@
 
 ### initStorageData
 
-▸ `Const` **initStorageData**(): [`MetadataStorageFormat`](../interfaces/MetadataStorageFormat.md)
+▸ `Const` **initStorageData**(): [`Format`](../interfaces/Storage.Format.md)
 
 #### Returns
 
-[`MetadataStorageFormat`](../interfaces/MetadataStorageFormat.md)
+[`Format`](../interfaces/Storage.Format.md)
 
 #### Defined in
 
-[src/nft/storage/index.ts:27](https://github.com/fukaoi/solana-suite/blob/262aa17/src/nft/storage/index.ts#L27)
+[src/nft/storage/index.ts:29](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/nft/storage/index.ts#L29)

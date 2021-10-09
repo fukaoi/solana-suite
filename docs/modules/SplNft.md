@@ -13,14 +13,14 @@
 
 ### create
 
-▸ `Const` **create**(`sourceSecret`, `authority?`): `Promise`<`string`\>
+▸ `Const` **create**(`source`, `authority?`): `Promise`<`string`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `sourceSecret` | `string` |
-| `authority` | `string` |
+| `source` | `Keypair` |
+| `authority` | `PublicKey` |
 
 #### Returns
 
@@ -28,21 +28,21 @@
 
 #### Defined in
 
-[src/nft/spl/index.ts:14](https://github.com/fukaoi/solana-suite/blob/262aa17/src/nft/spl/index.ts#L14)
+[src/nft/spl/index.ts:22](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/nft/spl/index.ts#L22)
 
 ___
 
 ### transfer
 
-▸ `Const` **transfer**(`tokenKey`, `sourceSecret`, `destPubkey`, `instruction?`): `Promise`<`string`\>
+▸ `Const` **transfer**(`tokenKey`, `source`, `dest`, `instruction?`): `Promise`<`string`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `tokenKey` | `string` |
-| `sourceSecret` | `string` |
-| `destPubkey` | `string` |
+| `tokenKey` | `PublicKey` |
+| `source` | `Keypair` |
+| `dest` | `PublicKey` |
 | `instruction?` | `TransactionInstruction` |
 
 #### Returns
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-[src/nft/spl/index.ts:26](https://github.com/fukaoi/solana-suite/blob/262aa17/src/nft/spl/index.ts#L26)
+[src/nft/spl/index.ts:34](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/nft/spl/index.ts#L34)

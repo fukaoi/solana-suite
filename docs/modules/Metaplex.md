@@ -7,25 +7,26 @@
 ### Interfaces
 
 - [Creators](../interfaces/Metaplex.Creators.md)
-- [MetadataFormat](../interfaces/Metaplex.MetadataFormat.md)
+- [Format](../interfaces/Metaplex.Format.md)
 
 ### Functions
 
 - [create](Metaplex.md#create)
+- [initFormat](Metaplex.md#initformat)
 - [mint](Metaplex.md#mint)
 
 ## Functions
 
 ### create
 
-▸ `Const` **create**(`payer`, `signerSecrets`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<`Object`\>
+▸ `Const` **create**(`payer`, `signers`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<`Object`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `payer` | `string` |
-| `signerSecrets` | `string`[] |
+| `payer` | `PublicKey` |
+| `signers` | `Keypair`[] |
 
 #### Returns
 
@@ -45,7 +46,21 @@
 
 #### Defined in
 
-[src/nft/metaplex/index.ts:78](https://github.com/fukaoi/solana-suite/blob/262aa17/src/nft/metaplex/index.ts#L78)
+[src/nft/metaplex/index.ts:89](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/nft/metaplex/index.ts#L89)
+
+___
+
+### initFormat
+
+▸ `Const` **initFormat**(): [`Format`](../interfaces/Metaplex.Format.md)
+
+#### Returns
+
+[`Format`](../interfaces/Metaplex.Format.md)
+
+#### Defined in
+
+[src/nft/metaplex/index.ts:77](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/nft/metaplex/index.ts#L77)
 
 ___
 
@@ -57,10 +72,8 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `data` | `Data` |
-| `owner` | `Object` |
-| `owner.pubkey` | `string` |
-| `owner.secret` | `string` |
+| `data` | [`Data`](../classes/MetaplexInstructure.Data.md) |
+| `owner` | `Keypair` |
 
 #### Returns
 
@@ -68,4 +81,4 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/index.ts:102](https://github.com/fukaoi/solana-suite/blob/262aa17/src/nft/metaplex/index.ts#L102)
+[src/nft/metaplex/index.ts:111](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/nft/metaplex/index.ts#L111)

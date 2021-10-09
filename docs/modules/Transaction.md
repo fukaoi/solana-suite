@@ -6,14 +6,34 @@
 
 ### Functions
 
+- [confirmedSig](Transaction.md#confirmedsig)
 - [get](Transaction.md#get)
 - [getAll](Transaction.md#getall)
 - [send](Transaction.md#send)
 - [sendInstructions](Transaction.md#sendinstructions)
-- [subscribeAccount](Transaction.md#subscribeaccount)
-- [unsubscribeAccount](Transaction.md#unsubscribeaccount)
 
 ## Functions
+
+### confirmedSig
+
+▸ `Const` **confirmedSig**(`signature`, `commitment?`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `signature` | `string` | `undefined` |
+| `commitment` | `Commitment` | `'max'` |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Defined in
+
+[src/transaction.ts:38](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/transaction.ts#L38)
+
+___
 
 ### get
 
@@ -31,19 +51,20 @@
 
 #### Defined in
 
-[src/transaction.ts:19](https://github.com/fukaoi/solana-suite/blob/262aa17/src/transaction.ts#L19)
+[src/transaction.ts:19](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/transaction.ts#L19)
 
 ___
 
 ### getAll
 
-▸ `Const` **getAll**(`pubkeyStr`): `Promise`<`ParsedConfirmedTransaction`[]\>
+▸ `Const` **getAll**(`pubkey`, `limit?`): `Promise`<`ParsedConfirmedTransaction`[]\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `pubkeyStr` | `string` |
+| `pubkey` | `PublicKey` |
+| `limit?` | `number` |
 
 #### Returns
 
@@ -51,21 +72,21 @@ ___
 
 #### Defined in
 
-[src/transaction.ts:22](https://github.com/fukaoi/solana-suite/blob/262aa17/src/transaction.ts#L22)
+[src/transaction.ts:22](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/transaction.ts#L22)
 
 ___
 
 ### send
 
-▸ `Const` **send**(`sourcePublicKey`, `signers`, `destPublicKey`, `amount`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<`string`\>
+▸ `Const` **send**(`source`, `signers`, `destination`, `amount`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<`string`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `sourcePublicKey` | `PublicKey` |
+| `source` | `PublicKey` |
 | `signers` | `Signer`[] |
-| `destPublicKey` | `PublicKey` |
+| `destination` | `PublicKey` |
 | `amount` | `number` |
 
 #### Returns
@@ -86,7 +107,7 @@ ___
 
 #### Defined in
 
-[src/transaction.ts:56](https://github.com/fukaoi/solana-suite/blob/262aa17/src/transaction.ts#L56)
+[src/transaction.ts:60](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/transaction.ts#L60)
 
 ___
 
@@ -107,45 +128,4 @@ ___
 
 #### Defined in
 
-[src/transaction.ts:39](https://github.com/fukaoi/solana-suite/blob/262aa17/src/transaction.ts#L39)
-
-___
-
-### subscribeAccount
-
-▸ `Const` **subscribeAccount**(`pubkey`, `callback`): `number`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `pubkey` | `string` |
-| `callback` | `AccountChangeCallback` |
-
-#### Returns
-
-`number`
-
-#### Defined in
-
-[src/transaction.ts:33](https://github.com/fukaoi/solana-suite/blob/262aa17/src/transaction.ts#L33)
-
-___
-
-### unsubscribeAccount
-
-▸ `Const` **unsubscribeAccount**(`subscribeId`): `Promise`<`void`\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `subscribeId` | `number` |
-
-#### Returns
-
-`Promise`<`void`\>
-
-#### Defined in
-
-[src/transaction.ts:36](https://github.com/fukaoi/solana-suite/blob/262aa17/src/transaction.ts#L36)
+[src/transaction.ts:42](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/transaction.ts#L42)
