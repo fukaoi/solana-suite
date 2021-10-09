@@ -1,9 +1,7 @@
 import {describe, it} from 'mocha';
-import {SplToken} from '../src/spl-token';
-import {Memo} from '../src/memo';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Wallet} from '../src/wallet';
+import {Wallet, SplToken, Memo} from '../src/'
 import fs from 'fs';
 
 let source: Wallet.KeyPair;
@@ -36,7 +34,8 @@ describe('SplToken', () => {
   });
 
   it('Get token transfer history by tokenKey', async () => {
-    const res = await SplToken.getTransferHistory(tokenKey);
+    const res = await SplToken.getTransferHistory(tokenKey, 3);
+    console.log(res);
     assert.isArray(res);
     res.forEach((v) => {
       assert.isNotEmpty(v.type);
@@ -81,8 +80,9 @@ describe('SplToken', () => {
       MINT_DECIMAL
     );
     console.log(`# tokenKey: ${res}`);
-    assert.isObject(res);
+    assert.isNotEmpty(res);
     createTokenTempFile({tokenKey: res});
+    tokenKeyStr = res;
   });
 
   it('Transfer token. source and destination inter send', async () => {
