@@ -13,6 +13,8 @@ import bs from 'bs58';
 import {Node} from './node';
 import {Constants} from './constants';
 import {Transaction} from './transaction';
+import * as TE from 'fp-ts/TaskEither';
+export * as E from 'fp-ts/Either';
 
 export namespace Wallet {
 
@@ -25,13 +27,18 @@ export namespace Wallet {
 
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
 
-  export const getBalance = async (pubkey: PublicKey, unit: Unit = 'sol'): Promise<number> => {
-    const balance = await Node.getConnection().getBalance(pubkey);
-    switch (unit) {
-      case 'sol': return balance / LAMPORTS_PER_SOL;
-      case 'lamports': return balance;
-      default: throw new Error('no match unit');
-    }
+  // export const getBalance = async (pubkey: PublicKey, unit: Unit = 'sol'): Promise<number> => {
+  export const getBalance = async (pubkey: PublicKey, unit: Unit = 'sol') => {
+
+    const task = (): TE.TaskEither<string, number>  =>
+      TE.tryCatch(() => Node.getConnection().getBalance(pubkey), (err) => err as string);
+    return task()();
+
+    // switch (unit) {
+      // case 'sol': return balance / LAMPORTS_PER_SOL;
+      // case 'lamports': return balance;
+      // default: throw new Error('no match unit');
+    // }
   };
 
   export const requestAirdrop = async (pubkey: PublicKey, airdropAmount: number = DEFAULT_AIRDROP_AMOUNT) => {
