@@ -35,7 +35,6 @@ describe('SplToken', () => {
 
   it('Get token transfer history by tokenKey', async () => {
     const res = await SplToken.getTransferHistory(tokenKey, 3);
-    console.log(res);
     assert.isArray(res);
     res.forEach((v) => {
       assert.isNotEmpty(v.type);
@@ -119,7 +118,7 @@ describe('SplToken', () => {
     assert.isNotEmpty(res);
   });
 
-  it.only('Subscribe a account(pubkey)', async () => {
+  it('Subscribe a account(pubkey)', async () => {
     const subscribeId = SplToken.subscribeAccount(
       destination.pubkey.toPubKey(),
       console.log
@@ -138,7 +137,7 @@ const sendContinuously = async (): Promise<void> => {
     source.secret.toKeypair(),
     destination.pubkey.toPubKey(),
     1,
-    MINT_DECIMAL 
+    MINT_DECIMAL
   );
 }
 
