@@ -1,5 +1,11 @@
+/// <reference types="node" />
 import { Keypair, PublicKey, TransactionInstruction, TransactionSignature, Signer, ParsedConfirmedTransaction, AccountChangeCallback, Commitment } from '@solana/web3.js';
 export declare namespace Transaction {
+    const parseAccountData: (data: Buffer) => {
+        token: PublicKey;
+        owner: PublicKey;
+        amount: number;
+    };
     const get: (signature: string) => Promise<ParsedConfirmedTransaction | null>;
     const getAll: (pubkey: PublicKey) => Promise<ParsedConfirmedTransaction[]>;
     const subscribeAccount: (pubkey: PublicKey, callback: AccountChangeCallback) => number;

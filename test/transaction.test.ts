@@ -1,12 +1,7 @@
 import {describe, it} from 'mocha';
-import {Transaction} from '../src/transaction';
-import {Memo} from '../src/memo';
+import {Transaction, Memo, Wallet, SolNative} from '../src';
 import {assert} from 'chai';
-import {Wallet} from '../src/wallet';
-import {SolNative} from '../src/sol-native';
 import {Setup} from '../test/utils/setup';
-import {Util} from '../src/util';
-import '../src/global';
 import {Commitment} from '@solana/web3.js';
 
 const signature1 = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
@@ -14,15 +9,6 @@ const signature2 = '2nPdn7AhJiTLaopwxCBzPxSB9ucBeBJbyKttXVBh7CoCQkmhkB12yoT6CuFS
 
 let source: Wallet.KeyPair;
 let destination: Wallet.KeyPair;
-
-const sendContinuously = async (): Promise<void> => {
-  await SolNative.transfer(
-    source.pubkey.toPubKey(),
-    [source.secret.toKeypair()],
-    destination.pubkey.toPubKey(),
-    0.0001
-  )();
-}
 
 describe('Transaction', () => {
   before(async () => {
@@ -39,33 +25,22 @@ describe('Transaction', () => {
   it('Get all transaction data', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const res = await Transaction.getAll(tokenKey.toPubKey());
+    console.log(res)
     assert.isArray(res);
     assert.isObject(res[0]);
   });
 
-  // it.only('Confirmed signagure: `max`', async () => {
-    // await confirmedSigTest('max');
- // });
+  it.only('Confirmed signagure: `max`', async () => {
+    await confirmedSigTest('max');
+  });
 
   // it.only('Confirmed signagure: `confirmed`', async () => {
     // await confirmedSigTest('confirmed');
- // });
+  // });
 
-  // it.only('Confirmed signagure: `singleGossip`', async () => {
-    // await confirmedSigTest('singleGossip');
- // });
-
-  it('Subscribe a account(pubkey)', async () => {
-    const subscribeId = Transaction.subscribeAccount(
-      destination.pubkey.toPubKey(),
-      console.log
-    );
-    console.log('# subscribeId: ', subscribeId);
-    for (let i = 0; i < 3; i++) await sendContinuously();
-    await Util.sleep(15);
-    Transaction.unsubscribeAccount(subscribeId);
-    assert.ok('success subscribe');
-  });
+  // it.only('Confirmed signagure: `proceed`', async () => {
+    // await confirmedSigTest('processed');
+  // });
 
   it('Transaction decode memo', async () => {
     const tx = await Transaction.get(signature2);
@@ -76,20 +51,24 @@ describe('Transaction', () => {
   });
 })
 
-const confirmedSigTest = async(commitment: Commitment) => {
-    const beforeBalance = await Wallet.getBalance(source.pubkey.toPubKey());
-    console.log('# before balance: ', beforeBalance);
-    const amount = 0.001;
+const confirmedSigTest = async (commitment: Commitment) => {
+  const beforeBalance = await Wallet.getBalance(
+    destination.pubkey.toPubKey()
+  );
+  console.log('# before balance: ', beforeBalance);
+  const amount = 0.001;
 
-    const sig = await SolNative.transfer(
-      source.pubkey.toPubKey(),
-      [source.secret.toKeypair()],
-      destination.pubkey.toPubKey(),
-      amount
-    )();
-    await Transaction.confirmedSig(sig, commitment);
+  const sig = await SolNative.transfer(
+    source.pubkey.toPubKey(),
+    [source.secret.toKeypair()],
+    destination.pubkey.toPubKey(),
+    amount
+  )();
+  await Transaction.confirmedSig(sig, commitment);
 
-    const afterBalance = await Wallet.getBalance(source.pubkey.toPubKey());
-    console.log('# after balance: ', afterBalance);
-    assert.equal(afterBalance, beforeBalance - amount);
+  const afterBalance = await Wallet.getBalance(
+    destination.pubkey.toPubKey()
+  );
+  console.log('# after balance: ', afterBalance);
+  assert.equal(afterBalance, beforeBalance + amount);
 }

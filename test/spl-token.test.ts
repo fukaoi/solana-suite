@@ -1,11 +1,11 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Wallet, SplToken, Memo} from '../src/'
+import {Wallet, SplToken, Memo, Util} from '../src/'
 import fs from 'fs';
 
 let source: Wallet.KeyPair;
-let dest: Wallet.KeyPair;
+let destination: Wallet.KeyPair;
 let tokenKeyStr: string;
 
 const TEMP_TOKEN_FILE = '.solana-spl-token';
@@ -29,7 +29,7 @@ describe('SplToken', () => {
   before(async () => {
     const obj = await Setup.generatekeyPair();
     source = obj.source;
-    dest = obj.dest;
+    destination = obj.dest;
     fs.existsSync(TEMP_TOKEN_FILE) && loadTokenTempFile();
   });
 
@@ -89,14 +89,14 @@ describe('SplToken', () => {
     const srcRes = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
       source.secret.toKeypair(),
-      dest.pubkey.toPubKey(),
+      destination.pubkey.toPubKey(),
       1,
       MINT_DECIMAL
     );
     console.log(`# tx signature: ${srcRes.toSigUrl()}`);
     const destRes = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
-      dest.secret.toKeypair(),
+      destination.secret.toKeypair(),
       source.pubkey.toPubKey(),
       1,
       MINT_DECIMAL
@@ -110,7 +110,7 @@ describe('SplToken', () => {
     const res = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
       source.secret.toKeypair(),
-      dest.pubkey.toPubKey(),
+      destination.pubkey.toPubKey(),
       5,
       MINT_DECIMAL,
       memoInst
@@ -118,4 +118,41 @@ describe('SplToken', () => {
     console.log(`# tx signature: ${res.toSigUrl()}`);
     assert.isNotEmpty(res);
   });
+
+  it.only('Subscribe a account(pubkey)', async () => {
+    const subscribeId = SplToken.subscribeAccount(
+      destination.pubkey.toPubKey(),
+      console.log
+    );
+    console.log('# subscribeId: ', subscribeId);
+    for (let i = 0; i < 1; i++) await sendContinuously();
+    await Util.sleep(15);
+    SplToken.unsubscribeAccount(subscribeId);
+    assert.ok('success subscribe');
+  });
 })
+
+const sendContinuously = async (): Promise<void> => {
+  // await SolNative.transfer(
+  // source.pubkey.toPubKey(),
+  // [source.secret.toKeypair()],
+  // destination.pubkey.toPubKey(),
+  // 0.0001
+  // )();
+  const tokenKey = await SplToken.create(
+    source.secret.toKeypair(),
+    1,
+    2,
+  );
+  console.log(tokenKey);
+  const srcRes = await SplToken.transfer(
+    tokenKey.toPubKey(),
+    source.secret.toKeypair(),
+    destination.pubkey.toPubKey(),
+    1,
+    2
+  );
+  console.log(srcRes);
+}
+
+

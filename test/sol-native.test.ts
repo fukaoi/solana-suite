@@ -1,7 +1,5 @@
 import {describe, it, before} from 'mocha';
-import {SolNative} from '../src/sol-native';
-import {Memo} from '../src/memo';
-import {Wallet} from '../src/wallet';
+import {SolNative, Memo, Wallet} from '../src';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
 
