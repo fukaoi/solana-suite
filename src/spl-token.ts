@@ -16,18 +16,22 @@ import {Transaction} from './transaction';
 import {Node} from './node';
 
 export namespace SplToken {
-  interface TransferHistory {
+  export interface TransferHistory {
     info: {
-      amount: string,
-      authority: PublicKey,
-      destination: PublicKey,
-      source: PublicKey,
+      destination: string,
+      source: string,
+      authority?: string,
+      multisigAuthority?: string,
+      signers?: string[],
+      amount?: string,
+      mint?: string,
+      tokenAmount?: any[],
     },
     type: string,
     date: Date,
   }
 
-  interface TransferDestinationList {
+  export interface TransferDestinationList {
     dest: PublicKey,
     date: Date,
   }

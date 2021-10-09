@@ -121,7 +121,14 @@ describe('SplToken', () => {
   it('Subscribe a account(pubkey)', async () => {
     const subscribeId = SplToken.subscribeAccount(
       destination.pubkey.toPubKey(),
-      console.log
+      (v: SplToken.TransferHistory) => {
+        console.log(v);
+        assert.isNotEmpty(v.type);
+        assert.isNotNull(v.date);
+        assert.isNotNull(v.info.mint);
+        assert.isNotEmpty(v.info.source);
+        assert.isNotEmpty(v.info.destination);
+      }
     );
     console.log('# subscribeId: ', subscribeId);
     for (let i = 0; i < 3; i++) await sendContinuously();
