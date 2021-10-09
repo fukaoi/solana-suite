@@ -1,7 +1,6 @@
 import {describe, it} from 'mocha';
-import {Wallet} from '../src/wallet';
+import {Wallet} from '../src';
 import {assert} from 'chai';
-import '../src/global';
 
 let source: Wallet.KeyPair;
 

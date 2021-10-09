@@ -2,10 +2,14 @@ import { Keypair, PublicKey, TransactionInstruction, TransactionSignature } from
 export declare namespace SplToken {
     interface TransferHistory {
         info: {
-            amount: string;
-            authority: PublicKey;
-            destination: PublicKey;
-            source: PublicKey;
+            destination: string;
+            source: string;
+            authority?: string;
+            multisigAuthority?: string;
+            signers?: string[];
+            amount?: string;
+            mint?: string;
+            tokenAmount?: any[];
         };
         type: string;
         date: Date;
@@ -14,9 +18,10 @@ export declare namespace SplToken {
         dest: PublicKey;
         date: Date;
     }
-    export const getTransferHistory: (pubkey: PublicKey) => Promise<TransferHistory[]>;
-    export const getTransferDestinationList: (pubkey: PublicKey) => Promise<TransferDestinationList[]>;
-    export const create: (source: Keypair, totalAmount: number, mintDecimal: number, authority?: PublicKey) => Promise<string>;
-    export const transfer: (tokenKey: PublicKey, source: Keypair, dest: PublicKey, amount: number, mintDecimal: number, instruction?: TransactionInstruction | undefined) => Promise<TransactionSignature>;
-    export {};
+    const subscribeAccount: (pubkey: PublicKey, callback: any) => number;
+    const unsubscribeAccount: (subscribeId: number) => Promise<void>;
+    const getTransferHistory: (pubkey: PublicKey, limit?: number | undefined) => Promise<TransferHistory[]>;
+    const getTransferDestinationList: (pubkey: PublicKey) => Promise<TransferDestinationList[]>;
+    const create: (source: Keypair, totalAmount: number, mintDecimal: number, authority?: PublicKey) => Promise<string>;
+    const transfer: (tokenKey: PublicKey, source: Keypair, dest: PublicKey, amount: number, mintDecimal: number, instruction?: TransactionInstruction | undefined) => Promise<TransactionSignature>;
 }

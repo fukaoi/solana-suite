@@ -4,27 +4,34 @@
 
 ## Table of contents
 
+### Interfaces
+
+- [TransferDestinationList](../interfaces/SplToken.TransferDestinationList.md)
+- [TransferHistory](../interfaces/SplToken.TransferHistory.md)
+
 ### Functions
 
 - [create](SplToken.md#create)
 - [getTransferDestinationList](SplToken.md#gettransferdestinationlist)
 - [getTransferHistory](SplToken.md#gettransferhistory)
+- [subscribeAccount](SplToken.md#subscribeaccount)
 - [transfer](SplToken.md#transfer)
+- [unsubscribeAccount](SplToken.md#unsubscribeaccount)
 
 ## Functions
 
 ### create
 
-▸ `Const` **create**(`sourceSecret`, `totalAmount`, `decimal`, `authority?`): `Promise`<`string`\>
+▸ `Const` **create**(`source`, `totalAmount`, `mintDecimal`, `authority?`): `Promise`<`string`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `sourceSecret` | `string` |
+| `source` | `Keypair` |
 | `totalAmount` | `number` |
-| `decimal` | `number` |
-| `authority` | `string` |
+| `mintDecimal` | `number` |
+| `authority` | `PublicKey` |
 
 #### Returns
 
@@ -32,62 +39,85 @@
 
 #### Defined in
 
-[src/spl-token.ts:94](https://github.com/fukaoi/solana-suite/blob/262aa17/src/spl-token.ts#L94)
+[src/spl-token.ts:112](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/spl-token.ts#L112)
 
 ___
 
 ### getTransferDestinationList
 
-▸ `Const` **getTransferDestinationList**(`pubkeyStr`): `Promise`<`TransferDestinationList`[]\>
+▸ `Const` **getTransferDestinationList**(`pubkey`): `Promise`<[`TransferDestinationList`](../interfaces/SplToken.TransferDestinationList.md)[]\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `pubkeyStr` | `string` |
+| `pubkey` | `PublicKey` |
 
 #### Returns
 
-`Promise`<`TransferDestinationList`[]\>
+`Promise`<[`TransferDestinationList`](../interfaces/SplToken.TransferDestinationList.md)[]\>
 
 #### Defined in
 
-[src/spl-token.ts:73](https://github.com/fukaoi/solana-suite/blob/262aa17/src/spl-token.ts#L73)
+[src/spl-token.ts:91](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/spl-token.ts#L91)
 
 ___
 
 ### getTransferHistory
 
-▸ `Const` **getTransferHistory**(`pubkeyStr`): `Promise`<`TransferHistory`[]\>
+▸ `Const` **getTransferHistory**(`pubkey`, `limit?`): `Promise`<[`TransferHistory`](../interfaces/SplToken.TransferHistory.md)[]\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `pubkeyStr` | `string` |
+| `pubkey` | `PublicKey` |
+| `limit?` | `number` |
 
 #### Returns
 
-`Promise`<`TransferHistory`[]\>
+`Promise`<[`TransferHistory`](../interfaces/SplToken.TransferHistory.md)[]\>
 
 #### Defined in
 
-[src/spl-token.ts:57](https://github.com/fukaoi/solana-suite/blob/262aa17/src/spl-token.ts#L57)
+[src/spl-token.ts:75](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/spl-token.ts#L75)
+
+___
+
+### subscribeAccount
+
+▸ `Const` **subscribeAccount**(`pubkey`, `callback`): `number`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `pubkey` | `PublicKey` |
+| `callback` | `any` |
+
+#### Returns
+
+`number`
+
+#### Defined in
+
+[src/spl-token.ts:61](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/spl-token.ts#L61)
 
 ___
 
 ### transfer
 
-▸ `Const` **transfer**(`tokenId`, `sourceSecret`, `destination`, `amount`, `instruction?`): `Promise`<`string`\>
+▸ `Const` **transfer**(`tokenKey`, `source`, `dest`, `amount`, `mintDecimal`, `instruction?`): `Promise`<`string`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `tokenId` | `string` |
-| `sourceSecret` | `string` |
-| `destination` | `string` |
+| `tokenKey` | `PublicKey` |
+| `source` | `Keypair` |
+| `dest` | `PublicKey` |
 | `amount` | `number` |
+| `mintDecimal` | `number` |
 | `instruction?` | `TransactionInstruction` |
 
 #### Returns
@@ -96,4 +126,24 @@ ___
 
 #### Defined in
 
-[src/spl-token.ts:125](https://github.com/fukaoi/solana-suite/blob/262aa17/src/spl-token.ts#L125)
+[src/spl-token.ts:141](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/spl-token.ts#L141)
+
+___
+
+### unsubscribeAccount
+
+▸ `Const` **unsubscribeAccount**(`subscribeId`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `subscribeId` | `number` |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Defined in
+
+[src/spl-token.ts:71](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/spl-token.ts#L71)

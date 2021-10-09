@@ -1,13 +1,11 @@
 import {describe, it} from 'mocha';
-import {SplToken} from '../src/spl-token';
-import {Memo} from '../src/memo';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Wallet} from '../src/wallet';
+import {Wallet, SplToken, Memo, Util} from '../src/'
 import fs from 'fs';
 
 let source: Wallet.KeyPair;
-let dest: Wallet.KeyPair;
+let destination: Wallet.KeyPair;
 let tokenKeyStr: string;
 
 const TEMP_TOKEN_FILE = '.solana-spl-token';
@@ -31,12 +29,12 @@ describe('SplToken', () => {
   before(async () => {
     const obj = await Setup.generatekeyPair();
     source = obj.source;
-    dest = obj.dest;
+    destination = obj.dest;
     fs.existsSync(TEMP_TOKEN_FILE) && loadTokenTempFile();
   });
 
   it('Get token transfer history by tokenKey', async () => {
-    const res = await SplToken.getTransferHistory(tokenKey);
+    const res = await SplToken.getTransferHistory(tokenKey, 3);
     assert.isArray(res);
     res.forEach((v) => {
       assert.isNotEmpty(v.type);
@@ -81,22 +79,23 @@ describe('SplToken', () => {
       MINT_DECIMAL
     );
     console.log(`# tokenKey: ${res}`);
-    assert.isObject(res);
+    assert.isNotEmpty(res);
     createTokenTempFile({tokenKey: res});
+    tokenKeyStr = res;
   });
 
   it('Transfer token. source and destination inter send', async () => {
     const srcRes = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
       source.secret.toKeypair(),
-      dest.pubkey.toPubKey(),
+      destination.pubkey.toPubKey(),
       1,
       MINT_DECIMAL
     );
     console.log(`# tx signature: ${srcRes.toSigUrl()}`);
     const destRes = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
-      dest.secret.toKeypair(),
+      destination.secret.toKeypair(),
       source.pubkey.toPubKey(),
       1,
       MINT_DECIMAL
@@ -110,7 +109,7 @@ describe('SplToken', () => {
     const res = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
       source.secret.toKeypair(),
-      dest.pubkey.toPubKey(),
+      destination.pubkey.toPubKey(),
       5,
       MINT_DECIMAL,
       memoInst
@@ -118,4 +117,34 @@ describe('SplToken', () => {
     console.log(`# tx signature: ${res.toSigUrl()}`);
     assert.isNotEmpty(res);
   });
+
+  it.only('Subscribe a account(pubkey)', async () => {
+    const subscribeId = SplToken.subscribeAccount(
+      destination.pubkey.toPubKey(),
+      (v: SplToken.TransferHistory) => {
+        console.log('# Subscribe result: ', v);
+        assert.isNotEmpty(v.type);
+        assert.isNotNull(v.date);
+        assert.isNotNull(v.info.mint);
+        assert.isNotEmpty(v.info.source);
+        assert.isNotEmpty(v.info.destination);
+      }
+    );
+    for (let i = 0; i < 3; i++) await sendContinuously();
+    await Util.sleep(15);
+    SplToken.unsubscribeAccount(subscribeId);
+    assert.ok('success subscribe');
+  });
 })
+
+const sendContinuously = async (): Promise<void> => {
+  await SplToken.transfer(
+    tokenKeyStr.toPubKey(),
+    source.secret.toKeypair(),
+    destination.pubkey.toPubKey(),
+    1,
+    MINT_DECIMAL
+  );
+}
+
+

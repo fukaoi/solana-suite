@@ -6,7 +6,7 @@
 
 ### Interfaces
 
-- [Keypair](../interfaces/Wallet.Keypair.md)
+- [KeyPair](../interfaces/Wallet.KeyPair.md)
 
 ### Variables
 
@@ -19,6 +19,7 @@
 - [findAssocaiatedTokenAddress](Wallet.md#findassocaiatedtokenaddress)
 - [findMetaplexAssocaiatedTokenAddress](Wallet.md#findmetaplexassocaiatedtokenaddress)
 - [getBalance](Wallet.md#getbalance)
+- [requestAirdrop](Wallet.md#requestairdrop)
 
 ## Variables
 
@@ -28,36 +29,36 @@
 
 #### Defined in
 
-[src/wallet.ts:28](https://github.com/fukaoi/solana-suite/blob/262aa17/src/wallet.ts#L28)
+[src/wallet.ts:26](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/wallet.ts#L26)
 
 ## Functions
 
 ### create
 
-▸ `Const` **create**(): `Promise`<[`Keypair`](../interfaces/Wallet.Keypair.md)\>
+▸ `Const` **create**(): `Promise`<[`KeyPair`](../interfaces/Wallet.KeyPair.md)\>
 
 #### Returns
 
-`Promise`<[`Keypair`](../interfaces/Wallet.Keypair.md)\>
+`Promise`<[`KeyPair`](../interfaces/Wallet.KeyPair.md)\>
 
 #### Defined in
 
-[src/wallet.ts:39](https://github.com/fukaoi/solana-suite/blob/262aa17/src/wallet.ts#L39)
+[src/wallet.ts:43](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/wallet.ts#L43)
 
 ___
 
 ### createAssociatedTokenAccountInstruction
 
-▸ `Const` **createAssociatedTokenAccountInstruction**(`associatedTokenAddress`, `payer`, `sourcePubkey`, `mintKey`): `TransactionInstruction`
+▸ `Const` **createAssociatedTokenAccountInstruction**(`associatedToken`, `payer`, `source`, `mintKey`): `TransactionInstruction`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `associatedTokenAddress` | `string` |
-| `payer` | `string` |
-| `sourcePubkey` | `string` |
-| `mintKey` | `string` |
+| `associatedToken` | `PublicKey` |
+| `payer` | `PublicKey` |
+| `source` | `PublicKey` |
+| `mintKey` | `PublicKey` |
 
 #### Returns
 
@@ -65,20 +66,20 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:82](https://github.com/fukaoi/solana-suite/blob/262aa17/src/wallet.ts#L82)
+[src/wallet.ts:81](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/wallet.ts#L81)
 
 ___
 
 ### findAssocaiatedTokenAddress
 
-▸ `Const` **findAssocaiatedTokenAddress**(`sourcePubkey`, `tokenId`): `Promise`<`PublicKey`\>
+▸ `Const` **findAssocaiatedTokenAddress**(`source`, `tokenKey`): `Promise`<`PublicKey`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `sourcePubkey` | `string` |
-| `tokenId` | `string` |
+| `source` | `PublicKey` |
+| `tokenKey` | `PublicKey` |
 
 #### Returns
 
@@ -86,19 +87,19 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:52](https://github.com/fukaoi/solana-suite/blob/262aa17/src/wallet.ts#L52)
+[src/wallet.ts:54](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/wallet.ts#L54)
 
 ___
 
 ### findMetaplexAssocaiatedTokenAddress
 
-▸ `Const` **findMetaplexAssocaiatedTokenAddress**(`tokenId`): `Promise`<`PublicKey`\>
+▸ `Const` **findMetaplexAssocaiatedTokenAddress**(`tokenKey`): `Promise`<`PublicKey`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `tokenId` | `string` |
+| `tokenKey` | `PublicKey` |
 
 #### Returns
 
@@ -106,7 +107,7 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:68](https://github.com/fukaoi/solana-suite/blob/262aa17/src/wallet.ts#L68)
+[src/wallet.ts:68](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/wallet.ts#L68)
 
 ___
 
@@ -118,7 +119,7 @@ ___
 
 | Name | Type | Default value |
 | :------ | :------ | :------ |
-| `pubkey` | `string` | `undefined` |
+| `pubkey` | `PublicKey` | `undefined` |
 | `unit` | `Unit` | `'sol'` |
 
 #### Returns
@@ -127,4 +128,25 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:30](https://github.com/fukaoi/solana-suite/blob/262aa17/src/wallet.ts#L30)
+[src/wallet.ts:28](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/wallet.ts#L28)
+
+___
+
+### requestAirdrop
+
+▸ `Const` **requestAirdrop**(`pubkey`, `airdropAmount?`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `pubkey` | `PublicKey` |
+| `airdropAmount` | `number` |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Defined in
+
+[src/wallet.ts:37](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/wallet.ts#L37)

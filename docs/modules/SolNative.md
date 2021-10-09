@@ -12,15 +12,15 @@
 
 ### transfer
 
-▸ `Const` **transfer**(`sourcePubkey`, `signerSecrets`, `destPubkey`, `amount`): (`instruction?`: `TransactionInstruction`) => `Promise`<`string`\>
+▸ `Const` **transfer**(`source`, `signers`, `destination`, `amount`): (`instruction?`: `TransactionInstruction`) => `Promise`<`string`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `sourcePubkey` | `string` |
-| `signerSecrets` | `string`[] |
-| `destPubkey` | `string` |
+| `source` | `PublicKey` |
+| `signers` | `Keypair`[] |
+| `destination` | `PublicKey` |
 | `amount` | `number` |
 
 #### Returns
@@ -41,4 +41,4 @@
 
 #### Defined in
 
-[src/sol-native.ts:12](https://github.com/fukaoi/solana-suite/blob/262aa17/src/sol-native.ts#L12)
+[src/sol-native.ts:12](https://github.com/fukaoi/solana-suite/blob/17adcd0/src/sol-native.ts#L12)
