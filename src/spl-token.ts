@@ -13,7 +13,6 @@ import {
 } from '@solana/web3.js';
 
 import {Transaction} from './transaction';
-import {Constants} from './constants';
 import {Node} from './node';
 
 export namespace SplToken {
@@ -60,11 +59,9 @@ export namespace SplToken {
     callback: any
   ): number => {
     return Node.getConnection().onAccountChange(pubkey, async() => {
-      console.log('pubkey:', pubkey.toBase58());
       const res = await SplToken.getTransferHistory(pubkey, 1);
-      console.log(res);
-      // callback(res);
-    }, Constants.COMMITMENT);
+      callback(res[0]);
+    }, 'confirmed');
   }
 
   export const unsubscribeAccount = (subscribeId: number): Promise<void> =>
@@ -73,7 +70,6 @@ export namespace SplToken {
 
   export const getTransferHistory = async (pubkey: PublicKey, limit?: number): Promise<TransferHistory[]> => {
     const transactions = await Transaction.getAll(pubkey, limit);
-      console.log('#value: ', transactions);
     const hist: TransferHistory[] = [];
     for (const tx of transactions) {
       for (const inst of tx.transaction.message.instructions) {

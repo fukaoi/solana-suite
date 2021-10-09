@@ -26,7 +26,6 @@ export namespace Transaction {
     const transactions = await Node.getConnection().getConfirmedSignaturesForAddress2(
       pubkey,
       {limit},
-      'confirmed'
     );
     const parsedSig: ParsedConfirmedTransaction[] = [];
     for (const tx of transactions) {

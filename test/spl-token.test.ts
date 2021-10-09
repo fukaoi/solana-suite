@@ -125,7 +125,7 @@ describe('SplToken', () => {
       console.log
     );
     console.log('# subscribeId: ', subscribeId);
-    for (let i = 0; i < 1; i++) await sendContinuously();
+    for (let i = 0; i < 3; i++) await sendContinuously();
     await Util.sleep(15);
     SplToken.unsubscribeAccount(subscribeId);
     assert.ok('success subscribe');
@@ -133,26 +133,13 @@ describe('SplToken', () => {
 })
 
 const sendContinuously = async (): Promise<void> => {
-  // await SolNative.transfer(
-  // source.pubkey.toPubKey(),
-  // [source.secret.toKeypair()],
-  // destination.pubkey.toPubKey(),
-  // 0.0001
-  // )();
-  const tokenKey = await SplToken.create(
-    source.secret.toKeypair(),
-    1,
-    2,
-  );
-  console.log(tokenKey);
-  const srcRes = await SplToken.transfer(
-    tokenKey.toPubKey(),
+  await SplToken.transfer(
+    tokenKeyStr.toPubKey(),
     source.secret.toKeypair(),
     destination.pubkey.toPubKey(),
     1,
-    2
+    MINT_DECIMAL 
   );
-  console.log(srcRes);
 }
 
 

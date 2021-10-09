@@ -30,15 +30,15 @@ describe('Transaction', () => {
     assert.isObject(res[0]);
   });
 
-  it.only('Confirmed signagure: `max`', async () => {
+  it('Confirmed signagure: `max`', async () => {
     await confirmedSigTest('max');
   });
 
-  // it.only('Confirmed signagure: `confirmed`', async () => {
+  // it('Confirmed signagure: `confirmed`', async () => {
     // await confirmedSigTest('confirmed');
   // });
 
-  // it.only('Confirmed signagure: `proceed`', async () => {
+  // it('Confirmed signagure: `proceed`', async () => {
     // await confirmedSigTest('processed');
   // });
 
