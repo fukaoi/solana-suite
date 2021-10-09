@@ -42,9 +42,6 @@ export namespace Wallet {
 
   export const create = async (): Promise<KeyPair> => {
     const keypair = Keypair.generate();
-    if (process.env.NODE_ENV !== Constants.ENV.prd) {
-      await requestAirdrop(keypair.publicKey);
-    }
     return {
       pubkey: keypair.publicKey.toBase58(),
       secret: bs.encode(keypair.secretKey)

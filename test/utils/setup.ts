@@ -49,6 +49,7 @@ export namespace Setup {
   const createTempFile = async () => {
     const source = await Wallet.create();
     const dest = await Wallet.create();
+    await Wallet.requestAirdrop(source.pubkey.toPubKey());
     const data = templateKeyPair(source, dest);
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));
     return {source: source, dest: dest};
