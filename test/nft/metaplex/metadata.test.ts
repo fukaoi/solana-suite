@@ -1,9 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {MetaplexMetaData} from '../../../src/nft/metaplex/metadata';
-import {MetaplexInstructure} from '../../../src/nft/metaplex';
+import {MetaplexMetaData, MetaplexInstructure, Wallet} from '../../../src';
 import {Setup} from '../../../test/utils/setup';
-import {Wallet} from '../../../src/wallet';
 
 let source: Wallet.KeyPair;
 

@@ -118,11 +118,11 @@ describe('SplToken', () => {
     assert.isNotEmpty(res);
   });
 
-  it('Subscribe a account(pubkey)', async () => {
+  it.only('Subscribe a account(pubkey)', async () => {
     const subscribeId = SplToken.subscribeAccount(
       destination.pubkey.toPubKey(),
       (v: SplToken.TransferHistory) => {
-        console.log(v);
+        console.log('# Subscribe result: ', v);
         assert.isNotEmpty(v.type);
         assert.isNotNull(v.date);
         assert.isNotNull(v.info.mint);
@@ -130,7 +130,6 @@ describe('SplToken', () => {
         assert.isNotEmpty(v.info.destination);
       }
     );
-    console.log('# subscribeId: ', subscribeId);
     for (let i = 0; i < 3; i++) await sendContinuously();
     await Util.sleep(15);
     SplToken.unsubscribeAccount(subscribeId);

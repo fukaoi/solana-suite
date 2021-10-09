@@ -1,8 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Metaplex, MetaplexInstructure} from '../../../src/nft/metaplex/index';
+import {Metaplex, MetaplexInstructure, Wallet} from '../../../src';
 import {Setup} from '../../../test/utils/setup';
-import {Wallet} from '../../../src/wallet';
 
 let source: Wallet.KeyPair;
 let tokenKey = '';

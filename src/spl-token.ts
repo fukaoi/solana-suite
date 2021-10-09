@@ -65,7 +65,7 @@ export namespace SplToken {
     return Node.getConnection().onAccountChange(pubkey, async() => {
       const res = await SplToken.getTransferHistory(pubkey, 1);
       callback(res[0]);
-    }, 'confirmed');
+    });
   }
 
   export const unsubscribeAccount = (subscribeId: number): Promise<void> =>

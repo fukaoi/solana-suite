@@ -1,9 +1,7 @@
 import {describe, it} from 'mocha';
-import {Memo} from '../../../src/memo';
 import {assert} from 'chai'
 import {Setup} from '../../../test/utils/setup';
-import {Wallet} from '../../../src/wallet';
-import {SplNft} from '../../../src/nft/spl';
+import {Wallet, SplNft, Memo} from '../../../src';
 import fs from 'fs';
 
 let source: Wallet.KeyPair;
