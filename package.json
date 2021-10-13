@@ -9,7 +9,7 @@
     "src"
   ],
   "scripts": {
-    "build": "SOLANA_NETWORK=devnet tsc -p ./tsconfig.json",
+    "build": "SOLANA_NETWORK=devnet tsc -p tsconfig.json",
     "build.prd": "SOLANA_NETWORK=mainnet-beta tsc -p ./tsconfig.prd.json",
     "test": "NODE_ENV=development SOLANA_NETWORK=devnet mocha -t 300000 --require ts-node/register -- ",
     "test-all": "NODE_ENV=development SOLANA_NETWORK=devnet mocha -t 300000 --require ts-node/register \"test/**/*.test.ts\"",
