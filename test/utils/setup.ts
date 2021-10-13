@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {Wallet} from '../../src/wallet';
+import {Wallet} from '../../src';
 import '../../src/util';
 
 console.debug(`\u001b[33m === DEBUG MODE (${process.env.NODE_ENV}) ===`);
@@ -28,18 +28,16 @@ export namespace Setup {
       const destBalance = await Wallet.getBalance(obj.dest.pubkey.toPubKey());
       console.debug(`# source balance: ${sourceBalance}`);
       console.debug(`# destination balance: ${destBalance}`);
-      if (sourceBalance < 0.1 || destBalance < 0.1) {
-        console.warn(`[Warning]source or dest balance is under 0.1 amount`);
+      if (sourceBalance < 0.1) {
+        console.warn(`[Warning]source  alance is under 0.1 amount`);
         console.warn(`Reset setupKeyPair`);
-        removeTempFile;
+        Wallet.requestAirdrop(obj.source.pubkey);
       }
       return obj;
     } else {
       return createTempFile();
     }
   }
-
-  const removeTempFile = () => fs.rmSync(TEMP_KEYPAIR_FILE);
 
   const loadTempFile = async () => {
     const obj = JSON.parse(fs.readFileSync(TEMP_KEYPAIR_FILE, 'utf8'));
