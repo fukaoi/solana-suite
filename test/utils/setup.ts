@@ -3,6 +3,7 @@ import {Wallet} from '../../src';
 import '../../src/util';
 
 console.debug(`\u001b[33m === DEBUG MODE (${process.env.NODE_ENV}) ===`);
+console.debug(`\u001b[33m --- SOLANA_NETWORK (${process.env.SOLANA_NETWORK}) ---`);
 
 export namespace Setup {
   export const TEMP_KEYPAIR_FILE = `.solana-${process.env.NODE_ENV}-keypair`;

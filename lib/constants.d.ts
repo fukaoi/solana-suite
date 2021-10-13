@@ -1,14 +1,13 @@
 import { Commitment, PublicKey } from '@solana/web3.js';
 export declare namespace Constants {
-    const ENV: {
-        prd: string;
-        dev: string;
-        test: string;
-    };
+    enum SolanaNet {
+        prd = "mainnet-beta",
+        dev = "devnet",
+        test = "testnet"
+    }
 }
 export declare namespace ConstantsFunc {
     const switchApi: (env: string | undefined) => "https://api.solana.com" | "https://api.testnet.solana.com" | "http://api.devnet.solana.com";
-    const switchNetwork: (env: string | undefined) => "mainnet-beta" | "testnet" | "devnet";
 }
 export declare namespace Constants {
     const CURRENT_NETWORK: string;

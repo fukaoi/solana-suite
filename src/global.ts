@@ -25,16 +25,16 @@ String.prototype.toKeypair = function () {
 }
 
 String.prototype.toSigUrl = function () {
-  return `https://explorer.solana.com/tx/${this}?cluster=${ConstantsFunc.switchNetwork(process.env.NODE_ENV)}`;
+  return `https://explorer.solana.com/tx/${this}?cluster=${process.env.SOLANA_NETWORK}`;
 }
 
 String.prototype.toAddressUrl = function () {
-  return `https://explorer.solana.com/address/${this}?cluster=${ConstantsFunc.switchNetwork(process.env.NODE_ENV)}`;
+  return `https://explorer.solana.com/address/${this}?cluster=${process.env.SOLANA_NETWORK}`;
 }
 
 console.debug = (data: any, data2: any = '') => {
-  if (process.env.NODE_ENV === Constants.ENV.dev
-    || process.env.NODE_ENV === Constants.ENV.test) {
+  if (process.env.NODE_ENV === 'development'
+    || process.env.NODE_ENV === 'test') {
     console.log(`\u001b[35m${data}`, `\u001b[36m${data2}`);
   }
 }
