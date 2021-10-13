@@ -6,7 +6,8 @@
     "node": "14.x"
   },
   "files": [
-    "src"
+    "src",
+    "tsconfig.json"
   ],
   "scripts": {
     "build": "SOLANA_NETWORK=devnet tsc",
