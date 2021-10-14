@@ -11,10 +11,10 @@
     "package-lock.json"
   ],
   "scripts": {
-    "build": "SOLANA_NETWORK=devnet tsc",
-    "build.prd": "SOLANA_NETWORK=mainnet-beta tsc",
-    "test": "NODE_ENV=development SOLANA_NETWORK=devnet mocha -t 300000 --require ts-node/register -- ",
-    "test-all": "NODE_ENV=development SOLANA_NETWORK=devnet mocha -t 300000 --require ts-node/register \"test/**/*.test.ts\"",
+    "build": "tsc && sed -i -e 's/\"network\":.*\"/\"network\": \"devnet\"/' tsconfig.json",
+    "build.prd": "tsc && sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' tsconfig.json",
+    "test": "NODE_ENV=development mocha -t 300000 --require ts-node/register -- ",
+    "test-all": "NODE_ENV=development mocha -t 300000 --require ts-node/register 'test/**/*.test.ts'",
     "lint": "npx tslint --fix --project .",
     "docs": "typedoc src/ --name solana-suite",
     "postinstall": "npm run build"

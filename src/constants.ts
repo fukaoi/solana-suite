@@ -12,8 +12,18 @@ export namespace Constants {
     test = 'testnet',
   }
 
-  export const loadNetworkFile = () => {
-    console.log(TSConfig.solanaNet);
+  export const currentNetwork = TSConfig.solanaSuite.network;
+
+  export const isDebugging = () => {
+    if (process?.env?.NODE_ENV) {
+      if (process.env.NODE_ENV === 'development') {
+        return true;
+      }
+    }
+    if (TSConfig.solanaSuite.debugging) {
+      return true;
+    }
+    return false;
   }
 }
 
@@ -35,8 +45,8 @@ export namespace Constants {
   String.prototype.toPubKey = function () {
     return new PublicKey(this);
   }
-  export const CURRENT_NETWORK = ConstantsFunc.switchApi(process.env.SOLANA_NETWORK);
-  export const API_URL = ConstantsFunc.switchApi(process.env.SOLANA_NETWORK);
+  export const CURRENT_NETWORK = ConstantsFunc.switchApi(Constants.currentNetwork);
+  export const API_URL = ConstantsFunc.switchApi(Constants.currentNetwork);
   export const SYSTEM_PROGRAM_ID = '11111111111111111111111111111111'.toPubKey();
   export const SPL_TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'.toPubKey();
   export const SPL_ASSOCIATED_TOKEN_PROGRAM_ID = 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'.toPubKey();

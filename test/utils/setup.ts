@@ -1,12 +1,12 @@
 import fs from 'fs';
-import {Wallet} from '../../src';
+import {Constants, Wallet} from '../../src';
 import '../../src/util';
 
-console.debug(`\u001b[33m === DEBUG MODE (${process.env.NODE_ENV}) ===`);
-console.debug(`\u001b[33m --- SOLANA_NETWORK (${process.env.SOLANA_NETWORK}) ---`);
+console.debug(`\u001b[33m === DEBUG MODE ===`);
+console.debug(`\u001b[33m solana-network: ${Constants.currentNetwork}`);
 
 export namespace Setup {
-  export const TEMP_KEYPAIR_FILE = `.solana-${process.env.NODE_ENV}-keypair`;
+  export const TEMP_KEYPAIR_FILE = `.solana-${Constants.currentNetwork}-keypair`;
 
   export const generatekeyPair = async ():
     Promise<{source: Wallet.KeyPair, dest: Wallet.KeyPair}> => {

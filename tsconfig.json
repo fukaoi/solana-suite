@@ -20,5 +20,8 @@
   "include": [
     "src/**/**.ts"
   ],
-  "solanaNet": "devnet"
+  "solanaSuite": {
+    "network": "devnet",
+    "debugging": false
+  }
 }
