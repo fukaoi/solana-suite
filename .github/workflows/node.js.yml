@@ -26,5 +26,15 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run docs
+    - name: Install dependency module
+      run: npm ci
+    - name: Generate api documents
+      run: npm run docs
+    - name: Fix lint   
+      run: npm run lint
+    - name: Auto commit
+      uses: stefanzweifel/git-auto-commit-action@v4.2.0
+      with:
+        commit_message: Exec auto commit(docs, fix lint)
+    
+    
