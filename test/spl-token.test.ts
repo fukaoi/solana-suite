@@ -2,35 +2,20 @@ import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
 import {Wallet, SplToken, Memo, Util} from '../src/'
-import fs from 'fs';
 
 let source: Wallet.KeyPair;
 let destination: Wallet.KeyPair;
 let tokenKeyStr: string;
 
-const TEMP_TOKEN_FILE = '.solana-spl-token';
 const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6'.toPubKey();
 const MINT_DECIMAL = 2;
-
-const loadTokenTempFile = () => {
-  const res = fs.readFileSync(TEMP_TOKEN_FILE, 'utf8');
-  if (res) {
-    const obj = JSON.parse(res);
-    tokenKeyStr = obj.tokenKey;
-  }
-  console.log(`# tokenKey: ${tokenKeyStr}`);
-}
-
-const createTokenTempFile = async (data: Object) => {
-  fs.writeFileSync(TEMP_TOKEN_FILE, JSON.stringify(data));
-}
 
 describe('SplToken', () => {
   before(async () => {
     const obj = await Setup.generatekeyPair();
     source = obj.source;
     destination = obj.dest;
-    fs.existsSync(TEMP_TOKEN_FILE) && loadTokenTempFile();
+    tokenKeyStr = Setup.loadTokenTempFile();
   });
 
   it('Get token transfer history by tokenKey', async () => {
@@ -80,7 +65,7 @@ describe('SplToken', () => {
     );
     console.log(`# tokenKey: ${res}`);
     assert.isNotEmpty(res);
-    createTokenTempFile({tokenKey: res});
+    Setup.createTokenTempFile({tokenKey: res});
     tokenKeyStr = res;
   });
 
