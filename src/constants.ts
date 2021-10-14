@@ -3,11 +3,17 @@ import {
   PublicKey
 } from '@solana/web3.js';
 
+import TSConfig from '../tsconfig.json';
+
 export namespace Constants {
   export enum SolanaNet {
     prd = 'mainnet-beta',
     dev = 'devnet',
     test = 'testnet',
+  }
+
+  export const loadNetworkFile = () => {
+    console.log(TSConfig.solanaNet);
   }
 }
 
