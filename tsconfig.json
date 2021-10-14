@@ -10,13 +10,18 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./lib",
-    "rootDir": "./src",
     "module": "commonjs",
     "target": "ES6",
     "declaration": true,
-    "allowJs": true
+    "allowJs": true,
+    "sourceMap": true,
+    "resolveJsonModule": true
   },
   "include": [
     "src/**/**.ts"
-  ]
+  ],
+  "solanaSuite": {
+    "network": "devnet",
+    "debugging": false
+  }
 }

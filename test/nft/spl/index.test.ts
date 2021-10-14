@@ -30,13 +30,5 @@ describe('NftSpl', () => {
     );
     console.log(`# tx signature: ${srcRes}`);
     assert.isNotEmpty(srcRes);
-    const destRes = await SplNft.transfer(
-      tokenKey.toPubKey(),
-      destination.secret.toKeypair(),
-      source.pubkey.toPubKey(),
-      memoInst
-    );
-    console.log(`# tx signature: ${destRes}`);
-    assert.isNotEmpty(destRes);
   });
 })
