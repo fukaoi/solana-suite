@@ -29,7 +29,7 @@
 
 #### Defined in
 
-[src/wallet.ts:26](https://github.com/fukaoi/solana-suite/blob/25d3582/src/wallet.ts#L26)
+[src/wallet.ts:26](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L26)
 
 ## Functions
 
@@ -43,7 +43,7 @@
 
 #### Defined in
 
-[src/wallet.ts:43](https://github.com/fukaoi/solana-suite/blob/25d3582/src/wallet.ts#L43)
+[src/wallet.ts:43](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L43)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:78](https://github.com/fukaoi/solana-suite/blob/25d3582/src/wallet.ts#L78)
+[src/wallet.ts:78](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L78)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:51](https://github.com/fukaoi/solana-suite/blob/25d3582/src/wallet.ts#L51)
+[src/wallet.ts:51](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L51)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:65](https://github.com/fukaoi/solana-suite/blob/25d3582/src/wallet.ts#L65)
+[src/wallet.ts:65](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L65)
 
 ___
 
@@ -128,7 +128,7 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:28](https://github.com/fukaoi/solana-suite/blob/25d3582/src/wallet.ts#L28)
+[src/wallet.ts:28](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L28)
 
 ___
 
@@ -149,4 +149,4 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:37](https://github.com/fukaoi/solana-suite/blob/25d3582/src/wallet.ts#L37)
+[src/wallet.ts:37](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L37)
