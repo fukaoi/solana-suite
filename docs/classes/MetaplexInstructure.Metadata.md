@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[src/nft/metaplex/instructure.ts:84](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/metaplex/instructure.ts#L84)
+[src/nft/metaplex/instructure.ts:84](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/nft/metaplex/instructure.ts#L84)
 
 ## Properties
 
@@ -49,7 +49,7 @@
 
 #### Defined in
 
-[src/nft/metaplex/instructure.ts:80](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/metaplex/instructure.ts#L80)
+[src/nft/metaplex/instructure.ts:80](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/nft/metaplex/instructure.ts#L80)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/instructure.ts:82](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/metaplex/instructure.ts#L82)
+[src/nft/metaplex/instructure.ts:82](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/nft/metaplex/instructure.ts#L82)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/instructure.ts:77](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/metaplex/instructure.ts#L77)
+[src/nft/metaplex/instructure.ts:77](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/nft/metaplex/instructure.ts#L77)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/instructure.ts:79](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/metaplex/instructure.ts#L79)
+[src/nft/metaplex/instructure.ts:79](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/nft/metaplex/instructure.ts#L79)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/instructure.ts:81](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/metaplex/instructure.ts#L81)
+[src/nft/metaplex/instructure.ts:81](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/nft/metaplex/instructure.ts#L81)
 
 ___
 
@@ -99,4 +99,4 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/instructure.ts:78](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/metaplex/instructure.ts#L78)
+[src/nft/metaplex/instructure.ts:78](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/nft/metaplex/instructure.ts#L78)

@@ -41,4 +41,4 @@
 
 #### Defined in
 
-[src/sol-native.ts:12](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/sol-native.ts#L12)
+[src/sol-native.ts:12](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/sol-native.ts#L12)
