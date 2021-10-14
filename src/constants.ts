@@ -3,36 +3,40 @@ import {
   PublicKey
 } from '@solana/web3.js';
 
+import TSConfig from '../tsconfig.json';
+
 export namespace Constants {
-  export const ENV = {
-    prd: 'production',
-    dev: 'development',
-    test: 'test',
+  export enum SolanaNet {
+    prd = 'mainnet-beta',
+    dev = 'devnet',
+    test = 'testnet',
+  }
+
+  export const currentNetwork = TSConfig.solanaSuite.network;
+
+  export const isDebugging = () => {
+    if (process?.env?.NODE_ENV) {
+      if (process.env.NODE_ENV === 'development') {
+        return true;
+      }
+    }
+    if (TSConfig.solanaSuite.debugging) {
+      return true;
+    }
+    return false;
   }
 }
 
 export namespace ConstantsFunc {
   export const switchApi = (env: string | undefined) => {
     switch (env) {
-      case Constants.ENV.prd:
+      case Constants.SolanaNet.prd:
         return 'https://api.solana.com';
-      case Constants.ENV.test:
+      case Constants.SolanaNet.test:
         return 'https://api.testnet.solana.com';
       default:
-        process.env.NODE_ENV = Constants.ENV.dev;
+        process.env.SOLANA_NETWORK = Constants.SolanaNet.dev;
         return 'http://api.devnet.solana.com';
-    }
-  }
-
-  export const switchNetwork = (env: string | undefined) => {
-    switch (env) {
-      case Constants.ENV.prd:
-        return 'mainnet-beta';
-      case Constants.ENV.test:
-        return 'testnet';
-      default:
-        process.env.NODE_ENV = Constants.ENV.dev;
-        return 'devnet';
     }
   }
 }
@@ -41,8 +45,8 @@ export namespace Constants {
   String.prototype.toPubKey = function () {
     return new PublicKey(this);
   }
-  export const CURRENT_NETWORK = ConstantsFunc.switchApi(process.env.NODE_ENV);
-  export const API_URL = ConstantsFunc.switchApi(process.env.NODE_ENV);
+  export const CURRENT_NETWORK = ConstantsFunc.switchApi(Constants.currentNetwork);
+  export const API_URL = ConstantsFunc.switchApi(Constants.currentNetwork);
   export const SYSTEM_PROGRAM_ID = '11111111111111111111111111111111'.toPubKey();
   export const SPL_TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'.toPubKey();
   export const SPL_ASSOCIATED_TOKEN_PROGRAM_ID = 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'.toPubKey();
