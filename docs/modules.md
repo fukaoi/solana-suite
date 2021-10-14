@@ -6,6 +6,8 @@
 
 ### Namespaces
 
+- [Constants](modules/Constants.md)
+- [ConstantsFunc](modules/ConstantsFunc.md)
 - [Memo](modules/Memo.md)
 - [Metaplex](modules/Metaplex.md)
 - [MetaplexInstructure](modules/MetaplexInstructure.md)
