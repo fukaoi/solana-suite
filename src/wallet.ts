@@ -25,19 +25,19 @@ export namespace Wallet {
 
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
 
-  // export const getBalance = async (pubkey: PublicKey, unit: Unit = 'sol'): Promise<number> => {
   export const getBalance = async (
     pubkey: PublicKey,
     unit: Unit = 'sol'
-  ): Promise<Result<number, Error | undefined>> => {
+  ): Promise<Result<number, Error| undefined>> => {
 
-    // try {
-    const balance = await tryCatch(
+    const balance: number | Error = await tryCatch(
       () => Node.getConnection().getBalance(pubkey),
-      (e: Error) => e
+      (e: Error) => new Error('aaaa')
     )(pubkey);
 
     if (balance instanceof Error) return Result.failure(balance);
+
+    console.log(typeof balance, balance + 1);
 
     switch (unit) {
       case 'sol': return Result.success((balance as any) / LAMPORTS_PER_SOL);
