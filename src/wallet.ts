@@ -39,7 +39,7 @@ export namespace Wallet {
 
     // } catch (e: any) {
       // console.log(e.message);
-    // } 
+    // }
     // // switch (unit) {
       // case 'sol': return balance / LAMPORTS_PER_SOL;
       // case 'lamports': return balance;

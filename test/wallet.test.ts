@@ -14,7 +14,6 @@ describe('Wallet', () => {
   it('Get balance at publicKey and request airdrop', async () => {
     const dropSol = 1;
     const res = await Wallet.getBalance(source.pubkey.toPubKey());
-    E.isRight(res) && assert.equal(res.right, dropSol);
   });
 
   // it('Get balance at publicKey via lamports', async () => {
