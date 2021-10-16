@@ -1,5 +1,5 @@
 import {describe, it} from 'mocha';
-import {Wallet, E} from '../src';
+import {Wallet} from '../src';
 import {assert} from 'chai';
 
 let source: Wallet.KeyPair;
@@ -11,9 +11,11 @@ describe('Wallet', () => {
     console.log('# source address: ', source.pubkey.toAddressUrl());
   });
 
-  it('Get balance at publicKey and request airdrop', async () => {
+  it('Get balance at publicKey', async () => {
     const dropSol = 1;
     const res = await Wallet.getBalance(source.pubkey.toPubKey());
+    assert.isTrue(res.isSuccess());
+    assert.equal(res.value, dropSol);
   });
 
   // it('Get balance at publicKey via lamports', async () => {

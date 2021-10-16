@@ -10,10 +10,9 @@ import {
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 import bs from 'bs58';
 
-import {Node} from './node';
-import {Constants} from './constants';
-import {Transaction} from './transaction';
-import { tryCatch, either } from 'rambda';
+import {Transaction, Constants, Node, Result} from './';
+import {tryCatch, either, cond, equals, T, always, is} from 'rambda';
+import {strict} from 'assert';
 
 export namespace Wallet {
 
@@ -27,24 +26,24 @@ export namespace Wallet {
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
 
   // export const getBalance = async (pubkey: PublicKey, unit: Unit = 'sol'): Promise<number> => {
-  export const getBalance = async (pubkey: PublicKey, unit: Unit = 'sol') => {
+  export const getBalance = async (
+    pubkey: PublicKey,
+    unit: Unit = 'sol'
+  ): Promise<Result<number, Error | undefined>> => {
 
     // try {
-    const res = await tryCatch(
-      () => Node.getConnection().getBalance('test'.toPubKey()),
-      (e: any) => e.message
+    const balance = await tryCatch(
+      () => Node.getConnection().getBalance(pubkey),
+      (e: Error) => e
     )(pubkey);
-      console.log('res:', res);
-     // await Node.getConnection().getBalance('test'.toPubKey());
 
-    // } catch (e: any) {
-      // console.log(e.message);
-    // }
-    // // switch (unit) {
-      // case 'sol': return balance / LAMPORTS_PER_SOL;
-      // case 'lamports': return balance;
-      // default: throw new Error('no match unit');
-    // }
+    if (balance instanceof Error) return Result.failure(balance);
+
+    switch (unit) {
+      case 'sol': return Result.success((balance as any) / LAMPORTS_PER_SOL);
+      case 'lamports': return Result.success(balance as any);
+      default: return Result.failure(Error('no match unit'));
+    }
   };
 
   export const requestAirdrop = async (pubkey: PublicKey, airdropAmount: number = DEFAULT_AIRDROP_AMOUNT) => {
