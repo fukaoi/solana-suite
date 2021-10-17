@@ -1,30 +1,44 @@
-export class Result<Success, Failure> {
+export class Result<Ok, Fail> {
   private constructor(
-    private _value: Success | undefined,
-    private _errorValue: Failure | undefined
+    private _value: Ok | undefined,
+    private _error: Fail | undefined
   ) {}
 
-  static success<Success, Failure>(value: Success) {
-    return new Result<Success, Failure>(value, undefined);
+  static ok<Ok, Fail>(value: Ok) {
+    return new Result<Ok, Fail>(value, undefined);
   }
 
-  static failure<Success, Failure>(errorValue: Failure) {
-    return new Result<Success, Failure>(undefined, errorValue);
+  static fail<Ok, Fail>(error: Fail) {
+    return new Result<Ok, Fail>(undefined, error);
   }
 
-  isSuccess(): boolean {
-    return this._value ? true : false;
+  static isFail(result: unknown): boolean {
+    if (typeof result === 'object' && result) {
+      return (result as Result<unknown, unknown>).isFail();
+    }
+    return false;
   }
 
-  isFailure(): boolean {
-    return this._errorValue ? true : false;
+  static isOk(result: unknown): boolean {
+    if (typeof result === 'object' && result) {
+      return (result as Result<unknown, unknown>).isOk();
+    }
+    return false;
   }
 
-  get value(): Success | undefined {
+  isOk(): boolean {
+    return this._value !== undefined  ? true : false;
+  }
+
+  isFail(): boolean {
+    return this._error !== undefined ? true : false;
+  }
+
+  get value(): Ok | undefined {
     return this._value;
   }
 
-  get errorValue(): Failure | undefined {
-    return this._errorValue;
+  get error(): Fail | undefined {
+    return this._error;
   }
 }

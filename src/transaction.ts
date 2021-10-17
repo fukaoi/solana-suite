@@ -35,7 +35,7 @@ export namespace Transaction {
     return parsedSig;
   }
 
-  export const confirmedSig = async (signature: string, commitment: Commitment = 'max') => {
+  export const confirmedSig = async (signature: string, commitment: Commitment = 'finalized') => {
     await Node.getConnection().confirmTransaction(signature, commitment);
   }
 

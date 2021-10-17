@@ -9,8 +9,8 @@ import {
 import {Wallet} from '../../wallet';
 import {Constants} from '../../constants';
 import {Metaplex, MetaplexSerialize, MetaplexInstructure} from './index';
+import {Node, Result} from '../../index';
 import {Token} from '@solana/spl-token';
-import {Node} from '../../node';
 
 export namespace MetaplexMetaData {
 
@@ -119,9 +119,11 @@ export namespace MetaplexMetaData {
       tokenKey
     );
 
+    if (associatedToken.isFail()) return associatedToken;
+
     inst.push(
       Wallet.createAssociatedTokenAccountInstruction(
-        associatedToken,
+        associatedToken.value as PublicKey,
         updateAuthority,
         updateAuthority,
         tokenKey
@@ -132,7 +134,7 @@ export namespace MetaplexMetaData {
       Token.createMintToInstruction(
         Constants.SPL_TOKEN_PROGRAM_ID,
         tokenKey,
-        associatedToken,
+        associatedToken.value as PublicKey,
         updateAuthority,
         signers,
         1,
