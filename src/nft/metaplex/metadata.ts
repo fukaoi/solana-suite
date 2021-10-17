@@ -14,11 +14,13 @@ import {Token} from '@solana/spl-token';
 
 export namespace MetaplexMetaData {
 
-  export const getByTokenKey = async (tokenKey: PublicKey): Promise<Metaplex.Format> => {
+  // export const getByTokenKey = async (tokenKey: PublicKey): Promise<Metaplex.Format> => {
+  export const getByTokenKey = async (tokenKey: PublicKey) => {
     const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
 
-    // get rent data in a metaAccount
-    const nfts = await Node.getConnection().getParsedAccountInfo(metaAccount);
+    if (metaAccount.isFail()) return metaAccount;
+
+    const nfts = await Node.getConnection().getParsedAccountInfo(<PublicKey>metaAccount.value);
     const data = nfts?.value?.data as Buffer;
     if (data) {
       return MetaplexSerialize.decode(data);
@@ -40,7 +42,7 @@ export namespace MetaplexMetaData {
       if (!decoded) continue;
       matches.push(decoded)
     }
-    return matches;
+    return Result.ok(matches);
   }
 
   export const create = (
@@ -53,12 +55,13 @@ export namespace MetaplexMetaData {
     let inst: TransactionInstruction[] = [];
     inst = instructions ? instructions : inst;
     const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    if (metaAccount.isFail()) return metaAccount;
 
     const txnData = MetaplexSerialize.serializeCreateArgs(data);
 
     const keys = [
       {
-        pubkey: metaAccount,
+        pubkey: <PublicKey>metaAccount.value,
         isSigner: false,
         isWritable: true,
       },
@@ -134,16 +137,15 @@ export namespace MetaplexMetaData {
       Token.createMintToInstruction(
         Constants.SPL_TOKEN_PROGRAM_ID,
         tokenKey,
-        associatedToken.value as PublicKey,
+        <PublicKey>associatedToken.value,
         updateAuthority,
         signers,
         1,
       ),
     );
 
-    const metaAccount = (
-      await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey)
-    );
+    const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    if (metaAccount.isFail()) return metaAccount; 
 
     const txnData = MetaplexSerialize.serializeUpdateArgs(
       data,
@@ -152,7 +154,7 @@ export namespace MetaplexMetaData {
     );
     const keys = [
       {
-        pubkey: metaAccount,
+        pubkey: <PublicKey>metaAccount.value,
         isSigner: false,
         isWritable: true,
       },
