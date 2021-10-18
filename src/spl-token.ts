@@ -14,6 +14,7 @@ import {
 
 import {Transaction} from './transaction';
 import {Node} from './node';
+import {Result} from './result';
 
 export namespace SplToken {
   export interface TransferHistory {
@@ -62,7 +63,7 @@ export namespace SplToken {
     pubkey: PublicKey,
     callback: any
   ): number => {
-    return Node.getConnection().onAccountChange(pubkey, async() => {
+    return Node.getConnection().onAccountChange(pubkey, async () => {
       const res = await SplToken.getTransferHistory(pubkey, 1);
       callback(res[0]);
     });
@@ -145,7 +146,7 @@ export namespace SplToken {
     amount: number,
     mintDecimal: number,
     instruction?: TransactionInstruction
-  ): Promise<TransactionSignature> => {
+  ): Promise<Result<string | unknown, Error | unknown>> => {
     const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, source);
     const sourceTokenAccount = (await token.getOrCreateAssociatedAccountInfo(source.publicKey)).address;
     const destTokenAccount = (await token.getOrCreateAssociatedAccountInfo(dest)).address;
