@@ -32,11 +32,11 @@ export namespace Wallet {
       .then(Result.ok)
       .catch(Result.fail);
 
-    if (balance.isFail()) return <Result<number, Error>>balance;
+    if (balance.isFail()) return balance as Result<number, Error>;
 
     switch (unit) {
-      case 'sol': return Result.ok(<number>balance.value / LAMPORTS_PER_SOL);
-      case 'lamports': return <Result<number, Error>>balance;
+      case 'sol': return Result.ok((balance.value as number) / LAMPORTS_PER_SOL);
+      case 'lamports': return balance as Result<number, Error>;
       default: return Result.fail(new Error('no match unit'));
     }
   };
@@ -82,7 +82,7 @@ export namespace Wallet {
     )
       .then(v => Result.ok(v[0]))
       .catch(Result.fail);
-    return <Result<PublicKey, Error>>res;
+    return res as Result<PublicKey, Error>;
   }
 
   export const findMetaplexAssocaiatedTokenAddress = async (
@@ -96,9 +96,9 @@ export namespace Wallet {
       ],
       Constants.METAPLEX_PROGRAM_ID,
     )
-      .then(res => Result.ok(res[0]))
+      .then(v => Result.ok(v[0]))
       .catch((e: Error) => Result.fail(e))
-    return <Result<PublicKey, Error>>res;
+    return res as Result<PublicKey, Error>;
   }
 
   export const createAssociatedTokenAccountInstruction = (

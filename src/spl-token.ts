@@ -65,7 +65,7 @@ export namespace SplToken {
     return Node.getConnection().onAccountChange(pubkey, async () => {
       const res = await SplToken.getTransferHistory(pubkey, 1);
       if (res.isFail()) return res;
-      callback((<TransferHistory[]>res.value)[0]);
+      callback((res.value as TransferHistory[])[0]);
     });
   }
 
@@ -79,10 +79,10 @@ export namespace SplToken {
   ): Promise<Result<TransferHistory[], Error>> => {
     const transactions = await Transaction.getAll(pubkey, limit);
 
-    if (transactions.isFail()) return <Result<[], Error>>transactions;
+    if (transactions.isFail()) return transactions as Result<[], Error>;
 
     const hist: TransferHistory[] = [];
-    for (const tx of <ParsedConfirmedTransaction[]>transactions.value) {
+    for (const tx of transactions.value as ParsedConfirmedTransaction[]) {
       for (const inst of tx.transaction.message.instructions) {
         const value = inst as ParsedInstruction;
         if (isTransfer(value)) {
@@ -100,10 +100,10 @@ export namespace SplToken {
   ): Promise<Result<TransferDestinationList[], Error>> => {
     const transactions = await Transaction.getAll(pubkey);
 
-    if (transactions.isFail()) return <Result<[], Error>>transactions;
+    if (transactions.isFail()) return transactions as Result<[], Error>;
 
     const hist: TransferDestinationList[] = [];
-    for (const tx of <ParsedConfirmedTransaction[]>transactions.value) {
+    for (const tx of transactions.value as ParsedConfirmedTransaction[]) {
       const posts = tx.meta?.postTokenBalances as TokenBalance[];
       if (posts.length > 1) {
         posts.forEach((p) => {
@@ -139,9 +139,9 @@ export namespace SplToken {
       .then(Result.ok)
       .catch(Result.fail);
 
-    if (tokenRes.isFail()) return <Result<string, Error>>tokenRes;
+    if (tokenRes.isFail()) return tokenRes as Result<string, Error>;
 
-    const token = <Token>tokenRes.value;
+    const token = tokenRes.value as Token;
 
     const tokenAssociated = await token.createAssociatedTokenAccount(
       source.publicKey
@@ -149,10 +149,10 @@ export namespace SplToken {
       .then(Result.ok)
       .catch(Result.fail);
 
-    if (tokenAssociated.isFail()) return  <Result<string, Error>>tokenAssociated;
+    if (tokenAssociated.isFail()) return  tokenAssociated as Result<string, Error>;
 
     const res = await token.mintTo(
-      <PublicKey>tokenAssociated.value,
+      tokenAssociated.value as PublicKey,
       authority,
       [],
       totalAmount,
@@ -160,7 +160,7 @@ export namespace SplToken {
       .then(Result.ok)
       .catch(Result.fail);
 
-    if (res.isFail()) return <Result<string, Error>>res;
+    if (res.isFail()) return res as Result<string, Error>;
 
     return Result.ok(token.publicKey.toBase58());
   }
@@ -178,19 +178,19 @@ export namespace SplToken {
       .then(Result.ok)
       .catch(Result.fail);
 
-    if (sourceToken.isFail()) return <Result<string, Error>>sourceToken;
+    if (sourceToken.isFail()) return sourceToken as Result<string, Error>;
 
     const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
       .then(Result.ok)
       .catch(Result.fail);
 
-    if (destToken.isFail()) return <Result<string, Error>>destToken;
+    if (destToken.isFail()) return destToken as Result<string, Error>;
 
     const param = Token.createTransferCheckedInstruction(
       TOKEN_PROGRAM_ID,
-      (<AccountInfo>sourceToken.value).address,
+      (sourceToken.value as AccountInfo).address,
       tokenKey,
-      (<AccountInfo>destToken.value).address,
+      (destToken.value as AccountInfo).address,
       source.publicKey,
       [source],
       amount,
