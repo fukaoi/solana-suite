@@ -4,11 +4,13 @@ import {
   Transaction as SolanaTransaction,
   sendAndConfirmTransaction,
   TransactionInstruction,
-  TransactionSignature,
   SystemProgram,
   Signer,
   ParsedConfirmedTransaction,
   Commitment,
+  RpcResponseAndContext,
+  SignatureResult,
+  ConfirmedSignatureInfo,
 } from '@solana/web3.js';
 
 import {Node} from './node';
@@ -16,46 +18,64 @@ import {Constants} from './constants';
 import {Result} from './result';
 
 export namespace Transaction {
-
-  export const get = async (signature: string): Promise<ParsedConfirmedTransaction | null> =>
-    await Node.getConnection().getParsedConfirmedTransaction(signature);
+  export const get = async (signature: string):
+    Promise<Result<ParsedConfirmedTransaction | unknown, Error | unknown>> =>
+    await Node.getConnection().getParsedConfirmedTransaction(signature)
+      .then(Result.ok)
+      .catch(Result.fail);
 
   export const getAll = async (
     pubkey: PublicKey,
     limit?: number
-  ): Promise<ParsedConfirmedTransaction[]> => {
+  ): Promise<Result<ParsedConfirmedTransaction[] | unknown, Error | unknown>> => {
     const transactions = await Node.getConnection().getConfirmedSignaturesForAddress2(
       pubkey,
       {limit},
-    );
+    )
+      .then(Result.ok)
+      .catch(Result.fail);
+
+    if (transactions.isFail()) return transactions;
+
     const parsedSig: ParsedConfirmedTransaction[] = [];
-    for (const tx of transactions) {
+    for (const tx of <ConfirmedSignatureInfo[]>transactions.value) {
       const res = await get(tx!.signature);
-      res !== null && parsedSig.push(res);
+      if (res.isFail()) return res;
+      res !== null && parsedSig.push(<ParsedConfirmedTransaction>res.value);
     }
-    return parsedSig;
+    return Result.ok(parsedSig);
   }
 
-  export const confirmedSig = async (signature: string, commitment: Commitment = 'finalized') => {
-    await Node.getConnection().confirmTransaction(signature, commitment);
+  export const confirmedSig = async (
+    signature: string,
+    commitment: Commitment = 'finalized'
+  ): Promise<Result<RpcResponseAndContext<SignatureResult> | unknown, Error | unknown>> => {
+    return await Node.getConnection().confirmTransaction(signature, commitment)
+      .then(Result.ok)
+      .catch(Result.fail);
   }
 
   export const sendInstructions = async (
     signers: Keypair[],
     instructions: TransactionInstruction[],
-  ): Promise<TransactionSignature> => {
-
-    const conn = Node.getConnection();
+  ): Promise<Result<string | unknown, Error | unknown>> => {
     const tx = new SolanaTransaction().add(instructions[0]);
     if (instructions[1]) {
       instructions.slice(1, instructions.length)
         .forEach((st: TransactionInstruction) => tx.add(st));
     }
     const options = {
-      skipPreflight: true,
+      skipPreflight: false,
       commitment: Constants.COMMITMENT,
     };
-    return sendAndConfirmTransaction(conn, tx, signers, options);
+    return await sendAndConfirmTransaction(
+      Node.getConnection(),
+      tx,
+      signers,
+      options
+    )
+      .then(Result.ok)
+      .catch(Result.fail);
   }
 
   export const send = (
