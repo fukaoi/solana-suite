@@ -1,15 +1,12 @@
 import {Token, MintLayout} from '@solana/spl-token';
-import {Transaction} from '../../transaction';
 import {
   Keypair,
   PublicKey,
   SystemProgram, TransactionInstruction,
 } from '@solana/web3.js';
 
-import {Constants} from '../../constants';
-import {Node} from '../../node';
-import {MetaplexMetaData} from './metadata';
-import {MetaplexInstructure} from './instructure';
+import {Constants, Node, Transaction} from '../../';
+import {MetaplexMetaData, MetaplexInstructure} from './';
 
 export * from './instructure';
 export * from './metadata';

@@ -1,4 +1,4 @@
-import {Metaplex} from '../metaplex'
+// import {Metaplex} from '../metaplex'
 
 export * from './arweave';
 export * from './nft-storage';

@@ -4,6 +4,7 @@ import {
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
   Keypair,
+  AccountInfo,
 } from '@solana/web3.js';
 
 import {Wallet} from '../../wallet';
@@ -20,12 +21,21 @@ export namespace MetaplexMetaData {
 
     if (metaAccount.isFail()) return metaAccount;
 
-    const nfts = await Node.getConnection().getParsedAccountInfo(<PublicKey>metaAccount.value);
-    const data = nfts?.value?.data as Buffer;
-    if (data) {
-      return MetaplexSerialize.decode(data);
-    }
-    return Metaplex.initFormat();
+    const nfts = await Node.getConnection().getParsedAccountInfo(
+      <PublicKey>metaAccount.value
+    )
+      .then(Result.ok)
+      .catch(Result.fail);
+
+    if (nfts.isFail())  return nfts;
+
+    const accountInfo = nfts.value.value;
+
+      const data = accountInfo?.value?.data as Buffer;
+      if (data) {
+        return MetaplexSerialize.decode(data);
+      }
+      return Metaplex.initFormat();
   }
 
   export const getByOwner = async (owner: PublicKey): Promise<Metaplex.Format[]> => {
@@ -61,7 +71,7 @@ export namespace MetaplexMetaData {
 
     const keys = [
       {
-        pubkey: <PublicKey>metaAccount.value,
+        pubkey: metaAccount.value as PublicKey,
         isSigner: false,
         isWritable: true,
       },
@@ -137,7 +147,7 @@ export namespace MetaplexMetaData {
       Token.createMintToInstruction(
         Constants.SPL_TOKEN_PROGRAM_ID,
         tokenKey,
-        <PublicKey>associatedToken.value,
+        associatedToken.value as PublicKey,
         updateAuthority,
         signers,
         1,
@@ -145,7 +155,7 @@ export namespace MetaplexMetaData {
     );
 
     const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
-    if (metaAccount.isFail()) return metaAccount; 
+    if (metaAccount.isFail()) return metaAccount;
 
     const txnData = MetaplexSerialize.serializeUpdateArgs(
       data,
@@ -154,7 +164,7 @@ export namespace MetaplexMetaData {
     );
     const keys = [
       {
-        pubkey: <PublicKey>metaAccount.value,
+        pubkey: metaAccount.value as PublicKey,
         isSigner: false,
         isWritable: true,
       },
