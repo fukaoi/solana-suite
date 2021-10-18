@@ -13,6 +13,7 @@ import {
 
 import {Node} from './node';
 import {Constants} from './constants';
+import {Result} from './result';
 
 export namespace Transaction {
 
@@ -62,24 +63,31 @@ export namespace Transaction {
     signers: Signer[],
     destination: PublicKey,
     amount: number,
-  ) => async (instructions?: TransactionInstruction[]): Promise<TransactionSignature> => {
-    const params =
-      SystemProgram.transfer({
-        fromPubkey: source,
-        toPubkey: destination,
-        lamports: amount,
-      });
+  ) => async (instructions?: TransactionInstruction[])
+      : Promise<Result<string | unknown, Error | unknown>> => {
+      const params =
+        SystemProgram.transfer({
+          fromPubkey: source,
+          toPubkey: destination,
+          lamports: amount,
+        });
 
-    const conn = Node.getConnection();
-    const tx = new SolanaTransaction().add(params);
-    if (instructions) {
-      instructions.forEach((st: TransactionInstruction) => tx.add(st));
+      const tx = new SolanaTransaction().add(params);
+      if (instructions) {
+        instructions.forEach((st: TransactionInstruction) => tx.add(st));
+      }
+
+      const options = {
+        skipPreflight: false,
+        commitment: Constants.COMMITMENT,
+      };
+      return await sendAndConfirmTransaction(
+        Node.getConnection(),
+        tx,
+        signers,
+        options
+      )
+        .then(Result.ok)
+        .catch(Result.fail);
     }
-
-    const options = {
-      skipPreflight: true,
-      commitment: Constants.COMMITMENT,
-    };
-    return sendAndConfirmTransaction(conn, tx, signers, options);
-  }
 }

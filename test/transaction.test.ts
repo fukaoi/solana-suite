@@ -52,9 +52,9 @@ describe('Transaction', () => {
 })
 
 const confirmedSigTest = async (commitment: Commitment) => {
-  const beforeBalance = await Wallet.getBalance(
+  const beforeBalance = (await Wallet.getBalance(
     destination.pubkey.toPubKey()
-  );
+  )).value;
   console.log('# before balance: ', beforeBalance);
   const amount = 0.001;
 
@@ -66,9 +66,9 @@ const confirmedSigTest = async (commitment: Commitment) => {
   )();
   await Transaction.confirmedSig(sig, commitment);
 
-  const afterBalance = await Wallet.getBalance(
+  const afterBalance = (await Wallet.getBalance(
     destination.pubkey.toPubKey()
-  );
+  )).value;
   console.log('# after balance: ', afterBalance);
-  assert.equal(afterBalance, beforeBalance + amount);
+  assert.equal(afterBalance, <number>beforeBalance + amount);
 }
