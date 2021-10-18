@@ -27,16 +27,16 @@ export namespace Wallet {
   export const getBalance = async (
     pubkey: PublicKey,
     unit: Unit = 'sol'
-  ): Promise<Result<number | unknown, Error | unknown>> => {
+  ): Promise<Result<number, Error>> => {
     const balance = await Node.getConnection().getBalance(pubkey)
       .then(Result.ok)
       .catch(Result.fail);
 
-    if (balance.isFail()) return Result.fail(balance);
+    if (balance.isFail()) return <Result<number, Error>>balance;
 
     switch (unit) {
-      case 'sol': return Result.ok((balance.value as number) / LAMPORTS_PER_SOL);
-      case 'lamports': return balance;
+      case 'sol': return Result.ok(<number>balance.value / LAMPORTS_PER_SOL);
+      case 'lamports': return <Result<number, Error>>balance;
       default: return Result.fail(new Error('no match unit'));
     }
   };
@@ -71,8 +71,8 @@ export namespace Wallet {
   export const findAssocaiatedTokenAddress = async (
     source: PublicKey,
     tokenKey: PublicKey
-  ): Promise<Result<PublicKey, Error | unknown>> => {
-    return await PublicKey.findProgramAddress(
+  ): Promise<Result<PublicKey, Error>> => {
+    const res = await PublicKey.findProgramAddress(
       [
         source.toBuffer(),
         TOKEN_PROGRAM_ID.toBuffer(),
@@ -80,14 +80,15 @@ export namespace Wallet {
       ],
       Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID
     )
-      .then(res => Result.ok(res[0]))
-      .catch((e: Error) => Result.fail(e))
+      .then(v => Result.ok(v[0]))
+      .catch(Result.fail);
+    return <Result<PublicKey, Error>>res;
   }
 
   export const findMetaplexAssocaiatedTokenAddress = async (
     tokenKey: PublicKey
-  ): Promise<Result<PublicKey, Error | unknown>> => {
-    return await PublicKey.findProgramAddress(
+  ): Promise<Result<PublicKey, Error>> => {
+    const res = await PublicKey.findProgramAddress(
       [
         Buffer.from('metadata'),
         Constants.METAPLEX_PROGRAM_ID.toBuffer(),
@@ -97,6 +98,7 @@ export namespace Wallet {
     )
       .then(res => Result.ok(res[0]))
       .catch((e: Error) => Result.fail(e))
+    return <Result<PublicKey, Error>>res;
   }
 
   export const createAssociatedTokenAccountInstruction = (

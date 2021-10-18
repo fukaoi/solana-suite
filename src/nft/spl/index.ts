@@ -10,9 +10,7 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import {Transaction} from '../../transaction';
-import {SplToken} from '../../spl-token';
-import {Node} from '../../node';
+import {Transaction, SplToken, Node, Result} from '../../';
 
 export namespace SplNft {
 
@@ -36,7 +34,7 @@ export namespace SplNft {
     source: Keypair,
     dest: PublicKey,
     instruction?: TransactionInstruction
-  ): Promise<TransactionSignature> => {
+  ): Promise<Result<TransactionSignature | unknown, Error | unknown>> => {
     const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, source);
     const sourceTokenAccount = (await token.getOrCreateAssociatedAccountInfo(source.publicKey)).address;
     const destTokenAccount = (await token.getOrCreateAssociatedAccountInfo(dest)).address;

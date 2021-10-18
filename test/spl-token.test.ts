@@ -20,8 +20,9 @@ describe('SplToken', () => {
 
   it('Get token transfer history by tokenKey', async () => {
     const res = await SplToken.getTransferHistory(tokenKey, 3);
+    assert.isTrue(res.isOk());
     assert.isArray(res);
-    res.forEach((v) => {
+    res.value.forEach((v) => {
       assert.isNotEmpty(v.type);
       assert.isNotEmpty(v.info.source);
       assert.isNotEmpty(v.info.destination);
@@ -33,8 +34,9 @@ describe('SplToken', () => {
   it('Get token transfer history by owner address', async () => {
     const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu'.toPubKey();
     const res = await SplToken.getTransferHistory(owner);
+    assert.isTrue(res.isOk());
     assert.isArray(res);
-    res.forEach((v) => {
+    res.value.forEach((v) => {
       assert.isNotEmpty(v.type);
       assert.isNotEmpty(v.info.source);
       assert.isNotEmpty(v.info.destination);
@@ -45,8 +47,9 @@ describe('SplToken', () => {
 
   it('Get token transfer destination history', async () => {
     const res = await SplToken.getTransferDestinationList(tokenKey);
+    assert.isTrue(res.isOk());
     assert.isArray(res);
-    res.forEach((v) => {
+    res.value.forEach((v) => {
       assert.isNotEmpty(v.dest);
       assert.isNotNull(v.date);
     });
@@ -64,9 +67,10 @@ describe('SplToken', () => {
       MINT_DECIMAL
     );
     console.log(`# tokenKey: ${res}`);
+    assert.isTrue(res.isOk());
     assert.isNotEmpty(res);
-    Setup.createTokenTempFile({tokenKey: res});
-    tokenKeyStr = res;
+    Setup.createTokenTempFile({tokenKey: res.value});
+    tokenKeyStr = <string>res.value;
   });
 
   it('Transfer token. source and destination inter send', async () => {
@@ -77,7 +81,9 @@ describe('SplToken', () => {
       1,
       MINT_DECIMAL
     );
-    console.log(`# tx signature: ${srcRes.toSigUrl()}`);
+
+    assert.isTrue(srcRes.isOk());
+
     const destRes = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
       destination.secret.toKeypair(),
@@ -85,7 +91,7 @@ describe('SplToken', () => {
       1,
       MINT_DECIMAL
     );
-    console.log(`# tx signature: ${destRes.toSigUrl()}`);
+    assert.isTrue(destRes.isOk());
     assert.isNotEmpty(destRes);
   });
 
@@ -99,7 +105,7 @@ describe('SplToken', () => {
       MINT_DECIMAL,
       memoInst
     );
-    console.log(`# tx signature: ${res.toSigUrl()}`);
+    assert.isTrue(res.isOk());
     assert.isNotEmpty(res);
   });
 

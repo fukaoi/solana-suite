@@ -38,10 +38,10 @@ export namespace Transaction {
     if (transactions.isFail()) return transactions;
 
     const parsedSig: ParsedConfirmedTransaction[] = [];
-    for (const tx of <ConfirmedSignatureInfo[]>transactions.value) {
+    for (const tx of transactions.value as ConfirmedSignatureInfo[]) {
       const res = await get(tx!.signature);
       if (res.isFail()) return res;
-      res !== null && parsedSig.push(<ParsedConfirmedTransaction>res.value);
+      res !== null && parsedSig.push(res.value as ParsedConfirmedTransaction);
     }
     return Result.ok(parsedSig);
   }
@@ -58,7 +58,7 @@ export namespace Transaction {
   export const sendInstructions = async (
     signers: Keypair[],
     instructions: TransactionInstruction[],
-  ): Promise<Result<string | unknown, Error | unknown>> => {
+  ): Promise<Result<string, Error>> => {
     const tx = new SolanaTransaction().add(instructions[0]);
     if (instructions[1]) {
       instructions.slice(1, instructions.length)
@@ -68,7 +68,7 @@ export namespace Transaction {
       skipPreflight: false,
       commitment: Constants.COMMITMENT,
     };
-    return await sendAndConfirmTransaction(
+    const res = await sendAndConfirmTransaction(
       Node.getConnection(),
       tx,
       signers,
@@ -76,6 +76,7 @@ export namespace Transaction {
     )
       .then(Result.ok)
       .catch(Result.fail);
+    return <Result<string, Error>>res
   }
 
   export const send = (
@@ -84,7 +85,7 @@ export namespace Transaction {
     destination: PublicKey,
     amount: number,
   ) => async (instructions?: TransactionInstruction[])
-      : Promise<Result<string | unknown, Error | unknown>> => {
+      : Promise<Result<string, Error>> => {
       const params =
         SystemProgram.transfer({
           fromPubkey: source,
@@ -101,7 +102,7 @@ export namespace Transaction {
         skipPreflight: false,
         commitment: Constants.COMMITMENT,
       };
-      return await sendAndConfirmTransaction(
+      const res = await sendAndConfirmTransaction(
         Node.getConnection(),
         tx,
         signers,
@@ -109,5 +110,6 @@ export namespace Transaction {
       )
         .then(Result.ok)
         .catch(Result.fail);
+      return <Result<string, Error>>res
     }
 }
