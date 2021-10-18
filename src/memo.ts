@@ -14,9 +14,9 @@ import {Constants} from './constants';
 export namespace Memo {
   export const decode = (encoded: string): string => bs.decode(encoded).toString();
 
-  export const encode = (data: any): Buffer => Buffer.from(data);
+  export const encode = (data: string): Buffer => Buffer.from(data);
 
-  export const createInstruction = (data: any): TransactionInstruction => {
+  export const createInstruction = (data: string): TransactionInstruction => {
     return new TransactionInstruction({
       programId: Constants.MEMO_PROGRAM_ID,
       data: encode(data),
