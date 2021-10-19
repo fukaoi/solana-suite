@@ -5,7 +5,7 @@ import {
   SystemProgram, TransactionInstruction,
 } from '@solana/web3.js';
 
-import {Constants, Node, Transaction} from '../../';
+import {Constants, Node, Transaction, Result} from '../../';
 import {MetaplexMetaData, MetaplexInstructure} from './';
 
 export * from './instructure';
@@ -71,6 +71,11 @@ export namespace Metaplex {
     primary_sale_happened?: boolean,
   }
 
+  export interface MintResult {
+    tokenKey: string;
+    signature: string;
+  }
+
   export const initFormat = (): Format => {
     return {
       name: '',
@@ -108,7 +113,7 @@ export namespace Metaplex {
   export const mint = async (
     data: MetaplexInstructure.Data,
     owner: Keypair,
-  ): Promise<{tokenKey: string, signature: string}> => {
+  ): Promise<Result<MintResult | unknown, Error | unknown>> => {
     const txsign = await create(owner.publicKey, [owner])();
 
     const metadataInst = await MetaplexMetaData.create(
@@ -117,6 +122,8 @@ export namespace Metaplex {
       owner.publicKey,
     )(txsign.instructions);
 
+    if (metadataInst.isFail()) return metadataInst;
+
     const updateTx = await MetaplexMetaData.update(
       data,
       undefined,
@@ -124,13 +131,15 @@ export namespace Metaplex {
       txsign.tokenKey.toPubKey(),
       owner.publicKey,
       [owner],
-    )(metadataInst);
+    )(<TransactionInstruction[]>metadataInst.value);
+
+    if (updateTx.isFail()) return metadataInst;
 
     const signature = await Transaction.sendInstructions(
       txsign.signers,
-      updateTx
+      <TransactionInstruction[]>updateTx.value
     );
 
-    return {tokenKey: txsign.tokenKey, signature};
+    return Result.ok({tokenKey: txsign.tokenKey, signature});
   }
 }

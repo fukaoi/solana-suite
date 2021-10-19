@@ -4,22 +4,21 @@ import {
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
   Keypair,
+  RpcResponseAndContext,
   AccountInfo,
+  ParsedAccountData
 } from '@solana/web3.js';
 
-import {Wallet} from '../../wallet';
-import {Constants} from '../../constants';
 import {Metaplex, MetaplexSerialize, MetaplexInstructure} from './index';
-import {Node, Result} from '../../index';
+import {Node, Result, Wallet, Constants} from '../../index';
 import {Token} from '@solana/spl-token';
 
 export namespace MetaplexMetaData {
-
-  // export const getByTokenKey = async (tokenKey: PublicKey): Promise<Metaplex.Format> => {
-  export const getByTokenKey = async (tokenKey: PublicKey) => {
+  export const getByTokenKey = async (tokenKey: PublicKey):
+    Promise<Result<Metaplex.Format | unknown, Error>> => {
     const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
 
-    if (metaAccount.isFail()) return metaAccount;
+    if (metaAccount.isFail()) return <Result<unknown, Error>>metaAccount;
 
     const nfts = await Node.getConnection().getParsedAccountInfo(
       <PublicKey>metaAccount.value
@@ -27,30 +26,42 @@ export namespace MetaplexMetaData {
       .then(Result.ok)
       .catch(Result.fail);
 
-    if (nfts.isFail())  return nfts;
+    if (nfts.isFail()) return <Result<unknown, Error>>nfts;
 
-    const accountInfo = nfts.value.value;
+    const accountData = <RpcResponseAndContext<AccountInfo<Buffer>>>nfts.value;
+    const data = accountData.value?.data;
 
-      const data = accountInfo?.value?.data as Buffer;
-      if (data) {
-        return MetaplexSerialize.decode(data);
-      }
-      return Metaplex.initFormat();
+    if (data) {
+      return Result.ok(MetaplexSerialize.decode(data));
+    }
+    return Result.ok(Metaplex.initFormat());
   }
 
-  export const getByOwner = async (owner: PublicKey): Promise<Metaplex.Format[]> => {
+  export const getByOwner = async (owner: PublicKey):
+    // Promise<Result<Metaplex.Format[] | unknown, Error>> => {
+    Promise<any> => {
     // Get all token by owner
     const tokens = await Node.getConnection().getParsedTokenAccountsByOwner(
       owner,
       {programId: Constants.SPL_TOKEN_PROGRAM_ID}
-    );
-    const matches = [];
+    )
+      .then(Result.ok)
+      .catch(Result.fail);
 
+    if (tokens.isFail()) return <Result<unknown, Error>>tokens;
+    const arr = <RpcResponseAndContext<Array<
+      {pubkey: PublicKey; account: AccountInfo<ParsedAccountData>}
+    >>>tokens.value;
+
+    const matches = [];
     // Filter only metaplex nft
-    for (const token of tokens.value) {
-      const decoded = await getByTokenKey(token.account.data.parsed.info.mint.toPubKey());
+    for (const token of arr.value) {
+      const decoded = await getByTokenKey(
+        token.account.data.parsed.info.mint.toPubKey()
+      );
       if (!decoded) continue;
-      matches.push(decoded)
+      if (decoded.isFail()) return decoded;
+      matches.push(decoded.value)
     }
     return Result.ok(matches);
   }
@@ -61,60 +72,61 @@ export namespace MetaplexMetaData {
     payer: PublicKey,
     mintAuthorityKey = payer,
     updateAuthority = payer,
-  ) => async (instructions?: TransactionInstruction[]) => {
-    let inst: TransactionInstruction[] = [];
-    inst = instructions ? instructions : inst;
-    const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
-    if (metaAccount.isFail()) return metaAccount;
+  ) => async (instructions?: TransactionInstruction[]):
+      Promise<Result<PublicKey | TransactionInstruction[], Error>> => {
+      let inst: TransactionInstruction[] = [];
+      inst = instructions ? instructions : inst;
+      const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
+      if (metaAccount.isFail()) return metaAccount;
 
-    const txnData = MetaplexSerialize.serializeCreateArgs(data);
+      const txnData = MetaplexSerialize.serializeCreateArgs(data);
 
-    const keys = [
-      {
-        pubkey: metaAccount.value as PublicKey,
-        isSigner: false,
-        isWritable: true,
-      },
-      {
-        pubkey: tokenKey,
-        isSigner: false,
-        isWritable: false,
-      },
-      {
-        pubkey: mintAuthorityKey,
-        isSigner: true,
-        isWritable: false,
-      },
-      {
-        pubkey: payer,
-        isSigner: true,
-        isWritable: false,
-      },
-      {
-        pubkey: updateAuthority,
-        isSigner: false,
-        isWritable: false,
-      },
-      {
-        pubkey: SystemProgram.programId,
-        isSigner: false,
-        isWritable: false,
-      },
-      {
-        pubkey: SYSVAR_RENT_PUBKEY,
-        isSigner: false,
-        isWritable: false,
-      },
-    ];
-    inst.push(
-      new TransactionInstruction({
-        keys,
-        programId: Constants.METAPLEX_PROGRAM_ID,
-        data: txnData,
-      })
-    );
-    return inst;
-  }
+      const keys = [
+        {
+          pubkey: <PublicKey>metaAccount.value,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: tokenKey,
+          isSigner: false,
+          isWritable: false,
+        },
+        {
+          pubkey: mintAuthorityKey,
+          isSigner: true,
+          isWritable: false,
+        },
+        {
+          pubkey: payer,
+          isSigner: true,
+          isWritable: false,
+        },
+        {
+          pubkey: updateAuthority,
+          isSigner: false,
+          isWritable: false,
+        },
+        {
+          pubkey: SystemProgram.programId,
+          isSigner: false,
+          isWritable: false,
+        },
+        {
+          pubkey: SYSVAR_RENT_PUBKEY,
+          isSigner: false,
+          isWritable: false,
+        },
+      ];
+      inst.push(
+        new TransactionInstruction({
+          keys,
+          programId: Constants.METAPLEX_PROGRAM_ID,
+          data: txnData,
+        })
+      );
+      return Result.ok(inst);
+    }
 
   export const update = (
     data: MetaplexInstructure.Data,
@@ -123,64 +135,65 @@ export namespace MetaplexMetaData {
     tokenKey: PublicKey,
     updateAuthority: PublicKey,
     signers: Keypair[],
-  ) => async (instructions?: TransactionInstruction[]) => {
-    let inst: TransactionInstruction[] = [];
-    inst = instructions ? instructions : inst;
+  ) => async (instructions?: TransactionInstruction[]):
+      Promise<Result<TransactionInstruction[] | PublicKey, Error>> => {
+      let inst: TransactionInstruction[] = [];
+      inst = instructions ? instructions : inst;
 
-    const associatedToken = await Wallet.findAssocaiatedTokenAddress(
-      updateAuthority,
-      tokenKey
-    );
-
-    if (associatedToken.isFail()) return associatedToken;
-
-    inst.push(
-      Wallet.createAssociatedTokenAccountInstruction(
-        associatedToken.value as PublicKey,
-        updateAuthority,
+      const associatedToken = await Wallet.findAssocaiatedTokenAddress(
         updateAuthority,
         tokenKey
-      )
-    );
+      );
 
-    inst.push(
-      Token.createMintToInstruction(
-        Constants.SPL_TOKEN_PROGRAM_ID,
-        tokenKey,
-        associatedToken.value as PublicKey,
-        updateAuthority,
-        signers,
-        1,
-      ),
-    );
+      if (associatedToken.isFail()) return associatedToken;
 
-    const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
-    if (metaAccount.isFail()) return metaAccount;
+      inst.push(
+        Wallet.createAssociatedTokenAccountInstruction(
+          associatedToken.value as PublicKey,
+          updateAuthority,
+          updateAuthority,
+          tokenKey
+        )
+      );
 
-    const txnData = MetaplexSerialize.serializeUpdateArgs(
-      data,
-      newUpdateAuthority,
-      primarySaleHappened
-    );
-    const keys = [
-      {
-        pubkey: metaAccount.value as PublicKey,
-        isSigner: false,
-        isWritable: true,
-      },
-      {
-        pubkey: updateAuthority,
-        isSigner: true,
-        isWritable: false,
-      },
-    ];
-    inst.push(
-      new TransactionInstruction({
-        keys,
-        programId: Constants.METAPLEX_PROGRAM_ID,
-        data: txnData,
-      }),
-    );
-    return inst;
-  }
+      inst.push(
+        Token.createMintToInstruction(
+          Constants.SPL_TOKEN_PROGRAM_ID,
+          tokenKey,
+          associatedToken.value as PublicKey,
+          updateAuthority,
+          signers,
+          1,
+        ),
+      );
+
+      const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
+      if (metaAccount.isFail()) return metaAccount;
+
+      const txnData = MetaplexSerialize.serializeUpdateArgs(
+        data,
+        newUpdateAuthority,
+        primarySaleHappened
+      );
+      const keys = [
+        {
+          pubkey: metaAccount.value as PublicKey,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: updateAuthority,
+          isSigner: true,
+          isWritable: false,
+        },
+      ];
+      inst.push(
+        new TransactionInstruction({
+          keys,
+          programId: Constants.METAPLEX_PROGRAM_ID,
+          data: txnData,
+        }),
+      );
+      return Result.ok(inst);
+    }
 }
