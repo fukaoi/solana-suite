@@ -1,7 +1,8 @@
 import {NFTStorage, Blob} from 'nft.storage';
 import fs from 'fs';
-import {Constants} from '../../constants';
+import {Constants} from '../../';
 import {Storage} from './index';
+import {Result} from '@badrap/result';
 
 export namespace StorageNftStorage {
 
@@ -17,11 +18,23 @@ export namespace StorageNftStorage {
 
   export const upload = async (
     storageData: Storage.Format
-  ): Promise<string> => {
-    const client = connect();
-    storageData.image = await preUploadImage(client, storageData.image);
-    const blobJson = new Blob([JSON.stringify(storageData)]);
-    const metadata = await client.storeBlob(blobJson);
-    return createGatewayUrl(metadata);
+  ): Promise<Result<string, Error>> => {
+      const client = connect();
+      const imageUrl = await preUploadImage(client, storageData.image)
+        .then(Result.ok)
+        .catch(Result.err);
+    
+      if (imageUrl.isErr) return imageUrl;
+
+      storageData.image = imageUrl.unwrap();
+
+      const blobJson = new Blob([JSON.stringify(storageData)]);
+      const metadata = await client.storeBlob(blobJson)
+        .then(Result.ok)
+        .catch(Result.err);
+
+      if (metadata.isErr) return metadata;
+
+      return Result.ok(createGatewayUrl(metadata.unwrap()));
   }
 }

@@ -37,10 +37,10 @@ console.debug = (data: any, data2: any = '') => {
   if (Constants.isDebugging()) console.log(`\u001b[35m${data}`, `\u001b[36m${data2}`);
 }
 
-  export const tryCatch = (fn: () => {}) => {
+  export const tryCatch = async(fn: () => {}) => {
   try {
-    return Result.ok(fn());
+    return await Result.ok(fn());
   } catch (e: unknown) {
-    return Result.err(<Error>e);
+    return Result.err(e as Error);
   }
 }
