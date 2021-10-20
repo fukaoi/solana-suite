@@ -21,10 +21,10 @@ describe('NftSpl', () => {
 
   it('Transfer nft with memo data, source and destination inter send', async () => {
     const tokenKey = await SplNft.create(source.secret.toKeypair());
-    assert.isTrue(tokenKey.isOk()); 
+    assert.isTrue(tokenKey.isOk); 
     const memoInst = Memo.createInstruction('{"nft": "art", "url": "http://hoge.hoge"}');
     const srcRes = await SplNft.transfer(
-      (<string>tokenKey.value).toPubKey(),
+      (<string>tokenKey.unwrap()).toPubKey(),
       source.secret.toKeypair(),
       destination.pubkey.toPubKey(),
       memoInst
