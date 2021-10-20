@@ -10,23 +10,24 @@ import {
 } from '@solana/web3.js';
 
 import {Metaplex, MetaplexSerialize, MetaplexInstructure} from './index';
-import {Node, Result, Wallet, Constants} from '../../index';
+import {Node, Wallet, Constants} from '../../index';
 import {Token} from '@solana/spl-token';
+import {Result} from '@badrap/result';
 
 export namespace MetaplexMetaData {
   export const getByTokenKey = async (tokenKey: PublicKey):
-    Promise<Result<Metaplex.Format | unknown, Error>> => {
+    Promise<Result<Metaplex.Format, Error>> => {
     const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
 
-    if (metaAccount.isFail()) return metaAccount as Result<unknown, Error>;
+    if (metaAccount.isErr) return Result.err(metaAccount.error);
 
     const nfts = await Node.getConnection().getParsedAccountInfo(
       metaAccount.value as PublicKey
     )
       .then(Result.ok)
-      .catch(Result.fail);
+      .catch(Result.err);
 
-    if (nfts.isFail()) return nfts as Result<unknown, Error>;
+    if (nfts.isErr) return Result.err(nfts.error);
 
     const accountData = nfts.value as RpcResponseAndContext<AccountInfo<Buffer>>;
     const data = accountData.value?.data;
@@ -38,17 +39,16 @@ export namespace MetaplexMetaData {
   }
 
   export const getByOwner = async (owner: PublicKey):
-    // Promise<Result<Metaplex.Format[] | unknown, Error>> => {
-    Promise<any> => {
+    Promise<Result<Metaplex.Format[], Error>> => {
     // Get all token by owner
     const tokens = await Node.getConnection().getParsedTokenAccountsByOwner(
       owner,
       {programId: Constants.SPL_TOKEN_PROGRAM_ID}
     )
       .then(Result.ok)
-      .catch(Result.fail);
+      .catch(Result.err);
 
-    if (tokens.isFail()) return tokens as Result<unknown, Error>;
+    if (tokens.isErr) return Result.err(tokens.error);
     const arr = tokens.value as RpcResponseAndContext<{pubkey: PublicKey; account: AccountInfo<ParsedAccountData>}[]>;
 
     const matches = [];
@@ -58,7 +58,7 @@ export namespace MetaplexMetaData {
         token.account.data.parsed.info.mint.toPubKey()
       );
       if (!decoded) continue;
-      if (decoded.isFail()) return decoded;
+      if (decoded.isErr) return Result.err(decoded.error);
       matches.push(decoded.value)
     }
     return Result.ok(matches);
@@ -75,7 +75,7 @@ export namespace MetaplexMetaData {
       let inst: TransactionInstruction[] = [];
       inst = instructions ? instructions : inst;
       const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
-      if (metaAccount.isFail()) return metaAccount;
+      if (metaAccount.isErr) return metaAccount;
 
       const txnData = MetaplexSerialize.serializeCreateArgs(data);
 
@@ -143,7 +143,7 @@ export namespace MetaplexMetaData {
         tokenKey
       );
 
-      if (associatedToken.isFail()) return associatedToken;
+      if (associatedToken.isErr) return associatedToken;
 
       inst.push(
         Wallet.createAssociatedTokenAccountInstruction(
@@ -166,7 +166,7 @@ export namespace MetaplexMetaData {
       );
 
       const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
-      if (metaAccount.isFail()) return metaAccount;
+      if (metaAccount.isErr) return metaAccount;
 
       const txnData = MetaplexSerialize.serializeUpdateArgs(
         data,

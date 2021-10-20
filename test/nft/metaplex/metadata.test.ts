@@ -1,6 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {MetaplexMetaData, MetaplexInstructure, Wallet, Metaplex} from '../../../src';
+import {Wallet} from '../../../src';
+import {MetaplexMetaData, MetaplexInstructure, Metaplex} from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
 import {TransactionInstruction} from '@solana/web3.js';
 
@@ -31,9 +32,9 @@ describe('MetaplexMetaData', () => {
       sourceStr,
       sourceStr,
     )();
-    assert.isTrue(res.isOk());
-    assert.isArray(res.value);
-    assert.isObject((<TransactionInstruction[]>res.value)[0]);
+    assert.isTrue(res.isOk);
+    assert.isArray(res.unwrap());
+    assert.isObject((<TransactionInstruction[]>res.unwrap())[0]);
   });
 
   it('Create instructions for update metadata', async () => {
@@ -55,9 +56,9 @@ describe('MetaplexMetaData', () => {
       source.pubkey.toPubKey(),
       [source.secret.toKeypair()],
     )();
-    assert.isTrue(res.isOk());
-    assert.isArray(res.value);
-    assert.isObject((<TransactionInstruction[]>res.value)[0]);
+    assert.isTrue(res.isOk);
+    assert.isArray(res.unwrap());
+    assert.isObject((<TransactionInstruction[]>res.unwrap())[0]);
   });
 
   it('Get metadata by tokenKey', async () => {
@@ -73,8 +74,8 @@ describe('MetaplexMetaData', () => {
       'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'.toPubKey()
     );
 
-    assert.isTrue(res.isOk());
-    const format = <Metaplex.Format>res.value;
+    assert.isTrue(res.isOk);
+    const format = <Metaplex.Format>res.unwrap();
     assert.equal(format.name, orgData.name);
     assert.equal(format.symbol, orgData.symbol)
     assert.equal(format.uri, orgData.uri)
@@ -86,7 +87,7 @@ describe('MetaplexMetaData', () => {
     const res = await MetaplexMetaData.getByOwner(
       '78DybLoke46TR6RW1HWZBMYt7qouGggQJjLATsfL7RwA'.toPubKey()
     );
-    assert.isTrue(res.isOk());
+    assert.isTrue(res.isOk);
     console.log(res);
   });
 })

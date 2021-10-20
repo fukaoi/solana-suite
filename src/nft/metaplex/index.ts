@@ -1,3 +1,4 @@
+import {Result} from '@badrap/result';
 import {Token, MintLayout} from '@solana/spl-token';
 import {
   Keypair,
@@ -5,7 +6,7 @@ import {
   SystemProgram, TransactionInstruction,
 } from '@solana/web3.js';
 
-import {Constants, Node, Transaction, Result, fail, ok} from '../../';
+import {Constants, Node, Transaction} from '../../';
 import {MetaplexMetaData, MetaplexInstructure} from './';
 
 export * from './instructure';
@@ -122,7 +123,7 @@ export namespace Metaplex {
       owner.publicKey,
     )(txsign.instructions);
 
-    if (metadataInst.isFail()) return fail(<Error>metadataInst.failValue);
+    if (metadataInst.isErr) return Result.err(metadataInst.error);
 
     const updateTx = await MetaplexMetaData.update(
       data,
@@ -133,19 +134,19 @@ export namespace Metaplex {
       [owner],
     )(metadataInst.value as TransactionInstruction[]);
 
-    if (updateTx.isFail()) return fail(<Error>updateTx.failValue);
+    if (updateTx.isErr) return Result.err(updateTx.error);
 
     const signature = await Transaction.sendInstructions(
       txsign.signers,
       updateTx.value as TransactionInstruction[]
     );
 
-    if (signature.isFail()) return fail(<Error>signature.failValue);
+    if (signature.isErr) return Result.err(signature.error);
 
-    return ok(
+    return Result.ok(
       {
         tokenKey: txsign.tokenKey,
-        signature: <string>signature.value
+        signature: signature.value
       }
     );
   }

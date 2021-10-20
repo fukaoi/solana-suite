@@ -76,7 +76,7 @@ export namespace Transaction {
     )
       .then(Result.ok)
       .catch(Result.err);
-    return <Result<string, Error>>res;
+    return res as Result<string, Error>;
   }
 
   export const send = (
@@ -110,6 +110,6 @@ export namespace Transaction {
       )
         .then(Result.ok)
         .catch(Result.err);
-      return <Result<string, Error>>res;
+      return res as Result<string, Error>;
     }
 }

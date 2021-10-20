@@ -1,6 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Metaplex, MetaplexInstructure, Wallet} from '../../../src';
+import {Wallet} from '../../../src';
+import {Metaplex, MetaplexInstructure} from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
 
 let source: Wallet.KeyPair;
@@ -21,8 +22,8 @@ describe('Metaplex', () => {
     });
 
     const res = await Metaplex.mint(data, source.secret.toKeypair());
-    assert.isTrue(res.isOk());
-    console.log(`# tokenKey: ${(<Metaplex.MintResult>res.value).tokenKey}`);
-    console.log(`# tx signature: ${(<Metaplex.MintResult>res.value).signature}`);
+    assert.isTrue(res.isOk);
+    console.log(`# tokenKey: ${(<Metaplex.MintResult>res.unwrap()).tokenKey}`);
+    console.log(`# tx signature: ${(<Metaplex.MintResult>res.unwrap()).signature}`);
   });
 });

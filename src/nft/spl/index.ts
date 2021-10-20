@@ -1,3 +1,4 @@
+import {Result} from '@badrap/result';
 import {
   Token,
   TOKEN_PROGRAM_ID,
@@ -10,7 +11,7 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import {Transaction, SplToken, Node, Result} from '../../';
+import {Transaction, SplToken, Node} from '../../';
 
 export namespace SplNft {
 
@@ -34,7 +35,7 @@ export namespace SplNft {
     source: Keypair,
     dest: PublicKey,
     instruction?: TransactionInstruction
-  ): Promise<Result<TransactionSignature | unknown, Error | unknown>> => {
+  ): Promise<Result<TransactionSignature, Error>> => {
     const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, source);
     const sourceTokenAccount = (await token.getOrCreateAssociatedAccountInfo(source.publicKey)).address;
     const destTokenAccount = (await token.getOrCreateAssociatedAccountInfo(dest)).address;
