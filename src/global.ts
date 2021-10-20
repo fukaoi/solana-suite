@@ -1,3 +1,4 @@
+import {Result} from '@badrap/result';
 import {
   PublicKey,
   Keypair
@@ -36,3 +37,10 @@ console.debug = (data: any, data2: any = '') => {
   if (Constants.isDebugging()) console.log(`\u001b[35m${data}`, `\u001b[36m${data2}`);
 }
 
+  export const tryCatch = (fn: () => {}) => {
+  try {
+    return Result.ok(fn());
+  } catch (e: unknown) {
+    return Result.err(<Error>e);
+  }
+}
