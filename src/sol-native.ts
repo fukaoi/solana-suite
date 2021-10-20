@@ -4,7 +4,7 @@ import {
   PublicKey,
   TransactionInstruction,
 } from '@solana/web3.js';
-import {Result} from './result';
+import {Result} from '@badrap/result';
 
 import {Transaction} from './transaction'; export namespace SolNative {
   export const transfer = (

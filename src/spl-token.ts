@@ -1,3 +1,4 @@
+import {Result} from '@badrap/result';
 import {
   AccountInfo,
   Token,
@@ -13,7 +14,7 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 
-import {Transaction, Node, Result} from './';
+import {Transaction, Node} from './';
 
 export namespace SplToken {
   export interface TransferHistory {
@@ -64,7 +65,7 @@ export namespace SplToken {
   ): number => {
     return Node.getConnection().onAccountChange(pubkey, async () => {
       const res = await SplToken.getTransferHistory(pubkey, 1);
-      if (res.isFail()) return res;
+      if (res.isErr) return res;
       callback((res.value as TransferHistory[])[0]);
     });
   }
@@ -79,10 +80,10 @@ export namespace SplToken {
   ): Promise<Result<TransferHistory[], Error>> => {
     const transactions = await Transaction.getAll(pubkey, limit);
 
-    if (transactions.isFail()) return transactions as Result<[], Error>;
+    if (transactions.isErr) return transactions as Result<[], Error>;
 
     const hist: TransferHistory[] = [];
-    for (const tx of transactions.value as ParsedConfirmedTransaction[]) {
+    for (const tx of transactions.unwrap() as ParsedConfirmedTransaction[]) {
       for (const inst of tx.transaction.message.instructions) {
         const value = inst as ParsedInstruction;
         if (isTransfer(value)) {
@@ -100,10 +101,10 @@ export namespace SplToken {
   ): Promise<Result<TransferDestinationList[], Error>> => {
     const transactions = await Transaction.getAll(pubkey);
 
-    if (transactions.isFail()) return transactions as Result<[], Error>;
+    if (transactions.isErr) return Result.err(transactions.error);
 
     const hist: TransferDestinationList[] = [];
-    for (const tx of transactions.value as ParsedConfirmedTransaction[]) {
+    for (const tx of transactions.unwrap() as ParsedConfirmedTransaction[]) {
       const posts = tx.meta?.postTokenBalances as TokenBalance[];
       if (posts.length > 1) {
         posts.forEach((p) => {
@@ -137,9 +138,9 @@ export namespace SplToken {
       TOKEN_PROGRAM_ID
     )
       .then(Result.ok)
-      .catch(Result.fail);
+      .catch(Result.err);
 
-    if (tokenRes.isFail()) return tokenRes as Result<string, Error>;
+    if (tokenRes.isErr) return Result.err(tokenRes.error);
 
     const token = tokenRes.value as Token;
 
@@ -147,9 +148,9 @@ export namespace SplToken {
       source.publicKey
     )
       .then(Result.ok)
-      .catch(Result.fail);
+      .catch(Result.err);
 
-    if (tokenAssociated.isFail()) return  tokenAssociated as Result<string, Error>;
+    if (tokenAssociated.isErr) return  Result.err(tokenAssociated.error);
 
     const res = await token.mintTo(
       tokenAssociated.value as PublicKey,
@@ -158,9 +159,9 @@ export namespace SplToken {
       totalAmount,
     )
       .then(Result.ok)
-      .catch(Result.fail);
+      .catch(Result.err);
 
-    if (res.isFail()) return res as Result<string, Error>;
+    if (res.isErr) return Result.err(res.error);
 
     return Result.ok(token.publicKey.toBase58());
   }
@@ -176,15 +177,15 @@ export namespace SplToken {
     const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, source);
     const sourceToken = await token.getOrCreateAssociatedAccountInfo(source.publicKey)
       .then(Result.ok)
-      .catch(Result.fail);
+      .catch(Result.err);
 
-    if (sourceToken.isFail()) return sourceToken as Result<string, Error>;
+    if (sourceToken.isErr) return Result.err(sourceToken.error);
 
     const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
       .then(Result.ok)
-      .catch(Result.fail);
+      .catch(Result.err);
 
-    if (destToken.isFail()) return destToken as Result<string, Error>;
+    if (destToken.isErr) return Result.err(destToken.error);
 
     const param = Token.createTransferCheckedInstruction(
       TOKEN_PROGRAM_ID,

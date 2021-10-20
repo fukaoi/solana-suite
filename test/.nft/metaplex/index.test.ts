@@ -4,7 +4,6 @@ import {Metaplex, MetaplexInstructure, Wallet} from '../../../src';
 import {Setup} from '../../../test/utils/setup';
 
 let source: Wallet.KeyPair;
-let tokenKey = '';
 
 describe('Metaplex', () => {
   before(async () => {
@@ -22,9 +21,8 @@ describe('Metaplex', () => {
     });
 
     const res = await Metaplex.mint(data, source.secret.toKeypair());
-    tokenKey = res.tokenKey;
-    console.log(`# tokenKey: ${tokenKey}`);
-    console.log(`# tx signature: ${res.signature}`);
-    assert.isNotEmpty(res);
+    assert.isTrue(res.isOk());
+    console.log(`# tokenKey: ${(<Metaplex.MintResult>res.value).tokenKey}`);
+    console.log(`# tx signature: ${(<Metaplex.MintResult>res.value).signature}`);
   });
 });

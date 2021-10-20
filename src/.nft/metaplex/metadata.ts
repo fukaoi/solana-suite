@@ -18,17 +18,17 @@ export namespace MetaplexMetaData {
     Promise<Result<Metaplex.Format | unknown, Error>> => {
     const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
 
-    if (metaAccount.isFail()) return <Result<unknown, Error>>metaAccount;
+    if (metaAccount.isFail()) return metaAccount as Result<unknown, Error>;
 
     const nfts = await Node.getConnection().getParsedAccountInfo(
-      <PublicKey>metaAccount.value
+      metaAccount.value as PublicKey
     )
       .then(Result.ok)
       .catch(Result.fail);
 
-    if (nfts.isFail()) return <Result<unknown, Error>>nfts;
+    if (nfts.isFail()) return nfts as Result<unknown, Error>;
 
-    const accountData = <RpcResponseAndContext<AccountInfo<Buffer>>>nfts.value;
+    const accountData = nfts.value as RpcResponseAndContext<AccountInfo<Buffer>>;
     const data = accountData.value?.data;
 
     if (data) {
@@ -48,10 +48,8 @@ export namespace MetaplexMetaData {
       .then(Result.ok)
       .catch(Result.fail);
 
-    if (tokens.isFail()) return <Result<unknown, Error>>tokens;
-    const arr = <RpcResponseAndContext<Array<
-      {pubkey: PublicKey; account: AccountInfo<ParsedAccountData>}
-    >>>tokens.value;
+    if (tokens.isFail()) return tokens as Result<unknown, Error>;
+    const arr = tokens.value as RpcResponseAndContext<{pubkey: PublicKey; account: AccountInfo<ParsedAccountData>}[]>;
 
     const matches = [];
     // Filter only metaplex nft
@@ -83,7 +81,7 @@ export namespace MetaplexMetaData {
 
       const keys = [
         {
-          pubkey: <PublicKey>metaAccount.value,
+          pubkey: metaAccount.value as PublicKey,
           isSigner: false,
           isWritable: true,
         },

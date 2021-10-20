@@ -20,7 +20,7 @@ export namespace SplNft {
   export const create = (
     source: Keypair,
     authority: PublicKey = source.publicKey,
-  ): Promise<string> => {
+  ): Promise<Result<string, Error>> => {
     return SplToken.create(
       source,
       NFT_AMOUNT,

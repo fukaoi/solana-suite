@@ -25,10 +25,12 @@ describe('Transaction', () => {
   it('Get all transaction data', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const res = await Transaction.getAll(tokenKey.toPubKey());
-    if (res.isFail()) return res;
+    if (res.isErr) return res;
     console.log(res)
-    assert.isArray(res.value);
-    assert.isObject((<ParsedConfirmedTransaction[]>res.value)[0]);
+    if (res.isOk) {
+      assert.isArray(res.value);
+      assert.isObject((<ParsedConfirmedTransaction[]>res.value)[0]);
+    }
   });
 
   it('Confirmed signagure: `max`', async () => {
@@ -36,17 +38,17 @@ describe('Transaction', () => {
   });
 
   // it('Confirmed signagure: `confirmed`', async () => {
-    // await confirmedSigTest('confirmed');
+  // await confirmedSigTest('confirmed');
   // });
 
   // it('Confirmed signagure: `proceed`', async () => {
-    // await confirmedSigTest('processed');
+  // await confirmedSigTest('processed');
   // });
 
   it('Transaction decode memo', async () => {
     const tx = await Transaction.get(signature2);
-    if (tx.isFail()) assert.isNotEmpty(tx);
-    const res = Memo.parseInstruction(<ParsedConfirmedTransaction>tx.value);
+    if (tx.isErr) assert.isNotEmpty(tx);
+    const res = Memo.parseInstruction(<ParsedConfirmedTransaction>tx.unwrap());
     console.log(`# decode: `, res);
     assert.equal(res, '{"tokenId": "dummy", "serialNo": "15/100"}');
   });
@@ -55,7 +57,7 @@ describe('Transaction', () => {
 const confirmedSigTest = async (commitment: Commitment) => {
   const beforeBalance = (await Wallet.getBalance(
     destination.pubkey.toPubKey()
-  )).value;
+  )).unwrap();
   console.log('# before balance: ', beforeBalance);
   const amount = 0.001;
 
@@ -66,13 +68,13 @@ const confirmedSigTest = async (commitment: Commitment) => {
     amount
   )();
 
-  if (sig.isFail()) assert.isNotEmpty(sig);
+  if (sig.isErr) assert.isNotEmpty(sig);
 
-  await Transaction.confirmedSig(<string>sig.value, commitment);
+  await Transaction.confirmedSig(sig.unwrap(), commitment);
 
   const afterBalance = (await Wallet.getBalance(
     destination.pubkey.toPubKey()
-  )).value;
+  )).unwrap();
   console.log('# after balance: ', afterBalance);
   assert.equal(afterBalance, <number>beforeBalance + amount);
 }

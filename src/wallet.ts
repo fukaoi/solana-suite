@@ -10,7 +10,8 @@ import {
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 import bs from 'bs58';
 
-import {Transaction, Constants, Node, Result} from './';
+import {Transaction, Constants, Node} from './';
+import {Result} from '@badrap/result';
 
 export namespace Wallet {
 
@@ -30,14 +31,14 @@ export namespace Wallet {
   ): Promise<Result<number, Error>> => {
     const balance = await Node.getConnection().getBalance(pubkey)
       .then(Result.ok)
-      .catch(Result.fail);
+      .catch(Result.err);
 
-    if (balance.isFail()) return balance as Result<number, Error>;
+    if (balance.isErr) return balance;
 
     switch (unit) {
-      case 'sol': return Result.ok((balance.value as number) / LAMPORTS_PER_SOL);
-      case 'lamports': return balance as Result<number, Error>;
-      default: return Result.fail(new Error('no match unit'));
+      case 'sol': return Result.ok((balance.value) / LAMPORTS_PER_SOL);
+      case 'lamports': return balance;
+      default: return Result.err(new Error('no match unit'));
     }
   };
 
@@ -48,13 +49,13 @@ export namespace Wallet {
     console.debug('Now airdropping...please wait');
 
     if (airdropAmount > MAX_AIRDROP_SOL)
-      return Result.fail(new Error(`Over max airdrop amount: ${airdropAmount}`))
+      return Result.err(new Error(`Over max airdrop amount: ${airdropAmount}`))
 
     const sig = await Node.getConnection().requestAirdrop(pubkey, airdropAmount)
       .then(Result.ok)
-      .catch(Result.fail);
+      .catch(Result.err);
 
-    if (sig.isFail()) return Result.fail(new Error('Failed airdrop'));
+    if (sig.isErr) return Result.err(new Error('Failed airdrop'));
 
     await Transaction.confirmedSig(sig.value as string);
     return Result.ok('success');
@@ -81,8 +82,8 @@ export namespace Wallet {
       Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID
     )
       .then(v => Result.ok(v[0]))
-      .catch(Result.fail);
-    return res as Result<PublicKey, Error>;
+      .catch(Result.err);
+    return res;
   }
 
   export const findMetaplexAssocaiatedTokenAddress = async (
@@ -97,8 +98,8 @@ export namespace Wallet {
       Constants.METAPLEX_PROGRAM_ID,
     )
       .then(v => Result.ok(v[0]))
-      .catch((e: Error) => Result.fail(e))
-    return res as Result<PublicKey, Error>;
+      .catch((e: Error) => Result.err(e))
+    return res;
   }
 
   export const createAssociatedTokenAccountInstruction = (

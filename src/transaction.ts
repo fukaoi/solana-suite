@@ -1,3 +1,4 @@
+import {Result} from '@badrap/result';
 import {
   Keypair,
   PublicKey,
@@ -13,46 +14,45 @@ import {
   ConfirmedSignatureInfo,
 } from '@solana/web3.js';
 
-import {Node} from './node';
-import {Constants} from './constants';
-import {Result} from './result';
+import {Node, Constants} from './';
 
 export namespace Transaction {
   export const get = async (signature: string):
-    Promise<Result<ParsedConfirmedTransaction | unknown, Error | unknown>> =>
+    Promise<Result<ParsedConfirmedTransaction | unknown, Error>> =>
     await Node.getConnection().getParsedConfirmedTransaction(signature)
       .then(Result.ok)
-      .catch(Result.fail);
+      .catch(Result.err);
 
   export const getAll = async (
     pubkey: PublicKey,
     limit?: number
-  ): Promise<Result<ParsedConfirmedTransaction[] | unknown, Error | unknown>> => {
+  ): Promise<Result<ParsedConfirmedTransaction[] | unknown, Error>> => {
     const transactions = await Node.getConnection().getConfirmedSignaturesForAddress2(
       pubkey,
       {limit},
     )
       .then(Result.ok)
-      .catch(Result.fail);
+      .catch(Result.err);
 
-    if (transactions.isFail()) return transactions;
+    if (transactions.isErr) {return transactions;} else {
 
-    const parsedSig: ParsedConfirmedTransaction[] = [];
-    for (const tx of transactions.value as ConfirmedSignatureInfo[]) {
-      const res = await get(tx!.signature);
-      if (res.isFail()) return res;
-      res !== null && parsedSig.push(res.value as ParsedConfirmedTransaction);
+      const parsedSig: ParsedConfirmedTransaction[] = [];
+      for (const tx of transactions.value as ConfirmedSignatureInfo[]) {
+        const res = await get(tx!.signature);
+        if (res.isErr) return res;
+        res !== null && parsedSig.push(res.value as ParsedConfirmedTransaction);
+      }
+      return Result.ok(parsedSig);
     }
-    return Result.ok(parsedSig);
   }
 
   export const confirmedSig = async (
     signature: string,
     commitment: Commitment = 'finalized'
-  ): Promise<Result<RpcResponseAndContext<SignatureResult> | unknown, Error | unknown>> => {
+  ): Promise<Result<RpcResponseAndContext<SignatureResult> | unknown, Error>> => {
     return await Node.getConnection().confirmTransaction(signature, commitment)
       .then(Result.ok)
-      .catch(Result.fail);
+      .catch(Result.err);
   }
 
   export const sendInstructions = async (
@@ -75,8 +75,8 @@ export namespace Transaction {
       options
     )
       .then(Result.ok)
-      .catch(Result.fail);
-    return res as Result<string, Error>
+      .catch(Result.err);
+    return <Result<string, Error>>res;
   }
 
   export const send = (
@@ -109,7 +109,7 @@ export namespace Transaction {
         options
       )
         .then(Result.ok)
-        .catch(Result.fail);
-      return res as Result<string, Error>
+        .catch(Result.err);
+      return <Result<string, Error>>res;
     }
 }

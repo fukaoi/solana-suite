@@ -1,3 +1,4 @@
+import {Result} from '@badrap/result';
 import fs from 'fs';
 import {Constants, Wallet} from '../../src';
 import '../../src/util';
@@ -30,7 +31,7 @@ export namespace Setup {
       const destBalance = await Wallet.getBalance(obj.dest.pubkey.toPubKey());
       console.debug(`# source balance: ${sourceBalance}`);
       console.debug(`# destination balance: ${destBalance}`);
-      if (<number>sourceBalance.value < 0.1) {
+      if (sourceBalance.isOk && sourceBalance.value < 0.1) {
         console.warn(`[Warning]source  alance is under 0.1 amount`);
         console.warn(`Reset setupKeyPair`);
         Wallet.requestAirdrop(obj.source.pubkey);
