@@ -18,7 +18,8 @@ describe('StorageArweave', () => {
       source.secret.toKeypair(),
       asset
     );
-    console.log('# arweave manifest url: ', res);
-    assert.isNotEmpty(res);
+    assert.isTrue(res.isOk);
+    assert.isNotEmpty(res.unwrap());
+    console.log('# arweave manifest url: ', res.unwrap());
   });
 })

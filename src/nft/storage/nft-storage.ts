@@ -23,10 +23,10 @@ export namespace StorageNftStorage {
       const imageUrl = await preUploadImage(client, storageData.image)
         .then(Result.ok)
         .catch(Result.err);
-    
+
       if (imageUrl.isErr) return imageUrl;
 
-      storageData.image = imageUrl.unwrap();
+      storageData.image = imageUrl.value;
 
       const blobJson = new Blob([JSON.stringify(storageData)]);
       const metadata = await client.storeBlob(blobJson)
@@ -35,6 +35,6 @@ export namespace StorageNftStorage {
 
       if (metadata.isErr) return metadata;
 
-      return Result.ok(createGatewayUrl(metadata.unwrap()));
+      return Result.ok(createGatewayUrl(metadata.value));
   }
 }

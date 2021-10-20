@@ -1,12 +1,11 @@
 import fs from 'fs';
-import {Constants} from '../../constants';
-import {Util} from '../../util';
+import {Constants, Util, SolNative} from '../../'
+import {Storage} from './';
 import fetch from 'cross-fetch';
 import FormData from 'form-data';
-import {SolNative} from '../../sol-native';
 import path from 'path';
 import {Keypair, LAMPORTS_PER_SOL} from '@solana/web3.js';
-import {Storage} from './index';
+import {Result} from '@badrap/result';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
@@ -70,7 +69,7 @@ export namespace StorageArweave {
     return Util.isEmpty(match) ? false : true;
   }
 
-  const createMetadata = ( storageData: Storage.Format): {buffer: Buffer, pngName: string} => {
+  const createMetadata = (storageData: Storage.Format): {buffer: Buffer, pngName: string} => {
     let image = path.basename(storageData.image);
     if (isJpegFile(image)) {
       const split = image.split('.jpeg');
@@ -99,20 +98,32 @@ export namespace StorageArweave {
     uploadData.append('file[]', metadataBuffer, METADATA_FILE);
     return uploadData;
   }
-  const uploadServer = async (uploadData: BodyInit): Promise<ArweaveResult> => {
-    return await (await fetch(
+  const uploadServer = async (uploadData: BodyInit):
+    Promise<Result<ArweaveResult, Error>> => {
+    const res = await fetch(
       Constants.ARWEAVE_UPLOAD_SRV_URL,
       {
         method: 'POST',
         body: uploadData,
       }
-    )).json() as ArweaveResult;
+    )
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (res.isErr) return res.error;
+
+    const json = await res.value.json()
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (json.isErr) return json;
+    return Result.ok(json.value);
   }
 
   export const upload = async (
     payer: Keypair,
     storageData: Storage.Format
-  ) => {
+  ): Promise<Result<string, Error>> => {
     const imagePath = storageData.image;
     const meta = createMetadata(storageData);
 
@@ -129,18 +140,25 @@ export namespace StorageArweave {
       metadataBuffer
     );
 
-    await SolNative.transfer(
+    const sig = await SolNative.transfer(
       payer.publicKey,
       [payer],
       Constants.AR_SOL_HOLDER_ID,
       await calculateArFee(fileBuffers)
-    )();
+    )()
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (sig.isErr) return sig.error;
 
     // todo: No support FormData
-    const res = await uploadServer(formData as any);
-    if (res.error) throw new Error(res.error);
+    const res = await uploadServer(<any>formData)
+      .then(Result.ok)
+      .catch(Result.err);
 
-    const manifest = res.messages.pop();
-    return `${Constants.ARWEAVE_GATEWAY_URL}/${manifest!.transactionId}`
+    if (res.isErr) return res.error;
+    const manifest = (<ArweaveResult>res.value.unwrap()).messages[0];
+    if (!manifest) return Result.err(new Error('Invalid manifest data'));
+    return Result.ok(`${Constants.ARWEAVE_GATEWAY_URL}/${manifest!.transactionId}`);
   }
 }
