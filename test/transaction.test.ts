@@ -2,7 +2,7 @@ import {describe, it} from 'mocha';
 import {Transaction, Memo, Wallet, SolNative} from '../src';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Commitment} from '@solana/web3.js';
+import {Commitment, ParsedConfirmedTransaction} from '@solana/web3.js';
 
 const signature1 = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
 const signature2 = '2nPdn7AhJiTLaopwxCBzPxSB9ucBeBJbyKttXVBh7CoCQkmhkB12yoT6CuFStbT6X6boi9eFEpJjtRUQYVPcvM3J';
@@ -25,9 +25,12 @@ describe('Transaction', () => {
   it('Get all transaction data', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const res = await Transaction.getAll(tokenKey.toPubKey());
+    if (res.isErr) return res;
     console.log(res)
-    assert.isArray(res);
-    assert.isObject(res[0]);
+    if (res.isOk) {
+      assert.isArray(res.value);
+      assert.isObject((<ParsedConfirmedTransaction[]>res.value)[0]);
+    }
   });
 
   it('Confirmed signagure: `max`', async () => {
@@ -35,26 +38,26 @@ describe('Transaction', () => {
   });
 
   // it('Confirmed signagure: `confirmed`', async () => {
-    // await confirmedSigTest('confirmed');
+  // await confirmedSigTest('confirmed');
   // });
 
   // it('Confirmed signagure: `proceed`', async () => {
-    // await confirmedSigTest('processed');
+  // await confirmedSigTest('processed');
   // });
 
   it('Transaction decode memo', async () => {
     const tx = await Transaction.get(signature2);
-    console.log(tx);
-    const res = Memo.parseInstruction(tx!);
+    if (tx.isErr) assert.isNotEmpty(tx);
+    const res = Memo.parseInstruction(<ParsedConfirmedTransaction>tx.unwrap());
     console.log(`# decode: `, res);
     assert.equal(res, '{"tokenId": "dummy", "serialNo": "15/100"}');
   });
 })
 
 const confirmedSigTest = async (commitment: Commitment) => {
-  const beforeBalance = await Wallet.getBalance(
+  const beforeBalance = (await Wallet.getBalance(
     destination.pubkey.toPubKey()
-  );
+  )).unwrap();
   console.log('# before balance: ', beforeBalance);
   const amount = 0.001;
 
@@ -64,11 +67,14 @@ const confirmedSigTest = async (commitment: Commitment) => {
     destination.pubkey.toPubKey(),
     amount
   )();
-  await Transaction.confirmedSig(sig, commitment);
 
-  const afterBalance = await Wallet.getBalance(
+  if (sig.isErr) assert.isNotEmpty(sig);
+
+  await Transaction.confirmedSig(sig.unwrap(), commitment);
+
+  const afterBalance = (await Wallet.getBalance(
     destination.pubkey.toPubKey()
-  );
+  )).unwrap();
   console.log('# after balance: ', afterBalance);
-  assert.equal(afterBalance, beforeBalance + amount);
+  assert.equal(afterBalance, <number>beforeBalance + amount);
 }

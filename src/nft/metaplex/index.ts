@@ -1,15 +1,12 @@
 import {Token, MintLayout} from '@solana/spl-token';
-import {Transaction} from '../../transaction';
 import {
   Keypair,
   PublicKey,
   SystemProgram, TransactionInstruction,
 } from '@solana/web3.js';
 
-import {Constants} from '../../constants';
-import {Node} from '../../node';
-import {MetaplexMetaData} from './metadata';
-import {MetaplexInstructure} from './instructure';
+import {Constants, Node, Transaction, Result} from '../../';
+import {MetaplexMetaData, MetaplexInstructure} from './';
 
 export * from './instructure';
 export * from './metadata';
@@ -74,6 +71,11 @@ export namespace Metaplex {
     primary_sale_happened?: boolean,
   }
 
+  export interface MintResult {
+    tokenKey: string,
+    signature: string
+  }
+
   export const initFormat = (): Format => {
     return {
       name: '',
@@ -111,7 +113,7 @@ export namespace Metaplex {
   export const mint = async (
     data: MetaplexInstructure.Data,
     owner: Keypair,
-  ): Promise<{tokenKey: string, signature: string}> => {
+  ): Promise<Result<MintResult, Error>> => {
     const txsign = await create(owner.publicKey, [owner])();
 
     const metadataInst = await MetaplexMetaData.create(
@@ -120,6 +122,8 @@ export namespace Metaplex {
       owner.publicKey,
     )(txsign.instructions);
 
+    if (metadataInst.isErr) return Result.err(metadataInst.error);
+
     const updateTx = await MetaplexMetaData.update(
       data,
       undefined,
@@ -127,13 +131,22 @@ export namespace Metaplex {
       txsign.tokenKey.toPubKey(),
       owner.publicKey,
       [owner],
-    )(metadataInst);
+    )(metadataInst.value as TransactionInstruction[]);
+
+    if (updateTx.isErr) return Result.err(updateTx.error);
 
     const signature = await Transaction.sendInstructions(
       txsign.signers,
-      updateTx
+      updateTx.value as TransactionInstruction[]
     );
 
-    return {tokenKey: txsign.tokenKey, signature};
+    if (signature.isErr) return Result.err(signature.error);
+
+    return Result.ok(
+      {
+        tokenKey: txsign.tokenKey,
+        signature: signature.value
+      }
+    );
   }
 }

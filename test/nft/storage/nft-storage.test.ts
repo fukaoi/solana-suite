@@ -7,7 +7,9 @@ describe('StorageNftStorage', () => {
   it('Upload metadata json file and image', async () => {
     const asset = RandomAsset.storage();
     const res = await StorageNftStorage.upload(asset);
-    console.log('# upload url: ', res);
-    assert.isString(res);
+    assert.isTrue(res.isOk);
+    const url = res.unwrap();
+    console.log('# upload url: ', url);
+    assert.isString(url);
   });
 })

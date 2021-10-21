@@ -43,6 +43,11 @@ import {RandomAsset} from '../test/utils/randomAsset';
   // metadata and image upload
   const url = await StorageNftStorage.upload(asset);
 
+  if (url.isErr) {
+    console.error(url.error);
+    process.exit(1);
+  }
+
   //////////////////////////////////////////////
   // CREATE NFT, MINT NFT FROM THIS LINE 
   //////////////////////////////////////////////
@@ -50,27 +55,34 @@ import {RandomAsset} from '../test/utils/randomAsset';
   const data = new MetaplexInstructure.Data({
     name: asset.name,
     symbol: 'SAMPLE',
-    uri: url,
+    uri: url.unwrap(),
     sellerFeeBasisPoints: 100,
     creators: null
   });
 
   const res = await Metaplex.mint(data, publish.secret.toKeypair());
 
+  if (res.isErr) {
+    console.error(res.error);
+    process.exit(1);
+  }
+
+  const mintResult = res.unwrap();
+
   // this is NFT ID
-  console.log('# tokenKey: ', res.tokenKey);
+  console.log('# tokenKey: ', mintResult.tokenKey);
 
   // untile completed in blockchain
-  await Transaction.confirmedSig(res.signature);
+  await Transaction.confirmedSig(mintResult.signature);
 
   //////////////////////////////////////////////
   // Display metadata from blockchain(optional)
   //////////////////////////////////////////////
 
   const metadata = await MetaplexMetaData.getByTokenKey(
-    res.tokenKey.toPubKey()
+    mintResult.tokenKey.toPubKey()
   );
-  console.log('# metadata: ', metadata);
+  console.log('# metadata: ', metadata.unwrap());
 
   //////////////////////////////////////////////
   // TRANSFER RECEIPR USER FROM THIS LINE 
@@ -78,10 +90,16 @@ import {RandomAsset} from '../test/utils/randomAsset';
 
   // transfer nft to receipt wallet
   const transferSig = await SplNft.transfer(
-    res.tokenKey.toPubKey(),
+    mintResult.tokenKey.toPubKey(),
     publish.secret.toKeypair(),
     receipt.pubkey.toPubKey()
   );
-  console.log('# Transfer nft sig: ', transferSig.toSigUrl());
+
+  if (transferSig.isErr) {
+    console.error(transferSig.error);
+    process.exit(1);
+  }
+
+  console.log('# Transfer nft sig: ', transferSig.unwrap().toSigUrl());
 
 })();

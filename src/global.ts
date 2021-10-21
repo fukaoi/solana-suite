@@ -4,7 +4,7 @@ import {
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-import {Constants} from './constants';
+import {Constants, Result} from './';
 
 declare global {
   interface String {
@@ -36,3 +36,10 @@ console.debug = (data: any, data2: any = '') => {
   if (Constants.isDebugging()) console.log(`\u001b[35m${data}`, `\u001b[36m${data2}`);
 }
 
+export const tryCatch = (fn: () => {}) => {
+  try {
+    return Result.ok(fn());
+  } catch (e: unknown) {
+    return Result.err(e as Error);
+  }
+}

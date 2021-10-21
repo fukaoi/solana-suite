@@ -1,12 +1,10 @@
 import fs from 'fs';
-import {Constants} from '../../constants';
-import {Util} from '../../util';
+import {Constants, Util, SolNative, Result} from '../../'
+import {Storage} from './';
 import fetch from 'cross-fetch';
 import FormData from 'form-data';
-import {SolNative} from '../../sol-native';
 import path from 'path';
 import {Keypair, LAMPORTS_PER_SOL} from '@solana/web3.js';
-import {Storage} from './index';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
@@ -26,43 +24,85 @@ export namespace StorageArweave {
     ];
   }
 
-  const calculateArFee = async (files: Buffer[]) => {
-    const totalBytes = files.reduce((sum, f) => (sum += f.length), 0);
+  interface ConventionsRate {
+    solana: {
+      usd: number
+    },
+    arweave: {
+      usd: number
+    }
+  }
 
-    console.debug('Total bytes', totalBytes);
+  const totalBytes = (files: Buffer[]): number => {
+    const bytes = files.reduce((sum, f) => (sum += f.length), 0);
+    console.debug('# total bytes: ', bytes);
+    return bytes;
+  }
 
-    const txnFeeInWinstons = parseInt(
-      await (
-        await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/0`)).text()
-      , DEFAULT_RADIX);
+  const fetchArweaveFeePrice = async ()
+    : Promise<Result<number, Error>> => {
+    const res = await (await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/0`))
+      .text()
+      .then(Result.ok)
+      .catch(Result.err)
 
-    console.debug('txn fee', txnFeeInWinstons);
+    if (res.isErr) return Result.err(res.error);
 
-    const byteCostInWinstons = parseInt(
-      await (
-        await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/` + totalBytes.toString())
-      ).text()
-      , DEFAULT_RADIX);
+    const price = parseInt(res.value, DEFAULT_RADIX);
+    console.debug('# arweave txn fee: ', price);
+    return Result.ok(price);
+  }
 
-    console.debug('byte cost', byteCostInWinstons);
+  const fetchArweaveContentsCost = async (cost: number)
+    : Promise<Result<number, Error>> => {
+    const res = await (await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/${cost.toString()}`))
+      .text()
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (res.isErr) return Result.err(res.error);
+
+    const price = parseInt(res.value, DEFAULT_RADIX);
+    console.debug('# arweave contents cost: ', price);
+    return Result.ok(price);
+  }
+
+  const fetchConvesionRateSolAndAr = async ()
+    : Promise<Result<ConventionsRate, Error>> => {
+    const res = await (await fetch(`${Constants.COIN_MARKET_URL}?ids=solana,arweave&vs_currencies=usd`))
+      .text()
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (res.isErr) return Result.err(res.error);
+
+    console.debug('# conversion rate: ', JSON.stringify(res.value));
+    return Result.ok(JSON.parse(res.value));
+  }
+
+  const calculateArweave = async (files: Buffer[]) => {
+    const t = totalBytes(files);
+    const feePrice = await fetchArweaveFeePrice();
+    if (feePrice.isErr) return Result.err(feePrice.error);
+
+    const contentsPrice = await fetchArweaveContentsCost(t);
+    if (contentsPrice.isErr) return Result.err(contentsPrice.error);
 
     const totalArCost =
-      (txnFeeInWinstons * files.length + byteCostInWinstons) / WINSTON_MULTIPLIER;
+      (feePrice.value * files.length + contentsPrice.value) / WINSTON_MULTIPLIER;
 
-    console.debug('total ar', totalArCost);
+    console.debug('# total arweave cost: ', totalArCost);
 
-    const conversionRates = JSON.parse(await (
-      await fetch(`${Constants.COIN_MARKET_URL}?ids=solana,arweave&vs_currencies=usd`)
-    ).text());
+    // MEMO: To figure out how many lamports are required, multiply ar byte cost by this number
+    const rates = await fetchConvesionRateSolAndAr();
+    if (rates.isErr) return Result.err(rates.error);
 
-    console.debug(JSON.stringify(conversionRates));
+    const multiplier =
+      (rates.value.arweave.usd / rates.value.solana.usd) / LAMPORTS_PER_SOL;
+    console.debug('# arweave multiplier: ', multiplier);
 
-    // To figure out how many lamports are required, multiply ar byte cost by this number
-    const arMultiplier =
-      (conversionRates.arweave.usd / conversionRates.solana.usd) / LAMPORTS_PER_SOL;
-    console.debug('Ar mult', arMultiplier);
-    // // We also always make a manifest file, which, though tiny, needs payment.
-    return LAMPORT_MULTIPLIER * totalArCost * arMultiplier * 1.1;
+    // MEMO: We also always make a manifest file, which, though tiny, needs payment.
+    return Result.ok(LAMPORT_MULTIPLIER * totalArCost * multiplier * 1.1);
   }
 
   const isJpegFile = (imageName: string): boolean => {
@@ -70,7 +110,7 @@ export namespace StorageArweave {
     return Util.isEmpty(match) ? false : true;
   }
 
-  const createMetadata = ( storageData: Storage.Format): {buffer: Buffer, pngName: string} => {
+  const createMetadata = (storageData: Storage.Format): {buffer: Buffer, pngName: string} => {
     let image = path.basename(storageData.image);
     if (isJpegFile(image)) {
       const split = image.split('.jpeg');
@@ -99,20 +139,32 @@ export namespace StorageArweave {
     uploadData.append('file[]', metadataBuffer, METADATA_FILE);
     return uploadData;
   }
-  const uploadServer = async (uploadData: BodyInit): Promise<ArweaveResult> => {
-    return await (await fetch(
+  const uploadServer = async (uploadData: BodyInit):
+    Promise<Result<ArweaveResult, Error>> => {
+    const res = await fetch(
       Constants.ARWEAVE_UPLOAD_SRV_URL,
       {
         method: 'POST',
         body: uploadData,
       }
-    )).json() as ArweaveResult;
+    )
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (res.isErr) return res.error;
+
+    const json = await res.value.json()
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (json.isErr) return json;
+    return Result.ok(json.value);
   }
 
   export const upload = async (
     payer: Keypair,
     storageData: Storage.Format
-  ) => {
+  ): Promise<Result<string, Error>> => {
     const imagePath = storageData.image;
     const meta = createMetadata(storageData);
 
@@ -129,18 +181,28 @@ export namespace StorageArweave {
       metadataBuffer
     );
 
-    await SolNative.transfer(
+    const totalConst = await calculateArweave(fileBuffers);
+    if (totalConst.isErr) return Result.err(totalConst.error);
+
+    const sig = await SolNative.transfer(
       payer.publicKey,
       [payer],
       Constants.AR_SOL_HOLDER_ID,
-      await calculateArFee(fileBuffers)
-    )();
+      totalConst.value
+    )()
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (sig.isErr) return sig.error;
 
     // todo: No support FormData
-    const res = await uploadServer(formData as any);
-    if (res.error) throw new Error(res.error);
+    const res = await uploadServer(formData as any)
+      .then(Result.ok)
+      .catch(Result.err);
 
-    const manifest = res.messages.pop();
-    return `${Constants.ARWEAVE_GATEWAY_URL}/${manifest!.transactionId}`
+    if (res.isErr) return res.error;
+    const manifest = (res.value.unwrap() as ArweaveResult).messages[0];
+    if (!manifest) return Result.err(new Error('Invalid manifest data'));
+    return Result.ok(`${Constants.ARWEAVE_GATEWAY_URL}/${manifest!.transactionId}`);
   }
 }

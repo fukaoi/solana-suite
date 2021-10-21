@@ -3,20 +3,19 @@ import {
   ParsedConfirmedTransaction,
   ParsedInstruction,
   TransactionInstruction,
-  TransactionSignature
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-
-import {Transaction} from './transaction';
-import {Constants} from './constants';
+import {Transaction, Constants, Result} from './';
 
 export namespace Memo {
-  export const decode = (encoded: string): string => bs.decode(encoded).toString();
+  export const decode = (encoded: string): string =>
+    bs.decode(encoded).toString();
 
-  export const encode = (data: any): Buffer => Buffer.from(data);
+  export const encode = (data: string): Buffer => Buffer.from(data);
 
-  export const createInstruction = (data: any): TransactionInstruction => {
+  export const createInstruction = (data: string):
+    TransactionInstruction => {
     return new TransactionInstruction({
       programId: Constants.MEMO_PROGRAM_ID,
       data: encode(data),
@@ -24,7 +23,8 @@ export namespace Memo {
     });
   };
 
-  export const parseInstruction = (tx: ParsedConfirmedTransaction): string => {
+  export const parseInstruction = (tx: ParsedConfirmedTransaction):
+    string => {
     const res = tx.transaction.message.instructions.filter(d => {
       const value = d as ParsedInstruction;
       return value.program === 'spl-memo';
@@ -35,7 +35,7 @@ export namespace Memo {
   export const own = async (
     instruction: TransactionInstruction,
     source: Keypair
-  ): Promise<TransactionSignature> =>
+  ): Promise<Result<string, Error>> =>
     await Transaction.sendInstructions(
       [source],
       [instruction]

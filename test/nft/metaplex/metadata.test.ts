@@ -1,7 +1,9 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {MetaplexMetaData, MetaplexInstructure, Wallet} from '../../../src';
+import {Wallet} from '../../../src';
+import {MetaplexMetaData, MetaplexInstructure, Metaplex} from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
+import {TransactionInstruction} from '@solana/web3.js';
 
 let source: Wallet.KeyPair;
 
@@ -30,8 +32,9 @@ describe('MetaplexMetaData', () => {
       sourceStr,
       sourceStr,
     )();
-    assert.isArray(res);
-    assert.isObject(res[0]);
+    assert.isTrue(res.isOk);
+    assert.isArray(res.unwrap());
+    assert.isObject((<TransactionInstruction[]>res.unwrap())[0]);
   });
 
   it('Create instructions for update metadata', async () => {
@@ -53,8 +56,9 @@ describe('MetaplexMetaData', () => {
       source.pubkey.toPubKey(),
       [source.secret.toKeypair()],
     )();
-    assert.isArray(res);
-    assert.isObject(res[0]);
+    assert.isTrue(res.isOk);
+    assert.isArray(res.unwrap());
+    assert.isObject((<TransactionInstruction[]>res.unwrap())[0]);
   });
 
   it('Get metadata by tokenKey', async () => {
@@ -69,17 +73,21 @@ describe('MetaplexMetaData', () => {
     const res = await MetaplexMetaData.getByTokenKey(
       'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'.toPubKey()
     );
-    assert.equal(res.name, orgData.name)
-    assert.equal(res.symbol, orgData.symbol)
-    assert.equal(res.uri, orgData.uri)
-    assert.equal(res.update_authority, orgData.updateAuthority)
-    assert.equal(res.seller_fee_basis_points, orgData.sellerFeeBasisPoints)
+
+    assert.isTrue(res.isOk);
+    const format = <Metaplex.Format>res.unwrap();
+    assert.equal(format.name, orgData.name);
+    assert.equal(format.symbol, orgData.symbol)
+    assert.equal(format.uri, orgData.uri)
+    assert.equal(format.update_authority, orgData.updateAuthority)
+    assert.equal(format.seller_fee_basis_points, orgData.sellerFeeBasisPoints)
   });
 
   it('Get metadata of nft by owner', async () => {
     const res = await MetaplexMetaData.getByOwner(
       '78DybLoke46TR6RW1HWZBMYt7qouGggQJjLATsfL7RwA'.toPubKey()
     );
-    assert.isNotEmpty(res);
+    assert.isTrue(res.isOk);
+    console.log(res);
   });
 })

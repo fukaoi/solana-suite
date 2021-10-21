@@ -4,57 +4,78 @@ import {
   Transaction as SolanaTransaction,
   sendAndConfirmTransaction,
   TransactionInstruction,
-  TransactionSignature,
   SystemProgram,
   Signer,
   ParsedConfirmedTransaction,
   Commitment,
+  RpcResponseAndContext,
+  SignatureResult,
+  ConfirmedSignatureInfo,
 } from '@solana/web3.js';
 
-import {Node} from './node';
-import {Constants} from './constants';
+import {Node, Constants, Result} from './';
 
 export namespace Transaction {
-
-  export const get = async (signature: string): Promise<ParsedConfirmedTransaction | null> =>
-    await Node.getConnection().getParsedConfirmedTransaction(signature);
+  export const get = async (signature: string):
+    Promise<Result<ParsedConfirmedTransaction | unknown, Error>> =>
+    await Node.getConnection().getParsedConfirmedTransaction(signature)
+      .then(Result.ok)
+      .catch(Result.err);
 
   export const getAll = async (
     pubkey: PublicKey,
     limit?: number
-  ): Promise<ParsedConfirmedTransaction[]> => {
+  ): Promise<Result<ParsedConfirmedTransaction[] | unknown, Error>> => {
     const transactions = await Node.getConnection().getConfirmedSignaturesForAddress2(
       pubkey,
       {limit},
-    );
-    const parsedSig: ParsedConfirmedTransaction[] = [];
-    for (const tx of transactions) {
-      const res = await get(tx!.signature);
-      res !== null && parsedSig.push(res);
+    )
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (transactions.isErr) {return transactions;} else {
+
+      const parsedSig: ParsedConfirmedTransaction[] = [];
+      for (const tx of transactions.value as ConfirmedSignatureInfo[]) {
+        const res = await get(tx!.signature);
+        if (res.isErr) return res;
+        res !== null && parsedSig.push(res.value as ParsedConfirmedTransaction);
+      }
+      return Result.ok(parsedSig);
     }
-    return parsedSig;
   }
 
-  export const confirmedSig = async (signature: string, commitment: Commitment = 'max') => {
-    await Node.getConnection().confirmTransaction(signature, commitment);
+  export const confirmedSig = async (
+    signature: string,
+    commitment: Commitment = 'finalized'
+  ): Promise<Result<RpcResponseAndContext<SignatureResult> | unknown, Error>> => {
+    return await Node.getConnection().confirmTransaction(signature, commitment)
+      .then(Result.ok)
+      .catch(Result.err);
   }
 
   export const sendInstructions = async (
     signers: Keypair[],
     instructions: TransactionInstruction[],
-  ): Promise<TransactionSignature> => {
-
-    const conn = Node.getConnection();
+  ): Promise<Result<string, Error>> => {
     const tx = new SolanaTransaction().add(instructions[0]);
     if (instructions[1]) {
       instructions.slice(1, instructions.length)
         .forEach((st: TransactionInstruction) => tx.add(st));
     }
     const options = {
-      skipPreflight: true,
+      skipPreflight: false,
       commitment: Constants.COMMITMENT,
     };
-    return sendAndConfirmTransaction(conn, tx, signers, options);
+    const res = await sendAndConfirmTransaction(
+      Node.getConnection(),
+      tx,
+      signers,
+      options
+    )
+      .then(Result.ok)
+      .catch(Result.err);
+    return res as Result<string, Error>;
   }
 
   export const send = (
@@ -62,24 +83,32 @@ export namespace Transaction {
     signers: Signer[],
     destination: PublicKey,
     amount: number,
-  ) => async (instructions?: TransactionInstruction[]): Promise<TransactionSignature> => {
-    const params =
-      SystemProgram.transfer({
-        fromPubkey: source,
-        toPubkey: destination,
-        lamports: amount,
-      });
+  ) => async (instructions?: TransactionInstruction[])
+      : Promise<Result<string, Error>> => {
+      const params =
+        SystemProgram.transfer({
+          fromPubkey: source,
+          toPubkey: destination,
+          lamports: amount,
+        });
 
-    const conn = Node.getConnection();
-    const tx = new SolanaTransaction().add(params);
-    if (instructions) {
-      instructions.forEach((st: TransactionInstruction) => tx.add(st));
+      const tx = new SolanaTransaction().add(params);
+      if (instructions) {
+        instructions.forEach((st: TransactionInstruction) => tx.add(st));
+      }
+
+      const options = {
+        skipPreflight: false,
+        commitment: Constants.COMMITMENT,
+      };
+      const res = await sendAndConfirmTransaction(
+        Node.getConnection(),
+        tx,
+        signers,
+        options
+      )
+        .then(Result.ok)
+        .catch(Result.err);
+      return res as Result<string, Error>;
     }
-
-    const options = {
-      skipPreflight: true,
-      commitment: Constants.COMMITMENT,
-    };
-    return sendAndConfirmTransaction(conn, tx, signers, options);
-  }
 }
