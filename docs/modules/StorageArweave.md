@@ -12,7 +12,7 @@
 
 ### upload
 
-▸ `Const` **upload**(`payer`, `storageData`): `Promise`<`string`\>
+▸ `Const` **upload**(`payer`, `storageData`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
@@ -23,8 +23,8 @@
 
 #### Returns
 
-`Promise`<`string`\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/nft/storage/arweave.ts:112](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/nft/storage/arweave.ts#L112)
+[src/nft/storage/arweave.ts:164](https://github.com/fukaoi/solana-suite/blob/9ac8f4b/src/nft/storage/arweave.ts#L164)

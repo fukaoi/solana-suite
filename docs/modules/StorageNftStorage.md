@@ -12,7 +12,7 @@
 
 ### upload
 
-▸ `Const` **upload**(`storageData`): `Promise`<`string`\>
+▸ `Const` **upload**(`storageData`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
@@ -22,8 +22,8 @@
 
 #### Returns
 
-`Promise`<`string`\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/nft/storage/nft-storage.ts:18](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/nft/storage/nft-storage.ts#L18)
+[src/nft/storage/nft-storage.ts:18](https://github.com/fukaoi/solana-suite/blob/9ac8f4b/src/nft/storage/nft-storage.ts#L18)

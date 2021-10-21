@@ -22,7 +22,7 @@
 
 | Name | Type |
 | :------ | :------ |
-| `data` | `any` |
+| `data` | `string` |
 
 #### Returns
 
@@ -30,7 +30,7 @@
 
 #### Defined in
 
-[src/memo.ts:19](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/memo.ts#L19)
+[src/memo.ts:17](https://github.com/fukaoi/solana-suite/blob/9ac8f4b/src/memo.ts#L17)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[src/memo.ts:15](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/memo.ts#L15)
+[src/memo.ts:12](https://github.com/fukaoi/solana-suite/blob/9ac8f4b/src/memo.ts#L12)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `data` | `any` |
+| `data` | `string` |
 
 #### Returns
 
@@ -70,13 +70,13 @@ ___
 
 #### Defined in
 
-[src/memo.ts:17](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/memo.ts#L17)
+[src/memo.ts:15](https://github.com/fukaoi/solana-suite/blob/9ac8f4b/src/memo.ts#L15)
 
 ___
 
 ### own
 
-▸ `Const` **own**(`instruction`, `source`): `Promise`<`string`\>
+▸ `Const` **own**(`instruction`, `source`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
@@ -87,11 +87,11 @@ ___
 
 #### Returns
 
-`Promise`<`string`\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/memo.ts:35](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/memo.ts#L35)
+[src/memo.ts:35](https://github.com/fukaoi/solana-suite/blob/9ac8f4b/src/memo.ts#L35)
 
 ___
 
@@ -111,4 +111,4 @@ ___
 
 #### Defined in
 
-[src/memo.ts:27](https://github.com/fukaoi/solana-suite/blob/127fc4a/src/memo.ts#L27)
+[src/memo.ts:26](https://github.com/fukaoi/solana-suite/blob/9ac8f4b/src/memo.ts#L26)
