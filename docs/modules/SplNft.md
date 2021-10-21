@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[src/nft/spl/index.ts:20](https://github.com/fukaoi/solana-suite/blob/164259d/src/nft/spl/index.ts#L20)
+[src/nft/spl/index.ts:20](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/nft/spl/index.ts#L20)
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-[src/nft/spl/index.ts:32](https://github.com/fukaoi/solana-suite/blob/164259d/src/nft/spl/index.ts#L32)
+[src/nft/spl/index.ts:32](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/nft/spl/index.ts#L32)
