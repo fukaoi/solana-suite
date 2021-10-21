@@ -34,8 +34,15 @@ import {
   // Basically SPL and Metaplex NFT is same logic
   const tokenKey = await SplNft.create(publish.secret.toKeypair());
 
+  if (tokenKey.isErr) {
+    console.error(tokenKey.error);
+    process.exit(1);
+  }
+
+  const token = tokenKey.unwrap();
+
   // this is NFT ID
-  console.log('# tokenKey: ', tokenKey);
+  console.log('# tokenKey: ', token);
 
 
   //////////////////////////////////////////////
@@ -44,14 +51,22 @@ import {
 
   // transfer nft to receipt wallet
   const transferSig = await SplNft.transfer(
-    tokenKey.toPubKey(),
+    token.toPubKey(),
     publish.secret.toKeypair(),
     receipt.pubkey.toPubKey()
   );
-  console.log('# Transfer nft sig: ', transferSig.toSigUrl());
+
+  if (transferSig.isErr) {
+    console.error(transferSig.error);
+    process.exit(1);
+  }
+
+  const sig = transferSig.unwrap();
+
+  console.log('# Transfer nft sig: ', sig.toSigUrl());
 
   // untile completed in blockchain
-  await Transaction.confirmedSig(transferSig);
+  await Transaction.confirmedSig(sig);
 
 
   //////////////////////////////////////////////
@@ -59,15 +74,15 @@ import {
   //////////////////////////////////////////////
 
   // Get history object by tokenKey
-  const history = await SplToken.getTransferHistory(tokenKey.toPubKey());
-  console.log('# Transfer history by token: ', history);
+  const history = await SplToken.getTransferHistory(token.toPubKey());
+  console.log('# Transfer history by token: ', history.unwrap());
 
   // Get history object by publish
   const historyPublish = await SplToken.getTransferHistory(publish.pubkey.toPubKey());
-  console.log('# Transfer history by publish: ', historyPublish);
+  console.log('# Transfer history by publish: ', historyPublish.unwrap());
 
   // Get destination history list by tokenKey
-  const destList = await SplToken.getTransferDestinationList(tokenKey.toPubKey());
-  console.log('# Transfer destination list: ', destList);
+  const destList = await SplToken.getTransferDestinationList(token.toPubKey());
+  console.log('# Transfer destination list: ', destList.unwrap());
 
 })();
