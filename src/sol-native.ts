@@ -5,7 +5,7 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 
-import {Transaction, Result} from './'; 
+import {Transaction, Result} from './';
 
 export namespace SolNative {
   export const transfer = (

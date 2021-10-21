@@ -1,6 +1,6 @@
 // fork: @badrap/result": "^0.2.8"
 
-abstract class _Result<T, E extends Error> {
+abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
     ok: (value: T) => Result<X, U>,
     err: (error: E) => Result<X, U>
@@ -9,7 +9,8 @@ abstract class _Result<T, E extends Error> {
   unwrap(): T;
   unwrap<U>(ok: (value: T) => U): U;
   unwrap<U, V>(ok: (value: T) => U, err: (error: E) => V): U | V;
-  unwrap<U>(ok: (value: T) => U, err: (error: E) => U): U;
+  // unified-signatures. into line 10
+  // unwrap<U>(ok: (value: T) => U, err: (error: E) => U): U;
   unwrap(ok?: (value: T) => unknown, err?: (error: E) => unknown): unknown {
     const r = this._chain(
       value => Result.ok(ok ? ok(value) : value),
@@ -36,7 +37,8 @@ abstract class _Result<T, E extends Error> {
   chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
   chain<X>(
     ok: (value: T) => Result<X, E>,
-    err: (error: E) => Result<X, E>
+    // unified-signatures. into line 36
+    // err: (error: E) => Result<X, E>
   ): Result<X, E>;
   chain<X, U extends Error>(
     ok: (value: T) => Result<X, U>,
@@ -50,7 +52,7 @@ abstract class _Result<T, E extends Error> {
   }
 }
 
-class _Ok<T, E extends Error> extends _Result<T, E> {
+class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
   readonly isOk = true;
   readonly isErr = false;
   constructor(readonly value: T) {
@@ -65,7 +67,7 @@ class _Ok<T, E extends Error> extends _Result<T, E> {
   }
 }
 
-class _Err<T, E extends Error> extends _Result<T, E> {
+class InternalErr<T, E extends Error> extends AbstractResult<T, E> {
   readonly isOk = false;
   readonly isErr = true;
   constructor(readonly error: E) {
@@ -81,15 +83,15 @@ class _Err<T, E extends Error> extends _Result<T, E> {
 }
 
 export namespace Result {
-  export interface Ok<T, E extends Error> extends _Ok<T, E> {}
-  export interface Err<T, E extends Error> extends _Err<T, E> {}
+  export interface Ok<T, E extends Error> extends InternalOk<T, E> {}
+  export interface Err<T, E extends Error> extends InternalErr<T, E> {}
 
   export function ok<T, E extends Error>(value: T): Result<T, E> {
-    return new _Ok(value);
+    return new InternalOk(value);
   }
   export function err<E extends Error, T = never>(error?: E): Result<T, E>
   export function err<E extends Error, T = never>(error: E): Result<T, E> {
-    return new _Err(error || new Error());
+    return new InternalErr(error || new Error());
   }
 
   type U = Result<unknown>;
@@ -478,35 +480,34 @@ export namespace Result {
     obj: [R0]
   ): Result<[OkType<R0>], ErrType<R0>>;
   export function all(obj: []): Result<[]>;
-  export function all<T extends Array<U> | Record<string, U>>(
+  export function all<T extends U[] | Record<string, U>>(
     obj: T
   ): Result<
-    { [K in keyof T]: T[K] extends Result<infer I> ? I : never },
+    {[K in keyof T]: T[K] extends Result<infer I> ? I : never},
     {
       [K in keyof T]: T[K] extends Result<unknown, infer E> ? E : never;
     }[keyof T]
   >;
   export function all(obj: unknown): unknown {
     if (Array.isArray(obj)) {
-      const res = [];
-      for (let i = 0; i < obj.length; i++) {
-        const item = obj[i];
+      const resArr = [];
+      for (const item of obj) {
         if (item.isErr) {
           return item;
         }
-        res.push(item.value);
+        resArr.push(item.value);
       }
-      return Result.ok(res);
+      return Result.ok(resArr);
     }
 
     const res: Record<string, unknown> = {};
     const keys = Object.keys(obj as Record<string, U>);
-    for (let i = 0; i < keys.length; i++) {
-      const item = (obj as Record<string, U>)[keys[i]];
+    for (const key of keys) {
+      const item = (obj as Record<string, U>)[key];
       if (item.isErr) {
         return item;
       }
-      res[keys[i]] = item.value;
+      res[key] = item.value;
     }
     return Result.ok(res);
   }
