@@ -13,28 +13,28 @@
 
 ### create
 
-▸ `Const` **create**(`source`, `authority?`): `Promise`<`string`\>
+▸ `Const` **create**(`source`, `authority?`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `source` | `Keypair` |
-| `authority` | `PublicKey` |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `source` | `Keypair` | `undefined` |
+| `authority` | `PublicKey` | `source.publicKey` |
 
 #### Returns
 
-`Promise`<`string`\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/nft/spl/index.ts:22](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/spl/index.ts#L22)
+[src/nft/spl/index.ts:20](https://github.com/fukaoi/solana-suite/blob/1200997/src/nft/spl/index.ts#L20)
 
 ___
 
 ### transfer
 
-▸ `Const` **transfer**(`tokenKey`, `source`, `dest`, `instruction?`): `Promise`<`string`\>
+▸ `Const` **transfer**(`tokenKey`, `source`, `dest`, `instruction?`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
@@ -47,8 +47,8 @@ ___
 
 #### Returns
 
-`Promise`<`string`\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/nft/spl/index.ts:34](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/spl/index.ts#L34)
+[src/nft/spl/index.ts:32](https://github.com/fukaoi/solana-suite/blob/1200997/src/nft/spl/index.ts#L32)

@@ -16,28 +16,28 @@
 
 ### confirmedSig
 
-▸ `Const` **confirmedSig**(`signature`, `commitment?`): `Promise`<`void`\>
+▸ `Const` **confirmedSig**(`signature`, `commitment?`): `Promise`<[`Result`](../modules.md#result)<`unknown`, `Error`\>\>
 
 #### Parameters
 
 | Name | Type | Default value |
 | :------ | :------ | :------ |
 | `signature` | `string` | `undefined` |
-| `commitment` | `Commitment` | `'max'` |
+| `commitment` | `Commitment` | `'finalized'` |
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`<[`Result`](../modules.md#result)<`unknown`, `Error`\>\>
 
 #### Defined in
 
-[src/transaction.ts:38](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/transaction.ts#L38)
+[src/transaction.ts:48](https://github.com/fukaoi/solana-suite/blob/1200997/src/transaction.ts#L48)
 
 ___
 
 ### get
 
-▸ `Const` **get**(`signature`): `Promise`<``null`` \| `ParsedConfirmedTransaction`\>
+▸ `Const` **get**(`signature`): `Promise`<[`Result`](../modules.md#result)<`unknown`, `Error`\>\>
 
 #### Parameters
 
@@ -47,17 +47,17 @@ ___
 
 #### Returns
 
-`Promise`<``null`` \| `ParsedConfirmedTransaction`\>
+`Promise`<[`Result`](../modules.md#result)<`unknown`, `Error`\>\>
 
 #### Defined in
 
-[src/transaction.ts:19](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/transaction.ts#L19)
+[src/transaction.ts:19](https://github.com/fukaoi/solana-suite/blob/1200997/src/transaction.ts#L19)
 
 ___
 
 ### getAll
 
-▸ `Const` **getAll**(`pubkey`, `limit?`): `Promise`<`ParsedConfirmedTransaction`[]\>
+▸ `Const` **getAll**(`pubkey`, `limit?`): `Promise`<[`Result`](../modules.md#result)<`unknown`, `Error`\>\>
 
 #### Parameters
 
@@ -68,17 +68,17 @@ ___
 
 #### Returns
 
-`Promise`<`ParsedConfirmedTransaction`[]\>
+`Promise`<[`Result`](../modules.md#result)<`unknown`, `Error`\>\>
 
 #### Defined in
 
-[src/transaction.ts:22](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/transaction.ts#L22)
+[src/transaction.ts:25](https://github.com/fukaoi/solana-suite/blob/1200997/src/transaction.ts#L25)
 
 ___
 
 ### send
 
-▸ `Const` **send**(`source`, `signers`, `destination`, `amount`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<`string`\>
+▸ `Const` **send**(`source`, `signers`, `destination`, `amount`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
@@ -93,7 +93,7 @@ ___
 
 `fn`
 
-▸ (`instructions?`): `Promise`<`string`\>
+▸ (`instructions?`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 ##### Parameters
 
@@ -103,17 +103,17 @@ ___
 
 ##### Returns
 
-`Promise`<`string`\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/transaction.ts:60](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/transaction.ts#L60)
+[src/transaction.ts:81](https://github.com/fukaoi/solana-suite/blob/1200997/src/transaction.ts#L81)
 
 ___
 
 ### sendInstructions
 
-▸ `Const` **sendInstructions**(`signers`, `instructions`): `Promise`<`string`\>
+▸ `Const` **sendInstructions**(`signers`, `instructions`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
@@ -124,8 +124,8 @@ ___
 
 #### Returns
 
-`Promise`<`string`\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/transaction.ts:42](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/transaction.ts#L42)
+[src/transaction.ts:57](https://github.com/fukaoi/solana-suite/blob/1200997/src/transaction.ts#L57)

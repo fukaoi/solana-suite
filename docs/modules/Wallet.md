@@ -11,6 +11,7 @@
 ### Variables
 
 - [DEFAULT\_AIRDROP\_AMOUNT](Wallet.md#default_airdrop_amount)
+- [MAX\_AIRDROP\_SOL](Wallet.md#max_airdrop_sol)
 
 ### Functions
 
@@ -29,7 +30,17 @@
 
 #### Defined in
 
-[src/wallet.ts:26](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L26)
+[src/wallet.ts:24](https://github.com/fukaoi/solana-suite/blob/1200997/src/wallet.ts#L24)
+
+___
+
+### MAX\_AIRDROP\_SOL
+
+• **MAX\_AIRDROP\_SOL**: `number`
+
+#### Defined in
+
+[src/wallet.ts:25](https://github.com/fukaoi/solana-suite/blob/1200997/src/wallet.ts#L25)
 
 ## Functions
 
@@ -43,7 +54,7 @@
 
 #### Defined in
 
-[src/wallet.ts:43](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L43)
+[src/wallet.ts:63](https://github.com/fukaoi/solana-suite/blob/1200997/src/wallet.ts#L63)
 
 ___
 
@@ -66,13 +77,13 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:78](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L78)
+[src/wallet.ts:104](https://github.com/fukaoi/solana-suite/blob/1200997/src/wallet.ts#L104)
 
 ___
 
 ### findAssocaiatedTokenAddress
 
-▸ `Const` **findAssocaiatedTokenAddress**(`source`, `tokenKey`): `Promise`<`PublicKey`\>
+▸ `Const` **findAssocaiatedTokenAddress**(`source`, `tokenKey`): `Promise`<[`Result`](../modules.md#result)<`PublicKey`, `Error`\>\>
 
 #### Parameters
 
@@ -83,17 +94,17 @@ ___
 
 #### Returns
 
-`Promise`<`PublicKey`\>
+`Promise`<[`Result`](../modules.md#result)<`PublicKey`, `Error`\>\>
 
 #### Defined in
 
-[src/wallet.ts:51](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L51)
+[src/wallet.ts:71](https://github.com/fukaoi/solana-suite/blob/1200997/src/wallet.ts#L71)
 
 ___
 
 ### findMetaplexAssocaiatedTokenAddress
 
-▸ `Const` **findMetaplexAssocaiatedTokenAddress**(`tokenKey`): `Promise`<`PublicKey`\>
+▸ `Const` **findMetaplexAssocaiatedTokenAddress**(`tokenKey`): `Promise`<[`Result`](../modules.md#result)<`PublicKey`, `Error`\>\>
 
 #### Parameters
 
@@ -103,17 +114,17 @@ ___
 
 #### Returns
 
-`Promise`<`PublicKey`\>
+`Promise`<[`Result`](../modules.md#result)<`PublicKey`, `Error`\>\>
 
 #### Defined in
 
-[src/wallet.ts:65](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L65)
+[src/wallet.ts:88](https://github.com/fukaoi/solana-suite/blob/1200997/src/wallet.ts#L88)
 
 ___
 
 ### getBalance
 
-▸ `Const` **getBalance**(`pubkey`, `unit?`): `Promise`<`number`\>
+▸ `Const` **getBalance**(`pubkey`, `unit?`): `Promise`<[`Result`](../modules.md#result)<`number`, `Error`\>\>
 
 #### Parameters
 
@@ -124,29 +135,29 @@ ___
 
 #### Returns
 
-`Promise`<`number`\>
+`Promise`<[`Result`](../modules.md#result)<`number`, `Error`\>\>
 
 #### Defined in
 
-[src/wallet.ts:28](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L28)
+[src/wallet.ts:27](https://github.com/fukaoi/solana-suite/blob/1200997/src/wallet.ts#L27)
 
 ___
 
 ### requestAirdrop
 
-▸ `Const` **requestAirdrop**(`pubkey`, `airdropAmount?`): `Promise`<`void`\>
+▸ `Const` **requestAirdrop**(`pubkey`, `airdropAmount?`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `pubkey` | `PublicKey` |
-| `airdropAmount` | `number` |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `pubkey` | `PublicKey` | `undefined` |
+| `airdropAmount` | `number` | `DEFAULT_AIRDROP_AMOUNT` |
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/wallet.ts:37](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/wallet.ts#L37)
+[src/wallet.ts:44](https://github.com/fukaoi/solana-suite/blob/1200997/src/wallet.ts#L44)

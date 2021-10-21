@@ -15,23 +15,23 @@
 
 ### create
 
-▸ `Const` **create**(`data`, `tokenKey`, `payer`, `mintAuthorityKey?`, `updateAuthority?`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<`TransactionInstruction`[]\>
+▸ `Const` **create**(`data`, `tokenKey`, `payer`, `mintAuthorityKey?`, `updateAuthority?`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `data` | [`Data`](../classes/MetaplexInstructure.Data.md) |
-| `tokenKey` | `PublicKey` |
-| `payer` | `PublicKey` |
-| `mintAuthorityKey` | `PublicKey` |
-| `updateAuthority` | `PublicKey` |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `data` | [`Data`](../classes/MetaplexInstructure.Data.md) | `undefined` |
+| `tokenKey` | `PublicKey` | `undefined` |
+| `payer` | `PublicKey` | `undefined` |
+| `mintAuthorityKey` | `PublicKey` | `payer` |
+| `updateAuthority` | `PublicKey` | `payer` |
 
 #### Returns
 
 `fn`
 
-▸ (`instructions?`): `Promise`<`TransactionInstruction`[]\>
+▸ (`instructions?`): `Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
 
 ##### Parameters
 
@@ -41,17 +41,17 @@
 
 ##### Returns
 
-`Promise`<`TransactionInstruction`[]\>
+`Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:46](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/metaplex/metadata.ts#L46)
+[src/nft/metaplex/metadata.ts:66](https://github.com/fukaoi/solana-suite/blob/1200997/src/nft/metaplex/metadata.ts#L66)
 
 ___
 
 ### getByOwner
 
-▸ `Const` **getByOwner**(`owner`): `Promise`<[`Format`](../interfaces/Metaplex.Format.md)[]\>
+▸ `Const` **getByOwner**(`owner`): `Promise`<[`Result`](../modules.md#result)<[`Format`](../interfaces/Metaplex.Format.md)[], `Error`\>\>
 
 #### Parameters
 
@@ -61,17 +61,17 @@ ___
 
 #### Returns
 
-`Promise`<[`Format`](../interfaces/Metaplex.Format.md)[]\>
+`Promise`<[`Result`](../modules.md#result)<[`Format`](../interfaces/Metaplex.Format.md)[], `Error`\>\>
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:29](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/metaplex/metadata.ts#L29)
+[src/nft/metaplex/metadata.ts:40](https://github.com/fukaoi/solana-suite/blob/1200997/src/nft/metaplex/metadata.ts#L40)
 
 ___
 
 ### getByTokenKey
 
-▸ `Const` **getByTokenKey**(`tokenKey`): `Promise`<[`Format`](../interfaces/Metaplex.Format.md)\>
+▸ `Const` **getByTokenKey**(`tokenKey`): `Promise`<[`Result`](../modules.md#result)<[`Format`](../interfaces/Metaplex.Format.md), `Error`\>\>
 
 #### Parameters
 
@@ -81,17 +81,17 @@ ___
 
 #### Returns
 
-`Promise`<[`Format`](../interfaces/Metaplex.Format.md)\>
+`Promise`<[`Result`](../modules.md#result)<[`Format`](../interfaces/Metaplex.Format.md), `Error`\>\>
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:17](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/metaplex/metadata.ts#L17)
+[src/nft/metaplex/metadata.ts:17](https://github.com/fukaoi/solana-suite/blob/1200997/src/nft/metaplex/metadata.ts#L17)
 
 ___
 
 ### update
 
-▸ `Const` **update**(`data`, `newUpdateAuthority`, `primarySaleHappened`, `tokenKey`, `updateAuthority`, `signers`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<`TransactionInstruction`[]\>
+▸ `Const` **update**(`data`, `newUpdateAuthority`, `primarySaleHappened`, `tokenKey`, `updateAuthority`, `signers`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
 
 #### Parameters
 
@@ -108,7 +108,7 @@ ___
 
 `fn`
 
-▸ (`instructions?`): `Promise`<`TransactionInstruction`[]\>
+▸ (`instructions?`): `Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
 
 ##### Parameters
 
@@ -118,8 +118,8 @@ ___
 
 ##### Returns
 
-`Promise`<`TransactionInstruction`[]\>
+`Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:106](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/nft/metaplex/metadata.ts#L106)
+[src/nft/metaplex/metadata.ts:128](https://github.com/fukaoi/solana-suite/blob/1200997/src/nft/metaplex/metadata.ts#L128)

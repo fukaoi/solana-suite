@@ -22,30 +22,30 @@
 
 ### create
 
-▸ `Const` **create**(`source`, `totalAmount`, `mintDecimal`, `authority?`): `Promise`<`string`\>
+▸ `Const` **create**(`source`, `totalAmount`, `mintDecimal`, `authority?`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `source` | `Keypair` |
-| `totalAmount` | `number` |
-| `mintDecimal` | `number` |
-| `authority` | `PublicKey` |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `source` | `Keypair` | `undefined` |
+| `totalAmount` | `number` | `undefined` |
+| `mintDecimal` | `number` | `undefined` |
+| `authority` | `PublicKey` | `source.publicKey` |
 
 #### Returns
 
-`Promise`<`string`\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/spl-token.ts:112](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/spl-token.ts#L112)
+[src/spl-token.ts:124](https://github.com/fukaoi/solana-suite/blob/1200997/src/spl-token.ts#L124)
 
 ___
 
 ### getTransferDestinationList
 
-▸ `Const` **getTransferDestinationList**(`pubkey`): `Promise`<[`TransferDestinationList`](../interfaces/SplToken.TransferDestinationList.md)[]\>
+▸ `Const` **getTransferDestinationList**(`pubkey`): `Promise`<[`Result`](../modules.md#result)<[`TransferDestinationList`](../interfaces/SplToken.TransferDestinationList.md)[], `Error`\>\>
 
 #### Parameters
 
@@ -55,17 +55,17 @@ ___
 
 #### Returns
 
-`Promise`<[`TransferDestinationList`](../interfaces/SplToken.TransferDestinationList.md)[]\>
+`Promise`<[`Result`](../modules.md#result)<[`TransferDestinationList`](../interfaces/SplToken.TransferDestinationList.md)[], `Error`\>\>
 
 #### Defined in
 
-[src/spl-token.ts:91](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/spl-token.ts#L91)
+[src/spl-token.ts:98](https://github.com/fukaoi/solana-suite/blob/1200997/src/spl-token.ts#L98)
 
 ___
 
 ### getTransferHistory
 
-▸ `Const` **getTransferHistory**(`pubkey`, `limit?`): `Promise`<[`TransferHistory`](../interfaces/SplToken.TransferHistory.md)[]\>
+▸ `Const` **getTransferHistory**(`pubkey`, `limit?`): `Promise`<[`Result`](../modules.md#result)<[`TransferHistory`](../interfaces/SplToken.TransferHistory.md)[], `Error`\>\>
 
 #### Parameters
 
@@ -76,11 +76,11 @@ ___
 
 #### Returns
 
-`Promise`<[`TransferHistory`](../interfaces/SplToken.TransferHistory.md)[]\>
+`Promise`<[`Result`](../modules.md#result)<[`TransferHistory`](../interfaces/SplToken.TransferHistory.md)[], `Error`\>\>
 
 #### Defined in
 
-[src/spl-token.ts:75](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/spl-token.ts#L75)
+[src/spl-token.ts:76](https://github.com/fukaoi/solana-suite/blob/1200997/src/spl-token.ts#L76)
 
 ___
 
@@ -101,13 +101,13 @@ ___
 
 #### Defined in
 
-[src/spl-token.ts:61](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/spl-token.ts#L61)
+[src/spl-token.ts:61](https://github.com/fukaoi/solana-suite/blob/1200997/src/spl-token.ts#L61)
 
 ___
 
 ### transfer
 
-▸ `Const` **transfer**(`tokenKey`, `source`, `dest`, `amount`, `mintDecimal`, `instruction?`): `Promise`<`string`\>
+▸ `Const` **transfer**(`tokenKey`, `source`, `dest`, `amount`, `mintDecimal`, `instruction?`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
@@ -122,11 +122,11 @@ ___
 
 #### Returns
 
-`Promise`<`string`\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/spl-token.ts:141](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/spl-token.ts#L141)
+[src/spl-token.ts:168](https://github.com/fukaoi/solana-suite/blob/1200997/src/spl-token.ts#L168)
 
 ___
 
@@ -146,4 +146,4 @@ ___
 
 #### Defined in
 
-[src/spl-token.ts:71](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/spl-token.ts#L71)
+[src/spl-token.ts:72](https://github.com/fukaoi/solana-suite/blob/1200997/src/spl-token.ts#L72)

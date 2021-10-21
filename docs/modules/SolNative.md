@@ -12,7 +12,7 @@
 
 ### transfer
 
-▸ `Const` **transfer**(`source`, `signers`, `destination`, `amount`): (`instruction?`: `TransactionInstruction`) => `Promise`<`string`\>
+▸ `Const` **transfer**(`source`, `signers`, `destination`, `amount`): (`instruction?`: `TransactionInstruction`) => `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
@@ -27,7 +27,7 @@
 
 `fn`
 
-▸ (`instruction?`): `Promise`<`string`\>
+▸ (`instruction?`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 ##### Parameters
 
@@ -37,8 +37,8 @@
 
 ##### Returns
 
-`Promise`<`string`\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/sol-native.ts:12](https://github.com/fukaoi/solana-suite/blob/20fd35c/src/sol-native.ts#L12)
+[src/sol-native.ts:11](https://github.com/fukaoi/solana-suite/blob/1200997/src/sol-native.ts#L11)
