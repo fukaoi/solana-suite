@@ -54,9 +54,9 @@ export namespace StorageArweave {
     return Result.ok(price);
   }
 
-  const fetchArweaveContentsCost = async (totalBytes: number)
+  const fetchArweaveContentsCost = async (cost: number)
     : Promise<Result<number, Error>> => {
-    const res = await (await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/${totalBytes.toString()}`))
+    const res = await (await fetch(`${Constants.ARWEAVE_GATEWAY_URL}/price/${cost.toString()}`))
       .text()
       .then(Result.ok)
       .catch(Result.err);
@@ -94,7 +94,7 @@ export namespace StorageArweave {
 
     console.debug('# total arweave cost: ', totalArCost);
 
-    //MEMO: To figure out how many lamports are required, multiply ar byte cost by this number
+    // MEMO: To figure out how many lamports are required, multiply ar byte cost by this number
     const rates = await fetchConvesionRateSolAndAr();
     if (rates.isErr) return Result.err(rates.error);
 
@@ -102,7 +102,7 @@ export namespace StorageArweave {
       (rates.value.arweave.usd / rates.value.solana.usd) / LAMPORTS_PER_SOL;
     console.debug('# arweave multiplier: ', multiplier);
 
-    //MEMO: We also always make a manifest file, which, though tiny, needs payment.
+    // MEMO: We also always make a manifest file, which, though tiny, needs payment.
     return Result.ok(LAMPORT_MULTIPLIER * totalArCost * multiplier * 1.1);
   }
 
