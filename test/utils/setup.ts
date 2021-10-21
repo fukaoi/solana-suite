@@ -1,4 +1,3 @@
-import {Result} from '@badrap/result';
 import fs from 'fs';
 import {Constants, Wallet} from '../../src';
 import '../../src/util';

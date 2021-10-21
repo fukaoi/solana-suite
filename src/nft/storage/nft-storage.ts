@@ -1,8 +1,7 @@
 import {NFTStorage, Blob} from 'nft.storage';
 import fs from 'fs';
-import {Constants} from '../../';
+import {Constants, Result} from '../../';
 import {Storage} from './index';
-import {Result} from '@badrap/result';
 
 export namespace StorageNftStorage {
 

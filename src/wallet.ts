@@ -10,8 +10,7 @@ import {
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 import bs from 'bs58';
 
-import {Transaction, Constants, Node} from './';
-import {Result} from '@badrap/result';
+import {Transaction, Constants, Node, Result} from './';
 
 export namespace Wallet {
 

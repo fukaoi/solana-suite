@@ -1,4 +1,3 @@
-import {Result} from '@badrap/result';
 import {Token, MintLayout} from '@solana/spl-token';
 import {
   Keypair,
@@ -6,7 +5,7 @@ import {
   SystemProgram, TransactionInstruction,
 } from '@solana/web3.js';
 
-import {Constants, Node, Transaction} from '../../';
+import {Constants, Node, Transaction, Result} from '../../';
 import {MetaplexMetaData, MetaplexInstructure} from './';
 
 export * from './instructure';

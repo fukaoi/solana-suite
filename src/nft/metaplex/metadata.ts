@@ -10,9 +10,8 @@ import {
 } from '@solana/web3.js';
 
 import {Metaplex, MetaplexSerialize, MetaplexInstructure} from './index';
-import {Node, Wallet, Constants} from '../../index';
+import {Node, Wallet, Constants, Result} from '../../index';
 import {Token} from '@solana/spl-token';
-import {Result} from '@badrap/result';
 
 export namespace MetaplexMetaData {
   export const getByTokenKey = async (tokenKey: PublicKey):

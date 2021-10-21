@@ -1,4 +1,3 @@
-import {Result} from '@badrap/result';
 import {
   Token,
   TOKEN_PROGRAM_ID,
@@ -11,7 +10,7 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import {Transaction, SplToken, Node} from '../../';
+import {Transaction, SplToken, Node, Result} from '../../';
 
 export namespace SplNft {
 

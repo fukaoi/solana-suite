@@ -1,4 +1,3 @@
-import {Result} from '@badrap/result';
 import {
   Keypair,
   PublicKey,
@@ -14,7 +13,7 @@ import {
   ConfirmedSignatureInfo,
 } from '@solana/web3.js';
 
-import {Node, Constants} from './';
+import {Node, Constants, Result} from './';
 
 export namespace Transaction {
   export const get = async (signature: string):

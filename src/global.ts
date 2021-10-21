@@ -1,11 +1,10 @@
-import {Result} from '@badrap/result';
 import {
   PublicKey,
   Keypair
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-import {Constants} from './constants';
+import {Constants, Result} from './';
 
 declare global {
   interface String {

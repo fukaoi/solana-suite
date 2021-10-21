@@ -6,9 +6,7 @@ import {
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-import {Result} from '@badrap/result';
-
-import {Transaction, Constants} from './';
+import {Transaction, Constants, Result} from './';
 
 export namespace Memo {
   export const decode = (encoded: string): string =>

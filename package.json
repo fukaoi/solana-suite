@@ -20,7 +20,6 @@
     "postinstall": "npm run build"
   },
   "dependencies": {
-    "@badrap/result": "^0.2.8",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.29.2",
     "@tsconfig/node14": "^1.0.1",

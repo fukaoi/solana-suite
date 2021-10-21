@@ -2,7 +2,6 @@ import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
 import {Wallet, SplToken, Memo, Util} from '../src/'
-import {Result} from '@badrap/result';
 
 let source: Wallet.KeyPair;
 let destination: Wallet.KeyPair;

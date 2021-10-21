@@ -1,7 +1,6 @@
 import {describe, it} from 'mocha';
 import {Wallet} from '../src';
 import {assert} from 'chai';
-import {Result} from '@badrap/result';
 
 let source: Wallet.KeyPair;
 

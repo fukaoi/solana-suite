@@ -1,11 +1,10 @@
 import fs from 'fs';
-import {Constants, Util, SolNative} from '../../'
+import {Constants, Util, SolNative, Result} from '../../'
 import {Storage} from './';
 import fetch from 'cross-fetch';
 import FormData from 'form-data';
 import path from 'path';
 import {Keypair, LAMPORTS_PER_SOL} from '@solana/web3.js';
-import {Result} from '@badrap/result';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';

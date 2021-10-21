@@ -1,4 +1,3 @@
-import {Result} from '@badrap/result';
 import {
   AccountInfo,
   Token,
@@ -14,7 +13,7 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 
-import {Transaction, Node} from './';
+import {Transaction, Node, Result} from './';
 
 export namespace SplToken {
   export interface TransferHistory {

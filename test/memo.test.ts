@@ -2,7 +2,6 @@ import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
 import {Memo, Wallet} from '../src';
-import '../src/global';
 
 let source: Wallet.KeyPair;
 const DUMMY_DATA = 'dummy memo data';
