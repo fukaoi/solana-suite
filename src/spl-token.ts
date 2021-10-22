@@ -127,10 +127,9 @@ export namespace SplToken {
     mintDecimal: number,
     authority: PublicKey = source.publicKey,
   ): Promise<Result<string, Error>> => {
-    const connection = Node.getConnection();
-
     const tokenRes = await Token.createMint(
-      connection, source,
+      Node.getConnection(), 
+      source,
       authority,
       null,
       mintDecimal,
@@ -143,7 +142,7 @@ export namespace SplToken {
 
     const token = tokenRes.value as Token;
 
-    const tokenAssociated = await token.createAssociatedTokenAccount(
+    const tokenAssociated = await token.getOrCreateAssociatedAccountInfo(
       source.publicKey
     )
       .then(Result.ok)
@@ -152,7 +151,7 @@ export namespace SplToken {
     if (tokenAssociated.isErr) return  Result.err(tokenAssociated.error);
 
     const res = await token.mintTo(
-      tokenAssociated.value as PublicKey,
+      tokenAssociated.value.address,
       authority,
       [],
       totalAmount,

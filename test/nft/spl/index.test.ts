@@ -5,6 +5,7 @@ import {Wallet, SplNft, Memo} from '../../../src';
 
 let source: Wallet.KeyPair;
 let destination: Wallet.KeyPair;
+let tokenKeyStr: string;
 
 describe('NftSpl', () => {
   before(async () => {
@@ -15,21 +16,22 @@ describe('NftSpl', () => {
 
   it('Create nft', async () => {
     const tokenKey = await SplNft.create(source.secret.toKeypair());
-    console.log(`# nft: ${tokenKey}`);
-    assert.isNotEmpty(tokenKey);
+    if (tokenKey.isErr) console.error(tokenKey.error);
+    assert.isTrue(tokenKey.isOk);
+    tokenKeyStr = tokenKey.unwrap();
+    console.log(`# nft: ${tokenKeyStr}`);
   });
 
   it('Transfer nft with memo data, source and destination inter send', async () => {
-    const tokenKey = await SplNft.create(source.secret.toKeypair());
-    assert.isTrue(tokenKey.isOk); 
     const memoInst = Memo.createInstruction('{"nft": "art", "url": "http://hoge.hoge"}');
     const srcRes = await SplNft.transfer(
-      (<string>tokenKey.unwrap()).toPubKey(),
+      tokenKeyStr.toPubKey(),
       source.secret.toKeypair(),
       destination.pubkey.toPubKey(),
       memoInst
     );
-    console.log(`# tx signature: ${srcRes}`);
-    assert.isNotEmpty(srcRes);
+    if (srcRes.isErr) console.error(srcRes.error);
+    assert.isTrue(srcRes.isOk); 
+    console.log(`# tx signature: ${srcRes.unwrap()}`);
   });
 })

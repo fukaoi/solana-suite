@@ -8,7 +8,7 @@ export namespace Node {
 
   export const getConnection = () => {
     if (connection) return connection;
-    connection = new Connection(Constants.API_URL);
+    connection = new Connection(Constants.API_URL, Constants.COMMITMENT);
     return connection;
   };
 
