@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[src/result.ts:526](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/result.ts#L526)
+[src/result.ts:526](https://github.com/fukaoi/solana-suite/blob/6dc9bbe/src/result.ts#L526)
 
 ## Properties
 
@@ -82,4 +82,4 @@ node_modules/@types/node/globals.d.ts:589
 
 #### Defined in
 
-[src/global.ts:39](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/global.ts#L39)
+[src/global.ts:39](https://github.com/fukaoi/solana-suite/blob/6dc9bbe/src/global.ts#L39)
