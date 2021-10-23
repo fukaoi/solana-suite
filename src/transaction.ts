@@ -62,11 +62,11 @@ export namespace Transaction {
       .catch(Result.err);
   }
 
-  export const sendInstruction = () => 
+  export const sendInstruction = () =>
     async (append: AppendValue)
       : Promise<Result<TransactionSignature, Error>> => {
 
-      if (!append.txInstructions) 
+      if (!append.txInstructions)
         return Result.err(new Error('Need set TransactionInstructions'));
 
       const tx = new SolanaTransaction().add(append.txInstructions[0]);
@@ -76,7 +76,7 @@ export namespace Transaction {
           .forEach((st: TransactionInstruction) => tx.add(st));
       }
 
-      if (!append.signers) 
+      if (!append.signers)
         return Result.err(new Error('Need set signers'));
 
       return await sendAndConfirmTransaction(

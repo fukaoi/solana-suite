@@ -160,7 +160,7 @@ export namespace SplToken {
       .then(Result.ok)
       .catch(Result.err);
 
-    return (<Result<string, Error>>res).chain(
+    return (res as Result<string, Error>).chain(
       (_value: string) => Result.ok(token.publicKey.toBase58()),
       (error: Error) => Result.err(error)
     );
