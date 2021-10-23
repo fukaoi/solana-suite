@@ -55,7 +55,6 @@ export namespace Wallet {
       .catch(Result.err);
 
     if (sig.isErr) return Result.err(new Error('Failed airdrop'));
-
     await Transaction.confirmedSig(sig.value as string);
     return Result.ok('success');
   }
