@@ -19,9 +19,10 @@ export namespace Metaplex {
     payer: PublicKey,
     signers: Keypair[],
   ) => {
-    const mintRentExempt = await Node.getConnection().getMinimumBalanceForRentExemption(
-      MintLayout.span,
-    );
+    const mintRentExempt =
+      await Node.getConnection().getMinimumBalanceForRentExemption(
+        MintLayout.span,
+      );
     const mintAccount = Keypair.generate();
     instructions.push(
       SystemProgram.createAccount({
@@ -136,10 +137,10 @@ export namespace Metaplex {
     if (updateTx.isErr) return Result.err(updateTx.error);
 
     const signature = await Transaction.sendInstruction()
-    ({
-      signers: txsign.signers,
-      txInstructions: updateTx.value as TransactionInstruction[]
-    });
+      ({
+        signers: txsign.signers,
+        txInstructions: updateTx.value as TransactionInstruction[]
+      });
 
     if (signature.isErr) return Result.err(signature.error);
 

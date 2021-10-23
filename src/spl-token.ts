@@ -68,7 +68,8 @@ export namespace SplToken {
     });
   }
 
-  export const unsubscribeAccount = (subscribeId: number): Promise<void> =>
+  export const unsubscribeAccount = (subscribeId: number)
+    : Promise<void> =>
     Node.getConnection().removeAccountChangeListener(subscribeId);
 
 

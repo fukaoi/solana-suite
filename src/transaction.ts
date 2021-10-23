@@ -1,5 +1,4 @@
 import {
-  Keypair,
   PublicKey,
   Transaction as SolanaTransaction,
   sendAndConfirmTransaction,
@@ -41,8 +40,9 @@ export namespace Transaction {
       .then(Result.ok)
       .catch(Result.err);
 
-    if (transactions.isErr) {return transactions;} else {
-
+    if (transactions.isErr) {
+      return transactions;
+    } else {
       const parsedSig: ParsedConfirmedTransaction[] = [];
       for (const tx of transactions.value as ConfirmedSignatureInfo[]) {
         const res = await get(tx!.signature);
@@ -102,28 +102,27 @@ export namespace Transaction {
         });
 
       const t = new SolanaTransaction();
-      if (append.feePayer) {
+      if (!append.feePayer) {
+        t.feePayer = append.signers[0].publicKey;
+      } else {
         // check existed fee payer address in signers
         const addresses = append.signers.map(s => s.publicKey.toBase58());
         if (!addresses.indexOf(append.feePayer.toBase58())) {
           return Result.err(new Error('Need include fee payer keypair in signers'));
         }
         t.feePayer = append.feePayer;
-      } else {
-        t.feePayer = append.signers[0].publicKey;
       }
 
       const tx = t.add(params);
       if (append.txInstructions)
         append.txInstructions.forEach((st: TransactionInstruction) => tx.add(st));
 
-      const res = await sendAndConfirmTransaction(
+      return await sendAndConfirmTransaction(
         Node.getConnection(),
         tx,
         append.signers,
       )
         .then(Result.ok)
         .catch(Result.err);
-      return res;
     }
 }
