@@ -31,9 +31,7 @@ export namespace MetaplexMetaData {
     const accountData = nfts.value as RpcResponseAndContext<AccountInfo<Buffer>>;
     const data = accountData.value?.data;
 
-    if (data) {
-      return Result.ok(MetaplexSerialize.decode(data));
-    }
+    if (data) return Result.ok(MetaplexSerialize.decode(data));
     return Result.ok(Metaplex.initFormat());
   }
 
