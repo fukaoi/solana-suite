@@ -3,11 +3,7 @@
 //////////////////////////////////////////////
 
 import {
-  Wallet,
-  Transaction,
-  Metaplex,
-  MetaplexInstructure,
-  MetaplexMetaData,
+  Wallet, Transaction, Metaplex, MetaplexInstructure, MetaplexMetaData,
   StorageNftStorage,
   SplNft
 } from '../src/index';
@@ -91,9 +87,11 @@ import {RandomAsset} from '../test/utils/randomAsset';
   // transfer nft to receipt wallet
   const transferSig = await SplNft.transfer(
     mintResult.tokenKey.toPubKey(),
-    publish.secret.toKeypair(),
+    publish.pubkey.toPubKey(),
     receipt.pubkey.toPubKey()
-  );
+  )({
+    signers: [publish.secret.toKeypair()]
+  });
 
   if (transferSig.isErr) {
     console.error(transferSig.error);

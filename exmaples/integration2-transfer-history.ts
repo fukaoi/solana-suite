@@ -16,8 +16,8 @@ import {
   //////////////////////////////////////////////
 
   // create nft owner wallet, receive nft receipt wallet.
-  const publish = await Wallet.create();
-  const receipt = await Wallet.create();
+  const publish = Wallet.create();
+  const receipt = Wallet.create();
 
   // faucet 1 sol
   await Wallet.requestAirdrop(publish.pubkey.toPubKey());
@@ -32,7 +32,10 @@ import {
 
 
   // Basically SPL and Metaplex NFT is same logic
-  const tokenKey = await SplNft.create(publish.secret.toKeypair());
+  const tokenKey = await SplNft.create(
+    publish.pubkey.toPubKey(),
+    publish.secret.toKeypair()
+  );
 
   if (tokenKey.isErr) {
     console.error(tokenKey.error);
@@ -52,9 +55,11 @@ import {
   // transfer nft to receipt wallet
   const transferSig = await SplNft.transfer(
     token.toPubKey(),
-    publish.secret.toKeypair(),
+    publish.pubkey.toPubKey(),
     receipt.pubkey.toPubKey()
-  );
+  )({
+    signers: [publish.secret.toKeypair()]
+  });
 
   if (transferSig.isErr) {
     console.error(transferSig.error);
