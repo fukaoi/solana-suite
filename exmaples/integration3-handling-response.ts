@@ -22,7 +22,7 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
 
   if (ex1.isOk) {
     console.log('# ex1: ', ex1.value);
-  } else if(ex1.isErr) {
+  } else if (ex1.isErr) {
     console.log('# ex1 error: ', ex1.error);
   }
 
@@ -40,5 +40,28 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
 
   const casted = (<Result.Ok<number, Error>>ex3).value;
   console.log('# ex3: ', casted);
+
+
+  //////////////////////////////////////////////
+  // Exmaple4 map()
+  //////////////////////////////////////////////
+  const ex4 = await Wallet.getBalance(DEMO_ADDRESS.toPubKey());
+
+  const mapped = ex4.map(
+    (value) => value * 1000,
+    (error) => new Error(error.message)
+  ).unwrap();
+  console.log('# ex4: ', mapped);
+
+
+  //////////////////////////////////////////////
+  // Exmaple5 match()
+  //////////////////////////////////////////////
+  const ex5 = await Wallet.getBalance(DEMO_ADDRESS.toPubKey());
+
+  ex5.match(
+    (value) => console.log('# ex5: ', value),
+    (error) => console.error(error)
+  );
 
 })();

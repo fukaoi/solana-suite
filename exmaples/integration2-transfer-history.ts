@@ -61,18 +61,19 @@ import {
     signers: [publish.secret.toKeypair()]
   });
 
-  if (transferSig.isErr) {
-    console.error(transferSig.error);
-    process.exit(1);
-  }
 
-  const sig = transferSig.unwrap();
 
-  console.log('# Transfer nft sig: ', sig.toSigUrl());
-
-  // untile completed in blockchain
-  await Transaction.confirmedSig(sig);
-
+  await transferSig.match(
+    async (value) => {
+      console.log('# Transfer nft sig: ', value.toSigUrl());
+      // untile completed in blockchain
+      await Transaction.confirmedSig(value);
+    },
+    (error) => {
+      console.error(error);
+      process.exit(1);
+    }
+  );
 
   //////////////////////////////////////////////
   // Get token toransaction history

@@ -3,9 +3,13 @@
 //////////////////////////////////////////////
 
 import {
-  Wallet, Transaction, Metaplex, MetaplexInstructure, MetaplexMetaData,
+  Wallet, 
+  Transaction, 
+  Metaplex, 
+  MetaplexInstructure, 
+  MetaplexMetaData,
   StorageNftStorage,
-  SplNft
+  SplNft,
 } from '../src/index';
 
 import {RandomAsset} from '../test/utils/randomAsset';
@@ -33,7 +37,6 @@ import {RandomAsset} from '../test/utils/randomAsset';
   // Only test that call this function   
   // Usually set custom param
   const asset = RandomAsset.storage();
-
   console.log('# asset: ', asset);
 
   // metadata and image upload
@@ -58,18 +61,17 @@ import {RandomAsset} from '../test/utils/randomAsset';
 
   const res = await Metaplex.mint(data, publish.secret.toKeypair());
 
-  if (res.isErr) {
-    console.error(res.error);
-    process.exit(1);
-  }
-
-  const mintResult = res.unwrap();
+  res.match(
+    async (value) => await Transaction.confirmedSig(value.signature),
+    (error) => {
+      console.error(error);
+      process.exit(1);
+    }
+  );
 
   // this is NFT ID
+  const mintResult = res.unwrap();
   console.log('# tokenKey: ', mintResult.tokenKey);
-
-  // untile completed in blockchain
-  await Transaction.confirmedSig(mintResult.signature);
 
   //////////////////////////////////////////////
   // Display metadata from blockchain(optional)
@@ -93,11 +95,8 @@ import {RandomAsset} from '../test/utils/randomAsset';
     signers: [publish.secret.toKeypair()]
   });
 
-  if (transferSig.isErr) {
-    console.error(transferSig.error);
-    process.exit(1);
-  }
-
-  console.log('# Transfer nft sig: ', transferSig.unwrap().toSigUrl());
-
+  transferSig.match(
+    (value) => console.log('# Transfer nft sig: ', value.toSigUrl()),
+    (error) => console.error(error)
+  );
 })();
