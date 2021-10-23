@@ -72,7 +72,7 @@ export namespace Wallet {
     source: PublicKey,
     tokenKey: PublicKey
   ): Promise<Result<PublicKey, Error>> => {
-    const res = await PublicKey.findProgramAddress(
+    return await PublicKey.findProgramAddress(
       [
         source.toBuffer(),
         TOKEN_PROGRAM_ID.toBuffer(),
@@ -82,13 +82,12 @@ export namespace Wallet {
     )
       .then(v => Result.ok(v[0]))
       .catch(Result.err);
-    return res;
   }
 
   export const findMetaplexAssocaiatedTokenAddress = async (
     tokenKey: PublicKey
   ): Promise<Result<PublicKey, Error>> => {
-    const res = await PublicKey.findProgramAddress(
+    return await PublicKey.findProgramAddress(
       [
         Buffer.from('metadata'),
         Constants.METAPLEX_PROGRAM_ID.toBuffer(),
@@ -98,7 +97,6 @@ export namespace Wallet {
     )
       .then(v => Result.ok(v[0]))
       .catch((e: Error) => Result.err(e))
-    return res;
   }
 
   export const createAssociatedTokenAccountInstruction = (
