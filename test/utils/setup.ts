@@ -27,9 +27,6 @@ export namespace Setup {
     if (fs.existsSync(TEMP_KEYPAIR_FILE)) {
       const obj = await loadTempFile();
       const sourceBalance = await Wallet.getBalance(obj.source.pubkey.toPubKey());
-      const destBalance = await Wallet.getBalance(obj.dest.pubkey.toPubKey());
-      console.debug(`# source balance: ${sourceBalance}`);
-      console.debug(`# destination balance: ${destBalance}`);
       if (sourceBalance.isOk && sourceBalance.value < 0.1) {
         console.warn(`[Warning]source  alance is under 0.1 amount`);
         console.warn(`Reset setupKeyPair`);
@@ -47,8 +44,8 @@ export namespace Setup {
   }
 
   const createTempFile = async () => {
-    const source = await Wallet.create();
-    const dest = await Wallet.create();
+    const source = Wallet.create();
+    const dest = Wallet.create();
     await Wallet.requestAirdrop(source.pubkey.toPubKey());
     const data = templateKeyPair(source, dest);
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));

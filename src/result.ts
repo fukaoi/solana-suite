@@ -1,4 +1,4 @@
-// fork: @badrap/result": "^0.2.8"
+// fork: https://github.com/badrap/result
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
@@ -11,7 +11,7 @@ abstract class AbstractResult<T, E extends Error> {
   unwrap<U, V>(ok: (value: T) => U, err: (error: E) => V): U | V;
   // unified-signatures. into line 10
   // unwrap<U>(ok: (value: T) => U, err: (error: E) => U): U;
-  unwrap(ok?: (value: T) => unknown, err?: (error: E) => unknown): unknown {
+  unwrap(ok?: (value: T) => unknown, err?: (error: E) => unknown): unknown  {
     const r = this._chain(
       value => Result.ok(ok ? ok(value) : value),
       error => (err ? Result.ok(err(error)) : Result.err(error))
@@ -22,6 +22,7 @@ abstract class AbstractResult<T, E extends Error> {
     return r.value;
   }
 
+  //// map ////
   map<U>(ok: (value: T) => U): Result<U, E>;
   map<U, F extends Error>(
     ok: (value: T) => U,
@@ -34,10 +35,11 @@ abstract class AbstractResult<T, E extends Error> {
     );
   }
 
+  //// chain ////
   chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
   chain<X>(
     ok: (value: T) => Result<X, E>,
-    // unified-signatures. into line 36
+    // unified-signatures. into line 37
     // err: (error: E) => Result<X, E>
   ): Result<X, E>;
   chain<X, U extends Error>(
@@ -49,6 +51,14 @@ abstract class AbstractResult<T, E extends Error> {
     err?: (error: E) => Result<unknown>
   ): Result<unknown> {
     return this._chain(ok, err || (error => Result.err(error)));
+  }
+
+  //// match ////
+  match(
+    ok: (value: T) => any,
+    err?: (error: E) => any
+  ): void | Promise<void> {
+    this._chain(ok, err || (error => Result.err(error)));
   }
 }
 

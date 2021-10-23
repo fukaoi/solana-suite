@@ -1,12 +1,11 @@
 import {
-  Keypair,
   ParsedConfirmedTransaction,
   ParsedInstruction,
   TransactionInstruction,
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-import {Transaction, Constants, Result} from './';
+import {Constants} from './';
 
 export namespace Memo {
   export const decode = (encoded: string): string =>
@@ -31,15 +30,4 @@ export namespace Memo {
     }) as ParsedInstruction[];
     return res[0].parsed;
   }
-
-  export const own = async (
-    instruction: TransactionInstruction,
-    source: Keypair
-  ): Promise<Result<string, Error>> =>
-    await Transaction.sendInstructions(
-      [source],
-      [instruction]
-    );
 }
-
-

@@ -1,5 +1,4 @@
 import {
-  AccountInfo,
   Token,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
@@ -10,7 +9,7 @@ import {
   ParsedInstruction,
   PublicKey,
   TokenBalance,
-  TransactionInstruction,
+  TransactionSignature,
 } from '@solana/web3.js';
 
 import {Transaction, Node, Result} from './';
@@ -69,7 +68,8 @@ export namespace SplToken {
     });
   }
 
-  export const unsubscribeAccount = (subscribeId: number): Promise<void> =>
+  export const unsubscribeAccount = (subscribeId: number)
+    : Promise<void> =>
     Node.getConnection().removeAccountChangeListener(subscribeId);
 
 
@@ -122,16 +122,16 @@ export namespace SplToken {
   }
 
   export const create = async (
-    source: Keypair,
+    source: PublicKey,
+    feePayer: Keypair,
     totalAmount: number,
     mintDecimal: number,
-    authority: PublicKey = source.publicKey,
   ): Promise<Result<string, Error>> => {
-    const connection = Node.getConnection();
 
     const tokenRes = await Token.createMint(
-      connection, source,
-      authority,
+      Node.getConnection(),
+      feePayer,
+      source,
       null,
       mintDecimal,
       TOKEN_PROGRAM_ID
@@ -141,69 +141,78 @@ export namespace SplToken {
 
     if (tokenRes.isErr) return Result.err(tokenRes.error);
 
-    const token = tokenRes.value as Token;
+    const token = tokenRes.value;
 
-    const tokenAssociated = await token.createAssociatedTokenAccount(
-      source.publicKey
-    )
-      .then(Result.ok)
-      .catch(Result.err);
+    const tokenAssociated =
+      await token.getOrCreateAssociatedAccountInfo(source)
+        .then(Result.ok)
+        .catch(Result.err);
 
-    if (tokenAssociated.isErr) return  Result.err(tokenAssociated.error);
+    if (tokenAssociated.isErr) return Result.err(tokenAssociated.error);
+
+    token.payer = feePayer;
 
     const res = await token.mintTo(
-      tokenAssociated.value as PublicKey,
-      authority,
+      tokenAssociated.value.address,
+      source,
       [],
       totalAmount,
     )
       .then(Result.ok)
       .catch(Result.err);
 
-    if (res.isErr) return Result.err(res.error);
-
-    return Result.ok(token.publicKey.toBase58());
+    return (res as Result<string, Error>).chain(
+      (_value: string) => Result.ok(token.publicKey.toBase58()),
+      (error: Error) => Result.err(error)
+    );
   }
 
-  export const transfer = async (
+  export const transfer = (
     tokenKey: PublicKey,
-    source: Keypair,
+    source: PublicKey,
     dest: PublicKey,
     amount: number,
     mintDecimal: number,
-    instruction?: TransactionInstruction
-  ): Promise<Result<string, Error>> => {
-    const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, source);
-    const sourceToken = await token.getOrCreateAssociatedAccountInfo(source.publicKey)
-      .then(Result.ok)
-      .catch(Result.err);
+  ) => async (append: Transaction.AppendValue)
+      : Promise<Result<TransactionSignature, Error>> => {
+      const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, append.signers[0]);
+      const sourceToken = await token.getOrCreateAssociatedAccountInfo(source)
+        .then(Result.ok)
+        .catch(Result.err);
 
-    if (sourceToken.isErr) return Result.err(sourceToken.error);
+      if (sourceToken.isErr) return Result.err(sourceToken.error);
 
-    const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
-      .then(Result.ok)
-      .catch(Result.err);
+      const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
+        .then(Result.ok)
+        .catch(Result.err);
 
-    if (destToken.isErr) return Result.err(destToken.error);
+      if (destToken.isErr) return Result.err(destToken.error);
 
-    const param = Token.createTransferCheckedInstruction(
-      TOKEN_PROGRAM_ID,
-      (sourceToken.value as AccountInfo).address,
-      tokenKey,
-      (destToken.value as AccountInfo).address,
-      source.publicKey,
-      [source],
-      amount,
-      mintDecimal
-    );
+      const param = Token.createTransferCheckedInstruction(
+        TOKEN_PROGRAM_ID,
+        sourceToken.value.address,
+        tokenKey,
+        destToken.value.address,
+        source,
+        append.signers,
+        amount,
+        mintDecimal
+      );
 
-    const instructions = instruction ? new Array(param, instruction) : [param];
-    const fn = Transaction.send(
-      source.publicKey,
-      [source],
-      dest,
-      amount,
-    );
-    return await fn(instructions);
-  }
+      const instructions =
+        append.txInstructions
+          ? new Array(append.txInstructions, [param]).flat()
+          : [param];
+      return Transaction.send(
+        source,
+        dest,
+        amount,
+      )(
+        {
+          signers: append.signers,
+          feePayer: append.feePayer,
+          txInstructions: instructions
+        }
+      );
+    }
 }
