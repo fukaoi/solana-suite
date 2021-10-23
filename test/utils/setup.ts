@@ -28,8 +28,6 @@ export namespace Setup {
       const obj = await loadTempFile();
       const sourceBalance = await Wallet.getBalance(obj.source.pubkey.toPubKey());
       const destBalance = await Wallet.getBalance(obj.dest.pubkey.toPubKey());
-      console.debug(`# source balance: ${sourceBalance}`);
-      console.debug(`# destination balance: ${destBalance}`);
       if (sourceBalance.isOk && sourceBalance.value < 0.1) {
         console.warn(`[Warning]source  alance is under 0.1 amount`);
         console.warn(`Reset setupKeyPair`);

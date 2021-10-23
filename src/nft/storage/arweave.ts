@@ -184,14 +184,16 @@ export namespace StorageArweave {
     const totalConst = await calculateArweave(fileBuffers);
     if (totalConst.isErr) return Result.err(totalConst.error);
 
-    const sig = await SolNative.transfer(
-      payer.publicKey,
-      [payer],
-      Constants.AR_SOL_HOLDER_ID,
-      totalConst.value
-    )()
-      .then(Result.ok)
-      .catch(Result.err);
+    const sig =
+      await SolNative.transfer(
+        payer.publicKey,
+        Constants.AR_SOL_HOLDER_ID,
+        totalConst.value
+      )({
+        signers: [payer]
+      })
+        .then(Result.ok)
+        .catch(Result.err);
 
     if (sig.isErr) return sig.error;
 

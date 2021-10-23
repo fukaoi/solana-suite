@@ -1,4 +1,4 @@
-// fork: @badrap/result": "^0.2.8"
+// fork: https://github.com/badrap/result
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(

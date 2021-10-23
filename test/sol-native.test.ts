@@ -15,14 +15,16 @@ describe('SolNative', () => {
 
   it('transfer transaction', async () => {
     const solAmount = 0.0001;
-    const res = await SolNative.transfer(
-      source.pubkey.toPubKey(),
-      [source.secret.toKeypair()],
-      destinationStr.toPubKey(),
-      solAmount,
-    )();
-    console.log(`# tx signature: ${res}`);
-    assert.isNotEmpty(res);
+    const res =
+      await SolNative.transfer(
+        source.pubkey.toPubKey(),
+        destinationStr.toPubKey(),
+        solAmount,
+      )({signers: [source.secret.toKeypair()]});
+
+    if (res.isErr) console.error(res.error);
+    assert.isNotTrue(res.isErr);
+    console.log('# tx signature: ', res.unwrap());
   });
 
   it('transfer transaction with memo data', async () => {
@@ -32,11 +34,14 @@ describe('SolNative', () => {
     );
     const res = await SolNative.transfer(
       source.pubkey.toPubKey(),
-      [source.secret.toKeypair()],
       destinationStr.toPubKey(),
       solAmount,
-    )(instruction);
-    console.log(`# tx signature: ${res}`);
-    assert.isNotEmpty(res);
+    )({
+      signers: [source.secret.toKeypair()],
+      txInstructions: [instruction]
+    });
+    if (res.isErr) console.error(res.error);
+    assert.isNotTrue(res.isErr);
+    console.log('# tx signature: ', res.unwrap());
   });
 })

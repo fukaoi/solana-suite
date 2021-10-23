@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Memo, Wallet} from '../src';
+import {Memo, Wallet, Transaction} from '../src';
 
 let source: Wallet.KeyPair;
 const DUMMY_DATA = 'dummy memo data';
@@ -33,8 +33,14 @@ describe('Memo', () => {
 
   it('send memo by own', async () => {
     const memoInst = Memo.createInstruction('{"memo": 123456789}');
-    const res = await Memo.own(memoInst, source.secret.toKeypair());
-    console.log(`# tx signature: ${res}`);
-    assert.isNotEmpty(res);
+    const res =
+      await Transaction.sendInstruction()({
+        signers: [source.secret.toKeypair()],
+        txInstructions: [memoInst],
+      });
+
+    if (res.isErr) console.error(res.error);
+    console.log('# tx signature: ', res.unwrap());
+    assert.isNotTrue(res.isErr);
   });
 })

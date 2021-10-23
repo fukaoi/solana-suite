@@ -60,7 +60,7 @@ export namespace Wallet {
     return Result.ok('success');
   }
 
-  export const create = async (): Promise<KeyPair> => {
+  export const create = (): KeyPair => {
     const keypair = Keypair.generate();
     return {
       pubkey: keypair.publicKey.toBase58(),

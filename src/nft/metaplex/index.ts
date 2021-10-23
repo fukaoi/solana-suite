@@ -135,10 +135,11 @@ export namespace Metaplex {
 
     if (updateTx.isErr) return Result.err(updateTx.error);
 
-    const signature = await Transaction.sendInstructions(
-      txsign.signers,
-      updateTx.value as TransactionInstruction[]
-    );
+    const signature = await Transaction.sendInstruction()
+    ({
+      signers: txsign.signers,
+      txInstructions: <TransactionInstruction[]>updateTx.value
+    });
 
     if (signature.isErr) return Result.err(signature.error);
 

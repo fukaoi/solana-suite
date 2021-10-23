@@ -6,7 +6,6 @@ import {
 import {
   Keypair,
   PublicKey,
-  TransactionInstruction,
   TransactionSignature,
 } from '@solana/web3.js';
 
@@ -18,42 +17,56 @@ export namespace SplNft {
   const NFT_DECIMAL = 0;
 
   export const create = (
-    source: Keypair,
-    authority: PublicKey = source.publicKey,
+    source: PublicKey,
+    feePayer: Keypair,
   ): Promise<Result<string, Error>> => {
     return SplToken.create(
       source,
+      feePayer,
       NFT_AMOUNT,
       NFT_DECIMAL,
-      authority
     );
   }
 
-  export const transfer = async (
+  export const transfer = (
     tokenKey: PublicKey,
-    source: Keypair,
+    source: PublicKey,
     dest: PublicKey,
-    instruction?: TransactionInstruction
-  ): Promise<Result<TransactionSignature, Error>> => {
-    const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, source);
-    const sourceTokenAccount = (await token.getOrCreateAssociatedAccountInfo(source.publicKey)).address;
-    const destTokenAccount = (await token.getOrCreateAssociatedAccountInfo(dest)).address;
+  ) => async (append: Transaction.AppendValue)
+      : Promise<Result<TransactionSignature, Error>> => {
+      const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, append.signers[0]);
+      const sourceToken = await token.getOrCreateAssociatedAccountInfo(source)
+        .then(Result.ok)
+        .catch(Result.err);
 
-    const param = Token.createTransferCheckedInstruction(
-      TOKEN_PROGRAM_ID,
-      sourceTokenAccount,
-      tokenKey,
-      destTokenAccount,
-      source.publicKey,
-      [source],
-      NFT_AMOUNT,
-      NFT_DECIMAL
-    );
+      if (sourceToken.isErr) return Result.err(sourceToken.error);
 
-    const instructions = instruction ? new Array(param, instruction) : [param];
-    return Transaction.sendInstructions(
-      [source],
-      instructions
-    );
-  }
+      const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
+        .then(Result.ok)
+        .catch(Result.err);
+
+      if (destToken.isErr) return Result.err(destToken.error);
+
+      const param = Token.createTransferCheckedInstruction(
+        TOKEN_PROGRAM_ID,
+        sourceToken.value.address,
+        tokenKey,
+        destToken.value.address,
+        source,
+        append.signers,
+        NFT_AMOUNT,
+        NFT_DECIMAL
+      );
+
+      const instructions =
+        append.txInstructions
+          ? new Array(append.txInstructions, [param]).flat()
+          : [param];
+
+      return await Transaction.sendInstruction()
+        ({
+          signers: append.signers,
+          txInstructions: instructions
+        });
+    }
 }

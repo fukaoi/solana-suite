@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Wallet, SplToken, Memo, Util} from '../src/'
+import {Wallet, SplToken, Memo, Util, Transaction} from '../src/'
 
 let source: Wallet.KeyPair;
 let destination: Wallet.KeyPair;
@@ -58,52 +58,81 @@ describe('SplToken', () => {
       return;
     }
     const TOKEN_TOTAL_AMOUNT = 10000000;
-    const res = await SplToken.create(
-      source.secret.toKeypair(),
-      TOKEN_TOTAL_AMOUNT,
-      MINT_DECIMAL
-    );
-    console.log(`# tokenKey: ${res}`);
+    const res =
+      await SplToken.create(
+        source.pubkey.toPubKey(),
+        source.secret.toKeypair(),
+        TOKEN_TOTAL_AMOUNT,
+        MINT_DECIMAL
+      );
+
+    if (res.isErr) console.error(res.error);
     assert.isTrue(res.isOk);
-    assert.isNotEmpty(res);
-    const token = res.unwrap();
-    Setup.createTokenTempFile({tokenKey: token});
-    tokenKeyStr = token;
+    tokenKeyStr = res.unwrap();
+    console.log('# tokenKey: ', tokenKeyStr);
+    Setup.createTokenTempFile({tokenKey: tokenKeyStr});
   });
 
-  it('Transfer token. source and destination inter send', async () => {
-    const srcRes = await SplToken.transfer(
+  it('Create token with fee payer', async () => {
+    if (tokenKeyStr) {
+      console.log(`# skip because loaded`);
+      return;
+    }
+
+    let beforeBalance = 0;
+    let afterBalance = 0;
+    const feePayer = Wallet.create();
+    const sig = await Wallet.requestAirdrop(feePayer.pubkey.toPubKey());
+    if (sig.isOk) {
+      Transaction.confirmedSig(sig.value);
+      beforeBalance = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
+    } else {
+      console.error(sig.unwrap());
+      assert.isTrue(sig.isErr);
+    }
+
+    const TOKEN_TOTAL_AMOUNT = 10000000;
+    const res =
+      await SplToken.create(
+        source.pubkey.toPubKey(),
+        feePayer.secret.toKeypair(),
+        TOKEN_TOTAL_AMOUNT,
+        MINT_DECIMAL
+      );
+    if (res.isErr) console.error(res.error);
+    assert.isTrue(res.isOk);
+    afterBalance = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
+    assert.isTrue(afterBalance - beforeBalance > 0);
+  });
+
+  it('Transfer token', async () => {
+    const res = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
-      source.secret.toKeypair(),
+      source.pubkey.toPubKey(),
       destination.pubkey.toPubKey(),
       1,
       MINT_DECIMAL
-    );
-    assert.isTrue(srcRes.isOk);
-
-    const destRes = await SplToken.transfer(
-      tokenKeyStr.toPubKey(),
-      destination.secret.toKeypair(),
-      source.pubkey.toPubKey(),
-      1,
-      MINT_DECIMAL
-    );
-    assert.isTrue(destRes.isOk);
-    assert.isNotEmpty(destRes);
+    )({
+      signers: [source.secret.toKeypair()]
+    });
+    if (res.isErr) console.error(res.error);
+    assert.isTrue(res.isOk);
   });
 
   it('Transfer transaction with memo data', async () => {
     const memoInst = Memo.createInstruction('{"tokenId": "dummy", "serialNo": "15/100"}');
     const res = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
-      source.secret.toKeypair(),
+      source.pubkey.toPubKey(),
       destination.pubkey.toPubKey(),
       5,
       MINT_DECIMAL,
-      memoInst
-    );
+    )({
+      signers: [source.secret.toKeypair()],
+      txInstructions: [memoInst],
+    });
+    if (res.isErr) console.error(res.error);
     assert.isTrue(res.isOk);
-    assert.isNotEmpty(res);
   });
 
   it('Subscribe a account(pubkey)', async () => {
@@ -128,11 +157,13 @@ describe('SplToken', () => {
 const sendContinuously = async (): Promise<void> => {
   await SplToken.transfer(
     tokenKeyStr.toPubKey(),
-    source.secret.toKeypair(),
+    source.pubkey.toPubKey(),
     destination.pubkey.toPubKey(),
     1,
     MINT_DECIMAL
-  );
+  )({
+    signers: [source.secret.toKeypair()]
+  });
 }
 
 
