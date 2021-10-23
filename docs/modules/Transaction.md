@@ -4,13 +4,17 @@
 
 ## Table of contents
 
+### Interfaces
+
+- [AppendValue](../interfaces/Transaction.AppendValue.md)
+
 ### Functions
 
 - [confirmedSig](Transaction.md#confirmedsig)
 - [get](Transaction.md#get)
 - [getAll](Transaction.md#getall)
 - [send](Transaction.md#send)
-- [sendInstructions](Transaction.md#sendinstructions)
+- [sendInstruction](Transaction.md#sendinstruction)
 
 ## Functions
 
@@ -23,7 +27,7 @@
 | Name | Type | Default value |
 | :------ | :------ | :------ |
 | `signature` | `string` | `undefined` |
-| `commitment` | `Commitment` | `'finalized'` |
+| `commitment` | `Commitment` | `Constants.COMMITMENT` |
 
 #### Returns
 
@@ -31,7 +35,7 @@
 
 #### Defined in
 
-[src/transaction.ts:48](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/transaction.ts#L48)
+[src/transaction.ts:56](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/transaction.ts#L56)
 
 ___
 
@@ -51,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/transaction.ts:19](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/transaction.ts#L19)
+[src/transaction.ts:26](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/transaction.ts#L26)
 
 ___
 
@@ -72,20 +76,19 @@ ___
 
 #### Defined in
 
-[src/transaction.ts:25](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/transaction.ts#L25)
+[src/transaction.ts:32](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/transaction.ts#L32)
 
 ___
 
 ### send
 
-▸ `Const` **send**(`source`, `signers`, `destination`, `amount`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+▸ `Const` **send**(`source`, `destination`, `amount`): (`append`: [`AppendValue`](../interfaces/Transaction.AppendValue.md)) => `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `source` | `PublicKey` |
-| `signers` | `Signer`[] |
 | `destination` | `PublicKey` |
 | `amount` | `number` |
 
@@ -93,13 +96,13 @@ ___
 
 `fn`
 
-▸ (`instructions?`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+▸ (`append`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 ##### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `instructions?` | `TransactionInstruction`[] |
+| `append` | [`AppendValue`](../interfaces/Transaction.AppendValue.md) |
 
 ##### Returns
 
@@ -107,25 +110,30 @@ ___
 
 #### Defined in
 
-[src/transaction.ts:81](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/transaction.ts#L81)
+[src/transaction.ts:91](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/transaction.ts#L91)
 
 ___
 
-### sendInstructions
+### sendInstruction
 
-▸ `Const` **sendInstructions**(`signers`, `instructions`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+▸ `Const` **sendInstruction**(): (`append`: [`AppendValue`](../interfaces/Transaction.AppendValue.md)) => `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
-#### Parameters
+#### Returns
+
+`fn`
+
+▸ (`append`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+
+##### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `signers` | `Keypair`[] |
-| `instructions` | `TransactionInstruction`[] |
+| `append` | [`AppendValue`](../interfaces/Transaction.AppendValue.md) |
 
-#### Returns
+##### Returns
 
 `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/transaction.ts:57](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/transaction.ts#L57)
+[src/transaction.ts:65](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/transaction.ts#L65)

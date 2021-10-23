@@ -12,14 +12,13 @@
 
 ### transfer
 
-▸ `Const` **transfer**(`source`, `signers`, `destination`, `amount`): (`instruction?`: `TransactionInstruction`) => `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+▸ `Const` **transfer**(`source`, `destination`, `amount`): (`append`: [`AppendValue`](../interfaces/Transaction.AppendValue.md)) => `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `source` | `PublicKey` |
-| `signers` | `Keypair`[] |
 | `destination` | `PublicKey` |
 | `amount` | `number` |
 
@@ -27,13 +26,13 @@
 
 `fn`
 
-▸ (`instruction?`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+▸ (`append`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 ##### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `instruction?` | `TransactionInstruction` |
+| `append` | [`AppendValue`](../interfaces/Transaction.AppendValue.md) |
 
 ##### Returns
 
@@ -41,4 +40,4 @@
 
 #### Defined in
 
-[src/sol-native.ts:11](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/sol-native.ts#L11)
+[src/sol-native.ts:9](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/sol-native.ts#L9)

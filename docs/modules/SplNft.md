@@ -13,14 +13,14 @@
 
 ### create
 
-▸ `Const` **create**(`source`, `authority?`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+▸ `Const` **create**(`source`, `feePayer`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `source` | `Keypair` | `undefined` |
-| `authority` | `PublicKey` | `source.publicKey` |
+| Name | Type |
+| :------ | :------ |
+| `source` | `PublicKey` |
+| `feePayer` | `Keypair` |
 
 #### Returns
 
@@ -28,27 +28,38 @@
 
 #### Defined in
 
-[src/nft/spl/index.ts:20](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/nft/spl/index.ts#L20)
+[src/nft/spl/index.ts:19](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/nft/spl/index.ts#L19)
 
 ___
 
 ### transfer
 
-▸ `Const` **transfer**(`tokenKey`, `source`, `dest`, `instruction?`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+▸ `Const` **transfer**(`tokenKey`, `source`, `dest`): (`append`: [`AppendValue`](../interfaces/Transaction.AppendValue.md)) => `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `tokenKey` | `PublicKey` |
-| `source` | `Keypair` |
+| `source` | `PublicKey` |
 | `dest` | `PublicKey` |
-| `instruction?` | `TransactionInstruction` |
 
 #### Returns
+
+`fn`
+
+▸ (`append`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `append` | [`AppendValue`](../interfaces/Transaction.AppendValue.md) |
+
+##### Returns
 
 `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/nft/spl/index.ts:32](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/nft/spl/index.ts#L32)
+[src/nft/spl/index.ts:31](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/nft/spl/index.ts#L31)

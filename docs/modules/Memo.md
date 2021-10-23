@@ -9,7 +9,6 @@
 - [createInstruction](Memo.md#createinstruction)
 - [decode](Memo.md#decode)
 - [encode](Memo.md#encode)
-- [own](Memo.md#own)
 - [parseInstruction](Memo.md#parseinstruction)
 
 ## Functions
@@ -30,7 +29,7 @@
 
 #### Defined in
 
-[src/memo.ts:17](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/memo.ts#L17)
+[src/memo.ts:16](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/memo.ts#L16)
 
 ___
 
@@ -50,7 +49,7 @@ ___
 
 #### Defined in
 
-[src/memo.ts:12](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/memo.ts#L12)
+[src/memo.ts:11](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/memo.ts#L11)
 
 ___
 
@@ -70,28 +69,7 @@ ___
 
 #### Defined in
 
-[src/memo.ts:15](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/memo.ts#L15)
-
-___
-
-### own
-
-▸ `Const` **own**(`instruction`, `source`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `instruction` | `TransactionInstruction` |
-| `source` | `Keypair` |
-
-#### Returns
-
-`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
-
-#### Defined in
-
-[src/memo.ts:35](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/memo.ts#L35)
+[src/memo.ts:14](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/memo.ts#L14)
 
 ___
 
@@ -111,4 +89,4 @@ ___
 
 #### Defined in
 
-[src/memo.ts:26](https://github.com/fukaoi/solana-suite/blob/ed5a1bc/src/memo.ts#L26)
+[src/memo.ts:25](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/memo.ts#L25)
