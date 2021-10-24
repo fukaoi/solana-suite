@@ -3,10 +3,10 @@
 //////////////////////////////////////////////
 
 import {
-  Wallet, 
-  Transaction, 
-  Metaplex, 
-  MetaplexInstructure, 
+  Wallet,
+  Transaction,
+  Metaplex,
+  MetaplexInstructure,
   MetaplexMetaData,
   StorageNftStorage,
   SplNft,
@@ -23,11 +23,13 @@ import {RandomAsset} from '../test/utils/randomAsset';
   // create nft owner wallet, receive nft receipt wallet.
   const publish = Wallet.create();
   const receipt = Wallet.create();
+  const feePayer = Wallet.create();
 
   // faucet 1 sol
-  await Wallet.requestAirdrop(publish.pubkey.toPubKey());
-  console.log('# publish: ', publish);
-  console.log('# receipt: ', receipt);
+  await Wallet.requestAirdrop(feePayer.pubkey.toPubKey());
+  console.log('# publish: ', publish.pubkey);
+  console.log('# receipt: ', receipt.pubkey);
+  console.log('# feePayer: ', feePayer.pubkey);
 
 
   //////////////////////////////////////////////
@@ -37,7 +39,6 @@ import {RandomAsset} from '../test/utils/randomAsset';
   // Only test that call this function   
   // Usually set custom param
   const asset = RandomAsset.storage();
-  console.log('# asset: ', asset);
 
   // metadata and image upload
   const url = await StorageNftStorage.upload(asset);
@@ -59,10 +60,10 @@ import {RandomAsset} from '../test/utils/randomAsset';
     creators: null
   });
 
-  const res = await Metaplex.mint(data, publish.secret.toKeypair());
+  const res = await Metaplex.mint(data, feePayer.secret.toKeypair());
 
   res.match(
-    async (value) => await Transaction.confirmedSig(value.signature),
+    async (value) => await Transaction.confirmedSig(value.signature, 'finalized'),
     (error) => {
       console.error(error);
       process.exit(1);
@@ -86,17 +87,36 @@ import {RandomAsset} from '../test/utils/randomAsset';
   // TRANSFER RECEIPR USER FROM THIS LINE 
   //////////////////////////////////////////////
 
+  // transfer nft to  wallet
+  const sig = await SplNft.transfer(
+    mintResult.tokenKey.toPubKey(),
+    feePayer.pubkey.toPubKey(),
+    publish.pubkey.toPubKey()
+  )({
+    feePayer: feePayer.pubkey.toPubKey(),
+    signers: [feePayer.secret.toKeypair()]
+  });
+
+  sig.match(
+    async (value) => {
+      console.log('# Transfer nft sig: ', value.toSigUrl());
+      await Transaction.confirmedSig(value, 'finalized');
+    },
+    (error) => console.error(error)
+  );
+
   // transfer nft to receipt wallet
-  const transferSig = await SplNft.transfer(
+  const sig2 = await SplNft.transfer(
     mintResult.tokenKey.toPubKey(),
     publish.pubkey.toPubKey(),
     receipt.pubkey.toPubKey()
   )({
-    signers: [publish.secret.toKeypair()]
+    feePayer: feePayer.pubkey.toPubKey(),
+    signers: [feePayer.secret.toKeypair(), publish.secret.toKeypair()]
   });
 
-  transferSig.match(
-    (value) => console.log('# Transfer nft sig: ', value.toSigUrl()),
+  sig2.match(
+    (value) => console.log('# Transfer nft sig2: ', value.toSigUrl()),
     (error) => console.error(error)
   );
 })();
