@@ -40,4 +40,4 @@
 
 #### Defined in
 
-[src/sol-native.ts:9](https://github.com/fukaoi/solana-suite/blob/c7cf758/src/sol-native.ts#L9)
+[src/sol-native.ts:9](https://github.com/fukaoi/solana-suite/blob/6dc9bbe/src/sol-native.ts#L9)
