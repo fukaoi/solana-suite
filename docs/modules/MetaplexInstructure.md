@@ -28,4 +28,4 @@
 
 #### Defined in
 
-[src/nft/metaplex/instructure.ts:101](https://github.com/fukaoi/solana-suite/blob/6dc9bbe/src/nft/metaplex/instructure.ts#L101)
+[src/nft/metaplex/instructure.ts:101](https://github.com/fukaoi/solana-suite/blob/42af222/src/nft/metaplex/instructure.ts#L101)
