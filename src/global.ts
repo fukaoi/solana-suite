@@ -52,7 +52,7 @@ console.error = (
   console.log(
     `\u001b[31m`, data,
     `\u001b[4m\u001b[31m`, data2,
-    `\u001b[0m\u001b[37m\u001b[41m`, data3,
+    `\u001b[0m\u001b[31m`, data3,
   );
 }
 
