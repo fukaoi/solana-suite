@@ -22,7 +22,7 @@
 
 #### Defined in
 
-[src/util.ts:4](https://github.com/fukaoi/solana-suite/blob/42af222/src/util.ts#L4)
+[src/util.ts:4](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/util.ts#L4)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[src/util.ts:14](https://github.com/fukaoi/solana-suite/blob/42af222/src/util.ts#L14)
+[src/util.ts:14](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/util.ts#L14)
 
 ___
 
@@ -62,4 +62,4 @@ ___
 
 #### Defined in
 
-[src/util.ts:2](https://github.com/fukaoi/solana-suite/blob/42af222/src/util.ts#L2)
+[src/util.ts:2](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/util.ts#L2)
