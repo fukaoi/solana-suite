@@ -10,10 +10,10 @@ import {
   PublicKey,
   TokenBalance,
   TransactionSignature,
+  Signer
 } from '@solana/web3.js';
 
 import {Transaction, Node, Result} from './';
-import {Constants} from './constants';
 
 export namespace SplToken {
   export interface TransferHistory {
@@ -169,9 +169,14 @@ export namespace SplToken {
       (error: Error) => Result.err(error)
     );
   }
-  export const multisig = (
+
+  export const multisig = async(
     tokenKey: PublicKey,
+    signers: Signer[],
+    multi: PublicKey[]
   ) => {
+    const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, signers[0]);
+    return await token.createMultisig(2, multi)
   }
 
   export const transfer = (

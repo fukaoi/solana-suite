@@ -72,23 +72,26 @@ describe('SplToken', () => {
   });
 
   it.only('multisig test', async () => {
-    // const mintAuthority = Wallet.create();
-    // const freezeAuthority = Wallet.create();
-    const TOKEN_TOTAL_AMOUNT = 10000000;
+    const mintAuthority = Wallet.create();
+    const freezeAuthority = Wallet.create();
+    const signer = {
+      publicKey: source.secret.toKeypair().publicKey,
+      secretKey: source.secret.toKeypair().secretKey,
+    }
+    const mid = await SplToken.multisig(
+      '3jQFBgJx6QCG9PUwATVcDfsZEkZnTHJMPLZmRkK2ZVq7'.toPubKey(), 
+      [signer],
+      [mintAuthority.pubkey.toPubKey()]
+    );
+    console.log(mid.toBase58());
     const res =
       await SplToken.mint(
         source.pubkey.toPubKey(),
         source.secret.toKeypair(),
-        TOKEN_TOTAL_AMOUNT,
+        1,
         MINT_DECIMAL,
-        // mintAuthority.pubkey.toPubKey(),
       );
-
-    if (res.isErr) console.error(res.error);
-    assert.isTrue(res.isOk);
-    tokenKeyStr = res.unwrap();
-    console.log('# tokenKey: ', tokenKeyStr);
-    SplToken.multisig(tokenKeyStr.toPubKey());
+    console.log(res);
   });
 
   it('Create token with fee payer', async () => {

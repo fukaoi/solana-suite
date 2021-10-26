@@ -1,5 +1,5 @@
 import {
-  Token, 
+  Token,
   MintLayout,
   TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
