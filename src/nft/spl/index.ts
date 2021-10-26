@@ -20,7 +20,7 @@ export namespace SplNft {
     source: PublicKey,
     feePayer: Keypair,
   ): Promise<Result<string, Error>> => {
-    return SplToken.create(
+    return SplToken.mint(
       source,
       feePayer,
       NFT_AMOUNT,

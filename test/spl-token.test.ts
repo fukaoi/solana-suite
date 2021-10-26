@@ -59,7 +59,7 @@ describe('SplToken', () => {
     }
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const res =
-      await SplToken.create(
+      await SplToken.mint(
         source.pubkey.toPubKey(),
         source.secret.toKeypair(),
         TOKEN_TOTAL_AMOUNT,
@@ -93,7 +93,7 @@ describe('SplToken', () => {
 
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const res =
-      await SplToken.create(
+      await SplToken.mint(
         source.pubkey.toPubKey(),
         feePayer.secret.toKeypair(),
         TOKEN_TOTAL_AMOUNT,

@@ -121,7 +121,7 @@ export namespace SplToken {
     return Result.ok(hist);
   }
 
-  export const create = async (
+  export const mint = async (
     source: PublicKey,
     feePayer: Keypair,
     totalAmount: number,
