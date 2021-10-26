@@ -1,4 +1,8 @@
-import {Token, MintLayout} from '@solana/spl-token';
+import {
+  Token, 
+  MintLayout,
+  TOKEN_PROGRAM_ID
+} from '@solana/spl-token';
 import {
   Keypair,
   PublicKey,
@@ -30,7 +34,7 @@ export namespace Metaplex {
         newAccountPubkey: mintAccount.publicKey,
         lamports: mintRentExempt,
         space: MintLayout.span,
-        programId: Constants.SPL_TOKEN_PROGRAM_ID,
+        programId: TOKEN_PROGRAM_ID,
       }),
     );
 
@@ -49,7 +53,7 @@ export namespace Metaplex {
 
     instructions.push(
       Token.createInitMintInstruction(
-        Constants.SPL_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
         mintAccount,
         decimals,
         owner,

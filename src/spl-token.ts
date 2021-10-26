@@ -13,6 +13,7 @@ import {
 } from '@solana/web3.js';
 
 import {Transaction, Node, Result} from './';
+import {Constants} from './constants';
 
 export namespace SplToken {
   export interface TransferHistory {
@@ -126,13 +127,15 @@ export namespace SplToken {
     feePayer: Keypair,
     totalAmount: number,
     mintDecimal: number,
+    mintAuthority?: PublicKey,
+    freezeAuthority?: PublicKey,
   ): Promise<Result<string, Error>> => {
 
     const tokenRes = await Token.createMint(
       Node.getConnection(),
       feePayer,
-      source,
-      null,
+      mintAuthority || source,
+      freezeAuthority || source,
       mintDecimal,
       TOKEN_PROGRAM_ID
     )
@@ -165,6 +168,10 @@ export namespace SplToken {
       (_value: string) => Result.ok(token.publicKey.toBase58()),
       (error: Error) => Result.err(error)
     );
+  }
+  export const multisig = (
+    tokenKey: PublicKey,
+  ) => {
   }
 
   export const transfer = (

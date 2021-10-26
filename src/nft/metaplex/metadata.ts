@@ -11,7 +11,7 @@ import {
 
 import {Metaplex, MetaplexSerialize, MetaplexInstructure} from './index';
 import {Node, Wallet, Constants, Result} from '../../index';
-import {Token} from '@solana/spl-token';
+import {Token, TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
 export namespace MetaplexMetaData {
   export const getByTokenKey = async (tokenKey: PublicKey):
@@ -40,7 +40,7 @@ export namespace MetaplexMetaData {
     // Get all token by owner
     const tokens = await Node.getConnection().getParsedTokenAccountsByOwner(
       owner,
-      {programId: Constants.SPL_TOKEN_PROGRAM_ID}
+      {programId: TOKEN_PROGRAM_ID}
     )
       .then(Result.ok)
       .catch(Result.err);
@@ -153,7 +153,7 @@ export namespace MetaplexMetaData {
 
       inst.push(
         Token.createMintToInstruction(
-          Constants.SPL_TOKEN_PROGRAM_ID,
+          TOKEN_PROGRAM_ID,
           tokenKey,
           associatedToken.value as PublicKey,
           updateAuthority,

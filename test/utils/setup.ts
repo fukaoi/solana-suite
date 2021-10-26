@@ -7,7 +7,6 @@ console.debug(`\u001b[33m solana-network: ${Constants.currentNetwork}`);
 
 export namespace Setup {
   const TEMP_KEYPAIR_FILE = `.solana-${Constants.currentNetwork}-keypair`;
-  const TEMP_TOKEN_FILE = '.solana-spl-token';
 
   export const generatekeyPair = async ():
     Promise<{source: Wallet.KeyPair, dest: Wallet.KeyPair}> => {
@@ -51,21 +50,6 @@ export namespace Setup {
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));
     return {source: source, dest: dest};
   }
-
-  export const loadTokenTempFile = () => {
-    let tokenKeyStr = '';
-    if (fs.existsSync(TEMP_TOKEN_FILE)) {
-      const res = fs.readFileSync(TEMP_TOKEN_FILE, 'utf8');
-      if (res) {
-        const obj = JSON.parse(res);
-        tokenKeyStr = obj.tokenKey;
-      }
-    }
-    return tokenKeyStr;
-  }
-
-  export const createTokenTempFile = async (data: Object) =>
-    fs.writeFileSync(TEMP_TOKEN_FILE, JSON.stringify(data));
 
   const templateKeyPair = (source: Wallet.KeyPair, dest: Wallet.KeyPair) => {
     return {

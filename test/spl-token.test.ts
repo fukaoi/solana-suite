@@ -15,7 +15,6 @@ describe('SplToken', () => {
     const obj = await Setup.generatekeyPair();
     source = obj.source;
     destination = obj.dest;
-    tokenKeyStr = Setup.loadTokenTempFile();
   });
 
   it('Get token transfer history by tokenKey', async () => {
@@ -70,15 +69,29 @@ describe('SplToken', () => {
     assert.isTrue(res.isOk);
     tokenKeyStr = res.unwrap();
     console.log('# tokenKey: ', tokenKeyStr);
-    Setup.createTokenTempFile({tokenKey: tokenKeyStr});
+  });
+
+  it.only('multisig test', async () => {
+    // const mintAuthority = Wallet.create();
+    // const freezeAuthority = Wallet.create();
+    const TOKEN_TOTAL_AMOUNT = 10000000;
+    const res =
+      await SplToken.mint(
+        source.pubkey.toPubKey(),
+        source.secret.toKeypair(),
+        TOKEN_TOTAL_AMOUNT,
+        MINT_DECIMAL,
+        // mintAuthority.pubkey.toPubKey(),
+      );
+
+    if (res.isErr) console.error(res.error);
+    assert.isTrue(res.isOk);
+    tokenKeyStr = res.unwrap();
+    console.log('# tokenKey: ', tokenKeyStr);
+    SplToken.multisig(tokenKeyStr.toPubKey());
   });
 
   it('Create token with fee payer', async () => {
-    if (tokenKeyStr) {
-      console.log(`# skip because loaded`);
-      return;
-    }
-
     let beforeBalance = 0;
     let afterBalance = 0;
     const feePayer = Wallet.create();
