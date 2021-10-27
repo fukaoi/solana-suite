@@ -32,9 +32,10 @@ export namespace SplNft {
     tokenKey: PublicKey,
     source: PublicKey,
     dest: PublicKey,
+    signers: Keypair[]
   ) => async (append: Transaction.AppendValue)
       : Promise<Result<TransactionSignature, Error>> => {
-      const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, append.signers[0]);
+      const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID,signers[0]);
       const sourceToken = await token.getOrCreateAssociatedAccountInfo(source)
         .then(Result.ok)
         .catch(Result.err);
@@ -53,7 +54,7 @@ export namespace SplNft {
         tokenKey,
         destToken.value.address,
         source,
-        append.signers,
+        signers,
         NFT_AMOUNT,
         NFT_DECIMAL
       );
@@ -63,9 +64,8 @@ export namespace SplNft {
           ? new Array(append.txInstructions, [param]).flat()
           : [param];
 
-      return await Transaction.sendInstruction()
+      return await Transaction.sendInstruction(signers)
         ({
-          signers: append.signers,
           txInstructions: instructions
         });
     }

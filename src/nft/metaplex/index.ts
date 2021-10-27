@@ -9,7 +9,7 @@ import {
   SystemProgram, TransactionInstruction,
 } from '@solana/web3.js';
 
-import {Constants, Node, Transaction, Result} from '../../';
+import {Node, Transaction, Result} from '../../';
 import {MetaplexMetaData, MetaplexInstructure} from './';
 
 export * from './instructure';
@@ -140,9 +140,8 @@ export namespace Metaplex {
 
     if (updateTx.isErr) return Result.err(updateTx.error);
 
-    const signature = await Transaction.sendInstruction()
+    const signature = await Transaction.sendInstruction(txsign.signers)
       ({
-        signers: txsign.signers,
         txInstructions: updateTx.value as TransactionInstruction[]
       });
 

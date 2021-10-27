@@ -33,12 +33,12 @@ describe('NftSpl', () => {
       tokenKeyStr.toPubKey(),
       source.pubkey.toPubKey(),
       destination.pubkey.toPubKey(),
+      [source.secret.toKeypair()],
     )({
-      signers: [source.secret.toKeypair()],
       txInstructions: [memoInst]
     });
     if (res.isErr) console.error(res.error);
-    assert.isTrue(res.isOk); 
+    assert.isTrue(res.isOk);
     console.log(`# tx signature: ${res.unwrap()}`);
   });
 })

@@ -170,7 +170,7 @@ export namespace SplToken {
     );
   }
 
-  export const multisig = async(
+  export const multisig = async (
     tokenKey: PublicKey,
     signers: Signer[],
     multi: PublicKey[]
@@ -183,11 +183,16 @@ export namespace SplToken {
     tokenKey: PublicKey,
     source: PublicKey,
     dest: PublicKey,
+    signers: Keypair[],
     amount: number,
     mintDecimal: number,
-  ) => async (append: Transaction.AppendValue)
+  ) => async (append?: Transaction.AppendValue)
       : Promise<Result<TransactionSignature, Error>> => {
-      const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, append.signers[0]);
+      const token = new Token(
+        Node.getConnection(),
+        tokenKey,
+        TOKEN_PROGRAM_ID,
+        signers[0]);
       const sourceToken = await token.getOrCreateAssociatedAccountInfo(source)
         .then(Result.ok)
         .catch(Result.err);
@@ -206,23 +211,23 @@ export namespace SplToken {
         tokenKey,
         destToken.value.address,
         source,
-        append.signers,
+        signers,
         amount,
         mintDecimal
       );
 
       const instructions =
-        append.txInstructions
+        append?.txInstructions
           ? new Array(append.txInstructions, [param]).flat()
           : [param];
       return Transaction.send(
         source,
         dest,
+        signers,
         amount,
       )(
         {
-          signers: append.signers,
-          feePayer: append.feePayer,
+          feePayer: append?.feePayer,
           txInstructions: instructions
         }
       );

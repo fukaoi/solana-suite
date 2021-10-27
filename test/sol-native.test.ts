@@ -19,8 +19,9 @@ describe('SolNative', () => {
       await SolNative.transfer(
         source.pubkey.toPubKey(),
         destinationStr.toPubKey(),
+        [source.secret.toKeypair()],
         solAmount,
-      )({signers: [source.secret.toKeypair()]});
+      )();
 
     if (res.isErr) console.error(res.error);
     assert.isNotTrue(res.isErr);
@@ -35,9 +36,9 @@ describe('SolNative', () => {
     const res = await SolNative.transfer(
       source.pubkey.toPubKey(),
       destinationStr.toPubKey(),
+      [source.secret.toKeypair()],
       solAmount,
     )({
-      signers: [source.secret.toKeypair()],
       txInstructions: [instruction]
     });
     if (res.isErr) console.error(res.error);

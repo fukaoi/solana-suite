@@ -188,10 +188,9 @@ export namespace StorageArweave {
       await SolNative.transfer(
         payer.publicKey,
         Constants.AR_SOL_HOLDER_ID,
+        [payer],
         totalConst.value
-      )({
-        signers: [payer]
-      })
+      )()
         .then(Result.ok)
         .catch(Result.err);
 

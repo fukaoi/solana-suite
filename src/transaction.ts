@@ -5,12 +5,12 @@ import {
   TransactionInstruction,
   TransactionSignature,
   SystemProgram,
-  Signer,
   ParsedConfirmedTransaction,
   Commitment,
   RpcResponseAndContext,
   SignatureResult,
   ConfirmedSignatureInfo,
+  Keypair,
 } from '@solana/web3.js';
 
 import {Node, Result} from './';
@@ -18,8 +18,10 @@ import {Constants} from './constants';
 
 export namespace Transaction {
   export interface AppendValue {
-    signers: Signer[],
     feePayer?: PublicKey,
+    multiSigsigners?: PublicKey[],
+    mintAuthority?: PublicKey,
+    freezeAuthority?: PublicKey,
     txInstructions?: TransactionInstruction[],
   }
 
@@ -62,27 +64,33 @@ export namespace Transaction {
       .catch(Result.err);
   }
 
-  export const sendInstruction = () =>
+  export const sendInstruction = (
+    signers: Keypair[]
+  ) =>
     async (append: AppendValue)
       : Promise<Result<TransactionSignature, Error>> => {
 
       if (!append.txInstructions)
         return Result.err(Error('Need set TransactionInstructions'));
 
-      const tx = new SolanaTransaction().add(append.txInstructions[0]);
+      const t = new SolanaTransaction();
+      if (!append.feePayer) {
+        t.feePayer = signers[0].publicKey;
+      } else {
+        t.feePayer = append.feePayer;
+      }
+
+      const tx = t.add(append.txInstructions[0]);
 
       if (append.txInstructions[1]) {
         append.txInstructions.slice(1, append.txInstructions.length)
           .forEach((st: TransactionInstruction) => tx.add(st));
       }
 
-      if (!append.signers)
-        return Result.err(Error('Need set signers'));
-
       return await sendAndConfirmTransaction(
         Node.getConnection(),
         tx,
-        append.signers,
+        signers,
       )
         .then(Result.ok)
         .catch(Result.err);
@@ -91,8 +99,9 @@ export namespace Transaction {
   export const send = (
     source: PublicKey,
     destination: PublicKey,
+    signers: Keypair[],
     amount: number,
-  ) => async (append: AppendValue)
+  ) => async (append?: AppendValue)
       : Promise<Result<TransactionSignature, Error>> => {
       const params =
         SystemProgram.transfer({
@@ -102,11 +111,11 @@ export namespace Transaction {
         });
 
       const t = new SolanaTransaction();
-      if (!append.feePayer) {
-        t.feePayer = append.signers[0].publicKey;
+      if (!append?.feePayer) {
+        t.feePayer = signers[0].publicKey;
       } else {
         // check existed fee payer address in signers
-        const addresses = append.signers.map(s => s.publicKey.toBase58());
+        const addresses = signers.map(s => s.publicKey.toBase58());
         if (!addresses.indexOf(append.feePayer.toBase58())) {
           return Result.err(Error('Need include fee payer keypair in signers'));
         }
@@ -114,13 +123,13 @@ export namespace Transaction {
       }
 
       const tx = t.add(params);
-      if (append.txInstructions)
+      if (append?.txInstructions)
         append.txInstructions.forEach((st: TransactionInstruction) => tx.add(st));
 
       return await sendAndConfirmTransaction(
         Node.getConnection(),
         tx,
-        append.signers,
+        signers,
       )
         .then(Result.ok)
         .catch(Result.err);

@@ -34,8 +34,9 @@ describe('Memo', () => {
   it('send memo by own', async () => {
     const memoInst = Memo.createInstruction('{"memo": 123456789}');
     const res =
-      await Transaction.sendInstruction()({
-        signers: [source.secret.toKeypair()],
+      await Transaction.sendInstruction(
+        [source.secret.toKeypair()],
+      )({
         txInstructions: [memoInst],
       });
 

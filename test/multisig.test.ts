@@ -11,17 +11,18 @@ describe('Multisig', () => {
   });
 
   it('Create account 2 of 2', async () => {
-    const feePayer = source;
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const res = await Multisig.create(
       2,
+      source.secret.toKeypair(),
       [
         signer1.pubkey.toPubKey(),
         signer2.pubkey.toPubKey(),
       ],
-      feePayer.secret.toKeypair()
-    );
+    )({
+      feePayer: source.pubkey.toPubKey()
+    });
 
     if (res.isErr) console.error(res.error); 
     assert.isTrue(res.isOk);
@@ -29,19 +30,20 @@ describe('Multisig', () => {
   });
 
   it('Create account 2 of 3', async () => {
-    const feePayer = source;
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const signer3 = Wallet.create();
     const res = await Multisig.create(
       2,
+      source.secret.toKeypair(),
       [
         signer1.pubkey.toPubKey(),
         signer2.pubkey.toPubKey(),
         signer3.pubkey.toPubKey(),
       ],
-      feePayer.secret.toKeypair()
-    );
+    )({
+      feePayer: source.pubkey.toPubKey()
+    });
 
     if (res.isErr) console.error(res.error); 
     assert.isTrue(res.isOk);
@@ -49,15 +51,14 @@ describe('Multisig', () => {
   });
 
   it('[Err] m number less than signers number', async () => {
-    const feePayer = source;
     const signer1 = Wallet.create();
     const res = await Multisig.create(
       2,
+      source.secret.toKeypair(),
       [
         signer1.pubkey.toPubKey(),
       ],
-      feePayer.secret.toKeypair()
-    );
+    )();
     assert.isTrue(res.isErr);
   });
 })
