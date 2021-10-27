@@ -10,8 +10,12 @@ import {
   PublicKey,
   TokenBalance,
   TransactionSignature,
-  Signer
+  Signer,
+  Transaction as SolanaTransaction,
+  SystemProgram
 } from '@solana/web3.js';
+
+import * as BufferLayout from '@solana/buffer-layout';
 
 import {Transaction, Node, Result} from './';
 
@@ -57,6 +61,23 @@ export namespace SplToken {
 
   const convertTimestmapToDate = (blockTime: number) =>
     new Date(blockTime * 1000);
+
+  const createLayoutPubKey = (property: string = 'publicKey') =>
+    BufferLayout.blob(32, property);
+
+  const createLayoutUint64 = (property: string = 'uint64') =>
+    BufferLayout.blob(8, property);
+
+  const MintLayout =
+    BufferLayout.struct([
+      BufferLayout.u32('mintAuthorityOption'),
+      createLayoutPubKey('mintAuthority'),
+      createLayoutUint64('supply'),
+      BufferLayout.u8('decimals'),
+      BufferLayout.u8('isInitialized'),
+      BufferLayout.u32('freezeAuthorityOption'),
+      createLayoutPubKey('freezeAuthority'),
+    ]);
 
   export const subscribeAccount = (
     pubkey: PublicKey,
@@ -122,20 +143,71 @@ export namespace SplToken {
     return Result.ok(hist);
   }
 
-  export const mint = async (
+  export const mint2 = async (
     source: PublicKey,
-    feePayer: Keypair,
+    signer: Keypair,
     totalAmount: number,
     mintDecimal: number,
-    mintAuthority?: PublicKey,
-    freezeAuthority?: PublicKey,
+    // ): Promise<Result<string, Error>> => {
+  ) => {
+    const mintAccount = Keypair.generate();
+    const connection = Node.getConnection();
+    const token = new Token(
+      connection,
+      mintAccount.publicKey,
+      TOKEN_PROGRAM_ID,
+      signer,
+    );
+
+    const balanceNeeded = await Token.getMinBalanceRentForExemptMint(
+      connection,
+    );
+
+    const t = new SolanaTransaction();
+    t.add(
+      SystemProgram.createAccount({
+        fromPubkey: signer.publicKey,
+        newAccountPubkey: mintAccount.publicKey,
+        lamports: balanceNeeded,
+        space: MintLayout.span,
+        programId: TOKEN_PROGRAM_ID,
+      }),
+    );
+
+    t.add(
+      Token.createInitMintInstruction(
+        TOKEN_PROGRAM_ID,
+        mintAccount.publicKey,
+        mintDecimal,
+        source,
+        source,
+      ),
+    );
+
+    // Send the two instructions
+    // await sendAndConfirmTransaction(
+    // 'createAccount and InitializeMint',
+    // connection,
+    // transaction,
+    // payer,
+    // mintAccount,
+    // );
+
+
+  }
+
+  export const mint = async (
+    source: PublicKey,
+    signer: Keypair,
+    totalAmount: number,
+    mintDecimal: number,
   ): Promise<Result<string, Error>> => {
 
     const tokenRes = await Token.createMint(
       Node.getConnection(),
-      feePayer,
-      mintAuthority || source,
-      freezeAuthority || source,
+      signer,
+      source,
+      null,
       mintDecimal,
       TOKEN_PROGRAM_ID
     )
@@ -153,7 +225,7 @@ export namespace SplToken {
 
     if (tokenAssociated.isErr) return Result.err(tokenAssociated.error);
 
-    token.payer = feePayer;
+    token.payer = signer;
 
     const res = await token.mintTo(
       tokenAssociated.value.address,

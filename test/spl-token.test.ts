@@ -94,7 +94,7 @@ describe('SplToken', () => {
   // console.log(res);
   // });
 
-  it('Create token with fee payer', async () => {
+  it.only('Create token with fee payer', async () => {
     let beforeBalance = 0;
     let afterBalance = 0;
     const feePayer = Wallet.create();
@@ -113,7 +113,7 @@ describe('SplToken', () => {
     const res =
       await SplToken.mint(
         source.pubkey.toPubKey(),
-        source.secret.toKeypair(),
+        feePayer.secret.toKeypair(),
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL
       );
