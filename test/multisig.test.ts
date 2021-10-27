@@ -1,3 +1,4 @@
+import {assert} from 'chai';
 import {Multisig, Wallet} from '../src/';
 import {Setup} from './utils/setup';
 
@@ -21,6 +22,22 @@ describe('Multisig', () => {
       ],
       feePayer.secret.toKeypair()
     );
-    console.log('# multisig account: ', res);
+
+    if (res.isErr) console.error(res.error); 
+    assert.isTrue(res.isOk);
+    console.log('# multisig account: ', res.unwrap());
+  });
+
+  it('[Err] m number less than signers number', async () => {
+    const feePayer = source;
+    const signer1 = Wallet.create();
+    const res = await Multisig.create(
+      2,
+      [
+        signer1.pubkey.toPubKey(),
+      ],
+      feePayer.secret.toKeypair()
+    );
+    assert.isTrue(res.isErr);
   });
 })

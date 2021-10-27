@@ -35,20 +35,31 @@ export namespace Multisig {
     createLayoutPubKey('signer11'),
   ]);
 
-  export const create = async (m: number, signers: PublicKey[], feePayer: Keypair) => {
-    if (m > signers.length) return Result.err(Error('signers number less than m number'));
+  export const create = async (
+    m: number, 
+    signers: PublicKey[], 
+    feePayer: Keypair
+  ): Promise<Result<string, Error>> => {
+
+    if (m > signers.length) 
+      return Result.err(Error('signers number less than m number'));
+
     const multisigAccount = Wallet.create().secret.toKeypair();
     const connection = Node.getConnection();
     const balanceNeeded = await connection.getMinimumBalanceForRentExemption(
       MultisigLayout.span
-    );
+    )
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (balanceNeeded.isErr) return Result.err(balanceNeeded.error);
 
     const transaction = new SolanaTransaction();
 
     transaction.add(SystemProgram.createAccount({
       fromPubkey: feePayer.publicKey,
       newAccountPubkey: multisigAccount.publicKey,
-      lamports: balanceNeeded,
+      lamports: balanceNeeded.value,
       space: MultisigLayout.span,
       programId: TOKEN_PROGRAM_ID
     }));
@@ -96,11 +107,16 @@ export namespace Multisig {
       data
     });
 
-    await sendAndConfirmTransaction(
+    const sig = await sendAndConfirmTransaction(
       connection,
       transaction,
       [feePayer, multisigAccount],
-    );
-    return multisigAccount.publicKey.toBase58();
+    )
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (sig.isErr) return sig;
+
+    return Result.ok(multisigAccount.publicKey.toBase58());
   }
 }
