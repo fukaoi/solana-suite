@@ -54,21 +54,21 @@ export namespace Multisig {
 
     const keys = [
       {
-        pubkey: multisigAccount.publicKey, 
-        isSigner: false, 
+        pubkey: multisigAccount.publicKey,
+        isSigner: false,
         isWritable: true
       },
       {
-        pubkey: SYSVAR_RENT_PUBKEY, 
-        isSigner: false, 
+        pubkey: SYSVAR_RENT_PUBKEY,
+        isSigner: false,
         isWritable: false
       },
     ];
     signers.forEach(signer =>
       keys.push(
         {
-          pubkey: signer, 
-          isSigner: false, 
+          pubkey: signer,
+          isSigner: false,
           isWritable: false
         }
       ),
