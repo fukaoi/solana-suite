@@ -12,7 +12,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
-import {Wallet, Node} from './';
+import {Wallet, Node, Result} from './';
 
 export namespace Multisig {
   const createLayoutPubKey = (property: string = 'publicKey') =>
@@ -36,6 +36,7 @@ export namespace Multisig {
   ]);
 
   export const create = async (m: number, signers: PublicKey[], feePayer: Keypair) => {
+    if (m > signers.length) return Result.err(Error('signers number less than m number'));
     const multisigAccount = Wallet.create().secret.toKeypair();
     const connection = Node.getConnection();
     const balanceNeeded = await connection.getMinimumBalanceForRentExemption(

@@ -37,7 +37,7 @@ export namespace Wallet {
     switch (unit) {
       case 'sol': return Result.ok((balance.value) / LAMPORTS_PER_SOL);
       case 'lamports': return balance;
-      default: return Result.err(new Error('no match unit'));
+      default: return Result.err(Error('no match unit'));
     }
   };
 
@@ -48,13 +48,13 @@ export namespace Wallet {
     console.debug('Now airdropping...please wait');
 
     if (airdropAmount > MAX_AIRDROP_SOL)
-      return Result.err(new Error(`Over max airdrop amount: ${airdropAmount}`))
+      return Result.err(Error(`Over max airdrop amount: ${airdropAmount}`))
 
     const sig = await Node.getConnection().requestAirdrop(pubkey, airdropAmount)
       .then(Result.ok)
       .catch(Result.err);
 
-    if (sig.isErr) return Result.err(new Error('Failed airdrop'));
+    if (sig.isErr) return Result.err(Error('Failed airdrop'));
     await Transaction.confirmedSig(sig.value);
     return Result.ok('success');
   }

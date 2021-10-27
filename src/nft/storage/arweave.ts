@@ -204,7 +204,7 @@ export namespace StorageArweave {
 
     if (res.isErr) return res.error;
     const manifest = (res.value.unwrap() as ArweaveResult).messages[0];
-    if (!manifest) return Result.err(new Error('Invalid manifest data'));
+    if (!manifest) return Result.err(Error('Invalid manifest data'));
     return Result.ok(`${Constants.ARWEAVE_GATEWAY_URL}/${manifest!.transactionId}`);
   }
 }

@@ -101,7 +101,7 @@ export namespace Result {
   }
   export function err<E extends Error, T = never>(error?: E): Result<T, E>
   export function err<E extends Error, T = never>(error: E): Result<T, E> {
-    return new InternalErr(error || new Error());
+    return new InternalErr(error || Error());
   }
 
   type U = Result<unknown>;

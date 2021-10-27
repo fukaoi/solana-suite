@@ -67,7 +67,7 @@ export namespace Transaction {
       : Promise<Result<TransactionSignature, Error>> => {
 
       if (!append.txInstructions)
-        return Result.err(new Error('Need set TransactionInstructions'));
+        return Result.err(Error('Need set TransactionInstructions'));
 
       const tx = new SolanaTransaction().add(append.txInstructions[0]);
 
@@ -77,7 +77,7 @@ export namespace Transaction {
       }
 
       if (!append.signers)
-        return Result.err(new Error('Need set signers'));
+        return Result.err(Error('Need set signers'));
 
       return await sendAndConfirmTransaction(
         Node.getConnection(),
@@ -108,7 +108,7 @@ export namespace Transaction {
         // check existed fee payer address in signers
         const addresses = append.signers.map(s => s.publicKey.toBase58());
         if (!addresses.indexOf(append.feePayer.toBase58())) {
-          return Result.err(new Error('Need include fee payer keypair in signers'));
+          return Result.err(Error('Need include fee payer keypair in signers'));
         }
         t.feePayer = append.feePayer;
       }
