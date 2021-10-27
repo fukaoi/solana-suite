@@ -9,11 +9,10 @@ import {
 } from '@solana/web3.js';
 
 import {
-  Token,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
-import {Transaction, Wallet, Node, Constants} from './';
+import {Wallet, Node} from './';
 
 export namespace Multisig {
   const createLayoutPubKey = (property: string = 'publicKey') =>
@@ -39,7 +38,10 @@ export namespace Multisig {
   export const create = async (m: number, signers: PublicKey[], feePayer: Keypair) => {
     const multisigAccount = Wallet.create().secret.toKeypair();
     const connection = Node.getConnection();
-    const balanceNeeded = await Token.getMinBalanceRentForExemptMultisig(connection);
+    const balanceNeeded = await connection.getMinimumBalanceForRentExemption(
+      MultisigLayout.span
+    );
+
     const transaction = new SolanaTransaction();
 
     transaction.add(SystemProgram.createAccount({
@@ -48,14 +50,28 @@ export namespace Multisig {
       lamports: balanceNeeded,
       space: MultisigLayout.span,
       programId: TOKEN_PROGRAM_ID
-    })); 
+    }));
 
     const keys = [
-      {pubkey: multisigAccount.publicKey, isSigner: false, isWritable: true},
-      {pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false},
+      {
+        pubkey: multisigAccount.publicKey, 
+        isSigner: false, 
+        isWritable: true
+      },
+      {
+        pubkey: SYSVAR_RENT_PUBKEY, 
+        isSigner: false, 
+        isWritable: false
+      },
     ];
     signers.forEach(signer =>
-      keys.push({pubkey: signer, isSigner: false, isWritable: false}),
+      keys.push(
+        {
+          pubkey: signer, 
+          isSigner: false, 
+          isWritable: false
+        }
+      ),
     );
 
     const dataLayout = BufferLayout.struct([
@@ -64,23 +80,26 @@ export namespace Multisig {
     ]);
 
     const data = Buffer.alloc(dataLayout.span);
+
     dataLayout.encode(
       {
         instruction: 2,
         m
       }
-      , data);
+      , data
+    );
+
     transaction.add({
       keys,
       programId: TOKEN_PROGRAM_ID,
       data
-    }); 
+    });
 
     await sendAndConfirmTransaction(
       connection,
       transaction,
-      [multisigAccount],
+      [feePayer, multisigAccount],
     );
-    return multisigAccount.publicKey;
+    return multisigAccount.publicKey.toBase58();
   }
 }
