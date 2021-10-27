@@ -7,7 +7,11 @@ import {
   SYSVAR_RENT_PUBKEY,
 } from '@solana/web3.js';
 
-import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID, 
+  TOKEN_PROGRAM_ID
+} from '@solana/spl-token';
+
 import bs from 'bs58';
 
 import {Transaction, Constants, Node, Result} from './';
@@ -77,7 +81,7 @@ export namespace Wallet {
         TOKEN_PROGRAM_ID.toBuffer(),
         tokenKey.toBuffer(),
       ],
-      Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID
+      ASSOCIATED_TOKEN_PROGRAM_ID
     )
       .then(v => Result.ok(v[0]))
       .catch(Result.err);
@@ -143,7 +147,7 @@ export namespace Wallet {
     ];
     return new TransactionInstruction({
       keys,
-      programId: Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID,
+      programId: ASSOCIATED_TOKEN_PROGRAM_ID,
       data: Buffer.from([]),
     });
   }
