@@ -10,7 +10,7 @@ describe('Multisig', () => {
     source = obj.source;
   });
 
-  it('Create account', async () => {
+  it('Create account 2 of 2', async () => {
     const feePayer = source;
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
@@ -19,6 +19,26 @@ describe('Multisig', () => {
       [
         signer1.pubkey.toPubKey(),
         signer2.pubkey.toPubKey(),
+      ],
+      feePayer.secret.toKeypair()
+    );
+
+    if (res.isErr) console.error(res.error); 
+    assert.isTrue(res.isOk);
+    console.log('# multisig account: ', res.unwrap());
+  });
+
+  it('Create account 2 of 3', async () => {
+    const feePayer = source;
+    const signer1 = Wallet.create();
+    const signer2 = Wallet.create();
+    const signer3 = Wallet.create();
+    const res = await Multisig.create(
+      2,
+      [
+        signer1.pubkey.toPubKey(),
+        signer2.pubkey.toPubKey(),
+        signer3.pubkey.toPubKey(),
       ],
       feePayer.secret.toKeypair()
     );

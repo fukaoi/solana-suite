@@ -36,12 +36,12 @@ export namespace Multisig {
   ]);
 
   export const create = async (
-    m: number, 
-    signers: PublicKey[], 
+    m: number,
+    signers: PublicKey[],
     feePayer: Keypair
   ): Promise<Result<string, Error>> => {
 
-    if (m > signers.length) 
+    if (m > signers.length)
       return Result.err(Error('signers number less than m number'));
 
     const multisigAccount = Wallet.create().secret.toKeypair();
