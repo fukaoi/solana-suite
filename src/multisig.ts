@@ -91,7 +91,7 @@ export namespace Multisig {
       multisigPubKey.forEach(pubkey =>
         keys.push(
           {
-            pubkey: pubkey,
+            pubkey,
             isSigner: false,
             isWritable: false
           }
@@ -113,7 +113,7 @@ export namespace Multisig {
         , data
       );
 
-      if (append?.txInstructions) 
+      if (append?.txInstructions)
         append.txInstructions.forEach((st: TransactionInstruction) => t.add(st));
 
       t.add({
