@@ -3,8 +3,8 @@ import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
 import {Wallet, SplToken, Memo, Util, Transaction} from '../src/'
 
-let source: Wallet.KeyPair;
-let destination: Wallet.KeyPair;
+let source: Wallet.KeypairStr;
+let destination: Wallet.KeypairStr;
 let tokenKeyStr: string;
 
 const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6'.toPubKey();

@@ -5,7 +5,7 @@ import {MetaplexMetaData, MetaplexInstructure, Metaplex} from '../../../src/nft/
 import {Setup} from '../../../test/utils/setup';
 import {TransactionInstruction} from '@solana/web3.js';
 
-let source: Wallet.KeyPair;
+let source: Wallet.KeypairStr;
 
 describe('MetaplexMetaData', () => {
   before(async () => {

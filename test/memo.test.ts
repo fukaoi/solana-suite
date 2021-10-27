@@ -3,7 +3,7 @@ import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
 import {Memo, Wallet, Transaction} from '../src';
 
-let source: Wallet.KeyPair;
+let source: Wallet.KeypairStr;
 const DUMMY_DATA = 'dummy memo data';
 
 describe('Memo', () => {

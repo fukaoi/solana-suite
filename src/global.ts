@@ -1,6 +1,6 @@
 import {
   PublicKey,
-  Keypair
+  Keypair,
 } from '@solana/web3.js';
 
 import bs from 'bs58';

@@ -2,11 +2,11 @@ import {describe, it} from 'mocha';
 import {Wallet} from '../src';
 import {assert} from 'chai';
 
-let source: Wallet.KeyPair;
+let source: Wallet.KeypairStr;
 
 describe('Wallet', () => {
   before(async () => {
-    source = await Wallet.create();
+    source = Wallet.create();
     console.log('# source address: ', source.pubkey.toAddressUrl());
   });
 

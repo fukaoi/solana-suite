@@ -3,8 +3,8 @@ import {assert} from 'chai'
 import {Setup} from '../../../test/utils/setup';
 import {Wallet, SplNft, Memo} from '../../../src';
 
-let source: Wallet.KeyPair;
-let destination: Wallet.KeyPair;
+let source: Wallet.KeypairStr;
+let destination: Wallet.KeypairStr;
 let tokenKeyStr: string;
 
 describe('NftSpl', () => {

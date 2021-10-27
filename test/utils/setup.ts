@@ -1,6 +1,5 @@
 import fs from 'fs';
 import {Constants, Wallet} from '../../src';
-import '../../src/util';
 
 console.debug(`\u001b[33m === DEBUG MODE ===`);
 console.debug(`\u001b[33m solana-network: ${Constants.currentNetwork}`);
@@ -9,13 +8,13 @@ export namespace Setup {
   const TEMP_KEYPAIR_FILE = `.solana-${Constants.currentNetwork}-keypair`;
 
   export const generatekeyPair = async ():
-    Promise<{source: Wallet.KeyPair, dest: Wallet.KeyPair}> => {
+    Promise<{source: Wallet.KeypairStr, dest: Wallet.KeypairStr}> => {
     const {source, dest} = await getSourceAndDest();
     debug(source, dest);
     return {source: source, dest: dest};
   }
 
-  const debug = (source: Wallet.KeyPair, dest: Wallet.KeyPair) => {
+  const debug = (source: Wallet.KeypairStr, dest: Wallet.KeypairStr) => {
     console.debug(`# source.pubkey:`, source.pubkey);
     console.debug(`# source.secret: `, source.secret);
     console.debug(`# destination.pubkey:`, dest.pubkey);
@@ -51,7 +50,10 @@ export namespace Setup {
     return {source: source, dest: dest};
   }
 
-  const templateKeyPair = (source: Wallet.KeyPair, dest: Wallet.KeyPair) => {
+  const templateKeyPair = (
+    source: Wallet.KeypairStr, 
+    dest: Wallet.KeypairStr
+  ) => {
     return {
       source: {
         pubkey: source.pubkey,

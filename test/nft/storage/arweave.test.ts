@@ -4,7 +4,7 @@ import {StorageArweave, Wallet} from '../../../src';
 import {Setup} from '../../utils/setup';
 import {RandomAsset} from '../../utils/randomAsset';
 
-let source: Wallet.KeyPair;
+let source: Wallet.KeypairStr;
 
 describe('StorageArweave', () => {
   before(async () => {

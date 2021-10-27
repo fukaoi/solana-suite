@@ -16,7 +16,7 @@ import {
 import {Transaction, Wallet, Node, Constants} from './';
 
 export namespace Multisig {
-  const createLayoutPubKey = (property: string = 'publicKey') => 
+  const createLayoutPubKey = (property: string = 'publicKey') =>
     BufferLayout.blob(32, property);
 
   const MultisigLayout = BufferLayout.struct([
@@ -37,20 +37,20 @@ export namespace Multisig {
   ]);
 
   export const create = async (m: number, signers: PublicKey[], feePayer: Keypair) => {
-    const multisigAccount = Keypair.generate();
+    const multisigAccount = Wallet.create().secret.toKeypair();
     const connection = Node.getConnection();
     const balanceNeeded = await Token.getMinBalanceRentForExemptMultisig(connection);
     const transaction = new SolanaTransaction();
+
     transaction.add(SystemProgram.createAccount({
       fromPubkey: feePayer.publicKey,
       newAccountPubkey: multisigAccount.publicKey,
       lamports: balanceNeeded,
       space: MultisigLayout.span,
       programId: TOKEN_PROGRAM_ID
-    })); // create the new account
+    })); 
 
-    // create the new account
-    let keys = [
+    const keys = [
       {pubkey: multisigAccount.publicKey, isSigner: false, isWritable: true},
       {pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false},
     ];
@@ -74,12 +74,12 @@ export namespace Multisig {
       keys,
       programId: TOKEN_PROGRAM_ID,
       data
-    }); // Send the two instructions
+    }); 
 
     await sendAndConfirmTransaction(
       connection,
       transaction,
-      multisigAccount,
+      [multisigAccount],
     );
     return multisigAccount.publicKey;
   }

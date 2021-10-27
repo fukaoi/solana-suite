@@ -3,7 +3,7 @@ import {SolNative, Memo, Wallet} from '../src';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
 
-let source: Wallet.KeyPair;
+let source: Wallet.KeypairStr;
 let destinationStr: string;
 
 describe('SolNative', () => {

@@ -16,7 +16,7 @@ export namespace Wallet {
 
   type Unit = 'sol' | 'lamports';
 
-  export interface KeyPair {
+  export interface KeypairStr {
     pubkey: string,
     secret: string
   }
@@ -59,7 +59,7 @@ export namespace Wallet {
     return Result.ok('success');
   }
 
-  export const create = (): KeyPair => {
+  export const create = (): KeypairStr => {
     const keypair = Keypair.generate();
     return {
       pubkey: keypair.publicKey.toBase58(),
