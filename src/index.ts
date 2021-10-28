@@ -1,3 +1,4 @@
+export * from './append';
 export * from './constants';
 export * from './global';
 export * from './memo';
