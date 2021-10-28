@@ -11,13 +11,9 @@ import {
   TokenBalance,
   TransactionSignature,
   Signer,
-  Transaction as SolanaTransaction,
-  SystemProgram
 } from '@solana/web3.js';
 
-import * as BufferLayout from '@solana/buffer-layout';
-
-import {Transaction, Node, Result} from './';
+import {Transaction, Node, Result, Append} from './';
 
 export namespace SplToken {
   export interface TransferHistory {
@@ -61,23 +57,6 @@ export namespace SplToken {
 
   const convertTimestmapToDate = (blockTime: number) =>
     new Date(blockTime * 1000);
-
-  const createLayoutPubKey = (property: string = 'publicKey') =>
-    BufferLayout.blob(32, property);
-
-  const createLayoutUint64 = (property: string = 'uint64') =>
-    BufferLayout.blob(8, property);
-
-  const MintLayout =
-    BufferLayout.struct([
-      BufferLayout.u32('mintAuthorityOption'),
-      createLayoutPubKey('mintAuthority'),
-      createLayoutUint64('supply'),
-      BufferLayout.u8('decimals'),
-      BufferLayout.u8('isInitialized'),
-      BufferLayout.u32('freezeAuthorityOption'),
-      createLayoutPubKey('freezeAuthority'),
-    ]);
 
   export const subscribeAccount = (
     pubkey: PublicKey,
@@ -143,104 +122,56 @@ export namespace SplToken {
     return Result.ok(hist);
   }
 
-  export const mint2 = async (
+  export const mint = (
     source: PublicKey,
-    signer: Keypair,
+    signers: Keypair[],
     totalAmount: number,
     mintDecimal: number,
-    // ): Promise<Result<string, Error>> => {
-  ) => {
-    const mintAccount = Keypair.generate();
-    const connection = Node.getConnection();
-    const token = new Token(
-      connection,
-      mintAccount.publicKey,
-      TOKEN_PROGRAM_ID,
-      signer,
-    );
-
-    const balanceNeeded = await Token.getMinBalanceRentForExemptMint(
-      connection,
-    );
-
-    const t = new SolanaTransaction();
-    t.add(
-      SystemProgram.createAccount({
-        fromPubkey: signer.publicKey,
-        newAccountPubkey: mintAccount.publicKey,
-        lamports: balanceNeeded,
-        space: MintLayout.span,
-        programId: TOKEN_PROGRAM_ID,
-      }),
-    );
-
-    t.add(
-      Token.createInitMintInstruction(
-        TOKEN_PROGRAM_ID,
-        mintAccount.publicKey,
+  ) => async (append?: Append.Value)
+      : Promise<Result<string, Error>> => {
+      const tokenRes = await Token.createMint(
+        Node.getConnection(),
+        signers[0],
+        source,
+        null,
         mintDecimal,
-        source,
-        source,
-      ),
-    );
-
-    // Send the two instructions
-    // await sendAndConfirmTransaction(
-    // 'createAccount and InitializeMint',
-    // connection,
-    // transaction,
-    // payer,
-    // mintAccount,
-    // );
-
-
-  }
-
-  export const mint = async (
-    source: PublicKey,
-    signer: Keypair,
-    totalAmount: number,
-    mintDecimal: number,
-  ): Promise<Result<string, Error>> => {
-
-    const tokenRes = await Token.createMint(
-      Node.getConnection(),
-      signer,
-      source,
-      null,
-      mintDecimal,
-      TOKEN_PROGRAM_ID
-    )
-      .then(Result.ok)
-      .catch(Result.err);
-
-    if (tokenRes.isErr) return Result.err(tokenRes.error);
-
-    const token = tokenRes.value;
-
-    const tokenAssociated =
-      await token.getOrCreateAssociatedAccountInfo(source)
+        TOKEN_PROGRAM_ID
+      )
         .then(Result.ok)
         .catch(Result.err);
 
-    if (tokenAssociated.isErr) return Result.err(tokenAssociated.error);
+      if (tokenRes.isErr) return Result.err(tokenRes.error);
+      const token = tokenRes.value;
 
-    token.payer = signer;
 
-    const res = await token.mintTo(
-      tokenAssociated.value.address,
-      source,
-      [],
-      totalAmount,
-    )
-      .then(Result.ok)
-      .catch(Result.err);
+      let authority = source;
+      if (append?.multiSig) {
+        if (!Append.isInMultisig(append.multiSig, signers))
+          return Result.err(Error('Not found singer of multiSig in signers'));
+        authority = append.multiSig;
+      }
 
-    return (res as Result<string, Error>).chain(
-      (_value: string) => Result.ok(token.publicKey.toBase58()),
-      (error: Error) => Result.err(error)
-    );
-  }
+      const tokenAssociated =
+        await token.getOrCreateAssociatedAccountInfo(source)
+          .then(Result.ok)
+          .catch(Result.err);
+
+      if (tokenAssociated.isErr) return Result.err(tokenAssociated.error);
+
+      const res = await token.mintTo(
+        tokenAssociated.value.address,
+        source,
+        signers,
+        totalAmount,
+      )
+        .then(Result.ok)
+        .catch(Result.err);
+
+      return (res as Result<string, Error>).chain(
+        (_value: string) => Result.ok(token.publicKey.toBase58()),
+        (error: Error) => Result.err(error)
+      );
+    }
 
   export const multisig = async (
     tokenKey: PublicKey,
@@ -258,7 +189,7 @@ export namespace SplToken {
     signers: Keypair[],
     amount: number,
     mintDecimal: number,
-  ) => async (append?: Transaction.AppendValue)
+  ) => async (append?: Append.Value)
       : Promise<Result<TransactionSignature, Error>> => {
       const token = new Token(
         Node.getConnection(),

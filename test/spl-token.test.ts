@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Wallet, SplToken, Memo, Util, Transaction} from '../src/'
+import {Wallet, SplToken, Memo, Util, Transaction, Multisig} from '../src/'
 
 let source: Wallet.KeypairStr;
 let destination: Wallet.KeypairStr;
@@ -52,18 +52,14 @@ describe('SplToken', () => {
   });
 
   it('Create token', async () => {
-    if (tokenKeyStr) {
-      console.log(`# skip because loaded`);
-      return;
-    }
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const res =
       await SplToken.mint(
         source.pubkey.toPubKey(),
-        source.secret.toKeypair(),
+        [source.secret.toKeypair()],
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL
-      );
+      )();
 
     if (res.isErr) console.error(res.error);
     assert.isTrue(res.isOk);
@@ -71,30 +67,33 @@ describe('SplToken', () => {
     console.log('# tokenKey: ', tokenKeyStr);
   });
 
-  // it('multisig test', async () => {
-  // const mintAuthority = Wallet.create();
-  // const freezeAuthority = Wallet.create();
-  // const signer = {
-  // publicKey: source.secret.toKeypair().publicKey,
-  // secretKey: source.secret.toKeypair().secretKey,
-  // }
-  // const mid = await SplToken.multisig(
-  // '3jQFBgJx6QCG9PUwATVcDfsZEkZnTHJMPLZmRkK2ZVq7'.toPubKey(), 
-  // [signer],
-  // [mintAuthority.pubkey.toPubKey()]
-  // );
-  // console.log(mid.toBase58());
-  // const res =
-  // await SplToken.mint(
-  // source.pubkey.toPubKey(),
-  // source.secret.toKeypair(),
-  // 1,
-  // MINT_DECIMAL,
-  // );
-  // console.log(res);
-  // });
+  it.only('Create token with multisig', async () => {
+    const signer1 = Wallet.create();
+    const signer2 = Wallet.create();
+    const multisig = await Multisig.create(
+      2,
+      source.secret.toKeypair(),
+      [signer1.pubkey.toPubKey(), signer2.pubkey.toPubKey()]
+    )();
 
-  it.only('Create token with fee payer', async () => {
+    if (multisig.isErr) console.error(multisig.error);
+
+    const TOKEN_TOTAL_AMOUNT = 10000000;
+    const res =
+      await SplToken.mint(
+        multisig.unwrap().toPubKey(),
+        [source.secret.toKeypair()],
+        TOKEN_TOTAL_AMOUNT,
+        MINT_DECIMAL,
+        [
+          signer1.secret.toKeypair(),
+          signer2.secret.toKeypair()
+        ],
+      )();
+    console.log(res);
+  });
+
+  it('Create token with fee payer', async () => {
     let beforeBalance = 0;
     let afterBalance = 0;
     const feePayer = Wallet.create();

@@ -14,10 +14,10 @@ import {
 } from '@solana/spl-token';
 
 import {
+  Append,
   Wallet,
   Node,
   Result,
-  Transaction
 } from './';
 
 export namespace Multisig {
@@ -41,11 +41,41 @@ export namespace Multisig {
     createLayoutPubKey('signer11'),
   ]);
 
+  export const getMultisigInfo = async (multisig: PublicKey)
+    : Promise<Result<BufferLayout.LayoutObject, Error>> => {
+    const info = await Node.getConnection().getAccountInfo(multisig);
+    if (info === null) {
+      return Result.err(Error('Failed to find multisig'));
+    }
+    if (!info.owner.equals(TOKEN_PROGRAM_ID)) {
+      return Result.err(Error('Invalid multisig owner'));
+    }
+    if (info.data.length != MultisigLayout.span) {
+      return Result.err(Error('Invalid multisig size'));
+    }
+
+    const data = Buffer.from(info.data);
+    const multisigInfo = MultisigLayout.decode(data);
+    multisigInfo.signer1 = new PublicKey(multisigInfo.signer1);
+    multisigInfo.signer2 = new PublicKey(multisigInfo.signer2);
+    multisigInfo.signer3 = new PublicKey(multisigInfo.signer3);
+    multisigInfo.signer4 = new PublicKey(multisigInfo.signer4);
+    multisigInfo.signer5 = new PublicKey(multisigInfo.signer5);
+    multisigInfo.signer6 = new PublicKey(multisigInfo.signer6);
+    multisigInfo.signer7 = new PublicKey(multisigInfo.signer7);
+    multisigInfo.signer8 = new PublicKey(multisigInfo.signer8);
+    multisigInfo.signer9 = new PublicKey(multisigInfo.signer9);
+    multisigInfo.signer10 = new PublicKey(multisigInfo.signer10);
+    multisigInfo.signer11 = new PublicKey(multisigInfo.signer11);
+
+    return Result.ok(multisigInfo);
+  }
+
   export const create = (
     m: number,
     signer: Keypair,
     multisigPubKey: PublicKey[],
-  ) => async (append?: Transaction.AppendValue)
+  ) => async (append?: Append.Value)
       : Promise<Result<string, Error>> => {
 
       if (m > multisigPubKey.length)

@@ -4,7 +4,11 @@ import {
   PublicKey,
 } from '@solana/web3.js';
 
-import {Transaction, Result} from './';
+import {
+  Append,
+  Transaction,
+  Result
+} from './';
 
 export namespace SolNative {
   export const transfer = (
@@ -12,7 +16,7 @@ export namespace SolNative {
     destination: PublicKey,
     signers: Keypair[],
     amount: number,
-  ) => async (append?: Transaction.AppendValue)
+  ) => async (append?: Append.Value)
       : Promise<Result<string, Error>> => {
       const sol = amount * LAMPORTS_PER_SOL;
       return Transaction.send(

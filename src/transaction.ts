@@ -13,18 +13,10 @@ import {
   Keypair,
 } from '@solana/web3.js';
 
-import {Node, Result} from './';
+import {Node, Result, Append} from './';
 import {Constants} from './constants';
 
 export namespace Transaction {
-  export interface AppendValue {
-    feePayer?: PublicKey,
-    multiSigsigners?: PublicKey[],
-    mintAuthority?: PublicKey,
-    freezeAuthority?: PublicKey,
-    txInstructions?: TransactionInstruction[],
-  }
-
   export const get = async (signature: string):
     Promise<Result<ParsedConfirmedTransaction | unknown, Error>> =>
     await Node.getConnection().getParsedConfirmedTransaction(signature)
@@ -67,7 +59,7 @@ export namespace Transaction {
   export const sendInstruction = (
     signers: Keypair[]
   ) =>
-    async (append: AppendValue)
+    async (append: Append.Value)
       : Promise<Result<TransactionSignature, Error>> => {
 
       if (!append.txInstructions)
@@ -101,7 +93,7 @@ export namespace Transaction {
     destination: PublicKey,
     signers: Keypair[],
     amount: number,
-  ) => async (append?: AppendValue)
+  ) => async (append?: Append.Value)
       : Promise<Result<TransactionSignature, Error>> => {
       const params =
         SystemProgram.transfer({

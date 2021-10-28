@@ -9,7 +9,13 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import {Transaction, SplToken, Node, Result} from '../../';
+import {
+  Append,
+  Transaction,
+  SplToken,
+  Node,
+  Result
+} from '../../';
 
 export namespace SplNft {
 
@@ -18,14 +24,14 @@ export namespace SplNft {
 
   export const create = (
     source: PublicKey,
-    feePayer: Keypair,
+    signers: Keypair[],
   ): Promise<Result<string, Error>> => {
     return SplToken.mint(
       source,
-      feePayer,
+      signers,
       NFT_AMOUNT,
       NFT_DECIMAL,
-    );
+    )();
   }
 
   export const transfer = (
@@ -33,9 +39,9 @@ export namespace SplNft {
     source: PublicKey,
     dest: PublicKey,
     signers: Keypair[]
-  ) => async (append: Transaction.AppendValue)
+  ) => async (append: Append.Value)
       : Promise<Result<TransactionSignature, Error>> => {
-      const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID,signers[0]);
+      const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, signers[0]);
       const sourceToken = await token.getOrCreateAssociatedAccountInfo(source)
         .then(Result.ok)
         .catch(Result.err);
