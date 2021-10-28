@@ -50,7 +50,7 @@ export namespace Multisig {
     if (!info.owner.equals(TOKEN_PROGRAM_ID)) {
       return Result.err(Error('Invalid multisig owner'));
     }
-    if (info.data.length != MultisigLayout.span) {
+    if (info.data.length !== MultisigLayout.span) {
       return Result.err(Error('Invalid multisig size'));
     }
 
