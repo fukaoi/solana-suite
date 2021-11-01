@@ -20,7 +20,7 @@ export namespace Append {
 
   export const isInFeePayer = (feePayer: PublicKey, signers: Keypair[]): boolean => {
     const res = signers.filter(s => s.publicKey.toString() === feePayer.toString());
-    return res.length !== 0;
+    return res.length > 0;
   }
 
   export const isInMultisig = async (multisig: PublicKey, signers: Keypair[])
