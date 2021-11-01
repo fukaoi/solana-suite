@@ -17,7 +17,7 @@ describe('NftSpl', () => {
   it('Create nft', async () => {
     const tokenKey = await SplNft.create(
       source.pubkey.toPubKey(),
-      source.secret.toKeypair()
+      [source.secret.toKeypair()]
     );
     if (tokenKey.isErr) console.error(tokenKey.error);
     assert.isTrue(tokenKey.isOk);

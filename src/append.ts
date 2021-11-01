@@ -30,7 +30,7 @@ export namespace Append {
       return Result.err(info.error);
     }
 
-    if (info.value.m !== signers.length) {
+    if (info.value.m > signers.length) {
       return Result.ok(false);
     }
 

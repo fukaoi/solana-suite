@@ -143,11 +143,28 @@ export namespace SplToken {
       if (tokenRes.isErr) return Result.err(tokenRes.error);
       const token = tokenRes.value;
 
+      // Check comformability of fee payer
+      if (append?.feePayer) {
+        if (!Append.isInFeePayer(append.feePayer, signers))
+          return Result.err(Error('Not found fee payer secret key in signers'));
+      }
 
+      // Check comformability of multiSig
       let authority = source;
       if (append?.multiSig) {
-        if (!Append.isInMultisig(append.multiSig, signers))
+        let onlySigners = signers;
+        if (append?.feePayer) {
+          // exclude keypair or fee payer
+          onlySigners = signers.filter(
+            s => s.publicKey.toString() !== append?.feePayer?.toString()
+          );
+        }
+        const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
+        if (multiSigRes.isErr) return Result.err(multiSigRes.error);
+
+        if (!multiSigRes.value)
           return Result.err(Error('Not found singer of multiSig in signers'));
+
         authority = append.multiSig;
       }
 
@@ -160,7 +177,7 @@ export namespace SplToken {
 
       const res = await token.mintTo(
         tokenAssociated.value.address,
-        source,
+        authority,
         signers,
         totalAmount,
       )

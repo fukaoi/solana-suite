@@ -61,13 +61,13 @@ describe('SplToken', () => {
         MINT_DECIMAL
       )();
 
-    if (res.isErr) console.error(res.error);
+    if (res.isErr) return console.error(res.error);
     assert.isTrue(res.isOk);
     tokenKeyStr = res.unwrap();
     console.log('# tokenKey: ', tokenKeyStr);
   });
 
-  it.only('Create token with multisig', async () => {
+  it('Create token with multisig', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const multisig = await Multisig.create(
@@ -94,7 +94,9 @@ describe('SplToken', () => {
         multiSig: multisig.unwrap().toPubKey()
       });
 
-      console.log(res);
+    if (res.isErr) console.error(res.error);
+    assert.isTrue(res.isOk);
+    console.log('# tokenKey: ', res.unwrap());
   });
 
   it('Create token with fee payer', async () => {
@@ -116,10 +118,12 @@ describe('SplToken', () => {
     const res =
       await SplToken.mint(
         source.pubkey.toPubKey(),
-        feePayer.secret.toKeypair(),
+        [source.secret.toKeypair(), feePayer.secret.toKeypair()],
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL
-      );
+      )({
+        feePayer: feePayer.pubkey.toPubKey()
+      });
     if (res.isErr) console.error(res.error);
     assert.isTrue(res.isOk);
     afterBalance = (
