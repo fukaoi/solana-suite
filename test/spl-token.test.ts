@@ -118,7 +118,10 @@ describe('SplToken', () => {
     const res =
       await SplToken.mint(
         source.pubkey.toPubKey(),
-        [source.secret.toKeypair(), feePayer.secret.toKeypair()],
+        [
+          source.secret.toKeypair(), 
+          feePayer.secret.toKeypair()
+        ],
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL
       )({
@@ -129,8 +132,8 @@ describe('SplToken', () => {
     afterBalance = (
       await Wallet.getBalance(feePayer.pubkey.toPubKey())
     ).unwrap();
-    console.log(afterBalance, beforeBalance);
-    // assert.isTrue(afterBalance - beforeBalance > 0);
+    console.log('# tokenKey: ', res.unwrap());
+    assert.isTrue(beforeBalance - afterBalance > 0);
   });
 
   it('Transfer token', async () => {

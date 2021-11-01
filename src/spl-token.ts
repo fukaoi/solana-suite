@@ -147,6 +147,10 @@ export namespace SplToken {
       if (append?.feePayer) {
         if (!Append.isInFeePayer(append.feePayer, signers))
           return Result.err(Error('Not found fee payer secret key in signers'));
+        const feekeyPair = signers.filter(
+          s => s.publicKey.toString() === append?.feePayer?.toString()
+        );
+        token.payer = feekeyPair[0];
       }
 
       // Check comformability of multiSig
