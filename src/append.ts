@@ -31,7 +31,7 @@ export namespace Append {
     }
 
     if (info.value.m !== signers.length) {
-      return Result.err(Error('Too less signers count'));
+      return Result.ok(false);
     }
 
     const signerLabels = [

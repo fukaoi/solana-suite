@@ -95,7 +95,7 @@ describe('Append', () => {
         signer1.secret.toKeypair(),
       ]
     );
-    assert.isTrue(res.isErr);
+    assert.isFalse(res.unwrap());
   });
 
   it('[Err]No match request address and registed address', async () => {
