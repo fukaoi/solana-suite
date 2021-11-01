@@ -82,15 +82,19 @@ describe('SplToken', () => {
     const res =
       await SplToken.mint(
         multisig.unwrap().toPubKey(),
-        [source.secret.toKeypair()],
+        [
+          source.secret.toKeypair(),
+          signer1.secret.toKeypair(),
+          signer2.secret.toKeypair(),
+        ],
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL,
-        [
-          signer1.secret.toKeypair(),
-          signer2.secret.toKeypair()
-        ],
-      )();
-    console.log(res);
+      )({
+        feePayer: source.pubkey.toPubKey(),
+        multiSig: multisig.unwrap().toPubKey()
+      });
+
+      console.log(res);
   });
 
   it('Create token with fee payer', async () => {

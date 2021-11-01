@@ -19,7 +19,7 @@ export namespace Append {
   }
 
   export const isInFeePayer = (feePayer: PublicKey, signers: Keypair[]): boolean => {
-    const res = signers.filter(s => s.publicKey === feePayer);
+    const res = signers.filter(s => s.publicKey.toString() === feePayer.toString());
     return res.length !== 0;
   }
 
@@ -29,7 +29,20 @@ export namespace Append {
     if (info.isErr) {
       return Result.err(info.error);
     }
-    const res = signers.filter(s => info.value.indexOf(s) === 1);
+
+    if (info.value.m !== signers.length) {
+      return Result.err(Error('Too less signers count'));
+    }
+
+    const signerLabels = [
+      'signer1', 'signer2', 'signer3', 'signer4', 'signer5',
+      'signer6', 'signer7', 'signer8', 'signer9', 'signer10',
+      'signer11'
+    ];
+
+    const registedSign = signerLabels.map(l => info.value[l].toString());
+    const requetSign = signers.map(s => s.publicKey.toString());
+    const res = requetSign.filter(r => registedSign.includes(r));
     return Result.ok(res.length === signers.length);
   }
 }
