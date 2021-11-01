@@ -10,7 +10,6 @@ import {
   PublicKey,
   TokenBalance,
   TransactionSignature,
-  Signer,
 } from '@solana/web3.js';
 
 import {Transaction, Node, Result, Append} from './';
@@ -55,8 +54,14 @@ export namespace SplToken {
     }
   }
 
-  const convertTimestmapToDate = (blockTime: number) =>
+  const convertTimestmapToDate = (blockTime: number): Date =>
     new Date(blockTime * 1000);
+
+  const fetchFeePayerKeypair = (feePayer: PublicKey, signers: Keypair[]): Keypair[] =>
+    signers.filter(s => s.publicKey.toString() === feePayer.toString());
+
+  const fetchExcludeFeePayerKeypair = (feePayer: PublicKey, signers: Keypair[]): Keypair[] =>
+    signers.filter(s => s.publicKey.toString() !== feePayer?.toString());
 
   export const subscribeAccount = (
     pubkey: PublicKey,
@@ -147,10 +152,7 @@ export namespace SplToken {
       if (append?.feePayer) {
         if (!Append.isInFeePayer(append.feePayer, signers))
           return Result.err(Error('Not found fee payer secret key in signers'));
-        const feekeyPair = signers.filter(
-          s => s.publicKey.toString() === append?.feePayer?.toString()
-        );
-        token.payer = feekeyPair[0];
+        token.payer = fetchFeePayerKeypair(append?.feePayer, signers)[0];
       }
 
       // Check comformability of multiSig
@@ -158,10 +160,8 @@ export namespace SplToken {
       if (append?.multiSig) {
         let onlySigners = signers;
         if (append?.feePayer) {
-          // exclude keypair or fee payer
-          onlySigners = signers.filter(
-            s => s.publicKey.toString() !== append?.feePayer?.toString()
-          );
+          // exclude keypair of fee payer 
+          onlySigners = fetchExcludeFeePayerKeypair(append?.feePayer, signers);
         }
         const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
         if (multiSigRes.isErr) return Result.err(multiSigRes.error);
@@ -193,15 +193,6 @@ export namespace SplToken {
         (error: Error) => Result.err(error)
       );
     }
-
-  export const multisig = async (
-    tokenKey: PublicKey,
-    signers: Signer[],
-    multi: PublicKey[]
-  ) => {
-    const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, signers[0]);
-    return await token.createMultisig(2, multi)
-  }
 
   export const transfer = (
     tokenKey: PublicKey,
