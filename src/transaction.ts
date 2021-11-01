@@ -17,6 +17,13 @@ import {Node, Result, Append} from './';
 import {Constants} from './constants';
 
 export namespace Transaction {
+
+  export const fetchFeePayerKeypair = (feePayer: PublicKey, signers: Keypair[]): Keypair[] =>
+    signers.filter(s => s.publicKey.toString() === feePayer.toString());
+
+  export const fetchExcludeFeePayerKeypair = (feePayer: PublicKey, signers: Keypair[]): Keypair[] =>
+    signers.filter(s => s.publicKey.toString() !== feePayer?.toString());
+
   export const get = async (signature: string):
     Promise<Result<ParsedConfirmedTransaction | unknown, Error>> =>
     await Node.getConnection().getParsedConfirmedTransaction(signature)
@@ -66,10 +73,27 @@ export namespace Transaction {
         return Result.err(Error('Need set TransactionInstructions'));
 
       const t = new SolanaTransaction();
-      if (!append.feePayer) {
-        t.feePayer = signers[0].publicKey;
-      } else {
-        t.feePayer = append.feePayer;
+
+      t.feePayer = signers[0].publicKey;
+
+      // Check comformability of fee payer
+      if (append?.feePayer) {
+        if (!Append.isInFeePayer(append.feePayer, signers))
+          return Result.err(Error('Not found fee payer secret key in signers'));
+        t.feePayer = fetchFeePayerKeypair(append?.feePayer, signers)[0].publicKey;
+      }
+
+      // Check comformability of multiSig
+      if (append?.multiSig) {
+        let onlySigners = signers;
+        if (append?.feePayer) {
+          // exclude keypair of fee payer
+          onlySigners = fetchExcludeFeePayerKeypair(append?.feePayer, signers);
+        }
+        const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
+        if (multiSigRes.isErr) return Result.err(multiSigRes.error);
+        if (!multiSigRes.value)
+          return Result.err(Error('Not found singer of multiSig in signers'));
       }
 
       const tx = t.add(append.txInstructions[0]);

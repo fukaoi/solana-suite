@@ -1,7 +1,6 @@
 import {describe, it} from 'mocha';
-import {Transaction, Memo, Wallet} from '../src';
+import {Transaction, Memo} from '../src';
 import {assert} from 'chai';
-import {Setup} from '../test/utils/setup';
 import {ParsedConfirmedTransaction} from '@solana/web3.js';
 
 const signature1 = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
