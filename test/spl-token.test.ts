@@ -99,28 +99,17 @@ describe('SplToken', () => {
     console.log('# tokenKey: ', res.unwrap());
   });
 
-  it('Create token with fee payer', async () => {
-    let beforeBalance = 0;
-    let afterBalance = 0;
-    const feePayer = Wallet.create();
-    const sig = await Wallet.requestAirdrop(feePayer.pubkey.toPubKey());
-    if (sig.isOk) {
-      Transaction.confirmedSig(sig.value);
-      beforeBalance = (
-        await Wallet.getBalance(feePayer.pubkey.toPubKey())
-      ).unwrap();
-    } else {
-      console.error(sig.unwrap());
-      assert.isTrue(sig.isErr);
-    }
-
+  it.only('Create token with fee payer', async () => {
+    const owner = Wallet.create();
+    const feePayer = source;
+    const before = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const res =
       await SplToken.mint(
-        source.pubkey.toPubKey(),
+        owner.pubkey.toPubKey(),
         [
-          source.secret.toKeypair(), 
-          feePayer.secret.toKeypair()
+          feePayer.secret.toKeypair(),
+          owner.secret.toKeypair(), 
         ],
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL
@@ -129,11 +118,9 @@ describe('SplToken', () => {
       });
     if (res.isErr) console.error(res.error);
     assert.isTrue(res.isOk);
-    afterBalance = (
-      await Wallet.getBalance(feePayer.pubkey.toPubKey())
-    ).unwrap();
+    const after = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
     console.log('# tokenKey: ', res.unwrap());
-    assert.isTrue(beforeBalance - afterBalance > 0);
+    assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
 
   it('Transfer token', async () => {

@@ -1,6 +1,7 @@
 import {
   ParsedConfirmedTransaction,
   ParsedInstruction,
+  PublicKey,
   TransactionInstruction,
 } from '@solana/web3.js';
 
@@ -13,12 +14,18 @@ export namespace Memo {
 
   export const encode = (data: string): Buffer => Buffer.from(data);
 
-  export const createInstruction = (data: string):
-    TransactionInstruction => {
+  export const createInstruction = (data: string, owner?: PublicKey)
+    : TransactionInstruction => {
+
+    const key =
+        owner
+        ? [{pubkey: owner, isSigner: true, isWritable: true}]
+        : [];
+
     return new TransactionInstruction({
       programId: Constants.MEMO_PROGRAM_ID,
       data: encode(data),
-      keys: []
+      keys: key
     });
   };
 

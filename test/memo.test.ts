@@ -44,4 +44,52 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
     assert.isNotTrue(res.isErr);
   });
+
+  it('Send memo instructions with fee payer', async () => {
+    const before = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
+    const owner = Wallet.create();
+    const memoInst = Memo.createInstruction(
+      '{"title": "send  instructions"}',
+      owner.pubkey.toPubKey()
+    );
+    const res =
+      await Transaction.sendInstruction(
+        [
+          source.secret.toKeypair(),
+          owner.secret.toKeypair(),
+        ],
+      )({
+        txInstructions: [memoInst],
+        feePayer: source.pubkey.toPubKey()
+      });
+
+    assert.isTrue(res.isOk, res.unwrap());
+    console.log('# tx signature: ', res.unwrap());
+    const after = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
+    assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
+  });
+
+  it('Send memo instructions with fee payer and multisig', async () => {
+    const before = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
+    const owner = Wallet.create();
+    const memoInst = Memo.createInstruction(
+      '{"title": "send  instructions"}',
+      owner.pubkey.toPubKey()
+    );
+    const res =
+      await Transaction.sendInstruction(
+        [
+          source.secret.toKeypair(),
+          owner.secret.toKeypair(),
+        ],
+      )({
+        txInstructions: [memoInst],
+        feePayer: source.pubkey.toPubKey()
+      });
+
+    assert.isTrue(res.isOk, res.unwrap());
+    console.log('# tx signature: ', res.unwrap());
+    const after = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
+    assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
+  });
 })
