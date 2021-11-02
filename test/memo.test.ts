@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Memo, Wallet, Transaction} from '../src';
+import {Memo, Wallet, Transaction, Multisig} from '../src';
 
 let source: Wallet.KeypairStr;
 const DUMMY_DATA = 'dummy memo data';
@@ -49,31 +49,7 @@ describe('Memo', () => {
     const before = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
     const owner = Wallet.create();
     const memoInst = Memo.createInstruction(
-      '{"title": "send  instructions"}',
-      owner.pubkey.toPubKey()
-    );
-    const res =
-      await Transaction.sendInstruction(
-        [
-          source.secret.toKeypair(),
-          owner.secret.toKeypair(),
-        ],
-      )({
-        txInstructions: [memoInst],
-        feePayer: source.pubkey.toPubKey()
-      });
-
-    assert.isTrue(res.isOk, res.unwrap());
-    console.log('# tx signature: ', res.unwrap());
-    const after = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
-    assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
-  });
-
-  it('Send memo instructions with fee payer and multisig', async () => {
-    const before = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
-    const owner = Wallet.create();
-    const memoInst = Memo.createInstruction(
-      '{"title": "send  instructions"}',
+      '{"title": "send instructions with fee payer"}',
       owner.pubkey.toPubKey()
     );
     const res =

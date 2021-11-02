@@ -43,6 +43,6 @@ export namespace Append {
     const registedSign = signerLabels.map(l => info.value[l].toString());
     const requetSign = signers.map(s => s.publicKey.toString());
     const res = requetSign.filter(r => registedSign.includes(r));
-    return Result.ok(res.length === signers.length);
+    return Result.ok(res.length === info.value.m);
   }
 }
