@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Wallet, SplToken, Memo, Util, Transaction, Multisig} from '../src/'
+import {Wallet, SplToken, Memo, Util, Multisig} from '../src/'
 
 let source: Wallet.KeypairStr;
 let destination: Wallet.KeypairStr;
@@ -99,7 +99,7 @@ describe('SplToken', () => {
     console.log('# tokenKey: ', res.unwrap());
   });
 
-  it.only('Create token with fee payer', async () => {
+  it('Create token with fee payer', async () => {
     const owner = Wallet.create();
     const feePayer = source;
     const before = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
