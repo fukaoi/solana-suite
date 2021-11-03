@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Memo, Wallet, Transaction, Multisig} from '../src';
+import {Memo, Wallet, Transaction} from '../src';
 
 let source: Wallet.KeypairStr;
 const DUMMY_DATA = 'dummy memo data';
@@ -50,7 +50,7 @@ describe('Memo', () => {
     const owner = Wallet.create();
     const memoInst = Memo.createInstruction(
       '{"title": "send instructions with fee payer"}',
-      owner.pubkey.toPubKey()
+      [owner.pubkey.toPubKey()]
     );
     const res =
       await Transaction.sendInstruction(

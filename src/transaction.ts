@@ -72,8 +72,8 @@ export namespace Transaction {
       if (!append.txInstructions)
         return Result.err(Error('Need set TransactionInstructions'));
 
-      if (append.multiSig)
-        return Result.err(Error('This function can not use multiSig'));
+      // if (append.multiSig)
+      // return Result.err(Error('This function can not use multiSig'));
 
       const t = new SolanaTransaction();
 
@@ -86,12 +86,26 @@ export namespace Transaction {
         t.feePayer = signers[0].publicKey;
       }
 
+      // if (append?.multiSig) {
+        // let onlySigners = signers;
+        // if (append?.feePayer) {
+          // // exclude keypair of fee payer
+          // onlySigners = Transaction.fetchExcludeFeePayerKeypair(append?.feePayer, signers);
+        // }
+        // const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
+        // if (multiSigRes.isErr) return Result.err(multiSigRes.error);
+
+        // if (!multiSigRes.value)
+          // return Result.err(Error('Not found singer of multiSig in signers'));
+
+      // }
+
       const tx = t.add(append.txInstructions[0]);
 
-      if (append.txInstructions[1]) {
-        append.txInstructions.slice(1, append.txInstructions.length)
-          .forEach((st: TransactionInstruction) => tx.add(st));
-      }
+      // if (append.txInstructions[1]) {
+        // append.txInstructions.slice(1, append.txInstructions.length)
+          // .forEach((st: TransactionInstruction) => tx.add(st));
+      // }
 
       return await sendAndConfirmTransaction(
         Node.getConnection(),

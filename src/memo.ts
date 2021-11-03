@@ -14,12 +14,22 @@ export namespace Memo {
 
   export const encode = (data: string): Buffer => Buffer.from(data);
 
-  export const createInstruction = (data: string, owner?: PublicKey)
+  export const createInstruction = (data: string, owners: PublicKey[] = [])
     : TransactionInstruction => {
 
+
+
     const key =
-        owner
-        ? [{pubkey: owner, isSigner: true, isWritable: true}]
+      owners.length > 0
+        ?
+        owners.map(owner => {
+          return {
+            pubkey: owner,
+            isSigner: true,
+            isWritable: true
+          }
+        }
+        )
         : [];
 
     return new TransactionInstruction({
