@@ -72,9 +72,6 @@ export namespace Transaction {
       if (!append.txInstructions)
         return Result.err(Error('Need set TransactionInstructions'));
 
-      // if (append.multiSig)
-      // return Result.err(Error('This function can not use multiSig'));
-
       const t = new SolanaTransaction();
 
       // Check comformability of fee payer
@@ -86,30 +83,27 @@ export namespace Transaction {
         t.feePayer = signers[0].publicKey;
       }
 
-      // if (append?.multiSig) {
-        // let onlySigners = signers;
-        // if (append?.feePayer) {
-          // // exclude keypair of fee payer
-          // onlySigners = Transaction.fetchExcludeFeePayerKeypair(append?.feePayer, signers);
-        // }
-        // const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
-        // if (multiSigRes.isErr) return Result.err(multiSigRes.error);
+      if (append?.multiSig) {
+        let onlySigners = signers;
+        if (append?.feePayer) {
+          // exclude keypair of fee payer
+          onlySigners = Transaction.fetchExcludeFeePayerKeypair(append?.feePayer, signers);
+        }
+        const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
+        if (multiSigRes.isErr) return Result.err(multiSigRes.error);
 
-        // if (!multiSigRes.value)
-          // return Result.err(Error('Not found singer of multiSig in signers'));
+        if (!multiSigRes.value)
+          return Result.err(Error('Not found singer of multiSig in signers'));
 
-      // }
+      }
 
-      const tx = t.add(append.txInstructions[0]);
-
-      // if (append.txInstructions[1]) {
-        // append.txInstructions.slice(1, append.txInstructions.length)
-          // .forEach((st: TransactionInstruction) => tx.add(st));
-      // }
+      append.txInstructions.forEach(
+        (instruction: TransactionInstruction) => t.add(instruction)
+      );
 
       return await sendAndConfirmTransaction(
         Node.getConnection(),
-        tx,
+        t,
         signers,
       )
         .then(Result.ok)

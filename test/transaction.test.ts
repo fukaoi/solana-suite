@@ -44,7 +44,7 @@ describe('Transaction', () => {
     const owner = Wallet.create();
     const memoInst = Memo.createInstruction(
       '{"title": "send  instructions"}',
-      owner.pubkey.toPubKey()
+      [owner.pubkey.toPubKey()]
     );
     const res =
       await Transaction.sendInstruction(
