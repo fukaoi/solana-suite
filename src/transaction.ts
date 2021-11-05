@@ -135,19 +135,18 @@ export namespace Transaction {
         t.feePayer = signers[0].publicKey;
       }
 
+      if (append?.multiSig) {
+        let onlySigners = signers;
+        if (append?.feePayer) {
+          // exclude keypair of fee payer
+          onlySigners = Transaction.fetchExcludeFeePayerKeypair(append?.feePayer, signers);
+        }
+        const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
+        if (multiSigRes.isErr) return Result.err(multiSigRes.error);
 
-      // if (append?.multiSig) {
-        // let onlySigners = signers;
-        // if (append?.feePayer) {
-          // // exclude keypair of fee payer
-          // onlySigners = Transaction.fetchExcludeFeePayerKeypair(append?.feePayer, signers);
-        // }
-        // const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
-        // if (multiSigRes.isErr) return Result.err(multiSigRes.error);
-
-        // if (!multiSigRes.value)
-          // return Result.err(Error('Not found singer of multiSig in signers'));
-      // }
+        if (!multiSigRes.value)
+          return Result.err(Error('Not found singer of multiSig in signers'));
+      }
 
       const tx = t.add(params);
       if (append?.txInstructions)

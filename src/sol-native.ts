@@ -17,41 +17,77 @@ import {
 } from './';
 
 export namespace SolNative {
-  export const wrappedTransfer = async (
+  export const wrappedTransfer = (
     source: PublicKey,
     dest: PublicKey,
     signers: Keypair[],
     amount: number,
-  ) => {
+  ) => async (append?: Append.Value) => {
+
+    let feePayer = signers[0];
+    if (append?.feePayer) {
+      if (!Append.isInFeePayer(append.feePayer, signers))
+        return Result.err(Error('Not found fee payer secret key in signers'));
+      feePayer = Transaction.fetchFeePayerKeypair(
+        append?.feePayer,
+        signers
+      )[0];
+    }
+
+    let multiSigSigners: Keypair[] = [];
+    if (append?.multiSig) {
+      let onlySigners = signers;
+      if (append?.feePayer) {
+        // exclude keypair of fee payer
+        onlySigners = Transaction.fetchExcludeFeePayerKeypair(append?.feePayer, signers);
+      }
+      const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
+      if (multiSigRes.isErr) return Result.err(multiSigRes.error);
+
+      if (!multiSigRes.value)
+        return Result.err(Error('Not found singer of multiSig in signers'));
+
+      multiSigSigners = signers;
+    }
+
+    // append.txInstructions.forEach(
+    // (instruction: TransactionInstruction) => t.add(instruction)
+    // );
+
     const connection = Node.getConnection();
-  
-    const native = await Token.createWrappedNativeAccount(
+
+    const wrapped = await Token.createWrappedNativeAccount(
       connection,
       TOKEN_PROGRAM_ID,
       source,
-      signers[0],
+      feePayer,
       amount * LAMPORTS_PER_SOL
     );
 
     const token = new Token(
-      connection, 
-      Constants.WRAPPED_TOKEN_PROGRAM_ID, 
-      TOKEN_PROGRAM_ID, 
-      signers[0]
+      connection,
+      Constants.WRAPPED_TOKEN_PROGRAM_ID,
+      TOKEN_PROGRAM_ID,
+      feePayer
     );
 
+    const t = new SolanaTransaction();
+    t.feePayer = feePayer.publicKey;
+
     const tx = await sendAndConfirmTransaction(
-      Node.getConnection(),
-      new SolanaTransaction().add(
+      connection,
+      t.add(
         SystemProgram.transfer({
           fromPubkey: source,
-          toPubkey: native,
+          toPubkey: wrapped,
           lamports: 100
         }),
       ),
       signers,
     );
-    await token.closeAccount(native, dest, source, []);
+
+    // await token.closeAccount(wrapped, dest, signers[0], []);
+    // await token.closeAccount(wrapped, dest, source, multiSigSigners);
     return tx;
   }
 
