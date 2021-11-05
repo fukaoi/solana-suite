@@ -3,9 +3,7 @@ import {
   Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
-  sendAndConfirmTransaction,
   Transaction as SolanaTransaction,
-  SystemProgram,
 } from '@solana/web3.js';
 
 import {
@@ -26,36 +24,13 @@ export namespace SolNative {
 
     let feePayer = signers[0];
     if (append?.feePayer) {
-      if (!Append.isInFeePayer(append.feePayer, signers))
-        return Result.err(Error('Not found fee payer secret key in signers'));
       feePayer = Transaction.fetchFeePayerKeypair(
         append?.feePayer,
         signers
       )[0];
     }
 
-    let multiSigSigners: Keypair[] = [];
-    if (append?.multiSig) {
-      let onlySigners = signers;
-      if (append?.feePayer) {
-        // exclude keypair of fee payer
-        onlySigners = Transaction.fetchExcludeFeePayerKeypair(append?.feePayer, signers);
-      }
-      const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
-      if (multiSigRes.isErr) return Result.err(multiSigRes.error);
-
-      if (!multiSigRes.value)
-        return Result.err(Error('Not found singer of multiSig in signers'));
-
-      multiSigSigners = signers;
-    }
-
-    // append.txInstructions.forEach(
-    // (instruction: TransactionInstruction) => t.add(instruction)
-    // );
-
     const connection = Node.getConnection();
-
     const wrapped = await Token.createWrappedNativeAccount(
       connection,
       TOKEN_PROGRAM_ID,
@@ -76,27 +51,21 @@ export namespace SolNative {
 
     console.log(wrapped.toBase58(), append!.multiSig!.toBase58());
 
-    // const tx = await sendAndConfirmTransaction(
-    // connection,
-    // t.add(
-    // SystemProgram.transfer({
-    // fromPubkey: source,
-    // toPubkey: wrapped,
-    // lamports: 100
-    // }),
-    // ),
-    // // signers,
-    // [feePayer],
-    // );
     const tx = await Transaction.send(
       source,
       wrapped,
       [feePayer],
       amount
-    )();
+    )({
+      feePayer: append?.feePayer,
+      txInstructions: append?.txInstructions
+    });
 
-    // await token.closeAccount(wrapped, dest, signers[0], []);
-    await token.closeAccount(wrapped, dest, append!.multiSig!, multiSigSigners);
+    await token.closeAccount(
+      wrapped, 
+      dest, append!.multiSig!, 
+      signers
+    );
     return tx;
   }
 
