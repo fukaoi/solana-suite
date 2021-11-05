@@ -169,6 +169,16 @@ describe('SplToken', () => {
     SplToken.unsubscribeAccount(subscribeId);
     assert.ok('success subscribe');
   });
+
+  it.only('Wrapped transfer sol', async () => {
+    const wrapped = await SplToken.wrappedTransfer(
+      source.pubkey.toPubKey(),
+      destination.pubkey.toPubKey(),
+      [source.secret.toKeypair()],
+      0.1
+    );
+    console.log(wrapped);
+  });
 })
 
 const sendContinuously = async (): Promise<void> => {

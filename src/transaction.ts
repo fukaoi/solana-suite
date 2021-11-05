@@ -125,16 +125,29 @@ export namespace Transaction {
         });
 
       const t = new SolanaTransaction();
-      if (!append?.feePayer) {
-        t.feePayer = signers[0].publicKey;
+
+      // Check comformability of fee payer
+      if (append?.feePayer) {
+        if (!Append.isInFeePayer(append.feePayer, signers))
+          return Result.err(Error('Not found fee payer secret key in signers'));
+        t.feePayer = fetchFeePayerKeypair(append?.feePayer, signers)[0].publicKey;
       } else {
-        // check existed fee payer address in signers
-        const addresses = signers.map(s => s.publicKey.toBase58());
-        if (!addresses.indexOf(append.feePayer.toBase58())) {
-          return Result.err(Error('Need include fee payer keypair in signers'));
-        }
-        t.feePayer = append.feePayer;
+        t.feePayer = signers[0].publicKey;
       }
+
+
+      // if (append?.multiSig) {
+        // let onlySigners = signers;
+        // if (append?.feePayer) {
+          // // exclude keypair of fee payer
+          // onlySigners = Transaction.fetchExcludeFeePayerKeypair(append?.feePayer, signers);
+        // }
+        // const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
+        // if (multiSigRes.isErr) return Result.err(multiSigRes.error);
+
+        // if (!multiSigRes.value)
+          // return Result.err(Error('Not found singer of multiSig in signers'));
+      // }
 
       const tx = t.add(params);
       if (append?.txInstructions)

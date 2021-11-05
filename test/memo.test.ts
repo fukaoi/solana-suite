@@ -40,9 +40,8 @@ describe('Memo', () => {
         txInstructions: [memoInst],
       });
 
-    if (res.isErr) console.error(res.error);
+    assert.isTrue(res.isOk, res.unwrap());
     console.log('# tx signature: ', res.unwrap());
-    assert.isNotTrue(res.isErr);
   });
 
   it('Send memo instructions with fee payer', async () => {
