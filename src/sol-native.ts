@@ -59,7 +59,7 @@ export namespace SolNative {
     const wrapped = await Token.createWrappedNativeAccount(
       connection,
       TOKEN_PROGRAM_ID,
-      source,
+      append!.multiSig!,
       feePayer,
       amount * LAMPORTS_PER_SOL
     );
@@ -74,20 +74,29 @@ export namespace SolNative {
     const t = new SolanaTransaction();
     t.feePayer = feePayer.publicKey;
 
-    const tx = await sendAndConfirmTransaction(
-      connection,
-      t.add(
-        SystemProgram.transfer({
-          fromPubkey: source,
-          toPubkey: wrapped,
-          lamports: 100
-        }),
-      ),
-      signers,
-    );
+    console.log(wrapped.toBase58(), append!.multiSig!.toBase58());
+
+    // const tx = await sendAndConfirmTransaction(
+    // connection,
+    // t.add(
+    // SystemProgram.transfer({
+    // fromPubkey: source,
+    // toPubkey: wrapped,
+    // lamports: 100
+    // }),
+    // ),
+    // // signers,
+    // [feePayer],
+    // );
+    const tx = await Transaction.send(
+      source,
+      wrapped,
+      [feePayer],
+      amount
+    )();
 
     // await token.closeAccount(wrapped, dest, signers[0], []);
-    // await token.closeAccount(wrapped, dest, source, multiSigSigners);
+    await token.closeAccount(wrapped, dest, append!.multiSig!, multiSigSigners);
     return tx;
   }
 

@@ -75,25 +75,7 @@ describe('SolNative', () => {
     console.log(res);
   });
 
-  it('Wrapped transfer sol with fee payer', async () => {
-    const feePayer = Wallet.create();
-    const dropped = await Wallet.requestAirdrop(feePayer.pubkey.toPubKey());
-    assert.isTrue(dropped.isOk, dropped.unwrap());
-    const res = await SolNative.wrappedTransfer(
-      source.pubkey.toPubKey(),
-      destination.pubkey.toPubKey(),
-      [
-        source.secret.toKeypair(),
-        feePayer.secret.toKeypair()
-      ],
-      0.00001
-    )({
-      feePayer: feePayer.pubkey.toPubKey()
-    });
-    console.log(res);
-  });
-
-  it.only('transfer transaction with fee payer and  ulti sig', async () => {
+  it.only('wrapped transfer transaction with multi sig', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const feePayer = source;
@@ -110,25 +92,18 @@ describe('SolNative', () => {
     const airdropRes = await Wallet.requestAirdrop(multi.unwrap().toPubKey());
     assert.isTrue(airdropRes.isOk, airdropRes.unwrap());
 
-    console.log('signer1:', signer1.pubkey);
-    console.log('signer2:', signer2.pubkey);
-    console.log('multi:', multi.unwrap());
-
     const res = await SolNative.wrappedTransfer(
-      multi.unwrap().toPubKey(),
+      source.pubkey.toPubKey(),
       destination.pubkey.toPubKey(),
       [
-        feePayer.secret.toKeypair(),
+        source.secret.toKeypair(),
         signer1.secret.toKeypair(),
         signer2.secret.toKeypair(),
       ],
       0.0001,
     )({
-      feePayer: feePayer.pubkey.toPubKey(),
       multiSig: multi.unwrap().toPubKey()
     });
     console.log(res);
-    // assert.isTrue(res.isOk, res.unwrap());
-    // console.log('# tx signature: ', res.unwrap());
   });
 })
