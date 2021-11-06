@@ -1,3 +1,4 @@
+import {Keypair} from '@solana/web3.js';
 import {assert} from 'chai';
 import {Append, Wallet, Multisig} from '../src/';
 import {Setup} from './utils/setup';
@@ -122,4 +123,36 @@ describe('Append', () => {
     if (res.isErr) console.error(res.error);
     assert.isFalse(res.unwrap());
   });
+
+  it.only('Extract multisig keypair', async () => {
+    const signer1 = Wallet.create();
+    const signer2 = Wallet.create();
+    const dummy = Wallet.create();
+    const multisig = await Multisig.create(2, source.secret.toKeypair(),
+      [
+        signer1.pubkey.toPubKey(),
+        signer2.pubkey.toPubKey(),
+      ]
+    )();
+    assert.isTrue(multisig.isOk, multisig.unwrap())
+    const signers =
+      [
+        signer1.secret.toKeypair(),
+        signer2.secret.toKeypair(),
+        dummy.secret.toKeypair(),
+      ];
+
+    const res = await Append.extractMultiSigKeypair(
+      multisig.unwrap().toPubKey(),
+      signers
+    );
+    assert.isTrue(res.isOk, res.unwrap().toString());
+    const actual = (res.unwrap() as Keypair[]).map(r => r.publicKey.toBase58());
+    const expect = 
+    [
+      signer1.pubkey,
+      signer2.pubkey 
+    ];
+    assert.deepEqual(actual, expect);
+  })
 })

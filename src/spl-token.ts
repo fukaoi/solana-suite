@@ -11,10 +11,6 @@ import {
   PublicKey,
   TokenBalance,
   TransactionSignature,
-  Transaction as SolanaTransaction,
-  SystemProgram,
-  sendAndConfirmTransaction,
-  LAMPORTS_PER_SOL
 } from '@solana/web3.js';
 
 import {Transaction, Node, Result, Append} from './';
@@ -151,7 +147,7 @@ export namespace SplToken {
       if (append?.feePayer) {
         if (!Append.isInFeePayer(append.feePayer, signers))
           return Result.err(Error('Not found fee payer secret key in signers'));
-        token.payer = Transaction.fetchFeePayerKeypair(append?.feePayer, signers)[0];
+        token.payer = Append.extractFeePayerKeypair(append?.feePayer, signers)[0];
       }
 
       // Check comformability of multiSig
@@ -160,7 +156,7 @@ export namespace SplToken {
         let onlySigners = signers;
         if (append?.feePayer) {
           // exclude keypair of fee payer
-          onlySigners = Transaction.fetchExcludeFeePayerKeypair(append?.feePayer, signers);
+          onlySigners = Append.extractOnlySignerKeypair(append?.feePayer, signers);
         }
         const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
         if (multiSigRes.isErr) return Result.err(multiSigRes.error);

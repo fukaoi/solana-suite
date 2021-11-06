@@ -65,16 +65,6 @@ describe('SolNative', () => {
     assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
 
-  it('Wrapped transfer sol', async () => {
-    const res = await SolNative.wrappedTransfer(
-      source.pubkey.toPubKey(),
-      destination.pubkey.toPubKey(),
-      [source.secret.toKeypair()],
-      0.00001
-    )();
-    console.log(res);
-  });
-
   it.only('wrapped transfer transaction with multi sig', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();

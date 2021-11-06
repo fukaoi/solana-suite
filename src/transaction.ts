@@ -13,16 +13,9 @@ import {
   Keypair,
 } from '@solana/web3.js';
 
-import {Node, Result, Append} from './';
-import {Constants} from './constants';
+import {Node, Result, Append, Constants} from './';
 
 export namespace Transaction {
-
-  export const fetchFeePayerKeypair = (feePayer: PublicKey, signers: Keypair[]): Keypair[] =>
-    signers.filter(s => s.publicKey.toString() === feePayer.toString());
-
-  export const fetchExcludeFeePayerKeypair = (feePayer: PublicKey, signers: Keypair[]): Keypair[] =>
-    signers.filter(s => s.publicKey.toString() !== feePayer?.toString());
 
   export const get = async (signature: string):
     Promise<Result<ParsedConfirmedTransaction | unknown, Error>> =>
@@ -78,7 +71,7 @@ export namespace Transaction {
       if (append?.feePayer) {
         if (!Append.isInFeePayer(append.feePayer, signers))
           return Result.err(Error('Not found fee payer secret key in signers'));
-        t.feePayer = fetchFeePayerKeypair(append?.feePayer, signers)[0].publicKey;
+        t.feePayer = Append.extractFeePayerKeypair(append?.feePayer, signers)[0].publicKey;
       } else {
         t.feePayer = signers[0].publicKey;
       }
@@ -87,7 +80,7 @@ export namespace Transaction {
         let onlySigners = signers;
         if (append?.feePayer) {
           // exclude keypair of fee payer
-          onlySigners = Transaction.fetchExcludeFeePayerKeypair(append?.feePayer, signers);
+          onlySigners = Append.extractOnlySignerKeypair(append?.feePayer, signers);
         }
         const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
         if (multiSigRes.isErr) return Result.err(multiSigRes.error);
@@ -130,7 +123,7 @@ export namespace Transaction {
       if (append?.feePayer) {
         if (!Append.isInFeePayer(append.feePayer, signers))
           return Result.err(Error('Not found fee payer secret key in signers'));
-        t.feePayer = fetchFeePayerKeypair(append?.feePayer, signers)[0].publicKey;
+        t.feePayer = Append.extractFeePayerKeypair(append?.feePayer, signers)[0].publicKey;
       } else {
         t.feePayer = signers[0].publicKey;
       }
@@ -139,7 +132,7 @@ export namespace Transaction {
         let onlySigners = signers;
         if (append?.feePayer) {
           // exclude keypair of fee payer
-          onlySigners = Transaction.fetchExcludeFeePayerKeypair(append?.feePayer, signers);
+          onlySigners = Append.extractOnlySignerKeypair(append?.feePayer, signers);
         }
         const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
         if (multiSigRes.isErr) return Result.err(multiSigRes.error);

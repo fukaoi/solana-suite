@@ -22,9 +22,11 @@ export namespace SolNative {
     amount: number,
   ) => async (append?: Append.Value) => {
 
+    console.log(signers);
+
     let feePayer = signers[0];
     if (append?.feePayer) {
-      feePayer = Transaction.fetchFeePayerKeypair(
+      feePayer = Append.extractFeePayerKeypair(
         append?.feePayer,
         signers
       )[0];
@@ -62,8 +64,9 @@ export namespace SolNative {
     });
 
     await token.closeAccount(
-      wrapped, 
-      dest, append!.multiSig!, 
+      wrapped,
+      dest,
+      append!.multiSig!,
       signers
     );
     return tx;

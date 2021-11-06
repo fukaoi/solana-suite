@@ -1,3 +1,4 @@
+import {LayoutObject} from '@solana/buffer-layout';
 import {
   Keypair,
   PublicKey,
@@ -10,6 +11,17 @@ import {
 } from './';
 
 export namespace Append {
+  const signerLabels = [
+    'signer1', 'signer2', 'signer3', 'signer4', 'signer5',
+    'signer6', 'signer7', 'signer8', 'signer9', 'signer10',
+    'signer11'
+  ];
+
+  const filterInfo = (info: LayoutObject, signers: Keypair[]): Keypair[] => {
+    const registedSign = signerLabels.map(l => info.value[l].toString());
+    return signers.filter(r => registedSign.includes(r.publicKey.toBase58()));
+  }
+
   export interface Value {
     feePayer?: PublicKey,
     multiSig?: PublicKey,
@@ -23,26 +35,29 @@ export namespace Append {
     return res.length > 0;
   }
 
-  export const isInMultisig = async (multisig: PublicKey, signers: Keypair[])
-    : Promise<Result<boolean, Error>> => {
+  export const extractOnlySignerKeypair = (feePayer: PublicKey, signers: Keypair[]): Keypair[] =>
+    signers.filter(s => s.publicKey.toString() === feePayer.toString());
+
+  export const extractFeePayerKeypair = (feePayer: PublicKey, signers: Keypair[]): Keypair[] =>
+    signers.filter(s => s.publicKey.toString() === feePayer.toString());
+
+  export const extractMultiSigKeypair = async (multisig: PublicKey, signers: Keypair[])
+    : Promise<Result<Keypair[] | Error>> => {
     const info = await Multisig.getMultisigInfo(multisig);
     if (info.isErr) {
       return Result.err(info.error);
     }
+    return Result.ok(filterInfo(info, signers));
+  }
 
-    if (info.value.m > signers.length) {
-      return Result.ok(false);
+  export const isInMultisig = async (multisig: PublicKey, signers: Keypair[])
+    : Promise<Result<boolean, Error>> => {
+
+    const info = await Multisig.getMultisigInfo(multisig);
+    if (info.isErr) {
+      return Result.err(info.error);
     }
-
-    const signerLabels = [
-      'signer1', 'signer2', 'signer3', 'signer4', 'signer5',
-      'signer6', 'signer7', 'signer8', 'signer9', 'signer10',
-      'signer11'
-    ];
-
-    const registedSign = signerLabels.map(l => info.value[l].toString());
-    const requetSign = signers.map(s => s.publicKey.toString());
-    const res = requetSign.filter(r => registedSign.includes(r));
+    const res = filterInfo(info, signers);
     return Result.ok(res.length === info.value.m);
   }
 }

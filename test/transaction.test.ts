@@ -1,5 +1,5 @@
 import {describe, it} from 'mocha';
-import {Transaction, Memo, Wallet} from '../src';
+import {Transaction, Memo, Wallet, Multisig} from '../src';
 import {Setup} from '../test/utils/setup';
 import {assert} from 'chai';
 import {ParsedConfirmedTransaction} from '@solana/web3.js';
@@ -62,4 +62,26 @@ describe('Transaction', () => {
     const after = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
     assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
+
+  it.only('Extract multisig keypair', async () => {
+    const signer1 = Wallet.create();
+    const signer2 = Wallet.create();
+    const dummy = Wallet.create();
+    const multisig = await Multisig.create(2, source.secret.toKeypair(),
+      [
+        signer1.pubkey.toPubKey(),
+        signer2.pubkey.toPubKey(),
+      ]
+    )();
+    assert.isTrue(multisig.isOk, multisig.unwrap())
+    const res = await Transaction.extractMultiSigKeypair(
+      multisig.unwrap().toPubKey(),
+      [
+        signer1.secret.toKeypair(),
+        signer2.secret.toKeypair(),
+        dummy.secret.toKeypair(),
+      ]
+    );
+    console.log(res);
+  })
 })
