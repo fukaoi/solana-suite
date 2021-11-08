@@ -62,7 +62,7 @@ describe('Multisig', () => {
     assert.isTrue(res.isErr);
   });
 
-  it.only('Get multisig info', async () => {
+  it('Get multisig info', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const account = await Multisig.create(
