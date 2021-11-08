@@ -40,11 +40,11 @@ export namespace Append {
     feePayer?: PublicKey,
     multisig?: PublicKey,
    ): Promise<Result<Keypair[] | Error>> => {
-    let exFeepayer: Keypair[] = []; 
+    let exFeepayer: Keypair[] = [];
     if (feePayer) {
       exFeepayer = extractFeePayerKeypair(signers, feePayer);
     }
-    let exMultisig: Keypair[] = []; 
+    let exMultisig: Keypair[] = [];
     if (multisig) {
       const resEx = await extractMultiSigKeypair(signers, multisig);
       if (resEx.isErr) return resEx;

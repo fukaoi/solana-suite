@@ -149,7 +149,7 @@ export namespace SplToken {
           return Result.err(Error('Not found fee payer secret key in signers'));
         token.payer = Append.extractFeePayerKeypair(
           signers,
-          append?.feePayer, 
+          append?.feePayer,
         )[0];
       }
 

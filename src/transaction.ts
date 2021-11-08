@@ -73,7 +73,7 @@ export namespace Transaction {
           return Result.err(Error('Not found fee payer secret key in signers'));
         t.feePayer = Append.extractFeePayerKeypair(
           signers,
-          append?.feePayer, 
+          append?.feePayer,
         )[0].publicKey;
       } else {
         t.feePayer = signers[0].publicKey;
@@ -133,7 +133,7 @@ export namespace Transaction {
           return Result.err(Error('Not found fee payer secret key in signers'));
         t.feePayer = Append.extractFeePayerKeypair(
           signers,
-          append?.feePayer, 
+          append?.feePayer,
         )[0].publicKey;
       } else {
         t.feePayer = signers[0].publicKey;
