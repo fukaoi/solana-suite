@@ -35,11 +35,11 @@ export namespace Append {
     return res.length > 0;
   }
 
-  export const extractOnlySignerKeypair = async(
+  export const extractOnlySignerKeypair = async (
     signers: Keypair[],
-    feePayer?: PublicKey,
-    multisig?: PublicKey,
-   ): Promise<Result<Keypair[] | Error>> => {
+    feePayer?: PublicKey | undefined,
+    multisig?: PublicKey | undefined,
+  ): Promise<Result<Keypair[] | Error>> => {
     let exFeepayer: Keypair[] = [];
     if (feePayer) {
       exFeepayer = extractFeePayerKeypair(signers, feePayer);

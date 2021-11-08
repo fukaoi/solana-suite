@@ -15,6 +15,8 @@ import {
 } from './';
 
 export namespace SolNative {
+
+  //NOTICE: There is a lamport fluctuation when transfer under 0.001 sol
   export const wrappedTransfer = (
     source: PublicKey,
     dest: PublicKey,
@@ -23,15 +25,14 @@ export namespace SolNative {
   ) => async (append?: Append.Value) => {
     const onlySigners = await Append.extractOnlySignerKeypair(
       signers,
-      append?.feePayer,
+      undefined,
       append?.multiSig,
     );
 
     if (onlySigners.isErr) return onlySigners;
     source = (onlySigners.unwrap() as Keypair[])[0].publicKey;
+    let feePayer = (onlySigners.unwrap() as Keypair[])[0];
 
-    const sol = amount * LAMPORTS_PER_SOL;
-    let feePayer = signers[0];
     if (append?.feePayer) {
       feePayer = Append.extractFeePayerKeypair(
         signers,
@@ -45,7 +46,7 @@ export namespace SolNative {
       TOKEN_PROGRAM_ID,
       append!.multiSig!,
       feePayer,
-      sol
+      amount * LAMPORTS_PER_SOL,
     );
 
     console.debug('# wrapped sol: ', wrapped.toBase58());
@@ -64,7 +65,7 @@ export namespace SolNative {
       source,
       wrapped,
       [feePayer],
-      sol
+      100 // for fee
     )({
       feePayer: append?.feePayer,
       txInstructions: append?.txInstructions

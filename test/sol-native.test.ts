@@ -46,7 +46,7 @@ describe('SolNative', () => {
 
   it('transfer transaction with fee payer', async () => {
     const solAmount = 0.0001;
-    const feePayer = Wallet.create();
+    const feePayer = source;
     const before = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
     const res = await SolNative.transfer(
       source.pubkey.toPubKey(),
@@ -65,7 +65,7 @@ describe('SolNative', () => {
     assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
 
-  it.only('wrapped transfer transaction with multi sig', async () => {
+  it('wrapped transfer transaction with multi sig', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const feePayer = source;
@@ -79,9 +79,6 @@ describe('SolNative', () => {
     )();
 
     assert.isTrue(multi.isOk, multi.unwrap());
-    const airdropRes = await Wallet.requestAirdrop(multi.unwrap().toPubKey());
-    assert.isTrue(airdropRes.isOk, airdropRes.unwrap());
-
     const before = (await Wallet.getBalance(destination.pubkey.toPubKey())).unwrap();
     const amount = 0.0001;
 
@@ -99,6 +96,42 @@ describe('SolNative', () => {
     });
     assert.isTrue(res.isOk, res.unwrap().toString());
     const after = (await Wallet.getBalance(destination.pubkey.toPubKey())).unwrap();
-    assert.equal(after - before, amount);
+    assert.isTrue(after > before);
+  });
+
+  it('wrapped transfer transaction with multi sig and fee payer', async () => {
+    
+    const signer1 = Wallet.create();
+    const signer2 = Wallet.create();
+    const feePayer = Wallet.create();
+    const airdropRes = await Wallet.requestAirdrop(feePayer.pubkey.toPubKey()); assert.isTrue(airdropRes.isOk, airdropRes.unwrap()); const before = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
+
+    const multi = await Multisig.create(
+      2,
+      feePayer.secret.toKeypair(),
+      [
+        signer1.pubkey.toPubKey(),
+        signer2.pubkey.toPubKey(),
+      ]
+    )();
+
+    assert.isTrue(multi.isOk, multi.unwrap());
+    const amount = 0.0001;
+
+    const res = await SolNative.wrappedTransfer( multi.unwrap().toPubKey(),
+      destination.pubkey.toPubKey(),
+      [
+        feePayer.secret.toKeypair(),
+        signer1.secret.toKeypair(),
+        signer2.secret.toKeypair(),
+      ],
+      amount,
+    )({
+      multiSig: multi.unwrap().toPubKey(),
+      feePayer: feePayer.pubkey.toPubKey()
+    });
+    assert.isTrue(res.isOk, res.unwrap().toString());
+    const after = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
+    assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
 })
