@@ -157,7 +157,7 @@ export namespace SplToken {
         if (append?.feePayer) {
           // exclude keypair of fee payer
           const extracted = await Append.extractMultiSigKeypair(
-            append.multiSig, 
+            append.multiSig,
             signers
           );
           if (extracted.isErr) return Result.err(extracted.error);

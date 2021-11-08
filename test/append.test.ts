@@ -41,7 +41,7 @@ describe('Append', () => {
         signer2.pubkey.toPubKey(),
       ],
     )();
-    if (account.isErr) console.error(account.error);
+    assert.isTrue(account.isOk, account.unwrap())
     const res = await Append.isInMultisig(
       account.unwrap().toPubKey(),
       [
@@ -49,8 +49,7 @@ describe('Append', () => {
         signer2.secret.toKeypair()
       ]
     );
-    if (res.isErr) console.error(res.error);
-    assert.isTrue(res.isOk);
+    assert.isTrue(res.isOk, res.unwrap().toString());
   });
 
   it('Is in multiSig m of n', async () => {
@@ -66,7 +65,7 @@ describe('Append', () => {
         signer3.pubkey.toPubKey(),
       ],
     )();
-    if (account.isErr) console.error(account.error);
+    assert.isTrue(account.isOk, account.unwrap());
     const res = await Append.isInMultisig(
       account.unwrap().toPubKey(),
       [
@@ -74,8 +73,7 @@ describe('Append', () => {
         signer3.secret.toKeypair(),
       ]
     );
-    if (res.isErr) console.error(res.error);
-    assert.isTrue(res.unwrap());
+    assert.isTrue(res.isOk, res.unwrap().toString());
   });
 
   it('[Err]keypair for signing is too less', async () => {
@@ -89,7 +87,7 @@ describe('Append', () => {
         signer2.pubkey.toPubKey(),
       ],
     )();
-    if (account.isErr) console.error(account.error);
+    assert.isOk(account.isOk, account.unwrap());
     const res = await Append.isInMultisig(
       account.unwrap().toPubKey(),
       [
@@ -112,7 +110,7 @@ describe('Append', () => {
         signer2.pubkey.toPubKey(),
       ],
     )();
-    if (account.isErr) console.error(account.error);
+    assert.isOk(account.isOk, account.unwrap());
     const res = await Append.isInMultisig(
       account.unwrap().toPubKey(),
       [
@@ -120,18 +118,17 @@ describe('Append', () => {
         other2.secret.toKeypair(),
       ]
     );
-    if (res.isErr) console.error(res.error);
     assert.isFalse(res.unwrap());
   });
 
-  it.only('Extract only signer keypair', async () => {
+  it('Extract only signer keypair', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const signer3 = Wallet.create();
     const signer4 = Wallet.create();
     const feePayer = Wallet.create();
 
-   const multisig = await Multisig.create(2, source.secret.toKeypair(),
+    const multisig = await Multisig.create(2, source.secret.toKeypair(),
       [
         signer1.pubkey.toPubKey(),
         signer2.pubkey.toPubKey(),
@@ -149,16 +146,49 @@ describe('Append', () => {
         signer4.secret.toKeypair(),
       ];
 
-   const res = await Append.extractOnlySignerKeypair(
+    const res = await Append.extractOnlySignerKeypair(
       feePayer.pubkey.toPubKey(),
       multisig.unwrap().toPubKey(),
       signers
     );
-    // assert.isTrue(res.isOk, res.unwrap().toString());
-
-    console.log(res);
+    assert.isTrue(res.isOk, res.unwrap().toString());
+    assert.deepEqual(
+      res.unwrap(),
+      [
+        signer3.secret.toKeypair(),
+        signer4.secret.toKeypair(),
+      ]
+    );
   });
 
+  it('[Err]empty keypair', async () => {
+    const signer1 = Wallet.create();
+    const signer2 = Wallet.create();
+    const feePayer = Wallet.create();
+
+    const multisig = await Multisig.create(2, source.secret.toKeypair(),
+      [
+        signer1.pubkey.toPubKey(),
+        signer2.pubkey.toPubKey(),
+      ]
+    )();
+
+    assert.isTrue(multisig.isOk, multisig.unwrap());
+
+    const signers =
+      [
+        feePayer.secret.toKeypair(),
+        signer1.secret.toKeypair(),
+        signer2.secret.toKeypair(),
+      ];
+
+    const res = await Append.extractOnlySignerKeypair(
+      feePayer.pubkey.toPubKey(),
+      multisig.unwrap().toPubKey(),
+      signers
+    );
+    assert.isFalse(res.isOk);
+  });
 
   it('Extract multisig keypair', async () => {
     const signer1 = Wallet.create();
@@ -184,11 +214,11 @@ describe('Append', () => {
     );
     assert.isTrue(res.isOk, res.unwrap().toString());
     const actual = (res.unwrap() as Keypair[]).map(r => r.publicKey.toBase58());
-    const expect = 
-    [
-      signer1.pubkey,
-      signer2.pubkey 
-    ];
+    const expect =
+      [
+        signer1.pubkey,
+        signer2.pubkey
+      ];
     assert.deepEqual(actual, expect);
   })
 })
