@@ -124,7 +124,43 @@ describe('Append', () => {
     assert.isFalse(res.unwrap());
   });
 
-  it.only('Extract multisig keypair', async () => {
+  it.only('Extract only signer keypair', async () => {
+    const signer1 = Wallet.create();
+    const signer2 = Wallet.create();
+    const signer3 = Wallet.create();
+    const signer4 = Wallet.create();
+    const feePayer = Wallet.create();
+
+   const multisig = await Multisig.create(2, source.secret.toKeypair(),
+      [
+        signer1.pubkey.toPubKey(),
+        signer2.pubkey.toPubKey(),
+      ]
+    )();
+
+    assert.isTrue(multisig.isOk, multisig.unwrap());
+
+    const signers =
+      [
+        feePayer.secret.toKeypair(),
+        signer1.secret.toKeypair(),
+        signer2.secret.toKeypair(),
+        signer3.secret.toKeypair(),
+        signer4.secret.toKeypair(),
+      ];
+
+   const res = await Append.extractOnlySignerKeypair(
+      feePayer.pubkey.toPubKey(),
+      multisig.unwrap().toPubKey(),
+      signers
+    );
+    // assert.isTrue(res.isOk, res.unwrap().toString());
+
+    console.log(res);
+  });
+
+
+  it('Extract multisig keypair', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const dummy = Wallet.create();
@@ -134,7 +170,7 @@ describe('Append', () => {
         signer2.pubkey.toPubKey(),
       ]
     )();
-    assert.isTrue(multisig.isOk, multisig.unwrap())
+    assert.isTrue(multisig.isOk, multisig.unwrap());
     const signers =
       [
         signer1.secret.toKeypair(),

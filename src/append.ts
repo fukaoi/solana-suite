@@ -35,8 +35,14 @@ export namespace Append {
     return res.length > 0;
   }
 
-  export const extractOnlySignerKeypair = (feePayer: PublicKey, signers: Keypair[]): Keypair[] =>
-    signers.filter(s => s.publicKey.toString() === feePayer.toString());
+  export const extractOnlySignerKeypair = async(
+    feePayer: PublicKey, 
+    multisig: PublicKey, 
+    signers: Keypair[]
+   ): Promise<Result<Keypair[] | Error>> => {
+    const extracted = extractFeePayerKeypair(feePayer, signers);
+    return extractMultiSigKeypair(multisig, extracted);
+  }
 
   export const extractFeePayerKeypair = (feePayer: PublicKey, signers: Keypair[]): Keypair[] =>
     signers.filter(s => s.publicKey.toString() === feePayer.toString());

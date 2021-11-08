@@ -79,8 +79,13 @@ export namespace Transaction {
       if (append?.multiSig) {
         let onlySigners = signers;
         if (append?.feePayer) {
-          // exclude keypair of fee payer
-          onlySigners = Append.extractOnlySignerKeypair(append?.feePayer, signers);
+          const extracted = await Append.extractMultiSigKeypair(
+            append.multiSig,
+            signers
+          );
+          if (extracted.isErr) return Result.err(extracted.error);
+          onlySigners = extracted.value as Keypair[];
+
         }
         const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
         if (multiSigRes.isErr) return Result.err(multiSigRes.error);
@@ -131,8 +136,12 @@ export namespace Transaction {
       if (append?.multiSig) {
         let onlySigners = signers;
         if (append?.feePayer) {
-          // exclude keypair of fee payer
-          onlySigners = Append.extractOnlySignerKeypair(append?.feePayer, signers);
+          const extracted = await Append.extractMultiSigKeypair(
+            append.multiSig,
+            signers
+          );
+          if (extracted.isErr) return Result.err(extracted.error);
+          onlySigners = extracted.value as Keypair[];
         }
         const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
         if (multiSigRes.isErr) return Result.err(multiSigRes.error);
