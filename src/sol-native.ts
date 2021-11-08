@@ -21,14 +21,20 @@ export namespace SolNative {
     signers: Keypair[],
     amount: number,
   ) => async (append?: Append.Value) => {
+    const onlySigners = await Append.extractOnlySignerKeypair(
+      signers,
+      append?.feePayer || signers[0].publicKey,
+      append?.multiSig || signers[0].publicKey,
+    );
 
-    console.log(signers);
+    if (onlySigners.isErr) return onlySigners;
+    source = (onlySigners.unwrap() as Keypair[])[0].publicKey;
 
     let feePayer = signers[0];
     if (append?.feePayer) {
       feePayer = Append.extractFeePayerKeypair(
+        signers,
         append?.feePayer,
-        signers
       )[0];
     }
 
@@ -51,8 +57,6 @@ export namespace SolNative {
     const t = new SolanaTransaction();
     t.feePayer = feePayer.publicKey;
 
-    console.log(wrapped.toBase58(), append!.multiSig!.toBase58());
-
     const tx = await Transaction.send(
       source,
       wrapped,
@@ -63,6 +67,7 @@ export namespace SolNative {
       txInstructions: append?.txInstructions
     });
 
+    // this point is need multiSig signers
     await token.closeAccount(
       wrapped,
       dest,

@@ -83,7 +83,7 @@ describe('SolNative', () => {
     assert.isTrue(airdropRes.isOk, airdropRes.unwrap());
 
     const res = await SolNative.wrappedTransfer(
-      source.pubkey.toPubKey(),
+      multi.unwrap().toPubKey(),
       destination.pubkey.toPubKey(),
       [
         source.secret.toKeypair(),

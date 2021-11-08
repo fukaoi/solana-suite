@@ -20,7 +20,7 @@ describe('Append', () => {
     assert.isTrue(res);
   });
 
-  it('[Err]No match fee payer address and keypari', async () => {
+  it('[Err]No match fee payer address and keypair', async () => {
     const feePayer = Wallet.create();
     const other = Wallet.create();
     const res = Append.isInFeePayer(
@@ -147,9 +147,9 @@ describe('Append', () => {
       ];
 
     const res = await Append.extractOnlySignerKeypair(
+      signers,
       feePayer.pubkey.toPubKey(),
       multisig.unwrap().toPubKey(),
-      signers
     );
     assert.isTrue(res.isOk, res.unwrap().toString());
     assert.deepEqual(
@@ -161,7 +161,7 @@ describe('Append', () => {
     );
   });
 
-  it('[Err]empty keypair', async () => {
+  it('[Err]Extract only signer, but empty keypair', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const feePayer = Wallet.create();
@@ -183,11 +183,28 @@ describe('Append', () => {
       ];
 
     const res = await Append.extractOnlySignerKeypair(
+      signers,
       feePayer.pubkey.toPubKey(),
       multisig.unwrap().toPubKey(),
-      signers
     );
     assert.isFalse(res.isOk);
+  });
+
+  it('Extract only signer, no fee payer and no multisig', async () => {
+    const signer1 = Wallet.create();
+    const signer2 = Wallet.create();
+
+    const signers =
+      [
+        signer1.secret.toKeypair(),
+        signer2.secret.toKeypair(),
+      ];
+
+    const res = await Append.extractOnlySignerKeypair(
+      signers,
+    );
+    assert.isTrue(res.isOk);
+    assert.deepEqual(res.unwrap(), signers);
   });
 
   it('Extract multisig keypair', async () => {
@@ -209,8 +226,8 @@ describe('Append', () => {
       ];
 
     const res = await Append.extractMultiSigKeypair(
+      signers,
       multisig.unwrap().toPubKey(),
-      signers
     );
     assert.isTrue(res.isOk, res.unwrap().toString());
     const actual = (res.unwrap() as Keypair[]).map(r => r.publicKey.toBase58());

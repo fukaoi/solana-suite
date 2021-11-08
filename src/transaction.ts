@@ -71,7 +71,10 @@ export namespace Transaction {
       if (append?.feePayer) {
         if (!Append.isInFeePayer(append.feePayer, signers))
           return Result.err(Error('Not found fee payer secret key in signers'));
-        t.feePayer = Append.extractFeePayerKeypair(append?.feePayer, signers)[0].publicKey;
+        t.feePayer = Append.extractFeePayerKeypair(
+          signers,
+          append?.feePayer, 
+        )[0].publicKey;
       } else {
         t.feePayer = signers[0].publicKey;
       }
@@ -80,8 +83,8 @@ export namespace Transaction {
         let onlySigners = signers;
         if (append?.feePayer) {
           const extracted = await Append.extractMultiSigKeypair(
+            signers,
             append.multiSig,
-            signers
           );
           if (extracted.isErr) return Result.err(extracted.error);
           onlySigners = extracted.value as Keypair[];
@@ -128,7 +131,10 @@ export namespace Transaction {
       if (append?.feePayer) {
         if (!Append.isInFeePayer(append.feePayer, signers))
           return Result.err(Error('Not found fee payer secret key in signers'));
-        t.feePayer = Append.extractFeePayerKeypair(append?.feePayer, signers)[0].publicKey;
+        t.feePayer = Append.extractFeePayerKeypair(
+          signers,
+          append?.feePayer, 
+        )[0].publicKey;
       } else {
         t.feePayer = signers[0].publicKey;
       }
@@ -137,8 +143,8 @@ export namespace Transaction {
         let onlySigners = signers;
         if (append?.feePayer) {
           const extracted = await Append.extractMultiSigKeypair(
+            signers,
             append.multiSig,
-            signers
           );
           if (extracted.isErr) return Result.err(extracted.error);
           onlySigners = extracted.value as Keypair[];

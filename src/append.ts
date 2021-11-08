@@ -36,26 +36,32 @@ export namespace Append {
   }
 
   export const extractOnlySignerKeypair = async(
-    feePayer: PublicKey,
-    multisig: PublicKey,
-    signers: Keypair[]
+    signers: Keypair[],
+    feePayer?: PublicKey,
+    multisig?: PublicKey,
    ): Promise<Result<Keypair[] | Error>> => {
-    const exFeepayer = extractFeePayerKeypair(feePayer, signers);
-    const exMultisig = await extractMultiSigKeypair(multisig, signers);
+    let exFeepayer: Keypair[] = []; 
+    if (feePayer) {
+      exFeepayer = extractFeePayerKeypair(signers, feePayer);
+    }
+    let exMultisig: Keypair[] = []; 
+    if (multisig) {
+      const resEx = await extractMultiSigKeypair(signers, multisig);
+      if (resEx.isErr) return resEx;
+      exMultisig = resEx.unwrap() as Keypair[];
+    }
 
-    if (exMultisig.isErr) return exMultisig;
-
-    const concated = exFeepayer.concat(exMultisig.value as Keypair[]);
+    const concated = exFeepayer.concat(exMultisig);
 
     const res = signers.filter(f => !concated.includes(f));
     if (res.length === 0) return Result.err(Error('Not found keypair for signer'));
     return Result.ok(res);
   }
 
-  export const extractFeePayerKeypair = (feePayer: PublicKey, signers: Keypair[]): Keypair[] =>
+  export const extractFeePayerKeypair = (signers: Keypair[], feePayer: PublicKey): Keypair[] =>
     signers.filter(s => s.publicKey.toString() === feePayer.toString());
 
-  export const extractMultiSigKeypair = async (multisig: PublicKey, signers: Keypair[])
+  export const extractMultiSigKeypair = async (signers: Keypair[], multisig: PublicKey)
     : Promise<Result<Keypair[] | Error>> => {
     const info = await Multisig.getMultisigInfo(multisig);
     if (info.isErr) {
