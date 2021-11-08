@@ -18,21 +18,8 @@ import {
 } from '../../';
 
 export namespace SplNft {
-
   const NFT_AMOUNT = 1;
   const NFT_DECIMAL = 0;
-
-  export const create = (
-    source: PublicKey,
-    signers: Keypair[],
-  ): Promise<Result<string, Error>> => {
-    return SplToken.mint(
-      source,
-      signers,
-      NFT_AMOUNT,
-      NFT_DECIMAL,
-    )();
-  }
 
   export const transfer = (
     tokenKey: PublicKey,
