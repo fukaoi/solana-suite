@@ -23,13 +23,14 @@ export namespace SolNative {
   ) => async (append?: Append.Value) => {
     const onlySigners = await Append.extractOnlySignerKeypair(
       signers,
-      append?.feePayer || signers[0].publicKey,
-      append?.multiSig || signers[0].publicKey,
+      append?.feePayer,
+      append?.multiSig,
     );
 
     if (onlySigners.isErr) return onlySigners;
     source = (onlySigners.unwrap() as Keypair[])[0].publicKey;
 
+    const sol = amount * LAMPORTS_PER_SOL;
     let feePayer = signers[0];
     if (append?.feePayer) {
       feePayer = Append.extractFeePayerKeypair(
@@ -44,8 +45,10 @@ export namespace SolNative {
       TOKEN_PROGRAM_ID,
       append!.multiSig!,
       feePayer,
-      amount * LAMPORTS_PER_SOL
+      sol
     );
+
+    console.debug('# wrapped sol: ', wrapped.toBase58());
 
     const token = new Token(
       connection,
@@ -61,7 +64,7 @@ export namespace SolNative {
       source,
       wrapped,
       [feePayer],
-      amount
+      sol
     )({
       feePayer: append?.feePayer,
       txInstructions: append?.txInstructions

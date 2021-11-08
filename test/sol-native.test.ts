@@ -82,6 +82,9 @@ describe('SolNative', () => {
     const airdropRes = await Wallet.requestAirdrop(multi.unwrap().toPubKey());
     assert.isTrue(airdropRes.isOk, airdropRes.unwrap());
 
+    const before = (await Wallet.getBalance(destination.pubkey.toPubKey())).unwrap();
+    const amount = 0.0001;
+
     const res = await SolNative.wrappedTransfer(
       multi.unwrap().toPubKey(),
       destination.pubkey.toPubKey(),
@@ -90,10 +93,12 @@ describe('SolNative', () => {
         signer1.secret.toKeypair(),
         signer2.secret.toKeypair(),
       ],
-      0.0001,
+      amount,
     )({
       multiSig: multi.unwrap().toPubKey()
     });
-    console.log(res);
+    assert.isTrue(res.isOk, res.unwrap().toString());
+    const after = (await Wallet.getBalance(destination.pubkey.toPubKey())).unwrap();
+    assert.equal(after - before, amount);
   });
 })
