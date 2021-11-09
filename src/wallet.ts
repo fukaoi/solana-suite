@@ -2,14 +2,11 @@ import {
   Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
-  TransactionInstruction,
-  SystemProgram,
-  SYSVAR_RENT_PUBKEY,
 } from '@solana/web3.js';
 
 import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  TOKEN_PROGRAM_ID
+  TOKEN_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
 
 import bs from 'bs58';
@@ -100,55 +97,5 @@ export namespace Wallet {
     )
       .then(v => Result.ok(v[0]))
       .catch((e: Error) => Result.err(e))
-  }
-
-  export const createAssociatedTokenAccountInstruction = (
-    associatedToken: PublicKey,
-    payer: PublicKey,
-    source: PublicKey,
-    mintKey: PublicKey,
-  ) => {
-    const keys = [
-      {
-        pubkey: payer,
-        isSigner: true,
-        isWritable: true,
-      },
-      {
-        pubkey: associatedToken,
-        isSigner: false,
-        isWritable: true,
-      },
-      {
-        pubkey: source,
-        isSigner: false,
-        isWritable: false,
-      },
-      {
-        pubkey: mintKey,
-        isSigner: false,
-        isWritable: false,
-      },
-      {
-        pubkey: SystemProgram.programId,
-        isSigner: false,
-        isWritable: false,
-      },
-      {
-        pubkey: TOKEN_PROGRAM_ID,
-        isSigner: false,
-        isWritable: false,
-      },
-      {
-        pubkey: SYSVAR_RENT_PUBKEY,
-        isSigner: false,
-        isWritable: false,
-      },
-    ];
-    return new TransactionInstruction({
-      keys,
-      programId: ASSOCIATED_TOKEN_PROGRAM_ID,
-      data: Buffer.from([]),
-    });
   }
 }
