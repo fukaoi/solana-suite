@@ -65,7 +65,7 @@ describe('SolNative', () => {
     assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
 
-  it('wrapped transfer transaction with multi sig', async () => {
+  it('transfer transaction with multi sig', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const feePayer = source;
@@ -82,7 +82,7 @@ describe('SolNative', () => {
     const before = (await Wallet.getBalance(destination.pubkey.toPubKey())).unwrap();
     const amount = 0.0001;
 
-    const res = await SolNative.multisigTransfer(
+    const res = await SolNative.transfer(
       multi.unwrap().toPubKey(),
       destination.pubkey.toPubKey(),
       [
@@ -99,7 +99,7 @@ describe('SolNative', () => {
     assert.isTrue(after > before);
   });
 
-  it('wrapped transfer transaction with multi sig and fee payer', async () => {
+  it('transfer transaction with multi sig and fee payer', async () => {
     
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
@@ -118,7 +118,7 @@ describe('SolNative', () => {
     assert.isTrue(multi.isOk, multi.unwrap());
     const amount = 0.0001;
 
-    const res = await SolNative.multisigTransfer( multi.unwrap().toPubKey(),
+    const res = await SolNative.transfer( multi.unwrap().toPubKey(),
       destination.pubkey.toPubKey(),
       [
         feePayer.secret.toKeypair(),
