@@ -82,7 +82,7 @@ describe('SolNative', () => {
     const before = (await Wallet.getBalance(destination.pubkey.toPubKey())).unwrap();
     const amount = 0.0001;
 
-    const res = await SolNative.wrappedTransfer(
+    const res = await SolNative.multisigTransfer(
       multi.unwrap().toPubKey(),
       destination.pubkey.toPubKey(),
       [
@@ -118,7 +118,7 @@ describe('SolNative', () => {
     assert.isTrue(multi.isOk, multi.unwrap());
     const amount = 0.0001;
 
-    const res = await SolNative.wrappedTransfer( multi.unwrap().toPubKey(),
+    const res = await SolNative.multisigTransfer( multi.unwrap().toPubKey(),
       destination.pubkey.toPubKey(),
       [
         feePayer.secret.toKeypair(),

@@ -17,16 +17,21 @@ import {
 export namespace SolNative {
 
   // NOTICE: There is a lamport fluctuation when transfer under 0.001 sol
-  export const wrappedTransfer = (
+  // for multiSig only function
+  export const multisigTransfer = (
     source: PublicKey,
     dest: PublicKey,
     signers: Keypair[],
     amount: number,
   ) => async (append?: Append.Value) => {
+
+    if (!append?.multiSig)
+      return Result.err(Error('Need to set append.multiSig param'));
+
     const onlySigners = await Append.extractOnlySignerKeypair(
       signers,
       undefined,
-      append?.multiSig,
+      append!.multiSig!,
     );
 
     if (onlySigners.isErr) return onlySigners;
