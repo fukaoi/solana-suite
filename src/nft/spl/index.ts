@@ -12,7 +12,6 @@ import {
 import {
   Append,
   Transaction,
-  SplToken,
   Node,
   Result
 } from '../../';

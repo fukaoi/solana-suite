@@ -104,7 +104,10 @@ describe('SolNative', () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const feePayer = Wallet.create();
-    const airdropRes = await Wallet.requestAirdrop(feePayer.pubkey.toPubKey()); assert.isTrue(airdropRes.isOk, airdropRes.unwrap()); const before = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
+
+    const airdropRes = await Wallet.requestAirdrop(feePayer.pubkey.toPubKey()); 
+    assert.isTrue(airdropRes.isOk, airdropRes.unwrap()); 
+    const before = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
 
     const multi = await Multisig.create(
       2,

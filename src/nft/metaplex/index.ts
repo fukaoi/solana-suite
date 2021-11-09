@@ -9,7 +9,7 @@ import {
   SystemProgram, TransactionInstruction,
 } from '@solana/web3.js';
 
-import {Node, Transaction, Result} from '../../';
+import {Node, Transaction, Result, Append} from '../../';
 import {MetaplexMetaData, MetaplexInstructure} from './';
 
 export * from './instructure';
@@ -114,6 +114,48 @@ export namespace Metaplex {
 
     return {instructions: inst, signers, tokenKey};
   }
+
+  export const mint2 = (
+    data: MetaplexInstructure.Data,
+    owner: PublicKey,
+    signers: Keypair[],
+  ) => async (append?: Append.Value)
+      : Promise<Result<MintResult, Error>> => {
+      const txsign = await create(owner, signers)();
+
+      const metadataInst = await MetaplexMetaData.create(
+        data,
+        txsign.tokenKey.toPubKey(),
+        owner,
+      )(txsign.instructions);
+
+      if (metadataInst.isErr) return Result.err(metadataInst.error);
+
+      const updateTx = await MetaplexMetaData.update(
+        data,
+        undefined,
+        undefined,
+        txsign.tokenKey.toPubKey(),
+        owner,
+        signers,
+      )(metadataInst.value as TransactionInstruction[]);
+
+      if (updateTx.isErr) return Result.err(updateTx.error);
+
+      const signature = await Transaction.sendInstruction(txsign.signers)
+        ({
+          txInstructions: updateTx.value as TransactionInstruction[]
+        });
+
+      if (signature.isErr) return Result.err(signature.error);
+
+      return Result.ok(
+        {
+          tokenKey: txsign.tokenKey,
+          signature: signature.value
+        }
+      );
+    }
 
   export const mint = async (
     data: MetaplexInstructure.Data,

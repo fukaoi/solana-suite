@@ -61,8 +61,7 @@ describe('SplToken', () => {
         MINT_DECIMAL
       )();
 
-    if (res.isErr) return console.error(res.error);
-    assert.isTrue(res.isOk);
+    assert.isTrue(res.isOk, res.unwrap());
     tokenKeyStr = res.unwrap();
     console.log('# tokenKey: ', tokenKeyStr);
   });
@@ -76,7 +75,7 @@ describe('SplToken', () => {
       [signer1.pubkey.toPubKey(), signer2.pubkey.toPubKey()]
     )();
 
-    if (multisig.isErr) console.error(multisig.error);
+    assert.isTrue(multisig.isOk, multisig.unwrap());
 
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const res =
@@ -94,8 +93,7 @@ describe('SplToken', () => {
         multiSig: multisig.unwrap().toPubKey()
       });
 
-    if (res.isErr) console.error(res.error);
-    assert.isTrue(res.isOk);
+    assert.isTrue(res.isOk, res.unwrap());
     console.log('# tokenKey: ', res.unwrap());
   });
 
@@ -116,8 +114,7 @@ describe('SplToken', () => {
       )({
         feePayer: feePayer.pubkey.toPubKey()
       });
-    if (res.isErr) console.error(res.error);
-    assert.isTrue(res.isOk);
+    assert.isTrue(res.isOk, res.unwrap());
     const after = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
     console.log('# tokenKey: ', res.unwrap());
     assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
@@ -132,8 +129,7 @@ describe('SplToken', () => {
       1,
       MINT_DECIMAL
     )();
-    if (res.isErr) console.error(res.error);
-    assert.isTrue(res.isOk);
+    assert.isTrue(res.isOk, res.unwrap());
   });
 
   it('Transfer transaction with memo data', async () => {
@@ -148,8 +144,7 @@ describe('SplToken', () => {
     )({
       txInstructions: [memoInst],
     });
-    if (res.isErr) console.error(res.error);
-    assert.isTrue(res.isOk);
+    assert.isTrue(res.isOk, res.unwrap());
   });
 
   it('Subscribe a account(pubkey)', async () => {
