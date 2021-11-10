@@ -123,7 +123,7 @@ export namespace Metaplex {
       : Promise<Result<MintResult, Error>> => {
       const txsign = await create(append!.feePayer!, [signers[0]])();
 
-      let multiSigSignerPubkey = [];
+      const multiSigSignerPubkey = [];
       for (let i = 1; i<signers.length; i++) {
         multiSigSignerPubkey.push(signers[i].publicKey);
       }
@@ -134,10 +134,10 @@ export namespace Metaplex {
         data,
         txsign.tokenKey.toPubKey(),
         append!.feePayer!,
+        owner,
+        owner
       )(txsign.instructions, append!.multiSig!, multiSigSignerPubkey);
 
-      // console.log(metadataInst);
-        
       console.log(txsign.signers.map(m => m.publicKey.toBase58()));
 
       const merged = txsign.signers.concat(signers);

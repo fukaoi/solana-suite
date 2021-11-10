@@ -68,12 +68,6 @@ export namespace MetaplexMetaData {
     // console.log(keys);
 
     if (multiSig && multiSigSignerPubkey) {
-      keys.push({
-        pubkey: multiSig,
-        isSigner: false,
-        isWritable: false,
-      });
-
       multiSigSignerPubkey.forEach(m => keys.push(
         {
           pubkey: m,
@@ -83,7 +77,7 @@ export namespace MetaplexMetaData {
       ));
     }
 
-    // console.log(keys);
+    console.log(keys.map(k => k.pubkey.toBase58()));
     return new TransactionInstruction({
       keys,
       programId: Constants.METAPLEX_PROGRAM_ID,
