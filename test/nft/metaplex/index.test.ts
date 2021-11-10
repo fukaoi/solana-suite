@@ -31,7 +31,7 @@ describe('Metaplex', () => {
     console.log(`# tx signature: ${(<Metaplex.MintResult>res.unwrap()).signature}`);
   });
 
-  it.only('Mint nft with multi sig', async () => {
+  it.only('Mint2 nft with multi sig', async () => {
     const data = new MetaplexInstructure.Data({
       name: 'Sample',
       symbol: 'SAMPLE',
@@ -66,11 +66,11 @@ describe('Metaplex', () => {
       // multisig.unwrap().toPubKey(),
       [
         source.secret.toKeypair(),
-        // signer1.secret.toKeypair(),
-        // signer2.secret.toKeypair(),
+        signer1.secret.toKeypair(),
+        signer2.secret.toKeypair(),
       ]
     )({
-      // multiSig: multisig.unwrap().toPubKey(),
+      multiSig: multisig.unwrap().toPubKey(),
       feePayer: source.pubkey.toPubKey(),
     });
 

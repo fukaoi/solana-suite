@@ -24,7 +24,9 @@ export namespace MetaplexMetaData {
     mintAuthorityKey: PublicKey,
     updateAuthority: PublicKey,
     payer: PublicKey,
-    txnData: Buffer
+    txnData: Buffer,
+    multiSig?: PublicKey,
+    multiSigSignerPubkey?: PublicKey[]
   ) => {
     const keys = [
       {
@@ -63,6 +65,25 @@ export namespace MetaplexMetaData {
         isWritable: false,
       },
     ];
+    // console.log(keys);
+
+    if (multiSig && multiSigSignerPubkey) {
+      keys.push({
+        pubkey: multiSig,
+        isSigner: false,
+        isWritable: false,
+      });
+
+      multiSigSignerPubkey.forEach(m => keys.push(
+        {
+          pubkey: m,
+          isSigner: true,
+          isWritable: false
+        }
+      ));
+    }
+
+    // console.log(keys);
     return new TransactionInstruction({
       keys,
       programId: Constants.METAPLEX_PROGRAM_ID,
@@ -173,7 +194,7 @@ export namespace MetaplexMetaData {
     payer: PublicKey,
     mintAuthorityKey = payer,
     updateAuthority = payer,
-  ) => async (instructions?: TransactionInstruction[]):
+  ) => async (instructions?: TransactionInstruction[], multiSig?: PublicKey, multiSigSignerPubkey?: PublicKey[]):
       Promise<Result<PublicKey | TransactionInstruction[], Error>> => {
       let inst: TransactionInstruction[] = [];
       inst = instructions ? instructions : inst;
@@ -189,7 +210,9 @@ export namespace MetaplexMetaData {
           mintAuthorityKey,
           updateAuthority,
           payer,
-          txnData
+          txnData,
+          multiSig,
+          multiSigSignerPubkey,
         )
       );
       return Result.ok(inst);

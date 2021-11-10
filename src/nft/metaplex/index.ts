@@ -121,30 +121,36 @@ export namespace Metaplex {
     signers: Keypair[],
   ) => async (append?: Append.Value)
       : Promise<Result<MintResult, Error>> => {
-      const txsign = await create(owner, signers)();
+      const txsign = await create(owner, [signers[0]])();
+
+      let multiSigSignerPubkey = [];
+      for (let i = 1; i<signers.length; i++) {
+        multiSigSignerPubkey.push(signers[i].publicKey);
+      }
+
+      // console.log(multiSigSignerPubkey.map(m => m.toBase58()));
 
       const metadataInst = await MetaplexMetaData.create(
         data,
         txsign.tokenKey.toPubKey(),
         owner,
-      )(txsign.instructions);
+      )(txsign.instructions, append!.multiSig!, multiSigSignerPubkey);
+
+      // console.log(metadataInst);
+        
+      console.log(txsign.signers.map(m => m.publicKey.toBase58()));
+
+      const merged = txsign.signers.concat(signers);
+
+      console.log(merged.map(m => m.publicKey.toBase58()));
 
       if (metadataInst.isErr) return Result.err(metadataInst.error);
 
-      const updateTx = await MetaplexMetaData.update(
-        data,
-        undefined,
-        undefined,
-        txsign.tokenKey.toPubKey(),
-        owner,
-        signers,
-      )(metadataInst.value as TransactionInstruction[]);
-
-      if (updateTx.isErr) return Result.err(updateTx.error);
-
-      const signature = await Transaction.sendInstruction(txsign.signers)
+      // const signature = await Transaction.sendInstruction(txsign.signers) default
+      const signature = await Transaction.sendInstruction(merged)
         ({
-          txInstructions: updateTx.value as TransactionInstruction[]
+          txInstructions: metadataInst.value as TransactionInstruction[]
+          // txInstructions: txsign.instructions as TransactionInstruction[]
         });
 
       if (signature.isErr) return Result.err(signature.error);
