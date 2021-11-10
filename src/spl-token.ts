@@ -156,21 +156,21 @@ export namespace SplToken {
       // Check comformability of multiSig
       let authority = source;
       if (append?.multiSig) {
-        let onlySigners = signers;
-        if (append?.feePayer) {
-          // exclude keypair of fee payer
-          const extracted = await Append.extractMultiSigKeypair(
-            signers,
-            append.multiSig,
-          );
-          if (extracted.isErr) return Result.err(extracted.error);
-          onlySigners = extracted.value as Keypair[];
-        }
-        const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
-        if (multiSigRes.isErr) return Result.err(multiSigRes.error);
+        // let onlySigners = signers;
+        // if (append?.feePayer) {
+          // // exclude keypair of fee payer
+          // const extracted = await Append.extractMultiSigKeypair(
+            // signers,
+            // append.multiSig,
+          // );
+          // if (extracted.isErr) return Result.err(extracted.error);
+          // onlySigners = extracted.value as Keypair[];
+        // }
+        // const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
+        // if (multiSigRes.isErr) return Result.err(multiSigRes.error);
 
-        if (!multiSigRes.value)
-          return Result.err(Error('Not found singer of multiSig in signers'));
+        // if (!multiSigRes.value)
+          // return Result.err(Error('Not found singer of multiSig in signers'));
 
         authority = append.multiSig;
       }

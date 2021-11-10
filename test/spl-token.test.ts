@@ -66,7 +66,38 @@ describe('SplToken', () => {
     console.log('# tokenKey: ', tokenKeyStr);
   });
 
-  it('Create token with multisig', async () => {
+  it('[Err]lack signer for multisig', async () => {
+    const signer1 = Wallet.create();
+    const signer2 = Wallet.create();
+    const multisig = await Multisig.create(
+      2,
+      source.secret.toKeypair(),
+      [
+        signer1.pubkey.toPubKey(),
+        signer2.pubkey.toPubKey()
+      ]
+    )();
+
+    assert.isTrue(multisig.isOk, multisig.unwrap());
+
+    const TOKEN_TOTAL_AMOUNT = 10000000;
+    const res =
+      await SplToken.mint(
+        multisig.unwrap().toPubKey(),
+        [
+          source.secret.toKeypair(),
+        ],
+        TOKEN_TOTAL_AMOUNT,
+        MINT_DECIMAL,
+      )({
+        feePayer: source.pubkey.toPubKey(),
+        multiSig: multisig.unwrap().toPubKey()
+      });
+    assert.isFalse(res.isOk);
+  });
+
+
+  it('Create token with multisig and fee payer', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const multisig = await Multisig.create(
@@ -107,7 +138,7 @@ describe('SplToken', () => {
         owner.pubkey.toPubKey(),
         [
           feePayer.secret.toKeypair(),
-          owner.secret.toKeypair(), 
+          owner.secret.toKeypair(),
         ],
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL
