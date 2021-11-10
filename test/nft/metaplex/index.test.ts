@@ -40,6 +40,7 @@ describe('Metaplex', () => {
       creators: null
     });
 
+
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const multisig = await Multisig.create(
@@ -53,17 +54,14 @@ describe('Metaplex', () => {
 
     assert.isTrue(multisig.isOk, multisig.unwrap());
 
-    const airdropRes = await Wallet.requestAirdrop(multisig.unwrap().toPubKey());
-    assert.isTrue(airdropRes.isOk, airdropRes.unwrap()); 
-
     console.log('multisig: ', multisig.unwrap());
     console.log('signer1: ', signer1.pubkey);
     console.log('signer2: ', signer2.pubkey);
 
     const res = await Metaplex.mint2(
       data,
-      source.pubkey.toPubKey(),
-      // multisig.unwrap().toPubKey(),
+      // source.pubkey.toPubKey(),
+      multisig.unwrap().toPubKey(),
       [
         source.secret.toKeypair(),
         signer1.secret.toKeypair(),

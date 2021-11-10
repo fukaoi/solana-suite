@@ -121,7 +121,7 @@ export namespace Metaplex {
     signers: Keypair[],
   ) => async (append?: Append.Value)
       : Promise<Result<MintResult, Error>> => {
-      const txsign = await create(owner, [signers[0]])();
+      const txsign = await create(append!.feePayer!, [signers[0]])();
 
       let multiSigSignerPubkey = [];
       for (let i = 1; i<signers.length; i++) {
@@ -133,7 +133,7 @@ export namespace Metaplex {
       const metadataInst = await MetaplexMetaData.create(
         data,
         txsign.tokenKey.toPubKey(),
-        owner,
+        append!.feePayer!,
       )(txsign.instructions, append!.multiSig!, multiSigSignerPubkey);
 
       // console.log(metadataInst);
