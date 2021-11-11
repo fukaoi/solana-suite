@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Wallet, Multisig} from '../../../src';
+import {Wallet} from '../../../src';
 import {Metaplex, MetaplexInstructure} from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
 
@@ -23,15 +23,18 @@ describe('Metaplex', () => {
 
     const res = await Metaplex.mint(
       data,
-      source.secret.toKeypair(),
-    );
+      source.pubkey.toPubKey(),
+      [source.secret.toKeypair()],
+    )({
+      feePayer: source.pubkey.toPubKey()
+    });
 
     assert.isTrue(res.isOk);
     console.log(`# tokenKey: ${(<Metaplex.MintResult>res.unwrap()).tokenKey}`);
     console.log(`# tx signature: ${(<Metaplex.MintResult>res.unwrap()).signature}`);
   });
 
-  it.only('Mint2 nft with multi sig', async () => {
+  it('Mint nft with fee payer', async () => {
     const data = new MetaplexInstructure.Data({
       name: 'Sample',
       symbol: 'SAMPLE',
@@ -40,34 +43,13 @@ describe('Metaplex', () => {
       creators: null
     });
 
-
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
-    const multisig = await Multisig.create(
-      2,
-      source.secret.toKeypair(),
-      [
-        signer1.pubkey.toPubKey(), 
-        signer2.pubkey.toPubKey()
-      ]
-    )();
-
-    assert.isTrue(multisig.isOk, multisig.unwrap());
-
-    console.log('multisig: ', multisig.unwrap());
-    console.log('signer1: ', signer1.pubkey);
-    console.log('signer2: ', signer2.pubkey);
-
-    const res = await Metaplex.mint2(
+    const res = await Metaplex.mint(
       data,
-      multisig.unwrap().toPubKey(),
+      source.pubkey.toPubKey(),
       [
         source.secret.toKeypair(),
-        signer1.secret.toKeypair(),
-        signer2.secret.toKeypair(),
       ]
     )({
-      multiSig: multisig.unwrap().toPubKey(),
       feePayer: source.pubkey.toPubKey(),
     });
 

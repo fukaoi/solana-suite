@@ -115,7 +115,7 @@ export namespace Metaplex {
     return {instructions: inst, signers, tokenKey};
   }
 
-  export const mint2 = (
+  export const mint = (
     data: MetaplexInstructure.Data,
     owner: PublicKey,
     signers: Keypair[],
@@ -124,11 +124,9 @@ export namespace Metaplex {
       const txsign = await create(append!.feePayer!, [signers[0]])();
 
       const multiSigSignerPubkey = [];
-      for (let i = 1; i<signers.length; i++) {
+      for (let i = 1; i < signers.length; i++) {
         multiSigSignerPubkey.push(signers[i].publicKey);
       }
-
-      // console.log(multiSigSignerPubkey.map(m => m.toBase58()));
 
       const metadataInst = await MetaplexMetaData.create(
         data,
@@ -138,19 +136,13 @@ export namespace Metaplex {
         owner
       )(txsign.instructions, append!.multiSig!, multiSigSignerPubkey);
 
-      console.log(txsign.signers.map(m => m.publicKey.toBase58()));
-
       const merged = txsign.signers.concat(signers);
-
-      console.log(merged.map(m => m.publicKey.toBase58()));
 
       if (metadataInst.isErr) return Result.err(metadataInst.error);
 
-      // const signature = await Transaction.sendInstruction(txsign.signers) default
       const signature = await Transaction.sendInstruction(merged)
         ({
           txInstructions: metadataInst.value as TransactionInstruction[]
-          // txInstructions: txsign.instructions as TransactionInstruction[]
         });
 
       if (signature.isErr) return Result.err(signature.error);
@@ -162,44 +154,4 @@ export namespace Metaplex {
         }
       );
     }
-
-  export const mint = async (
-    data: MetaplexInstructure.Data,
-    owner: Keypair,
-  ): Promise<Result<MintResult, Error>> => {
-    const txsign = await create(owner.publicKey, [owner])();
-
-    const metadataInst = await MetaplexMetaData.create(
-      data,
-      txsign.tokenKey.toPubKey(),
-      owner.publicKey,
-    )(txsign.instructions);
-
-    if (metadataInst.isErr) return Result.err(metadataInst.error);
-
-    const updateTx = await MetaplexMetaData.update(
-      data,
-      undefined,
-      undefined,
-      txsign.tokenKey.toPubKey(),
-      owner.publicKey,
-      [owner],
-    )(metadataInst.value as TransactionInstruction[]);
-
-    if (updateTx.isErr) return Result.err(updateTx.error);
-
-    const signature = await Transaction.sendInstruction(txsign.signers)
-      ({
-        txInstructions: updateTx.value as TransactionInstruction[]
-      });
-
-    if (signature.isErr) return Result.err(signature.error);
-
-    return Result.ok(
-      {
-        tokenKey: txsign.tokenKey,
-        signature: signature.value
-      }
-    );
-  }
 }
