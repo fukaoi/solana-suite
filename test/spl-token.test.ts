@@ -99,16 +99,8 @@ describe('SplToken', () => {
 
 
   it.only('Create token, transfer with multisig and fee payer', async () => {
-    // const signer1 = Wallet.create();
- // const signer2 = Wallet.create();
-    const signer1 = {
-      pubkey: '3F12z9sB2bvuZVcdo7VyKvDvsboD1akUUEcXPgLwP5dy',
-      secret: '2ymrPyWHeZJK9rj8cgCXr77463H2AcVmVLRQ2cTKQZGyXB4zYft4wbtEjtDV9bANdCmfuW8uAefbLkFEnpx9Wnwh'
-    };
-    const signer2 = {
-      pubkey: '48dWuQ42QfTH2ak925fxJnaUmeBizLuRm2sPCB1jzuPw',
-      secret: 'GZKjz7biHw2ZQkuV5bYHBXE5oXvVeg948L6Pev9QzE5ADTafA3UGgWnbPxqRmnj78UTRdD1a3fzfwXMpPWd7VDK'
-    };
+    const signer1 = Wallet.create();
+    const signer2 = Wallet.create();
     const multisig = await Multisig.create(
       2,
       source.secret.toKeypair(),
@@ -117,13 +109,12 @@ describe('SplToken', () => {
 
     assert.isTrue(multisig.isOk, multisig.unwrap());
     console.log('# multisig address: ', multisig.unwrap());
-    // const multisig = '8ZtJUa75qSoKKKpAqhRZhHRzvm1EGJGeqSMjf86hkcLH';
 
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const res =
       await SplToken.mint(
+          // source.pubkey.toPubKey(),
         multisig.unwrap().toPubKey(),
-        // multisig.toPubKey(),
         [
           source.secret.toKeypair(),
           signer1.secret.toKeypair(),
@@ -134,23 +125,21 @@ describe('SplToken', () => {
       )({
         feePayer: source.pubkey.toPubKey(),
         multiSig: multisig.unwrap().toPubKey()
-        // multiSig: multisig.toPubKey()
       });
 
     assert.isTrue(res.isOk, res.unwrap());
     console.log('# tokenKey: ', res.unwrap());
     const token = res.unwrap();
-    // const token = 'EFbBV7nRsFUmyr7B4a6yYUBL42zVzyzdUiFSZPTbN8PA';
 
     console.log('token: ', token);
-    console.log('multisig: ', multisig);
+    console.log('multisig: ', multisig.unwrap());
     console.log('signer1: ', signer1.pubkey);
     console.log('signer2: ', signer2.pubkey);
 
-    const transferRes = await SplToken.transfer(
+    const transferRes = await SplToken.transfer2(
       token.toPubKey(),
+      // source.pubkey.toPubKey(),
       multisig.unwrap().toPubKey(),
-      // multisig.toPubKey(),
       destination.pubkey.toPubKey(),
       [
         source.secret.toKeypair(),
@@ -161,10 +150,10 @@ describe('SplToken', () => {
       MINT_DECIMAL
     )({
       multiSig: multisig.unwrap().toPubKey(),
-      // multiSig: multisig.toPubKey(),
       feePayer: source.pubkey.toPubKey()
     });
-    assert.isTrue(transferRes.isOk, transferRes.unwrap());
+    console.log(transferRes);
+    // assert.isTrue(transferRes.isOk, transferRes.unwrap());
   });
 
   it('Create token with fee payer', async () => {

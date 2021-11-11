@@ -11,6 +11,8 @@ import {
   PublicKey,
   TokenBalance,
   TransactionSignature,
+  Transaction as SolanaTransaction,
+  sendAndConfirmTransaction,
 } from '@solana/web3.js';
 
 import {Transaction, Node, Result, Append} from './';
@@ -158,19 +160,19 @@ export namespace SplToken {
       if (append?.multiSig) {
         // let onlySigners = signers;
         // if (append?.feePayer) {
-          // // exclude keypair of fee payer
-          // const extracted = await Append.extractMultiSigKeypair(
-            // signers,
-            // append.multiSig,
-          // );
-          // if (extracted.isErr) return Result.err(extracted.error);
-          // onlySigners = extracted.value as Keypair[];
+        // // exclude keypair of fee payer
+        // const extracted = await Append.extractMultiSigKeypair(
+        // signers,
+        // append.multiSig,
+        // );
+        // if (extracted.isErr) return Result.err(extracted.error);
+        // onlySigners = extracted.value as Keypair[];
         // }
         // const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
         // if (multiSigRes.isErr) return Result.err(multiSigRes.error);
 
         // if (!multiSigRes.value)
-          // return Result.err(Error('Not found singer of multiSig in signers'));
+        // return Result.err(Error('Not found singer of multiSig in signers'));
 
         authority = append.multiSig;
       }
@@ -196,6 +198,52 @@ export namespace SplToken {
         (error: Error) => Result.err(error)
       );
     }
+
+  export const transfer2 = (
+    tokenKey: PublicKey,
+    source: PublicKey,
+    dest: PublicKey,
+    signers: Keypair[],
+    amount: number,
+    mintDecimal: number,
+  ) => async (append?: Append.Value) => {
+    // : Promise<Result<TransactionSignature, Error>> => {
+    const token = new Token(
+      Node.getConnection(),
+      tokenKey,
+      TOKEN_PROGRAM_ID,
+      signers[0]);
+    const sourceToken = await token.getOrCreateAssociatedAccountInfo(source)
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (sourceToken.isErr) return Result.err(sourceToken.error);
+
+    const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (destToken.isErr) return Result.err(destToken.error);
+
+    const param = Token.createTransferCheckedInstruction(
+      TOKEN_PROGRAM_ID,
+      sourceToken.value.address,
+      tokenKey,
+      destToken.value.address,
+      source,
+      signers,
+      amount,
+      mintDecimal
+    );
+
+    const t = new SolanaTransaction();
+    t.add(param);
+    return await sendAndConfirmTransaction(
+      Node.getConnection(),
+      t,
+      signers,
+    )
+  }
 
   export const transfer = (
     tokenKey: PublicKey,

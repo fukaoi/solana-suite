@@ -139,8 +139,8 @@ export namespace Transaction {
         t.feePayer = signers[0].publicKey;
       }
 
-      console.log('feePayer: ', t.feePayer.toBase58());
-      console.log('signers: ', signers.map(s => s.publicKey.toBase58()));
+      // console.log('feePayer: ', t.feePayer.toBase58());
+      // console.log('signers: ', signers.map(s => s.publicKey.toBase58()));
 
       // if (append?.multiSig) {
         // let onlySigners = signers;
