@@ -60,8 +60,7 @@ describe('Metaplex', () => {
 
     const res = await Metaplex.mint2(
       data,
-      source.pubkey.toPubKey(),
-      // multisig.unwrap().toPubKey(),
+      multisig.unwrap().toPubKey(),
       [
         source.secret.toKeypair(),
         signer1.secret.toKeypair(),
