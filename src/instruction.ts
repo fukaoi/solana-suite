@@ -43,13 +43,11 @@ export class Instruction {
   // @internal
   static batchSubmit = async (
     arr: Instruction[]
-  ) => {
-    console.log(arr);
+  ): Promise<Result<TransactionSignature, Error>> => {
     const instructions = arr.flatMap(a => a.instructions);
     const signers = arr.flatMap(a => a.signers);
     const feePayer = arr.filter(a => a.feePayer !== undefined)[0].feePayer;
 
-    console.log(instructions, signers, feePayer);
     const transaction = new Transaction();
     let finalSigners = signers;
     if (feePayer) {

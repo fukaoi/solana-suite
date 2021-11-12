@@ -1,10 +1,10 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Wallet, SplToken, Memo, Util, Multisig, Instruction} from '../src/'
+import {Wallet, SplToken, Memo, Util, Multisig} from '../src/'
 
 let source: Wallet.KeypairStr;
-let destination: Wallet.KeypairStr;
+let dest: Wallet.KeypairStr;
 let tokenKeyStr: string;
 
 const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6'.toPubKey();
@@ -14,7 +14,7 @@ describe('SplToken', () => {
   before(async () => {
     const obj = await Setup.generatekeyPair();
     source = obj.source;
-    destination = obj.dest;
+    dest = obj.dest;
   });
 
   it('Get token transfer history by tokenKey', async () => {
@@ -115,7 +115,7 @@ describe('SplToken', () => {
     const inst1 = await SplToken.transfer2(
       token.toPubKey(),
       source.pubkey.toPubKey(),
-      destination.pubkey.toPubKey(),
+      dest.pubkey.toPubKey(),
       [
         source.secret.toKeypair(),
       ],
@@ -128,7 +128,7 @@ describe('SplToken', () => {
     const inst2 = await SplToken.transfer2(
       token.toPubKey(),
       source.pubkey.toPubKey(),
-      destination.pubkey.toPubKey(),
+      dest.pubkey.toPubKey(),
       [
         source.secret.toKeypair(),
       ],
@@ -153,12 +153,10 @@ describe('SplToken', () => {
     )();
 
     assert.isTrue(multisig.isOk, multisig.unwrap());
-    console.log('# multisig address: ', multisig.unwrap());
 
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const res =
       await SplToken.mint(
-        // source.pubkey.toPubKey(),
         multisig.unwrap().toPubKey(),
         [
           source.secret.toKeypair(),
@@ -173,29 +171,22 @@ describe('SplToken', () => {
       });
 
     assert.isTrue(res.isOk, res.unwrap());
-    console.log('# tokenKey: ', res.unwrap());
     const token = res.unwrap();
-
-    console.log('token: ', token);
-    console.log('multisig: ', multisig.unwrap());
-    console.log('signer1: ', signer1.pubkey);
-    console.log('signer2: ', signer2.pubkey);
-
-    // const transferRes = await SplToken.transfer2(
-    // token.toPubKey(),
-    // // source.pubkey.toPubKey(),
-    // multisig.unwrap().toPubKey(),
-    // destination.pubkey.toPubKey(),
-    // [
-    // source.secret.toKeypair(),
-    // signer1.secret.toKeypair(),
-    // signer2.secret.toKeypair(),
-    // ],
-    // 1,
-    // MINT_DECIMAL
-    // );
-    // console.log(transferRes);
-    // assert.isTrue(transferRes.isOk, transferRes.unwrap());
+    const inst = await SplToken.transfer2(
+      token.toPubKey(),
+      multisig.unwrap().toPubKey(),
+      dest.pubkey.toPubKey(),
+      [
+        signer1.secret.toKeypair(),
+        signer2.secret.toKeypair(),
+      ],
+      1,
+      MINT_DECIMAL,
+      source.secret.toKeypair(),
+    );
+    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
+    const sig = await inst.unwrap().submit();
+    console.log('signature: ', `${sig.unwrap().toSigUrl()}`);
   });
 
   it('Create token with fee payer', async () => {
@@ -225,7 +216,7 @@ describe('SplToken', () => {
     const res = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
       source.pubkey.toPubKey(),
-      destination.pubkey.toPubKey(),
+      dest.pubkey.toPubKey(),
       [source.secret.toKeypair()],
       1,
       MINT_DECIMAL
@@ -238,7 +229,7 @@ describe('SplToken', () => {
     const res = await SplToken.transfer(
       tokenKeyStr.toPubKey(),
       source.pubkey.toPubKey(),
-      destination.pubkey.toPubKey(),
+      dest.pubkey.toPubKey(),
       [source.secret.toKeypair()],
       5,
       MINT_DECIMAL,
@@ -250,7 +241,7 @@ describe('SplToken', () => {
 
   it('Subscribe a account(pubkey)', async () => {
     const subscribeId = SplToken.subscribeAccount(
-      destination.pubkey.toPubKey(),
+      dest.pubkey.toPubKey(),
       (v: SplToken.TransferHistory) => {
         console.log('# Subscribe result: ', v);
         assert.isNotEmpty(v.type);
@@ -271,7 +262,7 @@ const sendContinuously = async (): Promise<void> => {
   await SplToken.transfer(
     tokenKeyStr.toPubKey(),
     source.pubkey.toPubKey(),
-    destination.pubkey.toPubKey(),
+    dest.pubkey.toPubKey(),
     [source.secret.toKeypair()],
     1,
     MINT_DECIMAL

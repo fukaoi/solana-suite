@@ -12,7 +12,6 @@ import {
   TokenBalance,
   TransactionSignature,
   Signer,
-  TransactionInstruction,
 } from '@solana/web3.js';
 
 import {Transaction, Node, Result, Append, Instruction} from './';
@@ -190,16 +189,15 @@ export namespace SplToken {
     mintDecimal: number,
     feePayer?: Signer,
   ): Promise<Result<Instruction, Error>> => {
-    const match = signers.filter(s => owner.toBase58() === s.publicKey.toBase58());
-    if (match.length === 0)
-      return (Result.err(Error('Not found signer of owner in signers param')));
 
-    const ownerSigner = match[0];
+    !feePayer && (feePayer = signers[0]);
+
     const token = new Token(
       Node.getConnection(),
       tokenKey,
       TOKEN_PROGRAM_ID,
-      ownerSigner);
+      feePayer 
+    );
 
     const sourceToken = await token.getOrCreateAssociatedAccountInfo(owner)
       .then(Result.ok)
