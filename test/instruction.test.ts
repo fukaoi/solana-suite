@@ -52,8 +52,7 @@ describe('Instruction', () => {
       feePayer
     );
 
-    const instructions = [instruction1, instruction2];
-    const res = await Instruction.batchSubmit(instructions);
+    const res = await [instruction1, instruction2].submit();
     assert.isTrue(res.isOk, res.unwrap());
     console.log('# tx signature: ', res.unwrap());
     const after = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();

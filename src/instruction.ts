@@ -40,6 +40,7 @@ export class Instruction {
       .catch(Result.err);
   }
 
+  // @internal
   static batchSubmit = async (
     arr: Instruction[]
   ) => {
@@ -62,6 +63,5 @@ export class Instruction {
     )
       .then(Result.ok)
       .catch(Result.err);
-
   }
 }
