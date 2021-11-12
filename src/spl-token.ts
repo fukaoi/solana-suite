@@ -10,7 +10,6 @@ import {
   ParsedInstruction,
   PublicKey,
   TokenBalance,
-  TransactionSignature,
   Signer,
 } from '@solana/web3.js';
 
