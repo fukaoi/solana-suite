@@ -12,6 +12,7 @@ import {
   TokenBalance,
   TransactionSignature,
   Signer,
+  TransactionInstruction,
 } from '@solana/web3.js';
 
 import {Transaction, Node, Result, Append, Instruction} from './';
@@ -188,9 +189,7 @@ export namespace SplToken {
     amount: number,
     mintDecimal: number,
     feePayer?: Signer,
-  ) => {
-    // : Promise<Result<TransactionSignature, Error>> => {
-
+  ): Promise<Result<Instruction, Error>> => {
     const match = signers.filter(s => owner.toBase58() === s.publicKey.toBase58());
     if (match.length === 0)
       return (Result.err(Error('Not found signer of owner in signers param')));
@@ -214,22 +213,23 @@ export namespace SplToken {
 
     if (destToken.isErr) return Result.err(destToken.error);
 
-      const instruction = Token.createTransferCheckedInstruction(
-        TOKEN_PROGRAM_ID,
-        sourceToken.value.address,
-        tokenKey,
-        destToken.value.address,
-        owner,
-        signers,
-        amount,
-        mintDecimal
-      );
+    const instruction = Token.createTransferCheckedInstruction(
+      TOKEN_PROGRAM_ID,
+      sourceToken.value.address,
+      tokenKey,
+      destToken.value.address,
+      owner,
+      signers,
+      amount,
+      mintDecimal
+    );
 
-      return new Instruction(
+    return Result.ok(
+      new Instruction(
         [instruction],
         signers,
         feePayer
-      );
+      ));
   }
 
   export const transfer = (

@@ -44,6 +44,7 @@ export class Instruction {
   static batchSubmit = async (
     arr: Instruction[]
   ) => {
+    console.log(arr);
     const instructions = arr.flatMap(a => a.instructions);
     const signers = arr.flatMap(a => a.signers);
     const feePayer = arr.filter(a => a.feePayer !== undefined)[0].feePayer;
