@@ -14,30 +14,12 @@ import {
   Wallet,
   Node,
   Result,
+  Instruction,
 } from './';
-import {Instruction} from './instruction';
+
+import {MultisigInstruction} from './instructions/multisig';
 
 export namespace Multisig {
-  const createLayoutPubKey = (property: string = 'publicKey') =>
-    BufferLayout.blob(32, property);
-
-  const MultisigLayout = BufferLayout.struct([
-    BufferLayout.u8('m'),
-    BufferLayout.u8('n'),
-    BufferLayout.u8('is_initialized'),
-    createLayoutPubKey('signer1'),
-    createLayoutPubKey('signer2'),
-    createLayoutPubKey('signer3'),
-    createLayoutPubKey('signer4'),
-    createLayoutPubKey('signer5'),
-    createLayoutPubKey('signer6'),
-    createLayoutPubKey('signer7'),
-    createLayoutPubKey('signer8'),
-    createLayoutPubKey('signer9'),
-    createLayoutPubKey('signer10'),
-    createLayoutPubKey('signer11'),
-  ]);
-
   export const getMultisigInfo = async (multisig: PublicKey)
     : Promise<Result<BufferLayout.LayoutObject, Error>> => {
     const info = await Node.getConnection().getAccountInfo(multisig);
@@ -47,12 +29,12 @@ export namespace Multisig {
     if (!info.owner.equals(TOKEN_PROGRAM_ID)) {
       return Result.err(Error('Invalid multisig owner'));
     }
-    if (info.data.length !== MultisigLayout.span) {
+    if (info.data.length !== MultisigInstruction.Layout.span) {
       return Result.err(Error('Invalid multisig size'));
     }
 
     const data = Buffer.from(info.data);
-    const multisigInfo = MultisigLayout.decode(data);
+    const multisigInfo = MultisigInstruction.Layout.decode(data);
     multisigInfo.signer1 = new PublicKey(multisigInfo.signer1);
     multisigInfo.signer2 = new PublicKey(multisigInfo.signer2);
     multisigInfo.signer3 = new PublicKey(multisigInfo.signer3);
@@ -81,65 +63,24 @@ export namespace Multisig {
     const account = Wallet.create().secret.toKeypair();
     const connection = Node.getConnection();
     const balanceNeeded = await connection.getMinimumBalanceForRentExemption(
-      MultisigLayout.span
+      MultisigInstruction.Layout.span
     )
       .then(Result.ok)
       .catch(Result.err);
 
     if (balanceNeeded.isErr) return Result.err(balanceNeeded.error);
 
-    const inst1 = SystemProgram.createAccount(
-      {
-        fromPubkey: feePayer.publicKey,
-        newAccountPubkey: account.publicKey,
-        lamports: balanceNeeded.value,
-        space: MultisigLayout.span,
-        programId: TOKEN_PROGRAM_ID
-      }
+    const inst1 = MultisigInstruction.account(
+      account,
+      feePayer,
+      balanceNeeded.value
     );
 
-    const keys = [
-      {
-        pubkey: account.publicKey,
-        isSigner: false,
-        isWritable: true
-      },
-      {
-        pubkey: SYSVAR_RENT_PUBKEY,
-        isSigner: false,
-        isWritable: false
-      },
-    ];
-    signerPubkey.forEach(pubkey =>
-      keys.push(
-        {
-          pubkey,
-          isSigner: false,
-          isWritable: false
-        }
-      ),
+    const inst2 = MultisigInstruction.multisig(
+      m,
+      account,
+      signerPubkey,
     );
-
-    const dataLayout = BufferLayout.struct([
-      BufferLayout.u8('instruction'),
-      BufferLayout.u8('m'),
-    ]);
-
-    const data = Buffer.alloc(dataLayout.span);
-
-    dataLayout.encode(
-      {
-        instruction: 2,
-        m
-      }
-      , data
-    );
-
-    const inst2 = ({
-      keys,
-      programId: TOKEN_PROGRAM_ID,
-      data
-    });
 
     return Result.ok(
       {

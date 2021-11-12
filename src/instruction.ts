@@ -3,10 +3,14 @@ import {
   TransactionSignature,
   Signer,
   TransactionInstruction,
-  Transaction
+  Transaction,
+  PublicKey,
 } from '@solana/web3.js';
 
 import {Node, Result} from './';
+
+import {Buffer} from 'buffer';
+import * as BufferLayout from '@solana/buffer-layout';
 
 export class Instruction {
   instructions: TransactionInstruction[];
@@ -62,5 +66,20 @@ export class Instruction {
     )
       .then(Result.ok)
       .catch(Result.err);
+  }
+
+  // @internal
+  static pubkeyToBuffer = (publicKey: PublicKey): Buffer => {
+    return Buffer.from(publicKey.toBuffer());
+  }
+
+  // @internal
+  static createLayoutUint64 = (property: string = 'uint64') => {
+    return BufferLayout.blob(8, property);
+  }
+
+  // @internal
+  static createLayoutPubKey = (property: string = 'publicKey') => {
+    return BufferLayout.blob(32, property);
   }
 }
