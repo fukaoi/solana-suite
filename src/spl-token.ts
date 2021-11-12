@@ -180,7 +180,7 @@ export namespace SplToken {
       );
     }
 
-  export const transfer2 = async (
+  export const transfer = async (
     tokenKey: PublicKey,
     owner: PublicKey,
     dest: PublicKey,
@@ -196,7 +196,7 @@ export namespace SplToken {
       Node.getConnection(),
       tokenKey,
       TOKEN_PROGRAM_ID,
-      feePayer 
+      feePayer
     );
 
     const sourceToken = await token.getOrCreateAssociatedAccountInfo(owner)
@@ -229,58 +229,4 @@ export namespace SplToken {
         feePayer
       ));
   }
-
-  export const transfer = (
-    tokenKey: PublicKey,
-    source: PublicKey,
-    dest: PublicKey,
-    signers: Keypair[],
-    amount: number,
-    mintDecimal: number,
-  ) => async (append?: Append.Value)
-      : Promise<Result<TransactionSignature, Error>> => {
-      const token = new Token(
-        Node.getConnection(),
-        tokenKey,
-        TOKEN_PROGRAM_ID,
-        signers[0]);
-      const sourceToken = await token.getOrCreateAssociatedAccountInfo(source)
-        .then(Result.ok)
-        .catch(Result.err);
-
-      if (sourceToken.isErr) return Result.err(sourceToken.error);
-
-      const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
-        .then(Result.ok)
-        .catch(Result.err);
-
-      if (destToken.isErr) return Result.err(destToken.error);
-
-      const param = Token.createTransferCheckedInstruction(
-        TOKEN_PROGRAM_ID,
-        sourceToken.value.address,
-        tokenKey,
-        destToken.value.address,
-        source,
-        signers,
-        amount,
-        mintDecimal
-      );
-
-      const instructions =
-        append?.txInstructions
-          ? new Array(append.txInstructions, [param]).flat()
-          : [param];
-      return Transaction.send(
-        source,
-        dest,
-        signers,
-        amount,
-      )(
-        {
-          feePayer: append?.feePayer,
-          txInstructions: instructions
-        }
-      );
-    }
 }
