@@ -4,7 +4,7 @@ import {
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-import {Constants, Result} from './';
+import {Constants, Result, Instruction} from './';
 
 declare global {
   interface String {
@@ -13,6 +13,14 @@ declare global {
     toSigUrl(): string;
     toAddressUrl(): string;
   }
+
+  interface Array<T> {
+    submit(): any;
+  }
+}
+
+Array.prototype.submit = function<Instruction> () {
+  Instruction.batchSubmit(this);
 }
 
 String.prototype.toPubKey = function () {

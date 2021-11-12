@@ -11,21 +11,10 @@ import {
   PublicKey,
   TokenBalance,
   TransactionSignature,
-  Transaction as SolanaTransaction,
-  sendAndConfirmTransaction,
-  TransactionInstruction
+  Signer,
 } from '@solana/web3.js';
 
-import {Transaction, Node, Result, Append} from './';
-
- export class TT extends TransactionInstruction {
-   constructor(obj: any) {
-    super(obj);
-   }
-   toA() {
-      console.log(this);
-   }
- }
+import {Transaction, Node, Result, Append, Instruction} from './';
 
 export namespace SplToken {
   export interface TransferHistory {
@@ -167,25 +156,7 @@ export namespace SplToken {
 
       // Check comformability of multiSig
       let authority = source;
-      if (append?.multiSig) {
-        // let onlySigners = signers;
-        // if (append?.feePayer) {
-        // // exclude keypair of fee payer
-        // const extracted = await Append.extractMultiSigKeypair(
-        // signers,
-        // append.multiSig,
-        // );
-        // if (extracted.isErr) return Result.err(extracted.error);
-        // onlySigners = extracted.value as Keypair[];
-        // }
-        // const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
-        // if (multiSigRes.isErr) return Result.err(multiSigRes.error);
-
-        // if (!multiSigRes.value)
-        // return Result.err(Error('Not found singer of multiSig in signers'));
-
-        authority = append.multiSig;
-      }
+      append?.multiSig && (authority = append.multiSig);
 
       const tokenAssociated =
         await token.getOrCreateAssociatedAccountInfo(source)
@@ -209,21 +180,29 @@ export namespace SplToken {
       );
     }
 
-  export const transfer2 = (
+  export const transfer2 = async (
     tokenKey: PublicKey,
-    source: PublicKey,
+    owner: PublicKey,
     dest: PublicKey,
-    signers: Keypair[],
+    signers: Signer[],
     amount: number,
     mintDecimal: number,
-  ) => async (append?: Append.Value) => {
+    feePayer?: Signer,
+  ) => {
     // : Promise<Result<TransactionSignature, Error>> => {
+
+    const match = signers.filter(s => owner.toBase58() === s.publicKey.toBase58());
+    if (match.length === 0)
+      return (Result.err(Error('Not found signer of owner in signers param')));
+
+    const ownerSigner = match[0];
     const token = new Token(
       Node.getConnection(),
       tokenKey,
       TOKEN_PROGRAM_ID,
-      signers[0]);
-    const sourceToken = await token.getOrCreateAssociatedAccountInfo(source)
+      ownerSigner);
+
+    const sourceToken = await token.getOrCreateAssociatedAccountInfo(owner)
       .then(Result.ok)
       .catch(Result.err);
 
@@ -235,26 +214,22 @@ export namespace SplToken {
 
     if (destToken.isErr) return Result.err(destToken.error);
 
-    const param = Token.createTransferCheckedInstruction(
-      TOKEN_PROGRAM_ID,
-      sourceToken.value.address,
-      tokenKey,
-      destToken.value.address,
-      source,
-      signers,
-      amount,
-      mintDecimal
-    ) as TT;
-    param.toA();
+      const instruction = Token.createTransferCheckedInstruction(
+        TOKEN_PROGRAM_ID,
+        sourceToken.value.address,
+        tokenKey,
+        destToken.value.address,
+        owner,
+        signers,
+        amount,
+        mintDecimal
+      );
 
-    const t = new SolanaTransaction();
-    t.add(param);
-    return await sendAndConfirmTransaction(
-      Node.getConnection(),
-      t,
-      signers,
-    )
-
+      return new Instruction(
+        [instruction],
+        signers,
+        feePayer
+      );
   }
 
   export const transfer = (

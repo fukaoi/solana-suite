@@ -1,5 +1,6 @@
 export * from './append';
 export * from './constants';
+export * from './instruction';
 export * from './global';
 export * from './memo';
 export * from './multisig';

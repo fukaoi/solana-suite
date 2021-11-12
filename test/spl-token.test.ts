@@ -1,8 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Wallet, SplToken, Memo, Util, Multisig} from '../src/'
-import {ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID} from '@solana/spl-token';
+import {Wallet, SplToken, Memo, Util, Multisig, Instruction} from '../src/'
 
 let source: Wallet.KeypairStr;
 let destination: Wallet.KeypairStr;
@@ -97,8 +96,56 @@ describe('SplToken', () => {
     assert.isFalse(res.isOk);
   });
 
+  it.only('Create token, transfer', async () => {
+    const TOKEN_TOTAL_AMOUNT = 10000000;
+    const res =
+      await SplToken.mint(
+        source.pubkey.toPubKey(),
+        [
+          source.secret.toKeypair(),
+        ],
+        TOKEN_TOTAL_AMOUNT,
+        MINT_DECIMAL,
+      )();
 
-  it.only('Create token, transfer with multisig and fee payer', async () => {
+    assert.isTrue(res.isOk, res.unwrap());
+    console.log('# tokenKey: ', res.unwrap());
+    const token = res.unwrap();
+
+    const sig = await SplToken.transfer2(
+      token.toPubKey(),
+      source.pubkey.toPubKey(),
+      destination.pubkey.toPubKey(),
+      [
+        source.secret.toKeypair(),
+      ],
+      1,
+      MINT_DECIMAL,
+      source.secret.toKeypair(),
+    );
+    const sig2 = await SplToken.transfer2(
+      token.toPubKey(),
+      source.pubkey.toPubKey(),
+      destination.pubkey.toPubKey(),
+      [
+        source.secret.toKeypair(),
+      ],
+      1,
+      MINT_DECIMAL,
+      source.secret.toKeypair(),
+    );
+
+    const sigs  = [sig as Instruction, sig2 as Instruction];
+    sigs.submit();
+    // console.log(sig);
+    // console.log(await (sig as Instruction).submit());
+    // console.log(await sig());
+    // assert.isTrue(sig.isOk, sig.error);
+    // console.log('signature: ', sig.toSigUrl());
+    // assert.isTrue(transferRes.isOk, transferRes.unwrap());
+  });
+
+  it('Create token, transfer with multisig and fee payer', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const multisig = await Multisig.create(
@@ -113,7 +160,7 @@ describe('SplToken', () => {
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const res =
       await SplToken.mint(
-          // source.pubkey.toPubKey(),
+        // source.pubkey.toPubKey(),
         multisig.unwrap().toPubKey(),
         [
           source.secret.toKeypair(),
@@ -136,23 +183,20 @@ describe('SplToken', () => {
     console.log('signer1: ', signer1.pubkey);
     console.log('signer2: ', signer2.pubkey);
 
-    const transferRes = await SplToken.transfer2(
-      token.toPubKey(),
-      // source.pubkey.toPubKey(),
-      multisig.unwrap().toPubKey(),
-      destination.pubkey.toPubKey(),
-      [
-        source.secret.toKeypair(),
-        signer1.secret.toKeypair(),
-        signer2.secret.toKeypair(),
-      ],
-      1,
-      MINT_DECIMAL
-    )({
-      multiSig: multisig.unwrap().toPubKey(),
-      feePayer: source.pubkey.toPubKey()
-    });
-    console.log(transferRes);
+    // const transferRes = await SplToken.transfer2(
+    // token.toPubKey(),
+    // // source.pubkey.toPubKey(),
+    // multisig.unwrap().toPubKey(),
+    // destination.pubkey.toPubKey(),
+    // [
+    // source.secret.toKeypair(),
+    // signer1.secret.toKeypair(),
+    // signer2.secret.toKeypair(),
+    // ],
+    // 1,
+    // MINT_DECIMAL
+    // );
+    // console.log(transferRes);
     // assert.isTrue(transferRes.isOk, transferRes.unwrap());
   });
 
