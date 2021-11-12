@@ -13,9 +13,19 @@ import {
   TransactionSignature,
   Transaction as SolanaTransaction,
   sendAndConfirmTransaction,
+  TransactionInstruction
 } from '@solana/web3.js';
 
 import {Transaction, Node, Result, Append} from './';
+
+ export class TT extends TransactionInstruction {
+   constructor(obj: any) {
+    super(obj);
+   }
+   toA() {
+      console.log(this);
+   }
+ }
 
 export namespace SplToken {
   export interface TransferHistory {
@@ -234,7 +244,8 @@ export namespace SplToken {
       signers,
       amount,
       mintDecimal
-    );
+    ) as TT;
+    param.toA();
 
     const t = new SolanaTransaction();
     t.add(param);
@@ -243,6 +254,7 @@ export namespace SplToken {
       t,
       signers,
     )
+
   }
 
   export const transfer = (
