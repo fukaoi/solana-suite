@@ -20,7 +20,7 @@ declare global {
   }
 }
 
-Array.prototype.submit = function<Instruction> () {
+Array.prototype.submit = function () {
   return Instruction.batchSubmit(this);
 }
 

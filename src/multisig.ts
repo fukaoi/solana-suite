@@ -2,11 +2,8 @@ import * as BufferLayout from '@solana/buffer-layout';
 import {
   Keypair,
   PublicKey,
-  sendAndConfirmTransaction,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
-  Transaction as SolanaTransaction,
-  TransactionInstruction,
 } from '@solana/web3.js';
 
 import {
@@ -14,11 +11,11 @@ import {
 } from '@solana/spl-token';
 
 import {
-  Append,
   Wallet,
   Node,
   Result,
 } from './';
+import {Instruction} from './instruction';
 
 export namespace Multisig {
   const createLayoutPubKey = (property: string = 'publicKey') =>
@@ -71,97 +68,84 @@ export namespace Multisig {
     return Result.ok(multisigInfo);
   }
 
-  export const create = (
+  export const create = async (
     m: number,
-    signer: Keypair,
-    multisigPubKey: PublicKey[],
-  ) => async (append?: Append.Value)
-      : Promise<Result<string, Error>> => {
+    feePayer: Keypair,
+    signerPubkey: PublicKey[],
+  )
+    : Promise<Result<{instruction: Instruction, multisig: string}, Error>> => {
 
-      if (m > multisigPubKey.length)
-        return Result.err(Error('signers number less than m number'));
+    if (m > signerPubkey.length)
+      return Result.err(Error('signers number less than m number'));
 
-      const multisigAccount = Wallet.create().secret.toKeypair();
-      const connection = Node.getConnection();
-      const balanceNeeded = await connection.getMinimumBalanceForRentExemption(
-        MultisigLayout.span
-      )
-        .then(Result.ok)
-        .catch(Result.err);
+    const account = Wallet.create().secret.toKeypair();
+    const connection = Node.getConnection();
+    const balanceNeeded = await connection.getMinimumBalanceForRentExemption(
+      MultisigLayout.span
+    )
+      .then(Result.ok)
+      .catch(Result.err);
 
-      if (balanceNeeded.isErr) return Result.err(balanceNeeded.error);
+    if (balanceNeeded.isErr) return Result.err(balanceNeeded.error);
 
-      const t = new SolanaTransaction();
-      if (!append?.feePayer) {
-        t.feePayer = signer.publicKey;
-      } else {
-        t.feePayer = append.feePayer;
-      }
-
-      t.add(SystemProgram.createAccount({
-        fromPubkey: signer.publicKey,
-        newAccountPubkey: multisigAccount.publicKey,
+    const inst1 = SystemProgram.createAccount(
+      {
+        fromPubkey: feePayer.publicKey,
+        newAccountPubkey: account.publicKey,
         lamports: balanceNeeded.value,
         space: MultisigLayout.span,
         programId: TOKEN_PROGRAM_ID
-      }));
+      }
+    );
 
-      const keys = [
+    const keys = [
+      {
+        pubkey: account.publicKey,
+        isSigner: false,
+        isWritable: true
+      },
+      {
+        pubkey: SYSVAR_RENT_PUBKEY,
+        isSigner: false,
+        isWritable: false
+      },
+    ];
+    signerPubkey.forEach(pubkey =>
+      keys.push(
         {
-          pubkey: multisigAccount.publicKey,
-          isSigner: false,
-          isWritable: true
-        },
-        {
-          pubkey: SYSVAR_RENT_PUBKEY,
+          pubkey,
           isSigner: false,
           isWritable: false
-        },
-      ];
-      multisigPubKey.forEach(pubkey =>
-        keys.push(
-          {
-            pubkey,
-            isSigner: false,
-            isWritable: false
-          }
-        ),
-      );
-
-      const dataLayout = BufferLayout.struct([
-        BufferLayout.u8('instruction'),
-        BufferLayout.u8('m'),
-      ]);
-
-      const data = Buffer.alloc(dataLayout.span);
-
-      dataLayout.encode(
-        {
-          instruction: 2,
-          m
         }
-        , data
-      );
+      ),
+    );
 
-      if (append?.txInstructions)
-        append.txInstructions.forEach((st: TransactionInstruction) => t.add(st));
+    const dataLayout = BufferLayout.struct([
+      BufferLayout.u8('instruction'),
+      BufferLayout.u8('m'),
+    ]);
 
-      t.add({
-        keys,
-        programId: TOKEN_PROGRAM_ID,
-        data
-      });
+    const data = Buffer.alloc(dataLayout.span);
 
-      const sig = await sendAndConfirmTransaction(
-        connection,
-        t,
-        [signer, multisigAccount],
-      )
-        .then(Result.ok)
-        .catch(Result.err);
+    dataLayout.encode(
+      {
+        instruction: 2,
+        m
+      }
+      , data
+    );
 
-      if (sig.isErr) return sig;
+    const inst2 = ({
+      keys,
+      programId: TOKEN_PROGRAM_ID,
+      data
+    });
 
-      return Result.ok(multisigAccount.publicKey.toBase58());
-    }
+    return Result.ok(
+      {
+        instruction: new Instruction([inst1, inst2], [account], feePayer),
+        multisig: account.publicKey.toBase58()
+      }
+    );
+  }
 }
