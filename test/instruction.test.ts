@@ -1,5 +1,5 @@
 import {describe, it} from 'mocha';
-import {Transaction, Memo, Wallet} from '../src';
+import {Memo, Wallet} from '../src';
 import {Instruction} from '../src/instruction';
 import {Setup} from '../test/utils/setup';
 import {assert} from 'chai';
