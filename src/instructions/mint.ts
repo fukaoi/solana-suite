@@ -1,15 +1,13 @@
-//
 // forked: solana-labs/solana-program-library
-//
 import {
   PublicKey,
   TransactionInstruction,
   Signer,
   SYSVAR_RENT_PUBKEY,
-} from "@solana/web3.js";
+} from '@solana/web3.js';
 
 import * as BufferLayout from '@solana/buffer-layout';
-import {Instruction} from "../instruction";
+import {Instruction, Constants} from '../';
 
 
 export namespace MintInstruction {
@@ -17,20 +15,18 @@ export namespace MintInstruction {
  /**
    * Construct an InitializeMint instruction
    *
-   * @param programId SPL Token program account
    * @param mint Token mint account
    * @param decimals Number of decimals in token account amounts
    * @param mintAuthority Minting authority
    * @param freezeAuthority Optional authority that can freeze token accounts
    */
   export const initMint = (
-    programId: PublicKey,
     mint: PublicKey,
     decimals: number,
     mintAuthority: PublicKey,
     freezeAuthority: PublicKey | null,
   ): TransactionInstruction => {
-    let keys = [
+    const keys = [
       {pubkey: mint, isSigner: false, isWritable: true},
       {pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false},
     ];
@@ -58,7 +54,7 @@ export namespace MintInstruction {
 
     return new TransactionInstruction({
       keys,
-      programId,
+      programId: Constants.TOKEN_PROGRAM_ID,
       data,
     });
   }
@@ -66,7 +62,6 @@ export namespace MintInstruction {
   /**
    * Construct a MintToChecked instruction
    *
-   * @param programId SPL Token program account
    * @param mint Public key of the mint
    * @param dest Public key of the account to mint to
    * @param authority The mint authority
@@ -75,11 +70,10 @@ export namespace MintInstruction {
    * @param decimals Number of decimals in amount to mint
    */
   export const mintToChecked = (
-    programId: PublicKey,
     mint: PublicKey,
     dest: PublicKey,
     authority: PublicKey,
-    multiSigners: Array<Signer>,
+    multiSigners: Signer[],
     amount: number | bigint,
     decimals: number,
   ): TransactionInstruction => {
@@ -93,13 +87,13 @@ export namespace MintInstruction {
     dataLayout.encode(
       {
         instruction: 14, // MintToChecked instruction
-        amount: amount,
+        amount,
         decimals,
       },
       data,
     );
 
-    let keys = [
+    const keys = [
       {pubkey: mint, isSigner: false, isWritable: true},
       {pubkey: dest, isSigner: false, isWritable: true},
     ];
@@ -122,7 +116,7 @@ export namespace MintInstruction {
 
     return new TransactionInstruction({
       keys,
-      programId: programId,
+      programId: Constants.TOKEN_PROGRAM_ID,
       data,
     });
   }

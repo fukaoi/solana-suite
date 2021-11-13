@@ -4,10 +4,10 @@ import {
   Signer,
   SYSVAR_RENT_PUBKEY,
   SystemProgram,
-} from "@solana/web3.js";
+} from '@solana/web3.js';
 
 import * as BufferLayout from '@solana/buffer-layout';
-import {Constants, Instruction} from "../";
+import {Constants, Instruction} from '../';
 
 export namespace MultisigInstruction {
   export const Layout = BufferLayout.struct([

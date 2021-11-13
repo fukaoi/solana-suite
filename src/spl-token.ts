@@ -13,7 +13,8 @@ import {
   Signer,
 } from '@solana/web3.js';
 
-import {Transaction, Node, Result, Append, Instruction, Util} from './';
+import {Transaction, Node, Result, Append, Instruction, Util, Wallet} from './';
+import {MintInstruction} from './instructions/mint';
 
 export namespace SplToken {
   export interface TransferHistory {
@@ -121,6 +122,43 @@ export namespace SplToken {
     }
     return Result.ok(hist);
   }
+
+  export const mint2 = (
+    source: PublicKey,
+    signers: Keypair[],
+    totalAmount: number,
+    mintDecimal: number,
+  ): Promise<Result<string, Error>> => {
+      const account = Keypair.generate();
+
+      const inst1 = MintInstruction.initMint(
+        account.publicKey,
+        mintDecimal,
+        source,
+        source,
+      );
+
+      const tokenAssociated =
+        await token.getOrCreateAssociatedAccountInfo(source)
+          .then(Result.ok)
+          .catch(Result.err);
+
+
+      const res = await token.mintTo(
+        tokenAssociated.value.address,
+        authority,
+        signers,
+        totalAmount,
+      )
+        .then(Result.ok)
+        .catch(Result.err);
+
+      return (res as Result<string, Error>).chain(
+        (_value: string) => Result.ok(token.publicKey.toBase58()),
+        (error: Error) => Result.err(error)
+      );
+    }
+
 
   export const mint = (
     source: PublicKey,

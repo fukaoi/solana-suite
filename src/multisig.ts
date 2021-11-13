@@ -2,8 +2,6 @@ import * as BufferLayout from '@solana/buffer-layout';
 import {
   Keypair,
   PublicKey,
-  SystemProgram,
-  SYSVAR_RENT_PUBKEY,
 } from '@solana/web3.js';
 
 import {
@@ -11,7 +9,6 @@ import {
 } from '@solana/spl-token';
 
 import {
-  Wallet,
   Node,
   Result,
   Instruction,
@@ -60,7 +57,7 @@ export namespace Multisig {
     if (m > signerPubkey.length)
       return Result.err(Error('signers number less than m number'));
 
-    const account = Wallet.create().secret.toKeypair();
+    const account = Keypair.generate();
     const connection = Node.getConnection();
     const balanceNeeded = await connection.getMinimumBalanceForRentExemption(
       MultisigInstruction.Layout.span

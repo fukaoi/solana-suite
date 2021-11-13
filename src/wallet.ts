@@ -4,15 +4,12 @@ import {
   PublicKey,
 } from '@solana/web3.js';
 
-import {
-  TOKEN_PROGRAM_ID,
-  ASSOCIATED_TOKEN_PROGRAM_ID
-} from '@solana/spl-token';
-
 import bs from 'bs58';
 
-import {Transaction, Constants, Node, Result} from './';
+import {Transaction, Constants, Node, Result, u64} from './';
+import {AccountInstruction} from './instructions/account';
 
+//TODO: want rename Wallet to Account
 export namespace Wallet {
 
   type Unit = 'sol' | 'lamports';
@@ -69,16 +66,16 @@ export namespace Wallet {
   };
 
   export const findAssocaiatedTokenAddress = async (
-    source: PublicKey,
+    owner: PublicKey,
     tokenKey: PublicKey
   ): Promise<Result<PublicKey, Error>> => {
     return await PublicKey.findProgramAddress(
       [
-        source.toBuffer(),
-        TOKEN_PROGRAM_ID.toBuffer(),
+        owner.toBuffer(),
+        Constants.TOKEN_PROGRAM_ID.toBuffer(),
         tokenKey.toBuffer(),
       ],
-      ASSOCIATED_TOKEN_PROGRAM_ID
+      Constants.ASSOCIATED_TOKEN_PROGRAM_ID
     )
       .then(v => Result.ok(v[0]))
       .catch(Result.err);
@@ -98,4 +95,83 @@ export namespace Wallet {
       .then(v => Result.ok(v[0]))
       .catch((e: Error) => Result.err(e))
   }
+
+  export const getAssociatedTokenAddress = async (
+    mint: PublicKey,
+    owner: PublicKey,
+    allowOwnerOffCurve: boolean = false,
+  ): Promise<Result<PublicKey, Error>> => {
+    if (!allowOwnerOffCurve && !PublicKey.isOnCurve(owner.toBuffer())) {
+      Result.err(Error(`Owner cannot sign: ${owner.toString()}`));
+    }
+    const address = (
+      await PublicKey.findProgramAddress(
+        [
+          owner.toBuffer(),
+          Constants.TOKEN_PROGRAM_ID.toBuffer(),
+          mint.toBuffer()
+        ],
+        Constants.ASSOCIATED_TOKEN_PROGRAM_ID,
+      )
+    )[0];
+    return Result.ok(address);
+  }
+  
+  export const getInfo = async(
+    account: PublicKey,
+    tokenKey: PublicKey,
+  ) => {
+    const info = await Node.getConnection().getAccountInfo(account);
+    if (info === null) {
+      return Result.err(Error('Failed to find account'));
+    }
+
+    if (!info.owner.equals(Constants.TOKEN_PROGRAM_ID)) {
+      return Result.err(Error('Invalid account owner'));
+    }
+    if (info.data.length != AccountInstruction.Layout.span) {
+      return Result.err(Error(`Invalid account size`));
+    }
+
+    const data = Buffer.from(info.data);
+    const accountInfo = AccountInstruction.Layout.decode(data);
+    accountInfo.address = account;
+    accountInfo.mint = new PublicKey(accountInfo.mint);
+    accountInfo.owner = new PublicKey(accountInfo.owner);
+    accountInfo.amount = u64.fromBuffer(accountInfo.amount);
+
+    if (accountInfo.delegateOption === 0) {
+      accountInfo.delegate = null;
+      accountInfo.delegatedAmount = new u64([]);
+    } else {
+      accountInfo.delegate = new PublicKey(accountInfo.delegate);
+      accountInfo.delegatedAmount = u64.fromBuffer(accountInfo.delegatedAmount);
+    }
+
+    accountInfo.isInitialized = accountInfo.state !== 0;
+    accountInfo.isFrozen = accountInfo.state === 2;
+
+    if (accountInfo.isNativeOption === 1) {
+      accountInfo.rentExemptReserve = u64.fromBuffer(accountInfo.isNative);
+      accountInfo.isNative = true;
+    } else {
+      accountInfo.rentExemptReserve = null;
+      accountInfo.isNative = false;
+    }
+
+    if (accountInfo.closeAuthorityOption === 0) {
+      accountInfo.closeAuthority = null;
+    } else {
+      accountInfo.closeAuthority = new PublicKey(accountInfo.closeAuthority);
+    }
+
+    if (!accountInfo.mint.equals(tokenKey)) {
+      Result.err(Error(
+        `Invalid account mint: ${JSON.stringify(
+          accountInfo.mint,
+        )} !== ${JSON.stringify(tokenKey)}`,
+      ));
+    }
+    return accountInfo;
+  } 
 }
