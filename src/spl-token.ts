@@ -5,7 +5,6 @@ import {
 
 
 import {
-  Keypair,
   ParsedConfirmedTransaction,
   ParsedInstruction,
   PublicKey,
@@ -13,9 +12,7 @@ import {
   Signer,
 } from '@solana/web3.js';
 
-import {Transaction, Node, Result, Append, Instruction, Util, Wallet} from './';
-import {Constants} from './constants';
-import {MintInstruction} from './instructions/mint';
+import {Transaction, Node, Result, Instruction, Util, } from './';
 
 export namespace SplToken {
   export interface TransferHistory {
@@ -124,158 +121,58 @@ export namespace SplToken {
     return Result.ok(hist);
   }
 
-  export const mint2 = async (
+  export const mint = async (
     source: PublicKey,
     signers: Signer[],
     totalAmount: number,
     mintDecimal: number,
     feePayer?: Signer,
-    // ): Promise<Result<string, Error>> => {
-  ) => {
-    const account = Keypair.generate();
-    console.log('account: ', account.publicKey.toBase58());
-
-    // todo: check error
-    const balanceNeeded = await Node.getConnection().getMinimumBalanceForRentExemption(MintInstruction.Layout.span);
-
-    !feePayer && (feePayer = signers[0]);
-
-    const inst1 = MintInstruction.account(
-      account,
-      feePayer,
-      balanceNeeded,
-    );
-
-    const inst2 = MintInstruction.initMint(
-      account.publicKey,
+  ): Promise<Result<{
+    instruction: Instruction,
+    tokenKey: string
+  }, Error>> => {
+    const tokenRes = await Token.createMint(
+      Node.getConnection(),
+      signers[0],
+      source,
+      null,
       mintDecimal,
-      source,
-      source,
-    );
+      TOKEN_PROGRAM_ID
+    )
+      .then(Result.ok)
+      .catch(Result.err);
 
-    await new Instruction(
-      [inst1, inst2],
-      [account],
-      feePayer
-    ).submit();
+    if (tokenRes.isErr) return Result.err(tokenRes.error);
+    const token = tokenRes.value;
 
-    // const tokenAssociated = await Wallet.getAssociatedTokenAddress(
-    // account.publicKey,
-    // source,
-    // false,
-    // ).value;
-
-
-    const tokenAssociated = await Token.getAssociatedTokenAddress(
-      Constants.ASSOCIATED_TOKEN_PROGRAM_ID,
-      Constants.TOKEN_PROGRAM_ID,
-      account.publicKey,
-      source
-    );
-
-    // if (tokenAssociated.isErr) {
-    // // return Result.err(tokenAssociated.error);
-    // return tokenAssociated.error;
-    // }
-
-    // console.log(tokenAssociated.value.toBase58());
-    console.log(tokenAssociated);
-    await Util.sleep(15);
-
-    const inst3 = MintInstruction.mintToChecked(
-      account.publicKey,
-      // tokenAssociated.value,
-      tokenAssociated,
-      source,
-      signers,
-      totalAmount,
-      mintDecimal
-    );
-
-    return new Instruction(
-      // [inst1, inst2, inst3],
-      [inst3],
-      [account, ...signers],
-      feePayer
-    );
-
-    // return (res as Result<string, Error>).chain(
-    // (_value: string) => Result.ok(token.publicKey.toBase58()),
-    // (error: Error) => Result.err(error)
-    // );
-  }
-
-  export const mint = (
-    source: PublicKey,
-    signers: Keypair[],
-    totalAmount: number,
-    mintDecimal: number,
-  ) => async (append?: Append.Value)
-      : Promise<Result<Instruction, Error>> => {
-      const tokenRes = await Token.createMint(
-        Node.getConnection(),
-        signers[0],
-        source,
-        null,
-        mintDecimal,
-        TOKEN_PROGRAM_ID
-      )
+    const tokenAssociated =
+      await token.getOrCreateAssociatedAccountInfo(source)
         .then(Result.ok)
         .catch(Result.err);
 
-      if (tokenRes.isErr) return Result.err(tokenRes.error);
-      const token = tokenRes.value;
+    if (tokenAssociated.isErr) return Result.err(tokenAssociated.error);
 
-      // Check comformability of fee payer
-      if (append?.feePayer) {
-        if (!Append.isInFeePayer(append.feePayer, signers))
-          return Result.err(Error('Not found fee payer secret key in signers'));
-        token.payer = Append.extractFeePayerKeypair(
-          signers,
-          append?.feePayer,
-        )[0];
+    const inst = Token.createMintToInstruction(
+      TOKEN_PROGRAM_ID,
+      token.publicKey,
+      tokenAssociated.value.address,
+      source,
+      signers,
+      totalAmount
+    );
+
+    return Result.ok(
+      {
+        instruction:
+          new Instruction(
+            [inst],
+            signers,
+            feePayer,
+          ),
+        tokenKey: token.publicKey.toBase58()
       }
-
-      // Check comformability of multiSig
-      let authority = source;
-      append?.multiSig && (authority = append.multiSig);
-
-      const tokenAssociated =
-        await token.getOrCreateAssociatedAccountInfo(source)
-          .then(Result.ok)
-          .catch(Result.err);
-
-      if (tokenAssociated.isErr) return Result.err(tokenAssociated.error);
-
-      const inst = Token.createMintToInstruction(
-        TOKEN_PROGRAM_ID,
-        token.publicKey,
-        tokenAssociated.value.address,
-        authority,
-        signers,
-        totalAmount
-      );
-
-      return Result.ok(
-        new Instruction(
-          [inst],
-          signers,
-        ));
-
-      // const res = await token.mintTo(
-      // tokenAssociated.value.address,
-      // authority,
-      // signers,
-      // totalAmount,
-      // )
-      // .then(Result.ok)
-      // .catch(Result.err);
-
-      // return (res as Result<string, Error>).chain(
-      // (_value: string) => Result.ok(token.publicKey.toBase58()),
-      // (error: Error) => Result.err(error)
-      // );
-    }
+    );
+  }
 
   export const transfer = async (
     tokenKey: PublicKey,

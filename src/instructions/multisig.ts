@@ -7,7 +7,8 @@ import {
 } from '@solana/web3.js';
 
 import * as BufferLayout from '@solana/buffer-layout';
-import {Constants, Instruction} from '../';
+import {Instruction} from '../';
+import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
 export namespace MultisigInstruction {
   export const Layout = BufferLayout.struct([
@@ -38,7 +39,7 @@ export namespace MultisigInstruction {
         newAccountPubkey: account.publicKey,
         lamports: balanceNeeded,
         space: Layout.span,
-        programId: Constants.TOKEN_PROGRAM_ID
+        programId: TOKEN_PROGRAM_ID
       }
     );
   }
@@ -87,7 +88,7 @@ export namespace MultisigInstruction {
 
     return new TransactionInstruction({
       keys,
-      programId: Constants.TOKEN_PROGRAM_ID,
+      programId: TOKEN_PROGRAM_ID,
       data
     });
   }

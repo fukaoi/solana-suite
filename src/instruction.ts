@@ -11,9 +11,6 @@ import {Node, Result} from './';
 
 import {Buffer} from 'buffer';
 import * as BufferLayout from '@solana/buffer-layout';
-import BN from 'bn.js';
-import assert from 'assert';
-
 
 export class Instruction {
   instructions: TransactionInstruction[];
@@ -84,42 +81,5 @@ export class Instruction {
   // @internal
   static createLayoutPubKey = (property: string = 'publicKey') => {
     return BufferLayout.blob(32, property);
-  }
-}
-
-export class u64 extends BN {
-  /**
-   * Convert to Buffer representation
-   */
-  toBuffer(): Buffer {
-    const a = super.toArray().reverse();
-    const b = Buffer.from(a);
-    if (b.length === 8) {
-      return b;
-    }
-
-    if (b.length < 8) {
-      assert(Error('u64 too large'));
-    }
-
-    const zeroPad = Buffer.alloc(8);
-    b.copy(zeroPad);
-    return zeroPad;
-  }
-
-  /**
-   * Construct a u64 from Buffer representation
-   */
-  static fromBuffer(buffer: Buffer): u64 {
-    if (buffer.length === 8) {
-      assert(Error(`Invalid buffer length: ${buffer.length}`));
-    }
-    return new u64(
-      [...buffer]
-        .reverse()
-        .map(i => `00${i.toString(16)}`.slice(-2))
-        .join(''),
-      16,
-    );
   }
 }
