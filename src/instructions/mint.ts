@@ -4,22 +4,44 @@ import {
   TransactionInstruction,
   Signer,
   SYSVAR_RENT_PUBKEY,
+  SystemProgram,
 } from '@solana/web3.js';
 
 import * as BufferLayout from '@solana/buffer-layout';
-import {Instruction, Constants} from '../';
-
+import {Instruction, Constants, u64} from '../';
 
 export namespace MintInstruction {
+  export const Layout: BufferLayout.Structure = BufferLayout.struct([
+    BufferLayout.u32('mintAuthorityOption'),
+    Instruction.createLayoutPubKey('mintAuthority'),
+    Instruction.createLayoutUint64('supply'),
+    BufferLayout.u8('decimals'),
+    BufferLayout.u8('isInitialized'),
+    BufferLayout.u32('freezeAuthorityOption'),
+    Instruction.createLayoutPubKey('freezeAuthority'),
+  ]);
 
- /**
-   * Construct an InitializeMint instruction
-   *
-   * @param mint Token mint account
-   * @param decimals Number of decimals in token account amounts
-   * @param mintAuthority Minting authority
-   * @param freezeAuthority Optional authority that can freeze token accounts
-   */
+  export const account = (
+    mintAccount: Signer,
+    payer: Signer,
+    balanceNeeded: number
+  ) => 
+    SystemProgram.createAccount({
+      fromPubkey: payer.publicKey,
+      newAccountPubkey: mintAccount.publicKey,
+      lamports: balanceNeeded,
+      space: Layout.span,
+      programId: Constants.TOKEN_PROGRAM_ID,
+    })
+
+  /**
+    * Construct an InitializeMint instruction
+    *
+    * @param mint Token mint account
+    * @param decimals Number of decimals in token account amounts
+    * @param mintAuthority Minting authority
+    * @param freezeAuthority Optional authority that can freeze token accounts
+    */
   export const initMint = (
     mint: PublicKey,
     decimals: number,
@@ -74,7 +96,7 @@ export namespace MintInstruction {
     dest: PublicKey,
     authority: PublicKey,
     multiSigners: Signer[],
-    amount: number | bigint,
+    amount: number | u64,
     decimals: number,
   ): TransactionInstruction => {
     const dataLayout = BufferLayout.struct([
@@ -87,7 +109,7 @@ export namespace MintInstruction {
     dataLayout.encode(
       {
         instruction: 14, // MintToChecked instruction
-        amount,
+        amount: new u64(amount).toBuffer(),
         decimals,
       },
       data,
@@ -117,6 +139,40 @@ export namespace MintInstruction {
     return new TransactionInstruction({
       keys,
       programId: Constants.TOKEN_PROGRAM_ID,
+      data,
+    });
+  }
+
+  /**
+ * Construct the AssociatedTokenProgram instruction to create the associated
+ * token account
+ *
+ * @param mint Token mint account
+ * @param associatedAccount New associated account
+ * @param owner Owner of the new account
+ * @param payer Payer of fees
+ */
+  export const associatedTokenAccount = (
+    mint: PublicKey,
+    associatedAccount: PublicKey,
+    owner: PublicKey,
+    payer: PublicKey,
+  ): TransactionInstruction => {
+    const data = Buffer.alloc(0);
+
+    const keys = [
+      {pubkey: payer, isSigner: true, isWritable: true},
+      {pubkey: associatedAccount, isSigner: false, isWritable: true},
+      {pubkey: owner, isSigner: false, isWritable: false},
+      {pubkey: mint, isSigner: false, isWritable: false},
+      {pubkey: SystemProgram.programId, isSigner: false, isWritable: false},
+      {pubkey: Constants.TOKEN_PROGRAM_ID, isSigner: false, isWritable: false},
+      {pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false},
+    ];
+
+    return new TransactionInstruction({
+      keys,
+      programId: Constants.ASSOCIATED_TOKEN_PROGRAM_ID,
       data,
     });
   }

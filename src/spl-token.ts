@@ -14,6 +14,7 @@ import {
 } from '@solana/web3.js';
 
 import {Transaction, Node, Result, Append, Instruction, Util, Wallet} from './';
+import {Constants} from './constants';
 import {MintInstruction} from './instructions/mint';
 
 export namespace SplToken {
@@ -123,42 +124,86 @@ export namespace SplToken {
     return Result.ok(hist);
   }
 
-  export const mint2 = (
+  export const mint2 = async (
     source: PublicKey,
-    signers: Keypair[],
+    signers: Signer[],
     totalAmount: number,
     mintDecimal: number,
-  ): Promise<Result<string, Error>> => {
-      const account = Keypair.generate();
+    feePayer?: Signer,
+    // ): Promise<Result<string, Error>> => {
+  ) => {
+    const account = Keypair.generate();
+    console.log('account: ', account.publicKey.toBase58());
 
-      const inst1 = MintInstruction.initMint(
-        account.publicKey,
-        mintDecimal,
-        source,
-        source,
-      );
+    // todo: check error
+    const balanceNeeded = await Node.getConnection().getMinimumBalanceForRentExemption(MintInstruction.Layout.span);
 
-      const tokenAssociated =
-        await token.getOrCreateAssociatedAccountInfo(source)
-          .then(Result.ok)
-          .catch(Result.err);
+    !feePayer && (feePayer = signers[0]);
+
+    const inst1 = MintInstruction.account(
+      account,
+      feePayer,
+      balanceNeeded,
+    );
+
+    const inst2 = MintInstruction.initMint(
+      account.publicKey,
+      mintDecimal,
+      source,
+      source,
+    );
+
+    await new Instruction(
+      [inst1, inst2],
+      [account],
+      feePayer
+    ).submit();
+
+    // const tokenAssociated = await Wallet.getAssociatedTokenAddress(
+    // account.publicKey,
+    // source,
+    // false,
+    // ).value;
 
 
-      const res = await token.mintTo(
-        tokenAssociated.value.address,
-        authority,
-        signers,
-        totalAmount,
-      )
-        .then(Result.ok)
-        .catch(Result.err);
+    const tokenAssociated = await Token.getAssociatedTokenAddress(
+      Constants.ASSOCIATED_TOKEN_PROGRAM_ID,
+      Constants.TOKEN_PROGRAM_ID,
+      account.publicKey,
+      source
+    );
 
-      return (res as Result<string, Error>).chain(
-        (_value: string) => Result.ok(token.publicKey.toBase58()),
-        (error: Error) => Result.err(error)
-      );
-    }
+    // if (tokenAssociated.isErr) {
+    // // return Result.err(tokenAssociated.error);
+    // return tokenAssociated.error;
+    // }
 
+    // console.log(tokenAssociated.value.toBase58());
+    console.log(tokenAssociated);
+    await Util.sleep(15);
+
+    const inst3 = MintInstruction.mintToChecked(
+      account.publicKey,
+      // tokenAssociated.value,
+      tokenAssociated,
+      source,
+      signers,
+      totalAmount,
+      mintDecimal
+    );
+
+    return new Instruction(
+      // [inst1, inst2, inst3],
+      [inst3],
+      [account, ...signers],
+      feePayer
+    );
+
+    // return (res as Result<string, Error>).chain(
+    // (_value: string) => Result.ok(token.publicKey.toBase58()),
+    // (error: Error) => Result.err(error)
+    // );
+  }
 
   export const mint = (
     source: PublicKey,
@@ -166,7 +211,7 @@ export namespace SplToken {
     totalAmount: number,
     mintDecimal: number,
   ) => async (append?: Append.Value)
-      : Promise<Result<string, Error>> => {
+      : Promise<Result<Instruction, Error>> => {
       const tokenRes = await Token.createMint(
         Node.getConnection(),
         signers[0],
@@ -202,19 +247,34 @@ export namespace SplToken {
 
       if (tokenAssociated.isErr) return Result.err(tokenAssociated.error);
 
-      const res = await token.mintTo(
+      const inst = Token.createMintToInstruction(
+        TOKEN_PROGRAM_ID,
+        token.publicKey,
         tokenAssociated.value.address,
         authority,
         signers,
-        totalAmount,
-      )
-        .then(Result.ok)
-        .catch(Result.err);
-
-      return (res as Result<string, Error>).chain(
-        (_value: string) => Result.ok(token.publicKey.toBase58()),
-        (error: Error) => Result.err(error)
+        totalAmount
       );
+
+      return Result.ok(
+        new Instruction(
+          [inst],
+          signers,
+        ));
+
+      // const res = await token.mintTo(
+      // tokenAssociated.value.address,
+      // authority,
+      // signers,
+      // totalAmount,
+      // )
+      // .then(Result.ok)
+      // .catch(Result.err);
+
+      // return (res as Result<string, Error>).chain(
+      // (_value: string) => Result.ok(token.publicKey.toBase58()),
+      // (error: Error) => Result.err(error)
+      // );
     }
 
   export const transfer = async (

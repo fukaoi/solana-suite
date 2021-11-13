@@ -1,5 +1,12 @@
 import * as BufferLayout from '@solana/buffer-layout';
-import {Instruction} from '../';
+import {
+  SystemProgram,
+  Signer,
+} from '@solana/web3.js';
+import {
+  Instruction, 
+  Constants,
+} from '../';
 
 export namespace AccountInstruction {
   export const Layout = BufferLayout.struct(
@@ -17,4 +24,5 @@ export namespace AccountInstruction {
       Instruction.createLayoutPubKey('closeAuthority'),
     ],
   );
+
 }
