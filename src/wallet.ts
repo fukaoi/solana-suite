@@ -9,7 +9,7 @@ import bs from 'bs58';
 import {Transaction, Constants, Node, Result, u64} from './';
 import {AccountInstruction} from './instructions/account';
 
-//TODO: want rename Wallet to Account
+// TODO: want rename Wallet to Account
 export namespace Wallet {
 
   type Unit = 'sol' | 'lamports';
@@ -116,7 +116,7 @@ export namespace Wallet {
     )[0];
     return Result.ok(address);
   }
-  
+
   export const getInfo = async(
     account: PublicKey,
     tokenKey: PublicKey,
@@ -173,5 +173,5 @@ export namespace Wallet {
       ));
     }
     return accountInfo;
-  } 
+  }
 }

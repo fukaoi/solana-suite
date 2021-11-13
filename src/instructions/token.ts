@@ -27,7 +27,7 @@ export namespace TokenInstruction {
   ): TransactionInstruction => {
     const data = Buffer.alloc(0);
 
-    let keys = [
+    const keys = [
       {pubkey: payer, isSigner: true, isWritable: true},
       {pubkey: associatedAccount, isSigner: false, isWritable: true},
       {pubkey: owner, isSigner: false, isWritable: false},
