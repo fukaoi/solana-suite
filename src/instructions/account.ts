@@ -4,7 +4,7 @@ import {
   Signer,
 } from '@solana/web3.js';
 import {
-  Instruction, 
+  Instruction,
   Constants,
 } from '../';
 

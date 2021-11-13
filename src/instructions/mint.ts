@@ -25,7 +25,7 @@ export namespace MintInstruction {
     mintAccount: Signer,
     payer: Signer,
     balanceNeeded: number
-  ) => 
+  ) =>
     SystemProgram.createAccount({
       fromPubkey: payer.publicKey,
       newAccountPubkey: mintAccount.publicKey,
