@@ -6,7 +6,7 @@
 
 ### Interfaces
 
-- [KeyPair](../interfaces/Wallet.KeyPair.md)
+- [KeypairStr](../interfaces/Wallet.KeypairStr.md)
 
 ### Variables
 
@@ -16,7 +16,6 @@
 ### Functions
 
 - [create](Wallet.md#create)
-- [createAssociatedTokenAccountInstruction](Wallet.md#createassociatedtokenaccountinstruction)
 - [findAssocaiatedTokenAddress](Wallet.md#findassocaiatedtokenaddress)
 - [findMetaplexAssocaiatedTokenAddress](Wallet.md#findmetaplexassocaiatedtokenaddress)
 - [getBalance](Wallet.md#getbalance)
@@ -30,7 +29,7 @@
 
 #### Defined in
 
-[src/wallet.ts:24](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/wallet.ts#L24)
+[src/wallet.ts:22](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L22)
 
 ___
 
@@ -40,56 +39,33 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:25](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/wallet.ts#L25)
+[src/wallet.ts:23](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L23)
 
 ## Functions
 
 ### create
 
-▸ `Const` **create**(): [`KeyPair`](../interfaces/Wallet.KeyPair.md)
+▸ `Const` **create**(): [`KeypairStr`](../interfaces/Wallet.KeypairStr.md)
 
 #### Returns
 
-[`KeyPair`](../interfaces/Wallet.KeyPair.md)
+[`KeypairStr`](../interfaces/Wallet.KeypairStr.md)
 
 #### Defined in
 
-[src/wallet.ts:62](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/wallet.ts#L62)
-
-___
-
-### createAssociatedTokenAccountInstruction
-
-▸ `Const` **createAssociatedTokenAccountInstruction**(`associatedToken`, `payer`, `source`, `mintKey`): `TransactionInstruction`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `associatedToken` | `PublicKey` |
-| `payer` | `PublicKey` |
-| `source` | `PublicKey` |
-| `mintKey` | `PublicKey` |
-
-#### Returns
-
-`TransactionInstruction`
-
-#### Defined in
-
-[src/wallet.ts:101](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/wallet.ts#L101)
+[src/wallet.ts:60](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L60)
 
 ___
 
 ### findAssocaiatedTokenAddress
 
-▸ `Const` **findAssocaiatedTokenAddress**(`source`, `tokenKey`): `Promise`<[`Result`](../modules.md#result)<`PublicKey`, `Error`\>\>
+▸ `Const` **findAssocaiatedTokenAddress**(`owner`, `tokenKey`): `Promise`<[`Result`](../modules.md#result)<`PublicKey`, `Error`\>\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `source` | `PublicKey` |
+| `owner` | `PublicKey` |
 | `tokenKey` | `PublicKey` |
 
 #### Returns
@@ -98,7 +74,7 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:70](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/wallet.ts#L70)
+[src/wallet.ts:68](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L68)
 
 ___
 
@@ -118,7 +94,7 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:86](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/wallet.ts#L86)
+[src/wallet.ts:84](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L84)
 
 ___
 
@@ -139,7 +115,7 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:27](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/wallet.ts#L27)
+[src/wallet.ts:25](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L25)
 
 ___
 
@@ -160,4 +136,4 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:44](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/wallet.ts#L44)
+[src/wallet.ts:42](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L42)

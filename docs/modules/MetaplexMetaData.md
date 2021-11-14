@@ -15,7 +15,7 @@
 
 ### create
 
-▸ `Const` **create**(`data`, `tokenKey`, `payer`, `mintAuthorityKey?`, `updateAuthority?`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
+▸ `Const` **create**(`data`, `tokenKey`, `payer`, `mintAuthorityKey?`, `updateAuthority?`): (`instructions?`: `TransactionInstruction`[], `multiSig?`: `PublicKey`, `multiSigSignerPubkey?`: `PublicKey`[]) => `Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
 
 #### Parameters
 
@@ -31,13 +31,15 @@
 
 `fn`
 
-▸ (`instructions?`): `Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
+▸ (`instructions?`, `multiSig?`, `multiSigSignerPubkey?`): `Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
 
 ##### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `instructions?` | `TransactionInstruction`[] |
+| `multiSig?` | `PublicKey` |
+| `multiSigSignerPubkey?` | `PublicKey`[] |
 
 ##### Returns
 
@@ -45,7 +47,7 @@
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:64](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/nft/metaplex/metadata.ts#L64)
+[src/nft/metaplex/metadata.ts:185](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/nft/metaplex/metadata.ts#L185)
 
 ___
 
@@ -65,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:38](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/nft/metaplex/metadata.ts#L38)
+[src/nft/metaplex/metadata.ts:159](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/nft/metaplex/metadata.ts#L159)
 
 ___
 
@@ -85,7 +87,7 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:17](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/nft/metaplex/metadata.ts#L17)
+[src/nft/metaplex/metadata.ts:138](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/nft/metaplex/metadata.ts#L138)
 
 ___
 
@@ -122,4 +124,4 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:126](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/nft/metaplex/metadata.ts#L126)
+[src/nft/metaplex/metadata.ts:215](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/nft/metaplex/metadata.ts#L215)

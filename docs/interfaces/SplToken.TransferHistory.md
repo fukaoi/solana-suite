@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[src/spl-token.ts:30](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/spl-token.ts#L30)
+[src/spl-token.ts:30](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/spl-token.ts#L30)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[src/spl-token.ts:19](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/spl-token.ts#L19)
+[src/spl-token.ts:19](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/spl-token.ts#L19)
 
 ___
 
@@ -53,4 +53,4 @@ ___
 
 #### Defined in
 
-[src/spl-token.ts:29](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/spl-token.ts#L29)
+[src/spl-token.ts:29](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/spl-token.ts#L29)

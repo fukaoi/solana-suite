@@ -47,7 +47,7 @@
 
 #### Defined in
 
-[src/nft/metaplex/index.ts:92](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/nft/metaplex/index.ts#L92)
+[src/nft/metaplex/index.ts:96](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/nft/metaplex/index.ts#L96)
 
 ___
 
@@ -61,25 +61,38 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/index.ts:80](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/nft/metaplex/index.ts#L80)
+[src/nft/metaplex/index.ts:84](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/nft/metaplex/index.ts#L84)
 
 ___
 
 ### mint
 
-▸ `Const` **mint**(`data`, `owner`): `Promise`<[`Result`](../modules.md#result)<[`MintResult`](../interfaces/Metaplex.MintResult.md), `Error`\>\>
+▸ `Const` **mint**(`data`, `owner`, `signers`): (`append?`: [`Value`](../interfaces/Append.Value.md)) => `Promise`<[`Result`](../modules.md#result)<[`MintResult`](../interfaces/Metaplex.MintResult.md), `Error`\>\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `data` | [`Data`](../classes/MetaplexInstructure.Data.md) |
-| `owner` | `Keypair` |
+| `owner` | `PublicKey` |
+| `signers` | `Keypair`[] |
 
 #### Returns
+
+`fn`
+
+▸ (`append?`): `Promise`<[`Result`](../modules.md#result)<[`MintResult`](../interfaces/Metaplex.MintResult.md), `Error`\>\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `append?` | [`Value`](../interfaces/Append.Value.md) |
+
+##### Returns
 
 `Promise`<[`Result`](../modules.md#result)<[`MintResult`](../interfaces/Metaplex.MintResult.md), `Error`\>\>
 
 #### Defined in
 
-[src/nft/metaplex/index.ts:114](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/nft/metaplex/index.ts#L114)
+[src/nft/metaplex/index.ts:118](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/nft/metaplex/index.ts#L118)

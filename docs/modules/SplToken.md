@@ -11,37 +11,14 @@
 
 ### Functions
 
-- [create](SplToken.md#create)
 - [getTransferDestinationList](SplToken.md#gettransferdestinationlist)
 - [getTransferHistory](SplToken.md#gettransferhistory)
+- [mint](SplToken.md#mint)
 - [subscribeAccount](SplToken.md#subscribeaccount)
 - [transfer](SplToken.md#transfer)
 - [unsubscribeAccount](SplToken.md#unsubscribeaccount)
 
 ## Functions
-
-### create
-
-▸ `Const` **create**(`source`, `feePayer`, `totalAmount`, `mintDecimal`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `source` | `PublicKey` |
-| `feePayer` | `Keypair` |
-| `totalAmount` | `number` |
-| `mintDecimal` | `number` |
-
-#### Returns
-
-`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
-
-#### Defined in
-
-[src/spl-token.ts:124](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/spl-token.ts#L124)
-
-___
 
 ### getTransferDestinationList
 
@@ -59,7 +36,7 @@ ___
 
 #### Defined in
 
-[src/spl-token.ts:98](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/spl-token.ts#L98)
+[src/spl-token.ts:102](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/spl-token.ts#L102)
 
 ___
 
@@ -80,7 +57,31 @@ ___
 
 #### Defined in
 
-[src/spl-token.ts:76](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/spl-token.ts#L76)
+[src/spl-token.ts:78](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/spl-token.ts#L78)
+
+___
+
+### mint
+
+▸ `Const` **mint**(`owner`, `signers`, `totalAmount`, `mintDecimal`, `feePayer?`): `Promise`<[`Result`](../modules.md#result)<[`Instruction`](../classes/Instruction.md), `Error`\>\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `owner` | `PublicKey` |
+| `signers` | `Signer`[] |
+| `totalAmount` | `number` |
+| `mintDecimal` | `number` |
+| `feePayer?` | `Signer` |
+
+#### Returns
+
+`Promise`<[`Result`](../modules.md#result)<[`Instruction`](../classes/Instruction.md), `Error`\>\>
+
+#### Defined in
+
+[src/spl-token.ts:130](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/spl-token.ts#L130)
 
 ___
 
@@ -101,43 +102,33 @@ ___
 
 #### Defined in
 
-[src/spl-token.ts:60](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/spl-token.ts#L60)
+[src/spl-token.ts:60](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/spl-token.ts#L60)
 
 ___
 
 ### transfer
 
-▸ `Const` **transfer**(`tokenKey`, `source`, `dest`, `amount`, `mintDecimal`): (`append`: [`AppendValue`](../interfaces/Transaction.AppendValue.md)) => `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+▸ `Const` **transfer**(`tokenKey`, `owner`, `dest`, `signers`, `amount`, `mintDecimal`, `feePayer?`): `Promise`<[`Result`](../modules.md#result)<[`Instruction`](../classes/Instruction.md), `Error`\>\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `tokenKey` | `PublicKey` |
-| `source` | `PublicKey` |
+| `owner` | `PublicKey` |
 | `dest` | `PublicKey` |
+| `signers` | `Signer`[] |
 | `amount` | `number` |
 | `mintDecimal` | `number` |
+| `feePayer?` | `Signer` |
 
 #### Returns
 
-`fn`
-
-▸ (`append`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `append` | [`AppendValue`](../interfaces/Transaction.AppendValue.md) |
-
-##### Returns
-
-`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+`Promise`<[`Result`](../modules.md#result)<[`Instruction`](../classes/Instruction.md), `Error`\>\>
 
 #### Defined in
 
-[src/spl-token.ts:170](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/spl-token.ts#L170)
+[src/spl-token.ts:185](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/spl-token.ts#L185)
 
 ___
 
@@ -157,4 +148,4 @@ ___
 
 #### Defined in
 
-[src/spl-token.ts:71](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/spl-token.ts#L71)
+[src/spl-token.ts:73](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/spl-token.ts#L73)

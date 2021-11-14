@@ -21,9 +21,7 @@
 - [METAPLEX\_PROGRAM\_ID](Constants.md#metaplex_program_id)
 - [NFT\_STORAGE\_API\_KEY](Constants.md#nft_storage_api_key)
 - [NFT\_STORAGE\_GATEWAY\_URL](Constants.md#nft_storage_gateway_url)
-- [SPL\_ASSOCIATED\_TOKEN\_PROGRAM\_ID](Constants.md#spl_associated_token_program_id)
-- [SPL\_TOKEN\_PROGRAM\_ID](Constants.md#spl_token_program_id)
-- [SYSTEM\_PROGRAM\_ID](Constants.md#system_program_id)
+- [WRAPPED\_TOKEN\_PROGRAM\_ID](Constants.md#wrapped_token_program_id)
 - [currentNetwork](Constants.md#currentnetwork)
 
 ### Functions
@@ -38,7 +36,7 @@
 
 #### Defined in
 
-[src/constants.ts:49](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L49)
+[src/constants.ts:49](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L49)
 
 ___
 
@@ -48,7 +46,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:62](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L62)
+[src/constants.ts:60](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L60)
 
 ___
 
@@ -58,7 +56,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:61](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L61)
+[src/constants.ts:59](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L59)
 
 ___
 
@@ -68,7 +66,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:63](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L63)
+[src/constants.ts:61](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L61)
 
 ___
 
@@ -78,7 +76,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:65](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L65)
+[src/constants.ts:63](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L63)
 
 ___
 
@@ -88,7 +86,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:55](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L55)
+[src/constants.ts:53](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L53)
 
 ___
 
@@ -98,7 +96,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:48](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L48)
+[src/constants.ts:48](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L48)
 
 ___
 
@@ -108,7 +106,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:53](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L53)
+[src/constants.ts:51](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L51)
 
 ___
 
@@ -118,7 +116,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:54](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L54)
+[src/constants.ts:52](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L52)
 
 ___
 
@@ -128,7 +126,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:58](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L58)
+[src/constants.ts:56](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L56)
 
 ___
 
@@ -138,37 +136,17 @@ ___
 
 #### Defined in
 
-[src/constants.ts:60](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L60)
+[src/constants.ts:58](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L58)
 
 ___
 
-### SPL\_ASSOCIATED\_TOKEN\_PROGRAM\_ID
+### WRAPPED\_TOKEN\_PROGRAM\_ID
 
-• **SPL\_ASSOCIATED\_TOKEN\_PROGRAM\_ID**: `PublicKey`
-
-#### Defined in
-
-[src/constants.ts:52](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L52)
-
-___
-
-### SPL\_TOKEN\_PROGRAM\_ID
-
-• **SPL\_TOKEN\_PROGRAM\_ID**: `PublicKey`
+• **WRAPPED\_TOKEN\_PROGRAM\_ID**: `PublicKey`
 
 #### Defined in
 
-[src/constants.ts:51](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L51)
-
-___
-
-### SYSTEM\_PROGRAM\_ID
-
-• **SYSTEM\_PROGRAM\_ID**: `PublicKey`
-
-#### Defined in
-
-[src/constants.ts:50](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L50)
+[src/constants.ts:50](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L50)
 
 ___
 
@@ -178,7 +156,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:15](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L15)
+[src/constants.ts:15](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L15)
 
 ## Functions
 
@@ -192,4 +170,4 @@ ___
 
 #### Defined in
 
-[src/constants.ts:17](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/constants.ts#L17)
+[src/constants.ts:17](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/constants.ts#L17)

@@ -6,30 +6,33 @@
 
 ### Functions
 
-- [createInstruction](Memo.md#createinstruction)
+- [create](Memo.md#create)
 - [decode](Memo.md#decode)
 - [encode](Memo.md#encode)
-- [parseInstruction](Memo.md#parseinstruction)
+- [parse](Memo.md#parse)
 
 ## Functions
 
-### createInstruction
+### create
 
-▸ `Const` **createInstruction**(`data`): `TransactionInstruction`
+▸ `Const` **create**(`data`, `signers`, `owners?`, `feePayer?`): [`Instruction`](../classes/Instruction.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `data` | `string` |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `data` | `string` | `undefined` |
+| `signers` | `Signer`[] | `undefined` |
+| `owners` | `PublicKey`[] | `[]` |
+| `feePayer?` | `Signer` | `undefined` |
 
 #### Returns
 
-`TransactionInstruction`
+[`Instruction`](../classes/Instruction.md)
 
 #### Defined in
 
-[src/memo.ts:16](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/memo.ts#L16)
+[src/memo.ts:18](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/memo.ts#L18)
 
 ___
 
@@ -49,7 +52,7 @@ ___
 
 #### Defined in
 
-[src/memo.ts:11](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/memo.ts#L11)
+[src/memo.ts:13](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/memo.ts#L13)
 
 ___
 
@@ -69,13 +72,13 @@ ___
 
 #### Defined in
 
-[src/memo.ts:14](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/memo.ts#L14)
+[src/memo.ts:16](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/memo.ts#L16)
 
 ___
 
-### parseInstruction
+### parse
 
-▸ `Const` **parseInstruction**(`tx`): `string`
+▸ `Const` **parse**(`tx`): `string`
 
 #### Parameters
 
@@ -89,4 +92,4 @@ ___
 
 #### Defined in
 
-[src/memo.ts:25](https://github.com/fukaoi/solana-suite/blob/ae9dd8e/src/memo.ts#L25)
+[src/memo.ts:51](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/memo.ts#L51)
