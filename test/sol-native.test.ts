@@ -4,13 +4,13 @@ import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
 
 let source: Wallet.KeypairStr;
-let destination: Wallet.KeypairStr;
+let dest: Wallet.KeypairStr;
 
 describe('SolNative', () => {
   before(async () => {
     const obj = await Setup.generatekeyPair();
     source = obj.source;
-    destination = obj.dest;
+    dest = obj.dest;
   });
 
   it('transfer transaction', async () => {
@@ -18,7 +18,7 @@ describe('SolNative', () => {
     const inst =
       await SolNative.transfer(
         source.pubkey.toPubKey(),
-        destination.pubkey.toPubKey(),
+        dest.pubkey.toPubKey(),
         [source.secret.toKeypair()],
         solAmount,
       );
@@ -29,49 +29,53 @@ describe('SolNative', () => {
     console.log('# tx signature: ', res.unwrap().sig.toSigUrl());
   });
 
-  // it('transfer transaction with memo data', async () => {
-  // const solAmount = 0.0001;
-  // const instruction = Memo.createInstruction(
-  // '{"tokenId": "dummy", "serialNo": "15/100"}'
-  // );
-  // const res = await SolNative.transfer(
-  // source.pubkey.toPubKey(),
-  // destination.pubkey.toPubKey(),
-  // [source.secret.toKeypair()],
-  // solAmount,
-  // )({
-  // txInstructions: [instruction]
-  // });
-  // assert.isTrue(res.isOk, res.unwrap());
-  // console.log('# tx signature: ', res.unwrap());
-  // });
+  it('transfer transaction with memo data', async () => {
+    const solAmount = 0.0001;
+    const inst1 = Memo.create(
+      '{"tokenId": "dummy", "serialNo": "15/100"}',
+      [source.secret.toKeypair()]
+    );
 
-  // it('transfer transaction with fee payer', async () => {
-  // const solAmount = 0.0001;
-  // const feePayer = source;
-  // const before = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
-  // const res = await SolNative.transfer(
-  // source.pubkey.toPubKey(),
-  // destination.pubkey.toPubKey(),
-  // [
-  // source.secret.toKeypair(),
-  // feePayer.secret.toKeypair()
-  // ],
-  // solAmount,
-  // )({
-  // feePayer: feePayer.pubkey.toPubKey()
-  // });
-  // assert.isTrue(res.isOk, res.unwrap());
-  // console.log('# tx signature: ', res.unwrap());
-  // const after = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
-  // assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
-  // });
-  
- it('Use internal multisigTransfer()', async () => {
+    const inst2 = await SolNative.transfer(
+      source.pubkey.toPubKey(),
+      dest.pubkey.toPubKey(),
+      [source.secret.toKeypair()],
+      solAmount,
+    );
+
+
+    const res = await [inst1, inst2.unwrap()].submit();
+    assert.isTrue(res.isOk, `${res.unwrap()}`);
+    console.log('# tx signature: ', res.unwrap().sig.toSigUrl());
+  });
+
+  it('transfer transaction with fee payer', async () => {
+    const solAmount = 0.0001;
+    const owner = Wallet.create();
+    const feePayer = source;
+    const before = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
+    const inst = await SolNative.transfer(
+      owner.pubkey.toPubKey(),
+      dest.pubkey.toPubKey(),
+      [
+        owner.secret.toKeypair(),
+      ],
+      solAmount,
+      feePayer.secret.toKeypair()
+    );
+
+    const res = await inst.unwrap().submit(); 
+    assert.isTrue(res.isOk, `${res.unwrap()}`);
+    console.log('# tx signature: ', res.unwrap().sig.toSigUrl());
+    const after = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
+    assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
+  });
+
+  it('Use internal multisigTransfer()', async () => {
     const amount = 0.0001;
     const inst = await SolNative.multisigTransfer(
       source.pubkey.toPubKey(),
-      destination.pubkey.toPubKey(),
+      dest.pubkey.toPubKey(),
       [
         source.secret.toKeypair(),
       ],
@@ -82,7 +86,7 @@ describe('SolNative', () => {
     console.log('# signature :', res.unwrap().sig.toSigUrl());
   });
 
-  it.only('transfer transaction with multi sig', async () => {
+  it('transfer transaction with multi sig', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const inst1 = await Multisig.create(
@@ -101,9 +105,9 @@ describe('SolNative', () => {
 
     const inst2 = await SolNative.multisigTransfer(
       multisig.toPubKey(),
-      destination.pubkey.toPubKey(),
+      dest.pubkey.toPubKey(),
       [
-      source.secret.toKeypair(),
+        source.secret.toKeypair(),
         signer1.secret.toKeypair(),
         signer2.secret.toKeypair(),
       ],
