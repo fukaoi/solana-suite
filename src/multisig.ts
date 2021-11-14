@@ -101,6 +101,16 @@ export namespace MultisigInstruction {
   }
 }
 export namespace Multisig {
+  export const isAddress = async (multisig: PublicKey)
+    : Promise<Result<boolean, Error>> => {
+
+    const info = await Multisig.getMultisigInfo(multisig);
+    if (info.isErr) {
+      return Result.ok(false);
+    }
+    return Result.ok(true);
+  }
+
   export const getMultisigInfo = async (multisig: PublicKey)
     : Promise<Result<BufferLayout.LayoutObject, Error>> => {
     const info = await Node.getConnection().getAccountInfo(multisig);
