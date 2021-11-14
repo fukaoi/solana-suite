@@ -20,8 +20,8 @@ declare global {
   }
 }
 
-Array.prototype.submit = function () {
-  return Instruction.batchSubmit(this);
+Array.prototype.submit = async function () {
+  return await Instruction.batchSubmit(this);
 }
 
 String.prototype.toPubKey = function () {
