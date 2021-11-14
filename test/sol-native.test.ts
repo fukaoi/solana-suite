@@ -73,7 +73,7 @@ describe('SolNative', () => {
       source.pubkey.toPubKey(),
       destination.pubkey.toPubKey(),
       [
-        source.secret.toKeypair()
+        source.secret.toKeypair(),
       ],
       amount,
     );
@@ -95,18 +95,16 @@ describe('SolNative', () => {
     );
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
-    const multiRes = await inst1.unwrap().submit();
 
     const amount = 0.0001;
-    const multisig = (multiRes.unwrap().value as string);
-
-    console.log('# multisig address: ', multisig);
+    const multisig = (inst1.unwrap().value as string);
 
     // const inst2 = await SolNative.transfer(
     const inst2 = await SolNative.multisigTransfer(
       multisig.toPubKey(),
       destination.pubkey.toPubKey(),
       [
+      source.secret.toKeypair(),
         signer1.secret.toKeypair(),
         signer2.secret.toKeypair(),
       ],
@@ -115,11 +113,8 @@ describe('SolNative', () => {
     );
     assert.isTrue(inst2.isOk, `${inst2.unwrap()}`);
 
-    // console.log(inst2);
-    // const res = await [inst1.unwrap(), inst2.unwrap()].submit();
-    const res = await inst2.unwrap().submit();
-    console.log(res);
-    // assert.isTrue(res.isOk, res.unwrap().toString());
-
+    const res = await [inst1.unwrap(), inst2.unwrap()].submit();
+    assert.isTrue(res.isOk, res.unwrap().toString());
+    console.log('# signature: ', res.unwrap().sig.toSigUrl());
   });
 })

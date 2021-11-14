@@ -1,4 +1,4 @@
-import {Token, TOKEN_PROGRAM_ID} from '@solana/spl-token';
+import {NATIVE_MINT, Token, TOKEN_PROGRAM_ID} from '@solana/spl-token';
 import {
   LAMPORTS_PER_SOL,
   PublicKey,
@@ -14,6 +14,7 @@ import {
 } from './';
 import {Instruction} from './instruction';
 import {Multisig} from './multisig';
+import {SplToken} from './spl-token';
 
 export namespace SolNative {
 
@@ -47,12 +48,44 @@ export namespace SolNative {
 
     console.debug('# wrapped sol: ', wrapped.value.toBase58());
 
-    const inst1 = SystemProgram.transfer({
-      fromPubkey: owner,
-      toPubkey: wrapped.value,
-      lamports: 100,
-    });
+    // const inst1 = SystemProgram.transfer({
+      // fromPubkey: owner,
+      // toPubkey: wrapped.value,
+      // lamports: 100,
+    // });
 
+    const token = new Token(
+    connection,
+    Constants.WRAPPED_TOKEN_PROGRAM_ID,
+    TOKEN_PROGRAM_ID,
+    payer
+    );
+
+    const sourceToken = await token.getOrCreateAssociatedAccountInfo(owner)
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (sourceToken.isErr) {
+      return Result.err(sourceToken.error);
+    }
+
+    const destToken = await token.getOrCreateAssociatedAccountInfo(wrapped.value)
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (destToken.isErr) {
+      return Result.err(destToken.error);
+    }
+
+    const inst1 = Token.createTransferInstruction(
+      TOKEN_PROGRAM_ID, 
+      sourceToken.value.address, 
+      destToken.value.address, 
+      owner, 
+      signers, 
+      amount
+    );
+ 
     const inst2 = Token.createCloseAccountInstruction(
       TOKEN_PROGRAM_ID,
       wrapped.value,
