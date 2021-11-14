@@ -80,24 +80,23 @@ describe('SplToken', () => {
         signer2.pubkey.toPubKey()
       ]
     );
-    console.log(signer1.pubkey);
-    console.log(signer2.pubkey);
-    console.log(multisig.unwrap());
-
-    // const multisigRes = await multisig.unwrap().instruction.submit();
-    // assert.isTrue(multisigRes.isOk, `${multisigRes.unwrap()}`);
 
     const TOKEN_TOTAL_AMOUNT = 10000000;
-    const res = await SplToken.mint(
+    const mint = await SplToken.mint(
       multisig.unwrap().multisig.toPubKey(),
       [
         source.secret.toKeypair(),
+        signer1.secret.toKeypair(),
       ],
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
     );
-    console.log(await res.unwrap().instruction.submit());
-    assert.isFalse(res.isOk, `${res.unwrap()}`);
+    const res = await [
+      multisig.unwrap().instruction, 
+      mint.unwrap().instruction
+    ].submit();
+
+    assert.isTrue(res.isErr);
   });
 
     // it('Create token, batch transfer', async () => {

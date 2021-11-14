@@ -68,7 +68,7 @@ export namespace Wallet {
   export const findAssocaiatedTokenAddress = async (
     owner: PublicKey,
     tokenKey: PublicKey
-  ): Promise<Result<PublicKey, Error>> => { 
+  ): Promise<Result<PublicKey, Error>> => {
     return await PublicKey.findProgramAddress(
       [
         owner.toBuffer(),

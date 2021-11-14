@@ -28,6 +28,7 @@ export class Instruction {
   }
 
   submit = async (): Promise<Result<TransactionSignature, Error>> => {
+    // return Error if include Error object
     const transaction = new Transaction();
     let finalSigners = this.signers;
     if (this.feePayer) {

@@ -36,14 +36,14 @@ export namespace MultisigInstruction {
   ]);
 
   export const account = (
-    account: Signer,
+    newAccount: Signer,
     feePayer: Signer,
     balanceNeeded: number
   ): TransactionInstruction => {
     return SystemProgram.createAccount(
       {
         fromPubkey: feePayer.publicKey,
-        newAccountPubkey: account.publicKey,
+        newAccountPubkey: newAccount.publicKey,
         lamports: balanceNeeded,
         space: Layout.span,
         programId: TOKEN_PROGRAM_ID
