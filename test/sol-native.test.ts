@@ -99,7 +99,6 @@ describe('SolNative', () => {
     const amount = 0.0001;
     const multisig = (inst1.unwrap().value as string);
 
-    // const inst2 = await SolNative.transfer(
     const inst2 = await SolNative.multisigTransfer(
       multisig.toPubKey(),
       destination.pubkey.toPubKey(),

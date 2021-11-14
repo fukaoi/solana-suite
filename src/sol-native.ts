@@ -13,15 +13,11 @@ import {
   Constants
 } from './';
 import {Instruction} from './instruction';
-import {Multisig} from './multisig';
-import {SplToken} from './spl-token';
 
 export namespace SolNative {
 
   // NOTICE: There is a lamport fluctuation when transfer under 0.001 sol
   // for multiSig only function
-
-  // @internal
   export const multisigTransfer = async (
     owner: PublicKey,
     dest: PublicKey,
@@ -48,17 +44,11 @@ export namespace SolNative {
 
     console.debug('# wrapped sol: ', wrapped.value.toBase58());
 
-    // const inst1 = SystemProgram.transfer({
-      // fromPubkey: owner,
-      // toPubkey: wrapped.value,
-      // lamports: 100,
-    // });
-
     const token = new Token(
-    connection,
-    Constants.WRAPPED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
-    payer
+      connection,
+      Constants.WRAPPED_TOKEN_PROGRAM_ID,
+      TOKEN_PROGRAM_ID,
+      payer
     );
 
     const sourceToken = await token.getOrCreateAssociatedAccountInfo(owner)
@@ -78,14 +68,14 @@ export namespace SolNative {
     }
 
     const inst1 = Token.createTransferInstruction(
-      TOKEN_PROGRAM_ID, 
-      sourceToken.value.address, 
-      destToken.value.address, 
-      owner, 
-      signers, 
+      TOKEN_PROGRAM_ID,
+      sourceToken.value.address,
+      destToken.value.address,
+      owner,
+      signers,
       amount
     );
- 
+
     const inst2 = Token.createCloseAccountInstruction(
       TOKEN_PROGRAM_ID,
       wrapped.value,
@@ -101,35 +91,6 @@ export namespace SolNative {
         feePayer
       )
     );
-
-    // const token = new Token(
-    // connection,
-    // Constants.WRAPPED_TOKEN_PROGRAM_ID,
-    // TOKEN_PROGRAM_ID,
-    // payer
-    // );
-
-    // const t = new Transaction();
-    // t.feePayer = payer.publicKey;
-
-    // const tx = await Transaction.send(
-    // owner,
-    // wrapped,
-    // [feePayer],
-    // 100 // for fee
-    // )({
-    // feePayer: append?.feePayer,
-    // txInstructions: append?.txInstructions
-    // });
-
-    // // this point is need multiSig signers
-    // await token.closeAccount(
-    // wrapped,
-    // dest,
-    // append!.multiSig!,
-    // signers
-    // );
-    // return tx;
   }
 
   export const transfer = async (
@@ -139,28 +100,18 @@ export namespace SolNative {
     amount: number,
     feePayer?: Signer
   ): Promise<Result<Instruction, Error>> => {
-    const isAddress = (await Multisig.isAddress(source)).unwrap();
-    if (isAddress) {
-      return await multisigTransfer(
-        source,
-        destination,
-        signers,
-        amount,
-      );
-    } else {
-      const inst = SystemProgram.transfer({
-        fromPubkey: source,
-        toPubkey: destination,
-        lamports: amount,
-      });
+    const inst = SystemProgram.transfer({
+      fromPubkey: source,
+      toPubkey: destination,
+      lamports: amount,
+    });
 
-      return Result.ok(
-        new Instruction(
-          [inst],
-          signers,
-          feePayer
-        )
-      );
-    }
+    return Result.ok(
+      new Instruction(
+        [inst],
+        signers,
+        feePayer
+      )
+    );
   }
 }
