@@ -217,7 +217,7 @@ export namespace SplToken {
       return Result.err(destToken.error);
     }
 
-    const instruction = Token.createTransferCheckedInstruction(
+    const inst = Token.createTransferCheckedInstruction(
       TOKEN_PROGRAM_ID,
       sourceToken.value.address,
       tokenKey,
@@ -230,7 +230,7 @@ export namespace SplToken {
 
     return Result.ok(
       new Instruction(
-        [instruction],
+        [inst],
         signers,
         feePayer
       ));
