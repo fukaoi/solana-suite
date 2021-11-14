@@ -133,7 +133,7 @@ export namespace SplToken {
     totalAmount: number,
     mintDecimal: number,
     feePayer?: Signer,
-  ): Promise<Result<{instruction: Instruction, tokenKey: string}, Error>> => {
+  ): Promise<Result<Instruction, Error>> => {
 
     !feePayer && (feePayer = signers[0]);
 
@@ -173,15 +173,12 @@ export namespace SplToken {
     );
 
     return Result.ok(
-      {
-        instruction:
-          new Instruction(
-            [inst],
-            signers,
-            feePayer,
-          ),
-        tokenKey: token.publicKey.toBase58()
-      }
+      new Instruction(
+        [inst],
+        signers,
+        feePayer,
+        token.publicKey.toBase58()
+      )
     );
   }
 

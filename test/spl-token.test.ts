@@ -83,7 +83,7 @@ describe('SplToken', () => {
 
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const mint = await SplToken.mint(
-      multisig.unwrap().multisig.toPubKey(),
+      (multisig.unwrap().value as string).toPubKey(),
       [
         source.secret.toKeypair(),
         signer1.secret.toKeypair(),
@@ -92,7 +92,7 @@ describe('SplToken', () => {
       MINT_DECIMAL,
     );
     const res = await [
-      multisig.unwrap().instruction, 
+      multisig.unwrap(), 
       mint.unwrap().instruction
     ].submit();
 
