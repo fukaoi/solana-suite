@@ -6,6 +6,7 @@
 
 ### Namespaces
 
+- [Account](modules/Account.md)
 - [Append](modules/Append.md)
 - [Constants](modules/Constants.md)
 - [ConstantsFunc](modules/ConstantsFunc.md)
@@ -26,11 +27,12 @@
 - [StorageNftStorage](modules/StorageNftStorage.md)
 - [Transaction](modules/Transaction.md)
 - [Util](modules/Util.md)
-- [Wallet](modules/Wallet.md)
 
 ### Classes
 
 - [Instruction](classes/Instruction.md)
+- [KeypairStr](classes/KeypairStr.md)
+- [String](classes/String.md)
 
 ### Interfaces
 
@@ -63,7 +65,7 @@
 
 #### Defined in
 
-[src/result.ts:536](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/result.ts#L536)
+[src/result.ts:536](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/result.ts#L536)
 
 ## Properties
 
@@ -93,4 +95,4 @@ node_modules/@types/node/globals.d.ts:589
 
 #### Defined in
 
-[src/global.ts:68](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/global.ts#L68)
+[src/global.ts:73](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/global.ts#L73)

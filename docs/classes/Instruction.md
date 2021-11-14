@@ -40,7 +40,7 @@
 
 #### Defined in
 
-[src/instruction.ts:26](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/instruction.ts#L26)
+[src/instruction.ts:26](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L26)
 
 ## Properties
 
@@ -50,7 +50,7 @@
 
 #### Defined in
 
-[src/instruction.ts:23](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/instruction.ts#L23)
+[src/instruction.ts:23](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L23)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:21](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/instruction.ts#L21)
+[src/instruction.ts:21](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L21)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:22](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/instruction.ts#L22)
+[src/instruction.ts:22](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L22)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:24](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/instruction.ts#L24)
+[src/instruction.ts:24](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L24)
 
 ## Methods
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:38](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/instruction.ts#L38)
+[src/instruction.ts:38](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L38)
 
 ___
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:58](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/instruction.ts#L58)
+[src/instruction.ts:58](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L58)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:97](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/instruction.ts#L97)
+[src/instruction.ts:97](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L97)
 
 ___
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:92](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/instruction.ts#L92)
+[src/instruction.ts:92](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L92)
 
 ___
 
@@ -174,4 +174,4 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:87](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/instruction.ts#L87)
+[src/instruction.ts:87](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L87)

@@ -35,13 +35,13 @@
 
 #### Defined in
 
-[src/append.ts:61](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/append.ts#L61)
+[src/append.ts:61](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/append.ts#L61)
 
 ___
 
 ### extractMultiSigKeypair
 
-▸ `Const` **extractMultiSigKeypair**(`signers`, `multisig`): `Promise`<[`Result`](../modules.md#result)<`Keypair`[] \| `Error`, `Error`\>\>
+▸ `Const` **extractMultiSigKeypair**(`signers`, `multisig`): `Promise`<[`Result`](../modules.md#result)<`Error` \| `Keypair`[], `Error`\>\>
 
 #### Parameters
 
@@ -52,17 +52,17 @@ ___
 
 #### Returns
 
-`Promise`<[`Result`](../modules.md#result)<`Keypair`[] \| `Error`, `Error`\>\>
+`Promise`<[`Result`](../modules.md#result)<`Error` \| `Keypair`[], `Error`\>\>
 
 #### Defined in
 
-[src/append.ts:64](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/append.ts#L64)
+[src/append.ts:64](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/append.ts#L64)
 
 ___
 
 ### extractOnlySignerKeypair
 
-▸ `Const` **extractOnlySignerKeypair**(`signers`, `feePayer?`, `multisig?`): `Promise`<[`Result`](../modules.md#result)<`Keypair`[] \| `Error`, `Error`\>\>
+▸ `Const` **extractOnlySignerKeypair**(`signers`, `feePayer?`, `multisig?`): `Promise`<[`Result`](../modules.md#result)<`Error` \| `Keypair`[], `Error`\>\>
 
 #### Parameters
 
@@ -74,11 +74,11 @@ ___
 
 #### Returns
 
-`Promise`<[`Result`](../modules.md#result)<`Keypair`[] \| `Error`, `Error`\>\>
+`Promise`<[`Result`](../modules.md#result)<`Error` \| `Keypair`[], `Error`\>\>
 
 #### Defined in
 
-[src/append.ts:38](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/append.ts#L38)
+[src/append.ts:38](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/append.ts#L38)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[src/append.ts:33](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/append.ts#L33)
+[src/append.ts:33](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/append.ts#L33)
 
 ___
 
@@ -120,4 +120,4 @@ ___
 
 #### Defined in
 
-[src/append.ts:73](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/append.ts#L73)
+[src/append.ts:73](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/append.ts#L73)

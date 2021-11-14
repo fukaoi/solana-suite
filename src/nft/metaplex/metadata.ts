@@ -168,7 +168,7 @@ export namespace MetaplexMetaData {
 
     if (tokens.isErr) return Result.err(tokens.error);
     const arr = tokens.value as RpcResponseAndContext<{
-      pubkey: PublicKey; 
+      pubkey: PublicKey;
       account: AccountInfo<ParsedAccountData
     >}[]>;
 

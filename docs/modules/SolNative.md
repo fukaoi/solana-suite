@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[src/sol-native.ts:21](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/sol-native.ts#L21)
+[src/sol-native.ts:21](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/sol-native.ts#L21)
 
 ___
 
@@ -55,4 +55,4 @@ ___
 
 #### Defined in
 
-[src/sol-native.ts:96](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/sol-native.ts#L96)
+[src/sol-native.ts:96](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/sol-native.ts#L96)

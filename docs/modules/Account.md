@@ -1,25 +1,21 @@
-[solana-suite](../README.md) / [Exports](../modules.md) / Wallet
+[solana-suite](../README.md) / [Exports](../modules.md) / Account
 
-# Namespace: Wallet
+# Namespace: Account
 
 ## Table of contents
 
-### Interfaces
-
-- [KeypairStr](../interfaces/Wallet.KeypairStr.md)
-
 ### Variables
 
-- [DEFAULT\_AIRDROP\_AMOUNT](Wallet.md#default_airdrop_amount)
-- [MAX\_AIRDROP\_SOL](Wallet.md#max_airdrop_sol)
+- [DEFAULT\_AIRDROP\_AMOUNT](Account.md#default_airdrop_amount)
+- [MAX\_AIRDROP\_SOL](Account.md#max_airdrop_sol)
 
 ### Functions
 
-- [create](Wallet.md#create)
-- [findAssocaiatedTokenAddress](Wallet.md#findassocaiatedtokenaddress)
-- [findMetaplexAssocaiatedTokenAddress](Wallet.md#findmetaplexassocaiatedtokenaddress)
-- [getBalance](Wallet.md#getbalance)
-- [requestAirdrop](Wallet.md#requestairdrop)
+- [create](Account.md#create)
+- [findAssocaiatedTokenAddress](Account.md#findassocaiatedtokenaddress)
+- [findMetaplexAssocaiatedTokenAddress](Account.md#findmetaplexassocaiatedtokenaddress)
+- [getBalance](Account.md#getbalance)
+- [requestAirdrop](Account.md#requestairdrop)
 
 ## Variables
 
@@ -29,7 +25,7 @@
 
 #### Defined in
 
-[src/wallet.ts:22](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L22)
+[src/account.ts:43](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L43)
 
 ___
 
@@ -39,21 +35,21 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:23](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L23)
+[src/account.ts:44](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L44)
 
 ## Functions
 
 ### create
 
-▸ `Const` **create**(): [`KeypairStr`](../interfaces/Wallet.KeypairStr.md)
+▸ `Const` **create**(): [`KeypairStr`](../classes/KeypairStr.md)
 
 #### Returns
 
-[`KeypairStr`](../interfaces/Wallet.KeypairStr.md)
+[`KeypairStr`](../classes/KeypairStr.md)
 
 #### Defined in
 
-[src/wallet.ts:60](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L60)
+[src/account.ts:81](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L81)
 
 ___
 
@@ -74,7 +70,7 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:68](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L68)
+[src/account.ts:94](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L94)
 
 ___
 
@@ -94,7 +90,7 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:84](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L84)
+[src/account.ts:110](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L110)
 
 ___
 
@@ -115,7 +111,7 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:25](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L25)
+[src/account.ts:46](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L46)
 
 ___
 
@@ -136,4 +132,4 @@ ___
 
 #### Defined in
 
-[src/wallet.ts:42](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/wallet.ts#L42)
+[src/account.ts:63](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L63)

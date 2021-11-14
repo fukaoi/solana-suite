@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[src/multisig.ts:21](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/multisig.ts#L21)
+[src/multisig.ts:21](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/multisig.ts#L21)
 
 ## Functions
 
@@ -43,7 +43,7 @@
 
 #### Defined in
 
-[src/multisig.ts:38](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/multisig.ts#L38)
+[src/multisig.ts:38](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/multisig.ts#L38)
 
 ___
 
@@ -65,4 +65,4 @@ ___
 
 #### Defined in
 
-[src/multisig.ts:54](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/multisig.ts#L54)
+[src/multisig.ts:54](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/multisig.ts#L54)

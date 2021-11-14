@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[src/instruction.ts:16](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/instruction.ts#L16)
+[src/instruction.ts:16](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L16)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:17](https://github.com/fukaoi/solana-suite/blob/d1cae4f/src/instruction.ts#L17)
+[src/instruction.ts:17](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L17)
