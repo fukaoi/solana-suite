@@ -108,7 +108,7 @@ export namespace SolNative {
   ): Promise<Result<Instruction, Error>> => {
     const isAddress = (await Multisig.isAddress(source)).unwrap();
     if (isAddress) {
-      return multisigTransfer(
+      return await multisigTransfer(
         source,
         destination,
         signers,

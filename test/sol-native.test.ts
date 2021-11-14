@@ -115,9 +115,10 @@ describe('SolNative', () => {
     );
     assert.isTrue(inst2.isOk, `${inst2.unwrap()}`);
 
-    console.log(inst2);
+    // console.log(inst2);
     // const res = await [inst1.unwrap(), inst2.unwrap()].submit();
     const res = await inst2.unwrap().submit();
+    console.log(res);
     // assert.isTrue(res.isOk, res.unwrap().toString());
 
   });
