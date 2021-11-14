@@ -1,9 +1,9 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Memo, Wallet} from '../src';
+import {Memo, Account} from '../src';
 
-let source: Wallet.KeypairStr;
+let source: Account.KeypairStr;
 const DUMMY_DATA = 'dummy memo data';
 
 describe('Memo', () => {

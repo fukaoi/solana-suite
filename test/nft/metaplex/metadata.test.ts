@@ -1,11 +1,11 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Wallet} from '../../../src';
+import {Account} from '../../../src';
 import {MetaplexMetaData, MetaplexInstructure, Metaplex} from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
 import {TransactionInstruction} from '@solana/web3.js';
 
-let source: Wallet.KeypairStr;
+let source: Account.KeypairStr;
 
 describe('MetaplexMetaData', () => {
   before(async () => {

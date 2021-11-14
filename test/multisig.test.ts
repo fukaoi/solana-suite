@@ -1,8 +1,8 @@
 import {assert} from 'chai';
-import {Multisig, Wallet} from '../src/';
+import {Multisig, Account} from '../src/';
 import {Setup} from './utils/setup';
 
-let source: Wallet.KeypairStr;
+let source: Account.KeypairStr;
 
 describe('Multisig', () => {
   before(async () => {
@@ -11,8 +11,8 @@ describe('Multisig', () => {
   });
 
   it('Is multisig address', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
     const inst = await Multisig.create(
       2,
       source.secret.toKeypair(),
@@ -33,8 +33,8 @@ describe('Multisig', () => {
   });
 
   it('[Err]Invalid multisig address', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
     const inst = await Multisig.create(
       2,
       source.secret.toKeypair(),
@@ -51,8 +51,8 @@ describe('Multisig', () => {
   });
 
   it('Create account 2 of 2', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
     const inst = await Multisig.create(
       2,
       source.secret.toKeypair(),
@@ -69,9 +69,9 @@ describe('Multisig', () => {
   });
 
   it('Create account 2 of 3', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
-    const signer3 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
+    const signer3 = Account.create();
     const inst = await Multisig.create(
       2,
       source.secret.toKeypair(),
@@ -89,7 +89,7 @@ describe('Multisig', () => {
   });
 
   it('[Err] m number less than signers number', async () => {
-    const signer1 = Wallet.create();
+    const signer1 = Account.create();
     const res = await Multisig.create(
       2,
       source.secret.toKeypair(),
@@ -101,8 +101,8 @@ describe('Multisig', () => {
   });
 
   it('Get multisig info', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
     const inst = await Multisig.create(
       2,
       source.secret.toKeypair(),

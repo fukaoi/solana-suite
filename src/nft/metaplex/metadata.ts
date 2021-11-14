@@ -10,7 +10,7 @@ import {
 } from '@solana/web3.js';
 
 import {Metaplex, MetaplexSerialize, MetaplexInstructure} from './index';
-import {Node, Wallet, Constants, Result} from '../../index';
+import {Node, Account, Constants, Result} from '../../index';
 import {
   Token,
   TOKEN_PROGRAM_ID,
@@ -137,7 +137,7 @@ export namespace MetaplexMetaData {
 
   export const getByTokenKey = async (tokenKey: PublicKey):
     Promise<Result<Metaplex.Format, Error>> => {
-    const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    const metaAccount = await Account.findMetaplexAssocaiatedTokenAddress(tokenKey);
 
     if (metaAccount.isErr) return Result.err(metaAccount.error);
 
@@ -192,7 +192,7 @@ export namespace MetaplexMetaData {
       Promise<Result<PublicKey | TransactionInstruction[], Error>> => {
       let inst: TransactionInstruction[] = [];
       inst = instructions ? instructions : inst;
-      const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
+      const metaAccount = await Account.findMetaplexAssocaiatedTokenAddress(tokenKey);
       if (metaAccount.isErr) return metaAccount;
 
       const txnData = MetaplexSerialize.serializeCreateArgs(data);
@@ -224,7 +224,7 @@ export namespace MetaplexMetaData {
       let inst: TransactionInstruction[] = [];
       inst = instructions ? instructions : inst;
 
-      const associatedToken = await Wallet.findAssocaiatedTokenAddress(
+      const associatedToken = await Account.findAssocaiatedTokenAddress(
         updateAuthority,
         tokenKey
       );
@@ -251,7 +251,7 @@ export namespace MetaplexMetaData {
         ),
       );
 
-      const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
+      const metaAccount = await Account.findMetaplexAssocaiatedTokenAddress(tokenKey);
       if (metaAccount.isErr) return metaAccount;
 
       const txnData = MetaplexSerialize.serializeUpdateArgs(

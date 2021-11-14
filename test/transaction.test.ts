@@ -1,5 +1,5 @@
 import {describe, it} from 'mocha';
-import {Transaction, Memo, Wallet, Multisig} from '../src';
+import {Transaction, Memo, Account, Multisig} from '../src';
 import {Setup} from '../test/utils/setup';
 import {assert} from 'chai';
 import {ParsedConfirmedTransaction} from '@solana/web3.js';
@@ -7,7 +7,7 @@ import {ParsedConfirmedTransaction} from '@solana/web3.js';
 const signature1 = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
 const signature2 = '2nPdn7AhJiTLaopwxCBzPxSB9ucBeBJbyKttXVBh7CoCQkmhkB12yoT6CuFStbT6X6boi9eFEpJjtRUQYVPcvM3J';
 
-let source: Wallet.KeypairStr;
+let source: Account.KeypairStr;
 
 describe('Transaction', () => {
   before(async () => {

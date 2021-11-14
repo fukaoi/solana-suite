@@ -1,9 +1,9 @@
 import {describe, it} from 'mocha';
-import {Memo, Wallet} from '../src';
+import {Memo, Account} from '../src';
 import {Setup} from '../test/utils/setup';
 import {assert} from 'chai';
 
-let source: Wallet.KeypairStr;
+let source: Account.KeypairStr;
 
 describe('Instruction', () => {
   before(async () => {

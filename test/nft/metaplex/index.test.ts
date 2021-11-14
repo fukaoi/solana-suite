@@ -1,10 +1,10 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Wallet} from '../../../src';
+import {Account} from '../../../src';
 import {Metaplex, MetaplexInstructure} from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
 
-let source: Wallet.KeypairStr;
+let source: Account.KeypairStr;
 
 describe('Metaplex', () => {
   before(async () => {

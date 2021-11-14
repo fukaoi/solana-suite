@@ -9,8 +9,7 @@ import bs from 'bs58';
 
 import {Transaction, Constants, Node, Result} from './';
 
-// TODO: want rename Wallet to Account
-export namespace Wallet {
+export namespace Account {
 
   type Unit = 'sol' | 'lamports';
 

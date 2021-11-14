@@ -1,10 +1,10 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Wallet, SplToken, Multisig, Util} from '../src/'
+import {Account, SplToken, Multisig, Util} from '../src/'
 
-let source: Wallet.KeypairStr;
-let dest: Wallet.KeypairStr;
+let source: Account.KeypairStr;
+let dest: Account.KeypairStr;
 let tokenKeyStr: string;
 
 const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6'.toPubKey();
@@ -69,8 +69,8 @@ describe('SplToken', () => {
   });
 
   it('[Err]lack signer for multisig', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
     const multisig = await Multisig.create(
       2,
       source.secret.toKeypair(),
@@ -150,8 +150,8 @@ describe('SplToken', () => {
   });
 
   it('Create token, transfer with multisig and fee payer', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
     const multiInst =
       await Multisig.create(
         2,

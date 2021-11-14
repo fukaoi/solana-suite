@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {Constants, Wallet} from '../../src';
+import {Constants, Account} from '../../src';
 
 console.debug(`\u001b[33m === DEBUG MODE ===`);
 console.debug(`\u001b[33m solana-network: ${Constants.currentNetwork}`);
@@ -8,13 +8,13 @@ export namespace Setup {
   const TEMP_KEYPAIR_FILE = `.solana-${Constants.currentNetwork}-keypair`;
 
   export const generatekeyPair = async ():
-    Promise<{source: Wallet.KeypairStr, dest: Wallet.KeypairStr}> => {
+    Promise<{source: Account.KeypairStr, dest: Account.KeypairStr}> => {
     const {source, dest} = await getSourceAndDest();
     debug(source, dest);
     return {source: source, dest: dest};
   }
 
-  const debug = (source: Wallet.KeypairStr, dest: Wallet.KeypairStr) => {
+  const debug = (source: Account.KeypairStr, dest: Account.KeypairStr) => {
     console.debug(`# source.pubkey:`, source.pubkey);
     console.debug(`# source.secret: `, source.secret);
     console.debug(`# destination.pubkey:`, dest.pubkey);
@@ -24,11 +24,11 @@ export namespace Setup {
   const getSourceAndDest = async () => {
     if (fs.existsSync(TEMP_KEYPAIR_FILE)) {
       const obj = await loadTempFile();
-      const sourceBalance = await Wallet.getBalance(obj.source.pubkey.toPubKey());
+      const sourceBalance = await Account.getBalance(obj.source.pubkey.toPubKey());
       if (sourceBalance.isOk && sourceBalance.value < 0.1) {
         console.warn(`[Warning]source  alance is under 0.1 amount`);
         console.warn(`Reset setupKeyPair`);
-        Wallet.requestAirdrop(obj.source.pubkey);
+        Account.requestAirdrop(obj.source.pubkey);
       }
       return obj;
     } else {
@@ -42,17 +42,17 @@ export namespace Setup {
   }
 
   const createTempFile = async () => {
-    const source = Wallet.create();
-    const dest = Wallet.create();
-    await Wallet.requestAirdrop(source.pubkey.toPubKey());
+    const source = Account.create();
+    const dest = Account.create();
+    await Account.requestAirdrop(source.pubkey.toPubKey());
     const data = templateKeyPair(source, dest);
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));
     return {source: source, dest: dest};
   }
 
   const templateKeyPair = (
-    source: Wallet.KeypairStr, 
-    dest: Wallet.KeypairStr
+    source: Account.KeypairStr, 
+    dest: Account.KeypairStr
   ) => {
     return {
       source: {

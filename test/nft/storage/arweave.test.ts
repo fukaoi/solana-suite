@@ -1,10 +1,10 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
-import {StorageArweave, Wallet} from '../../../src';
+import {StorageArweave, Account} from '../../../src';
 import {Setup} from '../../utils/setup';
 import {RandomAsset} from '../../utils/randomAsset';
 
-let source: Wallet.KeypairStr;
+let source: Account.KeypairStr;
 
 describe('StorageArweave', () => {
   before(async () => {

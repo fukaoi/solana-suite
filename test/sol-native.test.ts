@@ -1,10 +1,10 @@
 import {describe, it, before} from 'mocha';
-import {SolNative, Memo, Wallet, Multisig} from '../src';
+import {SolNative, Memo, Account, Multisig} from '../src';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
 
-let source: Wallet.KeypairStr;
-let dest: Wallet.KeypairStr;
+let source: Account.KeypairStr;
+let dest: Account.KeypairStr;
 
 describe('SolNative', () => {
   before(async () => {
@@ -51,9 +51,9 @@ describe('SolNative', () => {
 
   it('transfer transaction with fee payer', async () => {
     const solAmount = 0.0001;
-    const owner = Wallet.create();
+    const owner = Account.create();
     const feePayer = source;
-    const before = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
+    const before = (await Account.getBalance(feePayer.pubkey.toPubKey())).unwrap();
     const inst = await SolNative.transfer(
       owner.pubkey.toPubKey(),
       dest.pubkey.toPubKey(),
@@ -67,7 +67,7 @@ describe('SolNative', () => {
     const res = await inst.unwrap().submit(); 
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# tx signature: ', res.unwrap().sig.toSigUrl());
-    const after = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
+    const after = (await Account.getBalance(feePayer.pubkey.toPubKey())).unwrap();
     assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
 
@@ -87,8 +87,8 @@ describe('SolNative', () => {
   });
 
   it('transfer transaction with multi sig', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
     const inst1 = await Multisig.create(
       2,
       source.secret.toKeypair(),
