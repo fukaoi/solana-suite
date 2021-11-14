@@ -14,20 +14,20 @@ import * as BufferLayout from '@solana/buffer-layout';
 
 export interface InstructionSubmit {
   sig: TransactionSignature,
-  value: undefined|undefined[]
+  value: unknown|unknown[]
 }
 
 export class Instruction {
   instructions: TransactionInstruction[];
   signers: Signer[];
   feePayer?: Signer;
-  value?: undefined;
+  value?: unknown;
 
   constructor(
     instructions: TransactionInstruction[],
     signers: Signer[],
     feePayer?: Signer,
-    value?: undefined,
+    value?: unknown,
   ) {
     this.instructions = instructions;
     this.signers = signers;

@@ -136,7 +136,7 @@ export namespace Multisig {
     feePayer: Signer,
     signerPubkey: PublicKey[],
   )
-    : Promise<Result<{instruction: Instruction, multisig: string}, Error>> => {
+    : Promise<Result<Instruction, Error>> => {
 
     if (m > signerPubkey.length)
       return Result.err(Error('signers number less than m number'));
@@ -164,10 +164,12 @@ export namespace Multisig {
     );
 
     return Result.ok(
-      {
-        instruction: new Instruction([inst1, inst2], [account], feePayer),
-        multisig: account.publicKey.toBase58()
-      }
+      new Instruction(
+        [inst1, inst2],
+        [account],
+        feePayer,
+        account.publicKey.toBase58()
+      )
     );
   }
 }

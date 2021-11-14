@@ -10,7 +10,7 @@ describe('Multisig', () => {
     source = obj.source;
   });
 
-  it.only('Create account 2 of 2', async () => {
+  it('Create account 2 of 2', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const inst = await Multisig.create(
@@ -23,10 +23,9 @@ describe('Multisig', () => {
     );
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
-    // const res = await inst.unwrap().instruction.submit();
-    const res = await inst.submit();
+    const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# multisig account: ', inst.unwrap().multisig);
+    console.log('# multisig account: ', inst.unwrap().value);
   });
 
   it('Create account 2 of 3', async () => {
@@ -44,9 +43,9 @@ describe('Multisig', () => {
     );
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
-    const res = await inst.unwrap().instruction.submit();
+    const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# multisig account: ', inst.unwrap().multisig);
+    console.log('# multisig account: ', inst.unwrap().value);
   });
 
   it('[Err] m number less than signers number', async () => {
@@ -73,8 +72,8 @@ describe('Multisig', () => {
       ],
     );
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
-    await inst.unwrap().instruction.submit();
-    const res = await Multisig.getMultisigInfo(inst.unwrap().multisig.toPubKey());
+    await inst.unwrap().submit();
+    const res = await Multisig.getMultisigInfo((inst.unwrap().value as string).toPubKey());
     assert.isTrue(res.isOk, `${res.unwrap()}`);
   });
 })
