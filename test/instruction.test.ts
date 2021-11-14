@@ -1,5 +1,5 @@
 import {describe, it} from 'mocha';
-import {Memo, Wallet, Instruction} from '../src';
+import {Memo, Wallet} from '../src';
 import {Setup} from '../test/utils/setup';
 import {assert} from 'chai';
 
@@ -15,14 +15,12 @@ describe('Instruction', () => {
     const before = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
     const owner = Wallet.create();
     const feePayer = source.secret.toKeypair();
-    const instruction = new Instruction(
-      [Memo.createInstruction(
+    const instruction =
+      Memo.create(
         '{"title": "Submit first instruction"}',
+        [feePayer],
         [owner.pubkey.toPubKey()]
-      )],
-      [owner.secret.toKeypair()],
-      feePayer
-    );
+      );
 
     const res = await instruction.submit();
     assert.isTrue(res.isOk, res.unwrap());
@@ -35,22 +33,19 @@ describe('Instruction', () => {
     const before = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
     const owner = Wallet.create();
     const feePayer = source.secret.toKeypair();
-    const instruction1 = new Instruction(
-      [Memo.createInstruction(
+    const instruction1 =
+      Memo.create(
         '{"title": "Submit first instruction"}',
+        [feePayer],
         [owner.pubkey.toPubKey()]
-      )],
-      [owner.secret.toKeypair()],
-    );
+      );
 
-    const instruction2 = new Instruction(
-      [Memo.createInstruction(
+    const instruction2 =
+      Memo.create(
         '{"title": "Submit first instruction"}',
+        [feePayer],
         [owner.pubkey.toPubKey()]
-      )],
-      [owner.secret.toKeypair()],
-      feePayer
-    );
+      );
 
     const res = await [instruction1, instruction2].submit();
     assert.isTrue(res.isOk, res.unwrap());
