@@ -30,36 +30,4 @@ describe('Transaction', () => {
       assert.isFalse(res.isErr, res.isErr && res.error.message);
     }
   });
-
-  it('Transaction decode memo', async () => {
-    const tx = await Transaction.get(signature2);
-    if (tx.isErr) assert.isNotEmpty(tx);
-    const res = Memo.parseInstruction(<ParsedConfirmedTransaction>tx.unwrap());
-    console.log(`# decode: `, res);
-    assert.equal(res, '{"tokenId": "dummy", "serialNo": "15/100"}');
-  });
-
-  it('Send instructions with fee payer', async () => {
-    const before = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
-    const owner = Wallet.create();
-    const memoInst = Memo.createInstruction(
-      '{"title": "send  instructions"}',
-      [owner.pubkey.toPubKey()]
-    );
-    const res =
-      await Transaction.sendInstruction(
-        [
-          source.secret.toKeypair(),
-          owner.secret.toKeypair(),
-        ],
-      )({
-        txInstructions: [memoInst],
-        feePayer: source.pubkey.toPubKey()
-      });
-
-    assert.isTrue(res.isOk, res.unwrap());
-    console.log('# tx signature: ', res.unwrap());
-    const after = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
-    assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
-  });
 })
