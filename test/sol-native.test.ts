@@ -102,7 +102,8 @@ describe('SolNative', () => {
 
     console.log('# multisig address: ', multisig);
 
-    const inst2 = await SolNative.transfer(
+    // const inst2 = await SolNative.transfer(
+    const inst2 = await SolNative.multisigTransfer(
       multisig.toPubKey(),
       destination.pubkey.toPubKey(),
       [
