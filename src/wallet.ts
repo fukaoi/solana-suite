@@ -1,22 +1,20 @@
+import {ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID} from '@solana/spl-token';
 import {
   Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
-  TransactionInstruction,
-  SystemProgram,
-  SYSVAR_RENT_PUBKEY,
 } from '@solana/web3.js';
 
-import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 import bs from 'bs58';
 
 import {Transaction, Constants, Node, Result} from './';
 
+// TODO: want rename Wallet to Account
 export namespace Wallet {
 
   type Unit = 'sol' | 'lamports';
 
-  export interface KeyPair {
+  export interface KeypairStr {
     pubkey: string,
     secret: string
   }
@@ -37,7 +35,7 @@ export namespace Wallet {
     switch (unit) {
       case 'sol': return Result.ok((balance.value) / LAMPORTS_PER_SOL);
       case 'lamports': return balance;
-      default: return Result.err(new Error('no match unit'));
+      default: return Result.err(Error('no match unit'));
     }
   };
 
@@ -48,18 +46,18 @@ export namespace Wallet {
     console.debug('Now airdropping...please wait');
 
     if (airdropAmount > MAX_AIRDROP_SOL)
-      return Result.err(new Error(`Over max airdrop amount: ${airdropAmount}`))
+      return Result.err(Error(`Over max airdrop amount: ${airdropAmount}`))
 
     const sig = await Node.getConnection().requestAirdrop(pubkey, airdropAmount)
       .then(Result.ok)
       .catch(Result.err);
 
-    if (sig.isErr) return Result.err(new Error('Failed airdrop'));
+    if (sig.isErr) return Result.err(Error('Failed airdrop'));
     await Transaction.confirmedSig(sig.value);
     return Result.ok('success');
   }
 
-  export const create = (): KeyPair => {
+  export const create = (): KeypairStr => {
     const keypair = Keypair.generate();
     return {
       pubkey: keypair.publicKey.toBase58(),
@@ -68,16 +66,16 @@ export namespace Wallet {
   };
 
   export const findAssocaiatedTokenAddress = async (
-    source: PublicKey,
+    owner: PublicKey,
     tokenKey: PublicKey
   ): Promise<Result<PublicKey, Error>> => {
     return await PublicKey.findProgramAddress(
       [
-        source.toBuffer(),
+        owner.toBuffer(),
         TOKEN_PROGRAM_ID.toBuffer(),
         tokenKey.toBuffer(),
       ],
-      Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID
+      ASSOCIATED_TOKEN_PROGRAM_ID
     )
       .then(v => Result.ok(v[0]))
       .catch(Result.err);
@@ -96,55 +94,5 @@ export namespace Wallet {
     )
       .then(v => Result.ok(v[0]))
       .catch((e: Error) => Result.err(e))
-  }
-
-  export const createAssociatedTokenAccountInstruction = (
-    associatedToken: PublicKey,
-    payer: PublicKey,
-    source: PublicKey,
-    mintKey: PublicKey,
-  ) => {
-    const keys = [
-      {
-        pubkey: payer,
-        isSigner: true,
-        isWritable: true,
-      },
-      {
-        pubkey: associatedToken,
-        isSigner: false,
-        isWritable: true,
-      },
-      {
-        pubkey: source,
-        isSigner: false,
-        isWritable: false,
-      },
-      {
-        pubkey: mintKey,
-        isSigner: false,
-        isWritable: false,
-      },
-      {
-        pubkey: SystemProgram.programId,
-        isSigner: false,
-        isWritable: false,
-      },
-      {
-        pubkey: TOKEN_PROGRAM_ID,
-        isSigner: false,
-        isWritable: false,
-      },
-      {
-        pubkey: SYSVAR_RENT_PUBKEY,
-        isSigner: false,
-        isWritable: false,
-      },
-    ];
-    return new TransactionInstruction({
-      keys,
-      programId: Constants.SPL_ASSOCIATED_TOKEN_PROGRAM_ID,
-      data: Buffer.from([]),
-    });
   }
 }

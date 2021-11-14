@@ -9,32 +9,25 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import {Transaction, SplToken, Node, Result} from '../../';
+import {
+  Append,
+  Transaction,
+  Node,
+  Result
+} from '../../';
 
 export namespace SplNft {
-
   const NFT_AMOUNT = 1;
   const NFT_DECIMAL = 0;
-
-  export const create = (
-    source: PublicKey,
-    feePayer: Keypair,
-  ): Promise<Result<string, Error>> => {
-    return SplToken.create(
-      source,
-      feePayer,
-      NFT_AMOUNT,
-      NFT_DECIMAL,
-    );
-  }
 
   export const transfer = (
     tokenKey: PublicKey,
     source: PublicKey,
     dest: PublicKey,
-  ) => async (append: Transaction.AppendValue)
+    signers: Keypair[]
+  ) => async (append: Append.Value)
       : Promise<Result<TransactionSignature, Error>> => {
-      const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, append.signers[0]);
+      const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, signers[0]);
       const sourceToken = await token.getOrCreateAssociatedAccountInfo(source)
         .then(Result.ok)
         .catch(Result.err);
@@ -53,7 +46,7 @@ export namespace SplNft {
         tokenKey,
         destToken.value.address,
         source,
-        append.signers,
+        signers,
         NFT_AMOUNT,
         NFT_DECIMAL
       );
@@ -63,9 +56,8 @@ export namespace SplNft {
           ? new Array(append.txInstructions, [param]).flat()
           : [param];
 
-      return await Transaction.sendInstruction()
+      return await Transaction.sendInstruction(signers)
         ({
-          signers: append.signers,
           txInstructions: instructions
         });
     }

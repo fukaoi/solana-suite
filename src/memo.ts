@@ -1,11 +1,13 @@
 import {
   ParsedConfirmedTransaction,
   ParsedInstruction,
+  PublicKey,
   TransactionInstruction,
+  Signer,
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-import {Constants} from './';
+import {Constants, Instruction} from './';
 
 export namespace Memo {
   export const decode = (encoded: string): string =>
@@ -13,16 +15,40 @@ export namespace Memo {
 
   export const encode = (data: string): Buffer => Buffer.from(data);
 
-  export const createInstruction = (data: string):
-    TransactionInstruction => {
-    return new TransactionInstruction({
+  export const create = (
+    data: string,
+    signers: Signer[],
+    owners: PublicKey[] = [],
+    feePayer?: Signer,
+  )
+    : Instruction => {
+
+    const key =
+      owners.length > 0
+        ?
+        owners.map(owner => {
+          return {
+            pubkey: owner,
+            isSigner: true,
+            isWritable: true
+          }
+        }
+        )
+        : [];
+
+    const instruction = new TransactionInstruction({
       programId: Constants.MEMO_PROGRAM_ID,
       data: encode(data),
-      keys: []
+      keys: key
     });
+    return new Instruction(
+      [instruction],
+      signers,
+      feePayer,
+    );
   };
 
-  export const parseInstruction = (tx: ParsedConfirmedTransaction):
+  export const parse = (tx: ParsedConfirmedTransaction):
     string => {
     const res = tx.transaction.message.instructions.filter(d => {
       const value = d as ParsedInstruction;

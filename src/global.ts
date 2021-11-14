@@ -1,10 +1,11 @@
 import {
   PublicKey,
-  Keypair
+  Keypair,
+  TransactionSignature,
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-import {Constants, Result} from './';
+import {Constants, Result, Instruction, InstructionSubmit} from './';
 
 declare global {
   interface String {
@@ -13,6 +14,14 @@ declare global {
     toSigUrl(): string;
     toAddressUrl(): string;
   }
+
+  interface Array<T> {
+    submit(): Promise<Result<InstructionSubmit, Error>>;
+  }
+}
+
+Array.prototype.submit = async function () {
+  return await Instruction.batchSubmit(this);
 }
 
 String.prototype.toPubKey = function () {

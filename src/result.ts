@@ -1,5 +1,8 @@
 // fork: https://github.com/badrap/result
 
+import {TransactionSignature} from '@solana/web3.js';
+import {Instruction} from './instruction';
+
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
     ok: (value: T) => Result<X, U>,
@@ -60,6 +63,13 @@ abstract class AbstractResult<T, E extends Error> {
   ): void | Promise<void> {
     this._chain(ok, err || (error => Result.err(error)));
   }
+
+  //// submit (alias Instruction.submit) ////
+  // submit<Instruction>(
+  // ): Promise<Result<TransactionSignature, Error>> {
+    // const inst = this.unwrap();
+    // return (inst as Instruction).submit();
+  // }
 }
 
 class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
@@ -101,7 +111,7 @@ export namespace Result {
   }
   export function err<E extends Error, T = never>(error?: E): Result<T, E>
   export function err<E extends Error, T = never>(error: E): Result<T, E> {
-    return new InternalErr(error || new Error());
+    return new InternalErr(error || Error());
   }
 
   type U = Result<unknown>;

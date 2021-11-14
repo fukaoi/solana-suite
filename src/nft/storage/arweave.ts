@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {Constants, Util, SolNative, Result} from '../../'
+import {Constants, Util, SolNative, Result, Instruction} from '../../'
 import {Storage} from './';
 import fetch from 'cross-fetch';
 import FormData from 'form-data';
@@ -184,18 +184,23 @@ export namespace StorageArweave {
     const totalConst = await calculateArweave(fileBuffers);
     if (totalConst.isErr) return Result.err(totalConst.error);
 
-    const sig =
+    const inst =
       await SolNative.transfer(
         payer.publicKey,
         Constants.AR_SOL_HOLDER_ID,
+        [payer],
         totalConst.value
-      )({
-        signers: [payer]
-      })
-        .then(Result.ok)
-        .catch(Result.err);
+      );
 
-    if (sig.isErr) return sig.error;
+    if (inst.isErr) {
+      return Result.err(inst.error);
+    } else {
+      const sig = await inst.unwrap().submit();
+      if (sig.isErr) {
+        return Result.err(sig.error);
+      }
+    }
+
 
     // todo: No support FormData
     const res = await uploadServer(formData as any)
@@ -204,7 +209,7 @@ export namespace StorageArweave {
 
     if (res.isErr) return res.error;
     const manifest = (res.value.unwrap() as ArweaveResult).messages[0];
-    if (!manifest) return Result.err(new Error('Invalid manifest data'));
+    if (!manifest) return Result.err(Error('Invalid manifest data'));
     return Result.ok(`${Constants.ARWEAVE_GATEWAY_URL}/${manifest!.transactionId}`);
   }
 }

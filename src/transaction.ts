@@ -5,23 +5,17 @@ import {
   TransactionInstruction,
   TransactionSignature,
   SystemProgram,
-  Signer,
   ParsedConfirmedTransaction,
   Commitment,
   RpcResponseAndContext,
   SignatureResult,
   ConfirmedSignatureInfo,
+  Keypair,
 } from '@solana/web3.js';
 
-import {Node, Result} from './';
-import {Constants} from './constants';
+import {Node, Result, Append, Constants} from './';
 
 export namespace Transaction {
-  export interface AppendValue {
-    signers: Signer[],
-    feePayer?: PublicKey,
-    txInstructions?: TransactionInstruction[],
-  }
 
   export const get = async (signature: string):
     Promise<Result<ParsedConfirmedTransaction | unknown, Error>> =>
@@ -62,27 +56,56 @@ export namespace Transaction {
       .catch(Result.err);
   }
 
-  export const sendInstruction = () =>
-    async (append: AppendValue)
+  export const sendInstruction = (
+    signers: Keypair[]
+  ) =>
+    async (append: Append.Value)
       : Promise<Result<TransactionSignature, Error>> => {
 
       if (!append.txInstructions)
-        return Result.err(new Error('Need set TransactionInstructions'));
+        return Result.err(Error('Need set TransactionInstructions'));
 
-      const tx = new SolanaTransaction().add(append.txInstructions[0]);
+      const t = new SolanaTransaction();
 
-      if (append.txInstructions[1]) {
-        append.txInstructions.slice(1, append.txInstructions.length)
-          .forEach((st: TransactionInstruction) => tx.add(st));
+      // Check comformability of fee payer
+      if (append?.feePayer) {
+        if (!Append.isInFeePayer(append.feePayer, signers))
+          return Result.err(Error('Not found fee payer secret key in signers'));
+        t.feePayer = Append.extractFeePayerKeypair(
+          signers,
+          append?.feePayer,
+        )[0].publicKey;
+      } else {
+        t.feePayer = signers[0].publicKey;
       }
 
-      if (!append.signers)
-        return Result.err(new Error('Need set signers'));
+      if (append?.multiSig) {
+        let onlySigners = signers;
+        if (append?.feePayer) {
+          const extracted = await Append.extractMultiSigKeypair(
+            signers,
+            append.multiSig,
+          );
+          if (extracted.isErr) return Result.err(extracted.error);
+          onlySigners = extracted.value as Keypair[];
+
+        }
+        const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
+        if (multiSigRes.isErr) return Result.err(multiSigRes.error);
+
+        if (!multiSigRes.value)
+          return Result.err(Error('Not found singer of multiSig in signers'));
+
+      }
+
+      append.txInstructions.forEach(
+        (instruction: TransactionInstruction) => t.add(instruction)
+      );
 
       return await sendAndConfirmTransaction(
         Node.getConnection(),
-        tx,
-        append.signers,
+        t,
+        signers,
       )
         .then(Result.ok)
         .catch(Result.err);
@@ -91,8 +114,9 @@ export namespace Transaction {
   export const send = (
     source: PublicKey,
     destination: PublicKey,
+    signers: Keypair[],
     amount: number,
-  ) => async (append: AppendValue)
+  ) => async (append?: Append.Value)
       : Promise<Result<TransactionSignature, Error>> => {
       const params =
         SystemProgram.transfer({
@@ -102,25 +126,47 @@ export namespace Transaction {
         });
 
       const t = new SolanaTransaction();
-      if (!append.feePayer) {
-        t.feePayer = append.signers[0].publicKey;
+
+      // Check comformability of fee payer
+      if (append?.feePayer) {
+        // if (!Append.isInFeePayer(append.feePayer, signers))
+          // return Result.err(Error('Not found fee payer secret key in signers'));
+        t.feePayer = Append.extractFeePayerKeypair(
+          signers,
+          append?.feePayer,
+        )[0].publicKey;
       } else {
-        // check existed fee payer address in signers
-        const addresses = append.signers.map(s => s.publicKey.toBase58());
-        if (!addresses.indexOf(append.feePayer.toBase58())) {
-          return Result.err(new Error('Need include fee payer keypair in signers'));
-        }
-        t.feePayer = append.feePayer;
+        t.feePayer = signers[0].publicKey;
       }
 
+      // console.log('feePayer: ', t.feePayer.toBase58());
+      // console.log('signers: ', signers.map(s => s.publicKey.toBase58()));
+
+      // if (append?.multiSig) {
+        // let onlySigners = signers;
+        // if (append?.feePayer) {
+          // const extracted = await Append.extractMultiSigKeypair(
+            // signers,
+            // append.multiSig,
+          // );
+          // if (extracted.isErr) return Result.err(extracted.error);
+          // onlySigners = extracted.value as Keypair[];
+        // }
+        // const multiSigRes = await Append.isInMultisig(append.multiSig, onlySigners);
+        // if (multiSigRes.isErr) return Result.err(multiSigRes.error);
+
+        // if (!multiSigRes.value)
+          // return Result.err(Error('Not found singer of multiSig in signers'));
+      // }
+
       const tx = t.add(params);
-      if (append.txInstructions)
+      if (append?.txInstructions)
         append.txInstructions.forEach((st: TransactionInstruction) => tx.add(st));
 
       return await sendAndConfirmTransaction(
         Node.getConnection(),
         tx,
-        append.signers,
+        signers,
       )
         .then(Result.ok)
         .catch(Result.err);

@@ -1,9 +1,9 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Memo, Wallet, Transaction} from '../src';
+import {Memo, Wallet} from '../src';
 
-let source: Wallet.KeyPair;
+let source: Wallet.KeypairStr;
 const DUMMY_DATA = 'dummy memo data';
 
 describe('Memo', () => {
@@ -18,8 +18,8 @@ describe('Memo', () => {
     assert.equal(res.length, 15);
   });
 
-  it('createInstruction', async () => {
-    const res = Memo.createInstruction(DUMMY_DATA);
+  it('create instruction', async () => {
+    const res = Memo.create(DUMMY_DATA, [source.secret.toKeypair()]);
     console.log(`# create: `, res);
     assert.isObject(res);
   });
@@ -32,15 +32,13 @@ describe('Memo', () => {
   });
 
   it('send memo by own', async () => {
-    const memoInst = Memo.createInstruction('{"memo": 123456789}');
-    const res =
-      await Transaction.sendInstruction()({
-        signers: [source.secret.toKeypair()],
-        txInstructions: [memoInst],
-      });
+    const inst = Memo.create(
+      '{"memo": 123456789}',
+      [source.secret.toKeypair()]
+    );
 
-    if (res.isErr) console.error(res.error);
+    const res = await inst.submit();
+    assert.isTrue(res.isOk, res.unwrap().sig);
     console.log('# tx signature: ', res.unwrap());
-    assert.isNotTrue(res.isErr);
   });
 })

@@ -3,16 +3,16 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
+
 import {
-  Keypair,
   ParsedConfirmedTransaction,
   ParsedInstruction,
   PublicKey,
   TokenBalance,
-  TransactionSignature,
+  Signer,
 } from '@solana/web3.js';
 
-import {Transaction, Node, Result} from './';
+import {Transaction, Node, Result, Instruction, Util, } from './';
 
 export namespace SplToken {
   export interface TransferHistory {
@@ -54,7 +54,7 @@ export namespace SplToken {
     }
   }
 
-  const convertTimestmapToDate = (blockTime: number) =>
+  const convertTimestmapToDate = (blockTime: number): Date =>
     new Date(blockTime * 1000);
 
   export const subscribeAccount = (
@@ -63,7 +63,9 @@ export namespace SplToken {
   ): number => {
     return Node.getConnection().onAccountChange(pubkey, async () => {
       const res = await SplToken.getTransferHistory(pubkey, 1);
-      if (res.isErr) return res;
+      if (res.isErr) {
+        return res;
+      }
       callback((res.value as TransferHistory[])[0]);
     });
   }
@@ -79,7 +81,9 @@ export namespace SplToken {
   ): Promise<Result<TransferHistory[], Error>> => {
     const transactions = await Transaction.getAll(pubkey, limit);
 
-    if (transactions.isErr) return transactions as Result<[], Error>;
+    if (transactions.isErr) {
+      return transactions as Result<[], Error>;
+    }
 
     const hist: TransferHistory[] = [];
     for (const tx of transactions.unwrap() as ParsedConfirmedTransaction[]) {
@@ -100,12 +104,14 @@ export namespace SplToken {
   ): Promise<Result<TransferDestinationList[], Error>> => {
     const transactions = await Transaction.getAll(pubkey);
 
-    if (transactions.isErr) return Result.err(transactions.error);
+    if (transactions.isErr) {
+      return Result.err(transactions.error);
+    }
 
     const hist: TransferDestinationList[] = [];
     for (const tx of transactions.unwrap() as ParsedConfirmedTransaction[]) {
       const posts = tx.meta?.postTokenBalances as TokenBalance[];
-      if (posts.length > 1) {
+      if (!Util.isEmpty(posts.length)) {
         posts.forEach((p) => {
           const amount = p!.uiTokenAmount!.uiAmount as number;
           if (amount > 0) {
@@ -121,98 +127,112 @@ export namespace SplToken {
     return Result.ok(hist);
   }
 
-  export const create = async (
-    source: PublicKey,
-    feePayer: Keypair,
+  export const mint = async (
+    owner: PublicKey,
+    signers: Signer[],
     totalAmount: number,
     mintDecimal: number,
-  ): Promise<Result<string, Error>> => {
+    feePayer?: Signer,
+  ): Promise<Result<Instruction, Error>> => {
+
+    !feePayer && (feePayer = signers[0]);
 
     const tokenRes = await Token.createMint(
       Node.getConnection(),
       feePayer,
-      source,
-      null,
+      owner,
+      owner,
       mintDecimal,
       TOKEN_PROGRAM_ID
     )
       .then(Result.ok)
       .catch(Result.err);
 
-    if (tokenRes.isErr) return Result.err(tokenRes.error);
+    if (tokenRes.isErr) {
+      return Result.err(tokenRes.error);
+    }
 
     const token = tokenRes.value;
 
     const tokenAssociated =
-      await token.getOrCreateAssociatedAccountInfo(source)
+      await token.getOrCreateAssociatedAccountInfo(owner)
         .then(Result.ok)
         .catch(Result.err);
 
-    if (tokenAssociated.isErr) return Result.err(tokenAssociated.error);
+    if (tokenAssociated.isErr) {
+      return Result.err(tokenAssociated.error);
+    }
 
-    token.payer = feePayer;
-
-    const res = await token.mintTo(
+    const inst = Token.createMintToInstruction(
+      TOKEN_PROGRAM_ID,
+      token.publicKey,
       tokenAssociated.value.address,
-      source,
-      [],
-      totalAmount,
-    )
-      .then(Result.ok)
-      .catch(Result.err);
+      owner,
+      signers,
+      totalAmount
+    );
 
-    return (res as Result<string, Error>).chain(
-      (_value: string) => Result.ok(token.publicKey.toBase58()),
-      (error: Error) => Result.err(error)
+    return Result.ok(
+      new Instruction(
+        [inst],
+        signers,
+        feePayer,
+        token.publicKey.toBase58()
+      )
     );
   }
 
-  export const transfer = (
+  export const transfer = async (
     tokenKey: PublicKey,
-    source: PublicKey,
+    owner: PublicKey,
     dest: PublicKey,
+    signers: Signer[],
     amount: number,
     mintDecimal: number,
-  ) => async (append: Transaction.AppendValue)
-      : Promise<Result<TransactionSignature, Error>> => {
-      const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, append.signers[0]);
-      const sourceToken = await token.getOrCreateAssociatedAccountInfo(source)
-        .then(Result.ok)
-        .catch(Result.err);
+    feePayer?: Signer,
+  ): Promise<Result<Instruction, Error>> => {
 
-      if (sourceToken.isErr) return Result.err(sourceToken.error);
+    !feePayer && (feePayer = signers[0]);
 
-      const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
-        .then(Result.ok)
-        .catch(Result.err);
+    const token = new Token(
+      Node.getConnection(),
+      tokenKey,
+      TOKEN_PROGRAM_ID,
+      feePayer
+    );
 
-      if (destToken.isErr) return Result.err(destToken.error);
+    const sourceToken = await token.getOrCreateAssociatedAccountInfo(owner)
+      .then(Result.ok)
+      .catch(Result.err);
 
-      const param = Token.createTransferCheckedInstruction(
-        TOKEN_PROGRAM_ID,
-        sourceToken.value.address,
-        tokenKey,
-        destToken.value.address,
-        source,
-        append.signers,
-        amount,
-        mintDecimal
-      );
-
-      const instructions =
-        append.txInstructions
-          ? new Array(append.txInstructions, [param]).flat()
-          : [param];
-      return Transaction.send(
-        source,
-        dest,
-        amount,
-      )(
-        {
-          signers: append.signers,
-          feePayer: append.feePayer,
-          txInstructions: instructions
-        }
-      );
+    if (sourceToken.isErr) {
+      return Result.err(sourceToken.error);
     }
+
+    const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (destToken.isErr) {
+      return Result.err(destToken.error);
+    }
+
+    const inst = Token.createTransferCheckedInstruction(
+      TOKEN_PROGRAM_ID,
+      sourceToken.value.address,
+      tokenKey,
+      destToken.value.address,
+      owner,
+      signers,
+      amount,
+      mintDecimal
+    );
+
+    return Result.ok(
+      new Instruction(
+        [inst],
+        signers,
+        feePayer
+      ));
+  }
 }

@@ -1,6 +1,7 @@
 {
   "name": "solana-suite",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "version": "0.0.1",
   "engines": {
     "node": "14.x"
@@ -20,6 +21,7 @@
     "postinstall": "npm run build"
   },
   "dependencies": {
+    "@solana/buffer-layout": "^3.0.0",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.29.2",
     "@tsconfig/node14": "^1.0.1",

@@ -11,9 +11,130 @@ import {
 
 import {Metaplex, MetaplexSerialize, MetaplexInstructure} from './index';
 import {Node, Wallet, Constants, Result} from '../../index';
-import {Token} from '@solana/spl-token';
+import {
+  Token,
+  TOKEN_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+} from '@solana/spl-token';
 
 export namespace MetaplexMetaData {
+  const createAssociatedTokenAccountInstruction = (
+    metaAccount: PublicKey,
+    tokenKey: PublicKey,
+    mintAuthorityKey: PublicKey,
+    updateAuthority: PublicKey,
+    payer: PublicKey,
+    txnData: Buffer,
+    multiSig?: PublicKey,
+    multiSigSignerPubkey?: PublicKey[]
+  ) => {
+    const keys = [
+      {
+        pubkey: metaAccount,
+        isSigner: false,
+        isWritable: true,
+      },
+      {
+        pubkey: tokenKey,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: mintAuthorityKey,
+        isSigner: true,
+        isWritable: false,
+      },
+      {
+        pubkey: payer,
+        isSigner: true,
+        isWritable: false,
+      },
+      {
+        pubkey: updateAuthority,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: SystemProgram.programId,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: SYSVAR_RENT_PUBKEY,
+        isSigner: false,
+        isWritable: false,
+      },
+    ];
+    // console.log(keys);
+
+    if (multiSig && multiSigSignerPubkey) {
+      multiSigSignerPubkey.forEach(m => keys.push(
+        {
+          pubkey: m,
+          isSigner: true,
+          isWritable: false
+        }
+      ));
+    }
+
+    console.log(keys.map(k => k.pubkey.toBase58()));
+    return new TransactionInstruction({
+      keys,
+      programId: Constants.METAPLEX_PROGRAM_ID,
+      data: txnData,
+    })
+  }
+
+  const updateAssociatedTokenAccountInstruction = (
+    associatedToken: PublicKey,
+    payer: PublicKey,
+    source: PublicKey,
+    mintKey: PublicKey,
+  ) => {
+    const keys = [
+      {
+        pubkey: payer,
+        isSigner: true,
+        isWritable: true,
+      },
+      {
+        pubkey: associatedToken,
+        isSigner: false,
+        isWritable: true,
+      },
+      {
+        pubkey: source,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: mintKey,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: SystemProgram.programId,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: TOKEN_PROGRAM_ID,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: SYSVAR_RENT_PUBKEY,
+        isSigner: false,
+        isWritable: false,
+      },
+    ];
+    return new TransactionInstruction({
+      keys,
+      programId: ASSOCIATED_TOKEN_PROGRAM_ID,
+      data: Buffer.from([]),
+    });
+  }
+
   export const getByTokenKey = async (tokenKey: PublicKey):
     Promise<Result<Metaplex.Format, Error>> => {
     const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
@@ -40,7 +161,7 @@ export namespace MetaplexMetaData {
     // Get all token by owner
     const tokens = await Node.getConnection().getParsedTokenAccountsByOwner(
       owner,
-      {programId: Constants.SPL_TOKEN_PROGRAM_ID}
+      {programId: TOKEN_PROGRAM_ID}
     )
       .then(Result.ok)
       .catch(Result.err);
@@ -67,7 +188,7 @@ export namespace MetaplexMetaData {
     payer: PublicKey,
     mintAuthorityKey = payer,
     updateAuthority = payer,
-  ) => async (instructions?: TransactionInstruction[]):
+  ) => async (instructions?: TransactionInstruction[], multiSig?: PublicKey, multiSigSignerPubkey?: PublicKey[]):
       Promise<Result<PublicKey | TransactionInstruction[], Error>> => {
       let inst: TransactionInstruction[] = [];
       inst = instructions ? instructions : inst;
@@ -76,49 +197,17 @@ export namespace MetaplexMetaData {
 
       const txnData = MetaplexSerialize.serializeCreateArgs(data);
 
-      const keys = [
-        {
-          pubkey: metaAccount.value as PublicKey,
-          isSigner: false,
-          isWritable: true,
-        },
-        {
-          pubkey: tokenKey,
-          isSigner: false,
-          isWritable: false,
-        },
-        {
-          pubkey: mintAuthorityKey,
-          isSigner: true,
-          isWritable: false,
-        },
-        {
-          pubkey: payer,
-          isSigner: true,
-          isWritable: false,
-        },
-        {
-          pubkey: updateAuthority,
-          isSigner: false,
-          isWritable: false,
-        },
-        {
-          pubkey: SystemProgram.programId,
-          isSigner: false,
-          isWritable: false,
-        },
-        {
-          pubkey: SYSVAR_RENT_PUBKEY,
-          isSigner: false,
-          isWritable: false,
-        },
-      ];
       inst.push(
-        new TransactionInstruction({
-          keys,
-          programId: Constants.METAPLEX_PROGRAM_ID,
-          data: txnData,
-        })
+        createAssociatedTokenAccountInstruction(
+          metaAccount.unwrap(),
+          tokenKey,
+          mintAuthorityKey,
+          updateAuthority,
+          payer,
+          txnData,
+          multiSig,
+          multiSigSignerPubkey,
+        )
       );
       return Result.ok(inst);
     }
@@ -143,7 +232,7 @@ export namespace MetaplexMetaData {
       if (associatedToken.isErr) return associatedToken;
 
       inst.push(
-        Wallet.createAssociatedTokenAccountInstruction(
+        updateAssociatedTokenAccountInstruction(
           associatedToken.value as PublicKey,
           updateAuthority,
           updateAuthority,
@@ -153,7 +242,7 @@ export namespace MetaplexMetaData {
 
       inst.push(
         Token.createMintToInstruction(
-          Constants.SPL_TOKEN_PROGRAM_ID,
+          TOKEN_PROGRAM_ID,
           tokenKey,
           associatedToken.value as PublicKey,
           updateAuthority,

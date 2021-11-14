@@ -1,11 +1,15 @@
-import {Token, MintLayout} from '@solana/spl-token';
+import {
+  Token,
+  MintLayout,
+  TOKEN_PROGRAM_ID
+} from '@solana/spl-token';
 import {
   Keypair,
   PublicKey,
   SystemProgram, TransactionInstruction,
 } from '@solana/web3.js';
 
-import {Constants, Node, Transaction, Result} from '../../';
+import {Node, Transaction, Result, Append} from '../../';
 import {MetaplexMetaData, MetaplexInstructure} from './';
 
 export * from './instructure';
@@ -30,7 +34,7 @@ export namespace Metaplex {
         newAccountPubkey: mintAccount.publicKey,
         lamports: mintRentExempt,
         space: MintLayout.span,
-        programId: Constants.SPL_TOKEN_PROGRAM_ID,
+        programId: TOKEN_PROGRAM_ID,
       }),
     );
 
@@ -49,7 +53,7 @@ export namespace Metaplex {
 
     instructions.push(
       Token.createInitMintInstruction(
-        Constants.SPL_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
         mintAccount,
         decimals,
         owner,
@@ -111,44 +115,43 @@ export namespace Metaplex {
     return {instructions: inst, signers, tokenKey};
   }
 
-  export const mint = async (
+  export const mint = (
     data: MetaplexInstructure.Data,
-    owner: Keypair,
-  ): Promise<Result<MintResult, Error>> => {
-    const txsign = await create(owner.publicKey, [owner])();
+    owner: PublicKey,
+    signers: Keypair[],
+  ) => async (append?: Append.Value)
+      : Promise<Result<MintResult, Error>> => {
+      const txsign = await create(append!.feePayer!, [signers[0]])();
 
-    const metadataInst = await MetaplexMetaData.create(
-      data,
-      txsign.tokenKey.toPubKey(),
-      owner.publicKey,
-    )(txsign.instructions);
-
-    if (metadataInst.isErr) return Result.err(metadataInst.error);
-
-    const updateTx = await MetaplexMetaData.update(
-      data,
-      undefined,
-      undefined,
-      txsign.tokenKey.toPubKey(),
-      owner.publicKey,
-      [owner],
-    )(metadataInst.value as TransactionInstruction[]);
-
-    if (updateTx.isErr) return Result.err(updateTx.error);
-
-    const signature = await Transaction.sendInstruction()
-      ({
-        signers: txsign.signers,
-        txInstructions: updateTx.value as TransactionInstruction[]
-      });
-
-    if (signature.isErr) return Result.err(signature.error);
-
-    return Result.ok(
-      {
-        tokenKey: txsign.tokenKey,
-        signature: signature.value
+      const multiSigSignerPubkey = [];
+      for (let i = 1; i < signers.length; i++) {
+        multiSigSignerPubkey.push(signers[i].publicKey);
       }
-    );
-  }
+
+      const metadataInst = await MetaplexMetaData.create(
+        data,
+        txsign.tokenKey.toPubKey(),
+        append!.feePayer!,
+        owner,
+        owner
+      )(txsign.instructions, append!.multiSig!, multiSigSignerPubkey);
+
+      const merged = txsign.signers.concat(signers);
+
+      if (metadataInst.isErr) return Result.err(metadataInst.error);
+
+      const signature = await Transaction.sendInstruction(merged)
+        ({
+          txInstructions: metadataInst.value as TransactionInstruction[]
+        });
+
+      if (signature.isErr) return Result.err(signature.error);
+
+      return Result.ok(
+        {
+          tokenKey: txsign.tokenKey,
+          signature: signature.value
+        }
+      );
+    }
 }
