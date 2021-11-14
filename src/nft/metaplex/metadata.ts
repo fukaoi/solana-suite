@@ -167,13 +167,16 @@ export namespace MetaplexMetaData {
       .catch(Result.err);
 
     if (tokens.isErr) return Result.err(tokens.error);
-    const arr = tokens.value as RpcResponseAndContext<{pubkey: PublicKey; account: AccountInfo<ParsedAccountData>}[]>;
+    const arr = tokens.value as RpcResponseAndContext<{
+      pubkey: PublicKey; 
+      account: AccountInfo<ParsedAccountData
+    >}[]>;
 
     const matches = [];
     // Filter only metaplex nft
     for (const token of arr.value) {
       const decoded = await getByTokenKey(
-        token.account.data.parsed.info.mint.toPubKey()
+        token.account.data.parsed.info.mint.toPubkey()
       );
       if (!decoded) continue;
       if (decoded.isErr) return Result.err(decoded.error);

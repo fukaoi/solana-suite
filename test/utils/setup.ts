@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {Constants, Account} from '../../src';
+import {Constants, Account, KeypairStr} from '../../src';
 
 console.debug(`\u001b[33m === DEBUG MODE ===`);
 console.debug(`\u001b[33m solana-network: ${Constants.currentNetwork}`);
@@ -8,13 +8,16 @@ export namespace Setup {
   const TEMP_KEYPAIR_FILE = `.solana-${Constants.currentNetwork}-keypair`;
 
   export const generatekeyPair = async ():
-    Promise<{source: Account.KeypairStr, dest: Account.KeypairStr}> => {
+    Promise<{source: KeypairStr, dest: KeypairStr}> => {
     const {source, dest} = await getSourceAndDest();
     debug(source, dest);
-    return {source: source, dest: dest};
+    return {
+      source: new KeypairStr(source.pubkey, source.secret), 
+      dest: new KeypairStr(dest.pubkey, dest.secret), 
+    };
   }
 
-  const debug = (source: Account.KeypairStr, dest: Account.KeypairStr) => {
+  const debug = (source: KeypairStr, dest: KeypairStr) => {
     console.debug(`# source.pubkey:`, source.pubkey);
     console.debug(`# source.secret: `, source.secret);
     console.debug(`# destination.pubkey:`, dest.pubkey);
@@ -24,7 +27,7 @@ export namespace Setup {
   const getSourceAndDest = async () => {
     if (fs.existsSync(TEMP_KEYPAIR_FILE)) {
       const obj = await loadTempFile();
-      const sourceBalance = await Account.getBalance(obj.source.pubkey.toPubKey());
+      const sourceBalance = await Account.getBalance(obj.source.pubkey.toPubkey());
       if (sourceBalance.isOk && sourceBalance.value < 0.1) {
         console.warn(`[Warning]source  alance is under 0.1 amount`);
         console.warn(`Reset setupKeyPair`);
@@ -44,15 +47,15 @@ export namespace Setup {
   const createTempFile = async () => {
     const source = Account.create();
     const dest = Account.create();
-    await Account.requestAirdrop(source.pubkey.toPubKey());
+    await Account.requestAirdrop(source.toPubkey());
     const data = templateKeyPair(source, dest);
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));
     return {source: source, dest: dest};
   }
 
   const templateKeyPair = (
-    source: Account.KeypairStr, 
-    dest: Account.KeypairStr
+    source: KeypairStr,
+    dest: KeypairStr
   ) => {
     return {
       source: {

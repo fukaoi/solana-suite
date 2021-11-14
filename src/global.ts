@@ -5,15 +5,16 @@ import {
 
 import bs from 'bs58';
 import {
-  Constants, 
-  Result, 
-  Instruction, 
-  InstructionSubmit, 
+  Constants,
+  Result,
+  Instruction,
+  InstructionSubmit,
 } from './';
+
 
 declare global {
   interface String {
-    toPubKey(): PublicKey;
+    toPubkey(): PublicKey;
     toKeypair(): Keypair;
     toSigUrl(): string;
     toAddressUrl(): string;
@@ -22,22 +23,13 @@ declare global {
   interface Array<T> {
     submit(): Promise<Result<InstructionSubmit, Error>>;
   }
-
-  // interface Account {
-    // toPubKey(): PublicKey;
-  // }
 }
-
-// Account.prototype.toPubKey = function() {
-  // return new PublicKey(this);
-// }
 
 Array.prototype.submit = async function () {
   return await Instruction.batchSubmit(this);
 }
 
-String.prototype.toPubKey = function () {
-  console.log(this);
+String.prototype.toPubkey = function () {
   return new PublicKey(this);
 }
 

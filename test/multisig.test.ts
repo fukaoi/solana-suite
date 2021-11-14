@@ -1,8 +1,8 @@
 import {assert} from 'chai';
-import {Multisig, Account} from '../src/';
+import {Multisig, Account, KeypairStr} from '../src/';
 import {Setup} from './utils/setup';
 
-let source: Account.KeypairStr;
+let source: KeypairStr;
 
 describe('Multisig', () => {
   before(async () => {
@@ -17,8 +17,8 @@ describe('Multisig', () => {
       2,
       source.secret.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
-        signer2.pubkey.toPubKey(),
+        signer1.toPubkey(),
+        signer2.toPubkey(),
       ],
     );
 
@@ -27,7 +27,7 @@ describe('Multisig', () => {
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     const address = (inst.unwrap().value as string);
     console.log('# multisig address: ', address);
-    const isAddress = await Multisig.isAddress(address.toPubKey());
+    const isAddress = await Multisig.isAddress(address.toPubkey());
     assert.isTrue(isAddress.isOk);
     assert.isTrue(isAddress.unwrap());
   });
@@ -37,15 +37,15 @@ describe('Multisig', () => {
     const signer2 = Account.create();
     const inst = await Multisig.create(
       2,
-      source.secret.toKeypair(),
+      source.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
-        signer2.pubkey.toPubKey(),
+        signer1.toPubkey(),
+        signer2.toPubkey(),
       ],
     );
 
     const address = (inst.unwrap().value as string);
-    const res = await Multisig.isAddress(address.toPubKey());
+    const res = await Multisig.isAddress(address.toPubkey());
     assert.isTrue(res.isOk);
     assert.isFalse(res.unwrap());
   });
@@ -55,10 +55,10 @@ describe('Multisig', () => {
     const signer2 = Account.create();
     const inst = await Multisig.create(
       2,
-      source.secret.toKeypair(),
+      source.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
-        signer2.pubkey.toPubKey(),
+        signer1.toPubkey(),
+        signer2.toPubkey(),
       ],
     );
 
@@ -74,11 +74,11 @@ describe('Multisig', () => {
     const signer3 = Account.create();
     const inst = await Multisig.create(
       2,
-      source.secret.toKeypair(),
+      source.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
-        signer2.pubkey.toPubKey(),
-        signer3.pubkey.toPubKey(),
+        signer1.toPubkey(),
+        signer2.toPubkey(),
+        signer3.toPubkey(),
       ],
     );
 
@@ -92,9 +92,9 @@ describe('Multisig', () => {
     const signer1 = Account.create();
     const res = await Multisig.create(
       2,
-      source.secret.toKeypair(),
+      source.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
+        signer1.toPubkey(),
       ],
     );
     assert.isTrue(res.isErr);
@@ -105,15 +105,17 @@ describe('Multisig', () => {
     const signer2 = Account.create();
     const inst = await Multisig.create(
       2,
-      source.secret.toKeypair(),
+      source.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
-        signer2.pubkey.toPubKey(),
+        signer1.toPubkey(),
+        signer2.toPubkey(),
       ],
     );
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     await inst.unwrap().submit();
-    const res = await Multisig.getMultisigInfo((inst.unwrap().value as string).toPubKey());
+    const res = await Multisig.getMultisigInfo(
+      (inst.unwrap().value as string).toPubkey()
+    );
     assert.isTrue(res.isOk, `${res.unwrap()}`);
   });
 })

@@ -1,10 +1,10 @@
 import {describe, it, before} from 'mocha';
-import {SolNative, Memo, Account, Multisig} from '../src';
+import {SolNative, Memo, Account, Multisig, KeypairStr} from '../src';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
 
-let source: Account.KeypairStr;
-let dest: Account.KeypairStr;
+let source: KeypairStr;
+let dest: KeypairStr;
 
 describe('SolNative', () => {
   before(async () => {
@@ -17,9 +17,9 @@ describe('SolNative', () => {
     const solAmount = 0.0001;
     const inst =
       await SolNative.transfer(
-        source.pubkey.toPubKey(),
-        dest.pubkey.toPubKey(),
-        [source.secret.toKeypair()],
+        source.toPubkey(),
+        dest.toPubkey(),
+        [source.toKeypair()],
         solAmount,
       );
 
@@ -33,13 +33,13 @@ describe('SolNative', () => {
     const solAmount = 0.0001;
     const inst1 = Memo.create(
       '{"tokenId": "dummy", "serialNo": "15/100"}',
-      [source.secret.toKeypair()]
+      [source.toKeypair()]
     );
 
     const inst2 = await SolNative.transfer(
-      source.pubkey.toPubKey(),
-      dest.pubkey.toPubKey(),
-      [source.secret.toKeypair()],
+      source.toPubkey(),
+      dest.toPubkey(),
+      [source.toKeypair()],
       solAmount,
     );
 
@@ -53,31 +53,36 @@ describe('SolNative', () => {
     const solAmount = 0.0001;
     const owner = Account.create();
     const feePayer = source;
-    const before = (await Account.getBalance(feePayer.pubkey.toPubKey())).unwrap();
+    const before = (await Account.getBalance(
+      feePayer.pubkey.toPubkey())
+    ).unwrap();
+
     const inst = await SolNative.transfer(
-      owner.pubkey.toPubKey(),
-      dest.pubkey.toPubKey(),
+      owner.toPubkey(),
+      dest.toPubkey(),
       [
-        owner.secret.toKeypair(),
+        owner.toKeypair(),
       ],
       solAmount,
-      feePayer.secret.toKeypair()
+      feePayer.toKeypair()
     );
 
     const res = await inst.unwrap().submit(); 
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# tx signature: ', res.unwrap().sig.toSigUrl());
-    const after = (await Account.getBalance(feePayer.pubkey.toPubKey())).unwrap();
+    const after = (await Account.getBalance(
+      feePayer.pubkey.toPubkey())
+    ).unwrap();
     assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
 
   it('Use internal multisigTransfer()', async () => {
     const amount = 0.0001;
     const inst = await SolNative.multisigTransfer(
-      source.pubkey.toPubKey(),
-      dest.pubkey.toPubKey(),
+      source.toPubkey(),
+      dest.toPubkey(),
       [
-        source.secret.toKeypair(),
+        source.toKeypair(),
       ],
       amount,
     );
@@ -91,10 +96,10 @@ describe('SolNative', () => {
     const signer2 = Account.create();
     const inst1 = await Multisig.create(
       2,
-      source.secret.toKeypair(),
+      source.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
-        signer2.pubkey.toPubKey(),
+        signer1.toPubkey(),
+        signer2.toPubkey(),
       ]
     );
 
@@ -104,15 +109,15 @@ describe('SolNative', () => {
     const multisig = (inst1.unwrap().value as string);
 
     const inst2 = await SolNative.multisigTransfer(
-      multisig.toPubKey(),
-      dest.pubkey.toPubKey(),
+      multisig.toPubkey(),
+      dest.toPubkey(),
       [
-        source.secret.toKeypair(),
-        signer1.secret.toKeypair(),
-        signer2.secret.toKeypair(),
+        source.toKeypair(),
+        signer1.toKeypair(),
+        signer2.toKeypair(),
       ],
       amount,
-      source.secret.toKeypair(),
+      source.toKeypair(),
     );
     assert.isTrue(inst2.isOk, `${inst2.unwrap()}`);
 

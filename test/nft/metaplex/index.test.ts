@@ -1,10 +1,10 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Account} from '../../../src';
+import {KeypairStr} from '../../../src';
 import {Metaplex, MetaplexInstructure} from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
 
-let source: Account.KeypairStr;
+let source: KeypairStr;
 
 describe('Metaplex', () => {
   before(async () => {
@@ -23,10 +23,10 @@ describe('Metaplex', () => {
 
     const res = await Metaplex.mint(
       data,
-      source.pubkey.toPubKey(),
-      [source.secret.toKeypair()],
+      source.toPubkey(),
+      [source.toKeypair()],
     )({
-      feePayer: source.pubkey.toPubKey()
+      feePayer: source.toPubkey()
     });
 
     assert.isTrue(res.isOk);
@@ -45,12 +45,12 @@ describe('Metaplex', () => {
 
     const res = await Metaplex.mint(
       data,
-      source.pubkey.toPubKey(),
+      source.toPubkey(),
       [
-        source.secret.toKeypair(),
+        source.toKeypair(),
       ]
     )({
-      feePayer: source.pubkey.toPubKey(),
+      feePayer: source.toPubkey(),
     });
 
     assert.isTrue(res.isOk, res.unwrap().toString());

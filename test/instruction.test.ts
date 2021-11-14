@@ -1,21 +1,22 @@
 import {describe, it} from 'mocha';
-import {Memo, Account} from '../src';
+import {Memo, KeypairStr} from '../src';
 import {Setup} from '../test/utils/setup';
 import {assert} from 'chai';
 
-let source: Account.KeypairStr;
+let source: KeypairStr;
 
 describe('Instruction', () => {
   before(async () => {
     const obj = await Setup.generatekeyPair();
     source = obj.source;
+    console.log(source);
   });
 
   it('Submit instruction', async () => {
     const inst =
       Memo.create(
         '{"title": "Submit first instruction"}',
-        [source.secret.toKeypair()],
+        [source.toKeypair()],
       );
 
     const res = await inst.submit();
@@ -26,13 +27,13 @@ describe('Instruction', () => {
     const inst1 =
       Memo.create(
         '{"title": "Submit first instruction"}',
-        [source.secret.toKeypair()],
+        [source.toKeypair()],
       );
 
     const inst2 =
       Memo.create(
         '{"title": "Submit first instruction"}',
-        [source.secret.toKeypair()],
+        [source.toKeypair()],
       );
 
     const res = await [inst1, inst2].submit();

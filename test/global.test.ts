@@ -2,12 +2,11 @@ import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import '../src/global';
 import {tryCatch} from '../src/global';
-import {Account} from '../src';
 
 describe('Global', () => {
   it('Convert string to PublicKey', async () => {
     const str = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
-    const res = str.toPubKey();
+    const res = str.toPubkey();
     assert.equal(res.constructor.name, 'PublicKey');
   });
 
@@ -43,13 +42,4 @@ describe('Global', () => {
       'error test', {title: 'error'}, () => {return}
     );
   });
-
-  it('string to PublicKey', async () => {
-    '6KJBDz6qPZZyJ9gAWXSgHufqAzU8pnhQmVdTitfusYS5'.toPubKey();
-  });
-
-  // it('Account to PublicKey', async () => {
-    // const account = Account.create();
-    // account.toPubKey();
-  // });
 })
