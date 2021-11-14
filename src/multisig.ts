@@ -53,12 +53,12 @@ export namespace MultisigInstruction {
 
   export const multisig = (
     m: number,
-    account: Signer,
+    feePayer: Signer,
     signerPubkey: PublicKey[]
   ): TransactionInstruction => {
     const keys = [
       {
-        pubkey: account.publicKey,
+        pubkey: feePayer.publicKey,
         isSigner: false,
         isWritable: true
       },
