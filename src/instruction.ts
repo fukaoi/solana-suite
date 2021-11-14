@@ -63,7 +63,7 @@ export class Instruction {
     const feePayers = arr.filter(a => a.feePayer !== undefined);
     let feePayer = signers[0];
     if (feePayers.length > 0) {
-      feePayer = feePayers[0].feePayer!; 
+      feePayer = feePayers[0].feePayer!;
     }
     const values = arr.map(a => {if (a.value) return a.value});
 
