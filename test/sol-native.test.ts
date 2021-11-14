@@ -66,77 +66,58 @@ describe('SolNative', () => {
   // const after = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
   // assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   // });
+  
+ it('Use internal multisigTransfer()', async () => {
+    const amount = 0.0001;
+    const inst = await SolNative.multisigTransfer(
+      source.pubkey.toPubKey(),
+      destination.pubkey.toPubKey(),
+      [
+        source.secret.toKeypair()
+      ],
+      amount,
+    );
+    const res = await inst.unwrap().submit();
+    assert.isTrue(res.isOk, `${res.unwrap()}`);
+    console.log('# signature :', res.unwrap().sig.toSigUrl());
+  });
 
-  // it('transfer transaction with multi sig', async () => {
-  // const signer1 = Wallet.create();
-  // const signer2 = Wallet.create();
-  // const feePayer = source;
-  // const multi = await Multisig.create(
-  // 2,
-  // feePayer.secret.toKeypair(),
-  // [
-  // signer1.pubkey.toPubKey(),
-  // signer2.pubkey.toPubKey(),
-  // ]
-  // )();
+  it.only('transfer transaction with multi sig', async () => {
+    const signer1 = Wallet.create();
+    const signer2 = Wallet.create();
+    const inst1 = await Multisig.create(
+      2,
+      source.secret.toKeypair(),
+      [
+        signer1.pubkey.toPubKey(),
+        signer2.pubkey.toPubKey(),
+      ]
+    );
 
-  // assert.isTrue(multi.isOk, multi.unwrap());
-  // const before = (await Wallet.getBalance(destination.pubkey.toPubKey())).unwrap();
-  // const amount = 0.0001;
+    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
+    const multiRes = await inst1.unwrap().submit();
 
-  // const res = await SolNative.transfer(
-  // multi.unwrap().toPubKey(),
-  // destination.pubkey.toPubKey(),
-  // [
-  // source.secret.toKeypair(),
-  // signer1.secret.toKeypair(),
-  // signer2.secret.toKeypair(),
-  // ],
-  // amount,
-  // )({
-  // multiSig: multi.unwrap().toPubKey()
-  // });
-  // assert.isTrue(res.isOk, res.unwrap().toString());
-  // const after = (await Wallet.getBalance(destination.pubkey.toPubKey())).unwrap();
-  // assert.isTrue(after > before);
-  // });
+    const amount = 0.0001;
+    const multisig = (multiRes.unwrap().value as string);
 
-  // it('transfer transaction with multi sig and fee payer', async () => {
+    console.log('# multisig address: ', multisig);
 
-  // const signer1 = Wallet.create();
-  // const signer2 = Wallet.create();
-  // const feePayer = Wallet.create();
+    const inst2 = await SolNative.transfer(
+      multisig.toPubKey(),
+      destination.pubkey.toPubKey(),
+      [
+        signer1.secret.toKeypair(),
+        signer2.secret.toKeypair(),
+      ],
+      amount,
+      source.secret.toKeypair(),
+    );
+    assert.isTrue(inst2.isOk, `${inst2.unwrap()}`);
 
-  // const airdropRes = await Wallet.requestAirdrop(feePayer.pubkey.toPubKey()); 
-  // assert.isTrue(airdropRes.isOk, airdropRes.unwrap()); 
-  // const before = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
+    console.log(inst2);
+    // const res = await [inst1.unwrap(), inst2.unwrap()].submit();
+    const res = await inst2.unwrap().submit();
+    // assert.isTrue(res.isOk, res.unwrap().toString());
 
-  // const multi = await Multisig.create(
-  // 2,
-  // feePayer.secret.toKeypair(),
-  // [
-  // signer1.pubkey.toPubKey(),
-  // signer2.pubkey.toPubKey(),
-  // ]
-  // )();
-
-  // assert.isTrue(multi.isOk, multi.unwrap());
-  // const amount = 0.0001;
-
-  // const res = await SolNative.transfer( multi.unwrap().toPubKey(),
-  // destination.pubkey.toPubKey(),
-  // [
-  // feePayer.secret.toKeypair(),
-  // signer1.secret.toKeypair(),
-  // signer2.secret.toKeypair(),
-  // ],
-  // amount,
-  // )({
-  // multiSig: multi.unwrap().toPubKey(),
-  // feePayer: feePayer.pubkey.toPubKey()
-  // });
-  // assert.isTrue(res.isOk, res.unwrap().toString());
-  // const after = (await Wallet.getBalance(feePayer.pubkey.toPubKey())).unwrap();
-  // assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
-  // });
+  });
 })

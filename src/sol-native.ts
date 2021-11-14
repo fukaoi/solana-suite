@@ -13,12 +13,15 @@ import {
   Constants
 } from './';
 import {Instruction} from './instruction';
+import {Multisig} from './multisig';
 
 export namespace SolNative {
 
   // NOTICE: There is a lamport fluctuation when transfer under 0.001 sol
   // for multiSig only function
-  const multisigTransfer = async (
+
+  // @internal
+  export const multisigTransfer = async (
     owner: PublicKey,
     dest: PublicKey,
     signers: Signer[],
@@ -103,7 +106,8 @@ export namespace SolNative {
     amount: number,
     feePayer?: Signer
   ): Promise<Result<Instruction, Error>> => {
-    if (false) {
+    const isAddress = (await Multisig.isAddress(source)).unwrap();
+    if (isAddress) {
       return multisigTransfer(
         source,
         destination,
