@@ -11,47 +11,33 @@ describe('Instruction', () => {
     source = obj.source;
   });
 
-  it('Submit instruction with fee payer', async () => {
-    const before = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
-    const owner = Wallet.create();
-    const feePayer = source.secret.toKeypair();
-    const instruction =
+  it('Submit instruction', async () => {
+    const inst =
       Memo.create(
         '{"title": "Submit first instruction"}',
-        [feePayer],
-        [owner.pubkey.toPubKey()]
+        [source.secret.toKeypair()],
       );
 
-    const res = await instruction.submit();
-    assert.isTrue(res.isOk, res.unwrap());
-    console.log('# tx signature: ', res.unwrap());
-    const after = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
-    assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
+    const res = await inst.submit();
+    assert.isTrue(res.isOk, res.unwrap().sig);
   });
 
-  it('Submit batch instructions with fee payer', async () => {
-    const before = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
-    const owner = Wallet.create();
-    const feePayer = source.secret.toKeypair();
-    const instruction1 =
+  it('Submit batch instructions', async () => {
+    const inst1 =
       Memo.create(
         '{"title": "Submit first instruction"}',
-        [feePayer],
-        [owner.pubkey.toPubKey()]
+        [source.secret.toKeypair()],
       );
 
-    const instruction2 =
+    const inst2 =
       Memo.create(
         '{"title": "Submit first instruction"}',
-        [feePayer],
-        [owner.pubkey.toPubKey()]
+        [source.secret.toKeypair()],
       );
 
-    const res = await [instruction1, instruction2].submit();
-    assert.isTrue(res.isOk, res.unwrap());
-    console.log('# tx signature: ', res.unwrap());
-    const after = (await Wallet.getBalance(source.pubkey.toPubKey())).unwrap();
-    assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
+    const res = await [inst1, inst2].submit();
+    assert.isTrue(res.isOk, res.unwrap().sig);
+    console.log('# tx signature: ', res.unwrap().sig);
   });
 
 })

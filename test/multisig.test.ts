@@ -10,7 +10,7 @@ describe('Multisig', () => {
     source = obj.source;
   });
 
-  it('Create account 2 of 2', async () => {
+  it.only('Create account 2 of 2', async () => {
     const signer1 = Wallet.create();
     const signer2 = Wallet.create();
     const inst = await Multisig.create(
@@ -23,7 +23,8 @@ describe('Multisig', () => {
     );
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
-    const res = await inst.unwrap().instruction.submit();
+    // const res = await inst.unwrap().instruction.submit();
+    const res = await inst.submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# multisig account: ', inst.unwrap().multisig);
   });

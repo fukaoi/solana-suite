@@ -12,22 +12,31 @@ import {Node, Result} from './';
 import {Buffer} from 'buffer';
 import * as BufferLayout from '@solana/buffer-layout';
 
+export interface InstructionSubmit {
+  sig: TransactionSignature,
+  value: undefined|undefined[]
+}
+
 export class Instruction {
   instructions: TransactionInstruction[];
   signers: Signer[];
   feePayer?: Signer;
+  value?: undefined;
 
   constructor(
     instructions: TransactionInstruction[],
     signers: Signer[],
     feePayer?: Signer,
+    value?: undefined,
   ) {
     this.instructions = instructions;
     this.signers = signers;
     this.feePayer = feePayer;
+    this.value = value;
   }
 
-  submit = async (): Promise<Result<TransactionSignature, Error>> => {
+  submit = async ()
+    : Promise<Result<InstructionSubmit, Error>> => {
     // return Error if include Error object
     const transaction = new Transaction();
     let finalSigners = this.signers;
@@ -41,17 +50,22 @@ export class Instruction {
       transaction,
       finalSigners
     )
-      .then(Result.ok)
+      .then(sig => Result.ok({sig, value: this.value}))
       .catch(Result.err);
   }
 
   // @internal
   static batchSubmit = async (
     arr: Instruction[]
-  ): Promise<Result<TransactionSignature, Error>> => {
+  ): Promise<Result<InstructionSubmit, Error>> => {
     const instructions = arr.flatMap(a => a.instructions);
     const signers = arr.flatMap(a => a.signers);
-    const feePayer = arr.filter(a => a.feePayer !== undefined)[0].feePayer;
+    const feePayers = arr.filter(a => a.feePayer !== undefined);
+    let feePayer = signers[0];
+    if (feePayers.length > 0) {
+      feePayer = feePayers[0].feePayer!; 
+    }
+    const values = arr.map(a => {if (a.value) return a.value});
 
     const transaction = new Transaction();
     let finalSigners = signers;
@@ -65,7 +79,7 @@ export class Instruction {
       transaction,
       finalSigners
     )
-      .then(Result.ok)
+      .then(sig => Result.ok({sig, value: values}))
       .catch(Result.err);
   }
 

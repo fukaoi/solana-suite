@@ -5,7 +5,7 @@ import {
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-import {Constants, Result, Instruction} from './';
+import {Constants, Result, Instruction, InstructionSubmit} from './';
 
 declare global {
   interface String {
@@ -16,7 +16,7 @@ declare global {
   }
 
   interface Array<T> {
-    submit(): Promise<Result<TransactionSignature, Error>>;
+    submit(): Promise<Result<InstructionSubmit, Error>>;
   }
 }
 
