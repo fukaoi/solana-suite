@@ -42,14 +42,14 @@ export namespace ConstantsFunc {
 }
 
 export namespace Constants {
-  String.prototype.toPubKey = function () {
+  String.prototype.toPubkey = function () {
     return new PublicKey(this);
   }
   export const CURRENT_NETWORK = ConstantsFunc.switchApi(Constants.currentNetwork);
   export const API_URL = ConstantsFunc.switchApi(Constants.currentNetwork);
-  export const WRAPPED_TOKEN_PROGRAM_ID = 'So11111111111111111111111111111111111111112'.toPubKey();
-  export const MEMO_PROGRAM_ID = 'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo'.toPubKey();
-  export const METAPLEX_PROGRAM_ID = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'.toPubKey();
+  export const WRAPPED_TOKEN_PROGRAM_ID = 'So11111111111111111111111111111111111111112'.toPubkey();
+  export const MEMO_PROGRAM_ID = 'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo'.toPubkey();
+  export const METAPLEX_PROGRAM_ID = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'.toPubkey();
   export const COMMITMENT: Commitment = 'confirmed';
   // todo: this NFT_STORAGE_API_KEY moved .env file
   // NFT.storage can store NFTs up to 32GB in size!
@@ -58,7 +58,7 @@ export namespace Constants {
   export const NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
   export const ARWEAVE_UPLOAD_SRV_URL = 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile4';
   export const ARWEAVE_GATEWAY_URL = 'https://arweave.net';
-  export const AR_SOL_HOLDER_ID = 'HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm'.toPubKey();
+  export const AR_SOL_HOLDER_ID = 'HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm'.toPubkey();
 
   export const COIN_MARKET_URL = 'https://api.coingecko.com/api/v3/simple/price';
 }

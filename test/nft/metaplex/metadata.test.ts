@@ -1,11 +1,11 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Wallet} from '../../../src';
+import {KeypairStr} from '../../../src';
 import {MetaplexMetaData, MetaplexInstructure, Metaplex} from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
 import {TransactionInstruction} from '@solana/web3.js';
 
-let source: Wallet.KeypairStr;
+let source: KeypairStr;
 
 describe('MetaplexMetaData', () => {
   before(async () => {
@@ -22,8 +22,8 @@ describe('MetaplexMetaData', () => {
       creators: null
     });
 
-    const tokenKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM'.toPubKey();
-    const sourceStr = source.pubkey.toPubKey();
+    const tokenKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM'.toPubkey();
+    const sourceStr = source.pubkey.toPubkey();
 
     const res = await MetaplexMetaData.create(
       data,
@@ -46,15 +46,15 @@ describe('MetaplexMetaData', () => {
       creators: null
     });
 
-    const tokenKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM'.toPubKey();
+    const tokenKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM'.toPubkey();
 
     const res = await MetaplexMetaData.update(
       data,
       undefined,
       undefined,
       tokenKey,
-      source.pubkey.toPubKey(),
-      [source.secret.toKeypair()],
+      source.toPubkey(),
+      [source.toKeypair()],
     )();
     assert.isTrue(res.isOk);
     assert.isArray(res.unwrap());
@@ -71,7 +71,7 @@ describe('MetaplexMetaData', () => {
     };
 
     const res = await MetaplexMetaData.getByTokenKey(
-      'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'.toPubKey()
+      'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'.toPubkey()
     );
 
     assert.isTrue(res.isOk);
@@ -85,7 +85,7 @@ describe('MetaplexMetaData', () => {
 
   it('Get metadata of nft by owner', async () => {
     const res = await MetaplexMetaData.getByOwner(
-      '78DybLoke46TR6RW1HWZBMYt7qouGggQJjLATsfL7RwA'.toPubKey()
+      '78DybLoke46TR6RW1HWZBMYt7qouGggQJjLATsfL7RwA'.toPubkey()
     );
     assert.isTrue(res.isOk);
     console.log(res);

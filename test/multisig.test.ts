@@ -1,8 +1,8 @@
 import {assert} from 'chai';
-import {Multisig, Wallet} from '../src/';
+import {Multisig, Account, KeypairStr} from '../src/';
 import {Setup} from './utils/setup';
 
-let source: Wallet.KeypairStr;
+let source: KeypairStr;
 
 describe('Multisig', () => {
   before(async () => {
@@ -11,14 +11,14 @@ describe('Multisig', () => {
   });
 
   it('Is multisig address', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
     const inst = await Multisig.create(
       2,
       source.secret.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
-        signer2.pubkey.toPubKey(),
+        signer1.toPubkey(),
+        signer2.toPubkey(),
       ],
     );
 
@@ -27,38 +27,38 @@ describe('Multisig', () => {
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     const address = (inst.unwrap().value as string);
     console.log('# multisig address: ', address);
-    const isAddress = await Multisig.isAddress(address.toPubKey());
+    const isAddress = await Multisig.isAddress(address.toPubkey());
     assert.isTrue(isAddress.isOk);
     assert.isTrue(isAddress.unwrap());
   });
 
   it('[Err]Invalid multisig address', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
     const inst = await Multisig.create(
       2,
-      source.secret.toKeypair(),
+      source.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
-        signer2.pubkey.toPubKey(),
+        signer1.toPubkey(),
+        signer2.toPubkey(),
       ],
     );
 
     const address = (inst.unwrap().value as string);
-    const res = await Multisig.isAddress(address.toPubKey());
+    const res = await Multisig.isAddress(address.toPubkey());
     assert.isTrue(res.isOk);
     assert.isFalse(res.unwrap());
   });
 
   it('Create account 2 of 2', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
     const inst = await Multisig.create(
       2,
-      source.secret.toKeypair(),
+      source.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
-        signer2.pubkey.toPubKey(),
+        signer1.toPubkey(),
+        signer2.toPubkey(),
       ],
     );
 
@@ -69,16 +69,16 @@ describe('Multisig', () => {
   });
 
   it('Create account 2 of 3', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
-    const signer3 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
+    const signer3 = Account.create();
     const inst = await Multisig.create(
       2,
-      source.secret.toKeypair(),
+      source.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
-        signer2.pubkey.toPubKey(),
-        signer3.pubkey.toPubKey(),
+        signer1.toPubkey(),
+        signer2.toPubkey(),
+        signer3.toPubkey(),
       ],
     );
 
@@ -89,31 +89,33 @@ describe('Multisig', () => {
   });
 
   it('[Err] m number less than signers number', async () => {
-    const signer1 = Wallet.create();
+    const signer1 = Account.create();
     const res = await Multisig.create(
       2,
-      source.secret.toKeypair(),
+      source.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
+        signer1.toPubkey(),
       ],
     );
     assert.isTrue(res.isErr);
   });
 
   it('Get multisig info', async () => {
-    const signer1 = Wallet.create();
-    const signer2 = Wallet.create();
+    const signer1 = Account.create();
+    const signer2 = Account.create();
     const inst = await Multisig.create(
       2,
-      source.secret.toKeypair(),
+      source.toKeypair(),
       [
-        signer1.pubkey.toPubKey(),
-        signer2.pubkey.toPubKey(),
+        signer1.toPubkey(),
+        signer2.toPubkey(),
       ],
     );
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     await inst.unwrap().submit();
-    const res = await Multisig.getMultisigInfo((inst.unwrap().value as string).toPubKey());
+    const res = await Multisig.getMultisigInfo(
+      (inst.unwrap().value as string).toPubkey()
+    );
     assert.isTrue(res.isOk, `${res.unwrap()}`);
   });
 })

@@ -6,7 +6,7 @@ import {tryCatch} from '../src/global';
 describe('Global', () => {
   it('Convert string to PublicKey', async () => {
     const str = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
-    const res = str.toPubKey();
+    const res = str.toPubkey();
     assert.equal(res.constructor.name, 'PublicKey');
   });
 

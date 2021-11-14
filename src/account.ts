@@ -9,15 +9,36 @@ import bs from 'bs58';
 
 import {Transaction, Constants, Node, Result} from './';
 
-// TODO: want rename Wallet to Account
-export namespace Wallet {
+export class KeypairStr {
+  pubkey: string;
+  secret: string;
 
-  type Unit = 'sol' | 'lamports';
-
-  export interface KeypairStr {
+  constructor(
     pubkey: string,
     secret: string
+  ) {
+    this.pubkey = pubkey;
+    this.secret = secret;
   }
+
+  toPubkey(): PublicKey {
+    return new PublicKey(this.pubkey);
+  }
+
+  toKeypair(): Keypair {
+    const decoded = bs.decode(this.secret);
+    return Keypair.fromSecretKey(decoded);
+  }
+}
+
+export class String {
+  get toPubKey(): PublicKey {
+    return new PublicKey(this);
+  };
+}
+
+export namespace Account {
+  type Unit = 'sol' | 'lamports';
 
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
   export const MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 5;
@@ -59,10 +80,15 @@ export namespace Wallet {
 
   export const create = (): KeypairStr => {
     const keypair = Keypair.generate();
-    return {
-      pubkey: keypair.publicKey.toBase58(),
-      secret: bs.encode(keypair.secretKey)
-    };
+    return new KeypairStr(
+      keypair.publicKey.toBase58(),
+      bs.encode(keypair.secretKey)
+    );
+
+    // return {
+    // pubkey: keypair.publicKey.toBase58(),
+    // secret: bs.encode(keypair.secretKey)
+    // };
   };
 
   export const findAssocaiatedTokenAddress = async (

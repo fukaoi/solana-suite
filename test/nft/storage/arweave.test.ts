@@ -1,10 +1,10 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
-import {StorageArweave, Wallet} from '../../../src';
+import {StorageArweave, KeypairStr} from '../../../src';
 import {Setup} from '../../utils/setup';
 import {RandomAsset} from '../../utils/randomAsset';
 
-let source: Wallet.KeypairStr;
+let source: KeypairStr;
 
 describe('StorageArweave', () => {
   before(async () => {
@@ -15,7 +15,7 @@ describe('StorageArweave', () => {
   it('Upload metadata json file and image', async () => {
     const asset = RandomAsset.storage();
     const res = await StorageArweave.upload(
-      source.secret.toKeypair(),
+      source.toKeypair(),
       asset
     );
     assert.isTrue(res.isOk);

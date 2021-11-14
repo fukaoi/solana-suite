@@ -10,7 +10,7 @@ import {
 } from '@solana/web3.js';
 
 import {Metaplex, MetaplexSerialize, MetaplexInstructure} from './index';
-import {Node, Wallet, Constants, Result} from '../../index';
+import {Node, Account, Constants, Result} from '../../index';
 import {
   Token,
   TOKEN_PROGRAM_ID,
@@ -137,7 +137,7 @@ export namespace MetaplexMetaData {
 
   export const getByTokenKey = async (tokenKey: PublicKey):
     Promise<Result<Metaplex.Format, Error>> => {
-    const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    const metaAccount = await Account.findMetaplexAssocaiatedTokenAddress(tokenKey);
 
     if (metaAccount.isErr) return Result.err(metaAccount.error);
 
@@ -167,13 +167,16 @@ export namespace MetaplexMetaData {
       .catch(Result.err);
 
     if (tokens.isErr) return Result.err(tokens.error);
-    const arr = tokens.value as RpcResponseAndContext<{pubkey: PublicKey; account: AccountInfo<ParsedAccountData>}[]>;
+    const arr = tokens.value as RpcResponseAndContext<{
+      pubkey: PublicKey; 
+      account: AccountInfo<ParsedAccountData
+    >}[]>;
 
     const matches = [];
     // Filter only metaplex nft
     for (const token of arr.value) {
       const decoded = await getByTokenKey(
-        token.account.data.parsed.info.mint.toPubKey()
+        token.account.data.parsed.info.mint.toPubkey()
       );
       if (!decoded) continue;
       if (decoded.isErr) return Result.err(decoded.error);
@@ -192,7 +195,7 @@ export namespace MetaplexMetaData {
       Promise<Result<PublicKey | TransactionInstruction[], Error>> => {
       let inst: TransactionInstruction[] = [];
       inst = instructions ? instructions : inst;
-      const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
+      const metaAccount = await Account.findMetaplexAssocaiatedTokenAddress(tokenKey);
       if (metaAccount.isErr) return metaAccount;
 
       const txnData = MetaplexSerialize.serializeCreateArgs(data);
@@ -224,7 +227,7 @@ export namespace MetaplexMetaData {
       let inst: TransactionInstruction[] = [];
       inst = instructions ? instructions : inst;
 
-      const associatedToken = await Wallet.findAssocaiatedTokenAddress(
+      const associatedToken = await Account.findAssocaiatedTokenAddress(
         updateAuthority,
         tokenKey
       );
@@ -251,7 +254,7 @@ export namespace MetaplexMetaData {
         ),
       );
 
-      const metaAccount = await Wallet.findMetaplexAssocaiatedTokenAddress(tokenKey);
+      const metaAccount = await Account.findMetaplexAssocaiatedTokenAddress(tokenKey);
       if (metaAccount.isErr) return metaAccount;
 
       const txnData = MetaplexSerialize.serializeUpdateArgs(

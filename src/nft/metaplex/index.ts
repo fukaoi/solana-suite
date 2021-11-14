@@ -130,7 +130,7 @@ export namespace Metaplex {
 
       const metadataInst = await MetaplexMetaData.create(
         data,
-        txsign.tokenKey.toPubKey(),
+        txsign.tokenKey.toPubkey(),
         append!.feePayer!,
         owner,
         owner

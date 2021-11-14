@@ -1,9 +1,9 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Memo, Wallet} from '../src';
+import {Memo, KeypairStr} from '../src';
 
-let source: Wallet.KeypairStr;
+let source: KeypairStr;
 const DUMMY_DATA = 'dummy memo data';
 
 describe('Memo', () => {
@@ -34,7 +34,7 @@ describe('Memo', () => {
   it('send memo by own', async () => {
     const inst = Memo.create(
       '{"memo": 123456789}',
-      [source.secret.toKeypair()]
+      [source.toKeypair()]
     );
 
     const res = await inst.submit();

@@ -1,3 +1,4 @@
+export * from './account';
 export * from './append';
 export * from './constants';
 export * from './instruction';
@@ -13,6 +14,5 @@ export * from './sol-native';
 export * from './spl-token';
 export * from './transaction';
 export * from './util';
-export * from './wallet';
 
 export default module.exports;
