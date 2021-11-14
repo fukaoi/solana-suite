@@ -51,23 +51,23 @@ describe('SplToken', () => {
     });
   });
 
-  it('Create token', async () => {
-    const TOKEN_TOTAL_AMOUNT = 10000000;
-    const inst =
-      await SplToken.mint(
-        source.pubkey.toPubKey(),
-        [source.secret.toKeypair()],
-        TOKEN_TOTAL_AMOUNT,
-        MINT_DECIMAL
-      );
+  // it('Create token', async () => {
+    // const TOKEN_TOTAL_AMOUNT = 10000000;
+    // const inst =
+      // await SplToken.mint(
+        // source.pubkey.toPubKey(),
+        // [source.secret.toKeypair()],
+        // TOKEN_TOTAL_AMOUNT,
+        // MINT_DECIMAL
+      // );
 
-    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
+    // assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
-    const res = await inst.unwrap().instruction.submit();
-    assert.isTrue(res.isOk, res.unwrap());
-    tokenKeyStr = inst.unwrap().tokenKey;
-    console.log('# tokenKey: ', tokenKeyStr);
-  });
+    // const res = await inst.unwrap().instruction.submit();
+    // assert.isTrue(res.isOk, res.unwrap());
+    // tokenKeyStr = inst.unwrap().tokenKey;
+    // console.log('# tokenKey: ', tokenKeyStr);
+  // });
 
   it.only('[Err]lack signer for multisig', async () => {
     const signer1 = Wallet.create();
@@ -80,8 +80,12 @@ describe('SplToken', () => {
         signer2.pubkey.toPubKey()
       ]
     );
+    console.log(signer1.pubkey);
+    console.log(signer2.pubkey);
+    console.log(multisig.unwrap());
 
-    assert.isTrue(multisig.isOk, `${multisig.unwrap()}`);
+    // const multisigRes = await multisig.unwrap().instruction.submit();
+    // assert.isTrue(multisigRes.isOk, `${multisigRes.unwrap()}`);
 
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const res = await SplToken.mint(
@@ -92,7 +96,7 @@ describe('SplToken', () => {
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
     );
-    console.log(res);
+    console.log(await res.unwrap().instruction.submit());
     assert.isFalse(res.isOk, `${res.unwrap()}`);
   });
 

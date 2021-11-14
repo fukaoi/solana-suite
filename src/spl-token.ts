@@ -63,7 +63,9 @@ export namespace SplToken {
   ): number => {
     return Node.getConnection().onAccountChange(pubkey, async () => {
       const res = await SplToken.getTransferHistory(pubkey, 1);
-      if (res.isErr) return res;
+      if (res.isErr) {
+        return res;
+      }
       callback((res.value as TransferHistory[])[0]);
     });
   }
@@ -79,7 +81,9 @@ export namespace SplToken {
   ): Promise<Result<TransferHistory[], Error>> => {
     const transactions = await Transaction.getAll(pubkey, limit);
 
-    if (transactions.isErr) return transactions as Result<[], Error>;
+    if (transactions.isErr) {
+      return transactions as Result<[], Error>;
+    }
 
     const hist: TransferHistory[] = [];
     for (const tx of transactions.unwrap() as ParsedConfirmedTransaction[]) {
@@ -100,7 +104,9 @@ export namespace SplToken {
   ): Promise<Result<TransferDestinationList[], Error>> => {
     const transactions = await Transaction.getAll(pubkey);
 
-    if (transactions.isErr) return Result.err(transactions.error);
+    if (transactions.isErr) {
+      return Result.err(transactions.error);
+    }
 
     const hist: TransferDestinationList[] = [];
     for (const tx of transactions.unwrap() as ParsedConfirmedTransaction[]) {
@@ -122,41 +128,46 @@ export namespace SplToken {
   }
 
   export const mint = async (
-    source: PublicKey,
+    owner: PublicKey,
     signers: Signer[],
     totalAmount: number,
     mintDecimal: number,
     feePayer?: Signer,
-  ): Promise<Result<{
-    instruction: Instruction,
-    tokenKey: string
-  }, Error>> => {
+  ): Promise<Result<{instruction: Instruction, tokenKey: string}, Error>> => {
+
+    !feePayer && (feePayer = signers[0]);
+
     const tokenRes = await Token.createMint(
       Node.getConnection(),
-      signers[0],
-      source,
-      null,
+      feePayer,
+      owner,
+      owner,
       mintDecimal,
       TOKEN_PROGRAM_ID
     )
       .then(Result.ok)
       .catch(Result.err);
 
-    if (tokenRes.isErr) return Result.err(tokenRes.error);
+    if (tokenRes.isErr) {
+      return Result.err(tokenRes.error);
+    }
+
     const token = tokenRes.value;
 
     const tokenAssociated =
-      await token.getOrCreateAssociatedAccountInfo(source)
+      await token.getOrCreateAssociatedAccountInfo(owner)
         .then(Result.ok)
         .catch(Result.err);
 
-    if (tokenAssociated.isErr) return Result.err(tokenAssociated.error);
+    if (tokenAssociated.isErr) {
+      return Result.err(tokenAssociated.error);
+    }
 
     const inst = Token.createMintToInstruction(
       TOKEN_PROGRAM_ID,
       token.publicKey,
       tokenAssociated.value.address,
-      source,
+      owner,
       signers,
       totalAmount
     );
@@ -197,13 +208,17 @@ export namespace SplToken {
       .then(Result.ok)
       .catch(Result.err);
 
-    if (sourceToken.isErr) return Result.err(sourceToken.error);
+    if (sourceToken.isErr) {
+      return Result.err(sourceToken.error);
+    }
 
     const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
       .then(Result.ok)
       .catch(Result.err);
 
-    if (destToken.isErr) return Result.err(destToken.error);
+    if (destToken.isErr) {
+      return Result.err(destToken.error);
+    }
 
     const instruction = Token.createTransferCheckedInstruction(
       TOKEN_PROGRAM_ID,
