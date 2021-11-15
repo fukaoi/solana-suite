@@ -64,9 +64,11 @@ export namespace Account {
 
   export const requestAirdrop = async (
     pubkey: PublicKey,
-    airdropAmount: number = DEFAULT_AIRDROP_AMOUNT
+    airdropAmount?: number
   ): Promise<Result<string, Error>> => {
     console.debug('Now airdropping...please wait');
+
+    airdropAmount = !airdropAmount ? DEFAULT_AIRDROP_AMOUNT : airdropAmount * LAMPORTS_PER_SOL;
 
     if (airdropAmount > MAX_AIRDROP_SOL) {
       return Result.err(Error(`Over max airdrop amount: ${airdropAmount}`))
@@ -76,7 +78,7 @@ export namespace Account {
       .then(Result.ok)
       .catch(Result.err);
 
-    if (sig.isErr) {  
+    if (sig.isErr) {
       return Result.err(Error('Failed airdrop'));
     }
     await Transaction.confirmedSig(sig.value);
