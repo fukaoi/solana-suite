@@ -2,8 +2,10 @@
 //$ npx ts-node exmaples/integration2-transfer-history
 //////////////////////////////////////////////
 
+//Notice: not worked. now modifing
+
 import {
-  Wallet,
+  Account,
   Transaction,
   SplNft,
   SplToken
@@ -16,11 +18,11 @@ import {
   //////////////////////////////////////////////
 
   // create nft owner wallet, receive nft receipt wallet.
-  const publish = Wallet.create();
-  const receipt = Wallet.create();
+  const publish = Account.create();
+  const receipt = Account.create();
 
   // faucet 1 sol
-  await Wallet.requestAirdrop(publish.pubkey.toPubKey());
+  await Account.requestAirdrop(publish.pubkey.toPubKey());
 
   console.log('# publish: ', publish);
   console.log('# receipt: ', receipt);

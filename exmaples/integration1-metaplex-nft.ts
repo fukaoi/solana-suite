@@ -2,8 +2,10 @@
 //$ npx ts-node exmaples/integration1-metaplex-nft.ts
 //////////////////////////////////////////////
 
+//Notice: not worked. now modifing
+
 import {
-  Wallet,
+  Account,
   Transaction,
   Metaplex,
   MetaplexInstructure,
@@ -21,12 +23,12 @@ import {RandomAsset} from '../test/utils/randomAsset';
   //////////////////////////////////////////////
 
   // create nft owner wallet, receive nft receipt wallet.
-  const publish = Wallet.create();
-  const receipt = Wallet.create();
-  const feePayer = Wallet.create();
+  const publish = Account.create();
+  const receipt = Account.create();
+  const feePayer = Account.create();
 
   // faucet 1 sol
-  await Wallet.requestAirdrop(feePayer.pubkey.toPubKey());
+  await Account.requestAirdrop(feePayer.pubkey.toPubkey());
   console.log('# publish: ', publish.pubkey);
   console.log('# receipt: ', receipt.pubkey);
   console.log('# feePayer: ', feePayer.pubkey);
@@ -79,7 +81,7 @@ import {RandomAsset} from '../test/utils/randomAsset';
   //////////////////////////////////////////////
 
   const metadata = await MetaplexMetaData.getByTokenKey(
-    mintResult.tokenKey.toPubKey()
+    mintResult.tokenKey.toPubkey()
   );
   console.log('# metadata: ', metadata.unwrap());
 
@@ -89,11 +91,11 @@ import {RandomAsset} from '../test/utils/randomAsset';
 
   // transfer nft to  wallet
   const sig = await SplNft.transfer(
-    mintResult.tokenKey.toPubKey(),
-    feePayer.pubkey.toPubKey(),
-    publish.pubkey.toPubKey()
+    mintResult.tokenKey.toPubkey(),
+    feePayer.pubkey.toPubkey(),
+    publish.pubkey.toPubkey()
   )({
-    feePayer: feePayer.pubkey.toPubKey(),
+    feePayer: feePayer.pubkey.toPubkey(),
     signers: [feePayer.secret.toKeypair()]
   });
 
@@ -107,11 +109,11 @@ import {RandomAsset} from '../test/utils/randomAsset';
 
   // transfer nft to receipt wallet
   const sig2 = await SplNft.transfer(
-    mintResult.tokenKey.toPubKey(),
-    publish.pubkey.toPubKey(),
-    receipt.pubkey.toPubKey()
+    mintResult.tokenKey.toPubkey(),
+    publish.pubkey.toPubkey(),
+    receipt.pubkey.toPubkey()
   )({
-    feePayer: feePayer.pubkey.toPubKey(),
+    feePayer: feePayer.pubkey.toPubkey(),
     signers: [feePayer.secret.toKeypair(), publish.secret.toKeypair()]
   });
 

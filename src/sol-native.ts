@@ -22,7 +22,7 @@ export namespace SolNative {
     owner: PublicKey,
     dest: PublicKey,
     signers: Signer[],
-    amount: number,
+    amountSol: number,
     feePayer?: Signer,
   ): Promise<Result<Instruction, Error>> => {
 
@@ -33,7 +33,7 @@ export namespace SolNative {
       TOKEN_PROGRAM_ID,
       owner,
       payer,
-      amount * LAMPORTS_PER_SOL,
+      amountSol * LAMPORTS_PER_SOL,
     )
       .then(Result.ok)
       .catch(Result.err);
@@ -73,7 +73,7 @@ export namespace SolNative {
       destToken.value.address,
       owner,
       signers,
-      amount
+      amountSol
     );
 
     const inst2 = Token.createCloseAccountInstruction(
@@ -97,13 +97,13 @@ export namespace SolNative {
     source: PublicKey,
     destination: PublicKey,
     signers: Signer[],
-    amount: number,
+    amountSol: number,
     feePayer?: Signer
   ): Promise<Result<Instruction, Error>> => {
     const inst = SystemProgram.transfer({
       fromPubkey: source,
       toPubkey: destination,
-      lamports: amount,
+      lamports: amountSol * LAMPORTS_PER_SOL,
     });
 
     return Result.ok(
