@@ -3,7 +3,7 @@
 //////////////////////////////////////////////
 
 import {
-  Wallet,
+  Account,
   Result
 } from '../src/index';
 
@@ -17,7 +17,7 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   //////////////////////////////////////////////
   // Example1 type guard
   //////////////////////////////////////////////
-  const ex1 = await Wallet.getBalance(DEMO_ADDRESS.toPubKey());
+  const ex1 = await Account.getBalance(DEMO_ADDRESS.toPubkey());
   ex1.isOk && console.log('# ex1: ', ex1.value);
 
   if (ex1.isOk) {
@@ -29,27 +29,27 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   //////////////////////////////////////////////
   // Exmaple2 unwrap
   //////////////////////////////////////////////
-  const ex2 = await Wallet.getBalance(DEMO_ADDRESS.toPubKey());
+  const ex2 = await Account.getBalance(DEMO_ADDRESS.toPubkey());
   console.log('# ex2: ', ex2.unwrap());
 
 
   //////////////////////////////////////////////
   // Exmaple3 explicit define type
   //////////////////////////////////////////////
-  const ex3 = await Wallet.getBalance(DEMO_ADDRESS.toPubKey());
+  const ex3 = await Account.getBalance(DEMO_ADDRESS.toPubkey());
 
-  const casted = (<Result.Ok<number, Error>>ex3).value;
+  const casted = (ex3 as Result.Ok<number, Error>).value;
   console.log('# ex3: ', casted);
 
 
   //////////////////////////////////////////////
   // Exmaple4 map()
   //////////////////////////////////////////////
-  const ex4 = await Wallet.getBalance(DEMO_ADDRESS.toPubKey());
+  const ex4 = await Account.getBalance(DEMO_ADDRESS.toPubkey());
 
   const mapped = ex4.map(
-    (value) => value * 1000,
-    (error) => new Error(error.message)
+    (value: number) => value * 1000,
+    (error: Error) => new Error(error.message)
   ).unwrap();
   console.log('# ex4: ', mapped);
 
@@ -57,11 +57,11 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   //////////////////////////////////////////////
   // Exmaple5 match()
   //////////////////////////////////////////////
-  const ex5 = await Wallet.getBalance(DEMO_ADDRESS.toPubKey());
+  const ex5 = await Account.getBalance(DEMO_ADDRESS.toPubkey());
 
   ex5.match(
-    (value) => console.log('# ex5: ', value),
-    (error) => console.error(error)
+    (value: number) => console.log('# ex5: ', value),
+    (error: Error) => console.error(error)
   );
 
 })();

@@ -16,23 +16,27 @@ import {
 import * as BufferLayout from '@solana/buffer-layout';
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
+// @internal
+namespace MultisigInstruction {
+  const createLayoutPubKey = (property: string = 'publicKey') => {
+    return BufferLayout.blob(32, property);
+  }
 
-export namespace MultisigInstruction {
   export const Layout = BufferLayout.struct([
     BufferLayout.u8('m'),
     BufferLayout.u8('n'),
     BufferLayout.u8('is_initialized'),
-    Instruction.createLayoutPubKey('signer1'),
-    Instruction.createLayoutPubKey('signer2'),
-    Instruction.createLayoutPubKey('signer3'),
-    Instruction.createLayoutPubKey('signer4'),
-    Instruction.createLayoutPubKey('signer5'),
-    Instruction.createLayoutPubKey('signer6'),
-    Instruction.createLayoutPubKey('signer7'),
-    Instruction.createLayoutPubKey('signer8'),
-    Instruction.createLayoutPubKey('signer9'),
-    Instruction.createLayoutPubKey('signer10'),
-    Instruction.createLayoutPubKey('signer11'),
+    createLayoutPubKey('signer1'),
+    createLayoutPubKey('signer2'),
+    createLayoutPubKey('signer3'),
+    createLayoutPubKey('signer4'),
+    createLayoutPubKey('signer5'),
+    createLayoutPubKey('signer6'),
+    createLayoutPubKey('signer7'),
+    createLayoutPubKey('signer8'),
+    createLayoutPubKey('signer9'),
+    createLayoutPubKey('signer10'),
+    createLayoutPubKey('signer11'),
   ]);
 
   export const account = (

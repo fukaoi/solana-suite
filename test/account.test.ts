@@ -2,25 +2,27 @@ import {describe, it} from 'mocha';
 import {Account, KeypairStr} from '../src';
 import {assert} from 'chai';
 import {PublicKey} from '@solana/web3.js';
+import {Setup} from './utils/setup';
 
 let source: KeypairStr;
 
 describe('Account', () => {
   before(async () => {
-    source = Account.create();
-    console.log('# source address: ', source.pubkey.toAddressUrl());
+    const obj = await Setup.generatekeyPair();
+    source = obj.source;
   });
 
-  it('Reuest airdrop', async () => {
-    const res = await Account.requestAirdrop(source.toPubkey());
-    assert.isTrue(res.isOk);
+  it('Reuest airdrop with 3 SOL', async () => {
+    const res = await Account.requestAirdrop(source.toPubkey(), 3);
+    assert.isTrue(res.isOk, res.unwrap());
+    const balance = await Account.getBalance(source.toPubkey());
+    assert.isTrue(balance.isOk, balance.unwrap().toString());
   });
 
   it('Get balance at publicKey', async () => {
-    const dropSol = 1;
     const res = await Account.getBalance(source.toPubkey());
     assert.isTrue(res.isOk);
-    assert.equal(res.unwrap(), dropSol);
+    console.log('# balance sol: ', res.unwrap());
   });
 
   it('Get lamports balance at publicKey', async () => {
@@ -29,7 +31,7 @@ describe('Account', () => {
       'lamports'
     );
     assert.isTrue(res.isOk);
-    assert.equal(res.unwrap(), Account.DEFAULT_AIRDROP_AMOUNT);
+    console.log('# balance lamports: ', res.unwrap());
   });
 
   it('find token address', async () => {
