@@ -8,31 +8,26 @@ import {
 
 import {Node, Result} from './';
 
-export interface InstructionSubmit {
-  sig: TransactionSignature,
-  value: unknown|unknown[]
-}
-
 export class Instruction {
   instructions: TransactionInstruction[];
   signers: Signer[];
   feePayer?: Signer;
-  value?: unknown;
+  data?: unknown;
 
   constructor(
     instructions: TransactionInstruction[],
     signers: Signer[],
     feePayer?: Signer,
-    value?: unknown,
+    data?: unknown,
   ) {
     this.instructions = instructions;
     this.signers = signers;
     this.feePayer = feePayer;
-    this.value = value;
+    this.data = data;
   }
 
   submit = async ()
-    : Promise<Result<InstructionSubmit, Error>> => {
+    : Promise<Result<TransactionSignature, Error>> => {
     // return Error if include Error object
     const transaction = new Transaction();
     let finalSigners = this.signers;
@@ -46,14 +41,14 @@ export class Instruction {
       transaction,
       finalSigners
     )
-      .then(sig => Result.ok({sig, value: this.value}))
+      .then(Result.ok)
       .catch(Result.err);
   }
 
   // @internal
   static batchSubmit = async (
     arr: Instruction[]
-  ): Promise<Result<InstructionSubmit, Error>> => {
+  ): Promise<Result<TransactionSignature, Error>> => {
     const instructions = arr.flatMap(a => a.instructions);
     const signers = arr.flatMap(a => a.signers);
     const feePayers = arr.filter(a => a.feePayer !== undefined);
@@ -61,7 +56,6 @@ export class Instruction {
     if (feePayers.length > 0) {
       feePayer = feePayers[0].feePayer!;
     }
-    const values = arr.map(a => {if (a.value) return a.value});
 
     const transaction = new Transaction();
     let finalSigners = signers;
@@ -75,7 +69,7 @@ export class Instruction {
       transaction,
       finalSigners
     )
-      .then(sig => Result.ok({sig, value: values}))
+      .then(Result.ok)
       .catch(Result.err);
   }
 }

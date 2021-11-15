@@ -26,9 +26,10 @@ describe('SolNative', () => {
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# tx signature: ', res.unwrap().sig.toSigUrl());
+    console.log('# tx signature: ', res.unwrap().toSigUrl());
   });
 
+  // todo: Fails when run alone. 
   it('transfer transaction with memo data', async () => {
     const solAmount = 0.0001;
     const inst1 = Memo.create(
@@ -41,12 +42,13 @@ describe('SolNative', () => {
       dest.toPubkey(),
       [source.toKeypair()],
       solAmount,
+      source.toKeypair(),
     );
 
 
     const res = await [inst1, inst2.unwrap()].submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# tx signature: ', res.unwrap().sig.toSigUrl());
+    console.log('# tx signature: ', res.unwrap().toSigUrl());
   });
 
   it('transfer transaction with fee payer', async () => {
@@ -69,7 +71,7 @@ describe('SolNative', () => {
 
     const res = await inst.unwrap().submit(); 
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# tx signature: ', res.unwrap().sig.toSigUrl());
+    console.log('# tx signature: ', res.unwrap().toSigUrl());
     const after = (await Account.getBalance(
       feePayer.pubkey.toPubkey())
     ).unwrap();
@@ -88,7 +90,7 @@ describe('SolNative', () => {
     );
     const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# signature :', res.unwrap().sig.toSigUrl());
+    console.log('# signature :', res.unwrap().toSigUrl());
   });
 
   it('transfer transaction with multi sig', async () => {
@@ -106,7 +108,7 @@ describe('SolNative', () => {
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
 
     const amount = 0.0001;
-    const multisig = (inst1.unwrap().value as string);
+    const multisig = (inst1.unwrap().data as string);
 
     const inst2 = await SolNative.multisigTransfer(
       multisig.toPubkey(),
@@ -123,6 +125,6 @@ describe('SolNative', () => {
 
     const res = await [inst1.unwrap(), inst2.unwrap()].submit();
     assert.isTrue(res.isOk, res.unwrap().toString());
-    console.log('# signature: ', res.unwrap().sig.toSigUrl());
+    console.log('# signature: ', res.unwrap().toSigUrl());
   });
 })

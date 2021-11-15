@@ -25,7 +25,7 @@ describe('Multisig', () => {
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    const address = (inst.unwrap().value as string);
+    const address = (inst.unwrap().data as string);
     console.log('# multisig address: ', address);
     const isAddress = await Multisig.isAddress(address.toPubkey());
     assert.isTrue(isAddress.isOk);
@@ -44,7 +44,7 @@ describe('Multisig', () => {
       ],
     );
 
-    const address = (inst.unwrap().value as string);
+    const address = (inst.unwrap().data as string);
     const res = await Multisig.isAddress(address.toPubkey());
     assert.isTrue(res.isOk);
     assert.isFalse(res.unwrap());
@@ -65,7 +65,7 @@ describe('Multisig', () => {
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# multisig account: ', inst.unwrap().value);
+    console.log('# multisig account: ', inst.unwrap().data);
   });
 
   it('Create account 2 of 3', async () => {
@@ -85,7 +85,7 @@ describe('Multisig', () => {
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# multisig account: ', inst.unwrap().value);
+    console.log('# multisig account: ', inst.unwrap().data);
   });
 
   it('[Err] m number less than signers number', async () => {
@@ -114,7 +114,7 @@ describe('Multisig', () => {
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     await inst.unwrap().submit();
     const res = await Multisig.getMultisigInfo(
-      (inst.unwrap().value as string).toPubkey()
+      (inst.unwrap().data as string).toPubkey()
     );
     assert.isTrue(res.isOk, `${res.unwrap()}`);
   });

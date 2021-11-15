@@ -20,7 +20,7 @@ describe('Instruction', () => {
       );
 
     const res = await inst.submit();
-    assert.isTrue(res.isOk, res.unwrap().sig);
+    assert.isTrue(res.isOk, res.unwrap());
   });
 
   it('Submit batch instructions', async () => {
@@ -37,8 +37,8 @@ describe('Instruction', () => {
       );
 
     const res = await [inst1, inst2].submit();
-    assert.isTrue(res.isOk, res.unwrap().sig);
-    console.log('# tx signature: ', res.unwrap().sig);
+    assert.isTrue(res.isOk, res.unwrap());
+    console.log('# tx signature: ', res.unwrap());
   });
 
 })

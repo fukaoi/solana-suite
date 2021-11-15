@@ -5,7 +5,6 @@
 import assert from 'assert';
 import {
   Account, 
-  InstructionSubmit, 
   Multisig, 
   SolNative, 
   SplToken,
@@ -64,7 +63,7 @@ import {
 
   multiRes.isErr && assert(multiRes.error.message);
 
-  const publisher = (multiRes.unwrap().value as string);
+  const publisher = (inst1.unwrap().data as string);
   console.log('# publisher(multisig): ', publisher);
 
 
@@ -80,7 +79,7 @@ import {
 
   const transferRes = await inst2.unwrap().submit();
   transferRes.isErr && assert(transferRes.error.message);
-  console.log('# signature: ', transferRes.unwrap().sig);
+  console.log('# signature: ', transferRes.unwrap());
 
   // [optional]if need this action. wait confirmation state
   // await Transaction.confirmedSig(transferRes.unwrap().sig);
@@ -107,7 +106,7 @@ import {
   const mintRes = await inst3.unwrap().submit();
   mintRes.isErr && assert(mintRes.error.message);
 
-  const tokenKey = (mintRes.unwrap().value as string);
+  const tokenKey = (inst3.unwrap().data as string);
   console.log('# tokenKey: ', tokenKey);
 
   const inst4 = await SplToken.transfer(
@@ -124,7 +123,7 @@ import {
   tokenTransferRes.isErr && assert(tokenTransferRes.error.message);
 
   tokenTransferRes.match(
-    (value: InstructionSubmit) => console.log('# signature: ', value.sig),
+    (value: string) => console.log('# signature: ', value),
     (error: Error) => console.error(error)
   );
 })();
