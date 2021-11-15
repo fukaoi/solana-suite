@@ -16,8 +16,8 @@ import {
 import * as BufferLayout from '@solana/buffer-layout';
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
-
-export namespace MultisigInstruction {
+// @internal
+namespace MultisigInstruction {
   export const Layout = BufferLayout.struct([
     BufferLayout.u8('m'),
     BufferLayout.u8('n'),
