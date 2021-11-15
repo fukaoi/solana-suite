@@ -51,7 +51,9 @@ export namespace Account {
       .then(Result.ok)
       .catch(Result.err);
 
-    if (balance.isErr) return balance;
+    if (balance.isErr) {
+      return balance;
+    }
 
     switch (unit) {
       case 'sol': return Result.ok((balance.value) / LAMPORTS_PER_SOL);
@@ -66,14 +68,17 @@ export namespace Account {
   ): Promise<Result<string, Error>> => {
     console.debug('Now airdropping...please wait');
 
-    if (airdropAmount > MAX_AIRDROP_SOL)
+    if (airdropAmount > MAX_AIRDROP_SOL) {
       return Result.err(Error(`Over max airdrop amount: ${airdropAmount}`))
+    }
 
     const sig = await Node.getConnection().requestAirdrop(pubkey, airdropAmount)
       .then(Result.ok)
       .catch(Result.err);
 
-    if (sig.isErr) return Result.err(Error('Failed airdrop'));
+    if (sig.isErr) {  
+      return Result.err(Error('Failed airdrop'));
+    }
     await Transaction.confirmedSig(sig.value);
     return Result.ok('success');
   }
@@ -84,11 +89,6 @@ export namespace Account {
       keypair.publicKey.toBase58(),
       bs.encode(keypair.secretKey)
     );
-
-    // return {
-    // pubkey: keypair.publicKey.toBase58(),
-    // secret: bs.encode(keypair.secretKey)
-    // };
   };
 
   export const findAssocaiatedTokenAddress = async (
