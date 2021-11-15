@@ -19,9 +19,6 @@
 
 - [submit](Instruction.md#submit)
 - [batchSubmit](Instruction.md#batchsubmit)
-- [createLayoutPubKey](Instruction.md#createlayoutpubkey)
-- [createLayoutUint64](Instruction.md#createlayoutuint64)
-- [pubkeyToBuffer](Instruction.md#pubkeytobuffer)
 
 ## Constructors
 
@@ -40,7 +37,7 @@
 
 #### Defined in
 
-[src/instruction.ts:26](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L26)
+[src/instruction.ts:22](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L22)
 
 ## Properties
 
@@ -50,7 +47,7 @@
 
 #### Defined in
 
-[src/instruction.ts:23](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L23)
+[src/instruction.ts:19](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L19)
 
 ___
 
@@ -60,7 +57,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:21](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L21)
+[src/instruction.ts:17](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L17)
 
 ___
 
@@ -70,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:22](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L22)
+[src/instruction.ts:18](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L18)
 
 ___
 
@@ -80,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:24](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L24)
+[src/instruction.ts:20](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L20)
 
 ## Methods
 
@@ -94,7 +91,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:38](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L38)
+[src/instruction.ts:34](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L34)
 
 ___
 
@@ -114,64 +111,4 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:58](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L58)
-
-___
-
-### createLayoutPubKey
-
-▸ `Static` **createLayoutPubKey**(`property?`): `Blob`
-
-#### Parameters
-
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `property` | `string` | `'publicKey'` |
-
-#### Returns
-
-`Blob`
-
-#### Defined in
-
-[src/instruction.ts:97](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L97)
-
-___
-
-### createLayoutUint64
-
-▸ `Static` **createLayoutUint64**(`property?`): `Blob`
-
-#### Parameters
-
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `property` | `string` | `'uint64'` |
-
-#### Returns
-
-`Blob`
-
-#### Defined in
-
-[src/instruction.ts:92](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L92)
-
-___
-
-### pubkeyToBuffer
-
-▸ `Static` **pubkeyToBuffer**(`publicKey`): `Buffer`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `publicKey` | `PublicKey` |
-
-#### Returns
-
-`Buffer`
-
-#### Defined in
-
-[src/instruction.ts:87](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/instruction.ts#L87)
+[src/instruction.ts:54](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L54)

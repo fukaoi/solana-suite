@@ -27,4 +27,4 @@
 
 #### Defined in
 
-[src/nft/storage/arweave.ts:164](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/nft/storage/arweave.ts#L164)
+[src/nft/storage/arweave.ts:164](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/nft/storage/arweave.ts#L164)

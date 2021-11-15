@@ -30,7 +30,7 @@
 
 #### Defined in
 
-[src/multisig.ts:144](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/multisig.ts#L144)
+[src/multisig.ts:148](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/multisig.ts#L148)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[src/multisig.ts:114](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/multisig.ts#L114)
+[src/multisig.ts:118](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/multisig.ts#L118)
 
 ___
 
@@ -70,4 +70,4 @@ ___
 
 #### Defined in
 
-[src/multisig.ts:104](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/multisig.ts#L104)
+[src/multisig.ts:108](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/multisig.ts#L108)

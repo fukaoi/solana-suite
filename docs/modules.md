@@ -16,7 +16,6 @@
 - [MetaplexMetaData](modules/MetaplexMetaData.md)
 - [MetaplexSerialize](modules/MetaplexSerialize.md)
 - [Multisig](modules/Multisig.md)
-- [MultisigInstruction](modules/MultisigInstruction.md)
 - [Node](modules/Node.md)
 - [Result](modules/Result.md)
 - [SolNative](modules/SolNative.md)
@@ -61,11 +60,11 @@
 | Name | Type |
 | :------ | :------ |
 | `T` | `T` |
-| `E` | extends `Error``Error` |
+| `E` | extends `Error` = `Error` |
 
 #### Defined in
 
-[src/result.ts:536](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/result.ts#L536)
+[src/result.ts:536](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/result.ts#L536)
 
 ## Properties
 
@@ -95,4 +94,4 @@ node_modules/@types/node/globals.d.ts:589
 
 #### Defined in
 
-[src/global.ts:73](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/global.ts#L73)
+[src/global.ts:73](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/global.ts#L73)

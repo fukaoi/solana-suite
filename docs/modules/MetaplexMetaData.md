@@ -47,7 +47,7 @@
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:188](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/nft/metaplex/metadata.ts#L188)
+[src/nft/metaplex/metadata.ts:188](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/nft/metaplex/metadata.ts#L188)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:159](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/nft/metaplex/metadata.ts#L159)
+[src/nft/metaplex/metadata.ts:159](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/nft/metaplex/metadata.ts#L159)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:138](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/nft/metaplex/metadata.ts#L138)
+[src/nft/metaplex/metadata.ts:138](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/nft/metaplex/metadata.ts#L138)
 
 ___
 
@@ -124,4 +124,4 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:218](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/nft/metaplex/metadata.ts#L218)
+[src/nft/metaplex/metadata.ts:218](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/nft/metaplex/metadata.ts#L218)

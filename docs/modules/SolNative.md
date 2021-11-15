@@ -13,7 +13,7 @@
 
 ### multisigTransfer
 
-▸ `Const` **multisigTransfer**(`owner`, `dest`, `signers`, `amount`, `feePayer?`): `Promise`<[`Result`](../modules.md#result)<[`Instruction`](../classes/Instruction.md), `Error`\>\>
+▸ `Const` **multisigTransfer**(`owner`, `dest`, `signers`, `amountSol`, `feePayer?`): `Promise`<[`Result`](../modules.md#result)<[`Instruction`](../classes/Instruction.md), `Error`\>\>
 
 #### Parameters
 
@@ -22,7 +22,7 @@
 | `owner` | `PublicKey` |
 | `dest` | `PublicKey` |
 | `signers` | `Signer`[] |
-| `amount` | `number` |
+| `amountSol` | `number` |
 | `feePayer?` | `Signer` |
 
 #### Returns
@@ -31,13 +31,13 @@
 
 #### Defined in
 
-[src/sol-native.ts:21](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/sol-native.ts#L21)
+[src/sol-native.ts:21](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/sol-native.ts#L21)
 
 ___
 
 ### transfer
 
-▸ `Const` **transfer**(`source`, `destination`, `signers`, `amount`, `feePayer?`): `Promise`<[`Result`](../modules.md#result)<[`Instruction`](../classes/Instruction.md), `Error`\>\>
+▸ `Const` **transfer**(`source`, `destination`, `signers`, `amountSol`, `feePayer?`): `Promise`<[`Result`](../modules.md#result)<[`Instruction`](../classes/Instruction.md), `Error`\>\>
 
 #### Parameters
 
@@ -46,7 +46,7 @@ ___
 | `source` | `PublicKey` |
 | `destination` | `PublicKey` |
 | `signers` | `Signer`[] |
-| `amount` | `number` |
+| `amountSol` | `number` |
 | `feePayer?` | `Signer` |
 
 #### Returns
@@ -55,4 +55,4 @@ ___
 
 #### Defined in
 
-[src/sol-native.ts:96](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/sol-native.ts#L96)
+[src/sol-native.ts:96](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/sol-native.ts#L96)

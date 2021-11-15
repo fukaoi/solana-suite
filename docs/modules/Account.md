@@ -25,7 +25,7 @@
 
 #### Defined in
 
-[src/account.ts:43](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L43)
+[src/account.ts:43](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/account.ts#L43)
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:44](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L44)
+[src/account.ts:44](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/account.ts#L44)
 
 ## Functions
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:81](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L81)
+[src/account.ts:88](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/account.ts#L88)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:94](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L94)
+[src/account.ts:96](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/account.ts#L96)
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:110](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L110)
+[src/account.ts:112](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/account.ts#L112)
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:46](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L46)
+[src/account.ts:46](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/account.ts#L46)
 
 ___
 
@@ -121,10 +121,10 @@ ___
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `pubkey` | `PublicKey` | `undefined` |
-| `airdropAmount` | `number` | `DEFAULT_AIRDROP_AMOUNT` |
+| Name | Type |
+| :------ | :------ |
+| `pubkey` | `PublicKey` |
+| `airdropAmount?` | `number` |
 
 #### Returns
 
@@ -132,4 +132,4 @@ ___
 
 #### Defined in
 
-[src/account.ts:63](https://github.com/fukaoi/solana-suite/blob/5119ed2/src/account.ts#L63)
+[src/account.ts:65](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/account.ts#L65)
