@@ -33,7 +33,7 @@
 
 #### Defined in
 
-[src/account.ts:16](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/account.ts#L16)
+[src/account.ts:16](https://github.com/fukaoi/solana-suite/blob/077409e/src/account.ts#L16)
 
 ## Properties
 
@@ -43,7 +43,7 @@
 
 #### Defined in
 
-[src/account.ts:13](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/account.ts#L13)
+[src/account.ts:13](https://github.com/fukaoi/solana-suite/blob/077409e/src/account.ts#L13)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:14](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/account.ts#L14)
+[src/account.ts:14](https://github.com/fukaoi/solana-suite/blob/077409e/src/account.ts#L14)
 
 ## Methods
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:28](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/account.ts#L28)
+[src/account.ts:28](https://github.com/fukaoi/solana-suite/blob/077409e/src/account.ts#L28)
 
 ___
 
@@ -81,4 +81,4 @@ ___
 
 #### Defined in
 
-[src/account.ts:24](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/account.ts#L24)
+[src/account.ts:24](https://github.com/fukaoi/solana-suite/blob/077409e/src/account.ts#L24)

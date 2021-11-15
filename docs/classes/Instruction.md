@@ -10,10 +10,10 @@
 
 ### Properties
 
+- [data](Instruction.md#data)
 - [feePayer](Instruction.md#feepayer)
 - [instructions](Instruction.md#instructions)
 - [signers](Instruction.md#signers)
-- [value](Instruction.md#value)
 
 ### Methods
 
@@ -24,7 +24,7 @@
 
 ### constructor
 
-• **new Instruction**(`instructions`, `signers`, `feePayer?`, `value?`)
+• **new Instruction**(`instructions`, `signers`, `feePayer?`, `data?`)
 
 #### Parameters
 
@@ -33,13 +33,23 @@
 | `instructions` | `TransactionInstruction`[] |
 | `signers` | `Signer`[] |
 | `feePayer?` | `Signer` |
-| `value?` | `unknown` |
+| `data?` | `unknown` |
 
 #### Defined in
 
-[src/instruction.ts:22](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L22)
+[src/instruction.ts:17](https://github.com/fukaoi/solana-suite/blob/077409e/src/instruction.ts#L17)
 
 ## Properties
+
+### data
+
+• `Optional` **data**: `unknown`
+
+#### Defined in
+
+[src/instruction.ts:15](https://github.com/fukaoi/solana-suite/blob/077409e/src/instruction.ts#L15)
+
+___
 
 ### feePayer
 
@@ -47,7 +57,7 @@
 
 #### Defined in
 
-[src/instruction.ts:19](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L19)
+[src/instruction.ts:14](https://github.com/fukaoi/solana-suite/blob/077409e/src/instruction.ts#L14)
 
 ___
 
@@ -57,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:17](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L17)
+[src/instruction.ts:12](https://github.com/fukaoi/solana-suite/blob/077409e/src/instruction.ts#L12)
 
 ___
 
@@ -67,37 +77,27 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:18](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L18)
-
-___
-
-### value
-
-• `Optional` **value**: `unknown`
-
-#### Defined in
-
-[src/instruction.ts:20](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L20)
+[src/instruction.ts:13](https://github.com/fukaoi/solana-suite/blob/077409e/src/instruction.ts#L13)
 
 ## Methods
 
 ### submit
 
-▸ **submit**(): `Promise`<[`Result`](../modules.md#result)<[`InstructionSubmit`](../interfaces/InstructionSubmit.md), `Error`\>\>
+▸ **submit**(): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Returns
 
-`Promise`<[`Result`](../modules.md#result)<[`InstructionSubmit`](../interfaces/InstructionSubmit.md), `Error`\>\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/instruction.ts:34](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L34)
+[src/instruction.ts:29](https://github.com/fukaoi/solana-suite/blob/077409e/src/instruction.ts#L29)
 
 ___
 
 ### batchSubmit
 
-▸ `Static` **batchSubmit**(`arr`): `Promise`<[`Result`](../modules.md#result)<[`InstructionSubmit`](../interfaces/InstructionSubmit.md), `Error`\>\>
+▸ `Static` **batchSubmit**(`arr`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Parameters
 
@@ -107,8 +107,8 @@ ___
 
 #### Returns
 
-`Promise`<[`Result`](../modules.md#result)<[`InstructionSubmit`](../interfaces/InstructionSubmit.md), `Error`\>\>
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
 
 #### Defined in
 
-[src/instruction.ts:54](https://github.com/fukaoi/solana-suite/blob/f1947cd/src/instruction.ts#L54)
+[src/instruction.ts:49](https://github.com/fukaoi/solana-suite/blob/077409e/src/instruction.ts#L49)
