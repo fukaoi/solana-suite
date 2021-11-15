@@ -63,8 +63,8 @@ describe('SplToken', () => {
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
     const res = await inst.unwrap().submit();
-    assert.isTrue(res.isOk, res.unwrap().sig);
-    tokenKeyStr = inst.unwrap().value as string;
+    assert.isTrue(res.isOk, res.unwrap());
+    tokenKeyStr = inst.unwrap().data as string;
     console.log('# tokenKey: ', tokenKeyStr);
   });
 
@@ -82,7 +82,7 @@ describe('SplToken', () => {
 
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const mint = await SplToken.mint(
-      (multisig.unwrap().value as string).toPubkey(),
+      (multisig.unwrap().data as string).toPubkey(),
       [
         source.toKeypair(),
         signer1.toKeypair(),
@@ -110,7 +110,7 @@ describe('SplToken', () => {
       );
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
-    const token = inst1.unwrap().value as string;
+    const token = inst1.unwrap().data as string;
     console.log('# tokenKey: ', token);
 
     const inst2 = await SplToken.transfer(
@@ -145,8 +145,8 @@ describe('SplToken', () => {
       inst3.unwrap()
     ].submit();
 
-    assert.isTrue(sig.isOk, sig.unwrap().sig);
-    console.log('signature: ', sig.unwrap().sig.toSigUrl());
+    assert.isTrue(sig.isOk, sig.unwrap());
+    console.log('signature: ', sig.unwrap().toSigUrl());
   });
 
   it('Create token, transfer with multisig and fee payer', async () => {
@@ -164,7 +164,7 @@ describe('SplToken', () => {
 
     assert.isTrue(multiInst.isOk, `${multiInst.unwrap()}`);
 
-    const multisig = (multiInst.unwrap().value as string).toPubkey();
+    const multisig = (multiInst.unwrap().data as string).toPubkey();
 
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const mintInst =
@@ -182,7 +182,7 @@ describe('SplToken', () => {
 
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
 
-    const token = (mintInst.unwrap().value as string).toPubkey();
+    const token = (mintInst.unwrap().data as string).toPubkey();
     const inst = await SplToken.transfer(
       token,
       multisig,
@@ -203,7 +203,7 @@ describe('SplToken', () => {
       inst.unwrap()
     ].submit();
 
-    console.log('signature: ', `${sig.unwrap().sig.toSigUrl()}`);
+    console.log('signature: ', `${sig.unwrap().toSigUrl()}`);
   });
 
   it('Subscribe a account(pubkey)', async () => {

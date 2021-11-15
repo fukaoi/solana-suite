@@ -1,6 +1,7 @@
 import {
   PublicKey,
   Keypair,
+  TransactionSignature,
 } from '@solana/web3.js';
 
 import bs from 'bs58';
@@ -8,7 +9,6 @@ import {
   Constants,
   Result,
   Instruction,
-  InstructionSubmit,
 } from './';
 
 
@@ -21,7 +21,7 @@ declare global {
   }
 
   interface Array<T> {
-    submit(): Promise<Result<InstructionSubmit, Error>>;
+    submit(): Promise<Result<TransactionSignature, Error>>;
   }
 }
 
