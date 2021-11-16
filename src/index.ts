@@ -6,7 +6,6 @@ export * from './global';
 export * from './memo';
 export * from './multisig';
 export * from './node';
-export * from './nft/spl';
 export * from './nft/metaplex';
 export * from './nft/storage';
 export * from './result';
