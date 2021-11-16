@@ -1,5 +1,4 @@
 export * from './account';
-export * from './append';
 export * from './constants';
 export * from './instruction';
 export * from './global';

@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {KeypairStr} from '../../../src';
+import {Account, KeypairStr} from '../../../src';
 import {Metaplex, MetaplexInstructure} from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
 
@@ -21,20 +21,20 @@ describe('Metaplex', () => {
       creators: null
     });
 
-    const res = await Metaplex.mint(
+    const inst = await Metaplex.mint(
       data,
       source.toPubkey(),
       [source.toKeypair()],
-    )({
-      feePayer: source.toPubkey()
-    });
+    );
 
-    assert.isTrue(res.isOk);
-    console.log(`# tokenKey: ${(<Metaplex.MintResult>res.unwrap()).tokenKey}`);
-    console.log(`# tx signature: ${(<Metaplex.MintResult>res.unwrap()).signature}`);
+    assert.isTrue(inst.isOk);
+    const res = await inst.unwrap().submit();
+    console.log('# tokenKey: ', inst.unwrap().data);
+    console.log('# signature: ', res.unwrap());
   });
 
-  it('Mint nft with fee payer', async () => {
+  it.only('Mint nft with fee payer', async () => {
+    const owner = Account.create();
     const data = new MetaplexInstructure.Data({
       name: 'Sample',
       symbol: 'SAMPLE',
@@ -43,18 +43,18 @@ describe('Metaplex', () => {
       creators: null
     });
 
-    const res = await Metaplex.mint(
+    const inst = await Metaplex.mint(
       data,
-      source.toPubkey(),
+      owner.toPubkey(),
       [
-        source.toKeypair(),
-      ]
-    )({
-      feePayer: source.toPubkey(),
-    });
+        owner.toKeypair(),
+      ],
+      source.toKeypair(), // feePayer
+    );
 
-    assert.isTrue(res.isOk, res.unwrap().toString());
-    console.log(`# tokenKey: ${(<Metaplex.MintResult>res.unwrap()).tokenKey}`);
-    console.log(`# tx signature: ${(<Metaplex.MintResult>res.unwrap()).signature}`);
+    assert.isTrue(inst.isOk);
+    const res = await inst.unwrap().submit();
+    console.log('# tokenKey: ', inst.unwrap().data);
+    console.log('# signature: ', res.unwrap());
   });
 });
