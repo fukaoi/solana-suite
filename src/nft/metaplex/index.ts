@@ -13,24 +13,23 @@ import {
 
 import {
   Node,
-  Result,
   Instruction,
+  Result,
 } from '../../';
 
 import {
-  MetaplexMetaData,
   MetaplexInstructure
 } from './';
+import {MetaplexMetaData} from './metadata';
 
 export * from './instructure';
 export * from './metadata';
 export * from './serialize';
 
-export namespace Metaplex {
-
-  const createMintAccount = async (
+export namespace MetaplexInstruction {
+  export const mintAccount = async (
     instructions: TransactionInstruction[],
-    payer: PublicKey,
+    owner: PublicKey, // need sufficient sol account
     signers: Signer[],
   ) => {
     const mintRentExempt =
@@ -40,7 +39,7 @@ export namespace Metaplex {
     const mintAccount = Keypair.generate();
     instructions.push(
       SystemProgram.createAccount({
-        fromPubkey: payer,
+        fromPubkey: owner,
         newAccountPubkey: mintAccount.publicKey,
         lamports: mintRentExempt,
         space: MintLayout.span,
@@ -49,15 +48,18 @@ export namespace Metaplex {
     );
 
     signers.push(mintAccount);
-    return mintAccount.publicKey;
+
+    return {
+      mintAccount: mintAccount.publicKey,
+      signers: signers
+    };
   }
 
-  const init = async (
+  export const mint = async (
     instructions: TransactionInstruction[],
     mintAccount: PublicKey,
-    payer: PublicKey,
-    owner = payer,
-    freezeAuthority = payer
+    owner: PublicKey,
+    freezeAuthority: PublicKey,
   ) => {
     const decimals: number = 0;
 
@@ -72,6 +74,9 @@ export namespace Metaplex {
     );
     return mintAccount.toBase58();
   }
+}
+
+export namespace Metaplex {
 
   // tslint:disable-next-line
   export interface Creators {}
@@ -98,59 +103,79 @@ export namespace Metaplex {
     }
   }
 
-  export const create = async (
+  export const initializeMint = async (
     payer: PublicKey,
     signers: Signer[],
-    instructions?: TransactionInstruction[]
-  ) => {
-    let inst: TransactionInstruction[] = [];
-    inst = instructions ? instructions : inst;
+  ): Promise<{
+    instructions: TransactionInstruction[],
+    signers: Signer[],
+    tokenKey: string
+  }> => {
+    let instructions: TransactionInstruction[] = [];
 
-    const mintAccount = await createMintAccount(
-      inst,
+    const inst1 = await MetaplexInstruction.mintAccount(
+      instructions,
       payer,
       signers,
     );
 
-    const tokenKey = await init(
-      inst,
-      mintAccount,
+    signers = signers.concat(inst1.signers);
+
+    const tokenKey = await MetaplexInstruction.mint(
+      instructions,
+      inst1.mintAccount,
+      payer,
       payer,
     );
 
-    return {instructions: inst, signers, tokenKey};
+    return {
+      instructions,
+      signers,
+      tokenKey
+    };
   }
 
   export const mint = async (
     data: MetaplexInstructure.Data,
     owner: PublicKey,
     signers: Signer[],
-    feePayer?: Signer,
   ): Promise<Result<Instruction, Error>> => {
-    feePayer = feePayer ? feePayer : signers[0];
-    const txsign = await create(feePayer.publicKey, [signers[0]]);
+    const inst1 = await initializeMint(owner, signers);
 
-    const metadataInst = await MetaplexMetaData.create(
+    signers = signers.concat(inst1.signers);
+
+
+    const inst2 = await MetaplexMetaData.create(
       data,
-      txsign.tokenKey.toPubkey(),
-      feePayer.publicKey,
+      inst1.tokenKey.toPubkey(),
       owner,
       owner,
-      txsign.instructions,
+      owner,
     );
 
-    if (metadataInst.isErr){ 
-      return Result.err(metadataInst.error);
+    if (inst2.isErr) {
+      return Result.err(inst2.error);
     }
 
-    signers = signers.concat(txsign.signers);
+    const inst3 = await MetaplexMetaData.update(
+      data,
+      undefined,
+      undefined,
+      inst1.tokenKey.toPubkey(),
+      owner,
+      signers,
+    );
+
+    if (inst3.isErr) return Result.err(inst3.error);
+
+    const mergeInstructions = inst1.instructions.concat(inst2.unwrap()).concat(inst3.unwrap());
 
     return Result.ok(
       new Instruction(
-        metadataInst.value,
+        mergeInstructions,
         signers,
-        feePayer,
-        txsign.tokenKey,
+        undefined,
+        inst1.tokenKey,
       ));
   }
 }
