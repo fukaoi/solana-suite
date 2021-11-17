@@ -57,7 +57,7 @@ export namespace MetaplexInstruction {
 
   export const mint = async (
     instructions: TransactionInstruction[],
-    mintAccount: PublicKey,
+    createdAccount: PublicKey,
     owner: PublicKey,
     freezeAuthority: PublicKey,
   ) => {
@@ -66,13 +66,13 @@ export namespace MetaplexInstruction {
     instructions.push(
       Token.createInitMintInstruction(
         TOKEN_PROGRAM_ID,
-        mintAccount,
+        createdAccount,
         decimals,
         owner,
         freezeAuthority,
       ),
     );
-    return mintAccount.toBase58();
+    return createdAccount.toBase58();
   }
 }
 
