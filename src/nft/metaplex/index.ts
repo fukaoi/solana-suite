@@ -36,21 +36,21 @@ export namespace MetaplexInstruction {
       await Node.getConnection().getMinimumBalanceForRentExemption(
         MintLayout.span,
       );
-    const mintAccount = Keypair.generate();
+    const newAccount = Keypair.generate();
     instructions.push(
       SystemProgram.createAccount({
         fromPubkey: owner,
-        newAccountPubkey: mintAccount.publicKey,
+        newAccountPubkey: newAccount.publicKey,
         lamports: mintRentExempt,
         space: MintLayout.span,
         programId: TOKEN_PROGRAM_ID,
       }),
     );
 
-    signers.push(mintAccount);
+    signers.push(newAccount);
 
     return {
-      mintAccount: mintAccount.publicKey,
+      mintAccount: newAccount.publicKey,
       signers
     };
   }
