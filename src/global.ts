@@ -20,7 +20,8 @@ declare global {
     toAddressUrl(): string;
   }
 
-  interface Array<T> {
+  interface Array<T extends Instruction[]> {
+  // interface Array<T> {
     submit(): Promise<Result<TransactionSignature, Error>>;
   }
 }

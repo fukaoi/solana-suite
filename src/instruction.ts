@@ -73,3 +73,10 @@ export class Instruction {
       .catch(Result.err);
   }
 }
+
+export class Instructions<T extends Instruction> extends Array<T> {
+    public echo() {
+      console.log(this);
+    }
+}
+

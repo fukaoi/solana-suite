@@ -117,78 +117,79 @@ describe('Metaplex', () => {
     assert.equal(beforeSource.unwrap(), afterSource.unwrap());
   });
 
-  // metaplex protocl no suuproted
-  // it('Transfer nft with multi sig', async () => {
+  it('Transfer nft with multi sig', async () => {
 
-    // // create multisig
-    // const signer1 = Account.create();
-    // const signer2 = Account.create();
+    // create multisig
+    const signer1 = Account.create();
+    const signer2 = Account.create();
 
-    // const multisig = await Multisig.create(
-      // 2,
-      // source.toKeypair(),
-      // [
-        // signer1.toPubkey(),
-        // signer2.toPubkey(),
-      // ]
-    // );
+    const multisig = await Multisig.create(
+      2,
+      source.toKeypair(),
+      [
+        signer1.toPubkey(),
+        signer2.toPubkey(),
+      ]
+    );
 
-    // assert(multisig.isOk, `${multisig.unwrap()}`);
+    const resMulti = await multisig.unwrap().submit();
 
-    // const multisigAddress = multisig.unwrap().data as string;
+    assert(resMulti.isOk, `${resMulti.unwrap()}`);
 
-    // console.log('# multisig address: ', multisigAddress);
+    const multisigAddress = multisig.unwrap().data as string;
+
+    console.log('# multisig address: ', multisigAddress);
 
 
-    // // create nft 
-    // const data = new MetaplexInstructure.Data({
-      // name: 'Sample',
-      // symbol: 'SAMPLE',
-      // uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',
-      // sellerFeeBasisPoints: 100,
-      // creators: null
-    // });
+    // create nft 
+    const data = new MetaplexInstructure.Data({
+      name: 'Sample',
+      symbol: 'SAMPLE',
+      uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',
+      sellerFeeBasisPoints: 100,
+      creators: null
+    });
 
-    // const inst1 = await Metaplex.mint(
-      // data,
-      // source.toPubkey(),
-      // [source.toKeypair()],
-    // );
+    const inst1 = await Metaplex.mint(
+      data,
+      source.toPubkey(),
+      [source.toKeypair()],
+    );
 
-    // assert.isTrue(inst1.isOk);
+    assert.isTrue(inst1.isOk);
 
-    // const resMint = await inst1.unwrap().submit();
-    // console.log('# tokenKey: ', inst1.unwrap().data);
-    // console.log('# signature: ', resMint.unwrap());
+    const resMint = await inst1.unwrap().submit();
+    console.log('# tokenKey: ', inst1.unwrap().data);
+    console.log('# signature: ', resMint.unwrap());
 
-    // assert.isTrue(inst1.isOk, `${inst1.unwrap()}`)
+    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`)
 
-    // // transfer from source to multisig address
-    // const inst2 = await SplToken.transferNft(
-      // (inst1.unwrap().data as string).toPubkey(),
-      // source.toPubkey(),
-      // multisigAddress.toPubkey(),
-      // [
-        // source.toKeypair(),
-      // ],
-    // );
+    // transfer from source to multisig address
+    const inst2 = await SplToken.transferNft(
+      (inst1.unwrap().data as string).toPubkey(),
+      source.toPubkey(),
+      multisigAddress.toPubkey(),
+      [
+        source.toKeypair(),
+      ],
+    );
 
-    // const resTransfer = await inst2.unwrap().submit();
-    // console.log('# signature: ', resTransfer.unwrap());
+    const resTransfer = await inst2.unwrap().submit();
+    console.log('# signature: ', resTransfer.unwrap());
 
-    // // transfer from multisig address to dest  
-    // const inst3 = await SplToken.transferNft(
-      // (inst1.unwrap().data as string).toPubkey(),
-      // multisigAddress.toPubkey(),
-      // dest.toPubkey(),
-      // [
-        // signer1.toKeypair(),
-        // // signer2.toKeypair(),
-      // ],
-      // source.toKeypair(),
-    // );
+    // transfer from multisig address to dest  
+    const inst3 = await SplToken.transferNft(
+      (inst1.unwrap().data as string).toPubkey(),
+      multisigAddress.toPubkey(),
+      dest.toPubkey(),
+      [
+        signer1.toKeypair(),
+        signer2.toKeypair(),
+      ],
+      source.toKeypair(),
+    );
 
-    // const res = await inst3.unwrap().submit();
-    // console.log('# signature: ', res.unwrap());
-  // });
+    const res = await inst3.unwrap().submit();
+    console.log('# signature: ', res.unwrap());
+  });
 });
