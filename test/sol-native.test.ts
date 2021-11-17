@@ -29,7 +29,6 @@ describe('SolNative', () => {
     console.log('# tx signature: ', res.unwrap().toSigUrl());
   });
 
-  // todo: Fails when run alone. 
   it('transfer transaction with memo data', async () => {
     const solAmount = 0.0001;
     const inst1 = Memo.create(
@@ -54,10 +53,13 @@ describe('SolNative', () => {
   it('transfer transaction with fee payer', async () => {
     const solAmount = 0.0001;
     const owner = Account.create();
+    await Account.requestAirdrop(owner.toPubkey());
     const feePayer = source;
     const before = (await Account.getBalance(
       feePayer.pubkey.toPubkey())
     ).unwrap();
+
+    console.log(before);
 
     const inst = await SolNative.transfer(
       owner.toPubkey(),
@@ -69,7 +71,7 @@ describe('SolNative', () => {
       feePayer.toKeypair()
     );
 
-    const res = await inst.unwrap().submit(); 
+    const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# tx signature: ', res.unwrap().toSigUrl());
     const after = (await Account.getBalance(
