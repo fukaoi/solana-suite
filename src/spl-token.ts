@@ -248,12 +248,12 @@ export namespace SplToken {
     feePayer?: Signer,
   ): Promise<Result<Instruction, Error>> => {
     return transfer(
-      tokenKey, 
-      owner, 
-      dest, 
-      signers, 
-      NFT_AMOUNT, 
-      NFT_DECIMALS, 
+      tokenKey,
+      owner,
+      dest,
+      signers,
+      NFT_AMOUNT,
+      NFT_DECIMALS,
       feePayer
     );
   }

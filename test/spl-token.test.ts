@@ -150,6 +150,7 @@ describe('SplToken', () => {
   });
 
   it('Create token, transfer with multisig and fee payer', async () => {
+    // create multisig
     const signer1 = Account.create();
     const signer2 = Account.create();
     const multiInst =
@@ -168,6 +169,7 @@ describe('SplToken', () => {
 
     console.log('# multisig address :', multisig.toBase58());
 
+    // create nft 
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const mintInst =
       await SplToken.mint(
@@ -188,6 +190,7 @@ describe('SplToken', () => {
 
     console.log('# tokenKey: ', token.toBase58());
 
+    // transfer from multisig to dest
     const inst = await SplToken.transfer(
       token,
       multisig,
@@ -203,7 +206,7 @@ describe('SplToken', () => {
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
     const sig = await [
-      multiInst.unwrap(), 
+      multiInst.unwrap(),
       mintInst.unwrap(),
       inst.unwrap()
     ].submit();
