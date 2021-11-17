@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {KeypairStr, SplToken, Transaction} from '../../../src';
+import {Account, KeypairStr, Multisig, SplToken, Transaction} from '../../../src';
 import {Metaplex, MetaplexInstructure} from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
 
@@ -56,20 +56,91 @@ describe('Metaplex', () => {
     console.log('# tokenKey: ', inst1.unwrap().data);
     console.log('# signature: ', resMint.unwrap());
 
-    await Transaction.confirmedSig(resMint.unwrap());
-
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`)
 
-    const inst2 = await SplToken.transfer(
+    const inst2 = await SplToken.transferNft(
       (inst1.unwrap().data as string).toPubkey(),
       source.toPubkey(),
       dest.toPubkey(),
       [source.toKeypair()],
-      1,
-      0,
     );
 
     const res = await inst2.unwrap().submit();
+    console.log('# signature: ', res.unwrap());
+  });
+
+  it.only('Transfer nft with multi sig', async () => {
+
+    // create nft 
+    const data = new MetaplexInstructure.Data({
+      name: 'Sample',
+      symbol: 'SAMPLE',
+      uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',
+      sellerFeeBasisPoints: 100,
+      creators: null
+    });
+
+    const inst1 = await Metaplex.mint(
+      data,
+      source.toPubkey(),
+      [source.toKeypair()],
+    );
+
+    assert.isTrue(inst1.isOk);
+
+    const resMint = await inst1.unwrap().submit();
+    console.log('# tokenKey: ', inst1.unwrap().data);
+    console.log('# signature: ', resMint.unwrap());
+
+    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`)
+
+    // create multisig
+    const signer1 = Account.create();
+    const signer2 = Account.create();
+
+    const multisig = await Multisig.create(
+      2, 
+      source.toKeypair(), 
+      [
+        signer1.toPubkey(),
+        signer2.toPubkey(),
+      ]
+    );
+
+    assert(multisig.isOk, `${multisig.unwrap()}`);
+
+    const multisigAddress = multisig.unwrap().data as string;
+    console.log('# multisig address: ', multisigAddress);
+
+    // transfer from source to multisig address
+    const inst2 = await SplToken.transferNft(
+      (inst1.unwrap().data as string).toPubkey(),
+      source.toPubkey(),
+      multisigAddress.toPubkey(),
+      [
+        source.toKeypair(),
+      ],
+    );
+
+    const resTransfer = await inst2.unwrap().submit();
+    console.log('# signature: ', resTransfer.unwrap());
+
+    
+
+    // transfer from multisig address to dest  
+    const inst3 = await SplToken.transferNft(
+      (inst1.unwrap().data as string).toPubkey(),
+      multisigAddress.toPubkey(),
+      dest.toPubkey(),
+      [
+        signer1.toKeypair(),
+        signer2.toKeypair(),
+      ],
+      source.toKeypair(),
+    );
+    // console.log(inst3);
+
+    const res = await inst3.unwrap().submit();
     console.log('# signature: ', res.unwrap());
   });
 });

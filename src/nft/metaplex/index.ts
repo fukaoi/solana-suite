@@ -51,7 +51,7 @@ export namespace MetaplexInstruction {
 
     return {
       mintAccount: mintAccount.publicKey,
-      signers: signers
+      signers
     };
   }
 
@@ -111,7 +111,7 @@ export namespace Metaplex {
     signers: Signer[],
     tokenKey: string
   }> => {
-    let instructions: TransactionInstruction[] = [];
+    const instructions: TransactionInstruction[] = [];
 
     const inst1 = await MetaplexInstruction.mintAccount(
       instructions,

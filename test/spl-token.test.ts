@@ -146,7 +146,7 @@ describe('SplToken', () => {
     ].submit();
 
     assert.isTrue(sig.isOk, sig.unwrap());
-    console.log('signature: ', sig.unwrap().toSigUrl());
+    console.log('signature: ', sig.unwrap());
   });
 
   it('Create token, transfer with multisig and fee payer', async () => {
@@ -166,6 +166,8 @@ describe('SplToken', () => {
 
     const multisig = (multiInst.unwrap().data as string).toPubkey();
 
+    console.log('# multisig address :', multisig.toBase58());
+
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const mintInst =
       await SplToken.mint(
@@ -183,6 +185,9 @@ describe('SplToken', () => {
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
 
     const token = (mintInst.unwrap().data as string).toPubkey();
+
+    console.log('# tokenKey: ', token.toBase58());
+
     const inst = await SplToken.transfer(
       token,
       multisig,
@@ -203,7 +208,7 @@ describe('SplToken', () => {
       inst.unwrap()
     ].submit();
 
-    console.log('signature: ', `${sig.unwrap().toSigUrl()}`);
+    console.log('signature: ', `${sig.unwrap()}`);
   });
 
   it('Subscribe a account(pubkey)', async () => {

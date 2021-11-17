@@ -222,7 +222,7 @@ export namespace MetaplexMetaData {
     updateAuthority: PublicKey,
     signers: Signer[],
   ): Promise<Result<TransactionInstruction[], Error>> => {
-    let inst: TransactionInstruction[] = [];
+    const inst: TransactionInstruction[] = [];
 
     const associatedToken = await Account.findAssocaiatedTokenAddress(
       updateAuthority,

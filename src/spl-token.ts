@@ -15,6 +15,10 @@ import {
 import {Transaction, Node, Result, Instruction, Util, } from './';
 
 export namespace SplToken {
+
+  const NFT_AMOUNT =1;
+  const NFT_DECIMALS =0;
+
   export interface TransferHistory {
     info: {
       destination: string,
@@ -234,5 +238,23 @@ export namespace SplToken {
         signers,
         feePayer
       ));
+  }
+
+  export const transferNft = async (
+    tokenKey: PublicKey,
+    owner: PublicKey,
+    dest: PublicKey,
+    signers: Signer[],
+    feePayer?: Signer,
+  ): Promise<Result<Instruction, Error>> => {
+    return transfer(
+      tokenKey, 
+      owner, 
+      dest, 
+      signers, 
+      NFT_AMOUNT, 
+      NFT_DECIMALS, 
+      feePayer
+    );
   }
 }
