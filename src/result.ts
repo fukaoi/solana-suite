@@ -14,7 +14,7 @@ abstract class AbstractResult<T, E extends Error> {
   unwrap<U, V>(ok: (value: T) => U, err: (error: E) => V): U | V;
   // unified-signatures. into line 10
   // unwrap<U>(ok: (value: T) => U, err: (error: E) => U): U;
-  unwrap(ok?: (value: T) => unknown, err?: (error: E) => unknown): unknown  {
+  unwrap(ok?: (value: T) => unknown, err?: (error: E) => unknown): unknown {
     const r = this._chain(
       value => Result.ok(ok ? ok(value) : value),
       error => (err ? Result.ok(err(error)) : Result.err(error))
@@ -64,12 +64,18 @@ abstract class AbstractResult<T, E extends Error> {
     this._chain(ok, err || (error => Result.err(error)));
   }
 
-  //// submit (alias Instruction.submit) ////
-  // submit<Instruction>(
-  // ): Promise<Result<TransactionSignature, Error>> {
-    // const inst = this.unwrap();
-    // return (inst as Instruction).submit();
-  // }
+  /// submit (alias Instruction.submit) ////
+  async submit(): Promise<Result<TransactionSignature, Error>> {
+    try {
+      const instruction = this.unwrap() as unknown;
+      if (instruction instanceof Instruction) {
+        return await instruction.submit();
+      }
+      return Result.err(Error('Only Instruction object'));
+    } catch (err) {
+      return Result.err(err as Error);
+    }
+  }
 }
 
 class InternalOk<T, E extends Error> extends AbstractResult<T, E> {

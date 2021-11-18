@@ -21,13 +21,22 @@ declare global {
   }
 
   interface Array<T extends Instruction[]> {
-  // interface Array<T> {
     submit(): Promise<Result<TransactionSignature, Error>>;
   }
 }
 
 Array.prototype.submit = async function () {
-  return await Instruction.batchSubmit(this);
+  let instructions: Instruction[] = [];
+  for (let i = 0;  i < this.length; i++) {
+    if (this[i].isErr) {
+      return Result.err(Error(`[Array index: ${i}]${this[i].error.message}`));
+    } else if (this[i].isOk) {
+      instructions = this.map(t => t.value);
+    } else {
+      instructions = this;
+    }
+  }
+  return await Instruction.batchSubmit(instructions);
 }
 
 String.prototype.toPubkey = function () {
