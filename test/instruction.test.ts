@@ -1,5 +1,5 @@
 import {describe, it} from 'mocha';
-import {Memo, KeypairStr, Instructions, Result} from '../src';
+import {Memo, KeypairStr, Result} from '../src';
 import {Setup} from '../test/utils/setup';
 import {assert} from 'chai';
 let source: KeypairStr;
@@ -79,7 +79,7 @@ describe('Instruction', () => {
     const res = await insts.submit();
     assert.isTrue(res.isOk, res.unwrap());
     console.log('# tx signature: ', res.unwrap());
-  // https://explorer.solana.com/tx/5GSxzrVM8s8zMvk31HCM6WhUd6YAXgBUmrNSKMQ4JMmnAS7tv4naDRabHCVyHvirBUtpAUCqXHP9hFKvsvTkSc19?cluster=devnet
+    // https://explorer.solana.com/tx/5GSxzrVM8s8zMvk31HCM6WhUd6YAXgBUmrNSKMQ4JMmnAS7tv4naDRabHCVyHvirBUtpAUCqXHP9hFKvsvTkSc19?cluster=devnet
   });
 
   it('[Err]Submit instructions, Result type', async () => {
