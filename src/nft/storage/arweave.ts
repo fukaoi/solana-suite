@@ -1,10 +1,18 @@
 import fs from 'fs';
-import {Constants, Util, SolNative, Result, Instruction} from '../../'
 import {Storage} from './';
 import fetch from 'cross-fetch';
 import FormData from 'form-data';
 import path from 'path';
-import {Keypair, LAMPORTS_PER_SOL} from '@solana/web3.js';
+import {
+  Keypair,
+  LAMPORTS_PER_SOL
+} from '@solana/web3.js';
+
+import {
+  Constants,
+  SolNative,
+  Result
+} from '../../'
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
@@ -107,7 +115,7 @@ export namespace StorageArweave {
 
   const isJpegFile = (imageName: string): boolean => {
     const match = imageName.match(/.+(.jpeg|.jpg)$/i);
-    return Util.isEmpty(match) ? false : true;
+    return match !== null;
   }
 
   const createMetadata = (storageData: Storage.Format): {buffer: Buffer, pngName: string} => {

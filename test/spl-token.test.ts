@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Account, SplToken, Multisig, Util, KeypairStr} from '../src/'
+import {Account, SplToken, Multisig, KeypairStr} from '../src/'
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -146,10 +146,11 @@ describe('SplToken', () => {
     ].submit();
 
     assert.isTrue(sig.isOk, sig.unwrap());
-    console.log('signature: ', sig.unwrap().toSigUrl());
+    console.log('signature: ', sig.unwrap());
   });
 
   it('Create token, transfer with multisig and fee payer', async () => {
+    // create multisig
     const signer1 = Account.create();
     const signer2 = Account.create();
     const multiInst =
@@ -166,6 +167,9 @@ describe('SplToken', () => {
 
     const multisig = (multiInst.unwrap().data as string).toPubkey();
 
+    console.log('# multisig address :', multisig.toBase58());
+
+    // create nft 
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const mintInst =
       await SplToken.mint(
@@ -183,6 +187,10 @@ describe('SplToken', () => {
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
 
     const token = (mintInst.unwrap().data as string).toPubkey();
+
+    console.log('# tokenKey: ', token.toBase58());
+
+    // transfer from multisig to dest
     const inst = await SplToken.transfer(
       token,
       multisig,
@@ -198,12 +206,12 @@ describe('SplToken', () => {
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
     const sig = await [
-      multiInst.unwrap(), 
+      multiInst.unwrap(),
       mintInst.unwrap(),
       inst.unwrap()
     ].submit();
 
-    console.log('signature: ', `${sig.unwrap().toSigUrl()}`);
+    console.log('signature: ', `${sig.unwrap()}`);
   });
 
   it('Subscribe a account(pubkey)', async () => {
@@ -219,7 +227,7 @@ describe('SplToken', () => {
       }
     );
     for (let i = 0; i < 3; i++) await sendContinuously();
-    await Util.sleep(15);
+    await sleep(15);
     SplToken.unsubscribeAccount(subscribeId);
     assert.ok('success subscribe');
   });
@@ -236,5 +244,7 @@ const sendContinuously = async (): Promise<void> => {
   );
   inst.isOk && inst.value.submit();
 }
+
+const sleep = async (sec: number) => new Promise(r => setTimeout(r, sec * 1000));
 
 

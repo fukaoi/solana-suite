@@ -4,64 +4,79 @@ import {
   TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
 import {
-  Keypair,
   PublicKey,
-  SystemProgram, TransactionInstruction,
+  SystemProgram,
+  TransactionInstruction,
+  Signer,
+  Keypair,
 } from '@solana/web3.js';
 
-import {Node, Transaction, Result, Append} from '../../';
-import {MetaplexMetaData, MetaplexInstructure} from './';
+import {
+  Node,
+  Instruction,
+  Result,
+} from '../../';
+
+import {
+  MetaplexInstructure
+} from './';
+import {MetaplexMetaData} from './metadata';
 
 export * from './instructure';
 export * from './metadata';
 export * from './serialize';
 
-export namespace Metaplex {
-
-  const createMintAccount = async (
+export namespace MetaplexInstruction {
+  export const mintAccount = async (
     instructions: TransactionInstruction[],
-    payer: PublicKey,
-    signers: Keypair[],
+    owner: PublicKey, // need sufficient sol account
+    signers: Signer[],
   ) => {
     const mintRentExempt =
       await Node.getConnection().getMinimumBalanceForRentExemption(
         MintLayout.span,
       );
-    const mintAccount = Keypair.generate();
+    const newAccount = Keypair.generate();
     instructions.push(
       SystemProgram.createAccount({
-        fromPubkey: payer,
-        newAccountPubkey: mintAccount.publicKey,
+        fromPubkey: owner,
+        newAccountPubkey: newAccount.publicKey,
         lamports: mintRentExempt,
         space: MintLayout.span,
         programId: TOKEN_PROGRAM_ID,
       }),
     );
 
-    signers.push(mintAccount);
-    return mintAccount.publicKey;
+    signers.push(newAccount);
+
+    return {
+      mintAccount: newAccount.publicKey,
+      signers
+    };
   }
 
-  const init = async (
+  export const mint = async (
     instructions: TransactionInstruction[],
-    mintAccount: PublicKey,
-    payer: PublicKey,
-    owner = payer,
-    freezeAuthority = payer
+    createdAccount: PublicKey,
+    owner: PublicKey,
+    freezeAuthority: PublicKey,
   ) => {
     const decimals: number = 0;
 
     instructions.push(
       Token.createInitMintInstruction(
         TOKEN_PROGRAM_ID,
-        mintAccount,
+        createdAccount,
         decimals,
         owner,
         freezeAuthority,
       ),
     );
-    return mintAccount.toBase58();
+    return createdAccount.toBase58();
   }
+}
+
+export namespace Metaplex {
 
   // tslint:disable-next-line
   export interface Creators {}
@@ -76,11 +91,6 @@ export namespace Metaplex {
     primary_sale_happened?: boolean,
   }
 
-  export interface MintResult {
-    tokenKey: string,
-    signature: string
-  }
-
   export const initFormat = (): Format => {
     return {
       name: '',
@@ -93,65 +103,79 @@ export namespace Metaplex {
     }
   }
 
-  export const create = (
+  export const initializeMint = async (
     payer: PublicKey,
-    signers: Keypair[],
-  ) => async (instructions?: TransactionInstruction[]) => {
-    let inst: TransactionInstruction[] = [];
-    inst = instructions ? instructions : inst;
+    signers: Signer[],
+  ): Promise<{
+    instructions: TransactionInstruction[],
+    signers: Signer[],
+    tokenKey: string
+  }> => {
+    const instructions: TransactionInstruction[] = [];
 
-    const mintAccount = await createMintAccount(
-      inst,
+    const inst1 = await MetaplexInstruction.mintAccount(
+      instructions,
       payer,
       signers,
     );
 
-    const tokenKey = await init(
-      inst,
-      mintAccount,
+    signers = signers.concat(inst1.signers);
+
+    const tokenKey = await MetaplexInstruction.mint(
+      instructions,
+      inst1.mintAccount,
+      payer,
       payer,
     );
 
-    return {instructions: inst, signers, tokenKey};
+    return {
+      instructions,
+      signers,
+      tokenKey
+    };
   }
 
-  export const mint = (
+  export const mint = async (
     data: MetaplexInstructure.Data,
     owner: PublicKey,
-    signers: Keypair[],
-  ) => async (append?: Append.Value)
-      : Promise<Result<MintResult, Error>> => {
-      const txsign = await create(append!.feePayer!, [signers[0]])();
+    signers: Signer[],
+  ): Promise<Result<Instruction, Error>> => {
+    const inst1 = await initializeMint(owner, signers);
 
-      const multiSigSignerPubkey = [];
-      for (let i = 1; i < signers.length; i++) {
-        multiSigSignerPubkey.push(signers[i].publicKey);
-      }
+    signers = signers.concat(inst1.signers);
 
-      const metadataInst = await MetaplexMetaData.create(
-        data,
-        txsign.tokenKey.toPubkey(),
-        append!.feePayer!,
-        owner,
-        owner
-      )(txsign.instructions, append!.multiSig!, multiSigSignerPubkey);
 
-      const merged = txsign.signers.concat(signers);
+    const inst2 = await MetaplexMetaData.create(
+      data,
+      inst1.tokenKey.toPubkey(),
+      owner,
+      owner,
+      owner,
+    );
 
-      if (metadataInst.isErr) return Result.err(metadataInst.error);
-
-      const signature = await Transaction.sendInstruction(merged)
-        ({
-          txInstructions: metadataInst.value as TransactionInstruction[]
-        });
-
-      if (signature.isErr) return Result.err(signature.error);
-
-      return Result.ok(
-        {
-          tokenKey: txsign.tokenKey,
-          signature: signature.value
-        }
-      );
+    if (inst2.isErr) {
+      return Result.err(inst2.error);
     }
+
+    const inst3 = await MetaplexMetaData.update(
+      data,
+      undefined,
+      undefined,
+      inst1.tokenKey.toPubkey(),
+      owner,
+      signers,
+    );
+
+    if (inst3.isErr) return Result.err(inst3.error);
+
+    const mergeInstructions = inst1.instructions.concat(inst2.unwrap()).concat(inst3.unwrap());
+
+    return Result.ok(
+      new Instruction(
+        mergeInstructions,
+        signers,
+        undefined,
+        inst1.tokenKey,
+      ));
+  }
 }

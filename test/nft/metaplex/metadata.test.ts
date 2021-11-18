@@ -1,7 +1,11 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
 import {KeypairStr} from '../../../src';
-import {MetaplexMetaData, MetaplexInstructure, Metaplex} from '../../../src/nft/metaplex';
+import {
+  MetaplexMetaData, 
+  MetaplexInstructure, 
+  Metaplex
+} from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
 import {TransactionInstruction} from '@solana/web3.js';
 
@@ -31,7 +35,7 @@ describe('MetaplexMetaData', () => {
       sourceStr,
       sourceStr,
       sourceStr,
-    )();
+    );
     assert.isTrue(res.isOk);
     assert.isArray(res.unwrap());
     assert.isObject((<TransactionInstruction[]>res.unwrap())[0]);
@@ -55,7 +59,7 @@ describe('MetaplexMetaData', () => {
       tokenKey,
       source.toPubkey(),
       [source.toKeypair()],
-    )();
+    );
     assert.isTrue(res.isOk);
     assert.isArray(res.unwrap());
     assert.isObject((<TransactionInstruction[]>res.unwrap())[0]);

@@ -6,7 +6,10 @@ import {
   Transaction,
 } from '@solana/web3.js';
 
-import {Node, Result} from './';
+import {
+  Node,
+  Result
+} from './';
 
 export class Instruction {
   instructions: TransactionInstruction[];
@@ -28,7 +31,11 @@ export class Instruction {
 
   submit = async ()
     : Promise<Result<TransactionSignature, Error>> => {
-    // return Error if include Error object
+    if (!(this instanceof Instruction)) {
+      return Result.err(
+        Error('only Instruction object that can use this')
+      );
+    }
     const transaction = new Transaction();
     let finalSigners = this.signers;
     if (this.feePayer) {
@@ -49,6 +56,15 @@ export class Instruction {
   static batchSubmit = async (
     arr: Instruction[]
   ): Promise<Result<TransactionSignature, Error>> => {
+    for (const a of arr) {
+      if (!(a instanceof Instruction)) {
+        console.log(a);
+        return Result.err(
+          Error('only Instruction object that can use this')
+        );
+      }
+    }
+
     const instructions = arr.flatMap(a => a.instructions);
     const signers = arr.flatMap(a => a.signers);
     const feePayers = arr.filter(a => a.feePayer !== undefined);
@@ -73,3 +89,10 @@ export class Instruction {
       .catch(Result.err);
   }
 }
+
+export class Instructions<T extends Instruction> extends Array<T> {
+  public echo() {
+    console.log(this);
+  }
+}
+

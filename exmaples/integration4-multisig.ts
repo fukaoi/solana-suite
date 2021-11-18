@@ -4,11 +4,12 @@
 
 import assert from 'assert';
 import {
-  Account, 
-  Multisig, 
-  SolNative, 
+  Account,
+  Multisig,
+  SolNative,
   SplToken,
   Transaction,
+  Pubkey,
 } from '../src/index';
 
 (async () => {
@@ -57,16 +58,6 @@ import {
     signerPubkeys
   );
 
-  // inst1.unwrap().value or 
-  // use inst1.isOk() type guard.inst1.isOk && inst1.value.value 
-  const multiRes = await inst1.unwrap().submit();
-
-  multiRes.isErr && assert(multiRes.error.message);
-
-  const publisher = (inst1.unwrap().data as string);
-  console.log('# publisher(multisig): ', publisher);
-
-
   //////////////////////////////////////////////
   // TRANSFER FROM OWNER TO PUBLISHER
   //////////////////////////////////////////////
@@ -77,12 +68,17 @@ import {
     3,                       // 3 SOL
   );
 
-  const transferRes = await inst2.unwrap().submit();
-  transferRes.isErr && assert(transferRes.error.message);
-  console.log('# signature: ', transferRes.unwrap());
+  const publisher = inst1.unwrap().data as Pubkey;
+  console.log('# multisig address: ', publisher);
 
-  // [optional]if need this action. wait confirmation state
-  // await Transaction.confirmedSig(transferRes.unwrap().sig);
+  // submit batch instructions
+  await (await [inst1, inst2].submit()).match(
+    async (value) => {
+      // [optional]if need this action. wait confirmation state
+      await Transaction.confirmedSig(value);
+    },
+    error => assert(error)
+  );
 
   //////////////////////////////////////////////
   // CREATE SPL TOKEN
@@ -103,10 +99,7 @@ import {
       feePayer.toKeypair()   // pay transaction fee
     );
 
-  const mintRes = await inst3.unwrap().submit();
-  mintRes.isErr && assert(mintRes.error.message);
-
-  const tokenKey = (inst3.unwrap().data as string);
+  const tokenKey = (inst3.unwrap().data as Pubkey);
   console.log('# tokenKey: ', tokenKey);
 
   const inst4 = await SplToken.transfer(
@@ -119,11 +112,9 @@ import {
     feePayer.toKeypair()   // pay transaction fee
   );
 
-  const tokenTransferRes = await inst4.unwrap().submit();
-  tokenTransferRes.isErr && assert(tokenTransferRes.error.message);
-
-  tokenTransferRes.match(
-    (value: string) => console.log('# signature: ', value),
-    (error: Error) => console.error(error)
+  // submit batch instructions
+  await (await [inst3, inst4].submit()).match(
+    value => console.log('# sig url: ', value.toExporerUrl()),
+    error => assert(error.message)
   );
 })();

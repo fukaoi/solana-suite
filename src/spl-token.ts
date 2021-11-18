@@ -12,9 +12,13 @@ import {
   Signer,
 } from '@solana/web3.js';
 
-import {Transaction, Node, Result, Instruction, Util, } from './';
+import {Transaction, Node, Result, Instruction, } from './';
 
 export namespace SplToken {
+
+  const NFT_AMOUNT =1;
+  const NFT_DECIMALS =0;
+
   export interface TransferHistory {
     info: {
       destination: string,
@@ -111,7 +115,7 @@ export namespace SplToken {
     const hist: TransferDestinationList[] = [];
     for (const tx of transactions.unwrap() as ParsedConfirmedTransaction[]) {
       const posts = tx.meta?.postTokenBalances as TokenBalance[];
-      if (!Util.isEmpty(posts.length)) {
+      if (posts.length > 0) {
         posts.forEach((p) => {
           const amount = p!.uiTokenAmount!.uiAmount as number;
           if (amount > 0) {
@@ -234,5 +238,23 @@ export namespace SplToken {
         signers,
         feePayer
       ));
+  }
+
+  export const transferNft = async (
+    tokenKey: PublicKey,
+    owner: PublicKey,
+    dest: PublicKey,
+    signers: Signer[],
+    feePayer?: Signer,
+  ): Promise<Result<Instruction, Error>> => {
+    return transfer(
+      tokenKey,
+      owner,
+      dest,
+      signers,
+      NFT_AMOUNT,
+      NFT_DECIMALS,
+      feePayer
+    );
   }
 }

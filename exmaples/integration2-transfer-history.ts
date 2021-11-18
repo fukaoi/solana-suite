@@ -2,13 +2,12 @@
 //$ npx ts-node exmaples/integration2-transfer-history
 //////////////////////////////////////////////
 
-//Notice: not worked. now modifing
-
+import assert from 'assert';
 import {
   Account,
   Transaction,
-  SplNft,
-  SplToken
+  SplToken,
+  Pubkey
 } from '../src/index';
 
 (async () => {
@@ -17,37 +16,37 @@ import {
   // CREATE WALLET 
   //////////////////////////////////////////////
 
-  // create nft owner wallet, receive nft receipt wallet.
-  const publish = Account.create();
+  // create token owner wallet, receive token receipt wallet.
+  const publisher = Account.create();
   const receipt = Account.create();
 
   // faucet 1 sol
-  await Account.requestAirdrop(publish.pubkey.toPubKey());
+  await Account.requestAirdrop(publisher.toPubkey());
 
-  console.log('# publish: ', publish);
+  console.log('# publisher: ', publisher);
   console.log('# receipt: ', receipt);
 
 
   //////////////////////////////////////////////
-  // CREATE SPL NFT
+  // CREATE SPL TOKEN
   //////////////////////////////////////////////
 
 
   // Basically SPL and Metaplex NFT is same logic
-  const tokenKey = await SplNft.create(
-    publish.pubkey.toPubKey(),
-    publish.secret.toKeypair()
+  const totalAmount = 100000;
+  const decimals = 1;
+  const inst1 = await SplToken.mint(
+    publisher.toPubkey(),
+    [publisher.toKeypair()],
+    totalAmount,
+    decimals
   );
 
-  if (tokenKey.isErr) {
-    console.error(tokenKey.error);
-    process.exit(1);
-  }
 
-  const token = tokenKey.unwrap();
+  const tokenKey = inst1.unwrap().data as Pubkey;
 
   // this is NFT ID
-  console.log('# tokenKey: ', token);
+  console.log('# tokenKey: ', tokenKey);
 
 
   //////////////////////////////////////////////
@@ -55,26 +54,21 @@ import {
   //////////////////////////////////////////////
 
   // transfer nft to receipt wallet
-  const transferSig = await SplNft.transfer(
-    token.toPubKey(),
-    publish.pubkey.toPubKey(),
-    receipt.pubkey.toPubKey()
-  )({
-    signers: [publish.secret.toKeypair()]
-  });
+  const inst2 = await SplToken.transfer(
+    tokenKey.toPubkey(),
+    publisher.toPubkey(),
+    receipt.toPubkey(),
+    [publisher.toKeypair()],
+    10,
+    decimals
+  );
 
-
-
-  await transferSig.match(
+  (await [inst1, inst2].submit()).match(
     async (value) => {
       console.log('# Transfer nft sig: ', value.toSigUrl());
-      // untile completed in blockchain
       await Transaction.confirmedSig(value);
     },
-    (error) => {
-      console.error(error);
-      process.exit(1);
-    }
+    (error) => assert(error)
   );
 
   //////////////////////////////////////////////
@@ -82,15 +76,15 @@ import {
   //////////////////////////////////////////////
 
   // Get history object by tokenKey
-  const history = await SplToken.getTransferHistory(token.toPubKey());
+  const history = await SplToken.getTransferHistory(tokenKey.toPubkey());
   console.log('# Transfer history by token: ', history.unwrap());
 
   // Get history object by publish
-  const historyPublish = await SplToken.getTransferHistory(publish.pubkey.toPubKey());
+  const historyPublish = await SplToken.getTransferHistory(publisher.pubkey.toPubkey());
   console.log('# Transfer history by publish: ', historyPublish.unwrap());
 
   // Get destination history list by tokenKey
-  const destList = await SplToken.getTransferDestinationList(token.toPubKey());
+  const destList = await SplToken.getTransferDestinationList(tokenKey.toPubkey());
   console.log('# Transfer destination list: ', destList.unwrap());
 
 })();

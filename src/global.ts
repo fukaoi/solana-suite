@@ -16,17 +16,27 @@ declare global {
   interface String {
     toPubkey(): PublicKey;
     toKeypair(): Keypair;
-    toSigUrl(): string;
+    toExplorerUrl(): string;
     toAddressUrl(): string;
   }
 
-  interface Array<T> {
+  interface Array<T extends Instruction[]> {
     submit(): Promise<Result<TransactionSignature, Error>>;
   }
 }
 
 Array.prototype.submit = async function () {
-  return await Instruction.batchSubmit(this);
+  let instructions: Instruction[] = [];
+  for (let i = 0;  i < this.length; i++) {
+    if (this[i].isErr) {
+      return Result.err(Error(`[Array index: ${i}]${this[i].error.message}`));
+    } else if (this[i].isOk) {
+      instructions = this.map(t => t.value);
+    } else {
+      instructions = this;
+    }
+  }
+  return await Instruction.batchSubmit(instructions);
 }
 
 String.prototype.toPubkey = function () {
@@ -38,12 +48,13 @@ String.prototype.toKeypair = function () {
   return Keypair.fromSecretKey(decoded);
 }
 
-String.prototype.toSigUrl = function () {
-  return `https://explorer.solana.com/tx/${this}?cluster=${Constants.currentNetwork}`;
-}
-
-String.prototype.toAddressUrl = function () {
-  return `https://explorer.solana.com/address/${this}?cluster=${Constants.currentNetwork}`;
+String.prototype.toExplorerUrl = function () {
+  try {
+    new PublicKey(this);
+    return `https://explorer.solana.com/address/${this}?cluster=${Constants.currentNetwork}`;
+  } catch (_) {
+    return `https://explorer.solana.com/tx/${this}?cluster=${Constants.currentNetwork}`;
+  }
 }
 
 console.debug = (

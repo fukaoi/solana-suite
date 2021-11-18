@@ -26,10 +26,9 @@ describe('SolNative', () => {
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# tx signature: ', res.unwrap().toSigUrl());
+    console.log('# tx signature: ', res.unwrap());
   });
 
-  // todo: Fails when run alone. 
   it('transfer transaction with memo data', async () => {
     const solAmount = 0.0001;
     const inst1 = Memo.create(
@@ -48,16 +47,19 @@ describe('SolNative', () => {
 
     const res = await [inst1, inst2.unwrap()].submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# tx signature: ', res.unwrap().toSigUrl());
+    console.log('# tx signature: ', res.unwrap());
   });
 
   it('transfer transaction with fee payer', async () => {
     const solAmount = 0.0001;
     const owner = Account.create();
+    await Account.requestAirdrop(owner.toPubkey());
     const feePayer = source;
     const before = (await Account.getBalance(
       feePayer.pubkey.toPubkey())
     ).unwrap();
+
+    console.log(before);
 
     const inst = await SolNative.transfer(
       owner.toPubkey(),
@@ -69,9 +71,9 @@ describe('SolNative', () => {
       feePayer.toKeypair()
     );
 
-    const res = await inst.unwrap().submit(); 
+    const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# tx signature: ', res.unwrap().toSigUrl());
+    console.log('# tx signature: ', res.unwrap());
     const after = (await Account.getBalance(
       feePayer.pubkey.toPubkey())
     ).unwrap();
@@ -90,7 +92,7 @@ describe('SolNative', () => {
     );
     const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# signature :', res.unwrap().toSigUrl());
+    console.log('# signature :', res.unwrap());
   });
 
   it('transfer transaction with multi sig', async () => {
@@ -125,6 +127,6 @@ describe('SolNative', () => {
 
     const res = await [inst1.unwrap(), inst2.unwrap()].submit();
     assert.isTrue(res.isOk, res.unwrap().toString());
-    console.log('# signature: ', res.unwrap().toSigUrl());
+    console.log('# signature: ', res.unwrap());
   });
 })
