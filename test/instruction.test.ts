@@ -68,6 +68,19 @@ describe('Instruction', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
+  it('Submit batch many instructions', async () => {
+    let insts = [];
+    for (let i = 0; i < 20; i++) {
+      insts.push(Memo.create(
+        `{"title": "Submit ${i} instruction"}`,
+        [source.toKeypair()],
+      ));
+    }
+    const res = await insts.submit();
+    assert.isTrue(res.isOk, res.unwrap());
+    console.log('# tx signature: ', res.unwrap());
+  });
+
   it('[Err]Submit instructions, Result type', async () => {
     const message = 'Raise error';
     const inst = Result.err(Error(message));
