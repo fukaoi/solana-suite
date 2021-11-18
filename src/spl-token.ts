@@ -12,7 +12,7 @@ import {
   Signer,
 } from '@solana/web3.js';
 
-import {Transaction, Node, Result, Instruction, Util, } from './';
+import {Transaction, Node, Result, Instruction, } from './';
 
 export namespace SplToken {
 
@@ -115,7 +115,7 @@ export namespace SplToken {
     const hist: TransferDestinationList[] = [];
     for (const tx of transactions.unwrap() as ParsedConfirmedTransaction[]) {
       const posts = tx.meta?.postTokenBalances as TokenBalance[];
-      if (!Util.isEmpty(posts.length)) {
+      if (posts.length > 0) {
         posts.forEach((p) => {
           const amount = p!.uiTokenAmount!.uiAmount as number;
           if (amount > 0) {

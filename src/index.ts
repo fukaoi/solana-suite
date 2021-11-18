@@ -11,6 +11,5 @@ export * from './result';
 export * from './sol-native';
 export * from './spl-token';
 export * from './transaction';
-export * from './util';
 
 export default module.exports;

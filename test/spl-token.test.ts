@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Account, SplToken, Multisig, Util, KeypairStr} from '../src/'
+import {Account, SplToken, Multisig, KeypairStr} from '../src/'
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -227,7 +227,7 @@ describe('SplToken', () => {
       }
     );
     for (let i = 0; i < 3; i++) await sendContinuously();
-    await Util.sleep(15);
+    await sleep(15);
     SplToken.unsubscribeAccount(subscribeId);
     assert.ok('success subscribe');
   });
@@ -244,5 +244,7 @@ const sendContinuously = async (): Promise<void> => {
   );
   inst.isOk && inst.value.submit();
 }
+
+const sleep = async (sec: number) => new Promise(r => setTimeout(r, sec * 1000));
 
 
