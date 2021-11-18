@@ -31,6 +31,7 @@
 - [chain](Result.Err.md#chain)
 - [map](Result.Err.md#map)
 - [match](Result.Err.md#match)
+- [submit](Result.Err.md#submit)
 - [unwrap](Result.Err.md#unwrap)
 
 ## Properties
@@ -55,7 +56,7 @@ InternalErr.isErr
 
 #### Defined in
 
-[src/result.ts:92](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L92)
+[src/result.ts:98](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L98)
 
 ___
 
@@ -69,7 +70,7 @@ InternalErr.isOk
 
 #### Defined in
 
-[src/result.ts:91](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L91)
+[src/result.ts:97](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L97)
 
 ## Methods
 
@@ -101,7 +102,7 @@ InternalErr.\_chain
 
 #### Defined in
 
-[src/result.ts:97](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L97)
+[src/result.ts:103](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L103)
 
 ___
 
@@ -131,7 +132,7 @@ InternalErr.chain
 
 #### Defined in
 
-[src/result.ts:42](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L42)
+[src/result.ts:42](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L42)
 
 ▸ **chain**<`X`\>(`ok`): [`Result`](../modules.md#result)<`X`, `E`\>
 
@@ -157,7 +158,7 @@ InternalErr.chain
 
 #### Defined in
 
-[src/result.ts:43](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L43)
+[src/result.ts:43](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L43)
 
 ▸ **chain**<`X`, `U`\>(`ok`, `err`): [`Result`](../modules.md#result)<`X`, `U`\>
 
@@ -185,7 +186,7 @@ InternalErr.chain
 
 #### Defined in
 
-[src/result.ts:48](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L48)
+[src/result.ts:48](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L48)
 
 ___
 
@@ -215,7 +216,7 @@ InternalErr.map
 
 #### Defined in
 
-[src/result.ts:29](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L29)
+[src/result.ts:29](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L29)
 
 ▸ **map**<`U`, `F`\>(`ok`, `err`): [`Result`](../modules.md#result)<`U`, `F`\>
 
@@ -243,7 +244,7 @@ InternalErr.map
 
 #### Defined in
 
-[src/result.ts:30](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L30)
+[src/result.ts:30](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L30)
 
 ___
 
@@ -268,7 +269,25 @@ InternalErr.match
 
 #### Defined in
 
-[src/result.ts:60](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L60)
+[src/result.ts:60](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L60)
+
+___
+
+### submit
+
+▸ **submit**(): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+
+#### Returns
+
+`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
+
+#### Inherited from
+
+InternalErr.submit
+
+#### Defined in
+
+[src/result.ts:68](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L68)
 
 ___
 
@@ -286,7 +305,7 @@ InternalErr.unwrap
 
 #### Defined in
 
-[src/result.ts:12](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L12)
+[src/result.ts:12](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L12)
 
 ▸ **unwrap**<`U`\>(`ok`): `U`
 
@@ -312,7 +331,7 @@ InternalErr.unwrap
 
 #### Defined in
 
-[src/result.ts:13](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L13)
+[src/result.ts:13](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L13)
 
 ▸ **unwrap**<`U`, `V`\>(`ok`, `err`): `U` \| `V`
 
@@ -340,4 +359,4 @@ InternalErr.unwrap
 
 #### Defined in
 
-[src/result.ts:14](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L14)
+[src/result.ts:14](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L14)

@@ -15,39 +15,25 @@
 
 ### create
 
-▸ `Const` **create**(`data`, `tokenKey`, `payer`, `mintAuthorityKey?`, `updateAuthority?`): (`instructions?`: `TransactionInstruction`[], `multiSig?`: `PublicKey`, `multiSigSignerPubkey?`: `PublicKey`[]) => `Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
+▸ `Const` **create**(`data`, `tokenKey`, `mintAuthorityKey`, `updateAuthority`, `feePayer`): `Promise`<[`Result`](../modules.md#result)<`TransactionInstruction`[], `Error`\>\>
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `data` | [`Data`](../classes/MetaplexInstructure.Data.md) | `undefined` |
-| `tokenKey` | `PublicKey` | `undefined` |
-| `payer` | `PublicKey` | `undefined` |
-| `mintAuthorityKey` | `PublicKey` | `payer` |
-| `updateAuthority` | `PublicKey` | `payer` |
+| Name | Type |
+| :------ | :------ |
+| `data` | [`Data`](../classes/MetaplexInstructure.Data.md) |
+| `tokenKey` | `PublicKey` |
+| `mintAuthorityKey` | `PublicKey` |
+| `updateAuthority` | `PublicKey` |
+| `feePayer` | `PublicKey` |
 
 #### Returns
 
-`fn`
-
-▸ (`instructions?`, `multiSig?`, `multiSigSignerPubkey?`): `Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `instructions?` | `TransactionInstruction`[] |
-| `multiSig?` | `PublicKey` |
-| `multiSigSignerPubkey?` | `PublicKey`[] |
-
-##### Returns
-
-`Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
+`Promise`<[`Result`](../modules.md#result)<`TransactionInstruction`[], `Error`\>\>
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:188](https://github.com/fukaoi/solana-suite/blob/077409e/src/nft/metaplex/metadata.ts#L188)
+[src/nft/metaplex/metadata.ts:192](https://github.com/fukaoi/solana-suite/blob/5f78595/src/nft/metaplex/metadata.ts#L192)
 
 ___
 
@@ -67,7 +53,7 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:159](https://github.com/fukaoi/solana-suite/blob/077409e/src/nft/metaplex/metadata.ts#L159)
+[src/nft/metaplex/metadata.ts:160](https://github.com/fukaoi/solana-suite/blob/5f78595/src/nft/metaplex/metadata.ts#L160)
 
 ___
 
@@ -87,13 +73,13 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:138](https://github.com/fukaoi/solana-suite/blob/077409e/src/nft/metaplex/metadata.ts#L138)
+[src/nft/metaplex/metadata.ts:135](https://github.com/fukaoi/solana-suite/blob/5f78595/src/nft/metaplex/metadata.ts#L135)
 
 ___
 
 ### update
 
-▸ `Const` **update**(`data`, `newUpdateAuthority`, `primarySaleHappened`, `tokenKey`, `updateAuthority`, `signers`): (`instructions?`: `TransactionInstruction`[]) => `Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
+▸ `Const` **update**(`data`, `newUpdateAuthority`, `primarySaleHappened`, `tokenKey`, `updateAuthority`, `signers`): `Promise`<[`Result`](../modules.md#result)<`TransactionInstruction`[], `Error`\>\>
 
 #### Parameters
 
@@ -104,24 +90,12 @@ ___
 | `primarySaleHappened` | `undefined` \| ``null`` \| `boolean` |
 | `tokenKey` | `PublicKey` |
 | `updateAuthority` | `PublicKey` |
-| `signers` | `Keypair`[] |
+| `signers` | `Signer`[] |
 
 #### Returns
 
-`fn`
-
-▸ (`instructions?`): `Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `instructions?` | `TransactionInstruction`[] |
-
-##### Returns
-
-`Promise`<[`Result`](../modules.md#result)<`PublicKey` \| `TransactionInstruction`[], `Error`\>\>
+`Promise`<[`Result`](../modules.md#result)<`TransactionInstruction`[], `Error`\>\>
 
 #### Defined in
 
-[src/nft/metaplex/metadata.ts:218](https://github.com/fukaoi/solana-suite/blob/077409e/src/nft/metaplex/metadata.ts#L218)
+[src/nft/metaplex/metadata.ts:217](https://github.com/fukaoi/solana-suite/blob/5f78595/src/nft/metaplex/metadata.ts#L217)

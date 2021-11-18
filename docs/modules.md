@@ -7,11 +7,11 @@
 ### Namespaces
 
 - [Account](modules/Account.md)
-- [Append](modules/Append.md)
 - [Constants](modules/Constants.md)
 - [ConstantsFunc](modules/ConstantsFunc.md)
 - [Memo](modules/Memo.md)
 - [Metaplex](modules/Metaplex.md)
+- [MetaplexInstruction](modules/MetaplexInstruction.md)
 - [MetaplexInstructure](modules/MetaplexInstructure.md)
 - [MetaplexMetaData](modules/MetaplexMetaData.md)
 - [MetaplexSerialize](modules/MetaplexSerialize.md)
@@ -19,23 +19,24 @@
 - [Node](modules/Node.md)
 - [Result](modules/Result.md)
 - [SolNative](modules/SolNative.md)
-- [SplNft](modules/SplNft.md)
 - [SplToken](modules/SplToken.md)
 - [Storage](modules/Storage.md)
 - [StorageArweave](modules/StorageArweave.md)
 - [StorageNftStorage](modules/StorageNftStorage.md)
 - [Transaction](modules/Transaction.md)
-- [Util](modules/Util.md)
 
 ### Classes
 
 - [Instruction](classes/Instruction.md)
+- [Instructions](classes/Instructions.md)
 - [KeypairStr](classes/KeypairStr.md)
 - [String](classes/String.md)
 
 ### Type aliases
 
+- [Pubkey](modules.md#pubkey)
 - [Result](modules.md#result)
+- [Secret](modules.md#secret)
 
 ### Properties
 
@@ -46,6 +47,16 @@
 - [tryCatch](modules.md#trycatch)
 
 ## Type aliases
+
+### Pubkey
+
+Ƭ **Pubkey**: `string`
+
+#### Defined in
+
+[src/account.ts:12](https://github.com/fukaoi/solana-suite/blob/5f78595/src/account.ts#L12)
+
+___
 
 ### Result
 
@@ -60,7 +71,17 @@
 
 #### Defined in
 
-[src/result.ts:536](https://github.com/fukaoi/solana-suite/blob/077409e/src/result.ts#L536)
+[src/result.ts:542](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L542)
+
+___
+
+### Secret
+
+Ƭ **Secret**: `string`
+
+#### Defined in
+
+[src/account.ts:13](https://github.com/fukaoi/solana-suite/blob/5f78595/src/account.ts#L13)
 
 ## Properties
 
@@ -90,4 +111,4 @@ node_modules/@types/node/globals.d.ts:589
 
 #### Defined in
 
-[src/global.ts:73](https://github.com/fukaoi/solana-suite/blob/077409e/src/global.ts#L73)
+[src/global.ts:84](https://github.com/fukaoi/solana-suite/blob/5f78595/src/global.ts#L84)

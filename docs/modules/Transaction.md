@@ -9,8 +9,6 @@
 - [confirmedSig](Transaction.md#confirmedsig)
 - [get](Transaction.md#get)
 - [getAll](Transaction.md#getall)
-- [send](Transaction.md#send)
-- [sendInstruction](Transaction.md#sendinstruction)
 
 ## Functions
 
@@ -31,7 +29,7 @@
 
 #### Defined in
 
-[src/transaction.ts:50](https://github.com/fukaoi/solana-suite/blob/077409e/src/transaction.ts#L50)
+[src/transaction.ts:44](https://github.com/fukaoi/solana-suite/blob/5f78595/src/transaction.ts#L44)
 
 ___
 
@@ -51,7 +49,7 @@ ___
 
 #### Defined in
 
-[src/transaction.ts:20](https://github.com/fukaoi/solana-suite/blob/077409e/src/transaction.ts#L20)
+[src/transaction.ts:14](https://github.com/fukaoi/solana-suite/blob/5f78595/src/transaction.ts#L14)
 
 ___
 
@@ -72,71 +70,4 @@ ___
 
 #### Defined in
 
-[src/transaction.ts:26](https://github.com/fukaoi/solana-suite/blob/077409e/src/transaction.ts#L26)
-
-___
-
-### send
-
-▸ `Const` **send**(`source`, `destination`, `signers`, `amount`): (`append?`: [`Value`](../interfaces/Append.Value.md)) => `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `source` | `PublicKey` |
-| `destination` | `PublicKey` |
-| `signers` | `Keypair`[] |
-| `amount` | `number` |
-
-#### Returns
-
-`fn`
-
-▸ (`append?`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `append?` | [`Value`](../interfaces/Append.Value.md) |
-
-##### Returns
-
-`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
-
-#### Defined in
-
-[src/transaction.ts:114](https://github.com/fukaoi/solana-suite/blob/077409e/src/transaction.ts#L114)
-
-___
-
-### sendInstruction
-
-▸ `Const` **sendInstruction**(`signers`): (`append`: [`Value`](../interfaces/Append.Value.md)) => `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `signers` | `Keypair`[] |
-
-#### Returns
-
-`fn`
-
-▸ (`append`): `Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `append` | [`Value`](../interfaces/Append.Value.md) |
-
-##### Returns
-
-`Promise`<[`Result`](../modules.md#result)<`string`, `Error`\>\>
-
-#### Defined in
-
-[src/transaction.ts:59](https://github.com/fukaoi/solana-suite/blob/077409e/src/transaction.ts#L59)
+[src/transaction.ts:20](https://github.com/fukaoi/solana-suite/blob/5f78595/src/transaction.ts#L20)

@@ -30,4 +30,4 @@
 
 #### Defined in
 
-[src/account.ts:35](https://github.com/fukaoi/solana-suite/blob/077409e/src/account.ts#L35)
+[src/account.ts:38](https://github.com/fukaoi/solana-suite/blob/5f78595/src/account.ts#L38)
