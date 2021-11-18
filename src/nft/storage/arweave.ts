@@ -4,13 +4,13 @@ import fetch from 'cross-fetch';
 import FormData from 'form-data';
 import path from 'path';
 import {
-  Keypair, 
+  Keypair,
   LAMPORTS_PER_SOL
 } from '@solana/web3.js';
 
 import {
-  Constants, 
-  SolNative, 
+  Constants,
+  SolNative,
   Result
 } from '../../'
 
