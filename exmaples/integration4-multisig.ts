@@ -9,6 +9,7 @@ import {
   SolNative,
   SplToken,
   Transaction,
+  Pubkey,
 } from '../src/index';
 
 (async () => {
@@ -67,7 +68,7 @@ import {
     3,                       // 3 SOL
   );
 
-  const publisher = inst1.unwrap().data as string;
+  const publisher = inst1.unwrap().data as Pubkey;
   console.log('# multisig address: ', publisher);
 
   // submit batch instructions
@@ -98,7 +99,7 @@ import {
       feePayer.toKeypair()   // pay transaction fee
     );
 
-  const tokenKey = (inst3.unwrap().data as string);
+  const tokenKey = (inst3.unwrap().data as Pubkey);
   console.log('# tokenKey: ', tokenKey);
 
   const inst4 = await SplToken.transfer(
@@ -113,7 +114,7 @@ import {
 
   // submit batch instructions
   await (await [inst3, inst4].submit()).match(
-    value => console.log('# sig url: ', value),
+    value => console.log('# sig url: ', value.toExporerUrl()),
     error => assert(error.message)
   );
 })();

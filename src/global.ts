@@ -9,7 +9,6 @@ import {
   Constants,
   Result,
   Instruction,
-  Pubkey,
 } from './';
 
 
@@ -17,7 +16,7 @@ declare global {
   interface String {
     toPubkey(): PublicKey;
     toKeypair(): Keypair;
-    toSigUrl(): string;
+    toExplorerUrl(): string;
     toAddressUrl(): string;
   }
 
@@ -49,13 +48,13 @@ String.prototype.toKeypair = function () {
   return Keypair.fromSecretKey(decoded);
 }
 
-String.prototype.toSigUrl = function () {
-  console.log(this instanceof Pubkey);
-  return `https://explorer.solana.com/tx/${this}?cluster=${Constants.currentNetwork}`;
-}
-
-String.prototype.toAddressUrl = function () {
-  return `https://explorer.solana.com/address/${this}?cluster=${Constants.currentNetwork}`;
+String.prototype.toExplorerUrl = function () {
+  try {
+    new PublicKey(this);
+    return `https://explorer.solana.com/address/${this}?cluster=${Constants.currentNetwork}`;
+  } catch (_) {
+    return `https://explorer.solana.com/tx/${this}?cluster=${Constants.currentNetwork}`;
+  }
 }
 
 console.debug = (

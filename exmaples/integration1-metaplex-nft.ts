@@ -118,7 +118,7 @@ import {RandomAsset} from '../test/utils/randomAsset';
 
   // submit batch instructions
   (await [inst2, inst3].submit()).match(
-    (value) => console.log('# Transfer nft sig: ', value.toSigUrl()),
+    (value) => console.log('# Transfer nft sig: ', value.toExporerUrl()),
     (error) => assert(error)
   );
 })();

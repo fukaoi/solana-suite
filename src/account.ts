@@ -91,8 +91,8 @@ export namespace Account {
   export const create = (): KeypairStr => {
     const keypair = Keypair.generate();
     return new KeypairStr(
-      keypair.publicKey.toBase58(),
-      bs.encode(keypair.secretKey)
+      keypair.publicKey.toBase58() as Pubkey,
+      bs.encode(keypair.secretKey) as Secret
     );
   };
 

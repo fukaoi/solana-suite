@@ -26,7 +26,7 @@ describe('SolNative', () => {
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# tx signature: ', res.unwrap().toSigUrl());
+    console.log('# tx signature: ', res.unwrap());
   });
 
   it('transfer transaction with memo data', async () => {
@@ -47,7 +47,7 @@ describe('SolNative', () => {
 
     const res = await [inst1, inst2.unwrap()].submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# tx signature: ', res.unwrap().toSigUrl());
+    console.log('# tx signature: ', res.unwrap());
   });
 
   it('transfer transaction with fee payer', async () => {
@@ -73,7 +73,7 @@ describe('SolNative', () => {
 
     const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# tx signature: ', res.unwrap().toSigUrl());
+    console.log('# tx signature: ', res.unwrap());
     const after = (await Account.getBalance(
       feePayer.pubkey.toPubkey())
     ).unwrap();
@@ -92,7 +92,7 @@ describe('SolNative', () => {
     );
     const res = await inst.unwrap().submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# signature :', res.unwrap().toSigUrl());
+    console.log('# signature :', res.unwrap());
   });
 
   it('transfer transaction with multi sig', async () => {
@@ -127,6 +127,6 @@ describe('SolNative', () => {
 
     const res = await [inst1.unwrap(), inst2.unwrap()].submit();
     assert.isTrue(res.isOk, res.unwrap().toString());
-    console.log('# signature: ', res.unwrap().toSigUrl());
+    console.log('# signature: ', res.unwrap());
   });
 })

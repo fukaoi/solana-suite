@@ -6,7 +6,8 @@ import assert from 'assert';
 import {
   Account,
   Transaction,
-  SplToken
+  SplToken,
+  Pubkey
 } from '../src/index';
 
 (async () => {
@@ -42,7 +43,7 @@ import {
   );
 
 
-  const tokenKey = inst1.unwrap().data as string;
+  const tokenKey = inst1.unwrap().data as Pubkey;
 
   // this is NFT ID
   console.log('# tokenKey: ', tokenKey);
