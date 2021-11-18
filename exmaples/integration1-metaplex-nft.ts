@@ -11,6 +11,7 @@ import {
   MetaplexMetaData,
   StorageNftStorage,
   SplToken,
+  Pubkey,
 } from '../src/index';
 
 import {RandomAsset} from '../test/utils/randomAsset';
@@ -73,7 +74,7 @@ import {RandomAsset} from '../test/utils/randomAsset';
     (error) => assert(error)
   );
 
-  const tokenKey = (inst1.unwrap().data as string);
+  const tokenKey = (inst1.unwrap().data as Pubkey);
   console.log('# tokenKey: ', tokenKey);
 
   //////////////////////////////////////////////

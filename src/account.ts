@@ -9,13 +9,16 @@ import bs from 'bs58';
 
 import {Transaction, Constants, Node, Result} from './';
 
+export type Pubkey = string;
+export type Secret = string;
+
 export class KeypairStr {
-  pubkey: string;
-  secret: string;
+  pubkey: Pubkey;
+  secret: Secret;
 
   constructor(
-    pubkey: string,
-    secret: string
+    pubkey: Pubkey,
+    secret: Secret
   ) {
     this.pubkey = pubkey;
     this.secret = secret;

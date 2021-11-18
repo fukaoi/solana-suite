@@ -9,6 +9,7 @@ import {
   Constants,
   Result,
   Instruction,
+  Pubkey,
 } from './';
 
 
@@ -49,6 +50,7 @@ String.prototype.toKeypair = function () {
 }
 
 String.prototype.toSigUrl = function () {
+  console.log(this instanceof Pubkey);
   return `https://explorer.solana.com/tx/${this}?cluster=${Constants.currentNetwork}`;
 }
 
