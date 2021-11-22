@@ -65,7 +65,7 @@ import {RandomAsset} from '../test/utils/randomAsset';
   const inst1 = await Metaplex.mint(
     data,
     owner.toPubkey(),
-    [owner.secret.toKeypair()]
+    [owner.toKeypair()]
   );
 
   // this is NFT ID
