@@ -27,4 +27,4 @@
 
 #### Defined in
 
-[src/nft/storage/index.ts:29](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/nft/storage/index.ts#L29)
+[src/nft/storage/index.ts:29](https://github.com/fukaoi/solana-suite/blob/bbfcf40/src/nft/storage/index.ts#L29)

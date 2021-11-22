@@ -286,7 +286,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:94](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/instruction.ts#L94)
+[src/instruction.ts:94](https://github.com/fukaoi/solana-suite/blob/bbfcf40/src/instruction.ts#L94)
 
 ___
 
@@ -1183,7 +1183,7 @@ Array.submit
 
 #### Defined in
 
-[src/global.ts:24](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/global.ts#L24)
+[src/global.ts:24](https://github.com/fukaoi/solana-suite/blob/bbfcf40/src/global.ts#L24)
 
 ___
 
