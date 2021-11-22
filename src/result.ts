@@ -63,10 +63,14 @@ abstract class AbstractResult<T, E extends Error> {
   ): void | Promise<void>;
 
   match(
-    _ok: (value: T) => unknown,
-    _err: (error: E) => unknown
-  ): void | Promise<void>
-  { /* tslint:disable-next-line */ }
+    ok: (value: T) => unknown,
+    err: (error: E) => unknown
+  ): void | Promise<void> {
+     this._chain(
+      value => Result.ok(ok(value)),
+      error => Result.err(err(error) as Error)
+    );
+  }
 
 
   /// submit (alias Instruction.submit) ////
