@@ -25,7 +25,7 @@
 
 #### Defined in
 
-[src/account.ts:46](https://github.com/fukaoi/solana-suite/blob/5f78595/src/account.ts#L46)
+[src/account.ts:40](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/account.ts#L40)
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:47](https://github.com/fukaoi/solana-suite/blob/5f78595/src/account.ts#L47)
+[src/account.ts:41](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/account.ts#L41)
 
 ## Functions
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:91](https://github.com/fukaoi/solana-suite/blob/5f78595/src/account.ts#L91)
+[src/account.ts:85](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/account.ts#L85)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:99](https://github.com/fukaoi/solana-suite/blob/5f78595/src/account.ts#L99)
+[src/account.ts:93](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/account.ts#L93)
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:115](https://github.com/fukaoi/solana-suite/blob/5f78595/src/account.ts#L115)
+[src/account.ts:109](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/account.ts#L109)
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:49](https://github.com/fukaoi/solana-suite/blob/5f78595/src/account.ts#L49)
+[src/account.ts:43](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/account.ts#L43)
 
 ___
 
@@ -132,4 +132,4 @@ ___
 
 #### Defined in
 
-[src/account.ts:68](https://github.com/fukaoi/solana-suite/blob/5f78595/src/account.ts#L68)
+[src/account.ts:62](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/account.ts#L62)

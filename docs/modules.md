@@ -30,7 +30,6 @@
 - [Instruction](classes/Instruction.md)
 - [Instructions](classes/Instructions.md)
 - [KeypairStr](classes/KeypairStr.md)
-- [String](classes/String.md)
 
 ### Type aliases
 
@@ -54,7 +53,7 @@
 
 #### Defined in
 
-[src/account.ts:12](https://github.com/fukaoi/solana-suite/blob/5f78595/src/account.ts#L12)
+[src/account.ts:12](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/account.ts#L12)
 
 ___
 
@@ -71,7 +70,7 @@ ___
 
 #### Defined in
 
-[src/result.ts:542](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L542)
+[src/result.ts:547](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L547)
 
 ___
 
@@ -81,7 +80,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:13](https://github.com/fukaoi/solana-suite/blob/5f78595/src/account.ts#L13)
+[src/account.ts:13](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/account.ts#L13)
 
 ## Properties
 
@@ -111,4 +110,4 @@ node_modules/@types/node/globals.d.ts:589
 
 #### Defined in
 
-[src/global.ts:84](https://github.com/fukaoi/solana-suite/blob/5f78595/src/global.ts#L84)
+[src/global.ts:85](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/global.ts#L85)

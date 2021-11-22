@@ -54,7 +54,7 @@
 
 #### Defined in
 
-[src/result.ts:124](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L124)
+[src/result.ts:129](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L129)
 
 ▸ **all**<`R0`, `R1`, `R2`, `R3`, `R4`, `R5`, `R6`, `R7`, `R8`, `R9`, `R10`, `R11`, `R12`, `R13`, `R14`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>, `OkType`<`R3`\>, `OkType`<`R4`\>, `OkType`<`R5`\>, `OkType`<`R6`\>, `OkType`<`R7`\>, `OkType`<`R8`\>, `OkType`<`R9`\>, `OkType`<`R10`\>, `OkType`<`R11`\>, `OkType`<`R12`\>, `OkType`<`R13`\>, `OkType`<`R14`\>], `ErrType`<`R0` \| `R1` \| `R2` \| `R3` \| `R4` \| `R5` \| `R6` \| `R7` \| `R8` \| `R9` \| `R10` \| `R11` \| `R12` \| `R13` \| `R14`\>\>
 
@@ -90,7 +90,7 @@
 
 #### Defined in
 
-[src/result.ts:181](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L181)
+[src/result.ts:186](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L186)
 
 ▸ **all**<`R0`, `R1`, `R2`, `R3`, `R4`, `R5`, `R6`, `R7`, `R8`, `R9`, `R10`, `R11`, `R12`, `R13`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>, `OkType`<`R3`\>, `OkType`<`R4`\>, `OkType`<`R5`\>, `OkType`<`R6`\>, `OkType`<`R7`\>, `OkType`<`R8`\>, `OkType`<`R9`\>, `OkType`<`R10`\>, `OkType`<`R11`\>, `OkType`<`R12`\>, `OkType`<`R13`\>], `ErrType`<`R0` \| `R1` \| `R2` \| `R3` \| `R4` \| `R5` \| `R6` \| `R7` \| `R8` \| `R9` \| `R10` \| `R11` \| `R12` \| `R13`\>\>
 
@@ -125,7 +125,7 @@
 
 #### Defined in
 
-[src/result.ts:235](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L235)
+[src/result.ts:240](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L240)
 
 ▸ **all**<`R0`, `R1`, `R2`, `R3`, `R4`, `R5`, `R6`, `R7`, `R8`, `R9`, `R10`, `R11`, `R12`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>, `OkType`<`R3`\>, `OkType`<`R4`\>, `OkType`<`R5`\>, `OkType`<`R6`\>, `OkType`<`R7`\>, `OkType`<`R8`\>, `OkType`<`R9`\>, `OkType`<`R10`\>, `OkType`<`R11`\>], `ErrType`<`R0` \| `R1` \| `R2` \| `R3` \| `R4` \| `R5` \| `R6` \| `R7` \| `R8` \| `R9` \| `R10` \| `R11`\>\>
 
@@ -159,7 +159,7 @@
 
 #### Defined in
 
-[src/result.ts:273](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L273)
+[src/result.ts:278](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L278)
 
 ▸ **all**<`R0`, `R1`, `R2`, `R3`, `R4`, `R5`, `R6`, `R7`, `R8`, `R9`, `R10`, `R11`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>, `OkType`<`R3`\>, `OkType`<`R4`\>, `OkType`<`R5`\>, `OkType`<`R6`\>, `OkType`<`R7`\>, `OkType`<`R8`\>, `OkType`<`R9`\>, `OkType`<`R10`\>, `OkType`<`R11`\>], `ErrType`<`R0` \| `R1` \| `R2` \| `R3` \| `R4` \| `R5` \| `R6` \| `R7` \| `R8` \| `R9` \| `R10` \| `R11`\>\>
 
@@ -192,7 +192,7 @@
 
 #### Defined in
 
-[src/result.ts:306](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L306)
+[src/result.ts:311](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L311)
 
 ▸ **all**<`R0`, `R1`, `R2`, `R3`, `R4`, `R5`, `R6`, `R7`, `R8`, `R9`, `R10`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>, `OkType`<`R3`\>, `OkType`<`R4`\>, `OkType`<`R5`\>, `OkType`<`R6`\>, `OkType`<`R7`\>, `OkType`<`R8`\>, `OkType`<`R9`\>, `OkType`<`R10`\>], `ErrType`<`R0` \| `R1` \| `R2` \| `R3` \| `R4` \| `R5` \| `R6` \| `R7` \| `R8` \| `R9` \| `R10`\>\>
 
@@ -224,7 +224,7 @@
 
 #### Defined in
 
-[src/result.ts:338](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L338)
+[src/result.ts:343](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L343)
 
 ▸ **all**<`R0`, `R1`, `R2`, `R3`, `R4`, `R5`, `R6`, `R7`, `R8`, `R9`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>, `OkType`<`R3`\>, `OkType`<`R4`\>, `OkType`<`R5`\>, `OkType`<`R6`\>, `OkType`<`R7`\>, `OkType`<`R8`\>, `OkType`<`R9`\>], `ErrType`<`R0` \| `R1` \| `R2` \| `R3` \| `R4` \| `R5` \| `R6` \| `R7` \| `R8` \| `R9`\>\>
 
@@ -255,7 +255,7 @@
 
 #### Defined in
 
-[src/result.ts:368](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L368)
+[src/result.ts:373](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L373)
 
 ▸ **all**<`R0`, `R1`, `R2`, `R3`, `R4`, `R5`, `R6`, `R7`, `R8`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>, `OkType`<`R3`\>, `OkType`<`R4`\>, `OkType`<`R5`\>, `OkType`<`R6`\>, `OkType`<`R7`\>, `OkType`<`R8`\>], `ErrType`<`R0` \| `R1` \| `R2` \| `R3` \| `R4` \| `R5` \| `R6` \| `R7` \| `R8`\>\>
 
@@ -285,7 +285,7 @@
 
 #### Defined in
 
-[src/result.ts:396](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L396)
+[src/result.ts:401](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L401)
 
 ▸ **all**<`R0`, `R1`, `R2`, `R3`, `R4`, `R5`, `R6`, `R7`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>, `OkType`<`R3`\>, `OkType`<`R4`\>, `OkType`<`R5`\>, `OkType`<`R6`\>, `OkType`<`R7`\>], `ErrType`<`R0` \| `R1` \| `R2` \| `R3` \| `R4` \| `R5` \| `R6` \| `R7`\>\>
 
@@ -314,7 +314,7 @@
 
 #### Defined in
 
-[src/result.ts:422](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L422)
+[src/result.ts:427](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L427)
 
 ▸ **all**<`R0`, `R1`, `R2`, `R3`, `R4`, `R5`, `R6`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>, `OkType`<`R3`\>, `OkType`<`R4`\>, `OkType`<`R5`\>, `OkType`<`R6`\>], `ErrType`<`R0` \| `R1` \| `R2` \| `R3` \| `R4` \| `R5` \| `R6`\>\>
 
@@ -342,7 +342,7 @@
 
 #### Defined in
 
-[src/result.ts:446](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L446)
+[src/result.ts:451](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L451)
 
 ▸ **all**<`R0`, `R1`, `R2`, `R3`, `R4`, `R5`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>, `OkType`<`R3`\>, `OkType`<`R4`\>, `OkType`<`R5`\>], `ErrType`<`R0` \| `R1` \| `R2` \| `R3` \| `R4` \| `R5`\>\>
 
@@ -369,7 +369,7 @@
 
 #### Defined in
 
-[src/result.ts:468](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L468)
+[src/result.ts:473](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L473)
 
 ▸ **all**<`R0`, `R1`, `R2`, `R3`, `R4`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>, `OkType`<`R3`\>, `OkType`<`R4`\>], `ErrType`<`R0` \| `R1` \| `R2` \| `R3` \| `R4`\>\>
 
@@ -395,7 +395,7 @@
 
 #### Defined in
 
-[src/result.ts:481](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L481)
+[src/result.ts:486](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L486)
 
 ▸ **all**<`R0`, `R1`, `R2`, `R3`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>, `OkType`<`R3`\>], `ErrType`<`R0` \| `R1` \| `R2` \| `R3`\>\>
 
@@ -420,7 +420,7 @@
 
 #### Defined in
 
-[src/result.ts:493](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L493)
+[src/result.ts:498](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L498)
 
 ▸ **all**<`R0`, `R1`, `R2`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>, `OkType`<`R2`\>], `ErrType`<`R0` \| `R1` \| `R2`\>\>
 
@@ -444,7 +444,7 @@
 
 #### Defined in
 
-[src/result.ts:499](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L499)
+[src/result.ts:504](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L504)
 
 ▸ **all**<`R0`, `R1`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>, `OkType`<`R1`\>], `ErrType`<`R0` \| `R1`\>\>
 
@@ -467,7 +467,7 @@
 
 #### Defined in
 
-[src/result.ts:502](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L502)
+[src/result.ts:507](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L507)
 
 ▸ **all**<`R0`\>(`obj`): [`Result`](../modules.md#result)<[`OkType`<`R0`\>], `ErrType`<`R0`\>\>
 
@@ -489,7 +489,7 @@
 
 #### Defined in
 
-[src/result.ts:505](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L505)
+[src/result.ts:510](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L510)
 
 ▸ **all**(`obj`): [`Result`](../modules.md#result)<[]\>
 
@@ -505,7 +505,7 @@
 
 #### Defined in
 
-[src/result.ts:508](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L508)
+[src/result.ts:513](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L513)
 
 ▸ **all**<`T`\>(`obj`): [`Result`](../modules.md#result)<{ [K in keyof T]: T[K] extends Result<infer I\> ? I : never }, { [K in keyof T]: T[K] extends Result<unknown, infer E\> ? E : never }[keyof `T`]\>
 
@@ -527,7 +527,7 @@
 
 #### Defined in
 
-[src/result.ts:509](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L509)
+[src/result.ts:514](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L514)
 
 ___
 
@@ -554,7 +554,7 @@ ___
 
 #### Defined in
 
-[src/result.ts:118](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L118)
+[src/result.ts:123](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L123)
 
 ___
 
@@ -581,4 +581,4 @@ ___
 
 #### Defined in
 
-[src/result.ts:115](https://github.com/fukaoi/solana-suite/blob/5f78595/src/result.ts#L115)
+[src/result.ts:120](https://github.com/fukaoi/solana-suite/blob/c40ba3d/src/result.ts#L120)
