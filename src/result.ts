@@ -57,12 +57,17 @@ abstract class AbstractResult<T, E extends Error> {
   }
 
   //// match ////
+  match<U, F>(
+    ok: (value: T) => U,
+    err: (error: E) => F
+  ): void | Promise<void>;
+
   match(
-    ok: (value: T) => unknown,
-    err?: (error: E) => unknown 
-  ): void | Promise<void> {
-    this._chain(ok, err || (error => Result.err(error)));
-  }
+    _ok: (value: T) => unknown,
+    _err: (error: E) => unknown
+  ): void | Promise<void>
+  { /* tslint:disable-next-line */ }
+
 
   /// submit (alias Instruction.submit) ////
   async submit(): Promise<Result<TransactionSignature, Error>> {
