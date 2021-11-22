@@ -50,6 +50,7 @@ String.prototype.toKeypair = function () {
 
 String.prototype.toExplorerUrl = function () {
   try {
+    /* tslint:disable-next-line */
     new PublicKey(this);
     return `https://explorer.solana.com/address/${this}?cluster=${Constants.currentNetwork}`;
   } catch (_) {

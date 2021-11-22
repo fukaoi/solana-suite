@@ -34,12 +34,6 @@ export class KeypairStr {
   }
 }
 
-export class String {
-  get toPubKey(): PublicKey {
-    return new PublicKey(this);
-  };
-}
-
 export namespace Account {
   type Unit = 'sol' | 'lamports';
 

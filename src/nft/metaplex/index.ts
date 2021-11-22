@@ -78,7 +78,7 @@ export namespace MetaplexInstruction {
 
 export namespace Metaplex {
 
-  // tslint:disable-next-line
+  /* tslint:disable-next-line */
   export interface Creators {}
 
   export interface Format {

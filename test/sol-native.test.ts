@@ -82,7 +82,7 @@ describe('SolNative', () => {
 
   it('Use internal multisigTransfer()', async () => {
     const amount = 0.0001;
-    const inst = await SolNative.multisigTransfer(
+    const inst = await SolNative.transferWithMultisig(
       source.toPubkey(),
       dest.toPubkey(),
       [
@@ -112,7 +112,7 @@ describe('SolNative', () => {
     const amount = 0.0001;
     const multisig = (inst1.unwrap().data as string);
 
-    const inst2 = await SolNative.multisigTransfer(
+    const inst2 = await SolNative.transferWithMultisig(
       multisig.toPubkey(),
       dest.toPubkey(),
       [
