@@ -17,7 +17,7 @@ export namespace SolNative {
 
   // NOTICE: There is a lamport fluctuation when transfer under 0.001 sol
   // for multiSig only function
-  export const multisigTransfer = async (
+  export const transferWithMultisig = async (
     owner: PublicKey,
     dest: PublicKey,
     signers: Signer[],

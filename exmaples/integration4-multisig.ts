@@ -114,7 +114,7 @@ import {
 
   // submit batch instructions
   await (await [inst3, inst4].submit()).match(
-    value => console.log('# sig url: ', value.toExporerUrl()),
+    value => console.log('# sig url: ', value.toExplorerUrl()),
     error => assert(error.message)
   );
 })();
