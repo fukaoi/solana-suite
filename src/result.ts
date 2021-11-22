@@ -58,8 +58,8 @@ abstract class AbstractResult<T, E extends Error> {
 
   //// match ////
   match(
-    ok: (value: T) => any,
-    err?: (error: E) => any
+    ok: (value: T) => Result<unknown>,
+    err?: (error: E) => Result<unknown>
   ): void | Promise<void> {
     this._chain(ok, err || (error => Result.err(error)));
   }
