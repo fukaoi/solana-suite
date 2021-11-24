@@ -53,7 +53,7 @@
 
 #### Defined in
 
-[src/account.ts:12](https://github.com/fukaoi/solana-suite/blob/bbfcf40/src/account.ts#L12)
+[src/account.ts:12](https://github.com/fukaoi/solana-suite/blob/368a1a5/src/account.ts#L12)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[src/result.ts:551](https://github.com/fukaoi/solana-suite/blob/bbfcf40/src/result.ts#L551)
+[src/result.ts:551](https://github.com/fukaoi/solana-suite/blob/368a1a5/src/result.ts#L551)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:13](https://github.com/fukaoi/solana-suite/blob/bbfcf40/src/account.ts#L13)
+[src/account.ts:13](https://github.com/fukaoi/solana-suite/blob/368a1a5/src/account.ts#L13)
 
 ## Properties
 
@@ -110,4 +110,4 @@ node_modules/@types/node/globals.d.ts:589
 
 #### Defined in
 
-[src/global.ts:85](https://github.com/fukaoi/solana-suite/blob/bbfcf40/src/global.ts#L85)
+[src/global.ts:85](https://github.com/fukaoi/solana-suite/blob/368a1a5/src/global.ts#L85)

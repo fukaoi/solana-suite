@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[src/node.ts:15](https://github.com/fukaoi/solana-suite/blob/bbfcf40/src/node.ts#L15)
+[src/node.ts:15](https://github.com/fukaoi/solana-suite/blob/368a1a5/src/node.ts#L15)
 
 ___
 
@@ -35,4 +35,4 @@ ___
 
 #### Defined in
 
-[src/node.ts:9](https://github.com/fukaoi/solana-suite/blob/bbfcf40/src/node.ts#L9)
+[src/node.ts:9](https://github.com/fukaoi/solana-suite/blob/368a1a5/src/node.ts#L9)
