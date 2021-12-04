@@ -23,7 +23,7 @@ describe('Multisig', () => {
     );
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
-    const res = await inst.unwrap().submit();
+    const res = await inst.submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     const address = (inst.unwrap().data as string);
     console.log('# multisig address: ', address);
@@ -63,7 +63,7 @@ describe('Multisig', () => {
     );
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
-    const res = await inst.unwrap().submit();
+    const res = await inst.submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# multisig account: ', inst.unwrap().data);
   });
@@ -83,7 +83,7 @@ describe('Multisig', () => {
     );
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
-    const res = await inst.unwrap().submit();
+    const res = await inst.submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# multisig account: ', inst.unwrap().data);
   });
@@ -112,7 +112,7 @@ describe('Multisig', () => {
       ],
     );
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
-    await inst.unwrap().submit();
+    await inst.submit();
     const res = await Multisig.getMultisigInfo(
       (inst.unwrap().data as string).toPubkey()
     );

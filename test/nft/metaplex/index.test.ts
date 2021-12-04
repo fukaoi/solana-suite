@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Account, KeypairStr, Multisig, SplToken, Transaction} from '../../../src';
+import {Account, KeypairStr, Multisig, SplToken} from '../../../src';
 import {Metaplex, MetaplexInstructure} from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
 
@@ -30,8 +30,36 @@ describe('Metaplex', () => {
     );
 
     assert.isTrue(inst.isOk);
-    const res = await inst.unwrap().submit();
+    const res = await inst.submit();
     console.log('# tokenKey: ', inst.unwrap().data);
+    console.log('# signature: ', res.unwrap());
+  });
+
+  it('Mint batched nft', async () => {
+    const data = new MetaplexInstructure.Data({
+      name: 'NFT',
+      symbol: 'NFT',
+      uri: 'https://example.com',
+      sellerFeeBasisPoints: 100,
+      creators: null
+    });
+
+    const inst1 = await Metaplex.mint(
+      data,
+      source.toPubkey(),
+      [source.toKeypair()],
+    );
+    const inst2 = await Metaplex.mint(
+      data,
+      source.toPubkey(),
+      [source.toKeypair()],
+    );
+
+    const res = await [inst1, inst2].submit();
+
+    assert.isTrue(res.isOk);
+    console.log('# tokenKey1: ', inst1.unwrap().data);
+    console.log('# tokenKey2: ', inst2.unwrap().data);
     console.log('# signature: ', res.unwrap());
   });
 
@@ -52,7 +80,7 @@ describe('Metaplex', () => {
 
     assert.isTrue(inst1.isOk);
 
-    const resMint = await inst1.unwrap().submit();
+    const resMint = await inst1.submit();
     console.log('# tokenKey: ', inst1.unwrap().data);
     console.log('# signature: ', resMint.unwrap());
 
@@ -65,7 +93,7 @@ describe('Metaplex', () => {
       [source.toKeypair()],
     );
 
-    const res = await inst2.unwrap().submit();
+    const res = await inst2.submit();
     console.log('# signature: ', res.unwrap());
   });
 
@@ -91,7 +119,7 @@ describe('Metaplex', () => {
 
     assert.isTrue(inst1.isOk);
 
-    const resMint = await inst1.unwrap().submit();
+    const resMint = await inst1.submit();
     console.log('# tokenKey: ', inst1.unwrap().data);
     console.log('# signature: ', resMint.unwrap());
 
@@ -107,12 +135,12 @@ describe('Metaplex', () => {
       feePayer.toKeypair(),
     );
 
-    const res = await inst2.unwrap().submit();
+    const res = await inst2.submit();
     console.log('# signature: ', res.unwrap());
 
     const afterFeePayer = await Account.getBalance(feePayer.toPubkey());
     const afterSource = await Account.getBalance(source.toPubkey());
-    
+
     assert.isTrue(beforeFeePayer.unwrap() > afterFeePayer.unwrap());
     assert.equal(beforeSource.unwrap(), afterSource.unwrap());
   });
@@ -132,7 +160,7 @@ describe('Metaplex', () => {
       ]
     );
 
-    const resMulti = await multisig.unwrap().submit();
+    const resMulti = await multisig.submit();
 
     assert(resMulti.isOk, `${resMulti.unwrap()}`);
 
@@ -158,7 +186,7 @@ describe('Metaplex', () => {
 
     assert.isTrue(inst1.isOk);
 
-    const resMint = await inst1.unwrap().submit();
+    const resMint = await inst1.submit();
     console.log('# tokenKey: ', inst1.unwrap().data);
     console.log('# signature: ', resMint.unwrap());
 
@@ -174,7 +202,7 @@ describe('Metaplex', () => {
       ],
     );
 
-    const resTransfer = await inst2.unwrap().submit();
+    const resTransfer = await inst2.submit();
     console.log('# signature: ', resTransfer.unwrap());
 
     // transfer from multisig address to dest  
@@ -189,7 +217,7 @@ describe('Metaplex', () => {
       source.toKeypair(),
     );
 
-    const res = await inst3.unwrap().submit();
+    const res = await inst3.submit();
     console.log('# signature: ', res.unwrap());
   });
 });

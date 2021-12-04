@@ -31,9 +31,9 @@ Array.prototype.submit = async function () {
     if (this[i].isErr) {
       return Result.err(Error(`[Array index: ${i}]${this[i].error.message}`));
     } else if (this[i].isOk) {
-      instructions = this.map(t => t.value);
+      instructions.push(this[i].value);
     } else {
-      instructions = this;
+      instructions.push(this[i]);
     }
   }
   return await Instruction.batchSubmit(instructions);

@@ -31,7 +31,7 @@ export namespace ConstantsFunc {
   export const switchApi = (env: string | undefined) => {
     switch (env) {
       case Constants.SolanaNet.prd:
-        return 'https://api.solana.com';
+        return 'https://api.mainnet-beta.solana.com';
       case Constants.SolanaNet.test:
         return 'https://api.testnet.solana.com';
       default:

@@ -43,6 +43,8 @@ import {RandomAsset} from '../test/utils/randomAsset';
   // Usually set custom param
   const asset = RandomAsset.storage();
 
+  console.log(asset);
+
   // metadata and image upload
   const url = await StorageNftStorage.upload(asset);
 
