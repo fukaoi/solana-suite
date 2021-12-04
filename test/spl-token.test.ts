@@ -62,7 +62,7 @@ describe('SplToken', () => {
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
-    const res = await inst.unwrap().submit();
+    const res = await inst.submit();
     assert.isTrue(res.isOk, res.unwrap());
     tokenKeyStr = inst.unwrap().data as string;
     console.log('# tokenKey: ', tokenKeyStr);
@@ -91,8 +91,8 @@ describe('SplToken', () => {
       MINT_DECIMAL,
     );
     const res = await [
-      multisig.unwrap(),
-      mint.unwrap()
+      multisig,
+      mint
     ].submit();
     assert.isFalse(res.isOk);
   });
@@ -140,9 +140,9 @@ describe('SplToken', () => {
     assert.isTrue(inst2.isOk);
 
     const sig = await [
-      inst1.unwrap(),
-      inst2.unwrap(),
-      inst3.unwrap()
+      inst1,
+      inst2,
+      inst3
     ].submit();
 
     assert.isTrue(sig.isOk, sig.unwrap());
@@ -206,9 +206,9 @@ describe('SplToken', () => {
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
     const sig = await [
-      multiInst.unwrap(),
-      mintInst.unwrap(),
-      inst.unwrap()
+      multiInst,
+      mintInst,
+      inst
     ].submit();
 
     console.log('signature: ', `${sig.unwrap()}`);

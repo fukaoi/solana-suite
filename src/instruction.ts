@@ -56,13 +56,17 @@ export class Instruction {
   static batchSubmit = async (
     arr: Instruction[]
   ): Promise<Result<TransactionSignature, Error>> => {
+    let i = 0;
     for (const a of arr) {
       if (!(a instanceof Instruction)) {
-        console.log(a);
         return Result.err(
-          Error('only Instruction object that can use this')
+          Error(
+          `only Instruction object that can use batchSubmit(). 
+            Setted: ${a}, Index: ${i}`
+          )
         );
       }
+      i++;
     }
 
     const instructions = arr.flatMap(a => a.instructions);

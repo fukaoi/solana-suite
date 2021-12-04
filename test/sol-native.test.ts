@@ -24,7 +24,7 @@ describe('SolNative', () => {
       );
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
-    const res = await inst.unwrap().submit();
+    const res = await inst.submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# tx signature: ', res.unwrap());
   });
@@ -45,7 +45,7 @@ describe('SolNative', () => {
     );
 
 
-    const res = await [inst1, inst2.unwrap()].submit();
+    const res = await [inst1, inst2].submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# tx signature: ', res.unwrap());
   });
@@ -71,7 +71,7 @@ describe('SolNative', () => {
       feePayer.toKeypair()
     );
 
-    const res = await inst.unwrap().submit();
+    const res = await inst.submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# tx signature: ', res.unwrap());
     const after = (await Account.getBalance(
@@ -90,7 +90,7 @@ describe('SolNative', () => {
       ],
       amount,
     );
-    const res = await inst.unwrap().submit();
+    const res = await inst.submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# signature :', res.unwrap());
   });
@@ -125,7 +125,7 @@ describe('SolNative', () => {
     );
     assert.isTrue(inst2.isOk, `${inst2.unwrap()}`);
 
-    const res = await [inst1.unwrap(), inst2.unwrap()].submit();
+    const res = await [inst1, inst2].submit();
     assert.isTrue(res.isOk, res.unwrap().toString());
     console.log('# signature: ', res.unwrap());
   });

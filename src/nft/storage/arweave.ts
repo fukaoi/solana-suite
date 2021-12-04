@@ -203,7 +203,7 @@ export namespace StorageArweave {
     if (inst.isErr) {
       return Result.err(inst.error);
     } else {
-      const sig = await inst.unwrap().submit();
+      const sig = await inst.submit();
       if (sig.isErr) {
         return Result.err(sig.error);
       }
