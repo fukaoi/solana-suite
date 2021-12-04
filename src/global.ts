@@ -26,7 +26,7 @@ declare global {
 }
 
 Array.prototype.submit = async function () {
-  let instructions: Instruction[] = [];
+  const instructions: Instruction[] = [];
   for (let i = 0;  i < this.length; i++) {
     if (this[i].isErr) {
       return Result.err(Error(`[Array index: ${i}]${this[i].error.message}`));

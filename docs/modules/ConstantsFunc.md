@@ -12,7 +12,7 @@
 
 ### switchApi
 
-▸ `Const` **switchApi**(`env`): ``"https://api.solana.com"`` \| ``"https://api.testnet.solana.com"`` \| ``"http://api.devnet.solana.com"``
+▸ `Const` **switchApi**(`env`): ``"https://api.mainnet-beta.solana.com"`` \| ``"https://api.testnet.solana.com"`` \| ``"http://api.devnet.solana.com"``
 
 #### Parameters
 
@@ -22,8 +22,8 @@
 
 #### Returns
 
-``"https://api.solana.com"`` \| ``"https://api.testnet.solana.com"`` \| ``"http://api.devnet.solana.com"``
+``"https://api.mainnet-beta.solana.com"`` \| ``"https://api.testnet.solana.com"`` \| ``"http://api.devnet.solana.com"``
 
 #### Defined in
 
-[src/constants.ts:31](https://github.com/fukaoi/solana-suite/blob/368a1a5/src/constants.ts#L31)
+[src/constants.ts:31](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L31)

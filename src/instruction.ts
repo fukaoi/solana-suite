@@ -61,7 +61,7 @@ export class Instruction {
       if (!(a instanceof Instruction)) {
         return Result.err(
           Error(
-          `only Instruction object that can use batchSubmit(). 
+          `only Instruction object that can use batchSubmit().
             Setted: ${a}, Index: ${i}`
           )
         );

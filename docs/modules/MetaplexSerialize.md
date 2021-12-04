@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[src/nft/metaplex/serialize.ts:31](https://github.com/fukaoi/solana-suite/blob/368a1a5/src/nft/metaplex/serialize.ts#L31)
+[src/nft/metaplex/serialize.ts:31](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/nft/metaplex/serialize.ts#L31)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/serialize.ts:8](https://github.com/fukaoi/solana-suite/blob/368a1a5/src/nft/metaplex/serialize.ts#L8)
+[src/nft/metaplex/serialize.ts:8](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/nft/metaplex/serialize.ts#L8)
 
 ___
 
@@ -70,4 +70,4 @@ ___
 
 #### Defined in
 
-[src/nft/metaplex/serialize.ts:13](https://github.com/fukaoi/solana-suite/blob/368a1a5/src/nft/metaplex/serialize.ts#L13)
+[src/nft/metaplex/serialize.ts:13](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/nft/metaplex/serialize.ts#L13)

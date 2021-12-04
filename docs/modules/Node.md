@@ -13,15 +13,15 @@
 
 ### getApiUrl
 
-▸ `Const` **getApiUrl**(): ``"https://api.solana.com"`` \| ``"https://api.testnet.solana.com"`` \| ``"http://api.devnet.solana.com"``
+▸ `Const` **getApiUrl**(): ``"https://api.mainnet-beta.solana.com"`` \| ``"https://api.testnet.solana.com"`` \| ``"http://api.devnet.solana.com"``
 
 #### Returns
 
-``"https://api.solana.com"`` \| ``"https://api.testnet.solana.com"`` \| ``"http://api.devnet.solana.com"``
+``"https://api.mainnet-beta.solana.com"`` \| ``"https://api.testnet.solana.com"`` \| ``"http://api.devnet.solana.com"``
 
 #### Defined in
 
-[src/node.ts:15](https://github.com/fukaoi/solana-suite/blob/368a1a5/src/node.ts#L15)
+[src/node.ts:15](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/node.ts#L15)
 
 ___
 
@@ -35,4 +35,4 @@ ___
 
 #### Defined in
 
-[src/node.ts:9](https://github.com/fukaoi/solana-suite/blob/368a1a5/src/node.ts#L9)
+[src/node.ts:9](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/node.ts#L9)
