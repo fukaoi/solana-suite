@@ -7,7 +7,7 @@ import {
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-import {Constants, Instruction} from './';
+import {Constants, Instruction} from './index';
 
 export namespace Memo {
   export const decode = (encoded: string): string =>
@@ -50,7 +50,7 @@ export namespace Memo {
 
   export const parse = (tx: ParsedConfirmedTransaction):
     string => {
-    const res = tx.transaction.message.instructions.filter(d => {
+    const res = tx.transaction.message.instructions.filter((d: any) => {
       const value = d as ParsedInstruction;
       return value.program === 'spl-memo';
     }) as ParsedInstruction[];

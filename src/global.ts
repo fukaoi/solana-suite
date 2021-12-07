@@ -9,7 +9,7 @@ import {
   Constants,
   Result,
   Instruction,
-} from './';
+} from './index';
 
 
 declare global {

@@ -15,11 +15,11 @@ import {
   Node,
   Instruction,
   Result,
-} from '../../';
+} from '../../index';
 
 import {
   MetaplexInstructure
-} from './';
+} from './index';
 import {MetaplexMetaData} from './metadata';
 
 export * from './instructure';

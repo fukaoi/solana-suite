@@ -10,7 +10,7 @@ import {
   Result,
   Node,
   Constants
-} from './';
+} from './index';
 import {Instruction} from './instruction';
 
 export namespace SolNative {

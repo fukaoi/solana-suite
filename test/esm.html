@@ -1,14 +1,15 @@
 <html>
 
 <head>
-  <script type="module" src="../esm/index.js">
+  <script type="module" src="../lib/index.js">
   </script>
 </head>
 
 <body>
   <script type='module'>
-     import * as S from 'account';
+    import {Account} from '../lib/index.js';
     (async () => {
+    console.log(Account.create());
     })();
   </script>
   <div id="result"></div>

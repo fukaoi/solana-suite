@@ -2,7 +2,7 @@ import {
   Node,
   Result,
   Instruction,
-} from './';
+} from './index';
 
 import {
   PublicKey,

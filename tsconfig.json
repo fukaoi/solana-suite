@@ -10,12 +10,12 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./lib",
-    "module": "commonjs",
+    "module": "UMD",
     "target": "ES6",
     "declaration": true,
     "allowJs": true,
     "sourceMap": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": false
   },
   "include": [
     "src/**/**.ts"

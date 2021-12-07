@@ -12,7 +12,7 @@ import {
   Signer,
 } from '@solana/web3.js';
 
-import {Transaction, Node, Result, Instruction, } from './';
+import {Transaction, Node, Result, Instruction, } from './index';
 
 export namespace SplToken {
 

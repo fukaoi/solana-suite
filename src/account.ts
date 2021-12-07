@@ -7,7 +7,7 @@ import {
 
 import bs from 'bs58';
 
-import {Transaction, Constants, Node, Result} from './';
+import {Transaction, Constants, Node, Result} from './index';
 
 export type Pubkey = string;
 export type Secret = string;
@@ -102,7 +102,7 @@ export namespace Account {
       ],
       ASSOCIATED_TOKEN_PROGRAM_ID
     )
-      .then(v => Result.ok(v[0]))
+      .then((v: [PublicKey, number]) => Result.ok(v[0]))
       .catch(Result.err);
   }
 
@@ -117,7 +117,7 @@ export namespace Account {
       ],
       Constants.METAPLEX_PROGRAM_ID,
     )
-      .then(v => Result.ok(v[0]))
+      .then((v: [PublicKey, number]) => Result.ok(v[0]))
       .catch((e: Error) => Result.err(e))
   }
 }

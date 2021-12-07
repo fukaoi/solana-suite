@@ -9,7 +9,7 @@ import {
 import {
   Node,
   Result
-} from './';
+} from './index';
 
 export class Instruction {
   instructions: TransactionInstruction[];

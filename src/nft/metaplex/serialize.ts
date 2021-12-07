@@ -1,5 +1,5 @@
 import {deserializeUnchecked, serialize} from 'borsh';
-import {Metaplex, MetaplexInstructure} from './';
+import {Metaplex, MetaplexInstructure} from './index';
 import {PublicKey} from '@solana/web3.js';
 
 export namespace MetaplexSerialize {

@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {Storage} from './';
+import {Storage} from './index';
 import fetch from 'cross-fetch';
 import FormData from 'form-data';
 import path from 'path';
@@ -12,7 +12,7 @@ import {
   Constants,
   SolNative,
   Result
-} from '../../'
+} from '../../index'
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
