@@ -1,0 +1,18 @@
+<html>
+
+<head>
+  <script type="module" src="/dist/mjs/src/account.js" crossorigin="anonymous">
+  </script>
+</head>
+
+<body>
+  <script>
+    (async () => {
+      import {Account} from '/dist/mjs/src/account.js';
+      alert(Account.create());
+    })();
+  </script>
+  <div id="result"></div>
+</body>
+
+</html>
