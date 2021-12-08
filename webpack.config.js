@@ -8,7 +8,7 @@ module.exports = {
   output: {
     path: __dirname + "/dist/",
     filename: "solana-suite.js",
-    library: "solana-suite",
+    library: "SolanaSuite",
     libraryTarget: 'umd'
   },
   resolve: {

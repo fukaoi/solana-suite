@@ -2,13 +2,16 @@
 
 <head>
   <script type="text/javascript" src="../dist/solana-suite.js">
+  <!-- <script type="text/javascript" src="../esm/index.js"> -->
   </script>
 </head>
 
 <body>
   <script>
+    console.log(this);
+    const Account = SolanaSuite.Account; 
     (async () => {
-      console.log(solana-suite);
+      console.log(Account.create());
     })();
   </script>
   <div id="result"></div>

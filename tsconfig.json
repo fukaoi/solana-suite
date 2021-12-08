@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "lib": [
-      "ES6",
-      "ES2017",
+      "DOM",
       "ESNext"
     ],
     "strict": true,
@@ -11,7 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "./lib",
     "module": "commonjs",
-    "target": "ES6",
+    "target": "ESNext",
     "declaration": true,
     "allowJs": true,
     "sourceMap": true,
