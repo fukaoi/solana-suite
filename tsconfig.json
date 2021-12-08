@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "lib": [
-      "ES6",
       "ES2017",
       "ESNext"
     ],
@@ -10,8 +9,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./lib",
-    "module": "commonjs",
-    "target": "ES6",
+    "module": "CommonJS",
+    "target": "ESNext",
     "declaration": true,
     "allowJs": true,
     "sourceMap": true,
@@ -19,9 +18,5 @@
   },
   "include": [
     "src/**/**.ts"
-  ],
-  "solanaSuite": {
-    "network": "devnet",
-    "debugging": false
-  }
+  ]
 }

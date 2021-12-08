@@ -11,8 +11,9 @@ import {
   MetaplexMetaData,
   StorageNftStorage,
   SplToken,
-  Pubkey,
-} from '../src/index';
+  // Pubkey,
+// } from '../src/index';
+} from '../dist/index.js';
 
 import {RandomAsset} from '../test/utils/randomAsset';
 
@@ -23,6 +24,7 @@ import {RandomAsset} from '../test/utils/randomAsset';
   //////////////////////////////////////////////
 
   // create nft owner wallet, receive nft receipt wallet.
+
   const publisher = Account.create();
   const receipt = Account.create();
   const owner = Account.create();
@@ -76,7 +78,7 @@ import {RandomAsset} from '../test/utils/randomAsset';
     (error) => assert(error)
   );
 
-  const tokenKey = (inst1.unwrap().data as Pubkey);
+  const tokenKey = (inst1.unwrap().data as string);
   console.log('# tokenKey: ', tokenKey);
 
   //////////////////////////////////////////////

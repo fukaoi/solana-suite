@@ -3,7 +3,7 @@ import {
   PublicKey
 } from '@solana/web3.js';
 
-import TSConfig from '../tsconfig.json';
+import TSConfig from '../package.json';
 
 export namespace Constants {
   export enum SolanaNet {

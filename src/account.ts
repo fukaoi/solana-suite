@@ -7,7 +7,10 @@ import {
 
 import bs from 'bs58';
 
-import {Transaction, Constants, Node, Result} from './';
+import {Transaction} from './transaction';
+import {Constants} from './constants';
+import {Node} from './node';
+import {Result} from './result';
 
 export type Pubkey = string;
 export type Secret = string;

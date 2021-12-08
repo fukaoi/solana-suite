@@ -5,11 +5,9 @@ export * from './global';
 export * from './memo';
 export * from './multisig';
 export * from './node';
-export * from './nft/metaplex';
-export * from './nft/storage';
+export * from './nft/metaplex/index';
+export * from './nft/storage/index';
 export * from './result';
 export * from './sol-native';
 export * from './spl-token';
 export * from './transaction';
-
-// export default module.exports;
