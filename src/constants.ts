@@ -14,17 +14,7 @@ export namespace Constants {
 
   export const currentNetwork = TSConfig.solanaSuite.network;
 
-  export const isDebugging = () => {
-    if (process?.env?.NODE_ENV) {
-      if (process.env.NODE_ENV === 'development') {
-        return true;
-      }
-    }
-    if (TSConfig.solanaSuite.debugging) {
-      return true;
-    }
-    return false;
-  }
+  export const isDebugging = TSConfig.solanaSuite.debugging;
 }
 
 export namespace ConstantsFunc {
@@ -35,7 +25,6 @@ export namespace ConstantsFunc {
       case Constants.SolanaNet.test:
         return 'https://api.testnet.solana.com';
       default:
-        process.env.SOLANA_NETWORK = Constants.SolanaNet.dev;
         return 'http://api.devnet.solana.com';
     }
   }
