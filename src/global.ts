@@ -63,7 +63,7 @@ console.debug = (
   data2: unknown = '',
   data3: unknown = ''
 ) => {
-  if (Constants.isDebugging()) console.log(
+  if (Constants.isDebugging) console.log(
     `\u001b[34m`, data,
     `\u001b[35m`, data2,
     `\u001b[36m`, data3
