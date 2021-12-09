@@ -37,10 +37,6 @@
 - [Result](modules.md#result)
 - [Secret](modules.md#secret)
 
-### Properties
-
-- [default](modules.md#default)
-
 ### Functions
 
 - [tryCatch](modules.md#trycatch)
@@ -53,7 +49,7 @@
 
 #### Defined in
 
-[src/account.ts:12](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/account.ts#L12)
+[src/account.ts:12](https://github.com/fukaoi/solana-suite/blob/62f455f/src/account.ts#L12)
 
 ___
 
@@ -70,7 +66,7 @@ ___
 
 #### Defined in
 
-[src/result.ts:551](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/result.ts#L551)
+[src/result.ts:551](https://github.com/fukaoi/solana-suite/blob/62f455f/src/result.ts#L551)
 
 ___
 
@@ -80,17 +76,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:13](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/account.ts#L13)
-
-## Properties
-
-### default
-
-• **default**: `any`
-
-#### Defined in
-
-node_modules/@types/node/globals.d.ts:589
+[src/account.ts:13](https://github.com/fukaoi/solana-suite/blob/62f455f/src/account.ts#L13)
 
 ## Functions
 
@@ -110,4 +96,4 @@ node_modules/@types/node/globals.d.ts:589
 
 #### Defined in
 
-[src/global.ts:85](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/global.ts#L85)
+[src/global.ts:85](https://github.com/fukaoi/solana-suite/blob/62f455f/src/global.ts#L85)

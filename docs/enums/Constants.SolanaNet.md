@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[src/constants.ts:11](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L11)
+[src/constants.ts:11](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L11)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:10](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L10)
+[src/constants.ts:10](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L10)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-[src/constants.ts:12](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L12)
+[src/constants.ts:12](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L12)

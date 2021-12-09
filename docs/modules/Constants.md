@@ -23,9 +23,6 @@
 - [NFT\_STORAGE\_GATEWAY\_URL](Constants.md#nft_storage_gateway_url)
 - [WRAPPED\_TOKEN\_PROGRAM\_ID](Constants.md#wrapped_token_program_id)
 - [currentNetwork](Constants.md#currentnetwork)
-
-### Functions
-
 - [isDebugging](Constants.md#isdebugging)
 
 ## Variables
@@ -36,7 +33,7 @@
 
 #### Defined in
 
-[src/constants.ts:49](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L49)
+[src/constants.ts:38](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L38)
 
 ___
 
@@ -46,7 +43,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:60](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L60)
+[src/constants.ts:49](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L49)
 
 ___
 
@@ -56,7 +53,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:59](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L59)
+[src/constants.ts:48](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L48)
 
 ___
 
@@ -66,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:61](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L61)
+[src/constants.ts:50](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L50)
 
 ___
 
@@ -76,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:63](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L63)
+[src/constants.ts:52](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L52)
 
 ___
 
@@ -86,7 +83,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:53](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L53)
+[src/constants.ts:42](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L42)
 
 ___
 
@@ -96,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:48](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L48)
+[src/constants.ts:37](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L37)
 
 ___
 
@@ -106,7 +103,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:51](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L51)
+[src/constants.ts:40](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L40)
 
 ___
 
@@ -116,7 +113,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:52](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L52)
+[src/constants.ts:41](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L41)
 
 ___
 
@@ -126,7 +123,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:56](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L56)
+[src/constants.ts:45](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L45)
 
 ___
 
@@ -136,7 +133,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:58](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L58)
+[src/constants.ts:47](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L47)
 
 ___
 
@@ -146,7 +143,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:50](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L50)
+[src/constants.ts:39](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L39)
 
 ___
 
@@ -156,18 +153,14 @@ ___
 
 #### Defined in
 
-[src/constants.ts:15](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L15)
+[src/constants.ts:15](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L15)
 
-## Functions
+___
 
 ### isDebugging
 
-▸ `Const` **isDebugging**(): `boolean`
-
-#### Returns
-
-`boolean`
+• **isDebugging**: `boolean` = `TSConfig.solanaSuite.debugging`
 
 #### Defined in
 
-[src/constants.ts:17](https://github.com/fukaoi/solana-suite/blob/3d6e966/src/constants.ts#L17)
+[src/constants.ts:17](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L17)
