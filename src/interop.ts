@@ -15,7 +15,7 @@ export namespace Interop {
       const fs = await import('fs');
       return fs.readFileSync(filePath);
     } else {
-      // todo:browser 
+      // todo:browser
     }
   }
 
@@ -23,7 +23,7 @@ export namespace Interop {
     // if (isNodeJs()) {
       // return (import('../package.json')).solanaSuite;
     // } else {
-      // // todo:browser 
+      // // todo:browser
       // return (await import('../package.json')).solanaSuite;
     // }
   // }

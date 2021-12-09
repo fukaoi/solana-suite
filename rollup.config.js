@@ -32,6 +32,6 @@ export default {
   ],
   output: {
     file: 'dist/index.js',
-    format: 'iife'
+    format: 'amd'
   }
 }
