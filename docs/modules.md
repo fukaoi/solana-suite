@@ -49,7 +49,7 @@
 
 #### Defined in
 
-[src/account.ts:12](https://github.com/fukaoi/solana-suite/blob/62f455f/src/account.ts#L12)
+[src/account.ts:12](https://github.com/atonoy/solana-suite/blob/7e44c28/src/account.ts#L12)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[src/result.ts:551](https://github.com/fukaoi/solana-suite/blob/62f455f/src/result.ts#L551)
+[src/result.ts:551](https://github.com/atonoy/solana-suite/blob/7e44c28/src/result.ts#L551)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[src/account.ts:13](https://github.com/fukaoi/solana-suite/blob/62f455f/src/account.ts#L13)
+[src/account.ts:13](https://github.com/atonoy/solana-suite/blob/7e44c28/src/account.ts#L13)
 
 ## Functions
 
@@ -96,4 +96,4 @@ ___
 
 #### Defined in
 
-[src/global.ts:85](https://github.com/fukaoi/solana-suite/blob/62f455f/src/global.ts#L85)
+[src/global.ts:85](https://github.com/atonoy/solana-suite/blob/7e44c28/src/global.ts#L85)

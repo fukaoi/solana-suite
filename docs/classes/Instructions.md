@@ -286,7 +286,7 @@ ___
 
 #### Defined in
 
-[src/instruction.ts:98](https://github.com/fukaoi/solana-suite/blob/62f455f/src/instruction.ts#L98)
+[src/instruction.ts:98](https://github.com/atonoy/solana-suite/blob/7e44c28/src/instruction.ts#L98)
 
 ___
 
@@ -1183,7 +1183,7 @@ Array.submit
 
 #### Defined in
 
-[src/global.ts:24](https://github.com/fukaoi/solana-suite/blob/62f455f/src/global.ts#L24)
+[src/global.ts:24](https://github.com/atonoy/solana-suite/blob/7e44c28/src/global.ts#L24)
 
 ___
 

@@ -33,7 +33,7 @@
 
 #### Defined in
 
-[src/constants.ts:38](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L38)
+[src/constants.ts:38](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L38)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:49](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L49)
+[src/constants.ts:49](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L49)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:48](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L48)
+[src/constants.ts:48](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L48)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:50](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L50)
+[src/constants.ts:50](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L50)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:52](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L52)
+[src/constants.ts:52](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L52)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:42](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L42)
+[src/constants.ts:42](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L42)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:37](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L37)
+[src/constants.ts:37](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L37)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:40](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L40)
+[src/constants.ts:40](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L40)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:41](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L41)
+[src/constants.ts:41](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L41)
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:45](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L45)
+[src/constants.ts:45](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L45)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:47](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L47)
+[src/constants.ts:47](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L47)
 
 ___
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:39](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L39)
+[src/constants.ts:39](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L39)
 
 ___
 
@@ -153,7 +153,7 @@ ___
 
 #### Defined in
 
-[src/constants.ts:15](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L15)
+[src/constants.ts:15](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L15)
 
 ___
 
@@ -163,4 +163,4 @@ ___
 
 #### Defined in
 
-[src/constants.ts:17](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L17)
+[src/constants.ts:17](https://github.com/atonoy/solana-suite/blob/7e44c28/src/constants.ts#L17)
