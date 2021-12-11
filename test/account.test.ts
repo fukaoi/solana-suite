@@ -25,6 +25,17 @@ describe('Account', () => {
     console.log('# balance sol: ', res.unwrap());
   });
 
+  it('Get token balance at publicKey', async () => {
+    const pubkey = 'D1r8Uea5uVQ9u3uNr8Nrg49t6BmkgnwLYYVmwZ3WhbPT';
+    const tokenkey = '5k1WAQeAYUPiQnNWF557zBTqhMHfsi5utnE7TVSjd5Ut';
+    const res = await Account.getTokenBalance(
+      pubkey.toPubkey(), 
+      tokenkey.toPubkey()
+    );
+    assert.isTrue(res.isOk);
+    console.log('# balance token: ', res.unwrap());
+  });
+
   it('Get lamports balance at publicKey', async () => {
     const res = await Account.getBalance(
       source.toPubkey(),

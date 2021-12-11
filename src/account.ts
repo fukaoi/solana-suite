@@ -3,6 +3,8 @@ import {
   Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
+  RpcResponseAndContext,
+  TokenAmount,
 } from '@solana/web3.js';
 
 import bs from 'bs58';
@@ -57,6 +59,19 @@ export namespace Account {
       case 'lamports': return balance;
       default: return Result.err(Error('no match unit'));
     }
+  };
+
+  export const getTokenBalance = async (
+    pubkey: PublicKey,
+    tokenKey: PublicKey,
+  ): Promise<Result<TokenAmount, Error>> => {
+    const res = await findAssocaiatedTokenAddress(pubkey, tokenKey);
+    if (res.isErr) {
+      return Result.err(res.error);
+    }
+    return await Node.getConnection().getTokenAccountBalance(res.unwrap())
+      .then((rpc: RpcResponseAndContext<TokenAmount>) => Result.ok(rpc.value))
+      .catch(Result.err);
   };
 
   export const requestAirdrop = async (
