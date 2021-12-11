@@ -65,7 +65,7 @@ import {
 
   (await [inst1, inst2].submit()).match(
     async (value) => {
-      console.log('# Transfer nft sig: ', value.toSigUrl());
+      console.log('# Transfer nft sig: ', value.toExplorerUrl());
       await Transaction.confirmedSig(value);
     },
     (error) => assert(error)
@@ -80,7 +80,7 @@ import {
   console.log('# Transfer history by token: ', history.unwrap());
 
   // Get history object by publish
-  const historyPublish = await SplToken.getTransferHistory(publisher.pubkey.toPubkey());
+  const historyPublish = await SplToken.getTransferHistory(publisher.toPubkey());
   console.log('# Transfer history by publish: ', historyPublish.unwrap());
 
   // Get destination history list by tokenKey
