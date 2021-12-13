@@ -10,7 +10,9 @@
   "files": [
     "src",
     "tsconfig.json",
-    "package-lock.json"
+    "package.json",
+    "package-lock.json",
+    "dist"
   ],
   "scripts": {
     "build": "tsc && sed -i -e 's/\"network\":.*\"/\"network\": \"devnet\"/' tsconfig.json",
