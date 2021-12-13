@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./lib",
+    "outDir": "./dist",
     "module": "commonjs",
     "target": "ES6",
     "declaration": true,
