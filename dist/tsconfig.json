@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "lib": [
+            "ES6",
+            "ES2017",
+            "ESNext"
+        ],
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "./dist",
+        "module": "ESNext",
+        "target": "ES6",
+        "declaration": true,
+        "allowJs": true,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "moduleResolution": "node"
+    },
+    "include": [
+        "src/**/**.ts"
+    ],
+    "solanaSuite": {
+        "network": "devnet",
+        "debugging": false
+    }
+}

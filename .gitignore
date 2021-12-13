@@ -1,5 +1,4 @@
 .gdb_history
 node_modules
-dist
 .solana-*
 tsconfig.tsbuildinfo
