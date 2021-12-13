@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "lib": [
+            "ES6",
+            "ES2017",
+            "ESNext"
+        ],
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "./lib",
+        "module": "commonjs",
+        "target": "ES6",
+        "declaration": true,
+        "allowJs": true,
+        "sourceMap": true,
+        "resolveJsonModule": true
+    },
+    "include": [
+        "src/**/**.ts"
+    ],
+    "solanaSuite": {
+        "network": "devnet",
+        "debugging": false
+    }
+}
