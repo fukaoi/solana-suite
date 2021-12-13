@@ -14,11 +14,10 @@
   ],
   "scripts": {
     "build": "tsc && sed -i -e 's/\"network\":.*\"/\"network\": \"devnet\"/' tsconfig.json",
-    "build.prd": "tsc && sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' tsconfig.json",
+    "build:prd": "tsc && sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' tsconfig.json",
     "test": "mocha -t 300000 --require ts-node/register -- ",
-    "test-all": "mocha -t 300000 --require ts-node/register 'test/**/*.test.ts'",
-    "lint": "npx tslint --fix --project .",
-    "postinstall": "npm run build"
+    "test:all": "mocha -t 300000 --require ts-node/register 'test/**/*.test.ts'",
+    "lint": "npx tslint --fix --project ."
   },
   "dependencies": {
     "@solana/buffer-layout": "^3.0.0",
