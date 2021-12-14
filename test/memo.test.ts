@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Memo, KeypairStr, Account, SolNative} from '../src';
+import {Memo, KeypairStr, Account, SolNative, SplToken} from '../src';
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -21,7 +21,15 @@ describe('Memo', () => {
   });
 
   it('create instruction', async () => {
-    const res = Memo.create(DUMMY_DATA, [source.secret.toKeypair()]);
+    const res = Memo.create(
+      DUMMY_DATA,
+      [
+        source.toPubkey(),
+      ],
+      [
+        source.toKeypair()
+      ]
+    );
     console.log(`# create: `, res);
     assert.isObject(res);
   });
@@ -36,7 +44,12 @@ describe('Memo', () => {
   it('send memo by own', async () => {
     const inst = Memo.create(
       '{"memo": "send memo by own"}',
-      [source.toKeypair()]
+      [
+        source.toPubkey(),
+      ],
+      [
+        source.toKeypair()
+      ]
     );
 
     const res = await inst.submit();
@@ -49,12 +62,12 @@ describe('Memo', () => {
     const inst = Memo.create(
       '{"memo": "send memo by owners"}',
       [
+        otherOwner.toPubkey()
+      ],
+      [
         source.toKeypair(),
         otherOwner.toKeypair(),
       ],
-      [
-        otherOwner.toPubkey()
-      ]
     );
 
     const res = await inst.submit();
@@ -69,12 +82,12 @@ describe('Memo', () => {
     const inst = Memo.create(
       '{"memo": "send memo by owners with fee payer"}',
       [
-        owner1.toKeypair(),
-        owner2.toKeypair(),
-      ],
-      [
         owner1.toPubkey(),
         owner2.toPubkey(),
+      ],
+      [
+        owner1.toKeypair(),
+        owner2.toKeypair(),
       ],
       source.toKeypair()
     );
@@ -91,12 +104,12 @@ describe('Memo', () => {
     const inst1 = Memo.create(
       '{"memo": "send memo by owners with fee payer"}',
       [
-        owner1.toKeypair(),
-        owner2.toKeypair(),
-      ],
-      [
         owner1.toPubkey(),
         owner2.toPubkey(),
+      ],
+      [
+        owner1.toKeypair(),
+        owner2.toKeypair(),
       ],
       source.toKeypair()
     );
@@ -130,6 +143,9 @@ describe('Memo', () => {
     const inst = Memo.create(
       data500byte,
       [
+        source.toPubkey()
+      ],
+      [
         source.toKeypair()
       ]
     );
@@ -139,10 +155,21 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
+  // it('Get memo data in transaction', async () => {
+    // const res = await SplToken.getTransferHistory(source.toPubkey());
+    // console.log(res.unwrap()[0]);
+    // console.log(res.unwrap()[1]);
+    // console.log(res.unwrap()[2]);
+    // console.log(res.unwrap()[3]);
+  // });
+
   it('[Err] Over max limit', async () => {
     const overData = 'a'.repeat(2000);
     const inst = Memo.create(
       overData,
+      [
+        source.toPubkey()
+      ],
       [
         source.toKeypair()
       ]

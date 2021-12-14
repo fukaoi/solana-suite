@@ -17,6 +17,7 @@ describe('SplToken', () => {
   });
 
   it('Get token transfer history by tokenKey', async () => {
+    const limit = 3;
     const res = await SplToken.getTransferHistory(tokenKey, 3);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
@@ -26,11 +27,13 @@ describe('SplToken', () => {
       assert.isNotEmpty(v.info.authority);
       assert.isNotNull(v.date);
     });
+    assert.equal(res.unwrap().length, limit);
   });
 
-  it('Get token transfer history by owner address', async () => {
+  it.only('Get token transfer history by owner address', async () => {
+    const limit = 3;
     const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu'.toPubkey();
-    const res = await SplToken.getTransferHistory(owner);
+    const res = await SplToken.getTransferHistory(owner, limit);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotEmpty(v.type);
@@ -39,6 +42,7 @@ describe('SplToken', () => {
       assert.isNotEmpty(v.info.authority);
       assert.isNotNull(v.date);
     });
+    assert.equal(res.unwrap().length, limit);
   });
 
   it('Get token transfer destination history', async () => {

@@ -42,6 +42,7 @@ export namespace SplToken {
   enum TransactionStatus {
     Transfer = 'transfer',
     TransferChecked = 'transferChecked',
+    Memo = 'memo',
   }
 
   const isTransfer = (value: ParsedInstruction) => {
@@ -49,6 +50,7 @@ export namespace SplToken {
       switch (value.parsed.type) {
         case TransactionStatus.Transfer:
         case TransactionStatus.TransferChecked:
+        case TransactionStatus.Memo:
           return true;
         default:
           return false;

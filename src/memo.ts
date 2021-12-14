@@ -17,8 +17,8 @@ export namespace Memo {
 
   export const create = (
     data: string,
+    owners: PublicKey[],
     signers: Signer[],
-    owners?: PublicKey[],
     feePayer?: Signer,
   )
     : Instruction => {
