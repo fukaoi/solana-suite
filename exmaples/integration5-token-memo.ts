@@ -7,7 +7,8 @@ import {
   Account,
   Transaction,
   SplToken,
-  Pubkey
+  Pubkey,
+  Memo
 } from '../src/index';
 
 (async () => {
@@ -24,9 +25,9 @@ import {
   // faucet 1 sol
   await Account.requestAirdrop(owner.toPubkey());
 
-  console.log('# publisher: ', owner);
-  console.log('# receipt: ', receipt);
-  console.log('# receipt2: ', receipt2);
+  console.log('# owner: ', owner.pubkey);
+  console.log('# receipt: ', receipt.pubkey);
+  console.log('# receipt2: ', receipt2.pubkey);
 
 
   //////////////////////////////////////////////
@@ -52,11 +53,32 @@ import {
 
 
   //////////////////////////////////////////////
+  // CREATE MEMO
+  //////////////////////////////////////////////
+
+  const memoData = `
+  Omicron Is a Dress Rehearsal for the Next Pandemic
+  America’s response to the variant highlights both 
+  how much progress we have made over the past two years — and 
+  how much work remains
+  `;
+  const inst2 = Memo.create(
+    memoData, 
+    [
+      owner.toPubkey()
+    ],
+    [
+      owner.toKeypair()
+    ]
+  );
+
+
+  //////////////////////////////////////////////
   // TRANSFER RECEIPR USER FROM THIS LINE 
   //////////////////////////////////////////////
 
   // transfer nft to receipt wallet
-  const inst2 = await SplToken.transfer(
+  const inst3 = await SplToken.transfer(
     tokenKey.toPubkey(),
     owner.toPubkey(),
     receipt.toPubkey(),
@@ -65,16 +87,12 @@ import {
     decimals
   );
 
-  (await [inst1, inst2].submit()).match(
+  (await [inst1, inst2, inst3].submit()).match(
     async (value) => {
       console.log('# Transfer nft sig: ', value.toExplorerUrl());
       await Transaction.confirmedSig(value);
     },
     (error) => assert(error)
   );
-
-  //////////////////////////////////////////////
-  // Get memo data in transaction
-  //////////////////////////////////////////////
 
 })();
