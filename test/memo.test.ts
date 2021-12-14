@@ -1,15 +1,17 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
-import {Memo, KeypairStr} from '../src';
+import {Memo, KeypairStr, Account, Multisig, SolNative} from '../src';
 
 let source: KeypairStr;
+let dest: KeypairStr;
 const DUMMY_DATA = 'dummy memo data';
 
 describe('Memo', () => {
   before(async () => {
     const obj = await Setup.generatekeyPair();
     source = obj.source;
+    dest = obj.dest;
   });
 
   it('encode', async () => {
@@ -33,8 +35,111 @@ describe('Memo', () => {
 
   it('send memo by own', async () => {
     const inst = Memo.create(
-      '{"memo": 123456789}',
+      '{"memo": "send memo by own"}',
       [source.toKeypair()]
+    );
+
+    const res = await inst.submit();
+    assert.isTrue(res.isOk, res.unwrap());
+    console.log('# tx signature: ', res.unwrap());
+  });
+
+  it('send memo by owners', async () => {
+    const otherOwner = Account.create();
+    const inst = Memo.create(
+      '{"memo": "send memo by owners"}',
+      [
+        source.toKeypair(),
+        otherOwner.toKeypair(),
+      ],
+      [
+        otherOwner.toPubkey()
+      ]
+    );
+
+    const res = await inst.submit();
+    assert.isTrue(res.isOk, res.unwrap());
+    console.log('# tx signature: ', res.unwrap());
+  });
+
+  it('send memo by owners with fee payer', async () => {
+    const owner1 = Account.create();
+    const owner2 = Account.create();
+
+    const inst = Memo.create(
+      '{"memo": "send memo by owners with fee payer"}',
+      [
+        owner1.toKeypair(),
+        owner2.toKeypair(),
+      ],
+      [
+        owner1.toPubkey(),
+        owner2.toPubkey(),
+      ],
+      source.toKeypair()
+    );
+
+    const res = await inst.submit();
+    assert.isTrue(res.isOk, res.unwrap());
+    console.log('# tx signature: ', res.unwrap());
+  });
+
+  it('send memo and sol transfer by owner', async () => {
+    const owner1 = Account.create();
+    const owner2 = Account.create();
+
+    const inst1 = Memo.create(
+      '{"memo": "send memo by owners with fee payer"}',
+      [
+        owner1.toKeypair(),
+        owner2.toKeypair(),
+      ],
+      [
+        owner1.toPubkey(),
+        owner2.toPubkey(),
+      ],
+      source.toKeypair()
+    );
+
+    const inst2 = await SolNative.transfer(
+      source.toPubkey(),
+      dest.toPubkey(),
+      [
+        source.toKeypair()
+      ],
+      0.00001
+    );
+
+    const res = await [inst1, inst2].submit();
+    assert.isTrue(res.isOk, res.unwrap());
+    console.log('# tx signature: ', res.unwrap());
+  });
+
+  it('Max memo size 566 byte', async () => {
+
+    const data500byte = 'uYYebbntaWYWrwbpQUZUzPZwTfNGVECpSTcMJYsAakdMQDWVBxhtRRndNPmTHiWmgHbegzjYGXdsTawuuaatUbSywFCVsTzecEVjNMrNbEWVmjKYrXmthXVMdKXUAHsjbNEnmfzWfjYUtaTfTpBXpHVBbfSQccbYciBLeBpwXKtBVLjTQkRrDYaVBktMjtZKrTfAAGBCKTKQzQVpyTwCsVzQkWQLgsaJskuhmEfhwjGuiLEyZwWHSNyGaWcJpJteCrpmGMrsmEbNhiRcnGSrPyGsmYbeCSEXpCQxPEyCDzWD XHNcGUmKfyiZpjTYRLiRRijXkZKLtgXaZkDLkpPCccJkFwceLATUdujScyMENtJEfHXBxEeKRmhFXjPTBzMGJPyAZKdRHisPHdNUPUyNSLyVzDJzpdVKUUDVjwCNAgKZWBrwKyKdQGtZEQfApRnGGYYjkepGmxXPArdYijugVKgVMgSTsxFGAKZjmpbtzMZYpjVCchFb';
+
+    const inst = Memo.create(
+      data500byte,
+      [
+        source.toKeypair()
+      ]
+    );
+
+    const res = await inst.submit();
+    assert.isTrue(res.isOk, res.unwrap());
+    console.log('# tx signature: ', res.unwrap());
+  });
+
+  it('Max memo 283length by i18n', async () => {
+
+    const data500byte = 'アメリカの地質調査所から気象庁に入った連絡によりますと、日本時間の14日午後0時20分ごろ、インドネシア付近のフローレス海を震源とするマグニチュード7.6の大きな地震がありました。気象庁によりますと、この地震による日本への津波の影響はありません。フローレス島など 最大50センチの津波のおそれインドネシアの気象当局は、この地震でフローレス島やその周辺のシッカ島、レンバタ島に最大で高さ50センチの津波が到達するおそれがあるとして海岸近くの人たちに避難を呼びかけています。震源は米国地質調査所国立地震情報センター(USGS,NEIC)による。太平洋津波警報センター..';
+
+    const inst = Memo.create(
+      data500byte,
+      [
+        source.toKeypair()
+      ]
     );
 
     const res = await inst.submit();

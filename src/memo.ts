@@ -18,13 +18,13 @@ export namespace Memo {
   export const create = (
     data: string,
     signers: Signer[],
-    owners: PublicKey[] = [],
+    owners?: PublicKey[],
     feePayer?: Signer,
   )
     : Instruction => {
 
     const key =
-      owners.length > 0
+      owners && owners.length > 0
         ?
         owners.map(owner => {
           return {
