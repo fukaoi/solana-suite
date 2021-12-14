@@ -115,9 +115,17 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  it('Max memo size 566 byte', async () => {
-
-    const data500byte = 'uYYebbntaWYWrwbpQUZUzPZwTfNGVECpSTcMJYsAakdMQDWVBxhtRRndNPmTHiWmgHbegzjYGXdsTawuuaatUbSywFCVsTzecEVjNMrNbEWVmjKYrXmthXVMdKXUAHsjbNEnmfzWfjYUtaTfTpBXpHVBbfSQccbYciBLeBpwXKtBVLjTQkRrDYaVBktMjtZKrTfAAGBCKTKQzQVpyTwCsVzQkWQLgsaJskuhmEfhwjGuiLEyZwWHSNyGaWcJpJteCrpmGMrsmEbNhiRcnGSrPyGsmYbeCSEXpCQxPEyCDzWD XHNcGUmKfyiZpjTYRLiRRijXkZKLtgXaZkDLkpPCccJkFwceLATUdujScyMENtJEfHXBxEeKRmhFXjPTBzMGJPyAZKdRHisPHdNUPUyNSLyVzDJzpdVKUUDVjwCNAgKZWBrwKyKdQGtZEQfApRnGGYYjkepGmxXPArdYijugVKgVMgSTsxFGAKZjmpbtzMZYpjVCchFb';
+  it('Max memo 283length by i18n', async () => {
+    const data500byte = `
+    アメリカの地質調査所から気象庁に入った連絡によりますと、
+    日本時間の14日午後0時20分ごろ、インドネシア付近のフローレス海を
+    震源とするマグニチュード7.6の大きな地震がありました。
+    気象庁によりますと、この地震による日本への津波の影響はありません。
+    フローレス島など 最大50センチの津波のおそれインドネシアの気象当局は、
+    この地震でフローレス島やその周辺のシッカ島、レンバタ島に最大で高さ
+    50センチの津波が到達するおそれがあるとして海岸近くの人たちに避難を呼びかけています。
+    震源は米国地質調査所国立地震情報センター(USGS,NEIC)による。太平洋津波警報センター.....
+    `;
 
     const inst = Memo.create(
       data500byte,
@@ -131,19 +139,16 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  it('Max memo 283length by i18n', async () => {
-
-    const data500byte = 'アメリカの地質調査所から気象庁に入った連絡によりますと、日本時間の14日午後0時20分ごろ、インドネシア付近のフローレス海を震源とするマグニチュード7.6の大きな地震がありました。気象庁によりますと、この地震による日本への津波の影響はありません。フローレス島など 最大50センチの津波のおそれインドネシアの気象当局は、この地震でフローレス島やその周辺のシッカ島、レンバタ島に最大で高さ50センチの津波が到達するおそれがあるとして海岸近くの人たちに避難を呼びかけています。震源は米国地質調査所国立地震情報センター(USGS,NEIC)による。太平洋津波警報センター..';
-
+  it('[Err] Over max limit', async () => {
+    const overData = 'a'.repeat(2000);
     const inst = Memo.create(
-      data500byte,
+      overData,
       [
         source.toKeypair()
       ]
     );
 
     const res = await inst.submit();
-    assert.isTrue(res.isOk, res.unwrap());
-    console.log('# tx signature: ', res.unwrap());
+    assert.isTrue(res.isErr);
   });
 })
