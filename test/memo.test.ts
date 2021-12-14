@@ -115,7 +115,7 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  it('Max memo 283length by i18n', async () => {
+  it('Max memo 283 length by i18n', async () => {
     const data500byte = `
     アメリカの地質調査所から気象庁に入った連絡によりますと、
     日本時間の14日午後0時20分ごろ、インドネシア付近のフローレス海を
