@@ -8,18 +8,19 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "outDir": "./dist",
-        "module": "commonjs",
+        "module": "ESNext",
         "target": "ESNext",
         "declaration": true,
         "allowJs": true,
-        "sourceMap": true,
+        "sourceMap": false,
+        "moduleResolution": "node",
         "resolveJsonModule": true
     },
     "include": [
         "src/**/**.ts"
     ],
     "solanaSuite": {
-        "network": "devnet",
+        "network": "mainnet-beta",
         "debugging": false
     }
 }

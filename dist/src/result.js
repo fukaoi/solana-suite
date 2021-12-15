@@ -1,8 +1,5 @@
-"use strict";
 // fork: https://github.com/badrap/result
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Result = void 0;
-const instruction_1 = require("./instruction");
+import { Instruction } from './instruction';
 class AbstractResult {
     // unified-signatures. into line 10
     // unwrap<U>(ok: (value: T) => U, err: (error: E) => U): U;
@@ -26,7 +23,7 @@ class AbstractResult {
     async submit() {
         try {
             const instruction = this.unwrap();
-            if (instruction instanceof instruction_1.Instruction) {
+            if (instruction instanceof Instruction) {
                 return await instruction.submit();
             }
             return Result.err(Error('Only Instruction object'));
@@ -60,7 +57,7 @@ class InternalErr extends AbstractResult {
         return err(this.error);
     }
 }
-var Result;
+export var Result;
 (function (Result) {
     function ok(value) {
         return new InternalOk(value);
@@ -93,5 +90,4 @@ var Result;
         return Result.ok(res);
     }
     Result.all = all;
-})(Result = exports.Result || (exports.Result = {}));
-//# sourceMappingURL=result.js.map
+})(Result || (Result = {}));

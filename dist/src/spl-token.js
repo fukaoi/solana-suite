@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SplToken = void 0;
-const spl_token_1 = require("@solana/spl-token");
-const _1 = require("./");
-var SplToken;
+import { Token, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
+import { Transaction, Node, Result, Instruction, } from './';
+export var SplToken;
 (function (SplToken) {
     const NFT_AMOUNT = 1;
     const NFT_DECIMALS = 0;
@@ -30,7 +27,7 @@ var SplToken;
     };
     const convertTimestmapToDate = (blockTime) => new Date(blockTime * 1000);
     SplToken.subscribeAccount = (pubkey, callback) => {
-        return _1.Node.getConnection().onAccountChange(pubkey, async () => {
+        return Node.getConnection().onAccountChange(pubkey, async () => {
             const res = await SplToken.getTransferHistory(pubkey, 1);
             if (res.isErr) {
                 return res;
@@ -38,9 +35,9 @@ var SplToken;
             callback(res.value[0]);
         });
     };
-    SplToken.unsubscribeAccount = (subscribeId) => _1.Node.getConnection().removeAccountChangeListener(subscribeId);
+    SplToken.unsubscribeAccount = (subscribeId) => Node.getConnection().removeAccountChangeListener(subscribeId);
     SplToken.getTransferHistory = async (pubkey, limit) => {
-        const transactions = await _1.Transaction.getAll(pubkey, limit);
+        const transactions = await Transaction.getAll(pubkey, limit);
         if (transactions.isErr) {
             return transactions;
         }
@@ -55,12 +52,12 @@ var SplToken;
                 }
             }
         }
-        return _1.Result.ok(hist);
+        return Result.ok(hist);
     };
     SplToken.getTransferDestinationList = async (pubkey) => {
-        const transactions = await _1.Transaction.getAll(pubkey);
+        const transactions = await Transaction.getAll(pubkey);
         if (transactions.isErr) {
-            return _1.Result.err(transactions.error);
+            return Result.err(transactions.error);
         }
         const hist = [];
         for (const tx of transactions.unwrap()) {
@@ -78,46 +75,45 @@ var SplToken;
                 });
             }
         }
-        return _1.Result.ok(hist);
+        return Result.ok(hist);
     };
     SplToken.mint = async (owner, signers, totalAmount, mintDecimal, feePayer) => {
         !feePayer && (feePayer = signers[0]);
-        const tokenRes = await spl_token_1.Token.createMint(_1.Node.getConnection(), feePayer, owner, owner, mintDecimal, spl_token_1.TOKEN_PROGRAM_ID)
-            .then(_1.Result.ok)
-            .catch(_1.Result.err);
+        const tokenRes = await Token.createMint(Node.getConnection(), feePayer, owner, owner, mintDecimal, TOKEN_PROGRAM_ID)
+            .then(Result.ok)
+            .catch(Result.err);
         if (tokenRes.isErr) {
-            return _1.Result.err(tokenRes.error);
+            return Result.err(tokenRes.error);
         }
         const token = tokenRes.value;
         const tokenAssociated = await token.getOrCreateAssociatedAccountInfo(owner)
-            .then(_1.Result.ok)
-            .catch(_1.Result.err);
+            .then(Result.ok)
+            .catch(Result.err);
         if (tokenAssociated.isErr) {
-            return _1.Result.err(tokenAssociated.error);
+            return Result.err(tokenAssociated.error);
         }
-        const inst = spl_token_1.Token.createMintToInstruction(spl_token_1.TOKEN_PROGRAM_ID, token.publicKey, tokenAssociated.value.address, owner, signers, totalAmount);
-        return _1.Result.ok(new _1.Instruction([inst], signers, feePayer, token.publicKey.toBase58()));
+        const inst = Token.createMintToInstruction(TOKEN_PROGRAM_ID, token.publicKey, tokenAssociated.value.address, owner, signers, totalAmount);
+        return Result.ok(new Instruction([inst], signers, feePayer, token.publicKey.toBase58()));
     };
     SplToken.transfer = async (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => {
         !feePayer && (feePayer = signers[0]);
-        const token = new spl_token_1.Token(_1.Node.getConnection(), tokenKey, spl_token_1.TOKEN_PROGRAM_ID, feePayer);
+        const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, feePayer);
         const sourceToken = await token.getOrCreateAssociatedAccountInfo(owner)
-            .then(_1.Result.ok)
-            .catch(_1.Result.err);
+            .then(Result.ok)
+            .catch(Result.err);
         if (sourceToken.isErr) {
-            return _1.Result.err(sourceToken.error);
+            return Result.err(sourceToken.error);
         }
         const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
-            .then(_1.Result.ok)
-            .catch(_1.Result.err);
+            .then(Result.ok)
+            .catch(Result.err);
         if (destToken.isErr) {
-            return _1.Result.err(destToken.error);
+            return Result.err(destToken.error);
         }
-        const inst = spl_token_1.Token.createTransferCheckedInstruction(spl_token_1.TOKEN_PROGRAM_ID, sourceToken.value.address, tokenKey, destToken.value.address, owner, signers, amount, mintDecimal);
-        return _1.Result.ok(new _1.Instruction([inst], signers, feePayer));
+        const inst = Token.createTransferCheckedInstruction(TOKEN_PROGRAM_ID, sourceToken.value.address, tokenKey, destToken.value.address, owner, signers, amount, mintDecimal);
+        return Result.ok(new Instruction([inst], signers, feePayer));
     };
     SplToken.transferNft = async (tokenKey, owner, dest, signers, feePayer) => {
         return SplToken.transfer(tokenKey, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
     };
-})(SplToken = exports.SplToken || (exports.SplToken = {}));
-//# sourceMappingURL=spl-token.js.map
+})(SplToken || (SplToken = {}));
