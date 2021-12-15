@@ -1,8 +1,6 @@
 {
     "compilerOptions": {
         "lib": [
-            "ES6",
-            "ES2017",
             "ESNext"
         ],
         "strict": true,
@@ -10,13 +8,12 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "outDir": "./dist",
-        "module": "ESNext",
-        "target": "ES6",
+        "module": "commonjs",
+        "target": "ESNext",
         "declaration": true,
         "allowJs": true,
         "sourceMap": true,
-        "resolveJsonModule": true,
-        "moduleResolution": "node"
+        "resolveJsonModule": true
     },
     "include": [
         "src/**/**.ts"

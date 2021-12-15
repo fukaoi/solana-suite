@@ -29,27 +29,6 @@ describe('SolNative', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  it('transfer transaction with memo data', async () => {
-    const solAmount = 0.0001;
-    const inst1 = Memo.create(
-      '{"tokenId": "dummy", "serialNo": "15/100"}',
-      [source.toKeypair()]
-    );
-
-    const inst2 = await SolNative.transfer(
-      source.toPubkey(),
-      dest.toPubkey(),
-      [source.toKeypair()],
-      solAmount,
-      source.toKeypair(),
-    );
-
-
-    const res = await [inst1, inst2].submit();
-    assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# tx signature: ', res.unwrap());
-  });
-
   it('transfer transaction with fee payer', async () => {
     const solAmount = 0.0001;
     const owner = Account.create();
