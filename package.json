@@ -1,21 +1,19 @@
 {
   "name": "solana-suite",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/cjs/index.d.ts",
+  "main": "dist/cjs/src/index.js",
+  "module": "dist/esm/src/index.js",
+  "types": "dist/cjs/src/index.d.ts",
   "version": "0.0.1",
   "engines": {
     "node": ">=14.*"
   },
   "files": [
-    "tsconfig.json",
-    "package.json",
-    "package-lock.json",
     "dist"
   ],
   "scripts": {
-    "build:esm": "tsc -p tsconfig.esm.json && mv dist/src  dist/esm",
-    "build:cjs": "tsc -p tsconfig.cjs.json && mv dist/src  dist/cjs",
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
     "network:devt": "sed -i -e 's/\"network\":.*\"/\"network\": \"dev\"/' tsconfig.json",
     "network:mainnet": "sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' tsconfig.json",
     "test": "mocha -t 300000 --require ts-node/register -- ",
