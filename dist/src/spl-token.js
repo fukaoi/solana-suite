@@ -1,15 +1,9 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-import { Token, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
-import { Transaction, Node, Result, Instruction, } from './';
-export var SplToken;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SplToken = void 0;
+const spl_token_1 = require("@solana/spl-token");
+const _1 = require("./");
+var SplToken;
 (function (SplToken) {
     const NFT_AMOUNT = 1;
     const NFT_DECIMALS = 0;
@@ -17,12 +11,14 @@ export var SplToken;
     (function (TransactionStatus) {
         TransactionStatus["Transfer"] = "transfer";
         TransactionStatus["TransferChecked"] = "transferChecked";
+        TransactionStatus["Memo"] = "memo";
     })(TransactionStatus || (TransactionStatus = {}));
     const isTransfer = (value) => {
         if (value.program === 'spl-token') {
             switch (value.parsed.type) {
                 case TransactionStatus.Transfer:
                 case TransactionStatus.TransferChecked:
+                case TransactionStatus.Memo:
                     return true;
                 default:
                     return false;
@@ -34,17 +30,17 @@ export var SplToken;
     };
     const convertTimestmapToDate = (blockTime) => new Date(blockTime * 1000);
     SplToken.subscribeAccount = (pubkey, callback) => {
-        return Node.getConnection().onAccountChange(pubkey, () => __awaiter(this, void 0, void 0, function* () {
-            const res = yield SplToken.getTransferHistory(pubkey, 1);
+        return _1.Node.getConnection().onAccountChange(pubkey, async () => {
+            const res = await SplToken.getTransferHistory(pubkey, 1);
             if (res.isErr) {
                 return res;
             }
             callback(res.value[0]);
-        }));
+        });
     };
-    SplToken.unsubscribeAccount = (subscribeId) => Node.getConnection().removeAccountChangeListener(subscribeId);
-    SplToken.getTransferHistory = (pubkey, limit) => __awaiter(this, void 0, void 0, function* () {
-        const transactions = yield Transaction.getAll(pubkey, limit);
+    SplToken.unsubscribeAccount = (subscribeId) => _1.Node.getConnection().removeAccountChangeListener(subscribeId);
+    SplToken.getTransferHistory = async (pubkey, limit) => {
+        const transactions = await _1.Transaction.getAll(pubkey, limit);
         if (transactions.isErr) {
             return transactions;
         }
@@ -59,17 +55,16 @@ export var SplToken;
                 }
             }
         }
-        return Result.ok(hist);
-    });
-    SplToken.getTransferDestinationList = (pubkey) => __awaiter(this, void 0, void 0, function* () {
-        var _a;
-        const transactions = yield Transaction.getAll(pubkey);
+        return _1.Result.ok(hist);
+    };
+    SplToken.getTransferDestinationList = async (pubkey) => {
+        const transactions = await _1.Transaction.getAll(pubkey);
         if (transactions.isErr) {
-            return Result.err(transactions.error);
+            return _1.Result.err(transactions.error);
         }
         const hist = [];
         for (const tx of transactions.unwrap()) {
-            const posts = (_a = tx.meta) === null || _a === void 0 ? void 0 : _a.postTokenBalances;
+            const posts = tx.meta?.postTokenBalances;
             if (posts.length > 0) {
                 posts.forEach((p) => {
                     const amount = p.uiTokenAmount.uiAmount;
@@ -83,46 +78,46 @@ export var SplToken;
                 });
             }
         }
-        return Result.ok(hist);
-    });
-    SplToken.mint = (owner, signers, totalAmount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        return _1.Result.ok(hist);
+    };
+    SplToken.mint = async (owner, signers, totalAmount, mintDecimal, feePayer) => {
         !feePayer && (feePayer = signers[0]);
-        const tokenRes = yield Token.createMint(Node.getConnection(), feePayer, owner, owner, mintDecimal, TOKEN_PROGRAM_ID)
-            .then(Result.ok)
-            .catch(Result.err);
+        const tokenRes = await spl_token_1.Token.createMint(_1.Node.getConnection(), feePayer, owner, owner, mintDecimal, spl_token_1.TOKEN_PROGRAM_ID)
+            .then(_1.Result.ok)
+            .catch(_1.Result.err);
         if (tokenRes.isErr) {
-            return Result.err(tokenRes.error);
+            return _1.Result.err(tokenRes.error);
         }
         const token = tokenRes.value;
-        const tokenAssociated = yield token.getOrCreateAssociatedAccountInfo(owner)
-            .then(Result.ok)
-            .catch(Result.err);
+        const tokenAssociated = await token.getOrCreateAssociatedAccountInfo(owner)
+            .then(_1.Result.ok)
+            .catch(_1.Result.err);
         if (tokenAssociated.isErr) {
-            return Result.err(tokenAssociated.error);
+            return _1.Result.err(tokenAssociated.error);
         }
-        const inst = Token.createMintToInstruction(TOKEN_PROGRAM_ID, token.publicKey, tokenAssociated.value.address, owner, signers, totalAmount);
-        return Result.ok(new Instruction([inst], signers, feePayer, token.publicKey.toBase58()));
-    });
-    SplToken.transfer = (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const inst = spl_token_1.Token.createMintToInstruction(spl_token_1.TOKEN_PROGRAM_ID, token.publicKey, tokenAssociated.value.address, owner, signers, totalAmount);
+        return _1.Result.ok(new _1.Instruction([inst], signers, feePayer, token.publicKey.toBase58()));
+    };
+    SplToken.transfer = async (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => {
         !feePayer && (feePayer = signers[0]);
-        const token = new Token(Node.getConnection(), tokenKey, TOKEN_PROGRAM_ID, feePayer);
-        const sourceToken = yield token.getOrCreateAssociatedAccountInfo(owner)
-            .then(Result.ok)
-            .catch(Result.err);
+        const token = new spl_token_1.Token(_1.Node.getConnection(), tokenKey, spl_token_1.TOKEN_PROGRAM_ID, feePayer);
+        const sourceToken = await token.getOrCreateAssociatedAccountInfo(owner)
+            .then(_1.Result.ok)
+            .catch(_1.Result.err);
         if (sourceToken.isErr) {
-            return Result.err(sourceToken.error);
+            return _1.Result.err(sourceToken.error);
         }
-        const destToken = yield token.getOrCreateAssociatedAccountInfo(dest)
-            .then(Result.ok)
-            .catch(Result.err);
+        const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
+            .then(_1.Result.ok)
+            .catch(_1.Result.err);
         if (destToken.isErr) {
-            return Result.err(destToken.error);
+            return _1.Result.err(destToken.error);
         }
-        const inst = Token.createTransferCheckedInstruction(TOKEN_PROGRAM_ID, sourceToken.value.address, tokenKey, destToken.value.address, owner, signers, amount, mintDecimal);
-        return Result.ok(new Instruction([inst], signers, feePayer));
-    });
-    SplToken.transferNft = (tokenKey, owner, dest, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const inst = spl_token_1.Token.createTransferCheckedInstruction(spl_token_1.TOKEN_PROGRAM_ID, sourceToken.value.address, tokenKey, destToken.value.address, owner, signers, amount, mintDecimal);
+        return _1.Result.ok(new _1.Instruction([inst], signers, feePayer));
+    };
+    SplToken.transferNft = async (tokenKey, owner, dest, signers, feePayer) => {
         return SplToken.transfer(tokenKey, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
-    });
-})(SplToken || (SplToken = {}));
+    };
+})(SplToken = exports.SplToken || (exports.SplToken = {}));
 //# sourceMappingURL=spl-token.js.map

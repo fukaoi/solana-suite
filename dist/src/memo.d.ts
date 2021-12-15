@@ -4,6 +4,6 @@ import { Instruction } from './';
 export declare namespace Memo {
     const decode: (encoded: string) => string;
     const encode: (data: string) => Buffer;
-    const create: (data: string, signers: Signer[], owners?: PublicKey[], feePayer?: Signer | undefined) => Instruction;
+    const create: (data: string, owners: PublicKey[], signers: Signer[], feePayer?: Signer | undefined) => Instruction;
     const parse: (tx: ParsedConfirmedTransaction) => string;
 }
