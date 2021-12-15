@@ -1,22 +1,23 @@
 {
   "name": "solana-suite",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "version": "0.0.1",
   "engines": {
     "node": ">=14.*"
   },
   "files": [
-    "src",
     "tsconfig.json",
     "package.json",
     "package-lock.json",
     "dist"
   ],
   "scripts": {
-    "build": "tsc && sed -i -e 's/\"network\":.*\"/\"network\": \"devnet\"/' tsconfig.json",
-    "build:prd": "tsc && sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' tsconfig.json",
+    "build:esm": "tsc -p tsconfig.esm.json && mv dist/src  dist/esm",
+    "build:cjs": "tsc -p tsconfig.cjs.json && mv dist/src  dist/cjs",
+    "network:devt": "sed -i -e 's/\"network\":.*\"/\"network\": \"dev\"/' tsconfig.json",
+    "network:mainnet": "sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' tsconfig.json",
     "test": "mocha -t 300000 --require ts-node/register -- ",
     "test:all": "mocha -t 300000 --require ts-node/register 'test/**/*.test.ts'",
     "lint": "npx tslint --fix --project ."
