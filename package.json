@@ -1,7 +1,7 @@
 {
   "name": "solana-suite",
-  "main": "dist/index.cjs",
-  "module": "dist/index.esm.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "version": "0.0.1",
   "engines": {
@@ -14,10 +14,10 @@
     "dist"
   ],
   "scripts": {
-    "build:esm": "tsc -p tsconfig.esm.json && sed -i -e 's/\"network\":.*\"/\"network\": \"devnet\"/' tsconfig.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json && sed -i -e 's/\"network\":.*\"/\"network\": \"devnet\"/' tsconfig.json",
-    "build:prd-esm": "tsc -p tsconfig.esm.json && sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' tsconfig.json",
-    "build:prd-cjs": "tsc -p tsconfig.cjs.json && sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' tsconfig.json",
+    "build:esm": "tsc -p tsconfig.esm.json && mv dist/src  dist/esm",
+    "build:cjs": "tsc -p tsconfig.cjs.json && mv dist/src  dist/cjs",
+    "network:devt": "sed -i -e 's/\"network\":.*\"/\"network\": \"dev\"/' tsconfig.json",
+    "network:mainnet": "sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' tsconfig.json",
     "test": "mocha -t 300000 --require ts-node/register -- ",
     "test:all": "mocha -t 300000 --require ts-node/register 'test/**/*.test.ts'",
     "lint": "npx tslint --fix --project ."

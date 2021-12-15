@@ -20,7 +20,7 @@
         "src/**/**.ts"
     ],
     "solanaSuite": {
-        "network": "mainnet-beta",
+        "network": "devnet",
         "debugging": false
     }
 }
