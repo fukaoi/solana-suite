@@ -2,7 +2,7 @@
   "name": "solana-suite",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/cjs/index.d.ts",
   "version": "0.0.1",
   "engines": {
     "node": ">=14.*"
