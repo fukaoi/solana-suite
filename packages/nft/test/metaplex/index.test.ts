@@ -169,7 +169,7 @@ describe('Metaplex', () => {
     console.log('# multisig address: ', multisigAddress);
 
 
-    // create nft 
+    // create nft
     const data = new MetaplexInstructure.Data({
       name: 'Sample',
       symbol: 'SAMPLE',
@@ -205,7 +205,7 @@ describe('Metaplex', () => {
     const resTransfer = await inst2.submit();
     console.log('# signature: ', resTransfer.unwrap());
 
-    // transfer from multisig address to dest  
+    // transfer from multisig address to dest
     const inst3 = await SplToken.transferNft(
       (inst1.unwrap().data as string).toPubkey(),
       multisigAddress.toPubkey(),

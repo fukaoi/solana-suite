@@ -59,20 +59,20 @@ export namespace RandomAsset {
     storageData.collection = {name: 'Pets in Japan'};
     storageData.properties = [
       {
-        "uri": "https://www.arweave.net/abcd5678?ext=png",
-        "type": "image/png"
+        'uri': 'https://www.arweave.net/abcd5678?ext=png',
+        'type': 'image/png'
       },
       {
-        "uri": "https://watch.videodelivery.net/9876jkl",
-        "type": "unknown",
-        "cdn": true
+        'uri': 'https://watch.videodelivery.net/9876jkl',
+        'type': 'unknown',
+        'cdn': true
       },
     ];
 
     storageData.creators = [
       {
-        "address": "2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U",
-        "share": 100
+        'address': '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
+        'share': 100
       }
     ]
 

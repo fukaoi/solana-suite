@@ -16,7 +16,7 @@ describe('Transaction', () => {
     const res = await Transaction.getAll(tokenKey.toPubkey());
     if (res.isOk) {
       assert.isArray(res.value);
-      assert.isObject((<ParsedConfirmedTransaction[]>res.value)[0]);
+      assert.isObject((res.value as ParsedConfirmedTransaction[])[0]);
     } else {
       assert.isFalse(res.isErr, res.isErr && res.error.message);
     }

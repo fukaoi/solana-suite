@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//$ npx ts-node exmaples/integration4-multisig.ts
+// $ npx ts-node exmaples/integration4-multisig.ts
 //////////////////////////////////////////////
 
 import assert from 'assert';
@@ -15,7 +15,7 @@ import {
 (async () => {
 
   //////////////////////////////////////////////
-  // CREATE WALLET 
+  // CREATE WALLET
   //////////////////////////////////////////////
 
   // [Type of wallet]
@@ -62,7 +62,7 @@ import {
   // TRANSFER FROM OWNER TO PUBLISHER
   //////////////////////////////////////////////
   const inst2 = await SolNative.transfer(
-    owner.toPubkey(),        // from  
+    owner.toPubkey(),        // from
     feePayer.toPubkey(),     // to
     [owner.toKeypair()],     // signing
     3,                       // 3 SOL
@@ -93,7 +93,7 @@ import {
   const inst3 =
     await SplToken.mint(
       publisher.toPubkey(),  // creator account
-      multiSigners,          // signning 
+      multiSigners,          // signning
       100000,                // Total number of tokens issued
       2,                     // token's decimal e.g:0.12, 20.52
       feePayer.toKeypair()   // pay transaction fee
@@ -104,9 +104,9 @@ import {
 
   const inst4 = await SplToken.transfer(
     tokenKey.toPubkey(),   // tokenkey
-    publisher.toPubkey(),  // from. own token 
-    receipt.toPubkey(),    // to 
-    multiSigners,          // signning 
+    publisher.toPubkey(),  // from. own token
+    receipt.toPubkey(),    // to
+    multiSigners,          // signning
     5000,                  // transfer amount
     2,                     // token's decimal e.g:0.12, 20.52
     feePayer.toKeypair()   // pay transaction fee

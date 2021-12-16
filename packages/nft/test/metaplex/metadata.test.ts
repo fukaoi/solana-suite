@@ -2,8 +2,8 @@ import {describe, it} from 'mocha';
 import {assert} from 'chai'
 import {KeypairStr} from '../../../src';
 import {
-  MetaplexMetaData, 
-  MetaplexInstructure, 
+  MetaplexMetaData,
+  MetaplexInstructure,
   Metaplex
 } from '../../../src/nft/metaplex';
 import {Setup} from '../../../test/utils/setup';
@@ -38,7 +38,7 @@ describe('MetaplexMetaData', () => {
     );
     assert.isTrue(res.isOk);
     assert.isArray(res.unwrap());
-    assert.isObject((<TransactionInstruction[]>res.unwrap())[0]);
+    assert.isObject((res.unwrap() as TransactionInstruction[])[0]);
   });
 
   it('Create instructions for update metadata', async () => {
@@ -62,7 +62,7 @@ describe('MetaplexMetaData', () => {
     );
     assert.isTrue(res.isOk);
     assert.isArray(res.unwrap());
-    assert.isObject((<TransactionInstruction[]>res.unwrap())[0]);
+    assert.isObject((res.unwrap() as TransactionInstruction[])[0]);
   });
 
   it('Get metadata by tokenKey', async () => {
@@ -79,7 +79,7 @@ describe('MetaplexMetaData', () => {
     );
 
     assert.isTrue(res.isOk);
-    const format = <Metaplex.Format>res.unwrap();
+    const format = res.unwrap() as Metaplex.Format;
     assert.equal(format.name, orgData.name);
     assert.equal(format.symbol, orgData.symbol)
     assert.equal(format.uri, orgData.uri)

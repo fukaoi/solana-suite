@@ -29,7 +29,7 @@ describe('Account', () => {
     const pubkey = 'D1r8Uea5uVQ9u3uNr8Nrg49t6BmkgnwLYYVmwZ3WhbPT';
     const tokenkey = '5k1WAQeAYUPiQnNWF557zBTqhMHfsi5utnE7TVSjd5Ut';
     const res = await Account.getTokenBalance(
-      pubkey.toPubkey(), 
+      pubkey.toPubkey(),
       tokenkey.toPubkey()
     );
     assert.isTrue(res.isOk);

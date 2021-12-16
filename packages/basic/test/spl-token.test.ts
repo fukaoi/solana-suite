@@ -173,7 +173,7 @@ describe('SplToken', () => {
 
     console.log('# multisig address :', multisig.toBase58());
 
-    // create nft 
+    // create nft
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const mintInst =
       await SplToken.mint(

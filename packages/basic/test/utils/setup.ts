@@ -12,8 +12,8 @@ export namespace Setup {
     const {source, dest} = await getSourceAndDest();
     debug(source, dest);
     return {
-      source: new KeypairStr(source.pubkey, source.secret), 
-      dest: new KeypairStr(dest.pubkey, dest.secret), 
+      source: new KeypairStr(source.pubkey, source.secret),
+      dest: new KeypairStr(dest.pubkey, dest.secret),
     };
   }
 
@@ -50,7 +50,7 @@ export namespace Setup {
     await Account.requestAirdrop(source.toPubkey());
     const data = templateKeyPair(source, dest);
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));
-    return {source: source, dest: dest};
+    return {source, dest};
   }
 
   const templateKeyPair = (

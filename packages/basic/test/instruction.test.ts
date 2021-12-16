@@ -77,7 +77,7 @@ describe('Instruction', () => {
   });
 
   it('Submit batch many instructions', async () => {
-    let insts = [];
+    const insts = [];
     for (let i = 0; i < 20; i++) {
       insts.push(Memo.create(
         `{"title": "Submit ${i} instruction"}`,

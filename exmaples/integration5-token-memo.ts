@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//$ npx ts-node exmaples/integration5-token-memo
+// $ npx ts-node exmaples/integration5-token-memo
 //////////////////////////////////////////////
 
 import assert from 'assert';
@@ -14,7 +14,7 @@ import {
 (async () => {
 
   //////////////////////////////////////////////
-  // CREATE WALLET 
+  // CREATE WALLET
   //////////////////////////////////////////////
 
   // create token owner wallet, receive token receipt wallet.
@@ -58,12 +58,12 @@ import {
 
   const memoData = `
   Omicron Is a Dress Rehearsal for the Next Pandemic
-  America’s response to the variant highlights both 
-  how much progress we have made over the past two years — and 
+  America’s response to the variant highlights both
+  how much progress we have made over the past two years — and
   how much work remains
   `;
   const inst2 = Memo.create(
-    memoData, 
+    memoData,
     [
       owner.toPubkey()
     ],
@@ -74,7 +74,7 @@ import {
 
 
   //////////////////////////////////////////////
-  // TRANSFER RECEIPR USER FROM THIS LINE 
+  // TRANSFER RECEIPR USER FROM THIS LINE
   //////////////////////////////////////////////
 
   // transfer nft to receipt wallet
