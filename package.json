@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "lint": "npx tslint --fix --project .",
-    "build": ""
+    "build": "npm run build -w packages/basic && npm run build -w packages/nft"
   },
   "workspaces": [
     "packages/*"

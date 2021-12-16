@@ -12,7 +12,8 @@
     "declaration": true,
     "allowJs": true,
     "sourceMap": false,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "resolveJsonModule": true
   },
   "include": [
     "src/**/**.ts"

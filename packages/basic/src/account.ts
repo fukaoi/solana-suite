@@ -9,7 +9,8 @@ import {
 
 import bs from 'bs58';
 
-import {Transaction, Constants, Node, Result} from './';
+import {Transaction} from './';
+import {Constants, Node, Result} from '@solana-suite/shared';
 
 export type Pubkey = string;
 export type Secret = string;

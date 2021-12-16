@@ -3,7 +3,7 @@ import {
   PublicKey
 } from '@solana/web3.js';
 
-import TSConfig from '../tsconfig.json';
+import Config from '../solana-suite.json';
 
 export namespace Constants {
   export enum SolanaNet {
@@ -12,9 +12,8 @@ export namespace Constants {
     test = 'testnet',
   }
 
-  export const currentNetwork = TSConfig.solanaSuite.network;
-
-  export const isDebugging = TSConfig.solanaSuite.debugging;
+  export const currentNetwork = Config.network;
+  export const isDebugging = Config.debugging;
 }
 
 export namespace ConstantsFunc {
