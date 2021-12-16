@@ -18,10 +18,5 @@
     "network:mainnet": "sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' tsconfig.json",
     "test": "mocha -t 300000 --require ts-node/register -- ",
     "test:all": "mocha -t 300000 --require ts-node/register 'test/**/*.test.ts'"
-  },
-  "dependencies": {
-    "form-data": "^4.0.0",
-    "nft.storage": "^3.3.0",
-    "node-fetch": "^3.0.0"
   }
 }
