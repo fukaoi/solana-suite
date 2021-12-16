@@ -1,0 +1,28 @@
+{
+  "name": "@solana-suite/nft",
+  "version": "1.0.0",
+  "description": "NFT modules for solana-suite",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atonoy/solana-suite.git"
+  },
+  "keywords": [
+    "Solana",
+    "typescript",
+    "blockchain",
+    "sdk"
+  ],
+  "author": "fukaoi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/atonoy/solana-suite/issues"
+  },
+  "homepage": "https://github.com/atonoy/solana-suite#readme"
+}
