@@ -1,5 +1,5 @@
 import {describe, it, before} from 'mocha';
-import {SolNative, Memo, Account, Multisig, KeypairStr} from '../src';
+import {SolNative, Account, Multisig, KeypairStr} from '../src';
 import {assert} from 'chai';
 import {Setup} from '../test/utils/setup';
 
@@ -34,6 +34,8 @@ describe('SolNative', () => {
     const owner = Account.create();
     await Account.requestAirdrop(owner.toPubkey());
     const feePayer = source;
+
+    /* tslint:disable-next-line */
     const before = (await Account.getBalance(
       feePayer.pubkey.toPubkey())
     ).unwrap();
