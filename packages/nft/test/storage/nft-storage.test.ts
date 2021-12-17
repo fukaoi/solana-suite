@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {StorageNftStorage} from '../../../src/';
-import {RandomAsset} from '../../utils/randomAsset';
+import {RandomAsset} from '../utils/randomAsset';
+import {StorageNftStorage} from '../../src';
 
 describe('StorageNftStorage', () => {
   it('Upload metadata json file and image', async () => {

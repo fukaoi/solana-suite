@@ -1,8 +1,8 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Account, KeypairStr, Multisig, SplToken} from '../../../src';
-import {Metaplex, MetaplexInstructure} from '../../../src/nft/metaplex';
-import {Setup} from '../../../test/utils/setup';
+import {Account, KeypairStr, Multisig, SplToken} from 'solana-suite';
+import {Metaplex, MetaplexInstructure} from '../../src/metaplex';
+import {Setup} from '../utils/setup';
 
 let source: KeypairStr;
 let dest: KeypairStr;

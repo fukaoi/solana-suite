@@ -54,14 +54,6 @@ describe('Account', () => {
     assert.isNotNull(res.unwrap());
   });
 
-  it('find metaplex token address', async () => {
-    const res = await Account.findMetaplexAssocaiatedTokenAddress(
-      'D7dKBiFxWKiSSew4fzinML1so4vEaSPmtiKV6qWMDUJJ'.toPubkey(),
-    );
-    assert.isTrue(res.isOk);
-    assert.isNotNull(res.unwrap());
-  });
-
   it('string to PublicKey', async () => {
     const pubkey = '6KJBDz6qPZZyJ9gAWXSgHufqAzU8pnhQmVdTitfusYS5';
     const res = pubkey.toPubkey();

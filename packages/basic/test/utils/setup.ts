@@ -1,5 +1,6 @@
 import fs from 'fs';
-import {Constants, Account, KeypairStr} from '../../src';
+import {Account, KeypairStr} from '../../src';
+import {Constants} from '@solana-suite/shared';
 
 console.debug(`\u001b[33m === DEBUG MODE ===`);
 console.debug(`\u001b[33m solana-network: ${Constants.currentNetwork}`);

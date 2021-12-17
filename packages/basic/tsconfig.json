@@ -1,27 +1,3 @@
 {
-  "compilerOptions": {
-    "composite": true,
-    "lib": [
-      "ESNext"
-    ],
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "target": "ESNext",
-    "declaration": true,
-    "allowJs": true,
-    "sourceMap": false,
-    "moduleResolution": "node",
-    "resolveJsonModule": true
-  },
-  "include": [
-    "src/**/**.ts"
-  ],
-  "references": [
-    {
-      "path": "../shared"
-    }
-  ]
+  "extends": "../../tsconfig.json"
 }

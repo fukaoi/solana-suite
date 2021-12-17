@@ -1,12 +1,12 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {KeypairStr} from '../../../src';
+import {KeypairStr} from 'solana-suite';
 import {
   MetaplexMetaData,
   MetaplexInstructure,
   Metaplex
-} from '../../../src/nft/metaplex';
-import {Setup} from '../../../test/utils/setup';
+} from '../../src/metaplex';
+import {Setup} from '../../test/utils/setup';
 import {TransactionInstruction} from '@solana/web3.js';
 
 let source: KeypairStr;

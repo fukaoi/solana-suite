@@ -1,8 +1,9 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
-import {StorageArweave, KeypairStr} from '../../../src';
-import {Setup} from '../../utils/setup';
-import {RandomAsset} from '../../utils/randomAsset';
+import {KeypairStr} from 'solana-suite';
+import {Setup} from '../utils/setup';
+import {RandomAsset} from '../utils/randomAsset';
+import {StorageArweave} from '../../src';
 
 let source: KeypairStr;
 

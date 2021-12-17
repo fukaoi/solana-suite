@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {Storage} from '../../src/nft/storage';
+import {Storage} from '../../src/storage';
 
 export namespace RandomAsset {
   const ASSET_DIR = './test/assets/';

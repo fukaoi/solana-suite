@@ -4,10 +4,6 @@
   "module": "src/index.ts",
   "private": true,
   "directories": {
-    "version": "1.0.0",
-    "scripts": {
-      "test": "mocha -t 300000 --require ts-node/register -- ",
-      "test:all": "mocha -t 300000 --require ts-node/register 'test/**/*.test.ts'"
-    }
+    "version": "1.0.0"
   }
 }
