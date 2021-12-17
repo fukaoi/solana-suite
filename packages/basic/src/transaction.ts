@@ -7,7 +7,7 @@ import {
   ConfirmedSignatureInfo,
 } from '@solana/web3.js';
 
-import {Node, Result,  Constants} from './';
+import {Node, Result,  Constants} from '@solana-suite/shared';
 
 export namespace Transaction {
 

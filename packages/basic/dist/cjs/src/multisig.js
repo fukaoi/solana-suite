@@ -20,7 +20,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Multisig = void 0;
-const _1 = require("./");
+const shared_1 = require("@solana-suite/shared");
 const web3_js_1 = require("@solana/web3.js");
 const BufferLayout = __importStar(require("@solana/buffer-layout"));
 const spl_token_1 = require("@solana/spl-token");
@@ -94,20 +94,20 @@ var Multisig;
     Multisig.isAddress = async (multisig) => {
         const info = await Multisig.getMultisigInfo(multisig);
         if (info.isErr) {
-            return _1.Result.ok(false);
+            return shared_1.Result.ok(false);
         }
-        return _1.Result.ok(true);
+        return shared_1.Result.ok(true);
     };
     Multisig.getMultisigInfo = async (multisig) => {
-        const info = await _1.Node.getConnection().getAccountInfo(multisig);
+        const info = await shared_1.Node.getConnection().getAccountInfo(multisig);
         if (info === null) {
-            return _1.Result.err(Error('Failed to find multisig'));
+            return shared_1.Result.err(Error('Failed to find multisig'));
         }
         if (!info.owner.equals(spl_token_1.TOKEN_PROGRAM_ID)) {
-            return _1.Result.err(Error('Invalid multisig owner'));
+            return shared_1.Result.err(Error('Invalid multisig owner'));
         }
         if (info.data.length !== MultisigInstruction.Layout.span) {
-            return _1.Result.err(Error('Invalid multisig size'));
+            return shared_1.Result.err(Error('Invalid multisig size'));
         }
         const data = Buffer.from(info.data);
         const multisigInfo = MultisigInstruction.Layout.decode(data);
@@ -122,20 +122,20 @@ var Multisig;
         multisigInfo.signer9 = new web3_js_1.PublicKey(multisigInfo.signer9);
         multisigInfo.signer10 = new web3_js_1.PublicKey(multisigInfo.signer10);
         multisigInfo.signer11 = new web3_js_1.PublicKey(multisigInfo.signer11);
-        return _1.Result.ok(multisigInfo);
+        return shared_1.Result.ok(multisigInfo);
     };
     Multisig.create = async (m, feePayer, signerPubkey) => {
         if (m > signerPubkey.length)
-            return _1.Result.err(Error('signers number less than m number'));
+            return shared_1.Result.err(Error('signers number less than m number'));
         const account = web3_js_1.Keypair.generate();
-        const connection = _1.Node.getConnection();
+        const connection = shared_1.Node.getConnection();
         const balanceNeeded = await connection.getMinimumBalanceForRentExemption(MultisigInstruction.Layout.span)
-            .then(_1.Result.ok)
-            .catch(_1.Result.err);
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
         if (balanceNeeded.isErr)
-            return _1.Result.err(balanceNeeded.error);
+            return shared_1.Result.err(balanceNeeded.error);
         const inst1 = MultisigInstruction.account(account, feePayer, balanceNeeded.value);
         const inst2 = MultisigInstruction.multisig(m, account, signerPubkey);
-        return _1.Result.ok(new _1.Instruction([inst1, inst2], [account], feePayer, account.publicKey.toBase58()));
+        return shared_1.Result.ok(new shared_1.Instruction([inst1, inst2], [account], feePayer, account.publicKey.toBase58()));
     };
 })(Multisig = exports.Multisig || (exports.Multisig = {}));

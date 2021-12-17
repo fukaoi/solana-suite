@@ -1,6 +1,6 @@
 import { TransactionInstruction, } from '@solana/web3.js';
 import bs from 'bs58';
-import { Constants, Instruction } from './';
+import { Constants, Instruction } from '@solana-suite/shared';
 export var Memo;
 (function (Memo) {
     Memo.decode = (encoded) => bs.decode(encoded).toString();

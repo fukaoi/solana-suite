@@ -12,15 +12,19 @@ import {
 import {
   Metaplex,
   MetaplexSerialize,
-  MetaplexInstructure
+  MetaplexInstructure,
+  MetaplexAccount,
 } from './index';
 
 import {
   Node,
-  Account,
   Constants,
   Result
-} from '../../index';
+} from '@solana-suite/shared';
+
+import {
+  Account
+} from 'solana-suite';
 
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -134,7 +138,7 @@ export namespace MetaplexMetaData {
 
   export const getByTokenKey = async (tokenKey: PublicKey):
     Promise<Result<Metaplex.Format, Error>> => {
-    const metaAccount = await Account.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
 
     if (metaAccount.isErr) {
       return Result.err(metaAccount.error);
@@ -196,7 +200,7 @@ export namespace MetaplexMetaData {
     updateAuthority: PublicKey,
     feePayer: PublicKey,
   ): Promise<Result<TransactionInstruction[], Error>> => {
-    const metaAccount = await Account.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
     if (metaAccount.isErr) {
       return Result.err(metaAccount.error);
     }
@@ -253,7 +257,7 @@ export namespace MetaplexMetaData {
       ),
     );
 
-    const metaAccount = await Account.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
     if (metaAccount.isErr) {
       return Result.err(metaAccount.error);
     }

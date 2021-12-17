@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Memo = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const bs58_1 = __importDefault(require("bs58"));
-const _1 = require("./");
+const shared_1 = require("@solana-suite/shared");
 var Memo;
 (function (Memo) {
     Memo.decode = (encoded) => bs58_1.default.decode(encoded).toString();
@@ -23,11 +23,11 @@ var Memo;
                 })
             : [];
         const instruction = new web3_js_1.TransactionInstruction({
-            programId: _1.Constants.MEMO_PROGRAM_ID,
+            programId: shared_1.Constants.MEMO_PROGRAM_ID,
             data: Memo.encode(data),
             keys: key
         });
-        return new _1.Instruction([instruction], signers, feePayer);
+        return new shared_1.Instruction([instruction], signers, feePayer);
     };
     Memo.parse = (tx) => {
         const res = tx.transaction.message.instructions.filter(d => {

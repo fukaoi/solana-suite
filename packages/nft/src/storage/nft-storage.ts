@@ -1,6 +1,6 @@
 import {NFTStorage, Blob} from 'nft.storage';
 import fs from 'fs';
-import {Constants, Result} from '../../';
+import {Constants, Result} from '@solana-suite/shared';
 import {Storage} from './index';
 
 export namespace StorageNftStorage {

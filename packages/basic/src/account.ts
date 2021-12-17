@@ -1,4 +1,8 @@
-import {ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID} from '@solana/spl-token';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID, 
+  TOKEN_PROGRAM_ID
+} from '@solana/spl-token';
+
 import {
   Keypair,
   LAMPORTS_PER_SOL,
@@ -10,7 +14,7 @@ import {
 import bs from 'bs58';
 
 import {Transaction} from './';
-import {Constants, Node, Result} from '@solana-suite/shared';
+import {Node, Result} from '@solana-suite/shared';
 
 export type Pubkey = string;
 export type Secret = string;
@@ -120,20 +124,5 @@ export namespace Account {
     )
       .then(v => Result.ok(v[0]))
       .catch(Result.err);
-  }
-
-  export const findMetaplexAssocaiatedTokenAddress = async (
-    tokenKey: PublicKey
-  ): Promise<Result<PublicKey, Error>> => {
-    return await PublicKey.findProgramAddress(
-      [
-        Buffer.from('metadata'),
-        Constants.METAPLEX_PROGRAM_ID.toBuffer(),
-        tokenKey.toBuffer(),
-      ],
-      Constants.METAPLEX_PROGRAM_ID,
-    )
-      .then(v => Result.ok(v[0]))
-      .catch((e: Error) => Result.err(e))
   }
 }

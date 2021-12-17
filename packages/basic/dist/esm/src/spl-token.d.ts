@@ -1,5 +1,5 @@
 import { PublicKey, Signer } from '@solana/web3.js';
-import { Result, Instruction } from './';
+import { Result, Instruction } from '@solana-suite/shared';
 export declare namespace SplToken {
     interface TransferHistory {
         info: {

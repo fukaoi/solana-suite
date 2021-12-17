@@ -20,6 +20,6 @@
     "test:all": "mocha -t 300000 --require ts-node/register 'test/**/*.test.ts'"
   },
   "dependencies": {
-    "@solana-suite/shared": "^1.0.0"
+    "@solana-suite/shared": "../shared"
   }
 }

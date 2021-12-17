@@ -1,5 +1,6 @@
 import { Token, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
-import { Transaction, Node, Result, Instruction, } from './';
+import { Transaction } from './';
+import { Node, Result, Instruction } from '@solana-suite/shared';
 export var SplToken;
 (function (SplToken) {
     const NFT_AMOUNT = 1;

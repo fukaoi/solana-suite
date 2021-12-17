@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "composite": true,
     "lib": [
       "ESNext"
     ],
@@ -17,5 +18,10 @@
   },
   "include": [
     "src/**/**.ts"
+  ],
+  "references": [
+    {
+      "path": "../shared"
+    }
   ]
 }

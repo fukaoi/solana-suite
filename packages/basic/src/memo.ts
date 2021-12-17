@@ -7,7 +7,7 @@ import {
 } from '@solana/web3.js';
 
 import bs from 'bs58';
-import {Constants, Instruction} from './';
+import {Constants, Instruction} from '@solana-suite/shared';
 
 export namespace Memo {
   export const decode = (encoded: string): string =>

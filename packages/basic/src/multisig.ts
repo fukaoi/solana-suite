@@ -2,7 +2,7 @@ import {
   Node,
   Result,
   Instruction,
-} from './';
+} from '@solana-suite/shared';
 
 import {
   PublicKey,

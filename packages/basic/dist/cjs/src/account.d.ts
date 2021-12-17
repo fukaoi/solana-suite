@@ -1,5 +1,5 @@
 import { Keypair, PublicKey, TokenAmount } from '@solana/web3.js';
-import { Result } from './';
+import { Result } from '@solana-suite/shared';
 export declare type Pubkey = string;
 export declare type Secret = string;
 export declare class KeypairStr {
@@ -18,6 +18,5 @@ export declare namespace Account {
     export const requestAirdrop: (pubkey: PublicKey, airdropAmount?: number | undefined) => Promise<Result<string, Error>>;
     export const create: () => KeypairStr;
     export const findAssocaiatedTokenAddress: (owner: PublicKey, tokenKey: PublicKey) => Promise<Result<PublicKey, Error>>;
-    export const findMetaplexAssocaiatedTokenAddress: (tokenKey: PublicKey) => Promise<Result<PublicKey, Error>>;
     export {};
 }

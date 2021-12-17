@@ -8,6 +8,7 @@ const spl_token_1 = require("@solana/spl-token");
 const web3_js_1 = require("@solana/web3.js");
 const bs58_1 = __importDefault(require("bs58"));
 const _1 = require("./");
+const shared_1 = require("@solana-suite/shared");
 class KeypairStr {
     pubkey;
     secret;
@@ -29,41 +30,41 @@ var Account;
     Account.DEFAULT_AIRDROP_AMOUNT = web3_js_1.LAMPORTS_PER_SOL * 1;
     Account.MAX_AIRDROP_SOL = web3_js_1.LAMPORTS_PER_SOL * 5;
     Account.getBalance = async (pubkey, unit = 'sol') => {
-        const balance = await _1.Node.getConnection().getBalance(pubkey)
-            .then(_1.Result.ok)
-            .catch(_1.Result.err);
+        const balance = await shared_1.Node.getConnection().getBalance(pubkey)
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
         if (balance.isErr) {
             return balance;
         }
         switch (unit) {
-            case 'sol': return _1.Result.ok((balance.value) / web3_js_1.LAMPORTS_PER_SOL);
+            case 'sol': return shared_1.Result.ok((balance.value) / web3_js_1.LAMPORTS_PER_SOL);
             case 'lamports': return balance;
-            default: return _1.Result.err(Error('no match unit'));
+            default: return shared_1.Result.err(Error('no match unit'));
         }
     };
     Account.getTokenBalance = async (pubkey, tokenKey) => {
         const res = await Account.findAssocaiatedTokenAddress(pubkey, tokenKey);
         if (res.isErr) {
-            return _1.Result.err(res.error);
+            return shared_1.Result.err(res.error);
         }
-        return await _1.Node.getConnection().getTokenAccountBalance(res.unwrap())
-            .then((rpc) => _1.Result.ok(rpc.value))
-            .catch(_1.Result.err);
+        return await shared_1.Node.getConnection().getTokenAccountBalance(res.unwrap())
+            .then((rpc) => shared_1.Result.ok(rpc.value))
+            .catch(shared_1.Result.err);
     };
     Account.requestAirdrop = async (pubkey, airdropAmount) => {
         console.debug('Now airdropping...please wait');
         airdropAmount = !airdropAmount ? Account.DEFAULT_AIRDROP_AMOUNT : airdropAmount * web3_js_1.LAMPORTS_PER_SOL;
         if (airdropAmount > Account.MAX_AIRDROP_SOL) {
-            return _1.Result.err(Error(`Over max airdrop amount: ${airdropAmount}`));
+            return shared_1.Result.err(Error(`Over max airdrop amount: ${airdropAmount}`));
         }
-        const sig = await _1.Node.getConnection().requestAirdrop(pubkey, airdropAmount)
-            .then(_1.Result.ok)
-            .catch(_1.Result.err);
+        const sig = await shared_1.Node.getConnection().requestAirdrop(pubkey, airdropAmount)
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
         if (sig.isErr) {
-            return _1.Result.err(Error('Failed airdrop'));
+            return shared_1.Result.err(Error('Failed airdrop'));
         }
         await _1.Transaction.confirmedSig(sig.value);
-        return _1.Result.ok('success');
+        return shared_1.Result.ok('success');
     };
     Account.create = () => {
         const keypair = web3_js_1.Keypair.generate();
@@ -75,16 +76,7 @@ var Account;
             spl_token_1.TOKEN_PROGRAM_ID.toBuffer(),
             tokenKey.toBuffer(),
         ], spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID)
-            .then(v => _1.Result.ok(v[0]))
-            .catch(_1.Result.err);
-    };
-    Account.findMetaplexAssocaiatedTokenAddress = async (tokenKey) => {
-        return await web3_js_1.PublicKey.findProgramAddress([
-            Buffer.from('metadata'),
-            _1.Constants.METAPLEX_PROGRAM_ID.toBuffer(),
-            tokenKey.toBuffer(),
-        ], _1.Constants.METAPLEX_PROGRAM_ID)
-            .then(v => _1.Result.ok(v[0]))
-            .catch((e) => _1.Result.err(e));
+            .then(v => shared_1.Result.ok(v[0]))
+            .catch(shared_1.Result.err);
     };
 })(Account = exports.Account || (exports.Account = {}));

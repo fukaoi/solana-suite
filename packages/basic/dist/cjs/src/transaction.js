@@ -1,16 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Transaction = void 0;
-const _1 = require("./");
+const shared_1 = require("@solana-suite/shared");
 var Transaction;
 (function (Transaction) {
-    Transaction.get = async (signature) => await _1.Node.getConnection().getParsedConfirmedTransaction(signature)
-        .then(_1.Result.ok)
-        .catch(_1.Result.err);
+    Transaction.get = async (signature) => await shared_1.Node.getConnection().getParsedConfirmedTransaction(signature)
+        .then(shared_1.Result.ok)
+        .catch(shared_1.Result.err);
     Transaction.getAll = async (pubkey, limit) => {
-        const transactions = await _1.Node.getConnection().getConfirmedSignaturesForAddress2(pubkey, { limit })
-            .then(_1.Result.ok)
-            .catch(_1.Result.err);
+        const transactions = await shared_1.Node.getConnection().getConfirmedSignaturesForAddress2(pubkey, { limit })
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
         if (transactions.isErr) {
             return transactions;
         }
@@ -22,12 +22,12 @@ var Transaction;
                     return res;
                 res !== null && parsedSig.push(res.value);
             }
-            return _1.Result.ok(parsedSig);
+            return shared_1.Result.ok(parsedSig);
         }
     };
-    Transaction.confirmedSig = async (signature, commitment = _1.Constants.COMMITMENT) => {
-        return await _1.Node.getConnection().confirmTransaction(signature, commitment)
-            .then(_1.Result.ok)
-            .catch(_1.Result.err);
+    Transaction.confirmedSig = async (signature, commitment = shared_1.Constants.COMMITMENT) => {
+        return await shared_1.Node.getConnection().confirmTransaction(signature, commitment)
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
     };
 })(Transaction = exports.Transaction || (exports.Transaction = {}));

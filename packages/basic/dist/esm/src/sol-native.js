@@ -1,7 +1,6 @@
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { LAMPORTS_PER_SOL, SystemProgram } from '@solana/web3.js';
-import { Result, Node, Constants } from './';
-import { Instruction } from './instruction';
+import { Result, Node, Constants, Instruction } from '@solana-suite/shared';
 export var SolNative;
 (function (SolNative) {
     // NOTICE: There is a lamport fluctuation when transfer under 0.001 sol

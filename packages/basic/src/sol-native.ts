@@ -9,9 +9,9 @@ import {
 import {
   Result,
   Node,
-  Constants
-} from './';
-import {Instruction} from './instruction';
+  Constants,
+  Instruction
+} from '@solana-suite/shared';
 
 export namespace SolNative {
 

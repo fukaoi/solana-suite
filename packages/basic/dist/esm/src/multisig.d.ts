@@ -1,4 +1,4 @@
-import { Result, Instruction } from './';
+import { Result, Instruction } from '@solana-suite/shared';
 import { PublicKey, Signer } from '@solana/web3.js';
 import * as BufferLayout from '@solana/buffer-layout';
 export declare namespace Multisig {

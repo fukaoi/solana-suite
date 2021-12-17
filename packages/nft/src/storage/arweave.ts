@@ -10,9 +10,12 @@ import {
 
 import {
   Constants,
-  SolNative,
   Result
-} from '../../'
+} from '@solana-suite/shared'
+
+import {
+  SolNative,
+} from 'solana-suite';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';

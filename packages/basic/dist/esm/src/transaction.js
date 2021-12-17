@@ -1,4 +1,4 @@
-import { Node, Result, Constants } from './';
+import { Node, Result, Constants } from '@solana-suite/shared';
 export var Transaction;
 (function (Transaction) {
     Transaction.get = async (signature) => await Node.getConnection().getParsedConfirmedTransaction(signature)

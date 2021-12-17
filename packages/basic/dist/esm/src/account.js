@@ -1,7 +1,8 @@
 import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, } from '@solana/web3.js';
 import bs from 'bs58';
-import { Transaction, Constants, Node, Result } from './';
+import { Transaction } from './';
+import { Node, Result } from '@solana-suite/shared';
 export class KeypairStr {
     pubkey;
     secret;
@@ -70,14 +71,5 @@ export var Account;
         ], ASSOCIATED_TOKEN_PROGRAM_ID)
             .then(v => Result.ok(v[0]))
             .catch(Result.err);
-    };
-    Account.findMetaplexAssocaiatedTokenAddress = async (tokenKey) => {
-        return await PublicKey.findProgramAddress([
-            Buffer.from('metadata'),
-            Constants.METAPLEX_PROGRAM_ID.toBuffer(),
-            tokenKey.toBuffer(),
-        ], Constants.METAPLEX_PROGRAM_ID)
-            .then(v => Result.ok(v[0]))
-            .catch((e) => Result.err(e));
     };
 })(Account || (Account = {}));

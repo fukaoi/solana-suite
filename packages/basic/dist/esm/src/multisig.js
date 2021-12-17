@@ -1,4 +1,4 @@
-import { Node, Result, Instruction, } from './';
+import { Node, Result, Instruction, } from '@solana-suite/shared';
 import { PublicKey, TransactionInstruction, SYSVAR_RENT_PUBKEY, SystemProgram, Keypair, } from '@solana/web3.js';
 import * as BufferLayout from '@solana/buffer-layout';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';

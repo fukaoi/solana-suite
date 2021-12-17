@@ -15,7 +15,7 @@ import {
   Node,
   Instruction,
   Result,
-} from '../../';
+} from '@solana-suite/shared';
 
 import {
   MetaplexInstructure
@@ -25,6 +25,7 @@ import {MetaplexMetaData} from './metadata';
 export * from './instructure';
 export * from './metadata';
 export * from './serialize';
+export * from './account';
 
 export namespace MetaplexInstruction {
   export const mintAccount = async (
