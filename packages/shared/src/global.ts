@@ -20,7 +20,7 @@ declare global {
     toAddressUrl(): string;
   }
 
-  interface Array<Instruction[]> {
+  interface Array<T> {
     submit(): Promise<Result<TransactionSignature, Error>>;
   }
 }
