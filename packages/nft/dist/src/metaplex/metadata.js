@@ -1,9 +1,12 @@
-import { TransactionInstruction, SystemProgram, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
-import { Metaplex, MetaplexSerialize, MetaplexAccount, } from './index';
-import { Node, Constants, Result } from '@solana-suite/shared';
-import { Account } from 'solana-suite';
-import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, Token, } from '@solana/spl-token';
-export var MetaplexMetaData;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MetaplexMetaData = void 0;
+const web3_js_1 = require("@solana/web3.js");
+const index_1 = require("./index");
+const shared_1 = require("@solana-suite/shared");
+const solana_suite_1 = require("solana-suite");
+const spl_token_1 = require("@solana/spl-token");
+var MetaplexMetaData;
 (function (MetaplexMetaData) {
     const createAssociatedTokenAccountInstruction = (metaAccount, tokenKey, mintAuthorityKey, updateAuthority, payer, txnData) => {
         const keys = [
@@ -33,19 +36,19 @@ export var MetaplexMetaData;
                 isWritable: false,
             },
             {
-                pubkey: SystemProgram.programId,
+                pubkey: web3_js_1.SystemProgram.programId,
                 isSigner: false,
                 isWritable: false,
             },
             {
-                pubkey: SYSVAR_RENT_PUBKEY,
+                pubkey: web3_js_1.SYSVAR_RENT_PUBKEY,
                 isSigner: false,
                 isWritable: false,
             },
         ];
-        return new TransactionInstruction({
+        return new web3_js_1.TransactionInstruction({
             keys,
-            programId: Constants.METAPLEX_PROGRAM_ID,
+            programId: shared_1.Constants.METAPLEX_PROGRAM_ID,
             data: txnData,
         });
     };
@@ -72,51 +75,51 @@ export var MetaplexMetaData;
                 isWritable: false,
             },
             {
-                pubkey: SystemProgram.programId,
+                pubkey: web3_js_1.SystemProgram.programId,
                 isSigner: false,
                 isWritable: false,
             },
             {
-                pubkey: TOKEN_PROGRAM_ID,
+                pubkey: spl_token_1.TOKEN_PROGRAM_ID,
                 isSigner: false,
                 isWritable: false,
             },
             {
-                pubkey: SYSVAR_RENT_PUBKEY,
+                pubkey: web3_js_1.SYSVAR_RENT_PUBKEY,
                 isSigner: false,
                 isWritable: false,
             },
         ];
-        return new TransactionInstruction({
+        return new web3_js_1.TransactionInstruction({
             keys,
-            programId: ASSOCIATED_TOKEN_PROGRAM_ID,
+            programId: spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID,
             data: Buffer.from([]),
         });
     };
     MetaplexMetaData.getByTokenKey = async (tokenKey) => {
-        const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
+        const metaAccount = await index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
         if (metaAccount.isErr) {
-            return Result.err(metaAccount.error);
+            return shared_1.Result.err(metaAccount.error);
         }
-        const nfts = await Node.getConnection().getParsedAccountInfo(metaAccount.value)
-            .then(Result.ok)
-            .catch(Result.err);
+        const nfts = await shared_1.Node.getConnection().getParsedAccountInfo(metaAccount.value)
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
         if (nfts.isErr)
-            return Result.err(nfts.error);
+            return shared_1.Result.err(nfts.error);
         const accountData = nfts.value;
         const data = accountData.value?.data;
         if (data) {
-            return Result.ok(MetaplexSerialize.decode(data));
+            return shared_1.Result.ok(index_1.MetaplexSerialize.decode(data));
         }
-        return Result.ok(Metaplex.initFormat());
+        return shared_1.Result.ok(index_1.Metaplex.initFormat());
     };
     MetaplexMetaData.getByOwner = async (owner) => {
         // Get all token by owner
-        const tokens = await Node.getConnection().getParsedTokenAccountsByOwner(owner, { programId: TOKEN_PROGRAM_ID })
-            .then(Result.ok)
-            .catch(Result.err);
+        const tokens = await shared_1.Node.getConnection().getParsedTokenAccountsByOwner(owner, { programId: spl_token_1.TOKEN_PROGRAM_ID })
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
         if (tokens.isErr)
-            return Result.err(tokens.error);
+            return shared_1.Result.err(tokens.error);
         const arr = tokens.value;
         const matches = [];
         // Filter only metaplex nft
@@ -125,34 +128,34 @@ export var MetaplexMetaData;
             if (!decoded)
                 continue;
             if (decoded.isErr) {
-                return Result.err(decoded.error);
+                return shared_1.Result.err(decoded.error);
             }
             matches.push(decoded.value);
         }
-        return Result.ok(matches);
+        return shared_1.Result.ok(matches);
     };
     MetaplexMetaData.create = async (data, tokenKey, mintAuthorityKey, updateAuthority, feePayer) => {
-        const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
+        const metaAccount = await index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
         if (metaAccount.isErr) {
-            return Result.err(metaAccount.error);
+            return shared_1.Result.err(metaAccount.error);
         }
-        const txnData = MetaplexSerialize.serializeCreateArgs(data);
+        const txnData = index_1.MetaplexSerialize.serializeCreateArgs(data);
         const inst = createAssociatedTokenAccountInstruction(metaAccount.unwrap(), tokenKey, mintAuthorityKey, updateAuthority, feePayer, txnData);
-        return Result.ok([inst]);
+        return shared_1.Result.ok([inst]);
     };
     MetaplexMetaData.update = async (data, newUpdateAuthority, primarySaleHappened, tokenKey, updateAuthority, signers) => {
         const inst = [];
-        const associatedToken = await Account.findAssocaiatedTokenAddress(updateAuthority, tokenKey);
+        const associatedToken = await solana_suite_1.Account.findAssocaiatedTokenAddress(updateAuthority, tokenKey);
         if (associatedToken.isErr) {
-            return Result.err(associatedToken.error);
+            return shared_1.Result.err(associatedToken.error);
         }
         inst.push(updateAssociatedTokenAccountInstruction(associatedToken.value, updateAuthority, updateAuthority, tokenKey));
-        inst.push(Token.createMintToInstruction(TOKEN_PROGRAM_ID, tokenKey, associatedToken.value, updateAuthority, signers, 1));
-        const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
+        inst.push(spl_token_1.Token.createMintToInstruction(spl_token_1.TOKEN_PROGRAM_ID, tokenKey, associatedToken.value, updateAuthority, signers, 1));
+        const metaAccount = await index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
         if (metaAccount.isErr) {
-            return Result.err(metaAccount.error);
+            return shared_1.Result.err(metaAccount.error);
         }
-        const txnData = MetaplexSerialize.serializeUpdateArgs(data, newUpdateAuthority, primarySaleHappened);
+        const txnData = index_1.MetaplexSerialize.serializeUpdateArgs(data, newUpdateAuthority, primarySaleHappened);
         const keys = [
             {
                 pubkey: metaAccount.value,
@@ -165,11 +168,11 @@ export var MetaplexMetaData;
                 isWritable: false,
             },
         ];
-        inst.push(new TransactionInstruction({
+        inst.push(new web3_js_1.TransactionInstruction({
             keys,
-            programId: Constants.METAPLEX_PROGRAM_ID,
+            programId: shared_1.Constants.METAPLEX_PROGRAM_ID,
             data: txnData,
         }));
-        return Result.ok(inst);
+        return shared_1.Result.ok(inst);
     };
-})(MetaplexMetaData || (MetaplexMetaData = {}));
+})(MetaplexMetaData = exports.MetaplexMetaData || (exports.MetaplexMetaData = {}));

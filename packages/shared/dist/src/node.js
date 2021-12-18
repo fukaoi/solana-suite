@@ -1,13 +1,16 @@
-import { Constants } from './constants';
-import { Connection, } from '@solana/web3.js';
-export var Node;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Node = void 0;
+const constants_1 = require("./constants");
+const web3_js_1 = require("@solana/web3.js");
+var Node;
 (function (Node) {
     let connection;
     Node.getConnection = () => {
         if (connection)
             return connection;
-        connection = new Connection(Constants.API_URL, Constants.COMMITMENT);
+        connection = new web3_js_1.Connection(constants_1.Constants.API_URL, constants_1.Constants.COMMITMENT);
         return connection;
     };
-    Node.getApiUrl = () => Constants.API_URL;
-})(Node || (Node = {}));
+    Node.getApiUrl = () => constants_1.Constants.API_URL;
+})(Node = exports.Node || (exports.Node = {}));

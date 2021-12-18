@@ -9,30 +9,14 @@
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json"
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/atonoy/solana-suite.git"
-  },
-  "keywords": [
-    "Solana",
-    "typescript",
-    "blockchain",
-    "sdk"
-  ],
-  "author": "fukaoi",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/atonoy/solana-suite/issues"
-  },
-  "homepage": "https://github.com/atonoy/solana-suite#readme",
   "dependencies": {
     "@solana-suite/shared": "file:../shared",
     "@solana/buffer-layout": "^3.0.0",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.29.2",
-    "form-data": "^4.0.0",
     "nft.storage": "^3.3.0",
     "node-fetch": "^3.0.0",
     "solana-suite": "file:../basic"

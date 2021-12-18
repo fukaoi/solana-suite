@@ -1,29 +1,35 @@
-import { NFTStorage, Blob } from 'nft.storage';
-import fs from 'fs';
-import { Constants, Result } from '@solana-suite/shared';
-export var StorageNftStorage;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StorageNftStorage = void 0;
+const nft_storage_1 = require("nft.storage");
+const fs_1 = __importDefault(require("fs"));
+const shared_1 = require("@solana-suite/shared");
+var StorageNftStorage;
 (function (StorageNftStorage) {
-    const createGatewayUrl = (cid) => `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
-    const connect = () => new NFTStorage({ token: Constants.NFT_STORAGE_API_KEY });
+    const createGatewayUrl = (cid) => `${shared_1.Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
+    const connect = () => new nft_storage_1.NFTStorage({ token: shared_1.Constants.NFT_STORAGE_API_KEY });
     const preUploadImage = async (client, imagePath) => {
-        const blobImage = new Blob([fs.readFileSync(imagePath)]);
+        const blobImage = new nft_storage_1.Blob([fs_1.default.readFileSync(imagePath)]);
         const cid = await client.storeBlob(blobImage);
         return createGatewayUrl(cid);
     };
     StorageNftStorage.upload = async (storageData) => {
         const client = connect();
         const imageUrl = await preUploadImage(client, storageData.image)
-            .then(Result.ok)
-            .catch(Result.err);
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
         if (imageUrl.isErr)
             return imageUrl;
         storageData.image = imageUrl.value;
-        const blobJson = new Blob([JSON.stringify(storageData)]);
+        const blobJson = new nft_storage_1.Blob([JSON.stringify(storageData)]);
         const metadata = await client.storeBlob(blobJson)
-            .then(Result.ok)
-            .catch(Result.err);
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
         if (metadata.isErr)
             return metadata;
-        return Result.ok(createGatewayUrl(metadata.value));
+        return shared_1.Result.ok(createGatewayUrl(metadata.value));
     };
-})(StorageNftStorage || (StorageNftStorage = {}));
+})(StorageNftStorage = exports.StorageNftStorage || (exports.StorageNftStorage = {}));

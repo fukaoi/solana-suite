@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { Metaplex, MetaplexInstructure } from './';
 import { PublicKey } from '@solana/web3.js';
 export declare namespace MetaplexSerialize {

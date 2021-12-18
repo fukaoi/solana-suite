@@ -1,9 +1,16 @@
 {
   "name": "@solana-suite/shared",
-  "main": "src/index.ts",
-  "module": "src/index.ts",
+  "main": "dist/src/index.js",
+  "module": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "private": true,
   "directories": {
     "version": "1.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   }
 }

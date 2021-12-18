@@ -1,4 +1,7 @@
-export var MetaplexInstructure;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MetaplexInstructure = void 0;
+var MetaplexInstructure;
 (function (MetaplexInstructure) {
     class Creator {
         address;
@@ -138,4 +141,4 @@ export var MetaplexInstructure;
             },
         ],
     ]);
-})(MetaplexInstructure || (MetaplexInstructure = {}));
+})(MetaplexInstructure = exports.MetaplexInstructure || (exports.MetaplexInstructure = {}));

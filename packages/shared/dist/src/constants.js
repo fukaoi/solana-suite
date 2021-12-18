@@ -1,6 +1,12 @@
-import { PublicKey } from '@solana/web3.js';
-import Config from '../solana-suite.json';
-export var Constants;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ConstantsFunc = exports.Constants = void 0;
+const web3_js_1 = require("@solana/web3.js");
+const solana_suite_json_1 = __importDefault(require("../solana-suite.json"));
+var Constants;
 (function (Constants) {
     let SolanaNet;
     (function (SolanaNet) {
@@ -8,10 +14,10 @@ export var Constants;
         SolanaNet["dev"] = "devnet";
         SolanaNet["test"] = "testnet";
     })(SolanaNet = Constants.SolanaNet || (Constants.SolanaNet = {}));
-    Constants.currentNetwork = Config.network;
-    Constants.isDebugging = Config.debugging;
-})(Constants || (Constants = {}));
-export var ConstantsFunc;
+    Constants.currentNetwork = solana_suite_json_1.default.network;
+    Constants.isDebugging = solana_suite_json_1.default.debugging;
+})(Constants = exports.Constants || (exports.Constants = {}));
+var ConstantsFunc;
 (function (ConstantsFunc) {
     ConstantsFunc.switchApi = (env) => {
         switch (env) {
@@ -23,10 +29,10 @@ export var ConstantsFunc;
                 return 'http://api.devnet.solana.com';
         }
     };
-})(ConstantsFunc || (ConstantsFunc = {}));
+})(ConstantsFunc = exports.ConstantsFunc || (exports.ConstantsFunc = {}));
 (function (Constants) {
     String.prototype.toPubkey = function () {
-        return new PublicKey(this);
+        return new web3_js_1.PublicKey(this);
     };
     Constants.CURRENT_NETWORK = ConstantsFunc.switchApi(Constants.currentNetwork);
     Constants.API_URL = ConstantsFunc.switchApi(Constants.currentNetwork);
@@ -42,4 +48,4 @@ export var ConstantsFunc;
     Constants.ARWEAVE_GATEWAY_URL = 'https://arweave.net';
     Constants.AR_SOL_HOLDER_ID = 'HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm'.toPubkey();
     Constants.COIN_MARKET_URL = 'https://api.coingecko.com/api/v3/simple/price';
-})(Constants || (Constants = {}));
+})(Constants = exports.Constants || (exports.Constants = {}));

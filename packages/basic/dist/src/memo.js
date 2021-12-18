@@ -1,9 +1,15 @@
-import { TransactionInstruction, } from '@solana/web3.js';
-import bs from 'bs58';
-import { Constants, Instruction } from '@solana-suite/shared';
-export var Memo;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Memo = void 0;
+const web3_js_1 = require("@solana/web3.js");
+const bs58_1 = __importDefault(require("bs58"));
+const shared_1 = require("@solana-suite/shared");
+var Memo;
 (function (Memo) {
-    Memo.decode = (encoded) => bs.decode(encoded).toString();
+    Memo.decode = (encoded) => bs58_1.default.decode(encoded).toString();
     Memo.encode = (data) => Buffer.from(data);
     Memo.create = (data, owners, signers, feePayer) => {
         const key = owners && owners.length > 0
@@ -16,12 +22,12 @@ export var Memo;
                     };
                 })
             : [];
-        const instruction = new TransactionInstruction({
-            programId: Constants.MEMO_PROGRAM_ID,
+        const instruction = new web3_js_1.TransactionInstruction({
+            programId: shared_1.Constants.MEMO_PROGRAM_ID,
             data: Memo.encode(data),
             keys: key
         });
-        return new Instruction([instruction], signers, feePayer);
+        return new shared_1.Instruction([instruction], signers, feePayer);
     };
     Memo.parse = (tx) => {
         const res = tx.transaction.message.instructions.filter(d => {
@@ -30,4 +36,4 @@ export var Memo;
         });
         return res[0].parsed;
     };
-})(Memo || (Memo = {}));
+})(Memo = exports.Memo || (exports.Memo = {}));

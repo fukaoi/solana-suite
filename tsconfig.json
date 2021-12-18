@@ -7,11 +7,11 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
+    "module": "CommonJS",
     "target": "ESNext",
     "declaration": true,
     "sourceMap": false,
     "moduleResolution": "node",
-    "composite": true,
+    "composite": true
   }
 }

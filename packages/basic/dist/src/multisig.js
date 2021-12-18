@@ -1,7 +1,29 @@
-import { Node, Result, Instruction, } from '@solana-suite/shared';
-import { PublicKey, TransactionInstruction, SYSVAR_RENT_PUBKEY, SystemProgram, Keypair, } from '@solana/web3.js';
-import * as BufferLayout from '@solana/buffer-layout';
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Multisig = void 0;
+const shared_1 = require("@solana-suite/shared");
+const web3_js_1 = require("@solana/web3.js");
+const BufferLayout = __importStar(require("@solana/buffer-layout"));
+const spl_token_1 = require("@solana/spl-token");
 // @internal
 var MultisigInstruction;
 (function (MultisigInstruction) {
@@ -25,12 +47,12 @@ var MultisigInstruction;
         createLayoutPubKey('signer11'),
     ]);
     MultisigInstruction.account = (newAccount, feePayer, balanceNeeded) => {
-        return SystemProgram.createAccount({
+        return web3_js_1.SystemProgram.createAccount({
             fromPubkey: feePayer.publicKey,
             newAccountPubkey: newAccount.publicKey,
             lamports: balanceNeeded,
             space: MultisigInstruction.Layout.span,
-            programId: TOKEN_PROGRAM_ID
+            programId: spl_token_1.TOKEN_PROGRAM_ID
         });
     };
     MultisigInstruction.multisig = (m, feePayer, signerPubkey) => {
@@ -41,7 +63,7 @@ var MultisigInstruction;
                 isWritable: true
             },
             {
-                pubkey: SYSVAR_RENT_PUBKEY,
+                pubkey: web3_js_1.SYSVAR_RENT_PUBKEY,
                 isSigner: false,
                 isWritable: false
             },
@@ -60,60 +82,60 @@ var MultisigInstruction;
             instruction: 2,
             m
         }, data);
-        return new TransactionInstruction({
+        return new web3_js_1.TransactionInstruction({
             keys,
-            programId: TOKEN_PROGRAM_ID,
+            programId: spl_token_1.TOKEN_PROGRAM_ID,
             data
         });
     };
 })(MultisigInstruction || (MultisigInstruction = {}));
-export var Multisig;
+var Multisig;
 (function (Multisig) {
     Multisig.isAddress = async (multisig) => {
         const info = await Multisig.getMultisigInfo(multisig);
         if (info.isErr) {
-            return Result.ok(false);
+            return shared_1.Result.ok(false);
         }
-        return Result.ok(true);
+        return shared_1.Result.ok(true);
     };
     Multisig.getMultisigInfo = async (multisig) => {
-        const info = await Node.getConnection().getAccountInfo(multisig);
+        const info = await shared_1.Node.getConnection().getAccountInfo(multisig);
         if (info === null) {
-            return Result.err(Error('Failed to find multisig'));
+            return shared_1.Result.err(Error('Failed to find multisig'));
         }
-        if (!info.owner.equals(TOKEN_PROGRAM_ID)) {
-            return Result.err(Error('Invalid multisig owner'));
+        if (!info.owner.equals(spl_token_1.TOKEN_PROGRAM_ID)) {
+            return shared_1.Result.err(Error('Invalid multisig owner'));
         }
         if (info.data.length !== MultisigInstruction.Layout.span) {
-            return Result.err(Error('Invalid multisig size'));
+            return shared_1.Result.err(Error('Invalid multisig size'));
         }
         const data = Buffer.from(info.data);
         const multisigInfo = MultisigInstruction.Layout.decode(data);
-        multisigInfo.signer1 = new PublicKey(multisigInfo.signer1);
-        multisigInfo.signer2 = new PublicKey(multisigInfo.signer2);
-        multisigInfo.signer3 = new PublicKey(multisigInfo.signer3);
-        multisigInfo.signer4 = new PublicKey(multisigInfo.signer4);
-        multisigInfo.signer5 = new PublicKey(multisigInfo.signer5);
-        multisigInfo.signer6 = new PublicKey(multisigInfo.signer6);
-        multisigInfo.signer7 = new PublicKey(multisigInfo.signer7);
-        multisigInfo.signer8 = new PublicKey(multisigInfo.signer8);
-        multisigInfo.signer9 = new PublicKey(multisigInfo.signer9);
-        multisigInfo.signer10 = new PublicKey(multisigInfo.signer10);
-        multisigInfo.signer11 = new PublicKey(multisigInfo.signer11);
-        return Result.ok(multisigInfo);
+        multisigInfo.signer1 = new web3_js_1.PublicKey(multisigInfo.signer1);
+        multisigInfo.signer2 = new web3_js_1.PublicKey(multisigInfo.signer2);
+        multisigInfo.signer3 = new web3_js_1.PublicKey(multisigInfo.signer3);
+        multisigInfo.signer4 = new web3_js_1.PublicKey(multisigInfo.signer4);
+        multisigInfo.signer5 = new web3_js_1.PublicKey(multisigInfo.signer5);
+        multisigInfo.signer6 = new web3_js_1.PublicKey(multisigInfo.signer6);
+        multisigInfo.signer7 = new web3_js_1.PublicKey(multisigInfo.signer7);
+        multisigInfo.signer8 = new web3_js_1.PublicKey(multisigInfo.signer8);
+        multisigInfo.signer9 = new web3_js_1.PublicKey(multisigInfo.signer9);
+        multisigInfo.signer10 = new web3_js_1.PublicKey(multisigInfo.signer10);
+        multisigInfo.signer11 = new web3_js_1.PublicKey(multisigInfo.signer11);
+        return shared_1.Result.ok(multisigInfo);
     };
     Multisig.create = async (m, feePayer, signerPubkey) => {
         if (m > signerPubkey.length)
-            return Result.err(Error('signers number less than m number'));
-        const account = Keypair.generate();
-        const connection = Node.getConnection();
+            return shared_1.Result.err(Error('signers number less than m number'));
+        const account = web3_js_1.Keypair.generate();
+        const connection = shared_1.Node.getConnection();
         const balanceNeeded = await connection.getMinimumBalanceForRentExemption(MultisigInstruction.Layout.span)
-            .then(Result.ok)
-            .catch(Result.err);
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
         if (balanceNeeded.isErr)
-            return Result.err(balanceNeeded.error);
+            return shared_1.Result.err(balanceNeeded.error);
         const inst1 = MultisigInstruction.account(account, feePayer, balanceNeeded.value);
         const inst2 = MultisigInstruction.multisig(m, account, signerPubkey);
-        return Result.ok(new Instruction([inst1, inst2], [account], feePayer, account.publicKey.toBase58()));
+        return shared_1.Result.ok(new shared_1.Instruction([inst1, inst2], [account], feePayer, account.publicKey.toBase58()));
     };
-})(Multisig || (Multisig = {}));
+})(Multisig = exports.Multisig || (exports.Multisig = {}));

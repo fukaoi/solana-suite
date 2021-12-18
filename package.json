@@ -5,7 +5,7 @@
   "scripts": {
     "build": "npx tsc -b tsconfig.build.json",
     "lint": "npx tslint --fix --project .",
-    "test:all": "mocha -t 300000 --require ts-node/register 'packages/*/test/**/*.test.ts'",
+    "test:all": "npm run test:all --workspaces",
     "clean": "rm -rf ./packages/*/dist"
   },
   "workspaces": [
