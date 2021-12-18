@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "build": "npx tsc -b tsconfig.build.json",
     "lint": "npx tslint --fix --project .",
     "test:all": "mocha -t 300000 --require ts-node/register 'packages/*/test/**/*.test.ts'",
     "clean": "rm -rf ./packages/*/dist"
