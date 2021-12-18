@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "lint": "npx tslint --fix --project .",
-    "build": "npm run build --workspaces -if-present",
-    "test2": "mocha -t 300000 --require ts-node/register -- ",
-    "test2:all": "mocha -t 300000 --require ts-node/register 'packages/*/test/**/*.test.ts'"
+    "test:all": "mocha -t 300000 --require ts-node/register 'packages/*/test/**/*.test.ts'",
+    "clean": "rm -rf ./packages/*/dist"
   },
   "workspaces": [
     "packages/*"

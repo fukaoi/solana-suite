@@ -12,6 +12,7 @@
     "declaration": true,
     "sourceMap": false,
     "moduleResolution": "node",
-    "composite": true
+    "composite": true,
+    "incremental": true
   }
 }
