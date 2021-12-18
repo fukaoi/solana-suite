@@ -13,6 +13,6 @@
     "sourceMap": false,
     "moduleResolution": "node",
     "composite": true,
-    "incremental": true
+    "incremental": false
   }
 }

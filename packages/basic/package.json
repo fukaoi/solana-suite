@@ -1,8 +1,8 @@
 {
   "name": "solana-suite",
-  "main": "dist/cjs/src/index.js",
-  "module": "dist/esm/src/index.js",
-  "types": "dist/cjs/src/index.d.ts",
+  "main": "dist/src/index.js",
+  "module": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "version": "1.0.0",
   "engines": {
     "node": ">=14.*"
@@ -20,9 +20,9 @@
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
   "dependencies": {
+    "@solana-suite/shared": "file:../shared",
     "@solana/buffer-layout": "^3.0.0",
     "@solana/spl-token": "^0.1.8",
-    "@solana/web3.js": "^1.29.2",
-    "@solana-suite/shared": "../shared"
+    "@solana/web3.js": "^1.29.2"
   }
 }

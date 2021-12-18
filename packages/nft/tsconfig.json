@@ -5,7 +5,7 @@
   },
   "references": [
     {
-      "path": "../shared"
+      "path": "../basic"
     },
     {
       "path": "../shared"
