@@ -12,5 +12,8 @@
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
+  },
+  "devDependencies": {
+    "solana-suite": "^1.0.0"
   }
 }

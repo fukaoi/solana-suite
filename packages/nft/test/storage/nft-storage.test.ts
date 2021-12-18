@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {RandomAsset} from '../utils/randomAsset';
+import {RandomAsset} from '../randomAsset';
 import {StorageNftStorage} from '../../src';
 
 describe('StorageNftStorage', () => {

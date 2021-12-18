@@ -17,6 +17,7 @@
     "@solana/buffer-layout": "^3.0.0",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.29.2",
+    "form-data": "^3.0.1",
     "nft.storage": "^3.3.0",
     "node-fetch": "^3.0.0",
     "solana-suite": "file:../basic"

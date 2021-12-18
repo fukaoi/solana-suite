@@ -9,6 +9,7 @@
     "./src"
   ],
   "files": [
-    "./solana-suite.json"
+    "./solana-suite.json",
+    "./test/setup.ts"
   ]
 }

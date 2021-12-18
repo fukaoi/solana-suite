@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
-import {Setup} from '../test/utils/setup';
+import {Setup} from '@solana-suite/shared/test/setup';
 import {Account, SplToken, Multisig, KeypairStr} from '../src/'
 
 let source: KeypairStr;
@@ -30,7 +30,7 @@ describe('SplToken', () => {
     assert.equal(res.unwrap().length, limit);
   });
 
-  it.only('Get token transfer history by owner address', async () => {
+  it.skip('Get token transfer history by owner address', async () => {
     const limit = 3;
     const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu'.toPubkey();
     const res = await SplToken.getTransferHistory(owner, limit);

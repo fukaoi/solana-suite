@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import {Multisig, Account, KeypairStr} from '../src/';
-import {Setup} from './utils/setup';
+import {Setup} from '@solana-suite/shared/test/setup';
 
 let source: KeypairStr;
 
