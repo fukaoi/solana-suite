@@ -1,16 +1,35 @@
 import fs from 'fs';
-import {Account, KeypairStr} from 'solana-suite';
-import {Constants} from '@solana-suite/shared';
+import bs from 'bs58';
+import {Constants, Node} from '../src';
+
+import {
+  Keypair,
+  PublicKey,
+} from '@solana/web3.js';
+
 
 console.debug(`\u001b[33m === DEBUG MODE ===`);
 console.debug(`\u001b[33m solana-network: ${Constants.currentNetwork}`);
+
+class KeypairStr {
+  pubkey: string;
+  secret: string;
+
+  constructor(
+    pubkey: string,
+    secret: string,
+  ) {
+    this.pubkey = pubkey;
+    this.secret = secret;
+  }
+}
 
 export namespace Setup {
   const TEMP_KEYPAIR_FILE = `.solana-${Constants.currentNetwork}-keypair`;
 
   export const generatekeyPair = async ():
     Promise<{source: KeypairStr, dest: KeypairStr}> => {
-    const {source, dest} = await getSourceAndDest();
+    const {source, dest} = await fetechSourceAndDest();
     debug(source, dest);
     return {
       source: new KeypairStr(source.pubkey, source.secret),
@@ -25,16 +44,9 @@ export namespace Setup {
     console.debug(`# destination.secret: `, dest.secret);
   }
 
-  const getSourceAndDest = async () => {
+  const fetechSourceAndDest = async () => {
     if (fs.existsSync(TEMP_KEYPAIR_FILE)) {
-      const obj = await loadTempFile();
-      const sourceBalance = await Account.getBalance(obj.source.pubkey.toPubkey());
-      if (sourceBalance.isOk && sourceBalance.value < 0.1) {
-        console.warn(`[Warning]source  alance is under 0.1 amount`);
-        console.warn(`Reset setupKeyPair`);
-        Account.requestAirdrop(obj.source.pubkey);
-      }
-      return obj;
+      return await loadTempFile();
     } else {
       return createTempFile();
     }
@@ -45,11 +57,40 @@ export namespace Setup {
     return {source: obj.source, dest: obj.dest};
   }
 
+  const requestAirdrop = async (
+    pubkey: PublicKey,
+  ) => {
+    console.debug('Now airdropping...please wait');
+    await Node.getConnection().requestAirdrop(pubkey, 1000000000);
+    const sleep = (waitSec: number) => {
+      return new Promise((resolve: any) => {
+        setTimeout(() => {
+          resolve()
+        }, 
+          waitSec
+        );
+      });
+    }
+    await sleep(5);
+  }
+
   const createTempFile = async () => {
-    const source = Account.create();
-    const dest = Account.create();
-    await Account.requestAirdrop(source.toPubkey());
-    const data = templateKeyPair(source, dest);
+    const source = Keypair.generate();
+    const dest = Keypair.generate();
+
+    await requestAirdrop(source.publicKey);
+
+    const sourceObject = {
+      pubkey: source.publicKey.toBase58(),
+      secret: bs.encode(source.secretKey)
+    };
+
+    const destObject = {
+      pubkey: source.publicKey.toBase58(),
+      secret: bs.encode(source.secretKey)
+    };
+
+    const data = templateKeyPair(sourceObject, destObject);
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));
     return {source, dest};
   }

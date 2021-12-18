@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "npx tsc -b tsconfig.build.json",
+    "build": "npm run clean && npx tsc -b tsconfig.build.json",
     "lint": "npx tslint --fix --project .",
     "test:all": "npm run test:all --workspaces",
     "clean": "rm -rf ./packages/*/dist"

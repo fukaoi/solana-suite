@@ -2,7 +2,6 @@
 // fork: https://github.com/badrap/result
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Result = void 0;
-const instruction_1 = require("./instruction");
 class AbstractResult {
     // unified-signatures. into line 10
     // unwrap<U>(ok: (value: T) => U, err: (error: E) => U): U;
@@ -26,8 +25,11 @@ class AbstractResult {
     async submit() {
         try {
             const instruction = this.unwrap();
-            if (instruction instanceof instruction_1.Instruction) {
-                return await instruction.submit();
+            const castedInst = instruction;
+            // why return false?
+            // if (instruction instanceof Instruction) {
+            if (castedInst.instructions && castedInst.signers) {
+                return await castedInst.submit();
             }
             return Result.err(Error('Only Instruction object'));
         }

@@ -1,5 +1,5 @@
 import { PublicKey, Keypair, TransactionSignature } from '@solana/web3.js';
-import { Result } from './';
+import { Result, Instruction } from './';
 declare global {
     interface String {
         toPubkey(): PublicKey;
@@ -7,7 +7,7 @@ declare global {
         toExplorerUrl(): string;
         toAddressUrl(): string;
     }
-    interface Array<T> {
+    interface Array<T extends Instruction[]> {
         submit(): Promise<Result<TransactionSignature, Error>>;
     }
 }
