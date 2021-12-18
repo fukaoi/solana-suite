@@ -1,3 +1,15 @@
 {
-  "extends": "../../tsconfig.json"
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {},
+  "references": [
+    {
+      "path": "../shared"
+    },
+    {
+      "path": "../shared"
+    }
+  ],
+  "include": [
+    "./src"
+  ]
 }

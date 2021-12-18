@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "packages/basic"
+    },
+    {
+      "path": "packages/nft"
+    },
+    {
+      "path": "packages/shared"
+    }
+  ]
+}
