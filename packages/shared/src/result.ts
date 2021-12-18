@@ -82,7 +82,7 @@ abstract class AbstractResult<T, E extends Error> {
       // if (instruction instanceof Instruction) {
       if (castedInst.instructions && castedInst.signers) {
         return await castedInst.submit();
-      } 
+      }
       return Result.err(Error('Only Instruction object'));
     } catch (err) {
       return Result.err(err as Error);
