@@ -1,21 +1,20 @@
 import {describe, it} from 'mocha';
 import {Result} from '../src';
-// import {Memo, KeypairStr} from 'solana-suite';
-import {Setup} from './setup';
+import {Setup, KeypairStr} from './setup';
 import {assert} from 'chai';
 
-// let source: KeypairStr;
+let source: KeypairStr;
 
 describe('Instruction', () => {
   before(async () => {
     const obj = await Setup.generatekeyPair();
-    // source = obj.source;
+    source = obj.source;
     console.log(obj);
   });
 
   // it('Submit instruction', async () => {
     // const inst =
-      // Memo.create(
+      // (
         // '{"title": "Submit first instruction"}',
         // [source.toPubkey()],
         // [source.toKeypair()],

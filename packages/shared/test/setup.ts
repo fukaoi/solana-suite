@@ -11,7 +11,7 @@ import {
 console.debug(`\u001b[33m === DEBUG MODE ===`);
 console.debug(`\u001b[33m solana-network: ${Constants.currentNetwork}`);
 
-class KeypairStr {
+export class KeypairStr {
   pubkey: string;
   secret: string;
 
