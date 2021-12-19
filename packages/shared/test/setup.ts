@@ -22,15 +22,25 @@ class KeypairStr {
     this.pubkey = pubkey;
     this.secret = secret;
   }
+
+  toPubkey(): PublicKey {
+    return new PublicKey(this.pubkey);
+  }
+
+  toKeypair(): Keypair {
+    const decoded = bs.decode(this.secret);
+    return Keypair.fromSecretKey(decoded);
+  }
 }
 
 export namespace Setup {
-  const TEMP_KEYPAIR_FILE = `.solana-${Constants.currentNetwork}-keypair`;
+  const TEMP_KEYPAIR_FILE = `../../../solana-${Constants.currentNetwork}-keypair`;
 
   export const generatekeyPair = async ():
     Promise<{source: KeypairStr, dest: KeypairStr}> => {
     const {source, dest} = await fetechSourceAndDest();
     debug(source, dest);
+    console.log(source, dest);
     return {
       source: new KeypairStr(source.pubkey, source.secret),
       dest: new KeypairStr(dest.pubkey, dest.secret),
@@ -61,12 +71,12 @@ export namespace Setup {
     pubkey: PublicKey,
   ) => {
     console.debug('Now airdropping...please wait');
-    await Node.getConnection().requestAirdrop(pubkey, 1000000000);
+    await Node.getConnection().requestAirdrop(pubkey, 10);
     const sleep = (waitSec: number) => {
       return new Promise((resolve: any) => {
         setTimeout(() => {
           resolve()
-        }, 
+        },
           waitSec
         );
       });
@@ -80,15 +90,15 @@ export namespace Setup {
 
     await requestAirdrop(source.publicKey);
 
-    const sourceObject = {
-      pubkey: source.publicKey.toBase58(),
-      secret: bs.encode(source.secretKey)
-    };
+    const sourceObject = new KeypairStr(
+      source.publicKey.toBase58(),
+      bs.encode(source.secretKey)
+    );
 
-    const destObject = {
-      pubkey: source.publicKey.toBase58(),
-      secret: bs.encode(source.secretKey)
-    };
+    const destObject = new KeypairStr(
+      dest.publicKey.toBase58(),
+      bs.encode(dest.secretKey)
+    );
 
     const data = templateKeyPair(sourceObject, destObject);
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));

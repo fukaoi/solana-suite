@@ -1,4 +1,4 @@
   {
-    "network": "mainnet-beta",
-    "debugging": false
+    "network": "dev",
+    "debugging": true
   }

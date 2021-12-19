@@ -8,6 +8,8 @@
     "version": "1.0.0"
   },
   "scripts": {
+    "net:dev": "./changeNetwork dev", 
+    "net:mainnet": "./changeNetwork mainnet", 
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
