@@ -9,15 +9,15 @@ const bs58_1 = __importDefault(require("bs58"));
 const _1 = require("./");
 Array.prototype.submit = async function () {
     const instructions = [];
-    for (let i = 0; i < this.length; i++) {
-        if (this[i].isErr) {
-            // return Result.err(Error(`[Array index: ${i}]${this[i].error.message}`));
+    for (const [i, obj] of this) {
+        if (obj.isErr) {
+            return _1.Result.err(Error(`[Array index: ${i}]${obj.error.message}`));
         }
-        else if (this[i].isOk) {
-            instructions.push(this[i].value);
+        else if (obj.isOk) {
+            instructions.push(obj.value);
         }
         else {
-            instructions.push(this[i]);
+            instructions.push(obj);
         }
     }
     return await _1.Instruction.batchSubmit(instructions);

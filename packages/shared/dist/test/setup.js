@@ -28,7 +28,7 @@ class KeypairStr {
 exports.KeypairStr = KeypairStr;
 var Setup;
 (function (Setup) {
-    const TEMP_KEYPAIR_FILE = `../../../solana-${src_1.Constants.currentNetwork}-keypair`;
+    const TEMP_KEYPAIR_FILE = `/tmp/solana-${src_1.Constants.currentNetwork}-keypair`;
     Setup.generatekeyPair = async () => {
         const { source, dest } = await fetechSourceAndDest();
         debug(source, dest);
@@ -57,15 +57,9 @@ var Setup;
     };
     const requestAirdrop = async (pubkey) => {
         console.debug('Now airdropping...please wait');
-        await src_1.Node.getConnection().requestAirdrop(pubkey, 10);
-        const sleep = (waitSec) => {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve();
-                }, waitSec);
-            });
-        };
-        await sleep(5);
+        const sig = await src_1.Node.getConnection().requestAirdrop(pubkey, web3_js_1.LAMPORTS_PER_SOL);
+        await src_1.Node.getConnection().confirmTransaction(sig);
+        console.debug('Confirmed !!');
     };
     const createTempFile = async () => {
         const source = web3_js_1.Keypair.generate();
@@ -75,7 +69,7 @@ var Setup;
         const destObject = new KeypairStr(dest.publicKey.toBase58(), bs58_1.default.encode(dest.secretKey));
         const data = templateKeyPair(sourceObject, destObject);
         fs_1.default.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));
-        return { source, dest };
+        return data;
     };
     const templateKeyPair = (source, dest) => {
         return {

@@ -1,4 +1,4 @@
 {
     "network": "dev",
-    "debugging": false
+    "debugging": true
 }
