@@ -20,8 +20,10 @@ declare global {
     toAddressUrl(): string;
   }
 
-  interface Array<T extends Instruction[]> {
-    submit(): Promise<Result<TransactionSignature, Error>>;
+  // interface Array<T extends Instruction[]> {
+  interface Array<T> {
+    // submit(): Promise<Result<TransactionSignature, Error>>;
+    submit(): Promise<Result<string, Error>>;
   }
 }
 
@@ -29,7 +31,7 @@ Array.prototype.submit = async function () {
   const instructions: Instruction[] = [];
   for (let i = 0;  i < this.length; i++) {
     if (this[i].isErr) {
-      return Result.err(Error(`[Array index: ${i}]${this[i].error.message}`));
+      // return Result.err(Error(`[Array index: ${i}]${this[i].error.message}`));
     } else if (this[i].isOk) {
       instructions.push(this[i].value);
     } else {

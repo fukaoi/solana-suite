@@ -5,6 +5,7 @@ import {Constants, Node} from '../src';
 import {
   Keypair,
   PublicKey,
+  LAMPORTS_PER_SOL,
 } from '@solana/web3.js';
 
 
@@ -34,7 +35,7 @@ export class KeypairStr {
 }
 
 export namespace Setup {
-  const TEMP_KEYPAIR_FILE = `../../../solana-${Constants.currentNetwork}-keypair`;
+  const TEMP_KEYPAIR_FILE = `/tmp/solana-${Constants.currentNetwork}-keypair`;
 
   export const generatekeyPair = async ():
     Promise<{source: KeypairStr, dest: KeypairStr}> => {
@@ -70,17 +71,9 @@ export namespace Setup {
     pubkey: PublicKey,
   ) => {
     console.debug('Now airdropping...please wait');
-    await Node.getConnection().requestAirdrop(pubkey, 10);
-    const sleep = (waitSec: number) => {
-      return new Promise((resolve: any) => {
-        setTimeout(() => {
-          resolve()
-        },
-          waitSec
-        );
-      });
-    }
-    await sleep(5);
+    const sig = await Node.getConnection().requestAirdrop(pubkey, LAMPORTS_PER_SOL);
+    await Node.getConnection().confirmTransaction(sig);
+    console.debug('Confirmed !!');
   }
 
   const createTempFile = async () => {
@@ -101,7 +94,7 @@ export namespace Setup {
 
     const data = templateKeyPair(sourceObject, destObject);
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));
-    return {source, dest};
+    return data;
   }
 
   const templateKeyPair = (

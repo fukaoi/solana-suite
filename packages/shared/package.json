@@ -1,18 +1,18 @@
 {
   "name": "@solana-suite/shared",
-  "main": "dist/src/index.js",
-  "module": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
   "private": true,
   "directories": {
     "version": "1.0.0"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "net:dev": "./changeNetwork dev",
     "net:mainnet": "./changeNetwork mainnet",
-    "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build": "tsc -b tsconfig.json",
     "test": "mocha -t 300000 --require ts-node/register -- ",
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'",
     "debug:on": "./changeDebug on",

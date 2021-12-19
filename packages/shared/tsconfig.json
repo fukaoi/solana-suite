@@ -1,12 +1,11 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "resolveJsonModule": true,
     "outDir": "./dist",
     "module": "CommonJS"
   },
-  "include" : [
-    "./src"
+   "include": [
+    "src/**/**.ts"
   ],
   "files": [
     "./solana-suite.json",

@@ -11,7 +11,7 @@ Array.prototype.submit = async function () {
     const instructions = [];
     for (let i = 0; i < this.length; i++) {
         if (this[i].isErr) {
-            return _1.Result.err(Error(`[Array index: ${i}]${this[i].error.message}`));
+            // return Result.err(Error(`[Array index: ${i}]${this[i].error.message}`));
         }
         else if (this[i].isOk) {
             instructions.push(this[i].value);

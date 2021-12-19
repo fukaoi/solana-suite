@@ -57,7 +57,8 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  it('send memo by owners', async () => {
+  it.only('send memo by owners', async () => {
+    console.log(source);
     const otherOwner = Account.create();
     const inst = Memo.create(
       '{"memo": "send memo by owners"}',
