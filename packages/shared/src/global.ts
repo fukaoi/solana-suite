@@ -29,7 +29,7 @@ declare global {
 
 Array.prototype.submit = async function () {
   const instructions: Instruction[] = [];
-  for (const [i, obj] of this) {
+  this.forEach((obj, i) => {
     if (obj.isErr) {
       return Result.err(Error(`[Array index: ${i}]${obj.error.message}`));
     } else if (obj.isOk) {
@@ -37,7 +37,7 @@ Array.prototype.submit = async function () {
     } else {
       instructions.push(obj);
     }
-  }
+  });
   return await Instruction.batchSubmit(instructions);
 }
 
