@@ -40,7 +40,6 @@ export namespace Setup {
     Promise<{source: KeypairStr, dest: KeypairStr}> => {
     const {source, dest} = await fetechSourceAndDest();
     debug(source, dest);
-    console.log(source, dest);
     return {
       source: new KeypairStr(source.pubkey, source.secret),
       dest: new KeypairStr(dest.pubkey, dest.secret),

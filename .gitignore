@@ -1,3 +1,4 @@
 .gdb_history
 node_modules
 tsconfig.tsbuildinfo
+.solana-*
