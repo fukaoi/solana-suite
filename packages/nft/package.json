@@ -2,7 +2,9 @@
   "name": "@solana-suite/nft",
   "version": "1.0.0",
   "description": "NFT modules for solana-suite",
-  "main": "index.js",
+  "main": "dist/src/index.js",
+  "module": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "directories": {
     "test": "test"
   },
