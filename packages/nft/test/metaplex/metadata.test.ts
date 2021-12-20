@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {KeypairStr} from 'solana-suite';
+import {KeypairStr} from '@solana-suite/core';
 import {
   MetaplexMetaData,
   MetaplexInstructure,
