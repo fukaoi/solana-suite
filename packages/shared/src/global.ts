@@ -20,13 +20,12 @@ declare global {
     toAddressUrl(): string;
   }
 
-  // interface Array<T extends Instruction[]> {
   interface Array<T> {
-    // submit(): Promise<Result<TransactionSignature, Error>>;
-    submit(): Promise<Result<string, Error>>;
+    submit(): Promise<Result<TransactionSignature, Error>>;
   }
 }
 
+// @ts-ignore
 Array.prototype.submit = async function () {
   const instructions: Instruction[] = [];
   this.forEach((obj, i) => {

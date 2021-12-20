@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "compile": "npm run compile -ws",
     "lint": "npx tslint --fix --project .",
-    "test": "npm run test:all --workspaces"
+    "test": "npm run test:all -ws"
   },
   "workspaces": [
     "packages/*"

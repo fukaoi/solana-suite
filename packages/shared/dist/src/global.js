@@ -7,6 +7,7 @@ exports.tryCatch = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const bs58_1 = __importDefault(require("bs58"));
 const _1 = require("./");
+// @ts-ignore
 Array.prototype.submit = async function () {
     const instructions = [];
     this.forEach((obj, i) => {

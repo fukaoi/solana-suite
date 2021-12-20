@@ -57,7 +57,7 @@ describe('Metaplex', () => {
 
     const res = await [inst1, inst2].submit();
 
-    assert.isTrue(res.isOk);
+    assert.isTrue(res.isOk, res.unwrap());
     console.log('# tokenKey1: ', inst1.unwrap().data);
     console.log('# tokenKey2: ', inst2.unwrap().data);
     console.log('# signature: ', res.unwrap());

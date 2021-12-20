@@ -57,8 +57,9 @@ export class Instruction {
     arr: Instruction[]
   ): Promise<Result<TransactionSignature, Error>> => {
     let i = 0;
+      console.log(arr);
     for (const a of arr) {
-      if (!(a instanceof Instruction)) {
+      if (!a.instructions && !a.signers) {
         return Result.err(
           Error(
           `only Instruction object that can use batchSubmit().
