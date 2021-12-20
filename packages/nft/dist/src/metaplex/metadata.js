@@ -4,7 +4,7 @@ exports.MetaplexMetaData = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const index_1 = require("./index");
 const shared_1 = require("@solana-suite/shared");
-const solana_suite_1 = require("solana-suite");
+const core_1 = require("@solana-suite/core");
 const spl_token_1 = require("@solana/spl-token");
 var MetaplexMetaData;
 (function (MetaplexMetaData) {
@@ -145,7 +145,7 @@ var MetaplexMetaData;
     };
     MetaplexMetaData.update = async (data, newUpdateAuthority, primarySaleHappened, tokenKey, updateAuthority, signers) => {
         const inst = [];
-        const associatedToken = await solana_suite_1.Account.findAssocaiatedTokenAddress(updateAuthority, tokenKey);
+        const associatedToken = await core_1.Account.findAssocaiatedTokenAddress(updateAuthority, tokenKey);
         if (associatedToken.isErr) {
             return shared_1.Result.err(associatedToken.error);
         }

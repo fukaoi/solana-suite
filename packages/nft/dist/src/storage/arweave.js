@@ -10,7 +10,7 @@ const form_data_1 = __importDefault(require("form-data"));
 const path_1 = __importDefault(require("path"));
 const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
-const solana_suite_1 = require("solana-suite");
+const core_1 = require("@solana-suite/core");
 var StorageArweave;
 (function (StorageArweave) {
     const METADATA_FILE = 'metadata.json';
@@ -126,7 +126,7 @@ var StorageArweave;
         const totalConst = await calculateArweave(fileBuffers);
         if (totalConst.isErr)
             return shared_1.Result.err(totalConst.error);
-        const inst = await solana_suite_1.SolNative.transfer(payer.publicKey, shared_1.Constants.AR_SOL_HOLDER_ID, [payer], totalConst.value);
+        const inst = await core_1.SolNative.transfer(payer.publicKey, shared_1.Constants.AR_SOL_HOLDER_ID, [payer], totalConst.value);
         if (inst.isErr) {
             return shared_1.Result.err(inst.error);
         }

@@ -1,14 +1,28 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "packages/basic"
-    },
-    {
-      "path": "packages/nft"
-    },
-    {
-      "path": "packages/shared"
+  "compilerOptions": {
+    "lib": [
+      "ESNext"
+    ],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "CommonJS",
+    "target": "ESNext",
+    "allowJs": true,
+    "declaration": true,
+    "sourceMap": false,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "paths": {
+      "@acme-crp/*": [
+        "./packages/*/"
+      ]
     }
+  },
+  "exclude": [
+    "**/*.test.ts",
+    "node_modules",
+    "dist"
   ]
 }

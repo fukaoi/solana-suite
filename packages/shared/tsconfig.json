@@ -1,14 +1,9 @@
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "./dist",
-    "module": "CommonJS"
-  },
-   "include": [
-    "src/**/**.ts"
-  ],
-  "files": [
-    "./solana-suite.json",
-    "./test/setup.ts"
-  ]
+    "extends": "../../tsconfig.build.json",
+    "compilerOptions": {
+        "outDir": "./dist/"
+    },
+    "include": [
+        "./**/*.ts"
+    ]
 }

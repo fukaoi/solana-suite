@@ -24,7 +24,7 @@ import {
 
 import {
   Account
-} from 'solana-suite';
+} from '@solana-suite/core';
 
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,

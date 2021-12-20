@@ -1,19 +1,9 @@
 {
-  "compilerOptions": {
-    "lib": [
-      "ESNext"
-    ],
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "CommonJS",
-    "target": "ESNext",
-    "allowJs": true,
-    "declaration": true,
-    "sourceMap": false,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "composite": true
-  }
+    "extends": "./tsconfig.build.json",
+    "compilerOptions": {
+        "baseUrl": "./"
+    },
+    "include": [
+        "./packages/*/**.ts"
+    ]
 }

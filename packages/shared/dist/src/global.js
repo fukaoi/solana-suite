@@ -9,7 +9,7 @@ const bs58_1 = __importDefault(require("bs58"));
 const _1 = require("./");
 Array.prototype.submit = async function () {
     const instructions = [];
-    for (const [i, obj] of this) {
+    this.forEach((obj, i) => {
         if (obj.isErr) {
             return _1.Result.err(Error(`[Array index: ${i}]${obj.error.message}`));
         }
@@ -19,7 +19,7 @@ Array.prototype.submit = async function () {
         else {
             instructions.push(obj);
         }
-    }
+    });
     return await _1.Instruction.batchSubmit(instructions);
 };
 String.prototype.toPubkey = function () {

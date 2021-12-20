@@ -10,6 +10,7 @@
     "dist"
   ],
   "scripts": {
+    "compile": "rm -rf dist/ && tsc -p tsconfig.json",
     "net:dev": "./changeNetwork dev",
     "net:mainnet": "./changeNetwork mainnet",
     "build": "tsc -b tsconfig.json",

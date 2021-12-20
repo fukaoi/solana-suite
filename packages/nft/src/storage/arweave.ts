@@ -15,7 +15,7 @@ import {
 
 import {
   SolNative,
-} from 'solana-suite';
+} from '@solana-suite/core';
 
 export namespace StorageArweave {
   const METADATA_FILE = 'metadata.json';
