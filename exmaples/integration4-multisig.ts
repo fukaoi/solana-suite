@@ -65,7 +65,7 @@ import {
     owner.toPubkey(),        // from
     feePayer.toPubkey(),     // to
     [owner.toKeypair()],     // signing
-    3,                       // 3 SOL
+    0.5,                     // 0.5 SOL
   );
 
   const publisher = inst1.unwrap().data as Pubkey;
