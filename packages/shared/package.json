@@ -8,6 +8,12 @@
   "directories": {
     "version": "1.0.0"
   },
+  "files": [
+    "dist",
+    "changeNetwork",
+    "changeDebug",
+    "package.json"
+  ],
   "scripts": {
     "compile": "rm -rf dist/ && tsc -p tsconfig.json",
     "net:dev": "./changeNetwork dev",

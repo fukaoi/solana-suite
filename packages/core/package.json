@@ -7,12 +7,13 @@
   "engines": {
     "node": ">=14.*"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "compile": "rm -rf dist/ && tsc -p tsconfig.json",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
-    "network:devt": "sed -i -e 's/\"network\":.*\"/\"network\": \"dev\"/' tsconfig.json",
-    "network:mainnet": "sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' tsconfig.json",
     "test": "mocha -t 300000 --require ts-node/register -- ",
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },

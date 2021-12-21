@@ -8,6 +8,9 @@
   "directories": {
     "test": "test"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "compile": "rm -rf dist/ && tsc -p tsconfig.json",
     "build:esm": "tsc -p tsconfig.esm.json",
