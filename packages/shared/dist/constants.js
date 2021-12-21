@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConstantsFunc = exports.Constants = void 0;
 const web3_js_1 = require("@solana/web3.js");
-const solana_suite_json_1 = __importDefault(require("../solana-suite.json"));
+const solana_suite_json_1 = __importDefault(require("./solana-suite.json"));
 var Constants;
 (function (Constants) {
     let SolanaNet;

@@ -3,7 +3,7 @@ import {
   PublicKey
 } from '@solana/web3.js';
 
-import Config from '../solana-suite.json';
+import Config from './solana-suite.json';
 
 export namespace Constants {
   export enum SolanaNet {

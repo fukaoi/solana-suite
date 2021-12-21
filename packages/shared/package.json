@@ -1,9 +1,9 @@
 {
   "name": "@solana-suite/shared",
   "version": "1.0.0",
-  "main": "dist/src/index.js",
-  "module": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "private": true,
   "directories": {
     "version": "1.0.0"
@@ -15,7 +15,8 @@
     "package.json"
   ],
   "scripts": {
-    "compile": "rm -rf dist/ && tsc -p tsconfig.json",
+    "clean": "rm -rf dist/",
+    "compile": "npm run clean && tsc -p tsconfig.json",
     "net:dev": "./changeNetwork dev",
     "net:mainnet": "./changeNetwork mainnet",
     "build": "tsc -b tsconfig.json",

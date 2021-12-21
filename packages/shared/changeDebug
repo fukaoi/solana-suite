@@ -2,10 +2,10 @@
 
 if [ "$1" = "on" ]; then
   echo "changed debug on"
-  sed -i -e 's/\"debugging\":.*/\"debugging\": true/' solana-suite.json
+  sed -i -e 's/\"debugging\":.*/\"debugging\": true/' dist/solana-suite.json
 elif [ "$1" = "off" ]; then
   echo "changed debug off"
-  sed -i -e 's/\"debugging\":.*/\"debugging\": false/' solana-suite.json
+  sed -i -e 's/\"debugging\":.*/\"debugging\": false/' dist/solana-suite.json
 else
   echo "No argument supplied"
 fi
