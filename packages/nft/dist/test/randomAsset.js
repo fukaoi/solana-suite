@@ -8,7 +8,7 @@ const fs_1 = __importDefault(require("fs"));
 const storage_1 = require("../src/storage");
 var RandomAsset;
 (function (RandomAsset) {
-    const ASSET_DIR = './test/assets/';
+    const ASSET_DIR = `${__dirname}/assets/`;
     const dateFormat = () => {
         const t = new Date();
         return t.getFullYear() + '-' +

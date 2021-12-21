@@ -6,15 +6,19 @@ import assert from 'assert';
 import {
   Account,
   Transaction,
+  SplToken,
+  Pubkey,
+} from '@solana-suite/core';
+
+import {
   Metaplex,
   MetaplexInstructure,
   MetaplexMetaData,
   StorageNftStorage,
-  SplToken,
-  Pubkey,
-} from '../src/index';
+} from '@solana-suite/nft';
 
-import {RandomAsset} from '../test/utils/randomAsset';
+
+import {RandomAsset} from '../packages/nft/test/randomAsset'
 
 (async () => {
 

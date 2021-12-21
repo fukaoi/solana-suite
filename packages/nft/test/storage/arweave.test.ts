@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {KeypairStr} from '@solana-suite/core';
-import {Setup} from '@solana-suite/shared/test/setup';
+import {Setup} from '../../../shared/test/setup';
 import {RandomAsset} from '../randomAsset';
 import {StorageArweave} from '../../src';
 

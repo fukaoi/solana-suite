@@ -4,8 +4,12 @@
 
 import {
   Account,
-  Result
-} from '../src/index';
+} from '@solana-suite/core';
+
+import {
+  Result,
+} from '@solana-suite/shared';
+
 
 const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
 

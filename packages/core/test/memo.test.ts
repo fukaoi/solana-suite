@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
-import {Setup} from '@solana-suite/shared/test/setup';
+import {Setup} from '../../shared/test/setup';
 import {Memo, KeypairStr, Account, SolNative} from '../src';
 
 let source: KeypairStr;

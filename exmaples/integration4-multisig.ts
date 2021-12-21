@@ -10,7 +10,7 @@ import {
   SplToken,
   Transaction,
   Pubkey,
-} from '../src/index';
+} from '@solana-suite/core';
 
 (async () => {
 
@@ -33,8 +33,8 @@ import {
   const signer2 = Account.create();
   const signer3 = Account.create();
 
-  // faucet 4 sol
-  await Account.requestAirdrop(owner.toPubkey(), 4);
+  // faucet 1 sol
+  await Account.requestAirdrop(owner.toPubkey());
 
   console.log('# owner: ', owner.pubkey);
   console.log('# feePayer: ', receipt.pubkey);

@@ -2,7 +2,7 @@ import fs from 'fs';
 import {Storage} from '../src/storage';
 
 export namespace RandomAsset {
-  const ASSET_DIR = './test/assets/';
+  const ASSET_DIR = `${__dirname}/assets/`;
 
   const dateFormat = (): string => {
     const t = new Date();

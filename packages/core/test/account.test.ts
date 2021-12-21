@@ -2,8 +2,8 @@ import {describe, it} from 'mocha';
 import {Account, KeypairStr} from '../src';
 import {assert} from 'chai';
 import {PublicKey} from '@solana/web3.js';
-import {Setup} from '@solana-suite/shared/test/setup';
-
+import {Setup} from '../../shared/test/setup';
+ 
 let source: KeypairStr;
 
 describe('Account', () => {

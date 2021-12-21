@@ -32,8 +32,9 @@ class Instruction {
     // @internal
     static batchSubmit = async (arr) => {
         let i = 0;
+        console.log(arr);
         for (const a of arr) {
-            if (!(a instanceof Instruction)) {
+            if (!a.instructions && !a.signers) {
                 return _1.Result.err(Error(`only Instruction object that can use batchSubmit().
             Setted: ${a}, Index: ${i}`));
             }

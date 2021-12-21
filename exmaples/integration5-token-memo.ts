@@ -9,7 +9,7 @@ import {
   SplToken,
   Pubkey,
   Memo
-} from '../src/index';
+} from '@solana-suite/core';
 
 (async () => {
 
