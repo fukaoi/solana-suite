@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "compile": "npm run compile -ws",
+    "clean": "npm run clean -ws",
+    "compile": "npm run compile -ws && npm run compile:esm -ws",
     "lint": "npx tslint --fix --project .",
     "test": "npm run test:all -ws"
   },
   "workspaces": [
-    "packages/*"
+    "packages/shared",
+    "packages/core",
+    "packages/nft"
   ],
   "devDependencies": {
     "@tsconfig/node14": "^1.0.1",

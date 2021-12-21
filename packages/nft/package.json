@@ -2,9 +2,9 @@
   "name": "@solana-suite/nft",
   "version": "1.0.0",
   "description": "NFT modules for solana-suite",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/index.d.ts",
   "directories": {
     "test": "test"
   },
@@ -13,9 +13,8 @@
   ],
   "scripts": {
     "clean": "rm -rf dist/",
-    "compile": "npm run clean && tsc -p tsconfig.json",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "compile": "tsc -p tsconfig.json",
+    "compile:esm": "tsc -p tsconfig.esm.json",
     "test": "mocha -t 300000 --require ts-node/register -- ",
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },

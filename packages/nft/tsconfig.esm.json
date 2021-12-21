@@ -1,5 +1,5 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../tsconfig.build.json",
   "compilerOptions": {
     "outDir": "./dist/esm/",
     "module": "ESNext",
@@ -7,5 +7,8 @@
       "DOM",
       "ESNext"
     ]
-  }
+  },
+ "include": [
+    "src/**/*.ts"
+  ]
 }
