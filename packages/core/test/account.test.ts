@@ -69,6 +69,6 @@ describe('Account', () => {
   it('Account to Keypair', async () => {
     const account = Account.create();
     const res = account.toKeypair();
-    assert.deepEqual(res, account.secret.toKeypair());
+    assert.deepEqual(res, account.toKeypair());
   });
 })

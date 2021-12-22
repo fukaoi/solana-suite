@@ -2,13 +2,14 @@ import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {ParsedConfirmedTransaction} from '@solana/web3.js';
 import {Setup} from '../../shared/test/setup';
-import {SplToken as Transaction, KeypairStr, Transaction} from '../src/'
+import {KeypairStr, SplToken, Transaction} from '../src/'
 
 const signature1 = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
-
 const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6'.toPubkey();
+
 let source: KeypairStr;
 let dest: KeypairStr;
+let tokenKeyStr: string;
 
 describe('Transaction', () => {
   before(async () => {
@@ -90,7 +91,18 @@ describe('Transaction', () => {
 });
 
 const sendContinuously = async (): Promise<void> => {
-  const inst = await Transaction.transfer(
+  const TOKEN_TOTAL_AMOUNT = 10000000;
+  const MINT_DECIMAL = 2;
+
+  const inst1 =
+    await SplToken.mint(
+      source.toPubkey(),
+      [source.toKeypair()],
+      TOKEN_TOTAL_AMOUNT,
+      MINT_DECIMAL
+    );
+
+  const inst2 = await SplToken.transfer(
     tokenKeyStr.toPubkey(),
     source.pubkey.toPubkey(),
     dest.pubkey.toPubkey(),
@@ -98,7 +110,9 @@ const sendContinuously = async (): Promise<void> => {
     1,
     MINT_DECIMAL
   );
-  inst.isOk && inst.value.submit();
+
+  const res = await [inst1, inst2].submit();
+  res.isErr && console.error(res.error);
 }
 
 const sleep = async (sec: number) => new Promise(r => setTimeout(r, sec * 1000));
