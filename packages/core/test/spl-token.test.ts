@@ -7,51 +7,12 @@ let source: KeypairStr;
 let dest: KeypairStr;
 let tokenKeyStr: string;
 
-const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6'.toPubkey();
 const MINT_DECIMAL = 2;
 describe('SplToken', () => {
   before(async () => {
     const obj = await Setup.generatekeyPair();
     source = obj.source;
     dest = obj.dest;
-  });
-
-  it('Get token transfer history by tokenKey', async () => {
-    const limit = 3;
-    const res = await SplToken.getTransferHistory(tokenKey, 3);
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotEmpty(v.type);
-      assert.isNotEmpty(v.info.source);
-      assert.isNotEmpty(v.info.destination);
-      assert.isNotEmpty(v.info.authority);
-      assert.isNotNull(v.date);
-    });
-    assert.equal(res.unwrap().length, limit);
-  });
-
-  it.skip('Get token transfer history by owner address', async () => {
-    const limit = 3;
-    const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu'.toPubkey();
-    const res = await SplToken.getTransferHistory(owner, limit);
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotEmpty(v.type);
-      assert.isNotEmpty(v.info.source);
-      assert.isNotEmpty(v.info.destination);
-      assert.isNotEmpty(v.info.authority);
-      assert.isNotNull(v.date);
-    });
-    assert.equal(res.unwrap().length, limit);
-  });
-
-  it('Get token transfer destination history', async () => {
-    const res = await SplToken.getTransferDestinationList(tokenKey);
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotEmpty(v.dest);
-      assert.isNotNull(v.date);
-    });
   });
 
   it('Create token', async () => {
@@ -217,38 +178,4 @@ describe('SplToken', () => {
 
     console.log('signature: ', `${sig.unwrap()}`);
   });
-
-  it('Subscribe a account(pubkey)', async () => {
-    const subscribeId = SplToken.subscribeAccount(
-      dest.pubkey.toPubkey(),
-      (v: SplToken.TransferHistory) => {
-        console.log('# Subscribe result: ', v);
-        assert.isNotEmpty(v.type);
-        assert.isNotNull(v.date);
-        assert.isNotNull(v.info.mint);
-        assert.isNotEmpty(v.info.source);
-        assert.isNotEmpty(v.info.destination);
-      }
-    );
-    for (let i = 0; i < 3; i++) await sendContinuously();
-    await sleep(15);
-    SplToken.unsubscribeAccount(subscribeId);
-    assert.ok('success subscribe');
-  });
 })
-
-const sendContinuously = async (): Promise<void> => {
-  const inst = await SplToken.transfer(
-    tokenKeyStr.toPubkey(),
-    source.pubkey.toPubkey(),
-    dest.pubkey.toPubkey(),
-    [source.secret.toKeypair()],
-    1,
-    MINT_DECIMAL
-  );
-  inst.isOk && inst.value.submit();
-}
-
-const sleep = async (sec: number) => new Promise(r => setTimeout(r, sec * 1000));
-
-
