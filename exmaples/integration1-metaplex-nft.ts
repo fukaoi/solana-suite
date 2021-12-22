@@ -1,25 +1,29 @@
 //////////////////////////////////////////////
-//$ npx ts-node exmaples/integration1-metaplex-nft.ts
+// $ npx ts-node exmaples/integration1-metaplex-nft.ts
 //////////////////////////////////////////////
 
 import assert from 'assert';
 import {
   Account,
   Transaction,
+  SplToken,
+  Pubkey,
+} from '@solana-suite/core';
+
+import {
   Metaplex,
   MetaplexInstructure,
   MetaplexMetaData,
   StorageNftStorage,
-  SplToken,
-  Pubkey,
-} from '../src/index';
+} from '@solana-suite/nft';
 
-import {RandomAsset} from '../test/utils/randomAsset';
+
+import {RandomAsset} from '../packages/nft/test/randomAsset'
 
 (async () => {
 
   //////////////////////////////////////////////
-  // CREATE WALLET 
+  // CREATE WALLET
   //////////////////////////////////////////////
 
   // create nft owner wallet, receive nft receipt wallet.
@@ -36,10 +40,10 @@ import {RandomAsset} from '../test/utils/randomAsset';
 
 
   //////////////////////////////////////////////
-  // Upload contents 
+  // Upload contents
   //////////////////////////////////////////////
 
-  // Only test that call this function   
+  // Only test that call this function
   // Usually set custom param
   const asset = RandomAsset.storage();
 
@@ -53,7 +57,7 @@ import {RandomAsset} from '../test/utils/randomAsset';
   }
 
   //////////////////////////////////////////////
-  // CREATE NFT, MINT NFT FROM THIS LINE 
+  // CREATE NFT, MINT NFT FROM THIS LINE
   //////////////////////////////////////////////
 
   const data = new MetaplexInstructure.Data({
@@ -93,7 +97,7 @@ import {RandomAsset} from '../test/utils/randomAsset';
   );
 
   //////////////////////////////////////////////
-  // TRANSFER RECEIPR USER FROM THIS LINE 
+  // TRANSFER RECEIPR USER FROM THIS LINE
   //////////////////////////////////////////////
 
   // transfer nft owner => publish
@@ -115,7 +119,7 @@ import {RandomAsset} from '../test/utils/randomAsset';
     [
       publisher.toKeypair(),
     ],
-    owner.toKeypair() //feePayer
+    owner.toKeypair() // feePayer
   );
 
   // submit batch instructions

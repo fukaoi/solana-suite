@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//$ npx ts-node exmaples/integration2-transfer-history
+// $ npx ts-node exmaples/integration2-transfer-history
 //////////////////////////////////////////////
 
 import assert from 'assert';
@@ -8,12 +8,12 @@ import {
   Transaction,
   SplToken,
   Pubkey
-} from '../src/index';
+} from '@solana-suite/core';
 
 (async () => {
 
   //////////////////////////////////////////////
-  // CREATE WALLET 
+  // CREATE WALLET
   //////////////////////////////////////////////
 
   // create token owner wallet, receive token receipt wallet.
@@ -50,7 +50,7 @@ import {
 
 
   //////////////////////////////////////////////
-  // TRANSFER RECEIPR USER FROM THIS LINE 
+  // TRANSFER RECEIPR USER FROM THIS LINE
   //////////////////////////////////////////////
 
   // transfer nft to receipt wallet

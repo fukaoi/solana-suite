@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//$ npx ts-node exmaples/integration4-multisig.ts
+// $ npx ts-node exmaples/integration4-multisig.ts
 //////////////////////////////////////////////
 
 import assert from 'assert';
@@ -10,12 +10,12 @@ import {
   SplToken,
   Transaction,
   Pubkey,
-} from '../src/index';
+} from '@solana-suite/core';
 
 (async () => {
 
   //////////////////////////////////////////////
-  // CREATE WALLET 
+  // CREATE WALLET
   //////////////////////////////////////////////
 
   // [Type of wallet]
@@ -33,8 +33,8 @@ import {
   const signer2 = Account.create();
   const signer3 = Account.create();
 
-  // faucet 4 sol
-  await Account.requestAirdrop(owner.toPubkey(), 4);
+  // faucet 1 sol
+  await Account.requestAirdrop(owner.toPubkey());
 
   console.log('# owner: ', owner.pubkey);
   console.log('# feePayer: ', receipt.pubkey);
@@ -62,10 +62,10 @@ import {
   // TRANSFER FROM OWNER TO PUBLISHER
   //////////////////////////////////////////////
   const inst2 = await SolNative.transfer(
-    owner.toPubkey(),        // from  
+    owner.toPubkey(),        // from
     feePayer.toPubkey(),     // to
     [owner.toKeypair()],     // signing
-    3,                       // 3 SOL
+    0.5,                     // 0.5 SOL
   );
 
   const publisher = inst1.unwrap().data as Pubkey;
@@ -93,7 +93,7 @@ import {
   const inst3 =
     await SplToken.mint(
       publisher.toPubkey(),  // creator account
-      multiSigners,          // signning 
+      multiSigners,          // signning
       100000,                // Total number of tokens issued
       2,                     // token's decimal e.g:0.12, 20.52
       feePayer.toKeypair()   // pay transaction fee
@@ -104,9 +104,9 @@ import {
 
   const inst4 = await SplToken.transfer(
     tokenKey.toPubkey(),   // tokenkey
-    publisher.toPubkey(),  // from. own token 
-    receipt.toPubkey(),    // to 
-    multiSigners,          // signning 
+    publisher.toPubkey(),  // from. own token
+    receipt.toPubkey(),    // to
+    multiSigners,          // signning
     5000,                  // transfer amount
     2,                     // token's decimal e.g:0.12, 20.52
     feePayer.toKeypair()   // pay transaction fee
