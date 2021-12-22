@@ -2,14 +2,13 @@ import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {ParsedConfirmedTransaction} from '@solana/web3.js';
 import {Setup} from '../../shared/test/setup';
-import {KeypairStr, SplToken, Transaction} from '../src/'
+import {KeypairStr, Pubkey, SplToken, Transaction} from '../src/'
 
 const signature1 = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
 const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6'.toPubkey();
 
 let source: KeypairStr;
 let dest: KeypairStr;
-let tokenKeyStr: string;
 
 describe('Transaction', () => {
   before(async () => {
@@ -47,9 +46,9 @@ describe('Transaction', () => {
     assert.equal(res.unwrap().length, limit);
   });
 
-  it.skip('Get token transfer history by owner address', async () => {
+  it('Get token transfer history by owner address', async () => {
     const limit = 3;
-    const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu'.toPubkey();
+    const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPubkey();
     const res = await Transaction.getTransferHistory(owner, limit);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
@@ -102,8 +101,10 @@ const sendContinuously = async (): Promise<void> => {
       MINT_DECIMAL
     );
 
+  const tokenKey = inst1.unwrap().data as Pubkey;
+
   const inst2 = await SplToken.transfer(
-    tokenKeyStr.toPubkey(),
+    tokenKey.toPubkey(),
     source.pubkey.toPubkey(),
     dest.pubkey.toPubkey(),
     [source.secret.toKeypair()],
