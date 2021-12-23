@@ -7,7 +7,6 @@ let source: KeypairStr;
 let dest: KeypairStr;
 let tokenKeyStr: string;
 
-const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6'.toPubkey();
 const MINT_DECIMAL = 2;
 describe('SplToken', () => {
   before(async () => {
@@ -16,50 +15,12 @@ describe('SplToken', () => {
     dest = obj.dest;
   });
 
-  it('Get token transfer history by tokenKey', async () => {
-    const limit = 3;
-    const res = await SplToken.getTransferHistory(tokenKey, 3);
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotEmpty(v.type);
-      assert.isNotEmpty(v.info.source);
-      assert.isNotEmpty(v.info.destination);
-      assert.isNotEmpty(v.info.authority);
-      assert.isNotNull(v.date);
-    });
-    assert.equal(res.unwrap().length, limit);
-  });
-
-  it.skip('Get token transfer history by owner address', async () => {
-    const limit = 3;
-    const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu'.toPubkey();
-    const res = await SplToken.getTransferHistory(owner, limit);
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotEmpty(v.type);
-      assert.isNotEmpty(v.info.source);
-      assert.isNotEmpty(v.info.destination);
-      assert.isNotEmpty(v.info.authority);
-      assert.isNotNull(v.date);
-    });
-    assert.equal(res.unwrap().length, limit);
-  });
-
-  it('Get token transfer destination history', async () => {
-    const res = await SplToken.getTransferDestinationList(tokenKey);
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotEmpty(v.dest);
-      assert.isNotNull(v.date);
-    });
-  });
-
   it('Create token', async () => {
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const inst =
       await SplToken.mint(
-        source.pubkey.toPubkey(),
-        [source.secret.toKeypair()],
+        source.toPubkey(),
+        [source.toKeypair()],
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL
       );
@@ -105,9 +66,9 @@ describe('SplToken', () => {
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const inst1 =
       await SplToken.mint(
-        source.pubkey.toPubkey(),
+        source.toPubkey(),
         [
-          source.secret.toKeypair(),
+          source.toKeypair(),
         ],
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL,
@@ -119,27 +80,27 @@ describe('SplToken', () => {
 
     const inst2 = await SplToken.transfer(
       token.toPubkey(),
-      source.pubkey.toPubkey(),
-      dest.pubkey.toPubkey(),
+      source.toPubkey(),
+      dest.toPubkey(),
       [
-        source.secret.toKeypair(),
+        source.toKeypair(),
       ],
       1,
       MINT_DECIMAL,
-      source.secret.toKeypair(),
+      source.toKeypair(),
     );
     assert.isTrue(inst1.isOk);
 
     const inst3 = await SplToken.transfer(
       token.toPubkey(),
-      source.pubkey.toPubkey(),
-      dest.pubkey.toPubkey(),
+      source.toPubkey(),
+      dest.toPubkey(),
       [
-        source.secret.toKeypair(),
+        source.toKeypair(),
       ],
       1,
       MINT_DECIMAL,
-      source.secret.toKeypair(),
+      source.toKeypair(),
     );
     assert.isTrue(inst2.isOk);
 
@@ -160,10 +121,10 @@ describe('SplToken', () => {
     const multiInst =
       await Multisig.create(
         2,
-        source.secret.toKeypair(),
+        source.toKeypair(),
         [
-          signer1.pubkey.toPubkey(),
-          signer2.pubkey.toPubkey()
+          signer1.toPubkey(),
+          signer2.toPubkey()
         ]
       );
 
@@ -179,13 +140,13 @@ describe('SplToken', () => {
       await SplToken.mint(
         multisig,
         [
-          source.secret.toKeypair(),
-          signer1.secret.toKeypair(),
-          signer2.secret.toKeypair(),
+          source.toKeypair(),
+          signer1.toKeypair(),
+          signer2.toKeypair(),
         ],
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL,
-        source.secret.toKeypair()
+        source.toKeypair()
       );
 
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
@@ -198,14 +159,14 @@ describe('SplToken', () => {
     const inst = await SplToken.transfer(
       token,
       multisig,
-      dest.pubkey.toPubkey(),
+      dest.toPubkey(),
       [
-        signer1.secret.toKeypair(),
-        signer2.secret.toKeypair(),
+        signer1.toKeypair(),
+        signer2.toKeypair(),
       ],
       1,
       MINT_DECIMAL,
-      source.secret.toKeypair(),
+      source.toKeypair(),
     );
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
@@ -217,38 +178,4 @@ describe('SplToken', () => {
 
     console.log('signature: ', `${sig.unwrap()}`);
   });
-
-  it('Subscribe a account(pubkey)', async () => {
-    const subscribeId = SplToken.subscribeAccount(
-      dest.pubkey.toPubkey(),
-      (v: SplToken.TransferHistory) => {
-        console.log('# Subscribe result: ', v);
-        assert.isNotEmpty(v.type);
-        assert.isNotNull(v.date);
-        assert.isNotNull(v.info.mint);
-        assert.isNotEmpty(v.info.source);
-        assert.isNotEmpty(v.info.destination);
-      }
-    );
-    for (let i = 0; i < 3; i++) await sendContinuously();
-    await sleep(15);
-    SplToken.unsubscribeAccount(subscribeId);
-    assert.ok('success subscribe');
-  });
 })
-
-const sendContinuously = async (): Promise<void> => {
-  const inst = await SplToken.transfer(
-    tokenKeyStr.toPubkey(),
-    source.pubkey.toPubkey(),
-    dest.pubkey.toPubkey(),
-    [source.secret.toKeypair()],
-    1,
-    MINT_DECIMAL
-  );
-  inst.isOk && inst.value.submit();
-}
-
-const sleep = async (sec: number) => new Promise(r => setTimeout(r, sec * 1000));
-
-
