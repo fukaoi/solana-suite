@@ -1,16 +1,37 @@
 {
   "name": "@solana-suite/nft",
-  "version": "1.0.0",
-  "description": "NFT modules for solana-suite",
+  "version": "0.0.1",
+  "description": "nft module for solana-suite",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/cjs/index.d.ts",
-  "directories": {
-    "test": "test"
+  "keywords": [
+    "api",
+    "blockchain",
+    "solana",
+    "sdk",
+    "web3.js",
+    "nft"
+  ],
+  "engines": {
+    "node": ">=14.*"
   },
   "files": [
     "dist"
   ],
+  "license": "MIT",
+  "author": "Akira Takachi <a.takachi@atonoy.co>",
+  "homepage": "https://atonoy.github.io/solana-suite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atonoy/solana-suite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/atonoy/solana-suite/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "clean": "rm -rf dist/",
     "compile": "tsc -p tsconfig.json",
