@@ -32,9 +32,10 @@ describe('Transaction', () => {
       assert.isFalse(res.isErr, res.isErr && res.error.message);
     }
   });
-  it('Get token transfer history by tokenKey', async () => {
-    const limit = 3;
-    const res = await Transaction.getTransferHistory(tokenKey, 3);
+  it.only('Get token transfer history by tokenKey', async () => {
+    const limit = 30;
+    const res = await Transaction.getTransferHistory(tokenKey, limit);
+    console.log(res);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotEmpty(v.type);

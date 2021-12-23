@@ -16,8 +16,7 @@ import {
 } from '@solana-suite/shared';
 
 export namespace Transaction {
-  const isTransfer = (value: ParsedInstruction) => {
-    if (value.program === 'spl-token') {
+  const filterStatus = (value: ParsedInstruction) => {
       switch (value.parsed.type) {
         case TransactionStatus.Transfer:
         case TransactionStatus.TransferChecked:
@@ -26,9 +25,6 @@ export namespace Transaction {
         default:
           return false;
       }
-    } else {
-      return false;
-    }
   }
 
   const convertTimestmapToDate = (blockTime: number): Date =>
@@ -87,7 +83,7 @@ export namespace Transaction {
     pubkey: PublicKey,
     limit?: number
   ): Promise<Result<ParsedConfirmedTransaction[] | unknown, Error>> => {
-    const transactions = await Node.getConnection().getConfirmedSignaturesForAddress2(
+    const transactions = await Node.getConnection().getSignaturesForAddress(
       pubkey,
       {limit},
     )
@@ -119,9 +115,10 @@ export namespace Transaction {
 
     const hist: TransferHistory[] = [];
     for (const tx of transactions.unwrap() as ParsedConfirmedTransaction[]) {
+      console.log(tx);
       for (const inst of tx.transaction.message.instructions) {
         const value = inst as ParsedInstruction;
-        if (isTransfer(value)) {
+        if (filterStatus(value)) {
           const v: TransferHistory = value.parsed;
           v.date = convertTimestmapToDate(tx.blockTime as number);
           hist.push(v);
