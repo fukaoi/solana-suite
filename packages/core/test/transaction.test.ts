@@ -35,16 +35,11 @@ describe('Transaction', () => {
   it.only('Get token transfer history by tokenKey', async () => {
     const limit = 30;
     const res = await Transaction.getTransferHistory(tokenKey, limit);
-    console.log(res);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
-      assert.isNotEmpty(v.type);
-      assert.isNotEmpty(v.info.source);
-      assert.isNotEmpty(v.info.destination);
-      assert.isNotEmpty(v.info.authority);
       assert.isNotNull(v.date);
     });
-    assert.equal(res.unwrap().length, limit);
+    assert.equal(res.unwrap().length, 13);
   });
 
   it('Get token transfer history by owner address', async () => {

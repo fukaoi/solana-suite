@@ -7,6 +7,7 @@ import {
   ConfirmedSignatureInfo,
   ParsedInstruction,
   TokenBalance,
+  PartiallyDecodedInstruction,
 } from '@solana/web3.js';
 
 import {
@@ -15,16 +16,21 @@ import {
   Constants
 } from '@solana-suite/shared';
 
+import bs from 'bs58';
+
 export namespace Transaction {
-  const filterStatus = (value: ParsedInstruction) => {
-      switch (value.parsed.type) {
-        case TransactionStatus.Transfer:
-        case TransactionStatus.TransferChecked:
-        case TransactionStatus.Memo:
-          return true;
-        default:
-          return false;
-      }
+
+  const isParsedInstructon = (arg: any): arg is ParsedInstruction => {
+    return arg !== null && typeof arg === 'object' && arg.parsed;
+  }
+
+  const filterStatus = (
+    value: ParsedInstruction | PartiallyDecodedInstruction,
+    filterOptions: DefaultFilter[]
+  ) => {
+    if (isParsedInstructon(value)) {
+      return filterOptions.includes(value.parsed.type);
+    }
   }
 
   const convertTimestmapToDate = (blockTime: number): Date =>
@@ -67,10 +73,11 @@ export namespace Transaction {
     date: Date,
   }
 
-  enum TransactionStatus {
+  enum DefaultFilter {
     Transfer = 'transfer',
     TransferChecked = 'transferChecked',
     Memo = 'memo',
+    MintTo = 'mintTo',
   }
 
   export const get = async (signature: string):
@@ -81,7 +88,7 @@ export namespace Transaction {
 
   export const getAll = async (
     pubkey: PublicKey,
-    limit?: number
+    limit?: number,
   ): Promise<Result<ParsedConfirmedTransaction[] | unknown, Error>> => {
     const transactions = await Node.getConnection().getSignaturesForAddress(
       pubkey,
@@ -105,20 +112,37 @@ export namespace Transaction {
 
   export const getTransferHistory = async (
     pubkey: PublicKey,
-    limit?: number
+    limit?: number,
+    filterOptions?: DefaultFilter[]
   ): Promise<Result<TransferHistory[], Error>> => {
+
+    const filter = filterOptions ? filterOptions : [
+      DefaultFilter.Memo,
+      DefaultFilter.Transfer,
+      DefaultFilter.TransferChecked,
+      DefaultFilter.MintTo
+    ];
     const transactions = await Transaction.getAll(pubkey, limit);
 
     if (transactions.isErr) {
       return transactions as Result<[], Error>;
     }
-
     const hist: TransferHistory[] = [];
+    console.log('SIZE: ', (transactions.unwrap() as ParsedConfirmedTransaction[]).length);
     for (const tx of transactions.unwrap() as ParsedConfirmedTransaction[]) {
-      console.log(tx);
       for (const inst of tx.transaction.message.instructions) {
+        isParsedInstructon(inst) ? (tx.transaction) : tx.transaction.message.instructions.forEach(value => {
+          if (isParsedInstructon(value)) {
+              console.log(value.parsed);
+            if (filterStatus(value, filter)) {
+              const v: TransferHistory = value.parsed;
+              v.date = convertTimestmapToDate(tx.blockTime as number);
+              hist.push(v);
+            }
+          }
+        });
         const value = inst as ParsedInstruction;
-        if (filterStatus(value)) {
+        if (filterStatus(value, filter)) {
           const v: TransferHistory = value.parsed;
           v.date = convertTimestmapToDate(tx.blockTime as number);
           hist.push(v);
