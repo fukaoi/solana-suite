@@ -5,7 +5,7 @@ if [ "$1" = "mainnet" ]; then
   sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' solana-suite.json
 elif [ "$1" = "dev" ]; then
   echo "changed dev network"
-  sed -i -e 's/\"network\":.*\"/\"network\": \"dev\"/' solana-suite.json
+  sed -i -e 's/\"network\":.*\"/\"network\": \"devnet\"/' solana-suite.json
 else
   echo "No argument supplied"
 fi

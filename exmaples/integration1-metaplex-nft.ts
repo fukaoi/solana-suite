@@ -17,7 +17,6 @@ import {
   StorageNftStorage,
 } from '@solana-suite/nft';
 
-
 import {RandomAsset} from '../packages/nft/test/randomAsset'
 
 (async () => {
