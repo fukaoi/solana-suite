@@ -7,7 +7,6 @@ import {
   ConfirmedSignatureInfo,
   ParsedInstruction,
   TokenBalance,
-  PartiallyDecodedInstruction,
 } from '@solana/web3.js';
 
 import {
@@ -16,21 +15,38 @@ import {
   Constants
 } from '@solana-suite/shared';
 
-import bs from 'bs58';
-
 export namespace Transaction {
 
+  // type guard
   const isParsedInstructon = (arg: any): arg is ParsedInstruction => {
     return arg !== null && typeof arg === 'object' && arg.parsed;
   }
 
-  const filterStatus = (
-    value: ParsedInstruction | PartiallyDecodedInstruction,
+  const filterTransactions = (
+    transactions: ParsedConfirmedTransaction[],
     filterOptions: DefaultFilter[]
   ) => {
-    if (isParsedInstructon(value)) {
-      return filterOptions.includes(value.parsed.type);
-    }
+    const hist: TransferHistory[] = [];
+    transactions.forEach(tx => {
+      tx.transaction.message.instructions.forEach(t => {
+        if (isParsedInstructon(t)) {
+          if (filterOptions.includes(t.parsed.type)) {
+            const v: TransferHistory = t.parsed;
+            v.date = convertTimestmapToDate(tx.blockTime as number);
+            v.sig = tx.transaction.signatures[0];
+            if (tx.meta?.innerInstructions && tx.meta?.innerInstructions.length !== 0) {
+              // inner instructions
+              v.innerInstruction = true;
+            } else {
+              v.innerInstruction = false;
+            }
+            hist.push(v);
+          }
+        }
+      });
+    });
+    console.log(hist);
+    return hist;
   }
 
   const convertTimestmapToDate = (blockTime: number): Date =>
@@ -66,6 +82,8 @@ export namespace Transaction {
     },
     type: string,
     date: Date,
+    innerInstruction: boolean,
+    sig: string,
   }
 
   export interface TransferDestinationList {
@@ -78,6 +96,7 @@ export namespace Transaction {
     TransferChecked = 'transferChecked',
     Memo = 'memo',
     MintTo = 'mintTo',
+    Create = 'create',
   }
 
   export const get = async (signature: string):
@@ -120,36 +139,16 @@ export namespace Transaction {
       DefaultFilter.Memo,
       DefaultFilter.Transfer,
       DefaultFilter.TransferChecked,
-      DefaultFilter.MintTo
+      DefaultFilter.MintTo,
+      DefaultFilter.Create,
     ];
     const transactions = await Transaction.getAll(pubkey, limit);
 
     if (transactions.isErr) {
       return transactions as Result<[], Error>;
     }
-    const hist: TransferHistory[] = [];
-    console.log('SIZE: ', (transactions.unwrap() as ParsedConfirmedTransaction[]).length);
-    for (const tx of transactions.unwrap() as ParsedConfirmedTransaction[]) {
-      for (const inst of tx.transaction.message.instructions) {
-        isParsedInstructon(inst) ? (tx.transaction) : tx.transaction.message.instructions.forEach(value => {
-          if (isParsedInstructon(value)) {
-              console.log(value.parsed);
-            if (filterStatus(value, filter)) {
-              const v: TransferHistory = value.parsed;
-              v.date = convertTimestmapToDate(tx.blockTime as number);
-              hist.push(v);
-            }
-          }
-        });
-        const value = inst as ParsedInstruction;
-        if (filterStatus(value, filter)) {
-          const v: TransferHistory = value.parsed;
-          v.date = convertTimestmapToDate(tx.blockTime as number);
-          hist.push(v);
-        }
-      }
-    }
-    return Result.ok(hist);
+    const tx = transactions.unwrap() as ParsedConfirmedTransaction[];
+    return Result.ok(filterTransactions(tx, filter));
   }
 
   export const getTransferDestinationList = async (
