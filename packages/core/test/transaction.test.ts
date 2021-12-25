@@ -4,8 +4,6 @@ import {ParsedConfirmedTransaction} from '@solana/web3.js';
 import {Setup} from '../../shared/test/setup';
 import {KeypairStr, Pubkey, SplToken, Transaction} from '../src/'
 
-const signature1 = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
-const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6'.toPubkey();
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -18,34 +16,41 @@ describe('Transaction', () => {
   });
 
   it('Get transaction data', async () => {
-    const res = await Transaction.get(signature1);
+    const sig = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
+    const res = await Transaction.get(sig);
     assert.isObject(res);
   });
 
-  it('Get all transaction data', async () => {
+  it.only('Get all transaction data', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
-    const res = await Transaction.getAll(tokenKey.toPubkey());
+    const limit = 10;
+    const res = await Transaction.getAll(tokenKey.toPubkey(), limit);
+
     if (res.isOk) {
+      console.log(res.value);
+      assert.equal(res.value.length, limit);
       assert.isArray(res.value);
       assert.isObject((res.value as ParsedConfirmedTransaction[])[0]);
     } else {
       assert.isFalse(res.isErr, res.isErr && res.error.message);
     }
   });
-  it.only('Get token transfer history by tokenKey', async () => {
-    const limit = 30;
-    const res = await Transaction.getTransferHistory(tokenKey, limit);
+
+  it('Get token transfer history by tokenKey', async () => {
+    const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
+    const limit = 10;
+    const res = await Transaction.getTransactionHistory(tokenKey.toPubkey(), [], limit);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotNull(v.date);
     });
-    assert.equal(res.unwrap().length, 13);
+    assert.equal(res.unwrap().length, limit);
   });
 
   it('Get token transfer history by owner address', async () => {
     const limit = 3;
     const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPubkey();
-    const res = await Transaction.getTransferHistory(owner, limit);
+    const res = await Transaction.getTransactionHistory(owner, [], limit);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotEmpty(v.type);
@@ -57,8 +62,23 @@ describe('Transaction', () => {
     assert.equal(res.unwrap().length, limit);
   });
 
+  it('Get token transfer history by owner address, Use filter options', async () => {
+    const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
+    const res = await Transaction.getTransactionHistory(
+      tokenKey.toPubkey(), 
+      [
+        Transaction.Filter.MintTo, 
+      ]
+    );
+    assert.isTrue(res.isOk);
+    res.unwrap().forEach((v) => {
+      assert.isNotNull(v.date);
+    });
+  });
+
   it('Get token transfer destination history', async () => {
-    const res = await Transaction.getTransferDestinationList(tokenKey);
+    const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
+    const res = await Transaction.getTransferDestinationList(tokenKey.toPubkey());
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotEmpty(v.dest);

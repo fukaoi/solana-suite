@@ -24,9 +24,10 @@ export namespace Transaction {
 
   const filterTransactions = (
     transactions: ParsedConfirmedTransaction[],
-    filterOptions: DefaultFilter[]
+    filterOptions: Filter[] | string[],
   ) => {
     const hist: TransferHistory[] = [];
+
     transactions.forEach(tx => {
       tx.transaction.message.instructions.forEach(t => {
         if (isParsedInstructon(t)) {
@@ -57,7 +58,13 @@ export namespace Transaction {
     callback: any
   ): number => {
     return Node.getConnection().onAccountChange(pubkey, async () => {
-      const res = await getTransferHistory(pubkey, 1);
+      const res = await getTransactionHistory(
+        pubkey,
+        [
+          Filter.Transfer,
+          Filter.TransferChecked
+        ]
+      );
       if (res.isErr) {
         return res;
       }
@@ -91,7 +98,7 @@ export namespace Transaction {
     date: Date,
   }
 
-  enum DefaultFilter {
+  export enum Filter {
     Transfer = 'transfer',
     TransferChecked = 'transferChecked',
     Memo = 'memo',
@@ -100,15 +107,24 @@ export namespace Transaction {
   }
 
   export const get = async (signature: string):
-    Promise<Result<ParsedConfirmedTransaction | unknown, Error>> =>
-    await Node.getConnection().getParsedConfirmedTransaction(signature)
+    Promise<Result<ParsedConfirmedTransaction, Error>> => {
+      const res = await Node.getConnection().getParsedConfirmedTransaction(signature)
       .then(Result.ok)
       .catch(Result.err);
+      if (res.isErr) {
+        return Result.err(res.error);
+      } else {
+        if (!res.value) {
+          return Result.ok({} as ParsedConfirmedTransaction);
+        }
+        return Result.ok(res.value);
+      }
+    }
 
   export const getAll = async (
     pubkey: PublicKey,
     limit?: number,
-  ): Promise<Result<ParsedConfirmedTransaction[] | unknown, Error>> => {
+  ): Promise<Result<ParsedConfirmedTransaction[], Error>> => {
     const transactions = await Node.getConnection().getSignaturesForAddress(
       pubkey,
       {limit},
@@ -117,32 +133,33 @@ export namespace Transaction {
       .catch(Result.err);
 
     if (transactions.isErr) {
-      return transactions;
+      return Result.err(transactions.error);
     } else {
       const parsedSig: ParsedConfirmedTransaction[] = [];
       for (const tx of transactions.value as ConfirmedSignatureInfo[]) {
         const res = await get(tx!.signature);
-        if (res.isErr) return res;
+        if (res.isErr) {
+          return Result.err(res.error);
+        }
         res !== null && parsedSig.push(res.value as ParsedConfirmedTransaction);
       }
       return Result.ok(parsedSig);
     }
   }
 
-  export const getTransferHistory = async (
+  export const getTransactionHistory = async (
     pubkey: PublicKey,
+    filterOptions?: Filter[] | string[],
     limit?: number,
-    filterOptions?: DefaultFilter[]
   ): Promise<Result<TransferHistory[], Error>> => {
 
-    const filter = filterOptions ? filterOptions : [
-      DefaultFilter.Memo,
-      DefaultFilter.Transfer,
-      DefaultFilter.TransferChecked,
-      DefaultFilter.MintTo,
-      DefaultFilter.Create,
-    ];
-    const transactions = await Transaction.getAll(pubkey, limit);
+    const filter = filterOptions !== undefined && filterOptions.length > 0
+      ? filterOptions
+      : [
+        Filter.Transfer,
+        Filter.TransferChecked,
+      ];
+    const transactions = await Transaction.getAll(pubkey);
 
     if (transactions.isErr) {
       return transactions as Result<[], Error>;
