@@ -108,26 +108,32 @@ export namespace Transaction {
 
   export const get = async (signature: string):
     Promise<Result<ParsedConfirmedTransaction, Error>> => {
-      const res = await Node.getConnection().getParsedConfirmedTransaction(signature)
+    const res = await Node.getConnection().getParsedConfirmedTransaction(signature)
       .then(Result.ok)
       .catch(Result.err);
-      if (res.isErr) {
-        return Result.err(res.error);
-      } else {
-        if (!res.value) {
-          return Result.ok({} as ParsedConfirmedTransaction);
-        }
-        return Result.ok(res.value);
+    if (res.isErr) {
+      return Result.err(res.error);
+    } else {
+      if (!res.value) {
+        return Result.ok({} as ParsedConfirmedTransaction);
       }
+      return Result.ok(res.value);
     }
+  }
 
   export const getAll = async (
     pubkey: PublicKey,
-    limit?: number,
+    limit?: number | undefined,
+    before?: string | undefined,
+    until?: string | undefined,
   ): Promise<Result<ParsedConfirmedTransaction[], Error>> => {
     const transactions = await Node.getConnection().getSignaturesForAddress(
       pubkey,
-      {limit},
+      {
+        limit,
+        before,
+        until,
+      },
     )
       .then(Result.ok)
       .catch(Result.err);
@@ -159,7 +165,7 @@ export namespace Transaction {
         Filter.Transfer,
         Filter.TransferChecked,
       ];
-    const transactions = await Transaction.getAll(pubkey);
+    const transactions = await Transaction.getAll(pubkey, limit);
 
     if (transactions.isErr) {
       return transactions as Result<[], Error>;

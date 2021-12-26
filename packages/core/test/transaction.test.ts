@@ -37,11 +37,14 @@ describe('Transaction', () => {
 
   it.only('Get all transaction data with limit, until', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
-    const limit = 10;
-    const res = await Transaction.getAll(tokenKey.toPubkey(), limit);
+    const res = await Transaction.getAll(
+      tokenKey.toPubkey(), 
+      undefined,
+      undefined,
+      '4BpP9ugxmnJbCegPXfXXP78A25chuNcLVZzRT4Gu1vPT8nEAbZzWuX8BWeytLR45qASFLb7PzakLCn29wJLQciQ5'
+    );
 
     if (res.isOk) {
-      assert.equal(res.value.length, limit);
       assert.isArray(res.value);
       assert.isObject((res.value as ParsedConfirmedTransaction[])[0]);
     } else {
