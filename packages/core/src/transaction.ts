@@ -165,7 +165,14 @@ export namespace Transaction {
         Filter.Transfer,
         Filter.TransferChecked,
       ];
-    const transactions = await Transaction.getAll(pubkey, limit);
+
+    let bufferedLimit = 0;
+    if (limit && limit < 980) {
+      bufferedLimit = limit + 20;
+    } else {
+      bufferedLimit = 1000;
+    }
+    const transactions = await Transaction.getAll(pubkey, bufferedLimit);
 
     if (transactions.isErr) {
       return transactions as Result<[], Error>;
