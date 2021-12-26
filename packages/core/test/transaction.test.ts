@@ -21,13 +21,26 @@ describe('Transaction', () => {
     assert.isObject(res);
   });
 
-  it.only('Get all transaction data', async () => {
+  it('Get all transaction data with limit', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const limit = 10;
     const res = await Transaction.getAll(tokenKey.toPubkey(), limit);
 
     if (res.isOk) {
-      console.log(res.value);
+      assert.equal(res.value.length, limit);
+      assert.isArray(res.value);
+      assert.isObject((res.value as ParsedConfirmedTransaction[])[0]);
+    } else {
+      assert.isFalse(res.isErr, res.isErr && res.error.message);
+    }
+  });
+
+  it.only('Get all transaction data with limit, until', async () => {
+    const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
+    const limit = 10;
+    const res = await Transaction.getAll(tokenKey.toPubkey(), limit);
+
+    if (res.isOk) {
       assert.equal(res.value.length, limit);
       assert.isArray(res.value);
       assert.isObject((res.value as ParsedConfirmedTransaction[])[0]);
