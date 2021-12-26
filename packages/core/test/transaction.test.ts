@@ -35,7 +35,7 @@ describe('Transaction', () => {
     }
   });
 
-  it.only('Get all transaction data with limit, until', async () => {
+  it('Get all transaction data with limit, until', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const res = await Transaction.getAll(
       tokenKey.toPubkey(), 
@@ -52,15 +52,14 @@ describe('Transaction', () => {
     }
   });
 
-  it('Get token transfer history by tokenKey', async () => {
+  it.only('Get token transfer history by tokenKey', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
-    const limit = 10;
+    const limit = 20;
     const res = await Transaction.getTransactionHistory(tokenKey.toPubkey(), [], limit);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotNull(v.date);
     });
-    assert.equal(res.unwrap().length, limit);
   });
 
   it('Get token transfer history by owner address', async () => {

@@ -46,7 +46,6 @@ export namespace Transaction {
         }
       });
     });
-    console.log(hist);
     return hist;
   }
 
@@ -171,14 +170,25 @@ export namespace Transaction {
       bufferedLimit = limit + 20;
     } else {
       bufferedLimit = 1000;
+      limit = 1000;
     }
-    const transactions = await Transaction.getAll(pubkey, bufferedLimit);
+    let hist: TransferHistory[] = [];
+    let before = undefined;
 
-    if (transactions.isErr) {
-      return transactions as Result<[], Error>;
+    while (true) {
+      const transactions = await Transaction.getAll(pubkey, bufferedLimit, before);
+      if (transactions.isErr) {
+        return transactions as Result<[], Error>;
+      } const tx = transactions.unwrap() as ParsedConfirmedTransaction[];
+      const res = filterTransactions(tx, filter);
+      hist = hist.concat(res);
+      console.log(hist);
+      if (hist.length >= limit || res.length === 0) {
+        break;
+      }
+      before = hist[hist.length - 1].sig;
     }
-    const tx = transactions.unwrap() as ParsedConfirmedTransaction[];
-    return Result.ok(filterTransactions(tx, filter));
+    return Result.ok(hist);
   }
 
   export const getTransferDestinationList = async (
