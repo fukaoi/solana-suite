@@ -1,12 +1,5 @@
-# solana-suite
+## solana-suite
 
-### Definition of terms
-| Name | Description |
-| --- | --- |
-| source  | todo |
-| destination  | todo |
-| pubkey  | todo |
-| tokenKey  | todo |
-| owner  | todo |
-| payer  | todo |
-| metaAccount  | todo |
+:warning: The development of solana-suite has been transferred to [Atonoy.co](https://atonoy.co). 
+<br />
+From now on, development will continue in [this repository(Atonoy organization)](https://github.com/atonoy/solana-suite).
