@@ -26,4 +26,4 @@
 
 #### Defined in
 
-[src/constants.ts:21](https://github.com/fukaoi/solana-suite/blob/62f455f/src/constants.ts#L21)
+[src/constants.ts:21](https://github.com/fukaoi/solana-suite/blob/97f4f00/src/constants.ts#L21)
