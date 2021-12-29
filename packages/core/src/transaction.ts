@@ -179,10 +179,10 @@ export namespace Transaction {
       const transactions = await Transaction.getAll(pubkey, bufferedLimit, before);
       if (transactions.isErr) {
         return transactions as Result<[], Error>;
-      } const tx = transactions.unwrap() as ParsedConfirmedTransaction[];
+      } 
+      const tx = transactions.unwrap() as ParsedConfirmedTransaction[];
       const res = filterTransactions(tx, filter);
       hist = hist.concat(res);
-      console.log(hist);
       if (hist.length >= limit || res.length === 0) {
         break;
       }
