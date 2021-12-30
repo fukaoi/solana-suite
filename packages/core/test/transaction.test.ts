@@ -38,7 +38,7 @@ describe('Transaction', () => {
   it('Get all transaction data with limit, until', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const res = await Transaction.getAll(
-      tokenKey.toPubkey(), 
+      tokenKey.toPubkey(),
       undefined,
       undefined,
       '4BpP9ugxmnJbCegPXfXXP78A25chuNcLVZzRT4Gu1vPT8nEAbZzWuX8BWeytLR45qASFLb7PzakLCn29wJLQciQ5'
@@ -52,11 +52,45 @@ describe('Transaction', () => {
     }
   });
 
-  it.only('Get token transfer history by tokenKey', async () => {
+  it('Get token transfer history by tokenKey', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
-    const limit = 20;
+    const limit = 10;
     const res = await Transaction.getTransactionHistory(tokenKey.toPubkey(), [], limit);
     assert.isTrue(res.isOk);
+    res.unwrap().forEach((v) => {
+      assert.isNotNull(v.date);
+    });
+  });
+
+  it('Get token transfer history with set optional filter', async () => {
+    const tokenKey = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s';
+    const limit = 20;
+    const filter = 'mintTo';
+    const res = await Transaction.getTransactionHistory(
+      tokenKey.toPubkey(),
+      [filter],
+      limit
+    );
+    assert.isTrue(res.isOk);
+    assert.equal(res.unwrap()[0].type, filter);
+    assert.equal(res.unwrap().length, limit);
+    res.unwrap().forEach((v) => {
+      assert.isNotNull(v.date);
+    });
+  });
+
+  it('Get token transfer history with set optional filter limit 100', async () => {
+    const tokenKey = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s';
+    const limit = 100;
+    const filter = 'mintTo';
+    const res = await Transaction.getTransactionHistory(
+      tokenKey.toPubkey(),
+      [filter],
+      limit
+    );
+    assert.isTrue(res.isOk);
+    assert.equal(res.unwrap()[0].type, filter);
+    assert.equal(res.unwrap().length, limit);
     res.unwrap().forEach((v) => {
       assert.isNotNull(v.date);
     });
@@ -80,9 +114,9 @@ describe('Transaction', () => {
   it('Get token transfer history by owner address, Use filter options', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const res = await Transaction.getTransactionHistory(
-      tokenKey.toPubkey(), 
+      tokenKey.toPubkey(),
       [
-        Transaction.Filter.MintTo, 
+        Transaction.Filter.MintTo,
       ]
     );
     assert.isTrue(res.isOk);

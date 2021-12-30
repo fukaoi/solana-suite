@@ -177,6 +177,7 @@ export namespace Transaction {
 
     while (true) {
       const transactions = await Transaction.getAll(pubkey, bufferedLimit, before);
+      console.count('# getTransactionHistory loop');
       if (transactions.isErr) {
         return transactions as Result<[], Error>;
       } 
@@ -184,6 +185,7 @@ export namespace Transaction {
       const res = filterTransactions(tx, filter);
       hist = hist.concat(res);
       if (hist.length >= limit || res.length === 0) {
+        hist = hist.slice(0, limit); 
         break;
       }
       before = hist[hist.length - 1].sig;
