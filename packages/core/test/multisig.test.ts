@@ -15,7 +15,7 @@ describe('Multisig', () => {
     const signer2 = Account.create();
     const inst = await Multisig.create(
       2,
-      source.secret.toKeypair(),
+      source.toKeypair(),
       [
         signer1.toPubkey(),
         signer2.toPubkey(),
