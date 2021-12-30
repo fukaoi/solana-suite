@@ -25,6 +25,7 @@ export namespace Transaction {
   const filterTransactions = (
     transactions: ParsedConfirmedTransaction[],
     filterOptions: Filter[] | string[],
+    inOutFilter?: InoutFilter,
   ) => {
     const hist: TransferHistory[] = [];
 
@@ -105,6 +106,16 @@ export namespace Transaction {
     Create = 'create',
   }
 
+  export enum InoutFilterType { 
+    Input = 'input',
+    Output = 'output',
+  }
+
+  export interface InoutFilter {
+    filter: InoutFilterType,
+    pubkey: PublicKey,
+  }
+
   export const get = async (signature: string):
     Promise<Result<ParsedConfirmedTransaction, Error>> => {
     const res = await Node.getConnection().getParsedConfirmedTransaction(signature)
@@ -156,6 +167,7 @@ export namespace Transaction {
     pubkey: PublicKey,
     filterOptions?: Filter[] | string[],
     limit?: number,
+    inOutFilter?: InoutFilter
   ): Promise<Result<TransferHistory[], Error>> => {
 
     const filter = filterOptions !== undefined && filterOptions.length > 0
@@ -182,7 +194,7 @@ export namespace Transaction {
         return transactions as Result<[], Error>;
       } 
       const tx = transactions.unwrap() as ParsedConfirmedTransaction[];
-      const res = filterTransactions(tx, filter);
+      const res = filterTransactions(tx, filter, inOutFilter);
       hist = hist.concat(res);
       if (hist.length >= limit || res.length === 0) {
         hist = hist.slice(0, limit); 
@@ -193,7 +205,7 @@ export namespace Transaction {
     return Result.ok(hist);
   }
 
-  export const getTransferDestinationList = async (
+  export const getTransferTokenDestinationList = async (
     pubkey: PublicKey
   ): Promise<Result<TransferDestinationList[], Error>> => {
     const transactions = await Transaction.getAll(pubkey);

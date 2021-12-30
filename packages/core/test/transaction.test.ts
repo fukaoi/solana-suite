@@ -52,7 +52,7 @@ describe('Transaction', () => {
     }
   });
 
-  it('Get token transfer history by tokenKey', async () => {
+  it.only('Get token transfer history by tokenKey', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const limit = 10;
     const res = await Transaction.getTransactionHistory(tokenKey.toPubkey(), [], limit);
@@ -127,7 +127,7 @@ describe('Transaction', () => {
 
   it('Get token transfer destination history', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
-    const res = await Transaction.getTransferDestinationList(tokenKey.toPubkey());
+    const res = await Transaction.getTransferTokenDestinationList(tokenKey.toPubkey());
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotEmpty(v.dest);
