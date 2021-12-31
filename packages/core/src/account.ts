@@ -70,7 +70,7 @@ export namespace Account {
     pubkey: PublicKey,
     tokenKey: PublicKey,
   ): Promise<Result<TokenAmount, Error>> => {
-    const res = await findAssocaiatedTokenAddress(pubkey, tokenKey);
+    const res = await findAssocaiatedTokenAddress(tokenKey, pubkey);
     if (res.isErr) {
       return Result.err(res.error);
     }
@@ -111,8 +111,8 @@ export namespace Account {
   };
 
   export const findAssocaiatedTokenAddress = async (
-    owner: PublicKey,
-    tokenKey: PublicKey
+    tokenKey: PublicKey,
+    owner: PublicKey
   ): Promise<Result<PublicKey, Error>> => {
     return await PublicKey.findProgramAddress(
       [

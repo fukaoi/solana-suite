@@ -14,6 +14,7 @@ import {
   Result,
   Constants
 } from '@solana-suite/shared';
+import {Account} from '.';
 
 export namespace Transaction {
 
@@ -206,6 +207,27 @@ export namespace Transaction {
       before = hist[hist.length - 1].sig;
     }
     return Result.ok(hist);
+  }
+
+  export const getTokenTransactionHistory = async (
+    tokenKey: PublicKey,
+    pubkey: PublicKey,
+    filterOptions?: Filter[] | string[],
+    limit?: number,
+    transferFilter?: TransferFilter
+  ): Promise<Result<TransferHistory[], Error>> => {
+    const tokenPubkey = await Account.findAssocaiatedTokenAddress(pubkey, tokenKey);
+    if (tokenPubkey.isErr) {
+      return Result.err(tokenPubkey.error);
+    }
+    const filter = filterOptions !== undefined && filterOptions.length > 0
+      ? filterOptions
+      : [
+        Filter.Transfer,
+        Filter.TransferChecked,
+      ];
+
+    return getTransactionHistory(tokenPubkey.value, filter, limit, transferFilter);
   }
 
   export const getTransferTokenDestinationList = async (

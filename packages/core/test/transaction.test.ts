@@ -52,7 +52,7 @@ describe('Transaction', () => {
     }
   });
 
-  it('Get token transfer history by tokenKey', async () => {
+  it('Get transfer history by tokenKey', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const limit = 10;
     const res = await Transaction.getTransactionHistory(tokenKey.toPubkey(), [], limit);
@@ -62,7 +62,7 @@ describe('Transaction', () => {
     });
   });
 
-  it('Get token transfer history with set optional filter', async () => {
+  it('Get transfer history with set optional filter', async () => {
     const tokenKey = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s';
     const limit = 20;
     const filter = 'mintTo';
@@ -79,7 +79,7 @@ describe('Transaction', () => {
     });
   });
 
-  it('Get token transfer history with set optional filter limit 100', async () => {
+  it('Get transfer history with set optional filter limit 100', async () => {
     const tokenKey = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s';
     const limit = 100;
     const filter = 'mintTo';
@@ -96,7 +96,7 @@ describe('Transaction', () => {
     });
   });
 
-  it('Get token transfer history with transfer destination filter', async () => {
+  it('Get transfer history with transfer destination filter', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const destination = '2wxMtAe3nwQu5Ai2XuMgX4gxvYhTvXtedrvo7p9jDepn';
     const limit = 10;
@@ -117,7 +117,7 @@ describe('Transaction', () => {
     });
   });
 
-  it('Get token transfer history with transfer source filter', async () => {
+  it('Get transfer history with transfer source filter', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const source = '2wxMtAe3nwQu5Ai2XuMgX4gxvYhTvXtedrvo7p9jDepn';
     const limit = 3;
@@ -138,7 +138,7 @@ describe('Transaction', () => {
     });
   });
 
-  it('Get token transfer history by owner address', async () => {
+  it('Get transfer history by address', async () => {
     const limit = 3;
     const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPubkey();
     const res = await Transaction.getTransactionHistory(owner, [], limit);
@@ -151,6 +151,20 @@ describe('Transaction', () => {
       assert.isNotNull(v.date);
     });
     assert.equal(res.unwrap().length, limit);
+  });
+
+  it('Get token transfer history by owner address', async () => {
+    const tokenKey = 'EoRvjJXt25zzchc34qRVTRT3coe4ZrCkeSW24bFP4yU'.toPubkey();
+    const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPubkey();
+    const res = await Transaction.getTokenTransactionHistory(
+      tokenKey,
+      owner,
+      []
+    );
+    assert.isTrue(res.isOk);
+    res.unwrap().forEach((v) => {
+      assert.isNotNull(v.date);
+    });
   });
 
   it('Get token transfer history by owner address, Use filter options', async () => {
