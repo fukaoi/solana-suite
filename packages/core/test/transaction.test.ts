@@ -167,30 +167,14 @@ describe('Transaction', () => {
     });
   });
 
-  it.only('Get token transfer destination history', async () => {
+  it('Get token transfer destination history', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
-    const res = await Transaction.getTransactionHistory(
-      tokenKey.toPubkey(), 
-      [
-        Transaction.Filter.Transfer,
-        Transaction.Filter.TransferChecked,
-      ], 
-      20,
-      {
-        filter: Transaction.DirectionType.Dest, 
-        pubkey: tokenKey.toPubkey()
-      }
-    );
-
-    console.log(res);
-
-    // const res = await Transaction.getTransferTokenDestinationList(tokenKey.toPubkey());
-    // assert.isTrue(res.isOk);
-    // res.unwrap().forEach((v) => {
-      // assert.isNotEmpty(v.dest);
-      // assert.isNotNull(v.date);
-    // });
-
+    const res = await Transaction.getTransferTokenDestinationList(tokenKey.toPubkey());
+    assert.isTrue(res.isOk);
+    res.unwrap().forEach((v) => {
+      assert.isNotEmpty(v.dest);
+      assert.isNotNull(v.date);
+    });
   });
 
   it('Subscribe a account(pubkey)', async () => {
