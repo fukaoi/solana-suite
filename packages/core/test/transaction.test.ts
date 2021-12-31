@@ -52,7 +52,7 @@ describe('Transaction', () => {
     }
   });
 
-  it.only('Get token transfer history by tokenKey', async () => {
+  it('Get token transfer history by tokenKey', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const limit = 10;
     const res = await Transaction.getTransactionHistory(tokenKey.toPubkey(), [], limit);
@@ -96,6 +96,48 @@ describe('Transaction', () => {
     });
   });
 
+  it('Get token transfer history with transfer destination filter', async () => {
+    const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
+    const destination = '2wxMtAe3nwQu5Ai2XuMgX4gxvYhTvXtedrvo7p9jDepn';
+    const limit = 10;
+    const res = await Transaction.getTransactionHistory(
+      tokenKey.toPubkey(), 
+      [], 
+      limit,
+      {
+        filter: Transaction.DirectionType.Dest, 
+        pubkey: destination.toPubkey()
+      }
+    );
+
+    assert.isTrue(res.isOk);
+    res.unwrap().forEach((v) => {
+      assert.isNotNull(v.date);
+      assert.equal(v.info.destination, destination);
+    });
+  });
+
+  it('Get token transfer history with transfer source filter', async () => {
+    const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
+    const source = '2wxMtAe3nwQu5Ai2XuMgX4gxvYhTvXtedrvo7p9jDepn';
+    const limit = 3;
+    const res = await Transaction.getTransactionHistory(
+      tokenKey.toPubkey(), 
+      [], 
+      limit,
+      {
+        filter: Transaction.DirectionType.Source, 
+        pubkey: source.toPubkey()
+      }
+    );
+
+    assert.isTrue(res.isOk);
+    res.unwrap().forEach((v) => {
+      assert.isNotNull(v.date);
+      assert.equal(v.info.source, source);
+    });
+  });
+
   it('Get token transfer history by owner address', async () => {
     const limit = 3;
     const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPubkey();
@@ -125,14 +167,30 @@ describe('Transaction', () => {
     });
   });
 
-  it('Get token transfer destination history', async () => {
+  it.only('Get token transfer destination history', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
-    const res = await Transaction.getTransferTokenDestinationList(tokenKey.toPubkey());
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotEmpty(v.dest);
-      assert.isNotNull(v.date);
-    });
+    const res = await Transaction.getTransactionHistory(
+      tokenKey.toPubkey(), 
+      [
+        Transaction.Filter.Transfer,
+        Transaction.Filter.TransferChecked,
+      ], 
+      20,
+      {
+        filter: Transaction.DirectionType.Dest, 
+        pubkey: tokenKey.toPubkey()
+      }
+    );
+
+    console.log(res);
+
+    // const res = await Transaction.getTransferTokenDestinationList(tokenKey.toPubkey());
+    // assert.isTrue(res.isOk);
+    // res.unwrap().forEach((v) => {
+      // assert.isNotEmpty(v.dest);
+      // assert.isNotNull(v.date);
+    // });
+
   });
 
   it('Subscribe a account(pubkey)', async () => {

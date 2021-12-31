@@ -25,23 +25,26 @@ export namespace Transaction {
   const filterTransactions = (
     transactions: ParsedConfirmedTransaction[],
     filterOptions: Filter[] | string[],
-    inOutFilter?: InoutFilter,
+    inOutFilter?: TransferFilter,
   ) => {
     const hist: TransferHistory[] = [];
 
     transactions.forEach(tx => {
       tx.transaction.message.instructions.forEach(t => {
-        if (isParsedInstructon(t)) {
-          if (filterOptions.includes(t.parsed.type)) {
-            const v: TransferHistory = t.parsed;
-            v.date = convertTimestmapToDate(tx.blockTime as number);
-            v.sig = tx.transaction.signatures[0];
-            if (tx.meta?.innerInstructions && tx.meta?.innerInstructions.length !== 0) {
-              // inner instructions
-              v.innerInstruction = true;
-            } else {
-              v.innerInstruction = false;
+        if (isParsedInstructon(t) && filterOptions.includes(t.parsed.type)) {
+          const v: TransferHistory = t.parsed;
+          v.date = convertTimestmapToDate(tx.blockTime as number);
+          v.sig = tx.transaction.signatures[0];
+          if (tx.meta?.innerInstructions && tx.meta?.innerInstructions.length !== 0) {
+            // inner instructions
+            v.innerInstruction = true;
+          } else {
+            v.innerInstruction = false;
+          } if (inOutFilter) {
+            if (v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
+              hist.push(v);
             }
+          } else {
             hist.push(v);
           }
         }
@@ -106,13 +109,13 @@ export namespace Transaction {
     Create = 'create',
   }
 
-  export enum InoutFilterType { 
-    Input = 'input',
-    Output = 'output',
+  export enum DirectionType {
+    Dest = 'destination',
+    Source = 'source',
   }
 
-  export interface InoutFilter {
-    filter: InoutFilterType,
+  export interface TransferFilter {
+    filter: DirectionType,
     pubkey: PublicKey,
   }
 
@@ -167,7 +170,7 @@ export namespace Transaction {
     pubkey: PublicKey,
     filterOptions?: Filter[] | string[],
     limit?: number,
-    inOutFilter?: InoutFilter
+    transferFilter?: TransferFilter
   ): Promise<Result<TransferHistory[], Error>> => {
 
     const filter = filterOptions !== undefined && filterOptions.length > 0
@@ -192,12 +195,12 @@ export namespace Transaction {
       console.count('# getTransactionHistory loop');
       if (transactions.isErr) {
         return transactions as Result<[], Error>;
-      } 
+      }
       const tx = transactions.unwrap() as ParsedConfirmedTransaction[];
-      const res = filterTransactions(tx, filter, inOutFilter);
+      const res = filterTransactions(tx, filter, transferFilter);
       hist = hist.concat(res);
       if (hist.length >= limit || res.length === 0) {
-        hist = hist.slice(0, limit); 
+        hist = hist.slice(0, limit);
         break;
       }
       before = hist[hist.length - 1].sig;
