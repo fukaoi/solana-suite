@@ -14,7 +14,7 @@ import {
 
 declare global {
   interface String {
-    toPubkey(): PublicKey;
+    toPublicKey(): PublicKey;
     toKeypair(): Keypair;
     toExplorerUrl(): string;
     toAddressUrl(): string;
@@ -40,7 +40,7 @@ Array.prototype.submit = async function () {
   return await Instruction.batchSubmit(instructions);
 }
 
-String.prototype.toPubkey = function () {
+String.prototype.toPublicKey = function () {
   return new PublicKey(this);
 }
 
@@ -53,9 +53,11 @@ String.prototype.toExplorerUrl = function () {
   try {
     /* tslint:disable-next-line */
     new PublicKey(this);
-    return `https://explorer.solana.com/address/${this}?cluster=${Constants.currentNetwork}`;
+    return `https://solscan.io/account/${this}?cluster=${Constants.currentNetwork}`;
+    // return `https://explorer.solana.com/address/${this}?cluster=${Constants.currentNetwork}`;
   } catch (_) {
-    return `https://explorer.solana.com/tx/${this}?cluster=${Constants.currentNetwork}`;
+    return `https://solscan.io/tx/${this}?cluster=${Constants.currentNetwork}`;
+    // return `https://explorer.solana.com/tx/${this}?cluster=${Constants.currentNetwork}`;
   }
 }
 

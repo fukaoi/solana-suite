@@ -23,7 +23,7 @@ Array.prototype.submit = async function () {
     });
     return await _1.Instruction.batchSubmit(instructions);
 };
-String.prototype.toPubkey = function () {
+String.prototype.toPublicKey = function () {
     return new web3_js_1.PublicKey(this);
 };
 String.prototype.toKeypair = function () {

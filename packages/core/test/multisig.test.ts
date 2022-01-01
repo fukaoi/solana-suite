@@ -17,8 +17,8 @@ describe('Multisig', () => {
       2,
       source.toKeypair(),
       [
-        signer1.toPubkey(),
-        signer2.toPubkey(),
+        signer1.toPublicKey(),
+        signer2.toPublicKey(),
       ],
     );
 
@@ -27,7 +27,7 @@ describe('Multisig', () => {
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     const address = (inst.unwrap().data as string);
     console.log('# multisig address: ', address);
-    const isAddress = await Multisig.isAddress(address.toPubkey());
+    const isAddress = await Multisig.isAddress(address.toPublicKey());
     assert.isTrue(isAddress.isOk);
     assert.isTrue(isAddress.unwrap());
   });
@@ -39,13 +39,13 @@ describe('Multisig', () => {
       2,
       source.toKeypair(),
       [
-        signer1.toPubkey(),
-        signer2.toPubkey(),
+        signer1.toPublicKey(),
+        signer2.toPublicKey(),
       ],
     );
 
     const address = (inst.unwrap().data as string);
-    const res = await Multisig.isAddress(address.toPubkey());
+    const res = await Multisig.isAddress(address.toPublicKey());
     assert.isTrue(res.isOk);
     assert.isFalse(res.unwrap());
   });
@@ -57,8 +57,8 @@ describe('Multisig', () => {
       2,
       source.toKeypair(),
       [
-        signer1.toPubkey(),
-        signer2.toPubkey(),
+        signer1.toPublicKey(),
+        signer2.toPublicKey(),
       ],
     );
 
@@ -76,9 +76,9 @@ describe('Multisig', () => {
       2,
       source.toKeypair(),
       [
-        signer1.toPubkey(),
-        signer2.toPubkey(),
-        signer3.toPubkey(),
+        signer1.toPublicKey(),
+        signer2.toPublicKey(),
+        signer3.toPublicKey(),
       ],
     );
 
@@ -94,7 +94,7 @@ describe('Multisig', () => {
       2,
       source.toKeypair(),
       [
-        signer1.toPubkey(),
+        signer1.toPublicKey(),
       ],
     );
     assert.isTrue(res.isErr);
@@ -107,14 +107,14 @@ describe('Multisig', () => {
       2,
       source.toKeypair(),
       [
-        signer1.toPubkey(),
-        signer2.toPubkey(),
+        signer1.toPublicKey(),
+        signer2.toPublicKey(),
       ],
     );
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     await inst.submit();
     const res = await Multisig.getMultisigInfo(
-      (inst.unwrap().data as string).toPubkey()
+      (inst.unwrap().data as string).toPublicKey()
     );
     assert.isTrue(res.isOk, `${res.unwrap()}`);
   });

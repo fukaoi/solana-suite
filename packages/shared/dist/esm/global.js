@@ -17,7 +17,7 @@ Array.prototype.submit = async function () {
     });
     return await Instruction.batchSubmit(instructions);
 };
-String.prototype.toPubkey = function () {
+String.prototype.toPublicKey = function () {
     return new PublicKey(this);
 };
 String.prototype.toKeypair = function () {

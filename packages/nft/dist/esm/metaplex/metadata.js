@@ -121,7 +121,7 @@ export var MetaplexMetaData;
         const matches = [];
         // Filter only metaplex nft
         for (const token of arr.value) {
-            const decoded = await MetaplexMetaData.getByTokenKey(token.account.data.parsed.info.mint.toPubkey());
+            const decoded = await MetaplexMetaData.getByTokenKey(token.account.data.parsed.info.mint.toPublicKey());
             if (!decoded)
                 continue;
             if (decoded.isErr) {

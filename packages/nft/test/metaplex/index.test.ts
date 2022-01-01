@@ -25,7 +25,7 @@ describe('Metaplex', () => {
 
     const inst = await Metaplex.mint(
       data,
-      source.toPubkey(),
+      source.toPublicKey(),
       [source.toKeypair()],
     );
 
@@ -46,12 +46,12 @@ describe('Metaplex', () => {
 
     const inst1 = await Metaplex.mint(
       data,
-      source.toPubkey(),
+      source.toPublicKey(),
       [source.toKeypair()],
     );
     const inst2 = await Metaplex.mint(
       data,
-      source.toPubkey(),
+      source.toPublicKey(),
       [source.toKeypair()],
     );
 
@@ -74,7 +74,7 @@ describe('Metaplex', () => {
 
     const inst1 = await Metaplex.mint(
       data,
-      source.toPubkey(),
+      source.toPublicKey(),
       [source.toKeypair()],
     );
 
@@ -87,9 +87,9 @@ describe('Metaplex', () => {
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`)
 
     const inst2 = await SplToken.transferNft(
-      (inst1.unwrap().data as string).toPubkey(),
-      source.toPubkey(),
-      dest.toPubkey(),
+      (inst1.unwrap().data as string).toPublicKey(),
+      source.toPublicKey(),
+      dest.toPublicKey(),
       [source.toKeypair()],
     );
 
@@ -100,8 +100,8 @@ describe('Metaplex', () => {
   it('Transfer nft with fee payer', async () => {
 
     const feePayer = Account.create();
-    await Account.requestAirdrop(feePayer.toPubkey());
-    const beforeFeePayer = await Account.getBalance(feePayer.toPubkey());
+    await Account.requestAirdrop(feePayer.toPublicKey());
+    const beforeFeePayer = await Account.getBalance(feePayer.toPublicKey());
 
     const data = new MetaplexInstructure.Data({
       name: 'Sample',
@@ -113,7 +113,7 @@ describe('Metaplex', () => {
 
     const inst1 = await Metaplex.mint(
       data,
-      source.toPubkey(),
+      source.toPublicKey(),
       [source.toKeypair()],
     );
 
@@ -125,12 +125,12 @@ describe('Metaplex', () => {
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`)
 
-    const beforeSource = await Account.getBalance(source.toPubkey());
+    const beforeSource = await Account.getBalance(source.toPublicKey());
 
     const inst2 = await SplToken.transferNft(
-      (inst1.unwrap().data as string).toPubkey(),
-      source.toPubkey(),
-      dest.toPubkey(),
+      (inst1.unwrap().data as string).toPublicKey(),
+      source.toPublicKey(),
+      dest.toPublicKey(),
       [source.toKeypair()],
       feePayer.toKeypair(),
     );
@@ -138,8 +138,8 @@ describe('Metaplex', () => {
     const res = await inst2.submit();
     console.log('# signature: ', res.unwrap());
 
-    const afterFeePayer = await Account.getBalance(feePayer.toPubkey());
-    const afterSource = await Account.getBalance(source.toPubkey());
+    const afterFeePayer = await Account.getBalance(feePayer.toPublicKey());
+    const afterSource = await Account.getBalance(source.toPublicKey());
 
     assert.isTrue(beforeFeePayer.unwrap() > afterFeePayer.unwrap());
     assert.equal(beforeSource.unwrap(), afterSource.unwrap());
@@ -155,8 +155,8 @@ describe('Metaplex', () => {
       2,
       source.toKeypair(),
       [
-        signer1.toPubkey(),
-        signer2.toPubkey(),
+        signer1.toPublicKey(),
+        signer2.toPublicKey(),
       ]
     );
 
@@ -180,7 +180,7 @@ describe('Metaplex', () => {
 
     const inst1 = await Metaplex.mint(
       data,
-      source.toPubkey(),
+      source.toPublicKey(),
       [source.toKeypair()],
     );
 
@@ -194,9 +194,9 @@ describe('Metaplex', () => {
 
     // transfer from source to multisig address
     const inst2 = await SplToken.transferNft(
-      (inst1.unwrap().data as string).toPubkey(),
-      source.toPubkey(),
-      multisigAddress.toPubkey(),
+      (inst1.unwrap().data as string).toPublicKey(),
+      source.toPublicKey(),
+      multisigAddress.toPublicKey(),
       [
         source.toKeypair(),
       ],
@@ -207,9 +207,9 @@ describe('Metaplex', () => {
 
     // transfer from multisig address to dest
     const inst3 = await SplToken.transferNft(
-      (inst1.unwrap().data as string).toPubkey(),
-      multisigAddress.toPubkey(),
-      dest.toPubkey(),
+      (inst1.unwrap().data as string).toPublicKey(),
+      multisigAddress.toPublicKey(),
+      dest.toPublicKey(),
       [
         signer1.toKeypair(),
         signer2.toKeypair(),

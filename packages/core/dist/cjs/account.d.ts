@@ -6,7 +6,7 @@ export declare class KeypairStr {
     pubkey: Pubkey;
     secret: Secret;
     constructor(pubkey: Pubkey, secret: Secret);
-    toPubkey(): PublicKey;
+    toPublicKey(): PublicKey;
     toKeypair(): Keypair;
 }
 export declare namespace Account {

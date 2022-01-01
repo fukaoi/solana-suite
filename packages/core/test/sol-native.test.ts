@@ -17,8 +17,8 @@ describe('SolNative', () => {
     const solAmount = 0.0001;
     const inst =
       await SolNative.transfer(
-        source.toPubkey(),
-        dest.toPubkey(),
+        source.toPublicKey(),
+        dest.toPublicKey(),
         [source.toKeypair()],
         solAmount,
       );
@@ -32,19 +32,19 @@ describe('SolNative', () => {
   it('transfer transaction with fee payer', async () => {
     const solAmount = 0.0001;
     const owner = Account.create();
-    await Account.requestAirdrop(owner.toPubkey());
+    await Account.requestAirdrop(owner.toPublicKey());
     const feePayer = source;
 
     /* tslint:disable-next-line */
     const before = (await Account.getBalance(
-      feePayer.pubkey.toPubkey())
+      feePayer.pubkey.toPublicKey())
     ).unwrap();
 
     console.log(before);
 
     const inst = await SolNative.transfer(
-      owner.toPubkey(),
-      dest.toPubkey(),
+      owner.toPublicKey(),
+      dest.toPublicKey(),
       [
         owner.toKeypair(),
       ],
@@ -56,7 +56,7 @@ describe('SolNative', () => {
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# tx signature: ', res.unwrap());
     const after = (await Account.getBalance(
-      feePayer.pubkey.toPubkey())
+      feePayer.pubkey.toPublicKey())
     ).unwrap();
     assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
@@ -64,8 +64,8 @@ describe('SolNative', () => {
   it('Use internal multisigTransfer()', async () => {
     const amount = 0.0001;
     const inst = await SolNative.transferWithMultisig(
-      source.toPubkey(),
-      dest.toPubkey(),
+      source.toPublicKey(),
+      dest.toPublicKey(),
       [
         source.toKeypair(),
       ],
@@ -83,8 +83,8 @@ describe('SolNative', () => {
       2,
       source.toKeypair(),
       [
-        signer1.toPubkey(),
-        signer2.toPubkey(),
+        signer1.toPublicKey(),
+        signer2.toPublicKey(),
       ]
     );
 
@@ -94,8 +94,8 @@ describe('SolNative', () => {
     const multisig = (inst1.unwrap().data as string);
 
     const inst2 = await SolNative.transferWithMultisig(
-      multisig.toPubkey(),
-      dest.toPubkey(),
+      multisig.toPublicKey(),
+      dest.toPublicKey(),
       [
         source.toKeypair(),
         signer1.toKeypair(),

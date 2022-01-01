@@ -16,7 +16,7 @@ class KeypairStr {
         this.pubkey = pubkey;
         this.secret = secret;
     }
-    toPubkey() {
+    toPublicKey() {
         return new web3_js_1.PublicKey(this.pubkey);
     }
     toKeypair() {

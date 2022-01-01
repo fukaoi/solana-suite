@@ -148,7 +148,7 @@ export namespace Metaplex {
 
     const inst2 = await MetaplexMetaData.create(
       data,
-      inst1.tokenKey.toPubkey(),
+      inst1.tokenKey.toPublicKey(),
       owner,
       owner,
       owner,
@@ -162,7 +162,7 @@ export namespace Metaplex {
       data,
       undefined,
       undefined,
-      inst1.tokenKey.toPubkey(),
+      inst1.tokenKey.toPublicKey(),
       owner,
       signers,
     );
