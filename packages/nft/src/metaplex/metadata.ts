@@ -229,8 +229,8 @@ export namespace MetaplexMetaData {
     const inst: TransactionInstruction[] = [];
 
     const associatedToken = await Account.findAssocaiatedTokenAddress(
+      tokenKey,
       updateAuthority,
-      tokenKey
     );
 
     if (associatedToken.isErr) {

@@ -21,7 +21,7 @@ import {
   const receipt = Account.create();
 
   // faucet 1 sol
-  await Account.requestAirdrop(publisher.toPubkey());
+  await Account.requestAirdrop(publisher.toPublicKey());
 
   console.log('# publisher: ', publisher);
   console.log('# receipt: ', receipt);
@@ -36,7 +36,7 @@ import {
   const totalAmount = 100000;
   const decimals = 1;
   const inst1 = await SplToken.mint(
-    publisher.toPubkey(),
+    publisher.toPublicKey(),
     [publisher.toKeypair()],
     totalAmount,
     decimals
@@ -55,9 +55,9 @@ import {
 
   // transfer nft to receipt wallet
   const inst2 = await SplToken.transfer(
-    tokenKey.toPubkey(),
-    publisher.toPubkey(),
-    receipt.toPubkey(),
+    tokenKey.toPublicKey(),
+    publisher.toPublicKey(),
+    receipt.toPublicKey(),
     [publisher.toKeypair()],
     10,
     decimals
@@ -76,15 +76,15 @@ import {
   //////////////////////////////////////////////
 
   // Get history object by tokenKey
-  const history = await SplToken.getTransferHistory(tokenKey.toPubkey());
+  const history = await Transaction.getTransactionHistory(tokenKey.toPublicKey());
   console.log('# Transfer history by token: ', history.unwrap());
 
   // Get history object by publish
-  const historyPublish = await SplToken.getTransferHistory(publisher.toPubkey());
+  const historyPublish = await Transaction.getTransactionHistory(publisher.toPublicKey());
   console.log('# Transfer history by publish: ', historyPublish.unwrap());
 
   // Get destination history list by tokenKey
-  const destList = await SplToken.getTransferDestinationList(tokenKey.toPubkey());
+  const destList = await Transaction.getTransferTokenDestinationList(tokenKey.toPublicKey());
   console.log('# Transfer destination list: ', destList.unwrap());
 
 })();

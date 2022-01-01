@@ -21,7 +21,7 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   //////////////////////////////////////////////
   // Example1 type guard
   //////////////////////////////////////////////
-  const ex1 = await Account.getBalance(DEMO_ADDRESS.toPubkey());
+  const ex1 = await Account.getBalance(DEMO_ADDRESS.toPublicKey());
   ex1.isOk && console.log('# ex1: ', ex1.value);
 
   if (ex1.isOk) {
@@ -33,14 +33,14 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   //////////////////////////////////////////////
   // Exmaple2 unwrap
   //////////////////////////////////////////////
-  const ex2 = await Account.getBalance(DEMO_ADDRESS.toPubkey());
+  const ex2 = await Account.getBalance(DEMO_ADDRESS.toPublicKey());
   console.log('# ex2: ', ex2.unwrap());
 
 
   //////////////////////////////////////////////
   // Exmaple3 explicit define type
   //////////////////////////////////////////////
-  const ex3 = await Account.getBalance(DEMO_ADDRESS.toPubkey());
+  const ex3 = await Account.getBalance(DEMO_ADDRESS.toPublicKey());
 
   const casted = (ex3 as Result.Ok<number, Error>).value;
   console.log('# ex3: ', casted);
@@ -49,7 +49,7 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   //////////////////////////////////////////////
   // Exmaple4 map()
   //////////////////////////////////////////////
-  const ex4 = await Account.getBalance(DEMO_ADDRESS.toPubkey());
+  const ex4 = await Account.getBalance(DEMO_ADDRESS.toPublicKey());
 
   const mapped = ex4.map(
     (value: number) => value * 1000,
@@ -61,7 +61,7 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   //////////////////////////////////////////////
   // Exmaple5 match()
   //////////////////////////////////////////////
-  const ex5 = await Account.getBalance(DEMO_ADDRESS.toPubkey());
+  const ex5 = await Account.getBalance(DEMO_ADDRESS.toPublicKey());
 
   ex5.match(
     (value: number) => console.log('# ex5: ', value),

@@ -34,7 +34,7 @@ import {
   const signer3 = Account.create();
 
   // faucet 1 sol
-  await Account.requestAirdrop(owner.toPubkey());
+  await Account.requestAirdrop(owner.toPublicKey());
 
   console.log('# owner: ', owner.pubkey);
   console.log('# feePayer: ', receipt.pubkey);
@@ -47,9 +47,9 @@ import {
   // Setting multisig 2 of 2(m of n)
   //////////////////////////////////////////////
   const signerPubkeys = [
-    signer1.toPubkey(),
-    signer2.toPubkey(),
-    signer3.toPubkey(),
+    signer1.toPublicKey(),
+    signer2.toPublicKey(),
+    signer3.toPublicKey(),
   ];
 
   const inst1 = await Multisig.create(
@@ -62,8 +62,8 @@ import {
   // TRANSFER FROM OWNER TO PUBLISHER
   //////////////////////////////////////////////
   const inst2 = await SolNative.transfer(
-    owner.toPubkey(),        // from
-    feePayer.toPubkey(),     // to
+    owner.toPublicKey(),        // from
+    feePayer.toPublicKey(),     // to
     [owner.toKeypair()],     // signing
     0.5,                     // 0.5 SOL
   );
@@ -92,7 +92,7 @@ import {
   // created by publisher account
   const inst3 =
     await SplToken.mint(
-      publisher.toPubkey(),  // creator account
+      publisher.toPublicKey(),  // creator account
       multiSigners,          // signning
       100000,                // Total number of tokens issued
       2,                     // token's decimal e.g:0.12, 20.52
@@ -103,9 +103,9 @@ import {
   console.log('# tokenKey: ', tokenKey);
 
   const inst4 = await SplToken.transfer(
-    tokenKey.toPubkey(),   // tokenkey
-    publisher.toPubkey(),  // from. own token
-    receipt.toPubkey(),    // to
+    tokenKey.toPublicKey(),   // tokenkey
+    publisher.toPublicKey(),  // from. own token
+    receipt.toPublicKey(),    // to
     multiSigners,          // signning
     5000,                  // transfer amount
     2,                     // token's decimal e.g:0.12, 20.52

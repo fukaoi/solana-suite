@@ -142,7 +142,7 @@ export var MetaplexMetaData;
     };
     MetaplexMetaData.update = async (data, newUpdateAuthority, primarySaleHappened, tokenKey, updateAuthority, signers) => {
         const inst = [];
-        const associatedToken = await Account.findAssocaiatedTokenAddress(updateAuthority, tokenKey);
+        const associatedToken = await Account.findAssocaiatedTokenAddress(tokenKey, updateAuthority);
         if (associatedToken.isErr) {
             return Result.err(associatedToken.error);
         }

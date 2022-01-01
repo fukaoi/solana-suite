@@ -14,7 +14,7 @@ describe('Metaplex', () => {
     dest = obj.dest;
   });
 
-  it('Mint nft', async () => {
+  it.only('Mint nft', async () => {
     const data = new MetaplexInstructure.Data({
       name: 'Sample',
       symbol: 'SAMPLE',

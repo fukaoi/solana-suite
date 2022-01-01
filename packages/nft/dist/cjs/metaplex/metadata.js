@@ -145,7 +145,7 @@ var MetaplexMetaData;
     };
     MetaplexMetaData.update = async (data, newUpdateAuthority, primarySaleHappened, tokenKey, updateAuthority, signers) => {
         const inst = [];
-        const associatedToken = await core_1.Account.findAssocaiatedTokenAddress(updateAuthority, tokenKey);
+        const associatedToken = await core_1.Account.findAssocaiatedTokenAddress(tokenKey, updateAuthority);
         if (associatedToken.isErr) {
             return shared_1.Result.err(associatedToken.error);
         }

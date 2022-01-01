@@ -23,7 +23,7 @@ import {
   const receipt2 = Account.create();
 
   // faucet 1 sol
-  await Account.requestAirdrop(owner.toPubkey());
+  await Account.requestAirdrop(owner.toPublicKey());
 
   console.log('# owner: ', owner.pubkey);
   console.log('# receipt: ', receipt.pubkey);
@@ -39,7 +39,7 @@ import {
   const totalAmount = 100000;
   const decimals = 1;
   const inst1 = await SplToken.mint(
-    owner.toPubkey(),
+    owner.toPublicKey(),
     [owner.toKeypair()],
     totalAmount,
     decimals
@@ -65,7 +65,7 @@ import {
   const inst2 = Memo.create(
     memoData,
     [
-      owner.toPubkey()
+      owner.toPublicKey()
     ],
     [
       owner.toKeypair()
@@ -79,9 +79,9 @@ import {
 
   // transfer nft to receipt wallet
   const inst3 = await SplToken.transfer(
-    tokenKey.toPubkey(),
-    owner.toPubkey(),
-    receipt.toPubkey(),
+    tokenKey.toPublicKey(),
+    owner.toPublicKey(),
+    receipt.toPublicKey(),
     [owner.toKeypair()],
     10,
     decimals
