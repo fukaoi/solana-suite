@@ -26,8 +26,8 @@ describe('MetaplexMetaData', () => {
       creators: null
     });
 
-    const tokenKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM'.toPubkey();
-    const sourceStr = source.pubkey.toPubkey();
+    const tokenKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM'.toPublicKey();
+    const sourceStr = source.pubkey.toPublicKey();
 
     const res = await MetaplexMetaData.create(
       data,
@@ -50,14 +50,14 @@ describe('MetaplexMetaData', () => {
       creators: null
     });
 
-    const tokenKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM'.toPubkey();
+    const tokenKey = 'ZSMBYfbdn9eFJxs91p61nMbdZ7JALuXvUukqZu18skM'.toPublicKey();
 
     const res = await MetaplexMetaData.update(
       data,
       undefined,
       undefined,
       tokenKey,
-      source.toPubkey(),
+      source.toPublicKey(),
       [source.toKeypair()],
     );
     assert.isTrue(res.isOk);
@@ -75,7 +75,7 @@ describe('MetaplexMetaData', () => {
     };
 
     const res = await MetaplexMetaData.getByTokenKey(
-      'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'.toPubkey()
+      'Hn1DMeFF9baMuGVaC5dWhKC2jaPEQnB4pdY9iqz6G4zf'.toPublicKey()
     );
 
     assert.isTrue(res.isOk);
@@ -89,7 +89,7 @@ describe('MetaplexMetaData', () => {
 
   it('Get metadata of nft by owner', async () => {
     const res = await MetaplexMetaData.getByOwner(
-      '78DybLoke46TR6RW1HWZBMYt7qouGggQJjLATsfL7RwA'.toPubkey()
+      '78DybLoke46TR6RW1HWZBMYt7qouGggQJjLATsfL7RwA'.toPublicKey()
     );
     assert.isTrue(res.isOk);
     console.log(res);

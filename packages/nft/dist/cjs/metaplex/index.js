@@ -71,11 +71,11 @@ var Metaplex;
     Metaplex.mint = async (data, owner, signers) => {
         const inst1 = await Metaplex.initializeMint(owner, signers);
         signers = signers.concat(inst1.signers);
-        const inst2 = await metadata_1.MetaplexMetaData.create(data, inst1.tokenKey.toPubkey(), owner, owner, owner);
+        const inst2 = await metadata_1.MetaplexMetaData.create(data, inst1.tokenKey.toPublicKey(), owner, owner, owner);
         if (inst2.isErr) {
             return shared_1.Result.err(inst2.error);
         }
-        const inst3 = await metadata_1.MetaplexMetaData.update(data, undefined, undefined, inst1.tokenKey.toPubkey(), owner, signers);
+        const inst3 = await metadata_1.MetaplexMetaData.update(data, undefined, undefined, inst1.tokenKey.toPublicKey(), owner, signers);
         if (inst3.isErr)
             return shared_1.Result.err(inst3.error);
         const mergeInstructions = inst1.instructions.concat(inst2.unwrap()).concat(inst3.unwrap());

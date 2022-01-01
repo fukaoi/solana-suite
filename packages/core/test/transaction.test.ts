@@ -24,7 +24,7 @@ describe('Transaction', () => {
   it('Get all transaction data with limit', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const limit = 10;
-    const res = await Transaction.getAll(tokenKey.toPubkey(), limit);
+    const res = await Transaction.getAll(tokenKey.toPublicKey(), limit);
 
     if (res.isOk) {
       assert.equal(res.value.length, limit);
@@ -38,7 +38,7 @@ describe('Transaction', () => {
   it('Get all transaction data with limit, until', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const res = await Transaction.getAll(
-      tokenKey.toPubkey(),
+      tokenKey.toPublicKey(),
       undefined,
       undefined,
       '4BpP9ugxmnJbCegPXfXXP78A25chuNcLVZzRT4Gu1vPT8nEAbZzWuX8BWeytLR45qASFLb7PzakLCn29wJLQciQ5'
@@ -55,7 +55,7 @@ describe('Transaction', () => {
   it('Get transfer history by tokenKey', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const limit = 10;
-    const res = await Transaction.getTransactionHistory(tokenKey.toPubkey(), [], limit);
+    const res = await Transaction.getTransactionHistory(tokenKey.toPublicKey(), [], limit);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotNull(v.date);
@@ -67,7 +67,7 @@ describe('Transaction', () => {
     const limit = 20;
     const filter = 'mintTo';
     const res = await Transaction.getTransactionHistory(
-      tokenKey.toPubkey(),
+      tokenKey.toPublicKey(),
       [filter],
       limit
     );
@@ -84,7 +84,7 @@ describe('Transaction', () => {
     const limit = 100;
     const filter = 'mintTo';
     const res = await Transaction.getTransactionHistory(
-      tokenKey.toPubkey(),
+      tokenKey.toPublicKey(),
       [filter],
       limit
     );
@@ -101,12 +101,12 @@ describe('Transaction', () => {
     const destination = '2wxMtAe3nwQu5Ai2XuMgX4gxvYhTvXtedrvo7p9jDepn';
     const limit = 10;
     const res = await Transaction.getTransactionHistory(
-      tokenKey.toPubkey(), 
+      tokenKey.toPublicKey(), 
       [], 
       limit,
       {
         filter: Transaction.DirectionType.Dest, 
-        pubkey: destination.toPubkey()
+        pubkey: destination.toPublicKey()
       }
     );
 
@@ -122,12 +122,12 @@ describe('Transaction', () => {
     const source = '2wxMtAe3nwQu5Ai2XuMgX4gxvYhTvXtedrvo7p9jDepn';
     const limit = 3;
     const res = await Transaction.getTransactionHistory(
-      tokenKey.toPubkey(), 
+      tokenKey.toPublicKey(), 
       [], 
       limit,
       {
         filter: Transaction.DirectionType.Source, 
-        pubkey: source.toPubkey()
+        pubkey: source.toPublicKey()
       }
     );
 
@@ -140,7 +140,7 @@ describe('Transaction', () => {
 
   it('Get transfer history by address', async () => {
     const limit = 3;
-    const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPubkey();
+    const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPublicKey();
     const res = await Transaction.getTransactionHistory(owner, [], limit);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
@@ -154,8 +154,8 @@ describe('Transaction', () => {
   });
 
   it('Get token transfer history by owner address', async () => {
-    const tokenKey = 'EoRvjJXt25zzchc34qRVTRT3coe4ZrCkeSW24bFP4yU'.toPubkey();
-    const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPubkey();
+    const tokenKey = 'EoRvjJXt25zzchc34qRVTRT3coe4ZrCkeSW24bFP4yU'.toPublicKey();
+    const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPublicKey();
     const res = await Transaction.getTokenTransactionHistory(
       tokenKey,
       owner,
@@ -170,7 +170,7 @@ describe('Transaction', () => {
   it('Get token transfer history by owner address, Use filter options', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const res = await Transaction.getTransactionHistory(
-      tokenKey.toPubkey(),
+      tokenKey.toPublicKey(),
       [
         Transaction.Filter.MintTo,
       ]
@@ -183,7 +183,7 @@ describe('Transaction', () => {
 
   it('Get token transfer destination history', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
-    const res = await Transaction.getTransferTokenDestinationList(tokenKey.toPubkey());
+    const res = await Transaction.getTransferTokenDestinationList(tokenKey.toPublicKey());
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotEmpty(v.dest);
@@ -193,7 +193,7 @@ describe('Transaction', () => {
 
   it('Subscribe a account(pubkey)', async () => {
     const subscribeId = Transaction.subscribeAccount(
-      dest.pubkey.toPubkey(),
+      dest.pubkey.toPublicKey(),
       (v: Transaction.TransferHistory) => {
         console.log('# Subscribe result: ', v);
         assert.isNotEmpty(v.type);
@@ -216,7 +216,7 @@ const sendContinuously = async (): Promise<void> => {
 
   const inst1 =
     await SplToken.mint(
-      source.toPubkey(),
+      source.toPublicKey(),
       [source.toKeypair()],
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL
@@ -225,9 +225,9 @@ const sendContinuously = async (): Promise<void> => {
   const tokenKey = inst1.unwrap().data as Pubkey;
 
   const inst2 = await SplToken.transfer(
-    tokenKey.toPubkey(),
-    source.pubkey.toPubkey(),
-    dest.pubkey.toPubkey(),
+    tokenKey.toPublicKey(),
+    source.pubkey.toPublicKey(),
+    dest.pubkey.toPublicKey(),
     [source.secret.toKeypair()],
     1,
     MINT_DECIMAL

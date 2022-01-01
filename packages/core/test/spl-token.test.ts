@@ -19,7 +19,7 @@ describe('SplToken', () => {
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const inst =
       await SplToken.mint(
-        source.toPubkey(),
+        source.toPublicKey(),
         [source.toKeypair()],
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL
@@ -40,14 +40,14 @@ describe('SplToken', () => {
       2,
       source.toKeypair(),
       [
-        signer1.toPubkey(),
-        signer2.toPubkey()
+        signer1.toPublicKey(),
+        signer2.toPublicKey()
       ]
     );
 
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const mint = await SplToken.mint(
-      (multisig.unwrap().data as string).toPubkey(),
+      (multisig.unwrap().data as string).toPublicKey(),
       [
         source.toKeypair(),
         signer1.toKeypair(),
@@ -66,7 +66,7 @@ describe('SplToken', () => {
     const TOKEN_TOTAL_AMOUNT = 10000000;
     const inst1 =
       await SplToken.mint(
-        source.toPubkey(),
+        source.toPublicKey(),
         [
           source.toKeypair(),
         ],
@@ -79,9 +79,9 @@ describe('SplToken', () => {
     console.log('# tokenKey: ', token);
 
     const inst2 = await SplToken.transfer(
-      token.toPubkey(),
-      source.toPubkey(),
-      dest.toPubkey(),
+      token.toPublicKey(),
+      source.toPublicKey(),
+      dest.toPublicKey(),
       [
         source.toKeypair(),
       ],
@@ -92,9 +92,9 @@ describe('SplToken', () => {
     assert.isTrue(inst1.isOk);
 
     const inst3 = await SplToken.transfer(
-      token.toPubkey(),
-      source.toPubkey(),
-      dest.toPubkey(),
+      token.toPublicKey(),
+      source.toPublicKey(),
+      dest.toPublicKey(),
       [
         source.toKeypair(),
       ],
@@ -123,14 +123,14 @@ describe('SplToken', () => {
         2,
         source.toKeypair(),
         [
-          signer1.toPubkey(),
-          signer2.toPubkey()
+          signer1.toPublicKey(),
+          signer2.toPublicKey()
         ]
       );
 
     assert.isTrue(multiInst.isOk, `${multiInst.unwrap()}`);
 
-    const multisig = (multiInst.unwrap().data as string).toPubkey();
+    const multisig = (multiInst.unwrap().data as string).toPublicKey();
 
     console.log('# multisig address :', multisig.toBase58());
 
@@ -151,7 +151,7 @@ describe('SplToken', () => {
 
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
 
-    const token = (mintInst.unwrap().data as string).toPubkey();
+    const token = (mintInst.unwrap().data as string).toPublicKey();
 
     console.log('# tokenKey: ', token.toBase58());
 
@@ -159,7 +159,7 @@ describe('SplToken', () => {
     const inst = await SplToken.transfer(
       token,
       multisig,
-      dest.toPubkey(),
+      dest.toPublicKey(),
       [
         signer1.toKeypair(),
         signer2.toKeypair(),

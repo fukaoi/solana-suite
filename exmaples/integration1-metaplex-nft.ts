@@ -31,7 +31,7 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
   const owner = Account.create();
 
   // faucet 1 sol
-  await Account.requestAirdrop(owner.toPubkey());
+  await Account.requestAirdrop(owner.toPublicKey());
 
   console.log('# publisher: ', publisher.pubkey);
   console.log('# receipt: ', receipt.pubkey);
@@ -67,9 +67,11 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
     creators: null
   });
 
+  console.log(owner.toPublicKey());
+
   const inst1 = await Metaplex.mint(
     data,
-    owner.toPubkey(),
+    owner.toPublicKey(),
     [owner.toKeypair()]
   );
 
@@ -87,7 +89,7 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
   //////////////////////////////////////////////
 
   const metadata = await MetaplexMetaData.getByTokenKey(
-    tokenKey.toPubkey()
+    tokenKey.toPublicKey()
   );
 
   metadata.match(
@@ -101,9 +103,9 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
 
   // transfer nft owner => publish
   const inst2 = await SplToken.transferNft(
-    tokenKey.toPubkey(),
-    owner.toPubkey(),
-    publisher.toPubkey(),
+    tokenKey.toPublicKey(),
+    owner.toPublicKey(),
+    publisher.toPublicKey(),
     [
       owner.toKeypair()
     ],
@@ -112,9 +114,9 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
 
   // transfer nft publish => receipt
   const inst3 = await SplToken.transferNft(
-    tokenKey.toPubkey(),
-    publisher.toPubkey(),
-    receipt.toPubkey(),
+    tokenKey.toPublicKey(),
+    publisher.toPublicKey(),
+    receipt.toPublicKey(),
     [
       publisher.toKeypair(),
     ],

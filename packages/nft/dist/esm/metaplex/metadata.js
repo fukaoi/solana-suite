@@ -121,7 +121,7 @@ export var MetaplexMetaData;
         const matches = [];
         // Filter only metaplex nft
         for (const token of arr.value) {
-            const decoded = await MetaplexMetaData.getByTokenKey(token.account.data.parsed.info.mint.toPubkey());
+            const decoded = await MetaplexMetaData.getByTokenKey(token.account.data.parsed.info.mint.toPublicKey());
             if (!decoded)
                 continue;
             if (decoded.isErr) {
@@ -142,7 +142,7 @@ export var MetaplexMetaData;
     };
     MetaplexMetaData.update = async (data, newUpdateAuthority, primarySaleHappened, tokenKey, updateAuthority, signers) => {
         const inst = [];
-        const associatedToken = await Account.findAssocaiatedTokenAddress(updateAuthority, tokenKey);
+        const associatedToken = await Account.findAssocaiatedTokenAddress(tokenKey, updateAuthority);
         if (associatedToken.isErr) {
             return Result.err(associatedToken.error);
         }

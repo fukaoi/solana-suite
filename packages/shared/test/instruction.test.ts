@@ -16,7 +16,7 @@ describe('Instruction', () => {
     // const inst =
       // (
         // '{"title": "Submit first instruction"}',
-        // [source.toPubkey()],
+        // [source.toPublicKey()],
         // [source.toKeypair()],
       // );
 
@@ -28,14 +28,14 @@ describe('Instruction', () => {
     // const inst1 =
       // Memo.create(
         // '{"title": "Submit first instruction"}',
-        // [source.toPubkey()],
+        // [source.toPublicKey()],
         // [source.toKeypair()],
       // );
 
     // const inst2 =
       // Memo.create(
         // '{"title": "Submit first instruction"}',
-        // [source.toPubkey()],
+        // [source.toPublicKey()],
         // [source.toKeypair()],
       // );
 
@@ -48,7 +48,7 @@ describe('Instruction', () => {
     // const inst =
       // Result.ok(Memo.create(
         // '{"title": "Submit first instruction"}',
-        // [source.toPubkey()],
+        // [source.toPublicKey()],
         // [source.toKeypair()],
       // ));
 
@@ -61,14 +61,14 @@ describe('Instruction', () => {
     // const inst1 =
       // Result.ok(Memo.create(
         // '{"title": "Submit first instruction"}',
-        // [source.toPubkey()],
+        // [source.toPublicKey()],
         // [source.toKeypair()],
       // ));
 
     // const inst2 =
       // Result.ok(Memo.create(
         // '{"title": "Submit second instruction"}',
-        // [source.toPubkey()],
+        // [source.toPublicKey()],
         // [source.toKeypair()],
       // ));
 
@@ -82,7 +82,7 @@ describe('Instruction', () => {
     // for (let i = 0; i < 20; i++) {
       // insts.push(Memo.create(
         // `{"title": "Submit ${i} instruction"}`,
-        // [source.toPubkey()],
+        // [source.toPublicKey()],
         // [source.toKeypair()],
       // ));
     // }
@@ -110,7 +110,7 @@ describe('Instruction', () => {
     // const inst1 =
       // Result.ok(Memo.create(
         // '{"title": "Submit first instruction"}',
-        // [source.toPubkey()],
+        // [source.toPublicKey()],
         // [source.toKeypair()],
       // ));
 

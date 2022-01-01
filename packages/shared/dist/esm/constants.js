@@ -25,14 +25,14 @@ export var ConstantsFunc;
     };
 })(ConstantsFunc || (ConstantsFunc = {}));
 (function (Constants) {
-    String.prototype.toPubkey = function () {
+    String.prototype.toPublicKey = function () {
         return new PublicKey(this);
     };
     Constants.CURRENT_NETWORK = ConstantsFunc.switchApi(Constants.currentNetwork);
     Constants.API_URL = ConstantsFunc.switchApi(Constants.currentNetwork);
-    Constants.WRAPPED_TOKEN_PROGRAM_ID = 'So11111111111111111111111111111111111111112'.toPubkey();
-    Constants.MEMO_PROGRAM_ID = 'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo'.toPubkey();
-    Constants.METAPLEX_PROGRAM_ID = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'.toPubkey();
+    Constants.WRAPPED_TOKEN_PROGRAM_ID = 'So11111111111111111111111111111111111111112'.toPublicKey();
+    Constants.MEMO_PROGRAM_ID = 'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo'.toPublicKey();
+    Constants.METAPLEX_PROGRAM_ID = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'.toPublicKey();
     Constants.COMMITMENT = 'confirmed';
     // todo: this NFT_STORAGE_API_KEY moved .env file
     // NFT.storage can store NFTs up to 32GB in size!
@@ -40,6 +40,6 @@ export var ConstantsFunc;
     Constants.NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
     Constants.ARWEAVE_UPLOAD_SRV_URL = 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile4';
     Constants.ARWEAVE_GATEWAY_URL = 'https://arweave.net';
-    Constants.AR_SOL_HOLDER_ID = 'HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm'.toPubkey();
+    Constants.AR_SOL_HOLDER_ID = 'HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm'.toPublicKey();
     Constants.COIN_MARKET_URL = 'https://api.coingecko.com/api/v3/simple/price';
 })(Constants || (Constants = {}));

@@ -13,14 +13,14 @@ describe('Account', () => {
   });
 
   it('Reuest airdrop with 3 SOL', async () => {
-    const res = await Account.requestAirdrop(source.toPubkey(), 3);
+    const res = await Account.requestAirdrop(source.toPublicKey(), 3);
     assert.isTrue(res.isOk, res.unwrap());
-    const balance = await Account.getBalance(source.toPubkey());
+    const balance = await Account.getBalance(source.toPublicKey());
     assert.isTrue(balance.isOk, balance.unwrap().toString());
   });
 
   it('Get balance at publicKey', async () => {
-    const res = await Account.getBalance(source.toPubkey());
+    const res = await Account.getBalance(source.toPublicKey());
     assert.isTrue(res.isOk);
     console.log('# balance sol: ', res.unwrap());
   });
@@ -29,8 +29,8 @@ describe('Account', () => {
     const pubkey = 'D1r8Uea5uVQ9u3uNr8Nrg49t6BmkgnwLYYVmwZ3WhbPT';
     const tokenkey = '5k1WAQeAYUPiQnNWF557zBTqhMHfsi5utnE7TVSjd5Ut';
     const res = await Account.getTokenBalance(
-      pubkey.toPubkey(),
-      tokenkey.toPubkey()
+      pubkey.toPublicKey(),
+      tokenkey.toPublicKey()
     );
     assert.isTrue(res.isOk);
     console.log('# balance token: ', res.unwrap());
@@ -38,7 +38,7 @@ describe('Account', () => {
 
   it('Get lamports balance at publicKey', async () => {
     const res = await Account.getBalance(
-      source.toPubkey(),
+      source.toPublicKey(),
       'lamports'
     );
     assert.isTrue(res.isOk);
@@ -47,8 +47,8 @@ describe('Account', () => {
 
   it('find token address', async () => {
     const res = await Account.findAssocaiatedTokenAddress(
-      'D7dKBiFxWKiSSew4fzinML1so4vEaSPmtiKV6qWMDUJJ'.toPubkey(),
-      '5hj62erLKeKSM29C5oZR8TGei7RrMG79voFkiCotRZmS'.toPubkey(),
+      'D7dKBiFxWKiSSew4fzinML1so4vEaSPmtiKV6qWMDUJJ'.toPublicKey(),
+      '5hj62erLKeKSM29C5oZR8TGei7RrMG79voFkiCotRZmS'.toPublicKey(),
     );
     assert.isTrue(res.isOk);
     assert.isNotNull(res.unwrap());
@@ -56,13 +56,13 @@ describe('Account', () => {
 
   it('string to PublicKey', async () => {
     const pubkey = '6KJBDz6qPZZyJ9gAWXSgHufqAzU8pnhQmVdTitfusYS5';
-    const res = pubkey.toPubkey();
+    const res = pubkey.toPublicKey();
     assert.deepEqual(res, new PublicKey(pubkey));
   });
 
   it('Account to PublicKey', async () => {
     const account = Account.create();
-    const res = account.toPubkey();
+    const res = account.toPublicKey();
     assert.deepEqual(res, new PublicKey(account.pubkey));
   });
 

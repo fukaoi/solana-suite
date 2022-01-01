@@ -24,7 +24,7 @@ describe('Memo', () => {
     const res = Memo.create(
       DUMMY_DATA,
       [
-        source.toPubkey(),
+        source.toPublicKey(),
       ],
       [
         source.toKeypair()
@@ -45,7 +45,7 @@ describe('Memo', () => {
     const inst = Memo.create(
       '{"memo": "send memo by own"}',
       [
-        source.toPubkey(),
+        source.toPublicKey(),
       ],
       [
         source.toKeypair()
@@ -63,7 +63,7 @@ describe('Memo', () => {
     const inst = Memo.create(
       '{"memo": "send memo by owners"}',
       [
-        otherOwner.toPubkey()
+        otherOwner.toPublicKey()
       ],
       [
         source.toKeypair(),
@@ -83,8 +83,8 @@ describe('Memo', () => {
     const inst = Memo.create(
       '{"memo": "send memo by owners with fee payer"}',
       [
-        owner1.toPubkey(),
-        owner2.toPubkey(),
+        owner1.toPublicKey(),
+        owner2.toPublicKey(),
       ],
       [
         owner1.toKeypair(),
@@ -105,8 +105,8 @@ describe('Memo', () => {
     const inst1 = Memo.create(
       '{"memo": "send memo by owners with fee payer"}',
       [
-        owner1.toPubkey(),
-        owner2.toPubkey(),
+        owner1.toPublicKey(),
+        owner2.toPublicKey(),
       ],
       [
         owner1.toKeypair(),
@@ -116,8 +116,8 @@ describe('Memo', () => {
     );
 
     const inst2 = await SolNative.transfer(
-      source.toPubkey(),
-      dest.toPubkey(),
+      source.toPublicKey(),
+      dest.toPublicKey(),
       [
         source.toKeypair()
       ],
@@ -144,7 +144,7 @@ describe('Memo', () => {
     const inst = Memo.create(
       data500byte,
       [
-        source.toPubkey()
+        source.toPublicKey()
       ],
       [
         source.toKeypair()
@@ -157,7 +157,7 @@ describe('Memo', () => {
   });
 
   // it('Get memo data in transaction', async () => {
-    // const res = await SplToken.getTransferHistory(source.toPubkey());
+    // const res = await SplToken.getTransferHistory(source.toPublicKey());
     // console.log(res.unwrap()[0]);
     // console.log(res.unwrap()[1]);
     // console.log(res.unwrap()[2]);
@@ -169,7 +169,7 @@ describe('Memo', () => {
     const inst = Memo.create(
       overData,
       [
-        source.toPubkey()
+        source.toPublicKey()
       ],
       [
         source.toKeypair()

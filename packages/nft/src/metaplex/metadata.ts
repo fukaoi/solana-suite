@@ -182,7 +182,7 @@ export namespace MetaplexMetaData {
     // Filter only metaplex nft
     for (const token of arr.value) {
       const decoded = await getByTokenKey(
-        token.account.data.parsed.info.mint.toPubkey()
+        token.account.data.parsed.info.mint.toPublicKey()
       );
       if (!decoded) continue;
       if (decoded.isErr) {
@@ -229,8 +229,8 @@ export namespace MetaplexMetaData {
     const inst: TransactionInstruction[] = [];
 
     const associatedToken = await Account.findAssocaiatedTokenAddress(
+      tokenKey,
       updateAuthority,
-      tokenKey
     );
 
     if (associatedToken.isErr) {

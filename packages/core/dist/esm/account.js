@@ -10,7 +10,7 @@ export class KeypairStr {
         this.pubkey = pubkey;
         this.secret = secret;
     }
-    toPubkey() {
+    toPublicKey() {
         return new PublicKey(this.pubkey);
     }
     toKeypair() {

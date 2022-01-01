@@ -31,7 +31,7 @@ export class KeypairStr {
     this.secret = secret;
   }
 
-  toPubkey(): PublicKey {
+  toPublicKey(): PublicKey {
     return new PublicKey(this.pubkey);
   }
 

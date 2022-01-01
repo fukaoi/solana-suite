@@ -40,7 +40,7 @@
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
   "dependencies": {
-    "@solana-suite/shared": "^0.0.1",
+    "@solana-suite/shared": "^0.0.2",
     "@solana/buffer-layout": "^3.0.0",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.29.2"

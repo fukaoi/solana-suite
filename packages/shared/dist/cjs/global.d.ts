@@ -2,7 +2,7 @@ import { PublicKey, Keypair, TransactionSignature } from '@solana/web3.js';
 import { Result } from './';
 declare global {
     interface String {
-        toPubkey(): PublicKey;
+        toPublicKey(): PublicKey;
         toKeypair(): Keypair;
         toExplorerUrl(): string;
         toAddressUrl(): string;
