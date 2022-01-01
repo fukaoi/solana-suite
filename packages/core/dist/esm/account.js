@@ -36,7 +36,7 @@ export var Account;
         }
     };
     Account.getTokenBalance = async (pubkey, tokenKey) => {
-        const res = await Account.findAssocaiatedTokenAddress(pubkey, tokenKey);
+        const res = await Account.findAssocaiatedTokenAddress(tokenKey, pubkey);
         if (res.isErr) {
             return Result.err(res.error);
         }
@@ -63,7 +63,7 @@ export var Account;
         const keypair = Keypair.generate();
         return new KeypairStr(keypair.publicKey.toBase58(), bs.encode(keypair.secretKey));
     };
-    Account.findAssocaiatedTokenAddress = async (owner, tokenKey) => {
+    Account.findAssocaiatedTokenAddress = async (tokenKey, owner) => {
         return await PublicKey.findProgramAddress([
             owner.toBuffer(),
             TOKEN_PROGRAM_ID.toBuffer(),

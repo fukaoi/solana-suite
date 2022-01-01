@@ -1,26 +1,32 @@
 import { Node, Result, Constants } from '@solana-suite/shared';
+import { Account } from '.';
 export var Transaction;
 (function (Transaction) {
     // type guard
     const isParsedInstructon = (arg) => {
         return arg !== null && typeof arg === 'object' && arg.parsed;
     };
-    const filterTransactions = (transactions, filterOptions) => {
+    const filterTransactions = (transactions, filterOptions, inOutFilter) => {
         const hist = [];
         transactions.forEach(tx => {
             tx.transaction.message.instructions.forEach(t => {
-                if (isParsedInstructon(t)) {
-                    if (filterOptions.includes(t.parsed.type)) {
-                        const v = t.parsed;
-                        v.date = convertTimestmapToDate(tx.blockTime);
-                        v.sig = tx.transaction.signatures[0];
-                        if (tx.meta?.innerInstructions && tx.meta?.innerInstructions.length !== 0) {
-                            // inner instructions
-                            v.innerInstruction = true;
+                if (isParsedInstructon(t) && filterOptions.includes(t.parsed.type)) {
+                    const v = t.parsed;
+                    v.date = convertTimestmapToDate(tx.blockTime);
+                    v.sig = tx.transaction.signatures[0];
+                    if (tx.meta?.innerInstructions && tx.meta?.innerInstructions.length !== 0) {
+                        // inner instructions
+                        v.innerInstruction = true;
+                    }
+                    else {
+                        v.innerInstruction = false;
+                    }
+                    if (inOutFilter) {
+                        if (v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
+                            hist.push(v);
                         }
-                        else {
-                            v.innerInstruction = false;
-                        }
+                    }
+                    else {
                         hist.push(v);
                     }
                 }
@@ -50,6 +56,11 @@ export var Transaction;
         Filter["MintTo"] = "mintTo";
         Filter["Create"] = "create";
     })(Filter = Transaction.Filter || (Transaction.Filter = {}));
+    let DirectionType;
+    (function (DirectionType) {
+        DirectionType["Dest"] = "destination";
+        DirectionType["Source"] = "source";
+    })(DirectionType = Transaction.DirectionType || (Transaction.DirectionType = {}));
     Transaction.get = async (signature) => {
         const res = await Node.getConnection().getParsedConfirmedTransaction(signature)
             .then(Result.ok)
@@ -87,7 +98,7 @@ export var Transaction;
             return Result.ok(parsedSig);
         }
     };
-    Transaction.getTransactionHistory = async (pubkey, filterOptions, limit) => {
+    Transaction.getTransactionHistory = async (pubkey, filterOptions, limit, transferFilter) => {
         const filter = filterOptions !== undefined && filterOptions.length > 0
             ? filterOptions
             : [
@@ -111,7 +122,7 @@ export var Transaction;
                 return transactions;
             }
             const tx = transactions.unwrap();
-            const res = filterTransactions(tx, filter);
+            const res = filterTransactions(tx, filter, transferFilter);
             hist = hist.concat(res);
             if (hist.length >= limit || res.length === 0) {
                 hist = hist.slice(0, limit);
@@ -121,7 +132,20 @@ export var Transaction;
         }
         return Result.ok(hist);
     };
-    Transaction.getTransferDestinationList = async (pubkey) => {
+    Transaction.getTokenTransactionHistory = async (tokenKey, pubkey, filterOptions, limit, transferFilter) => {
+        const tokenPubkey = await Account.findAssocaiatedTokenAddress(pubkey, tokenKey);
+        if (tokenPubkey.isErr) {
+            return Result.err(tokenPubkey.error);
+        }
+        const filter = filterOptions !== undefined && filterOptions.length > 0
+            ? filterOptions
+            : [
+                Filter.Transfer,
+                Filter.TransferChecked,
+            ];
+        return Transaction.getTransactionHistory(tokenPubkey.value, filter, limit, transferFilter);
+    };
+    Transaction.getTransferTokenDestinationList = async (pubkey) => {
         const transactions = await Transaction.getAll(pubkey);
         if (transactions.isErr) {
             return Result.err(transactions.error);

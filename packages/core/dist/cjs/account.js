@@ -43,7 +43,7 @@ var Account;
         }
     };
     Account.getTokenBalance = async (pubkey, tokenKey) => {
-        const res = await Account.findAssocaiatedTokenAddress(pubkey, tokenKey);
+        const res = await Account.findAssocaiatedTokenAddress(tokenKey, pubkey);
         if (res.isErr) {
             return shared_1.Result.err(res.error);
         }
@@ -70,7 +70,7 @@ var Account;
         const keypair = web3_js_1.Keypair.generate();
         return new KeypairStr(keypair.publicKey.toBase58(), bs58_1.default.encode(keypair.secretKey));
     };
-    Account.findAssocaiatedTokenAddress = async (owner, tokenKey) => {
+    Account.findAssocaiatedTokenAddress = async (tokenKey, owner) => {
         return await web3_js_1.PublicKey.findProgramAddress([
             owner.toBuffer(),
             spl_token_1.TOKEN_PROGRAM_ID.toBuffer(),
