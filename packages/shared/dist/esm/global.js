@@ -28,10 +28,12 @@ String.prototype.toExplorerUrl = function () {
     try {
         /* tslint:disable-next-line */
         new PublicKey(this);
-        return `https://explorer.solana.com/address/${this}?cluster=${Constants.currentNetwork}`;
+        return `https://solscan.io/account/${this}?cluster=${Constants.currentNetwork}`;
+        // return `https://explorer.solana.com/address/${this}?cluster=${Constants.currentNetwork}`;
     }
     catch (_) {
-        return `https://explorer.solana.com/tx/${this}?cluster=${Constants.currentNetwork}`;
+        return `https://solscan.io/tx/${this}?cluster=${Constants.currentNetwork}`;
+        // return `https://explorer.solana.com/tx/${this}?cluster=${Constants.currentNetwork}`;
     }
 };
 console.debug = (data, data2 = '', data3 = '') => {
