@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/nft",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "nft module for solana-suite",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -40,8 +40,8 @@
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
   "dependencies": {
-    "@solana-suite/core": "^0.0.2",
-    "@solana-suite/shared": "^0.0.2",
+    "@solana-suite/core": "latest",
+    "@solana-suite/shared": "latest",
     "@solana/buffer-layout": "^3.0.0",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.29.2",
