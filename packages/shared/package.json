@@ -18,8 +18,8 @@
   },
   "files": [
     "dist",
-    "changeNetwork",
-    "changeDebug",
+    "switchNetwork",
+    "switchDebug",
     "package.json"
   ],
   "license": "MIT",
