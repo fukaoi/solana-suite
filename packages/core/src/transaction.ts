@@ -14,7 +14,7 @@ import {
   Result,
   Constants
 } from '@solana-suite/shared';
-import {Account} from '.';
+
 import {ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
 export namespace Transaction {
@@ -194,6 +194,7 @@ export namespace Transaction {
 
     while (true) {
       const transactions = await Transaction.getAll(pubkey, bufferedLimit, before);
+
       console.debug('# getTransactionHistory loop');
 
       if (transactions.isErr) {

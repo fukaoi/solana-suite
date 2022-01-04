@@ -162,7 +162,7 @@ describe('Transaction', () => {
       []
     );
     assert.isTrue(res.isOk);
-    assert.equal(res.unwrap().length, 9);
+    assert.isTrue(res.unwrap().length > 0);
     res.unwrap().forEach((v) => {
       assert.isNotNull(v.date);
     });
@@ -177,6 +177,22 @@ describe('Transaction', () => {
       ]
     );
     assert.isTrue(res.isOk);
+    assert.isTrue(res.unwrap().length > 0);
+    res.unwrap().forEach((v) => {
+      assert.isNotNull(v.date);
+    });
+  });
+
+  it('Get token transfer history by owner address, Use filter str options', async () => {
+    const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
+    const res = await Transaction.getTransactionHistory(
+      tokenKey.toPublicKey(),
+      [
+        'create',
+      ]
+    );
+    assert.isTrue(res.isOk);
+    assert.isTrue(res.unwrap().length > 0);
     res.unwrap().forEach((v) => {
       assert.isNotNull(v.date);
     });
