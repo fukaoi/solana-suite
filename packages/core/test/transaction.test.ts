@@ -101,11 +101,11 @@ describe('Transaction', () => {
     const destination = '2wxMtAe3nwQu5Ai2XuMgX4gxvYhTvXtedrvo7p9jDepn';
     const limit = 10;
     const res = await Transaction.getTransactionHistory(
-      tokenKey.toPublicKey(), 
-      [], 
+      tokenKey.toPublicKey(),
+      [],
       limit,
       {
-        filter: Transaction.DirectionType.Dest, 
+        filter: Transaction.DirectionType.Dest,
         pubkey: destination.toPublicKey()
       }
     );
@@ -122,11 +122,11 @@ describe('Transaction', () => {
     const source = '2wxMtAe3nwQu5Ai2XuMgX4gxvYhTvXtedrvo7p9jDepn';
     const limit = 3;
     const res = await Transaction.getTransactionHistory(
-      tokenKey.toPublicKey(), 
-      [], 
+      tokenKey.toPublicKey(),
+      [],
       limit,
       {
-        filter: Transaction.DirectionType.Source, 
+        filter: Transaction.DirectionType.Source,
         pubkey: source.toPublicKey()
       }
     );
@@ -153,7 +153,7 @@ describe('Transaction', () => {
     assert.equal(res.unwrap().length, limit);
   });
 
-  it('Get token transfer history by owner address', async () => {
+  it.only('Get token transfer history by owner address', async () => {
     const tokenKey = 'EoRvjJXt25zzchc34qRVTRT3coe4ZrCkeSW24bFP4yU'.toPublicKey();
     const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPublicKey();
     const res = await Transaction.getTokenTransactionHistory(

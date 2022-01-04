@@ -1,5 +1,5 @@
 import { Node, Result, Constants } from '@solana-suite/shared';
-import { Account } from '.';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 export var Transaction;
 (function (Transaction) {
     // type guard
@@ -117,7 +117,7 @@ export var Transaction;
         let before = undefined;
         while (true) {
             const transactions = await Transaction.getAll(pubkey, bufferedLimit, before);
-            console.count('# getTransactionHistory loop');
+            console.debug('# getTransactionHistory loop');
             if (transactions.isErr) {
                 return transactions;
             }
@@ -133,7 +133,8 @@ export var Transaction;
         return Result.ok(hist);
     };
     Transaction.getTokenTransactionHistory = async (tokenKey, pubkey, filterOptions, limit, transferFilter) => {
-        const tokenPubkey = await Account.findAssocaiatedTokenAddress(pubkey, tokenKey);
+        const tokenPubkey = await Token.getAssociatedTokenAddress(ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, tokenKey, pubkey).then(Result.ok)
+            .catch(Result.err);
         if (tokenPubkey.isErr) {
             return Result.err(tokenPubkey.error);
         }
