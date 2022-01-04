@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Instructions = exports.Instruction = void 0;
+exports.Instruction = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const _1 = require("./");
 class Instruction {
@@ -32,7 +32,6 @@ class Instruction {
     // @internal
     static batchSubmit = async (arr) => {
         let i = 0;
-        console.log(arr);
         for (const a of arr) {
             if (!a.instructions && !a.signers) {
                 return _1.Result.err(Error(`only Instruction object that can use batchSubmit().
@@ -60,9 +59,3 @@ class Instruction {
     };
 }
 exports.Instruction = Instruction;
-class Instructions extends Array {
-    echo() {
-        console.log(this);
-    }
-}
-exports.Instructions = Instructions;

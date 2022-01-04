@@ -9,6 +9,3 @@ export declare class Instruction {
     submit: () => Promise<Result<TransactionSignature, Error>>;
     static batchSubmit: (arr: Instruction[]) => Promise<Result<TransactionSignature, Error>>;
 }
-export declare class Instructions<T extends Instruction> extends Array<T> {
-    echo(): void;
-}

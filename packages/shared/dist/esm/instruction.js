@@ -29,7 +29,6 @@ export class Instruction {
     // @internal
     static batchSubmit = async (arr) => {
         let i = 0;
-        console.log(arr);
         for (const a of arr) {
             if (!a.instructions && !a.signers) {
                 return Result.err(Error(`only Instruction object that can use batchSubmit().
@@ -55,9 +54,4 @@ export class Instruction {
             .then(Result.ok)
             .catch(Result.err);
     };
-}
-export class Instructions extends Array {
-    echo() {
-        console.log(this);
-    }
 }
