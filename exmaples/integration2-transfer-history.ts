@@ -76,15 +76,25 @@ import {
   //////////////////////////////////////////////
 
   // Get history object by tokenKey
-  const history = await Transaction.getTransactionHistory(tokenKey.toPublicKey());
+  const history = await Transaction.getTransactionHistory(
+    tokenKey.toPublicKey()
+  );
+
   console.log('# Transfer history by token: ', history.unwrap());
 
-  // Get history object by publish
-  const historyPublish = await Transaction.getTransactionHistory(publisher.toPublicKey());
-  console.log('# Transfer history by publish: ', historyPublish.unwrap());
+  // Get Token history object by publish
+  const historyPublish = await Transaction.getTokenTransactionHistory(
+    tokenKey.toPublicKey(), 
+    publisher.toPublicKey()
+  );
+
+  console.log('# Transfer token history by publish: ', historyPublish.unwrap());
 
   // Get destination history list by tokenKey
-  const destList = await Transaction.getTransferTokenDestinationList(tokenKey.toPublicKey());
-  console.log('# Transfer destination list: ', destList.unwrap());
+  const destList = await Transaction.getTransferTokenDestinationList(
+    tokenKey.toPublicKey()
+  );
+
+  console.log('# Transfer token destinations list: ', destList.unwrap());
 
 })();

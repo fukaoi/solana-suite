@@ -57,7 +57,6 @@ export class Instruction {
     arr: Instruction[]
   ): Promise<Result<TransactionSignature, Error>> => {
     let i = 0;
-      console.log(arr);
     for (const a of arr) {
       if (!a.instructions && !a.signers) {
         return Result.err(
@@ -92,12 +91,6 @@ export class Instruction {
     )
       .then(Result.ok)
       .catch(Result.err);
-  }
-}
-
-export class Instructions<T extends Instruction> extends Array<T> {
-  public echo() {
-    console.log(this);
   }
 }
 

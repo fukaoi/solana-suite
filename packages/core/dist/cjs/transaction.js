@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Transaction = void 0;
 const shared_1 = require("@solana-suite/shared");
-const _1 = require(".");
+const spl_token_1 = require("@solana/spl-token");
 var Transaction;
 (function (Transaction) {
     // type guard
@@ -120,7 +120,7 @@ var Transaction;
         let before = undefined;
         while (true) {
             const transactions = await Transaction.getAll(pubkey, bufferedLimit, before);
-            console.count('# getTransactionHistory loop');
+            console.debug('# getTransactionHistory loop');
             if (transactions.isErr) {
                 return transactions;
             }
@@ -136,7 +136,8 @@ var Transaction;
         return shared_1.Result.ok(hist);
     };
     Transaction.getTokenTransactionHistory = async (tokenKey, pubkey, filterOptions, limit, transferFilter) => {
-        const tokenPubkey = await _1.Account.findAssocaiatedTokenAddress(pubkey, tokenKey);
+        const tokenPubkey = await spl_token_1.Token.getAssociatedTokenAddress(spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID, spl_token_1.TOKEN_PROGRAM_ID, tokenKey, pubkey).then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
         if (tokenPubkey.isErr) {
             return shared_1.Result.err(tokenPubkey.error);
         }
