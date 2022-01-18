@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { Node, Result, Instruction, } from '@solana-suite/shared';
 import { PublicKey, TransactionInstruction, SYSVAR_RENT_PUBKEY, SystemProgram, Keypair, } from '@solana/web3.js';
 import * as BufferLayout from '@solana/buffer-layout';
@@ -69,15 +78,15 @@ var MultisigInstruction;
 })(MultisigInstruction || (MultisigInstruction = {}));
 export var Multisig;
 (function (Multisig) {
-    Multisig.isAddress = async (multisig) => {
-        const info = await Multisig.getMultisigInfo(multisig);
+    Multisig.isAddress = (multisig) => __awaiter(this, void 0, void 0, function* () {
+        const info = yield Multisig.getMultisigInfo(multisig);
         if (info.isErr) {
             return Result.ok(false);
         }
         return Result.ok(true);
-    };
-    Multisig.getMultisigInfo = async (multisig) => {
-        const info = await Node.getConnection().getAccountInfo(multisig);
+    });
+    Multisig.getMultisigInfo = (multisig) => __awaiter(this, void 0, void 0, function* () {
+        const info = yield Node.getConnection().getAccountInfo(multisig);
         if (info === null) {
             return Result.err(Error('Failed to find multisig'));
         }
@@ -101,13 +110,13 @@ export var Multisig;
         multisigInfo.signer10 = new PublicKey(multisigInfo.signer10);
         multisigInfo.signer11 = new PublicKey(multisigInfo.signer11);
         return Result.ok(multisigInfo);
-    };
-    Multisig.create = async (m, feePayer, signerPubkey) => {
+    });
+    Multisig.create = (m, feePayer, signerPubkey) => __awaiter(this, void 0, void 0, function* () {
         if (m > signerPubkey.length)
             return Result.err(Error('signers number less than m number'));
         const account = Keypair.generate();
         const connection = Node.getConnection();
-        const balanceNeeded = await connection.getMinimumBalanceForRentExemption(MultisigInstruction.Layout.span)
+        const balanceNeeded = yield connection.getMinimumBalanceForRentExemption(MultisigInstruction.Layout.span)
             .then(Result.ok)
             .catch(Result.err);
         if (balanceNeeded.isErr)
@@ -115,5 +124,5 @@ export var Multisig;
         const inst1 = MultisigInstruction.account(account, feePayer, balanceNeeded.value);
         const inst2 = MultisigInstruction.multisig(m, account, signerPubkey);
         return Result.ok(new Instruction([inst1, inst2], [account], feePayer, account.publicKey.toBase58()));
-    };
+    });
 })(Multisig || (Multisig = {}));

@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -14,16 +23,16 @@ const core_1 = require("@solana-suite/core");
 var StorageArweave;
 (function (StorageArweave) {
     const METADATA_FILE = 'metadata.json';
-    const LAMPORT_MULTIPLIER = 10 ** 9;
-    const WINSTON_MULTIPLIER = 10 ** 12;
+    const LAMPORT_MULTIPLIER = Math.pow(10, 9);
+    const WINSTON_MULTIPLIER = Math.pow(10, 12);
     const DEFAULT_RADIX = 10;
     const totalBytes = (files) => {
         const bytes = files.reduce((sum, f) => (sum += f.length), 0);
         console.debug('# total bytes: ', bytes);
         return bytes;
     };
-    const fetchArweaveFeePrice = async () => {
-        const res = await (await (0, cross_fetch_1.default)(`${shared_1.Constants.ARWEAVE_GATEWAY_URL}/price/0`))
+    const fetchArweaveFeePrice = () => __awaiter(this, void 0, void 0, function* () {
+        const res = yield (yield (0, cross_fetch_1.default)(`${shared_1.Constants.ARWEAVE_GATEWAY_URL}/price/0`))
             .text()
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
@@ -32,9 +41,9 @@ var StorageArweave;
         const price = parseInt(res.value, DEFAULT_RADIX);
         console.debug('# arweave txn fee: ', price);
         return shared_1.Result.ok(price);
-    };
-    const fetchArweaveContentsCost = async (cost) => {
-        const res = await (await (0, cross_fetch_1.default)(`${shared_1.Constants.ARWEAVE_GATEWAY_URL}/price/${cost.toString()}`))
+    });
+    const fetchArweaveContentsCost = (cost) => __awaiter(this, void 0, void 0, function* () {
+        const res = yield (yield (0, cross_fetch_1.default)(`${shared_1.Constants.ARWEAVE_GATEWAY_URL}/price/${cost.toString()}`))
             .text()
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
@@ -43,9 +52,9 @@ var StorageArweave;
         const price = parseInt(res.value, DEFAULT_RADIX);
         console.debug('# arweave contents cost: ', price);
         return shared_1.Result.ok(price);
-    };
-    const fetchConvesionRateSolAndAr = async () => {
-        const res = await (await (0, cross_fetch_1.default)(`${shared_1.Constants.COIN_MARKET_URL}?ids=solana,arweave&vs_currencies=usd`))
+    });
+    const fetchConvesionRateSolAndAr = () => __awaiter(this, void 0, void 0, function* () {
+        const res = yield (yield (0, cross_fetch_1.default)(`${shared_1.Constants.COIN_MARKET_URL}?ids=solana,arweave&vs_currencies=usd`))
             .text()
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
@@ -53,26 +62,26 @@ var StorageArweave;
             return shared_1.Result.err(res.error);
         console.debug('# conversion rate: ', JSON.stringify(res.value));
         return shared_1.Result.ok(JSON.parse(res.value));
-    };
-    const calculateArweave = async (files) => {
+    });
+    const calculateArweave = (files) => __awaiter(this, void 0, void 0, function* () {
         const t = totalBytes(files);
-        const feePrice = await fetchArweaveFeePrice();
+        const feePrice = yield fetchArweaveFeePrice();
         if (feePrice.isErr)
             return shared_1.Result.err(feePrice.error);
-        const contentsPrice = await fetchArweaveContentsCost(t);
+        const contentsPrice = yield fetchArweaveContentsCost(t);
         if (contentsPrice.isErr)
             return shared_1.Result.err(contentsPrice.error);
         const totalArCost = (feePrice.value * files.length + contentsPrice.value) / WINSTON_MULTIPLIER;
         console.debug('# total arweave cost: ', totalArCost);
         // MEMO: To figure out how many lamports are required, multiply ar byte cost by this number
-        const rates = await fetchConvesionRateSolAndAr();
+        const rates = yield fetchConvesionRateSolAndAr();
         if (rates.isErr)
             return shared_1.Result.err(rates.error);
         const multiplier = (rates.value.arweave.usd / rates.value.solana.usd) / web3_js_1.LAMPORTS_PER_SOL;
         console.debug('# arweave multiplier: ', multiplier);
         // MEMO: We also always make a manifest file, which, though tiny, needs payment.
         return shared_1.Result.ok(LAMPORT_MULTIPLIER * totalArCost * multiplier * 1.1);
-    };
+    });
     const isJpegFile = (imageName) => {
         const match = imageName.match(/.+(.jpeg|.jpg)$/i);
         return match !== null;
@@ -98,8 +107,8 @@ var StorageArweave;
         uploadData.append('file[]', metadataBuffer, METADATA_FILE);
         return uploadData;
     };
-    const uploadServer = async (uploadData) => {
-        const res = await (0, cross_fetch_1.default)(shared_1.Constants.ARWEAVE_UPLOAD_SRV_URL, {
+    const uploadServer = (uploadData) => __awaiter(this, void 0, void 0, function* () {
+        const res = yield (0, cross_fetch_1.default)(shared_1.Constants.ARWEAVE_UPLOAD_SRV_URL, {
             method: 'POST',
             body: uploadData,
         })
@@ -107,14 +116,14 @@ var StorageArweave;
             .catch(shared_1.Result.err);
         if (res.isErr)
             return res.error;
-        const json = await res.value.json()
+        const json = yield res.value.json()
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (json.isErr)
             return json;
         return shared_1.Result.ok(json.value);
-    };
-    StorageArweave.upload = async (payer, storageData) => {
+    });
+    StorageArweave.upload = (payer, storageData) => __awaiter(this, void 0, void 0, function* () {
         const imagePath = storageData.image;
         const meta = createMetadata(storageData);
         const fileBuffers = [];
@@ -123,21 +132,21 @@ var StorageArweave;
         fileBuffers.push(imageBuffer);
         fileBuffers.push(metadataBuffer);
         const formData = createUploadData(payer.publicKey.toBase58(), meta.pngName, imageBuffer, metadataBuffer);
-        const totalConst = await calculateArweave(fileBuffers);
+        const totalConst = yield calculateArweave(fileBuffers);
         if (totalConst.isErr)
             return shared_1.Result.err(totalConst.error);
-        const inst = await core_1.SolNative.transfer(payer.publicKey, shared_1.Constants.AR_SOL_HOLDER_ID, [payer], totalConst.value);
+        const inst = yield core_1.SolNative.transfer(payer.publicKey, shared_1.Constants.AR_SOL_HOLDER_ID, [payer], totalConst.value);
         if (inst.isErr) {
             return shared_1.Result.err(inst.error);
         }
         else {
-            const sig = await inst.submit();
+            const sig = yield inst.submit();
             if (sig.isErr) {
                 return shared_1.Result.err(sig.error);
             }
         }
         // todo: No support FormData
-        const res = await uploadServer(formData)
+        const res = yield uploadServer(formData)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (res.isErr)
@@ -146,5 +155,5 @@ var StorageArweave;
         if (!manifest)
             return shared_1.Result.err(Error('Invalid manifest data'));
         return shared_1.Result.ok(`${shared_1.Constants.ARWEAVE_GATEWAY_URL}/${manifest.transactionId}`);
-    };
+    });
 })(StorageArweave = exports.StorageArweave || (exports.StorageArweave = {}));
