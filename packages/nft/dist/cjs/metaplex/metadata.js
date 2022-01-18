@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MetaplexMetaData = void 0;
 const web3_js_1 = require("@solana/web3.js");
@@ -96,26 +105,27 @@ var MetaplexMetaData;
             data: Buffer.from([]),
         });
     };
-    MetaplexMetaData.getByTokenKey = async (tokenKey) => {
-        const metaAccount = await index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    MetaplexMetaData.getByTokenKey = (tokenKey) => __awaiter(this, void 0, void 0, function* () {
+        var _a;
+        const metaAccount = yield index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
         if (metaAccount.isErr) {
             return shared_1.Result.err(metaAccount.error);
         }
-        const nfts = await shared_1.Node.getConnection().getParsedAccountInfo(metaAccount.value)
+        const nfts = yield shared_1.Node.getConnection().getParsedAccountInfo(metaAccount.value)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (nfts.isErr)
             return shared_1.Result.err(nfts.error);
         const accountData = nfts.value;
-        const data = accountData.value?.data;
+        const data = (_a = accountData.value) === null || _a === void 0 ? void 0 : _a.data;
         if (data) {
             return shared_1.Result.ok(index_1.MetaplexSerialize.decode(data));
         }
         return shared_1.Result.ok(index_1.Metaplex.initFormat());
-    };
-    MetaplexMetaData.getByOwner = async (owner) => {
+    });
+    MetaplexMetaData.getByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
         // Get all token by owner
-        const tokens = await shared_1.Node.getConnection().getParsedTokenAccountsByOwner(owner, { programId: spl_token_1.TOKEN_PROGRAM_ID })
+        const tokens = yield shared_1.Node.getConnection().getParsedTokenAccountsByOwner(owner, { programId: spl_token_1.TOKEN_PROGRAM_ID })
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (tokens.isErr)
@@ -124,7 +134,7 @@ var MetaplexMetaData;
         const matches = [];
         // Filter only metaplex nft
         for (const token of arr.value) {
-            const decoded = await MetaplexMetaData.getByTokenKey(token.account.data.parsed.info.mint.toPublicKey());
+            const decoded = yield MetaplexMetaData.getByTokenKey(token.account.data.parsed.info.mint.toPublicKey());
             if (!decoded)
                 continue;
             if (decoded.isErr) {
@@ -133,25 +143,25 @@ var MetaplexMetaData;
             matches.push(decoded.value);
         }
         return shared_1.Result.ok(matches);
-    };
-    MetaplexMetaData.create = async (data, tokenKey, mintAuthorityKey, updateAuthority, feePayer) => {
-        const metaAccount = await index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    });
+    MetaplexMetaData.create = (data, tokenKey, mintAuthorityKey, updateAuthority, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const metaAccount = yield index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
         if (metaAccount.isErr) {
             return shared_1.Result.err(metaAccount.error);
         }
         const txnData = index_1.MetaplexSerialize.serializeCreateArgs(data);
         const inst = createAssociatedTokenAccountInstruction(metaAccount.unwrap(), tokenKey, mintAuthorityKey, updateAuthority, feePayer, txnData);
         return shared_1.Result.ok([inst]);
-    };
-    MetaplexMetaData.update = async (data, newUpdateAuthority, primarySaleHappened, tokenKey, updateAuthority, signers) => {
+    });
+    MetaplexMetaData.update = (data, newUpdateAuthority, primarySaleHappened, tokenKey, updateAuthority, signers) => __awaiter(this, void 0, void 0, function* () {
         const inst = [];
-        const associatedToken = await core_1.Account.findAssocaiatedTokenAddress(tokenKey, updateAuthority);
+        const associatedToken = yield core_1.Account.findAssocaiatedTokenAddress(tokenKey, updateAuthority);
         if (associatedToken.isErr) {
             return shared_1.Result.err(associatedToken.error);
         }
         inst.push(updateAssociatedTokenAccountInstruction(associatedToken.value, updateAuthority, updateAuthority, tokenKey));
         inst.push(spl_token_1.Token.createMintToInstruction(spl_token_1.TOKEN_PROGRAM_ID, tokenKey, associatedToken.value, updateAuthority, signers, 1));
-        const metaAccount = await index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
+        const metaAccount = yield index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
         if (metaAccount.isErr) {
             return shared_1.Result.err(metaAccount.error);
         }
@@ -174,5 +184,5 @@ var MetaplexMetaData;
             data: txnData,
         }));
         return shared_1.Result.ok(inst);
-    };
+    });
 })(MetaplexMetaData = exports.MetaplexMetaData || (exports.MetaplexMetaData = {}));

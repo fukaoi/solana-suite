@@ -1,5 +1,14 @@
 "use strict";
 // fork: https://github.com/badrap/result
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Result = void 0;
 class AbstractResult {
@@ -22,41 +31,41 @@ class AbstractResult {
         this._chain(value => Result.ok(ok(value)), error => Result.err(err(error)));
     }
     /// submit (alias Instruction.submit) ////
-    async submit() {
-        try {
-            const instruction = this.unwrap();
-            const castedInst = instruction;
-            // why return false?
-            // if (instruction instanceof Instruction) {
-            if (castedInst.instructions && castedInst.signers) {
-                return await castedInst.submit();
+    submit() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const instruction = this.unwrap();
+                const castedInst = instruction;
+                // why return false?
+                // if (instruction instanceof Instruction) {
+                if (castedInst.instructions && castedInst.signers) {
+                    return yield castedInst.submit();
+                }
+                return Result.err(Error('Only Instruction object'));
             }
-            return Result.err(Error('Only Instruction object'));
-        }
-        catch (err) {
-            return Result.err(err);
-        }
+            catch (err) {
+                return Result.err(err);
+            }
+        });
     }
 }
 class InternalOk extends AbstractResult {
-    value;
-    isOk = true;
-    isErr = false;
     constructor(value) {
         super();
         this.value = value;
+        this.isOk = true;
+        this.isErr = false;
     }
     _chain(ok, _err) {
         return ok(this.value);
     }
 }
 class InternalErr extends AbstractResult {
-    error;
-    isOk = false;
-    isErr = true;
     constructor(error) {
         super();
         this.error = error;
+        this.isOk = false;
+        this.isErr = true;
     }
     _chain(_ok, err) {
         return err(this.error);

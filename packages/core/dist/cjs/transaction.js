@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Transaction = void 0;
 const shared_1 = require("@solana-suite/shared");
@@ -13,11 +22,12 @@ var Transaction;
         const hist = [];
         transactions.forEach(tx => {
             tx.transaction.message.instructions.forEach(t => {
+                var _a, _b;
                 if (isParsedInstructon(t) && filterOptions.includes(t.parsed.type)) {
                     const v = t.parsed;
                     v.date = convertTimestmapToDate(tx.blockTime);
                     v.sig = tx.transaction.signatures[0];
-                    if (tx.meta?.innerInstructions && tx.meta?.innerInstructions.length !== 0) {
+                    if (((_a = tx.meta) === null || _a === void 0 ? void 0 : _a.innerInstructions) && ((_b = tx.meta) === null || _b === void 0 ? void 0 : _b.innerInstructions.length) !== 0) {
                         // inner instructions
                         v.innerInstruction = true;
                     }
@@ -39,8 +49,8 @@ var Transaction;
     };
     const convertTimestmapToDate = (blockTime) => new Date(blockTime * 1000);
     Transaction.subscribeAccount = (pubkey, callback) => {
-        return shared_1.Node.getConnection().onAccountChange(pubkey, async () => {
-            const res = await Transaction.getTransactionHistory(pubkey, [
+        return shared_1.Node.getConnection().onAccountChange(pubkey, () => __awaiter(this, void 0, void 0, function* () {
+            const res = yield Transaction.getTransactionHistory(pubkey, [
                 Filter.Transfer,
                 Filter.TransferChecked
             ]);
@@ -48,7 +58,7 @@ var Transaction;
                 return res;
             }
             callback(res.value[0]);
-        });
+        }));
     };
     Transaction.unsubscribeAccount = (subscribeId) => shared_1.Node.getConnection().removeAccountChangeListener(subscribeId);
     let Filter;
@@ -64,8 +74,8 @@ var Transaction;
         DirectionType["Dest"] = "destination";
         DirectionType["Source"] = "source";
     })(DirectionType = Transaction.DirectionType || (Transaction.DirectionType = {}));
-    Transaction.get = async (signature) => {
-        const res = await shared_1.Node.getConnection().getParsedConfirmedTransaction(signature)
+    Transaction.get = (signature) => __awaiter(this, void 0, void 0, function* () {
+        const res = yield shared_1.Node.getConnection().getParsedConfirmedTransaction(signature)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (res.isErr) {
@@ -77,9 +87,9 @@ var Transaction;
             }
             return shared_1.Result.ok(res.value);
         }
-    };
-    Transaction.getAll = async (pubkey, limit, before, until) => {
-        const transactions = await shared_1.Node.getConnection().getSignaturesForAddress(pubkey, {
+    });
+    Transaction.getAll = (pubkey, limit, before, until) => __awaiter(this, void 0, void 0, function* () {
+        const transactions = yield shared_1.Node.getConnection().getSignaturesForAddress(pubkey, {
             limit,
             before,
             until,
@@ -92,7 +102,7 @@ var Transaction;
         else {
             const parsedSig = [];
             for (const tx of transactions.value) {
-                const res = await Transaction.get(tx.signature);
+                const res = yield Transaction.get(tx.signature);
                 if (res.isErr) {
                     return shared_1.Result.err(res.error);
                 }
@@ -100,8 +110,8 @@ var Transaction;
             }
             return shared_1.Result.ok(parsedSig);
         }
-    };
-    Transaction.getTransactionHistory = async (pubkey, filterOptions, limit, transferFilter) => {
+    });
+    Transaction.getTransactionHistory = (pubkey, filterOptions, limit, transferFilter) => __awaiter(this, void 0, void 0, function* () {
         const filter = filterOptions !== undefined && filterOptions.length > 0
             ? filterOptions
             : [
@@ -119,7 +129,7 @@ var Transaction;
         let hist = [];
         let before = undefined;
         while (true) {
-            const transactions = await Transaction.getAll(pubkey, bufferedLimit, before);
+            const transactions = yield Transaction.getAll(pubkey, bufferedLimit, before);
             console.debug('# getTransactionHistory loop');
             if (transactions.isErr) {
                 return transactions;
@@ -134,9 +144,9 @@ var Transaction;
             before = hist[hist.length - 1].sig;
         }
         return shared_1.Result.ok(hist);
-    };
-    Transaction.getTokenTransactionHistory = async (tokenKey, pubkey, filterOptions, limit, transferFilter) => {
-        const tokenPubkey = await spl_token_1.Token.getAssociatedTokenAddress(spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID, spl_token_1.TOKEN_PROGRAM_ID, tokenKey, pubkey).then(shared_1.Result.ok)
+    });
+    Transaction.getTokenTransactionHistory = (tokenKey, pubkey, filterOptions, limit, transferFilter) => __awaiter(this, void 0, void 0, function* () {
+        const tokenPubkey = yield spl_token_1.Token.getAssociatedTokenAddress(spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID, spl_token_1.TOKEN_PROGRAM_ID, tokenKey, pubkey).then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (tokenPubkey.isErr) {
             return shared_1.Result.err(tokenPubkey.error);
@@ -148,15 +158,16 @@ var Transaction;
                 Filter.TransferChecked,
             ];
         return Transaction.getTransactionHistory(tokenPubkey.value, filter, limit, transferFilter);
-    };
-    Transaction.getTransferTokenDestinationList = async (pubkey) => {
-        const transactions = await Transaction.getAll(pubkey);
+    });
+    Transaction.getTransferTokenDestinationList = (pubkey) => __awaiter(this, void 0, void 0, function* () {
+        var _a;
+        const transactions = yield Transaction.getAll(pubkey);
         if (transactions.isErr) {
             return shared_1.Result.err(transactions.error);
         }
         const hist = [];
         for (const tx of transactions.unwrap()) {
-            const posts = tx.meta?.postTokenBalances;
+            const posts = (_a = tx.meta) === null || _a === void 0 ? void 0 : _a.postTokenBalances;
             if (posts.length > 0) {
                 posts.forEach((p) => {
                     const amount = p.uiTokenAmount.uiAmount;
@@ -171,10 +182,10 @@ var Transaction;
             }
         }
         return shared_1.Result.ok(hist);
-    };
-    Transaction.confirmedSig = async (signature, commitment = shared_1.Constants.COMMITMENT) => {
-        return await shared_1.Node.getConnection().confirmTransaction(signature, commitment)
+    });
+    Transaction.confirmedSig = (signature, commitment = shared_1.Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {
+        return yield shared_1.Node.getConnection().confirmTransaction(signature, commitment)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
-    };
+    });
 })(Transaction = exports.Transaction || (exports.Transaction = {}));

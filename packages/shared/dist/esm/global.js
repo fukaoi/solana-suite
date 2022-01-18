@@ -1,21 +1,32 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { PublicKey, Keypair, } from '@solana/web3.js';
 import bs from 'bs58';
 import { Constants, Result, Instruction, } from './';
 // @ts-ignore
-Array.prototype.submit = async function () {
-    const instructions = [];
-    this.forEach((obj, i) => {
-        if (obj.isErr) {
-            return Result.err(Error(`[Array index: ${i}]${obj.error.message}`));
-        }
-        else if (obj.isOk) {
-            instructions.push(obj.value);
-        }
-        else {
-            instructions.push(obj);
-        }
+Array.prototype.submit = function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const instructions = [];
+        this.forEach((obj, i) => {
+            if (obj.isErr) {
+                return Result.err(Error(`[Array index: ${i}]${obj.error.message}`));
+            }
+            else if (obj.isOk) {
+                instructions.push(obj.value);
+            }
+            else {
+                instructions.push(obj);
+            }
+        });
+        return yield Instruction.batchSubmit(instructions);
     });
-    return await Instruction.batchSubmit(instructions);
 };
 String.prototype.toPublicKey = function () {
     return new PublicKey(this);

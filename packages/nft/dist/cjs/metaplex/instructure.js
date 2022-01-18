@@ -4,9 +4,6 @@ exports.MetaplexInstructure = void 0;
 var MetaplexInstructure;
 (function (MetaplexInstructure) {
     class Creator {
-        address;
-        verified;
-        share;
         constructor(args) {
             this.address = args.address;
             this.verified = args.verified;
@@ -15,11 +12,6 @@ var MetaplexInstructure;
     }
     MetaplexInstructure.Creator = Creator;
     class Data {
-        name;
-        symbol;
-        uri;
-        sellerFeeBasisPoints;
-        creators;
         constructor(args) {
             this.name = args.name;
             this.symbol = args.symbol;
@@ -30,22 +22,16 @@ var MetaplexInstructure;
     }
     MetaplexInstructure.Data = Data;
     class CreateMetadataArgs {
-        instruction = 0;
-        data;
-        isMutable;
         constructor(args) {
+            this.instruction = 0;
             this.data = args.data;
             this.isMutable = args.isMutable;
         }
     }
     MetaplexInstructure.CreateMetadataArgs = CreateMetadataArgs;
     class UpdateMetadataArgs {
-        instruction = 1;
-        data;
-        // Not used by this app, just required for instruction
-        updateAuthority;
-        primarySaleHappened;
         constructor(args) {
+            this.instruction = 1;
             this.data = args.data ? args.data : null;
             this.updateAuthority = args.updateAuthority ? args.updateAuthority : null;
             this.primarySaleHappened = args.primarySaleHappened;
@@ -62,12 +48,6 @@ var MetaplexInstructure;
         MetadataKey[MetadataKey["EditionMarker"] = 7] = "EditionMarker";
     })(MetadataKey = MetaplexInstructure.MetadataKey || (MetaplexInstructure.MetadataKey = {}));
     class Metadata {
-        key;
-        updateAuthority;
-        mint;
-        data;
-        primarySaleHappened;
-        isMutable;
         constructor(args) {
             this.key = MetadataKey.MetadataV1;
             this.updateAuthority = args.updateAuthority;
