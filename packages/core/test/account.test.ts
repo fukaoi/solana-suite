@@ -19,6 +19,23 @@ describe('Account', () => {
     assert.isTrue(balance.isOk, balance.unwrap().toString());
   });
 
+  it.only('Get account info', async () => {
+    const res = await Account.getInfo(source.toPublicKey());
+    console.log(res);
+  });
+
+  it.only('Get account info via token account', async () => {
+    const tokenAccount = '7huF1Cu7eXuaiSvJLuZvgAvS21K3M5PKvjm7mp5vRxE9'.toPublicKey();
+    const res = await Account.getInfo(tokenAccount);
+    console.log(res);
+  });
+
+  it.only('[Err]Not found address', async () => {
+    const tokenAccount = 'DUc7jGemNCv5A2q9GDDsnYn6JguMViVqfWyBdmPxvUG1'.toPublicKey();
+    const res = await Account.getInfo(tokenAccount);
+    console.log(res);
+  });
+
   it('Get balance at publicKey', async () => {
     const res = await Account.getBalance(source.toPublicKey());
     assert.isTrue(res.isOk);

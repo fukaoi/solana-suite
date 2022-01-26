@@ -48,6 +48,7 @@ import {
   // this is NFT ID
   console.log('# tokenKey: ', tokenKey);
 
+process.exit(0);
 
   //////////////////////////////////////////////
   // TRANSFER RECEIPR USER FROM THIS LINE

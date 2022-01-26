@@ -6,6 +6,7 @@ import {
 import {
   Keypair,
   LAMPORTS_PER_SOL,
+  ParsedAccountData,
   PublicKey,
   RpcResponseAndContext,
   TokenAmount,
@@ -15,6 +16,7 @@ import bs from 'bs58';
 
 import {Transaction} from './';
 import {Node, Result} from '@solana-suite/shared';
+import {parse} from 'path';
 
 export type Pubkey = string;
 export type Secret = string;
@@ -46,6 +48,30 @@ export namespace Account {
 
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
   export const MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 5;
+
+  export const getInfo = async (
+    pubkey: PublicKey,
+  ): Promise<any | Result<Error>> => {
+    // ) => {
+    const accountInfo = await Node.getConnection().getParsedAccountInfo(pubkey)
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (accountInfo.isErr) {
+      return accountInfo;
+    }
+    const data = (accountInfo?.value?.value?.data) as ParsedAccountData;
+    if (!data) {
+      // invalid pubkey 
+      return Result.err(Error('Not found publicKey. invalid data'));
+    } else if (data.parsed) {
+      // token account publicKey
+      return data.parsed.info;
+    } else {
+      // native address publicKey
+      return accountInfo.value.value;
+    }
+  }
 
   export const getBalance = async (
     pubkey: PublicKey,
