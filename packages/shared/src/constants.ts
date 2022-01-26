@@ -24,7 +24,7 @@ export namespace ConstantsFunc {
       case Constants.SolanaNet.test:
         return 'https://api.testnet.solana.com';
       default:
-        return 'http://api.devnet.solana.com';
+        return 'https://api.devnet.solana.com';
     }
   }
 }
