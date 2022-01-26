@@ -16,7 +16,6 @@ import bs from 'bs58';
 
 import {Transaction} from './';
 import {Node, Result} from '@solana-suite/shared';
-import {parse} from 'path';
 
 export type Pubkey = string;
 export type Secret = string;
@@ -49,16 +48,35 @@ export namespace Account {
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
   export const MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 5;
 
+  export interface AccountInfo {
+    data: any,
+    executable: boolean,
+    lamports: number,
+    owner: PublicKey,
+    rentEpoch: 255
+  }
+
+  export interface TokenAccountInfo {
+    mint: string,
+    owner: string,
+    state: string,
+    tokenAmount: {
+      amount: string,
+      decimals: number,
+      uiAmount: number,
+      uiAmountStirng: string
+    }
+  }
+
   export const getInfo = async (
     pubkey: PublicKey,
-  ): Promise<any | Result<Error>> => {
-    // ) => {
+  ): Promise<Result<AccountInfo | TokenAccountInfo, Error>> => {
     const accountInfo = await Node.getConnection().getParsedAccountInfo(pubkey)
       .then(Result.ok)
       .catch(Result.err);
 
     if (accountInfo.isErr) {
-      return accountInfo;
+      return Result.err(accountInfo.error);
     }
     const data = (accountInfo?.value?.value?.data) as ParsedAccountData;
     if (!data) {
@@ -66,10 +84,10 @@ export namespace Account {
       return Result.err(Error('Not found publicKey. invalid data'));
     } else if (data.parsed) {
       // token account publicKey
-      return data.parsed.info;
+      return Result.ok(data.parsed.info as TokenAccountInfo);
     } else {
       // native address publicKey
-      return accountInfo.value.value;
+      return Result.ok(accountInfo.value.value as AccountInfo);
     }
   }
 
