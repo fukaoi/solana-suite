@@ -36,6 +36,28 @@ var Account;
 (function (Account) {
     Account.DEFAULT_AIRDROP_AMOUNT = web3_js_1.LAMPORTS_PER_SOL * 1;
     Account.MAX_AIRDROP_SOL = web3_js_1.LAMPORTS_PER_SOL * 5;
+    Account.getInfo = (pubkey) => __awaiter(this, void 0, void 0, function* () {
+        var _a, _b;
+        const accountInfo = yield shared_1.Node.getConnection().getParsedAccountInfo(pubkey)
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
+        if (accountInfo.isErr) {
+            return shared_1.Result.err(accountInfo.error);
+        }
+        const data = ((_b = (_a = accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.value) === null || _a === void 0 ? void 0 : _a.value) === null || _b === void 0 ? void 0 : _b.data);
+        if (!data) {
+            // invalid pubkey 
+            return shared_1.Result.err(Error('Not found publicKey. invalid data'));
+        }
+        else if (data.parsed) {
+            // token account publicKey
+            return shared_1.Result.ok(data.parsed.info);
+        }
+        else {
+            // native address publicKey
+            return shared_1.Result.ok(accountInfo.value.value);
+        }
+    });
     Account.getBalance = (pubkey, unit = 'sol') => __awaiter(this, void 0, void 0, function* () {
         const balance = yield shared_1.Node.getConnection().getBalance(pubkey)
             .then(shared_1.Result.ok)

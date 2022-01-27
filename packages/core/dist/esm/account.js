@@ -29,6 +29,28 @@ export var Account;
 (function (Account) {
     Account.DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
     Account.MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 5;
+    Account.getInfo = (pubkey) => __awaiter(this, void 0, void 0, function* () {
+        var _a, _b;
+        const accountInfo = yield Node.getConnection().getParsedAccountInfo(pubkey)
+            .then(Result.ok)
+            .catch(Result.err);
+        if (accountInfo.isErr) {
+            return Result.err(accountInfo.error);
+        }
+        const data = ((_b = (_a = accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.value) === null || _a === void 0 ? void 0 : _a.value) === null || _b === void 0 ? void 0 : _b.data);
+        if (!data) {
+            // invalid pubkey 
+            return Result.err(Error('Not found publicKey. invalid data'));
+        }
+        else if (data.parsed) {
+            // token account publicKey
+            return Result.ok(data.parsed.info);
+        }
+        else {
+            // native address publicKey
+            return Result.ok(accountInfo.value.value);
+        }
+    });
     Account.getBalance = (pubkey, unit = 'sol') => __awaiter(this, void 0, void 0, function* () {
         const balance = yield Node.getConnection().getBalance(pubkey)
             .then(Result.ok)

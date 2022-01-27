@@ -6,6 +6,7 @@ import {
 import {
   Keypair,
   LAMPORTS_PER_SOL,
+  ParsedAccountData,
   PublicKey,
   RpcResponseAndContext,
   TokenAmount,
@@ -46,6 +47,49 @@ export namespace Account {
 
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
   export const MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 5;
+
+  export interface AccountInfo {
+    data: any,
+    executable: boolean,
+    lamports: number,
+    owner: PublicKey,
+    rentEpoch: 255
+  }
+
+  export interface TokenAccountInfo {
+    mint: string,
+    owner: string,
+    state: string,
+    tokenAmount: {
+      amount: string,
+      decimals: number,
+      uiAmount: number,
+      uiAmountStirng: string
+    }
+  }
+
+  export const getInfo = async (
+    pubkey: PublicKey,
+  ): Promise<Result<AccountInfo | TokenAccountInfo, Error>> => {
+    const accountInfo = await Node.getConnection().getParsedAccountInfo(pubkey)
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (accountInfo.isErr) {
+      return Result.err(accountInfo.error);
+    }
+    const data = (accountInfo?.value?.value?.data) as ParsedAccountData;
+    if (!data) {
+      // invalid pubkey 
+      return Result.err(Error('Not found publicKey. invalid data'));
+    } else if (data.parsed) {
+      // token account publicKey
+      return Result.ok(data.parsed.info as TokenAccountInfo);
+    } else {
+      // native address publicKey
+      return Result.ok(accountInfo.value.value as AccountInfo);
+    }
+  }
 
   export const getBalance = async (
     pubkey: PublicKey,

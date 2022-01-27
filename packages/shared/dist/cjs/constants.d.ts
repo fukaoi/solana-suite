@@ -1,19 +1,19 @@
 import { Commitment, PublicKey } from '@solana/web3.js';
+import './global';
 export declare namespace Constants {
     enum SolanaNet {
         prd = "mainnet-beta",
         dev = "devnet",
-        test = "testnet"
+        test = "testnet",
+        localhost = "localhost-devnet"
     }
     const currentNetwork: string;
     const isDebugging: boolean;
 }
 export declare namespace ConstantsFunc {
-    const switchApi: (env: string | undefined) => "https://api.mainnet-beta.solana.com" | "https://api.testnet.solana.com" | "http://api.devnet.solana.com";
+    const switchApi: (env: string | undefined) => "https://api.mainnet-beta.solana.com" | "https://api.testnet.solana.com" | "https://api.devnet.solana.com" | "http://api.devnet.solana.com";
 }
 export declare namespace Constants {
-    const CURRENT_NETWORK: string;
-    const API_URL: string;
     const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;
     const MEMO_PROGRAM_ID: PublicKey;
     const METAPLEX_PROGRAM_ID: PublicKey;

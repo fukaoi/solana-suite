@@ -3,7 +3,7 @@ import {Account, KeypairStr} from '../src';
 import {assert} from 'chai';
 import {PublicKey} from '@solana/web3.js';
 import {Setup} from '../../shared/test/setup';
- 
+
 let source: KeypairStr;
 
 describe('Account', () => {
@@ -17,6 +17,43 @@ describe('Account', () => {
     assert.isTrue(res.isOk, res.unwrap());
     const balance = await Account.getBalance(source.toPublicKey());
     assert.isTrue(balance.isOk, balance.unwrap().toString());
+  });
+
+  it('Get account info', async () => {
+    const res = await Account.getInfo(source.toPublicKey());
+    if (res.isErr) {
+      assert(res.error.message);
+    }
+    if (res.isOk) {
+      const info = res.value as Account.AccountInfo;
+      assert.isNumber(info.lamports);
+      assert.isDefined(info.data);
+      assert.isNotEmpty(info.owner);
+      assert.isNumber(info.rentEpoch);
+      assert.isBoolean(info.executable);
+    }
+  });
+
+  it('Get account info via token account', async () => {
+    const tokenAccount = '7huF1Cu7eXuaiSvJLuZvgAvS21K3M5PKvjm7mp5vRxE9'.toPublicKey();
+    const res = await Account.getInfo(tokenAccount);
+    if (res.isErr) {
+      assert(res.error.message);
+    }
+
+    if (res.isOk) {
+      const info = res.value as Account.TokenAccountInfo;
+      assert.isNotEmpty(info.owner);
+      assert.isNotEmpty(info.mint);
+      assert.isNotEmpty(info.state);
+      assert.isNotEmpty(info.tokenAmount);
+    }
+ });
+
+  it('[Err]Not found address', async () => {
+    const tokenAccount = 'DUc7jGemNCv5A2q9GDDsnYn6JguMViVqfWyBdmPxvUG1'.toPublicKey();
+    const res = await Account.getInfo(tokenAccount);
+    assert.isTrue(res.isErr);
   });
 
   it('Get balance at publicKey', async () => {

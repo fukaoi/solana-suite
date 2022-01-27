@@ -4,12 +4,14 @@ import {
 } from '@solana/web3.js';
 
 import Config from './solana-suite.json';
+import './global';
 
 export namespace Constants {
   export enum SolanaNet {
     prd = 'mainnet-beta',
     dev = 'devnet',
     test = 'testnet',
+    localhost = 'localhost-devnet',
   }
 
   export const currentNetwork = Config.network;
@@ -23,6 +25,8 @@ export namespace ConstantsFunc {
         return 'https://api.mainnet-beta.solana.com';
       case Constants.SolanaNet.test:
         return 'https://api.testnet.solana.com';
+      case Constants.SolanaNet.dev:
+        return 'https://api.devnet.solana.com';
       default:
         return 'http://api.devnet.solana.com';
     }
@@ -33,13 +37,10 @@ export namespace Constants {
   String.prototype.toPublicKey = function () {
     return new PublicKey(this);
   }
-  export const CURRENT_NETWORK = ConstantsFunc.switchApi(Constants.currentNetwork);
-  export const API_URL = ConstantsFunc.switchApi(Constants.currentNetwork);
   export const WRAPPED_TOKEN_PROGRAM_ID = 'So11111111111111111111111111111111111111112'.toPublicKey();
   export const MEMO_PROGRAM_ID = 'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo'.toPublicKey();
   export const METAPLEX_PROGRAM_ID = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'.toPublicKey();
   export const COMMITMENT: Commitment = 'confirmed';
-  // todo: this NFT_STORAGE_API_KEY moved .env file
   // NFT.storage can store NFTs up to 32GB in size!
   export const NFT_STORAGE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE';
 
