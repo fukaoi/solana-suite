@@ -1,16 +1,23 @@
-import {Constants} from './constants';
+import {
+  Constants,
+  ConstantsFunc
+} from './constants';
+
 import {
   Connection,
 } from '@solana/web3.js';
 
 export namespace Node {
-  let connection: Connection;
-
-  export const getConnection = () => {
-    if (connection) return connection;
-    connection = new Connection(Constants.API_URL, Constants.COMMITMENT);
+  export const getConnection = (
+    network = Constants.API_URL,
+    commitment = Constants.COMMITMENT
+  ): Connection => {
+    let connection: Connection;
+    if (network) {
+      connection = new Connection(ConstantsFunc.switchApi(network), commitment);
+    } else {
+      connection = new Connection(Constants.API_URL, commitment);
+    }
     return connection;
   };
-
-  export const getApiUrl = () => Constants.API_URL;
 }
