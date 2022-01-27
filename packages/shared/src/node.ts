@@ -9,9 +9,10 @@ import {
 
 export namespace Node {
   export const getConnection = (
-    network = Constants.API_URL,
+    network = Constants.currentNetwork,
     commitment = Constants.COMMITMENT
   ): Connection => {
+    console.debug('# Current network: ', network);
     return new Connection(ConstantsFunc.switchApi(network), commitment);
   };
 }

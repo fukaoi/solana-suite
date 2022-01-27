@@ -11,7 +11,7 @@ export namespace Constants {
     prd = 'mainnet-beta',
     dev = 'devnet',
     test = 'testnet',
-    localhostDev = 'localhost-devnet',
+    localhost = 'localhost-devnet',
   }
 
   export const currentNetwork = Config.network;

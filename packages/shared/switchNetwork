@@ -2,23 +2,28 @@
 
 CJS_JSON=dist/cjs/solana-suite.json
 ESM_JSON=dist/esm/solana-suite.json
+ORG_JSON=src/solana-suite.json
 
-if [ "$1" = "main" ]; then
+if [ "$1" = "prd" ]; then
   echo "changed mainnet-beta network"
   sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' $CJS_JSON
   sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' $ESM_JSON
+  sed -i -e 's/\"network\":.*\"/\"network\": \"mainnet-beta\"/' $ORG_JSON
 elif [ "$1" = "dev" ]; then
   echo "changed dev network"
   sed -i -e 's/\"network\":.*\"/\"network\": \"devnet\"/' $CJS_JSON
   sed -i -e 's/\"network\":.*\"/\"network\": \"devnet\"/' $ESM_JSON
+  sed -i -e 's/\"network\":.*\"/\"network\": \"devnet\"/' $ORG_JSON
 elif [ "$1" = "test" ]; then
   echo "changed test network"
   sed -i -e 's/\"network\":.*\"/\"network\": \"testnet\"/' $CJS_JSON
   sed -i -e 's/\"network\":.*\"/\"network\": \"testnet\"/' $ESM_JSON
+  sed -i -e 's/\"network\":.*\"/\"network\": \"testnet\"/' $ORG_JSON
 elif [ "$1" = "localhost" ]; then
   echo "changed dev network for localhost"
   sed -i -e 's/\"network\":.*\"/\"network\": \"localhost-devnet\"/' $CJS_JSON
   sed -i -e 's/\"network\":.*\"/\"network\": \"localhost-devnet\"/' $ESM_JSON
+  sed -i -e 's/\"network\":.*\"/\"network\": \"localhost-devnet\"/' $ORG_JSON
 else
   echo "No argument supplied"
 fi

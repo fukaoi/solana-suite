@@ -12,7 +12,7 @@ import fetch from 'cross-fetch';
 import FormData from 'form-data';
 import path from 'path';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { Constants, Result } from '@solana-suite/shared';
+import { Constants, ConstantsFunc, Result } from '@solana-suite/shared';
 import { SolNative, } from '@solana-suite/core';
 export var StorageArweave;
 (function (StorageArweave) {
@@ -96,7 +96,7 @@ export var StorageArweave;
     const createUploadData = (payedSignature, pngName, imageBuffer, metadataBuffer) => {
         const uploadData = new FormData();
         uploadData.append('transaction', payedSignature);
-        uploadData.append('env', Constants.CURRENT_NETWORK);
+        uploadData.append('env', ConstantsFunc.switchApi(Constants.currentNetwork));
         uploadData.append('file[]', imageBuffer, { filename: pngName, contentType: 'image/png' });
         uploadData.append('file[]', metadataBuffer, METADATA_FILE);
         return uploadData;

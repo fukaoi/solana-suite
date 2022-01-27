@@ -13,6 +13,25 @@ export declare namespace Account {
     type Unit = 'sol' | 'lamports';
     export const DEFAULT_AIRDROP_AMOUNT: number;
     export const MAX_AIRDROP_SOL: number;
+    export interface AccountInfo {
+        data: any;
+        executable: boolean;
+        lamports: number;
+        owner: PublicKey;
+        rentEpoch: 255;
+    }
+    export interface TokenAccountInfo {
+        mint: string;
+        owner: string;
+        state: string;
+        tokenAmount: {
+            amount: string;
+            decimals: number;
+            uiAmount: number;
+            uiAmountStirng: string;
+        };
+    }
+    export const getInfo: (pubkey: PublicKey) => Promise<Result<AccountInfo | TokenAccountInfo, Error>>;
     export const getBalance: (pubkey: PublicKey, unit?: Unit) => Promise<Result<number, Error>>;
     export const getTokenBalance: (pubkey: PublicKey, tokenKey: PublicKey) => Promise<Result<TokenAmount, Error>>;
     export const requestAirdrop: (pubkey: PublicKey, airdropAmount?: number | undefined) => Promise<Result<string, Error>>;

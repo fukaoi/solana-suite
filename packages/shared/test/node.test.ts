@@ -34,7 +34,6 @@ describe('Node', () => {
     assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.SolanaNet.localhostDev));
   });
 
-
   it('Connect devnet and modified commitment', async () => {
     const res = Node.getConnection(Constants.SolanaNet.dev, 'processed');
     assert.isNotEmpty(res);
