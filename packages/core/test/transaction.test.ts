@@ -140,8 +140,9 @@ describe('Transaction', () => {
 
   it('Get transfer history by address', async () => {
     const limit = 3;
-    const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPublicKey();
+    const owner = 'HeH2PRj4GEdLCsbKQ18LvwhbuH4anmPQ3HoeRsJmymVw'.toPublicKey();
     const res = await Transaction.getTransactionHistory(owner, [], limit);
+    console.log(res);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotEmpty(v.type);

@@ -11,6 +11,7 @@ export namespace Constants {
     prd = 'mainnet-beta',
     dev = 'devnet',
     test = 'testnet',
+    localhostDev = 'localhost-devnet',
   }
 
   export const currentNetwork = Config.network;
@@ -24,8 +25,10 @@ export namespace ConstantsFunc {
         return 'https://api.mainnet-beta.solana.com';
       case Constants.SolanaNet.test:
         return 'https://api.testnet.solana.com';
-      default:
+      case Constants.SolanaNet.dev:
         return 'https://api.devnet.solana.com';
+      default:
+        return 'http://api.devnet.solana.com';
     }
   }
 }

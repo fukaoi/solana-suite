@@ -1,6 +1,6 @@
 import {
   Constants,
-  ConstantsFunc
+  ConstantsFunc,
 } from './constants';
 
 import {
@@ -12,12 +12,6 @@ export namespace Node {
     network = Constants.API_URL,
     commitment = Constants.COMMITMENT
   ): Connection => {
-    let connection: Connection;
-    if (network) {
-      connection = new Connection(ConstantsFunc.switchApi(network), commitment);
-    } else {
-      connection = new Connection(Constants.API_URL, commitment);
-    }
-    return connection;
+    return new Connection(ConstantsFunc.switchApi(network), commitment);
   };
 }

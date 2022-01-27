@@ -11,6 +11,14 @@ elif [ "$1" = "dev" ]; then
   echo "changed dev network"
   sed -i -e 's/\"network\":.*\"/\"network\": \"devnet\"/' $CJS_JSON
   sed -i -e 's/\"network\":.*\"/\"network\": \"devnet\"/' $ESM_JSON
+elif [ "$1" = "test" ]; then
+  echo "changed test network"
+  sed -i -e 's/\"network\":.*\"/\"network\": \"testnet\"/' $CJS_JSON
+  sed -i -e 's/\"network\":.*\"/\"network\": \"testnet\"/' $ESM_JSON
+elif [ "$1" = "localhost" ]; then
+  echo "changed dev network for localhost"
+  sed -i -e 's/\"network\":.*\"/\"network\": \"localhost-devnet\"/' $CJS_JSON
+  sed -i -e 's/\"network\":.*\"/\"network\": \"localhost-devnet\"/' $ESM_JSON
 else
   echo "No argument supplied"
 fi
