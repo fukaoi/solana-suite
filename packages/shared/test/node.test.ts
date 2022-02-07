@@ -23,15 +23,15 @@ describe('Node', () => {
   });
 
   it('Connect devnet for localhost', async () => {
-    const res = Node.getConnection(Constants.SolanaNet.localhostDev);
+    const res = Node.getConnection(Constants.SolanaNet.localhost);
     assert.isNotEmpty(res);
-    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.SolanaNet.localhostDev));
+    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.SolanaNet.localhost));
   });
 
   it('Connect devnet for localhost by default no parameter', async () => {
     const res = Node.getConnection();
     assert.isNotEmpty(res);
-    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.SolanaNet.localhostDev));
+    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.SolanaNet.localhost));
   });
 
   it('Connect devnet and modified commitment', async () => {
