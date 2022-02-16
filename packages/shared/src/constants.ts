@@ -32,6 +32,10 @@ export namespace ConstantsFunc {
         return 'http://api.devnet.solana.com';
     }
   }
+  
+  export const setNftStorageApiKey = () => {
+
+  }
 }
 
 export namespace Constants {
