@@ -9,11 +9,10 @@ export declare namespace Constants {
     }
     const currentNetwork: string;
     const isDebugging: boolean;
-    const nftstorageApiKey: string;
 }
 export declare namespace ConstantsFunc {
     const switchApi: (env: string | undefined) => "https://api.mainnet-beta.solana.com" | "https://api.testnet.solana.com" | "https://api.devnet.solana.com" | "http://api.devnet.solana.com";
-    const setNftStorageApiKey: () => void;
+    const getNftStorageApiKey: () => string;
 }
 export declare namespace Constants {
     const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;
