@@ -34,6 +34,8 @@ var ConstantsFunc;
                 return 'http://api.devnet.solana.com';
         }
     };
+    ConstantsFunc.setNftStorageApiKey = () => {
+    };
 })(ConstantsFunc = exports.ConstantsFunc || (exports.ConstantsFunc = {}));
 (function (Constants) {
     String.prototype.toPublicKey = function () {
