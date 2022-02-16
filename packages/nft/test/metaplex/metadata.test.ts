@@ -6,7 +6,7 @@ import {
   MetaplexInstructure,
   Metaplex
 } from '../../src/metaplex';
-import {Setup} from '../../../shared/test/setup';
+import {Setup} from '../../../shared/test/testSetup';
 import {TransactionInstruction} from '@solana/web3.js';
 
 let source: KeypairStr;

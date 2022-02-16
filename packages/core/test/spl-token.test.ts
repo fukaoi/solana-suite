@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
-import {Setup} from '../../shared/test/setup';
+import {Setup} from '../../shared/test/testSetup';
 import {Account, SplToken, Multisig, KeypairStr} from '../src/'
 
 let source: KeypairStr;
