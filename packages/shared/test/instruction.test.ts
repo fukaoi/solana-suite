@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {Result} from '../src';
-import {Setup, KeypairStr} from './setup';
+import {Setup, KeypairStr} from './testSetup';
 import {assert} from 'chai';
 
 let source: KeypairStr;

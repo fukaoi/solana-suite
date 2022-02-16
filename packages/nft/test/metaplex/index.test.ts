@@ -2,7 +2,7 @@ import {describe, it} from 'mocha';
 import {assert} from 'chai'
 import {Account, KeypairStr, Multisig, SplToken} from '@solana-suite/core';
 import {Metaplex, MetaplexInstructure} from '../../src/metaplex';
-import {Setup} from '../../../shared/test/setup';
+import {Setup} from '../../../shared/test/testSetup';
 
 let source: KeypairStr;
 let dest: KeypairStr;

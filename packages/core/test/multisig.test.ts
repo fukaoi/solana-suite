@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import {Multisig, Account, KeypairStr} from '../src/';
-import {Setup} from '../../shared/test/setup';
+import {Setup} from '../../shared/test/testSetup';
 
 let source: KeypairStr;
 

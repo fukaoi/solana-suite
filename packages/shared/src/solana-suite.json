@@ -1,4 +1,7 @@
   {
     "network": "localhost-devnet",
-    "debugging": false
+    "debugging": false,
+    "nftstorage": {
+      "apikey": ""
+    }
   }

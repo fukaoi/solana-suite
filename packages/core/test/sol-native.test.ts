@@ -1,7 +1,7 @@
 import {describe, it, before} from 'mocha';
 import {SolNative, Account, Multisig, KeypairStr} from '../src';
 import {assert} from 'chai';
-import {Setup} from '../../shared/test/setup';
+import {Setup} from '../../shared/test/testSetup';
 
 let source: KeypairStr;
 let dest: KeypairStr;
