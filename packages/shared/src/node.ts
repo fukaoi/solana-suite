@@ -9,10 +9,10 @@ import {
 
 export namespace Node {
   export const getConnection = (
-    network = Constants.currentNetwork,
+    cluster = Constants.currentCluster,
     commitment = Constants.COMMITMENT
   ): Connection => {
-    console.debug('# Current network: ', network);
-    return new Connection(ConstantsFunc.switchApi(network), commitment);
+    console.debug('# Current cluster: ', cluster);
+    return new Connection(ConstantsFunc.switchApi(cluster), commitment);
   };
 }
