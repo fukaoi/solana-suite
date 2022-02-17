@@ -18,8 +18,7 @@
   },
   "files": [
     "dist",
-    "switchNetwork",
-    "switchDebug",
+    "solana-suite-config.js",
     "package.json"
   ],
   "license": "MIT",

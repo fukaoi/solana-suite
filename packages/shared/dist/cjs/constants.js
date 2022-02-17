@@ -16,7 +16,7 @@ var Constants;
         SolanaNet["test"] = "testnet";
         SolanaNet["localhost"] = "localhost-devnet";
     })(SolanaNet = Constants.SolanaNet || (Constants.SolanaNet = {}));
-    Constants.currentNetwork = solana_suite_json_1.default.network;
+    Constants.currentCluster = solana_suite_json_1.default.cluster;
     Constants.isDebugging = solana_suite_json_1.default.debugging;
 })(Constants = exports.Constants || (exports.Constants = {}));
 var ConstantsFunc;

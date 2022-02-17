@@ -7,7 +7,7 @@ export declare namespace Constants {
         test = "testnet",
         localhost = "localhost-devnet"
     }
-    const currentNetwork: string;
+    const currentCluster: string;
     const isDebugging: boolean;
 }
 export declare namespace ConstantsFunc {

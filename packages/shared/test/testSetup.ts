@@ -10,7 +10,7 @@ import {
 
 
 console.debug(`\u001b[33m === DEBUG MODE ===`);
-console.debug(`\u001b[33m solana-network: ${Constants.currentNetwork}`);
+console.debug(`\u001b[33m solana-network: ${Constants.currentCluster}`);
 
 export class KeypairStr {
   pubkey: string;
@@ -35,7 +35,7 @@ export class KeypairStr {
 }
 
 export namespace Setup {
-  const TEMP_KEYPAIR_FILE = `/tmp/solana-${Constants.currentNetwork}-keypair`;
+  const TEMP_KEYPAIR_FILE = `/tmp/solana-${Constants.currentCluster}-keypair`;
 
   export const generatekeyPair = async ():
     Promise<{source: KeypairStr, dest: KeypairStr}> => {

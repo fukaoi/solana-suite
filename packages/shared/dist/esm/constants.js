@@ -10,7 +10,7 @@ export var Constants;
         SolanaNet["test"] = "testnet";
         SolanaNet["localhost"] = "localhost-devnet";
     })(SolanaNet = Constants.SolanaNet || (Constants.SolanaNet = {}));
-    Constants.currentNetwork = Config.network;
+    Constants.currentCluster = Config.cluster;
     Constants.isDebugging = Config.debugging;
 })(Constants || (Constants = {}));
 export var ConstantsFunc;
