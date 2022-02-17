@@ -40,11 +40,9 @@ String.prototype.toExplorerUrl = function () {
         /* tslint:disable-next-line */
         new PublicKey(this);
         return `https://solscan.io/account/${this}?cluster=${Constants.currentCluster}`;
-        // return `https://explorer.solana.com/address/${this}?cluster=${Constants.currentNetwork}`;
     }
     catch (_) {
         return `https://solscan.io/tx/${this}?cluster=${Constants.currentCluster}`;
-        // return `https://explorer.solana.com/tx/${this}?cluster=${Constants.currentNetwork}`;
     }
 };
 console.debug = (data, data2 = '', data3 = '') => {
