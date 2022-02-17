@@ -102,7 +102,7 @@ var StorageArweave;
     const createUploadData = (payedSignature, pngName, imageBuffer, metadataBuffer) => {
         const uploadData = new form_data_1.default();
         uploadData.append('transaction', payedSignature);
-        uploadData.append('env', shared_1.ConstantsFunc.switchApi(shared_1.Constants.currentNetwork));
+        uploadData.append('env', shared_1.ConstantsFunc.switchApi(shared_1.Constants.currentCluster));
         uploadData.append('file[]', imageBuffer, { filename: pngName, contentType: 'image/png' });
         uploadData.append('file[]', metadataBuffer, METADATA_FILE);
         return uploadData;
