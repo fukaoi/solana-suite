@@ -14,7 +14,7 @@ export namespace Constants {
     localhost = 'localhost-devnet',
   }
 
-  export const currentNetwork = Config.network;
+  export const currentCluster = Config.cluster;
   export const isDebugging = Config.debugging;
 }
 

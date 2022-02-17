@@ -1,7 +1,0 @@
-{
-    "network": "localhost-devnet",
-    "debugging": false,
-    "nftstorage": {
-        "apikey": ""
-    }
-}
