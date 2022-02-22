@@ -80,7 +80,7 @@ export namespace Account {
     }
     const data = (accountInfo?.value?.value?.data) as ParsedAccountData;
     if (!data) {
-      // invalid pubkey 
+      // invalid pubkey
       return Result.err(Error('Not found publicKey. invalid data'));
     } else if (data.parsed) {
       // token account publicKey
