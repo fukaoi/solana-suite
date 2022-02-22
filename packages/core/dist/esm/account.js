@@ -39,7 +39,7 @@ export var Account;
         }
         const data = ((_b = (_a = accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.value) === null || _a === void 0 ? void 0 : _a.value) === null || _b === void 0 ? void 0 : _b.data);
         if (!data) {
-            // invalid pubkey 
+            // invalid pubkey
             return Result.err(Error('Not found publicKey. invalid data'));
         }
         else if (data.parsed) {

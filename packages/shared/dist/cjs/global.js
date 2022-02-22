@@ -42,13 +42,17 @@ String.prototype.toKeypair = function () {
     return web3_js_1.Keypair.fromSecretKey(decoded);
 };
 String.prototype.toExplorerUrl = function () {
+    let cluster = _1.Constants.currentCluster;
+    if (_1.Constants.currentCluster === 'localhost-devnet') {
+        cluster = 'devnet';
+    }
     try {
         /* tslint:disable-next-line */
         new web3_js_1.PublicKey(this);
-        return `https://solscan.io/account/${this}?cluster=${_1.Constants.currentCluster}`;
+        return `https://solscan.io/account/${this}?cluster=${cluster}`;
     }
     catch (_) {
-        return `https://solscan.io/tx/${this}?cluster=${_1.Constants.currentCluster}`;
+        return `https://solscan.io/tx/${this}?cluster=${cluster}`;
     }
 };
 console.debug = (data, data2 = '', data3 = '') => {

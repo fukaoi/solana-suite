@@ -124,7 +124,7 @@ export var Transaction;
             limit = 1000;
         }
         let hist = [];
-        let before = undefined;
+        let before;
         while (true) {
             const transactions = yield Transaction.getAll(pubkey, bufferedLimit, before);
             console.debug('# getTransactionHistory loop');
