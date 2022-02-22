@@ -5,7 +5,10 @@
   "scripts": {
     "clean": "npm run clean -ws",
     "compile": "npm run compile -ws && npm run compile:esm -ws",
-    "lint": "npx tslint --fix --project .",
+    "lint": "npm run lint:core && npm run lint:nft && npm run lint:shared",
+    "lint:core": "npx tslint --fix --project packages/core",
+    "lint:nft": "npx tslint --fix --project packages/nft",
+    "lint:shared": "npx tslint --fix --project packages/shared",
     "test": "npm run test:all -ws"
   },
   "workspaces": [

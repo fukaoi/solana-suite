@@ -50,12 +50,16 @@ String.prototype.toKeypair = function () {
 }
 
 String.prototype.toExplorerUrl = function () {
+  let cluster = Constants.currentCluster;
+  if (Constants.currentCluster === 'localhost-devnet') {
+    cluster = 'devnet';
+  }
   try {
     /* tslint:disable-next-line */
     new PublicKey(this);
-    return `https://solscan.io/account/${this}?cluster=${Constants.currentCluster}`;
+    return `https://solscan.io/account/${this}?cluster=${cluster}`;
   } catch (_) {
-    return `https://solscan.io/tx/${this}?cluster=${Constants.currentCluster}`;
+    return `https://solscan.io/tx/${this}?cluster=${cluster}`;
   }
 }
 

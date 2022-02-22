@@ -190,7 +190,7 @@ export namespace Transaction {
       limit = 1000;
     }
     let hist: TransferHistory[] = [];
-    let before = undefined;
+    let before;
 
     while (true) {
       const transactions = await Transaction.getAll(pubkey, bufferedLimit, before);
