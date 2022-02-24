@@ -7,7 +7,7 @@ import Config from './solana-suite.json';
 import './global';
 
 export namespace Constants {
-  export enum SolanaNet {
+  export enum Cluster {
     prd = 'mainnet-beta',
     dev = 'devnet',
     test = 'testnet',
@@ -21,11 +21,11 @@ export namespace Constants {
 export namespace ConstantsFunc {
   export const switchApi = (env: string | undefined) => {
     switch (env) {
-      case Constants.SolanaNet.prd:
+      case Constants.Cluster.prd:
         return 'https://api.mainnet-beta.solana.com';
-      case Constants.SolanaNet.test:
+      case Constants.Cluster.test:
         return 'https://api.testnet.solana.com';
-      case Constants.SolanaNet.dev:
+      case Constants.Cluster.dev:
         return 'https://api.devnet.solana.com';
       default:
         return 'http://api.devnet.solana.com';
@@ -38,7 +38,8 @@ export namespace ConstantsFunc {
         `
         [Warning]
         --------------------------------------
-        Your need to update nftstorage.apikey defin parameter in solana-suite.json.
+        If will use @solana-suite/nft package 
+        your need to update nftstorage.apikey defin parameter in solana-suite.json.
         can get apikey from https://nft.storage/
         --------------------------------------
         `
