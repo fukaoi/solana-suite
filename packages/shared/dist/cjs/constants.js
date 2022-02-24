@@ -9,13 +9,13 @@ const solana_suite_json_1 = __importDefault(require("./solana-suite.json"));
 require("./global");
 var Constants;
 (function (Constants) {
-    let SolanaNet;
-    (function (SolanaNet) {
-        SolanaNet["prd"] = "mainnet-beta";
-        SolanaNet["dev"] = "devnet";
-        SolanaNet["test"] = "testnet";
-        SolanaNet["localhost"] = "localhost-devnet";
-    })(SolanaNet = Constants.SolanaNet || (Constants.SolanaNet = {}));
+    let Cluster;
+    (function (Cluster) {
+        Cluster["prd"] = "mainnet-beta";
+        Cluster["dev"] = "devnet";
+        Cluster["test"] = "testnet";
+        Cluster["localhost"] = "localhost-devnet";
+    })(Cluster = Constants.Cluster || (Constants.Cluster = {}));
     Constants.currentCluster = solana_suite_json_1.default.cluster;
     Constants.isDebugging = solana_suite_json_1.default.debugging;
 })(Constants = exports.Constants || (exports.Constants = {}));
@@ -23,11 +23,11 @@ var ConstantsFunc;
 (function (ConstantsFunc) {
     ConstantsFunc.switchApi = (env) => {
         switch (env) {
-            case Constants.SolanaNet.prd:
+            case Constants.Cluster.prd:
                 return 'https://api.mainnet-beta.solana.com';
-            case Constants.SolanaNet.test:
+            case Constants.Cluster.test:
                 return 'https://api.testnet.solana.com';
-            case Constants.SolanaNet.dev:
+            case Constants.Cluster.dev:
                 return 'https://api.devnet.solana.com';
             default:
                 return 'http://api.devnet.solana.com';
@@ -38,7 +38,8 @@ var ConstantsFunc;
             console.warn(`
         [Warning]
         --------------------------------------
-        Your need to update nftstorage.apikey defin parameter in solana-suite.json.
+        If will use @solana-suite/nft package 
+        your need to update nftstorage.apikey defin parameter in solana-suite.json.
         can get apikey from https://nft.storage/
         --------------------------------------
         `);

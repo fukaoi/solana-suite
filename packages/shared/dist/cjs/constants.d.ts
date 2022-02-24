@@ -1,7 +1,7 @@
 import { Commitment, PublicKey } from '@solana/web3.js';
 import './global';
 export declare namespace Constants {
-    enum SolanaNet {
+    enum Cluster {
         prd = "mainnet-beta",
         dev = "devnet",
         test = "testnet",
