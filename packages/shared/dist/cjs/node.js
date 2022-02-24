@@ -21,7 +21,7 @@ var Node;
             connection = new web3_js_1.Connection(constants_1.ConstantsFunc.switchApi(param.cluster), param.commitment);
         }
         else {
-            connection = new web3_js_1.Connection(constants_1.ConstantsFunc.switchApi(param.cluster));
+            connection = new web3_js_1.Connection(constants_1.ConstantsFunc.switchApi(param.cluster), constants_1.Constants.COMMITMENT);
         }
     };
 })(Node = exports.Node || (exports.Node = {}));
