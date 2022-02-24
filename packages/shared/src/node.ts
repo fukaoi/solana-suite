@@ -31,7 +31,7 @@ export namespace Node {
     if (param.commitment) {
       connection = new Connection(ConstantsFunc.switchApi(param.cluster), param.commitment);
     } else {
-      connection = new Connection(ConstantsFunc.switchApi(param.cluster));
+      connection = new Connection(ConstantsFunc.switchApi(param.cluster), Constants.COMMITMENT);
     }
   }
 }
