@@ -55,13 +55,7 @@ String.prototype.toExplorerUrl = function () {
         return `https://solscan.io/tx/${this}?cluster=${cluster}`;
     }
 };
-console.debug = (data, data2 = '', data3 = '') => {
-    if (_1.Constants.isDebugging)
-        console.log(`\u001b[34m`, data, `\u001b[35m`, data2, `\u001b[36m`, data3);
-};
-console.error = (data, data2 = '', data3 = '') => {
-    console.log(`\u001b[31m`, data, `\u001b[4m\u001b[31m`, data2, `\u001b[0m\u001b[31m`, data3);
-};
+console.debug = (data, data2 = '', data3 = '') => _1.Constants.isDebugging && console.log(data, data2, data3);
 const tryCatch = (fn) => {
     try {
         return _1.Result.ok(fn());
