@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/shared",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "shared module for solana-suite",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
