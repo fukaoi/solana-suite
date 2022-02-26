@@ -67,25 +67,7 @@ console.debug = (
   data: unknown,
   data2: unknown = '',
   data3: unknown = ''
-) => {
-  if (Constants.isDebugging) console.log(
-    `\u001b[34m`, data,
-    `\u001b[35m`, data2,
-    `\u001b[36m`, data3
-  );
-}
-
-console.error = (
-  data: unknown,
-  data2: unknown = '',
-  data3: unknown = ''
-) => {
-  console.log(
-    `\u001b[31m`, data,
-    `\u001b[4m\u001b[31m`, data2,
-    `\u001b[0m\u001b[31m`, data3,
-  );
-}
+) => Constants.isDebugging && console.log(data, data2, data3);
 
 export const tryCatch = (fn: () => {}) => {
   try {

@@ -34,27 +34,9 @@ describe('Global', () => {
     }
   });
 
-  it('try catch. Handling error object', async () => {
-    const message = 'test';
-    const res = tryCatch(() => {
-      throw new Error(message);
-    });
-    assert.isTrue(res.isErr);
-    if (res.isErr) {
-      assert.equal(res.error.message, message);
-    }
-  });
-
   it('console.debug', async () => {
     console.debug(
       'debug test', {title: 'test'}, () => {return }
     );
   });
-
-  it('console.error', async () => {
-    console.error(
-      'error test', {title: 'error'}, () => {return}
-    );
-  });
-
 })
