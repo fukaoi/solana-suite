@@ -24,15 +24,6 @@ export namespace Transaction {
     return arg !== null && typeof arg === 'object' && arg.parsed;
   }
 
-  const includeFilter = (t: any, filterOptions: Filter[]) => {
-    filterOptions.map(f => {
-      if (f === Filter.Memo) {
-      } else {
-
-      }
-    });
-  }
-
   const filterTransactions = (
     transactions: ParsedTransactionWithMeta[],
     filterOptions: Filter[],
@@ -275,35 +266,6 @@ export namespace Transaction {
       ];
 
     return getTransactionHistory(tokenPubkey.value, filter, limit, transferFilter);
-  }
-
-  //@deprecated next version
-  export const getTransferTokenDestinationList = async (
-    pubkey: PublicKey
-  ): Promise<Result<TransferDestinationList[], Error>> => {
-    const transactions = await Transaction.getAll(pubkey);
-
-    if (transactions.isErr) {
-      return Result.err(transactions.error);
-    }
-
-    const hist: TransferDestinationList[] = [];
-    for (const tx of transactions.unwrap() as ParsedTransactionWithMeta[]) {
-      const posts = tx.meta?.postTokenBalances as TokenBalance[];
-      if (posts.length > 0) {
-        posts.forEach((p) => {
-          const amount = p!.uiTokenAmount!.uiAmount as number;
-          if (amount > 0) {
-            const index = p.accountIndex;
-            const dest = tx.transaction.message.accountKeys[index].pubkey;
-            const date = convertTimestmapToDate(tx.blockTime as number);
-            const v: TransferDestinationList = {dest, date};
-            hist.push(v);
-          }
-        });
-      }
-    }
-    return Result.ok(hist);
   }
 
   export const confirmedSig = async (

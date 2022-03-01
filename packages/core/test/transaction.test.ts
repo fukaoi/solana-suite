@@ -65,14 +65,13 @@ describe('Transaction', () => {
   it('Get transfer history with set optional filter', async () => {
     const tokenKey = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s';
     const limit = 20;
-    const filter = 'mintTo';
     const res = await Transaction.getTransactionHistory(
       tokenKey.toPublicKey(),
-      [filter],
+      [Transaction.Filter.MintTo],
       limit
     );
     assert.isTrue(res.isOk);
-    assert.equal(res.unwrap()[0].type, filter);
+    assert.equal(res.unwrap()[0].type, Transaction.Filter.MintTo);
     assert.equal(res.unwrap().length, limit);
     res.unwrap().forEach((v) => {
       assert.isNotNull(v.date);
@@ -82,14 +81,13 @@ describe('Transaction', () => {
   it('Get transfer history with set optional filter limit 100', async () => {
     const tokenKey = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s';
     const limit = 100;
-    const filter = 'mintTo';
     const res = await Transaction.getTransactionHistory(
       tokenKey.toPublicKey(),
-      [filter],
+      [Transaction.Filter.MintTo],
       limit
     );
     assert.isTrue(res.isOk);
-    assert.equal(res.unwrap()[0].type, filter);
+    assert.equal(res.unwrap()[0].type, Transaction.Filter.MintTo);
     assert.equal(res.unwrap().length, limit);
     res.unwrap().forEach((v) => {
       assert.isNotNull(v.date);
@@ -189,22 +187,12 @@ describe('Transaction', () => {
     const res = await Transaction.getTransactionHistory(
       tokenKey.toPublicKey(),
       [
-        'create',
+        Transaction.Filter.Create
       ]
     );
     assert.isTrue(res.isOk);
     assert.isTrue(res.unwrap().length > 0);
     res.unwrap().forEach((v) => {
-      assert.isNotNull(v.date);
-    });
-  });
-
-  it('Get token transfer destination history', async () => {
-    const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
-    const res = await Transaction.getTransferTokenDestinationList(tokenKey.toPublicKey());
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotEmpty(v.dest);
       assert.isNotNull(v.date);
     });
   });
