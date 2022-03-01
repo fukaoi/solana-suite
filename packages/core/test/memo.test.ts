@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../../shared/test/testSetup';
-import {Memo, KeypairStr, Account, SolNative} from '../src';
+import {Memo, KeypairStr, Account, SolNative, Transaction} from '../src';
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -156,13 +156,16 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  // it('Get memo data in transaction', async () => {
-    // const res = await SplToken.getTransferHistory(source.toPublicKey());
-    // console.log(res.unwrap()[0]);
-    // console.log(res.unwrap()[1]);
-    // console.log(res.unwrap()[2]);
-    // console.log(res.unwrap()[3]);
-  // });
+  it.only('Get memo data in transaction', async () => {
+    const res = await Transaction.getTransactionHistory(
+      source.toPublicKey(),
+      [Transaction.Filter.Memo, Transaction.Filter.TransferChecked]
+    );
+    if (res.isOk) {
+      console.log(res);
+      res.value.forEach(v => console.log(v));
+    }
+  });
 
   it('[Err] Over max limit', async () => {
     const overData = 'a'.repeat(2000);

@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
-import {ParsedConfirmedTransaction} from '@solana/web3.js';
+import {ParsedTransactionWithMeta} from '@solana/web3.js';
 import {Setup} from '../../shared/test/testSetup';
 import {KeypairStr, Pubkey, SplToken, Transaction} from '../src/'
 
@@ -29,7 +29,7 @@ describe('Transaction', () => {
     if (res.isOk) {
       assert.equal(res.value.length, limit);
       assert.isArray(res.value);
-      assert.isObject((res.value as ParsedConfirmedTransaction[])[0]);
+      assert.isObject((res.value as ParsedTransactionWithMeta[])[0]);
     } else {
       assert.isFalse(res.isErr, res.isErr && res.error.message);
     }
@@ -46,7 +46,7 @@ describe('Transaction', () => {
 
     if (res.isOk) {
       assert.isArray(res.value);
-      assert.isObject((res.value as ParsedConfirmedTransaction[])[0]);
+      assert.isObject((res.value as ParsedTransactionWithMeta[])[0]);
     } else {
       assert.isFalse(res.isErr, res.isErr && res.error.message);
     }
