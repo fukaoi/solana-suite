@@ -159,12 +159,14 @@ describe('Memo', () => {
   it.only('Get memo data in transaction', async () => {
     const res = await Transaction.getTransactionHistory(
       source.toPublicKey(),
-      [Transaction.Filter.Memo, Transaction.Filter.TransferChecked]
+      // [Transaction.Filter.Memo, Transaction.Filter.TransferChecked]
+      // [Transaction.Filter.Memo]
     );
-    if (res.isOk) {
-      console.log(res);
-      res.value.forEach(v => console.log(v));
-    }
+    console.log(res);
+    // if (res.isOk) {
+      // console.log(res);
+      // res.value.forEach(v => console.log(v));
+    // }
   });
 
   it('[Err] Over max limit', async () => {
