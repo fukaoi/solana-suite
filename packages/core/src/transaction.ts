@@ -22,7 +22,7 @@ export namespace Transaction {
     return arg !== null && typeof arg === 'object' && arg.parsed;
   }
 
-  const createTransferHistoryObject = (
+  const createTransferHistory = (
     instruction: ParsedInstruction,
     value: ParsedTransactionWithMeta,
     inOutFilter?: TransferFilter
@@ -30,22 +30,22 @@ export namespace Transaction {
     const v: TransferHistory = instruction.parsed;
     v.date = convertTimestmapToDate(value.blockTime as number);
     v.sig = value.transaction.signatures[0];
+    v.innerInstruction = false;
     if (value.meta?.innerInstructions && value.meta?.innerInstructions.length !== 0) {
       // inner instructions
       v.innerInstruction = true;
-    } else {
-      v.innerInstruction = false;
     }
 
     if (inOutFilter) {
-      if (v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
+      if (inOutFilter && v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
         return v;
       }
+    } else {
+      return v;
     }
-    return v;
   }
 
-  const createMemoHistoryObject = (
+  const createMemoHistory = (
     instruction: ParsedInstruction,
     value: ParsedTransactionWithMeta,
     inOutFilter?: TransferFilter
@@ -61,18 +61,18 @@ export namespace Transaction {
     v.type = instruction.program;
     v.date = convertTimestmapToDate(value.blockTime as number);
     v.sig = value.transaction.signatures[0];
+    v.innerInstruction = false;
     if (value.meta?.innerInstructions && value.meta?.innerInstructions.length !== 0) {
       // inner instructions
       v.innerInstruction = true;
-    } else {
-      v.innerInstruction = false;
     }
     if (inOutFilter) {
       if (v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
         return v;
       }
+    } else {
+      return v;
     }
-    return v;
   }
 
   const filterTransactions = (
@@ -86,17 +86,42 @@ export namespace Transaction {
       tx.value.transaction.message.instructions.forEach(instruction => {
         if (isParsedInstructon(instruction)) {
           if (filterOptions.includes(instruction.parsed.type)) {
-            hist.push(createTransferHistoryObject(instruction, tx.value, inOutFilter));
+            const res = createTransferHistory(instruction, tx.value, inOutFilter);
+            res && hist.push(res);
           } else {
             //spl-memo, other?
             if (filterOptions.includes(instruction.program as Filter)) {
-              hist.push(createMemoHistoryObject(instruction, tx.value, inOutFilter));
+              const res = createMemoHistory(instruction, tx.value, inOutFilter);
+              res && hist.push(res);
             }
           }
         }
       });
     });
     return hist;
+  }
+
+  const filterTransactionsCallback = (
+    transactions: Result<ParsedTransactionWithMeta>[],
+    filterOptions: Filter[],
+    callback: (data: any) => never,
+    inOutFilter?: TransferFilter,
+  ) => {
+    transactions.forEach(tx => {
+      if (tx.isErr) return tx;
+      tx.value.transaction.message.instructions.forEach(instruction => {
+        if (isParsedInstructon(instruction)) {
+          if (filterOptions.includes(instruction.parsed.type)) {
+            callback(createTransferHistory(instruction, tx.value, inOutFilter));
+          } else {
+            //spl-memo, other?
+            if (filterOptions.includes(instruction.program as Filter)) {
+              callback(createMemoHistory(instruction, tx.value, inOutFilter));
+            }
+          }
+        }
+      });
+    });
   }
 
   const convertTimestmapToDate = (blockTime: number): Date =>
@@ -109,10 +134,12 @@ export namespace Transaction {
     return Node.getConnection().onAccountChange(pubkey, async () => {
       const res = await getTransactionHistory(
         pubkey,
-        [
-          Filter.Transfer,
-          Filter.TransferChecked
-        ]
+        {
+          actionFilter: [
+            Filter.Transfer,
+            Filter.TransferChecked
+          ]
+        }
       );
       if (res.isErr) {
         return res;
@@ -208,23 +235,27 @@ export namespace Transaction {
 
   export const getTransactionHistory = async (
     pubkey: PublicKey,
-    filterOptions?: Filter[],
-    limit?: number,
-    transferFilter?: TransferFilter
+    options: {
+      limit?: number,
+      actionFilter?: Filter[],
+      transferFilter?: TransferFilter,
+      callback?: (data: any) => never
+    }
   ): Promise<Result<TransferHistory[], Error>> => {
-    const filter = filterOptions !== undefined && filterOptions.length > 0
-      ? filterOptions
-      : [
-        Filter.Transfer,
-        Filter.TransferChecked,
-      ];
+    const actionFilter =
+      options.actionFilter !== undefined && options.actionFilter.length > 0
+        ? options.actionFilter
+        : [
+          Filter.Transfer,
+          Filter.TransferChecked,
+        ];
 
     let bufferedLimit = 0;
-    if (limit && limit < 980) {
-      bufferedLimit = limit + 20;
+    if (options.limit && options.limit < 50) {
+      bufferedLimit = options.limit * 1.5; //To get more data, threshold
     } else {
-      bufferedLimit = 1000;
-      limit = 1000;
+      bufferedLimit = 10;
+      options.limit = 10;
     }
     let hist: TransferHistory[] = [];
     let before;
@@ -232,14 +263,24 @@ export namespace Transaction {
     while (true) {
       const transactions = await Transaction.getForAddress(pubkey, bufferedLimit, before);
       console.debug('# getTransactionHistory loop');
-      const res = filterTransactions(
-        transactions,
-        filter,
-        transferFilter
-      );
+      let res: TransferHistory[] = [];
+      if (options.callback) {
+        filterTransactionsCallback(
+          transactions,
+          actionFilter,
+          options.callback,
+          options.transferFilter
+        );
+      } else {
+        res = filterTransactions(
+          transactions,
+          actionFilter,
+          options.transferFilter
+        );
+      }
       hist = hist.concat(res);
-      if (hist.length >= limit || res.length === 0) {
-        hist = hist.slice(0, limit);
+      if (hist.length >= options.limit || res.length === 0) {
+        hist = hist.slice(0, options.limit);
         break;
       }
       before = hist[hist.length - 1].sig;
@@ -250,9 +291,11 @@ export namespace Transaction {
   export const getTokenTransactionHistory = async (
     tokenKey: PublicKey,
     pubkey: PublicKey,
-    filterOptions?: Filter[],
-    limit?: number,
-    transferFilter?: TransferFilter
+    options: {
+      limit?: number,
+      actionFilter?: Filter[],
+      transferFilter?: TransferFilter
+    }
   ): Promise<Result<TransferHistory[], Error>> => {
 
     const tokenPubkey = await Token.getAssociatedTokenAddress(
@@ -266,14 +309,22 @@ export namespace Transaction {
     if (tokenPubkey.isErr) {
       return Result.err(tokenPubkey.error);
     }
-    const filter = filterOptions !== undefined && filterOptions.length > 0
-      ? filterOptions
-      : [
-        Filter.Transfer,
-        Filter.TransferChecked,
-      ];
+    const actionFilter =
+      options.actionFilter !== undefined && options.actionFilter.length > 0
+        ? options.actionFilter
+        : [
+          Filter.Transfer,
+          Filter.TransferChecked,
+        ];
 
-    return getTransactionHistory(tokenPubkey.value, filter, limit, transferFilter);
+    return getTransactionHistory(
+      tokenPubkey.value,
+      {
+        limit: options.limit,
+        actionFilter,
+        transferFilter: options.transferFilter
+      }
+    );
   }
 
   export const confirmedSig = async (
