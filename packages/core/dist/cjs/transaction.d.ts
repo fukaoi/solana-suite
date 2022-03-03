@@ -1,12 +1,12 @@
-import { PublicKey, ParsedConfirmedTransaction, Commitment, RpcResponseAndContext, SignatureResult } from '@solana/web3.js';
+import { PublicKey, ParsedTransactionWithMeta, Commitment, RpcResponseAndContext, SignatureResult } from '@solana/web3.js';
 import { Result } from '@solana-suite/shared';
 export declare namespace Transaction {
     const subscribeAccount: (pubkey: PublicKey, callback: any) => number;
     const unsubscribeAccount: (subscribeId: number) => Promise<void>;
     interface TransferHistory {
         info: {
-            destination: string;
-            source: string;
+            destination?: string;
+            source?: string;
             authority?: string;
             multisigAuthority?: string;
             signers?: string[];
@@ -18,6 +18,7 @@ export declare namespace Transaction {
         date: Date;
         innerInstruction: boolean;
         sig: string;
+        memo?: string;
     }
     interface TransferDestinationList {
         dest: PublicKey;
@@ -26,7 +27,7 @@ export declare namespace Transaction {
     enum Filter {
         Transfer = "transfer",
         TransferChecked = "transferChecked",
-        Memo = "memo",
+        Memo = "spl-memo",
         MintTo = "mintTo",
         Create = "create"
     }
@@ -38,10 +39,17 @@ export declare namespace Transaction {
         filter: DirectionType;
         pubkey: PublicKey;
     }
-    const get: (signature: string) => Promise<Result<ParsedConfirmedTransaction, Error>>;
-    const getAll: (pubkey: PublicKey, limit?: number | undefined, before?: string | undefined, until?: string | undefined) => Promise<Result<ParsedConfirmedTransaction[], Error>>;
-    const getTransactionHistory: (pubkey: PublicKey, filterOptions?: Filter[] | string[] | undefined, limit?: number | undefined, transferFilter?: TransferFilter | undefined) => Promise<Result<TransferHistory[], Error>>;
-    const getTokenTransactionHistory: (tokenKey: PublicKey, pubkey: PublicKey, filterOptions?: Filter[] | string[] | undefined, limit?: number | undefined, transferFilter?: TransferFilter | undefined) => Promise<Result<TransferHistory[], Error>>;
-    const getTransferTokenDestinationList: (pubkey: PublicKey) => Promise<Result<TransferDestinationList[], Error>>;
+    const get: (signature: string) => Promise<Result<ParsedTransactionWithMeta, Error>>;
+    const getForAddress: (pubkey: PublicKey, limit?: number | undefined, before?: string | undefined, until?: string | undefined) => Promise<Result<ParsedTransactionWithMeta, Error>[]>;
+    const getTransactionHistory: (pubkey: PublicKey, options: {
+        limit?: number;
+        actionFilter?: Filter[];
+        transferFilter?: TransferFilter;
+    }) => Promise<Result<TransferHistory[], Error>>;
+    const getTokenTransactionHistory: (tokenKey: PublicKey, pubkey: PublicKey, options: {
+        limit?: number;
+        actionFilter?: Filter[];
+        transferFilter?: TransferFilter;
+    }) => Promise<Result<TransferHistory[], Error>>;
     const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result<RpcResponseAndContext<SignatureResult> | unknown, Error>>;
 }

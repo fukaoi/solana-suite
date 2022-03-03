@@ -18,29 +18,69 @@ var Transaction;
     const isParsedInstructon = (arg) => {
         return arg !== null && typeof arg === 'object' && arg.parsed;
     };
+    const createTransferHistory = (instruction, value, inOutFilter) => {
+        var _a, _b;
+        const v = instruction.parsed;
+        v.date = convertTimestmapToDate(value.blockTime);
+        v.sig = value.transaction.signatures[0];
+        v.innerInstruction = false;
+        if (((_a = value.meta) === null || _a === void 0 ? void 0 : _a.innerInstructions) && ((_b = value.meta) === null || _b === void 0 ? void 0 : _b.innerInstructions.length) !== 0) {
+            // inner instructions
+            v.innerInstruction = true;
+        }
+        if (inOutFilter) {
+            if (inOutFilter && v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
+                return v;
+            }
+        }
+        else {
+            return v;
+        }
+    };
+    const createMemoHistory = (instruction, value, inOutFilter) => {
+        var _a, _b;
+        const v = {
+            info: {},
+            type: '',
+            sig: '',
+            date: new Date(),
+            innerInstruction: false
+        };
+        v.memo = instruction.parsed;
+        v.type = instruction.program;
+        v.date = convertTimestmapToDate(value.blockTime);
+        v.sig = value.transaction.signatures[0];
+        v.innerInstruction = false;
+        if (((_a = value.meta) === null || _a === void 0 ? void 0 : _a.innerInstructions) && ((_b = value.meta) === null || _b === void 0 ? void 0 : _b.innerInstructions.length) !== 0) {
+            // inner instructions
+            v.innerInstruction = true;
+        }
+        if (inOutFilter) {
+            if (v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
+                return v;
+            }
+        }
+        else {
+            return v;
+        }
+    };
     const filterTransactions = (transactions, filterOptions, inOutFilter) => {
         const hist = [];
         transactions.forEach(tx => {
-            tx.transaction.message.instructions.forEach(t => {
-                var _a, _b;
-                if (isParsedInstructon(t) && filterOptions.includes(t.parsed.type)) {
-                    const v = t.parsed;
-                    v.date = convertTimestmapToDate(tx.blockTime);
-                    v.sig = tx.transaction.signatures[0];
-                    if (((_a = tx.meta) === null || _a === void 0 ? void 0 : _a.innerInstructions) && ((_b = tx.meta) === null || _b === void 0 ? void 0 : _b.innerInstructions.length) !== 0) {
-                        // inner instructions
-                        v.innerInstruction = true;
+            if (tx.isErr)
+                return tx;
+            tx.value.transaction.message.instructions.forEach(instruction => {
+                if (isParsedInstructon(instruction)) {
+                    if (filterOptions.includes(instruction.parsed.type)) {
+                        const res = createTransferHistory(instruction, tx.value, inOutFilter);
+                        res && hist.push(res);
                     }
                     else {
-                        v.innerInstruction = false;
-                    }
-                    if (inOutFilter) {
-                        if (v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
-                            hist.push(v);
+                        //spl-memo, other?
+                        if (filterOptions.includes(instruction.program)) {
+                            const res = createMemoHistory(instruction, tx.value, inOutFilter);
+                            res && hist.push(res);
                         }
-                    }
-                    else {
-                        hist.push(v);
                     }
                 }
             });
@@ -50,10 +90,12 @@ var Transaction;
     const convertTimestmapToDate = (blockTime) => new Date(blockTime * 1000);
     Transaction.subscribeAccount = (pubkey, callback) => {
         return shared_1.Node.getConnection().onAccountChange(pubkey, () => __awaiter(this, void 0, void 0, function* () {
-            const res = yield Transaction.getTransactionHistory(pubkey, [
-                Filter.Transfer,
-                Filter.TransferChecked
-            ]);
+            const res = yield Transaction.getTransactionHistory(pubkey, {
+                actionFilter: [
+                    Filter.Transfer,
+                    Filter.TransferChecked
+                ]
+            });
             if (res.isErr) {
                 return res;
             }
@@ -65,7 +107,7 @@ var Transaction;
     (function (Filter) {
         Filter["Transfer"] = "transfer";
         Filter["TransferChecked"] = "transferChecked";
-        Filter["Memo"] = "memo";
+        Filter["Memo"] = "spl-memo";
         Filter["MintTo"] = "mintTo";
         Filter["Create"] = "create";
     })(Filter = Transaction.Filter || (Transaction.Filter = {}));
@@ -75,7 +117,7 @@ var Transaction;
         DirectionType["Source"] = "source";
     })(DirectionType = Transaction.DirectionType || (Transaction.DirectionType = {}));
     Transaction.get = (signature) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield shared_1.Node.getConnection().getParsedConfirmedTransaction(signature)
+        const res = yield shared_1.Node.getConnection().getParsedTransaction(signature)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (res.isErr) {
@@ -88,7 +130,7 @@ var Transaction;
             return shared_1.Result.ok(res.value);
         }
     });
-    Transaction.getAll = (pubkey, limit, before, until) => __awaiter(this, void 0, void 0, function* () {
+    Transaction.getForAddress = (pubkey, limit, before, until) => __awaiter(this, void 0, void 0, function* () {
         const transactions = yield shared_1.Node.getConnection().getSignaturesForAddress(pubkey, {
             limit,
             before,
@@ -97,91 +139,60 @@ var Transaction;
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (transactions.isErr) {
-            return shared_1.Result.err(transactions.error);
+            return [shared_1.Result.err(transactions.error)];
         }
         else {
-            const parsedSig = [];
-            for (const tx of transactions.value) {
-                const res = yield Transaction.get(tx.signature);
-                if (res.isErr) {
-                    return shared_1.Result.err(res.error);
-                }
-                res !== null && parsedSig.push(res.value);
-            }
-            return shared_1.Result.ok(parsedSig);
+            const signatures = transactions.value.map(tx => Transaction.get(tx.signature));
+            return yield Promise.all(signatures);
         }
     });
-    Transaction.getTransactionHistory = (pubkey, filterOptions, limit, transferFilter) => __awaiter(this, void 0, void 0, function* () {
-        const filter = filterOptions !== undefined && filterOptions.length > 0
-            ? filterOptions
+    Transaction.getTransactionHistory = (pubkey, options) => __awaiter(this, void 0, void 0, function* () {
+        const actionFilter = options.actionFilter !== undefined && options.actionFilter.length > 0
+            ? options.actionFilter
             : [
                 Filter.Transfer,
                 Filter.TransferChecked,
             ];
         let bufferedLimit = 0;
-        if (limit && limit < 980) {
-            bufferedLimit = limit + 20;
+        if (options.limit && options.limit < 50) {
+            bufferedLimit = options.limit * 1.5; //To get more data, threshold
         }
         else {
-            bufferedLimit = 1000;
-            limit = 1000;
+            bufferedLimit = 10;
+            options.limit = 10;
         }
         let hist = [];
         let before;
         while (true) {
-            const transactions = yield Transaction.getAll(pubkey, bufferedLimit, before);
+            const transactions = yield Transaction.getForAddress(pubkey, bufferedLimit, before);
             console.debug('# getTransactionHistory loop');
-            if (transactions.isErr) {
-                return transactions;
-            }
-            const tx = transactions.unwrap();
-            const res = filterTransactions(tx, filter, transferFilter);
+            const res = filterTransactions(transactions, actionFilter, options.transferFilter);
             hist = hist.concat(res);
-            if (hist.length >= limit || res.length === 0) {
-                hist = hist.slice(0, limit);
+            if (hist.length >= options.limit || res.length === 0) {
+                hist = hist.slice(0, options.limit);
                 break;
             }
             before = hist[hist.length - 1].sig;
         }
         return shared_1.Result.ok(hist);
     });
-    Transaction.getTokenTransactionHistory = (tokenKey, pubkey, filterOptions, limit, transferFilter) => __awaiter(this, void 0, void 0, function* () {
+    Transaction.getTokenTransactionHistory = (tokenKey, pubkey, options) => __awaiter(this, void 0, void 0, function* () {
         const tokenPubkey = yield spl_token_1.Token.getAssociatedTokenAddress(spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID, spl_token_1.TOKEN_PROGRAM_ID, tokenKey, pubkey).then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (tokenPubkey.isErr) {
             return shared_1.Result.err(tokenPubkey.error);
         }
-        const filter = filterOptions !== undefined && filterOptions.length > 0
-            ? filterOptions
+        const actionFilter = options.actionFilter !== undefined && options.actionFilter.length > 0
+            ? options.actionFilter
             : [
                 Filter.Transfer,
                 Filter.TransferChecked,
             ];
-        return Transaction.getTransactionHistory(tokenPubkey.value, filter, limit, transferFilter);
-    });
-    Transaction.getTransferTokenDestinationList = (pubkey) => __awaiter(this, void 0, void 0, function* () {
-        var _a;
-        const transactions = yield Transaction.getAll(pubkey);
-        if (transactions.isErr) {
-            return shared_1.Result.err(transactions.error);
-        }
-        const hist = [];
-        for (const tx of transactions.unwrap()) {
-            const posts = (_a = tx.meta) === null || _a === void 0 ? void 0 : _a.postTokenBalances;
-            if (posts.length > 0) {
-                posts.forEach((p) => {
-                    const amount = p.uiTokenAmount.uiAmount;
-                    if (amount > 0) {
-                        const index = p.accountIndex;
-                        const dest = tx.transaction.message.accountKeys[index].pubkey;
-                        const date = convertTimestmapToDate(tx.blockTime);
-                        const v = { dest, date };
-                        hist.push(v);
-                    }
-                });
-            }
-        }
-        return shared_1.Result.ok(hist);
+        return Transaction.getTransactionHistory(tokenPubkey.value, {
+            limit: options.limit,
+            actionFilter,
+            transferFilter: options.transferFilter
+        });
     });
     Transaction.confirmedSig = (signature, commitment = shared_1.Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {
         return yield shared_1.Node.getConnection().confirmTransaction(signature, commitment)
