@@ -24,15 +24,25 @@ export namespace Transaction {
     return arg !== null && typeof arg === 'object' && arg.parsed;
   }
 
+  const createTransferHistoryObject = () => {
+
+
+  }
+
+  const createMemoHistoryObject = () => {
+
+
+  }
+
   const filterTransactions = (
-    // transactions: ParsedTransactionWithMeta[],
-    transactions: any[],
+    transactions: Result<ParsedTransactionWithMeta>[],
     filterOptions: Filter[],
     inOutFilter?: TransferFilter,
   ) => {
     const hist: TransferHistory[] = [];
-    transactions.forEach((tx: any) => {
-      tx.value.transaction.message.instructions.forEach((t: any) => {
+    transactions.forEach(tx => {
+      if (tx.isErr) return tx;
+      tx.value.transaction.message.instructions.forEach(t => {
         if (isParsedInstructon(t)) {
           // ParsedInstruction
           if (filterOptions.includes(t.parsed.type)) {
@@ -57,9 +67,9 @@ export namespace Transaction {
               const v: TransferHistory = {info: {}, type: '', sig: '', date: new Date(), innerInstruction: false};
               v.memo = t.parsed;
               v.type = t.program;
-              v.date = convertTimestmapToDate(tx.blockTime as number);
-              v.sig = tx.transaction.signatures[0];
-              if (tx.meta?.innerInstructions && tx.meta?.innerInstructions.length !== 0) {
+              v.date = convertTimestmapToDate(tx.value.blockTime as number);
+              v.sig = tx.value.transaction.signatures[0];
+              if (tx.value.meta?.innerInstructions && tx.value.meta?.innerInstructions.length !== 0) {
                 // inner instructions
                 v.innerInstruction = true;
               } else {
@@ -167,8 +177,7 @@ export namespace Transaction {
     limit?: number | undefined,
     before?: string | undefined,
     until?: string | undefined,
-    // ): Promise<Result<ParsedTransactionWithMeta[], Error>> => {
-  ) => {
+  ): Promise<Result<ParsedTransactionWithMeta, Error>[]> => {
     const transactions = await Node.getConnection().getSignaturesForAddress(
       pubkey,
       {
@@ -181,22 +190,10 @@ export namespace Transaction {
       .catch(Result.err);
 
     if (transactions.isErr) {
-      return Result.err(transactions.error);
+      return [Result.err(transactions.error)];
     } else {
-      const parsedSig: ParsedTransactionWithMeta[] = [];
-
-      // for (const tx of transactions.value as ConfirmedSignatureInfo[]) {
-      // const res = await get(tx!.signature);
-      // console.log(res);
-      // if (res.isErr) {
-      // return Result.err(res.error);
-      // }
-      // res !== null && parsedSig.push(res.value as ParsedTransactionWithMeta);
-      // }
       const signatures = transactions.value.map(tx => get(tx.signature));
-      const res = await Promise.all(signatures);
-      return res;
-      // return Result.ok(parsedSig);
+      return await Promise.all(signatures);
     }
   }
 
@@ -226,12 +223,11 @@ export namespace Transaction {
     while (true) {
       const transactions = await Transaction.getForAddress(pubkey, bufferedLimit, before);
       console.debug('# getTransactionHistory loop');
-
-      // if (transactions.isErr) {
-      // return transactions as Result<[], Error>;
-      // }
-      // const tx = transactions.unwrap() as ParsedTransactionWithMeta[];
-      const res = filterTransactions(transactions as Result<ParsedTransactionWithMeta>[], filter, transferFilter);
+      const res = filterTransactions(
+        transactions,
+        filter,
+        transferFilter
+      );
       hist = hist.concat(res);
       if (hist.length >= limit || res.length === 0) {
         hist = hist.slice(0, limit);

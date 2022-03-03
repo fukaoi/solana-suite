@@ -159,7 +159,7 @@ describe('Memo', () => {
   it.only('Get memo data in transaction', async () => {
     const res = await Transaction.getTransactionHistory(
       source.toPublicKey(),
-      // [Transaction.Filter.Memo, Transaction.Filter.TransferChecked]
+      [Transaction.Filter.Memo, Transaction.Filter.TransferChecked]
       // [Transaction.Filter.Memo]
     );
     console.log(res);
