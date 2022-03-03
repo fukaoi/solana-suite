@@ -4,9 +4,7 @@ import {
   Commitment,
   RpcResponseAndContext,
   SignatureResult,
-  ConfirmedSignatureInfo,
   ParsedInstruction,
-  TokenBalance,
 } from '@solana/web3.js';
 
 import {
@@ -24,11 +22,15 @@ export namespace Transaction {
     return arg !== null && typeof arg === 'object' && arg.parsed;
   }
 
-  const createTransferHistoryObject = (t: any, tx: any, inOutFilter?: TransferFilter) => {
-    const v: TransferHistory = t.parsed;
-    v.date = convertTimestmapToDate(tx.value.blockTime as number);
-    v.sig = tx.value.transaction.signatures[0];
-    if (tx.value.meta?.innerInstructions && tx.value.meta?.innerInstructions.length !== 0) {
+  const createTransferHistoryObject = (
+    instruction: ParsedInstruction,
+    value: ParsedTransactionWithMeta,
+    inOutFilter?: TransferFilter
+  ) => {
+    const v: TransferHistory = instruction.parsed;
+    v.date = convertTimestmapToDate(value.blockTime as number);
+    v.sig = value.transaction.signatures[0];
+    if (value.meta?.innerInstructions && value.meta?.innerInstructions.length !== 0) {
       // inner instructions
       v.innerInstruction = true;
     } else {
@@ -43,7 +45,11 @@ export namespace Transaction {
     return v;
   }
 
-  const createMemoHistoryObject = (t: any, tx: any, inOutFilter?: TransferFilter) => {
+  const createMemoHistoryObject = (
+    instruction: ParsedInstruction,
+    value: ParsedTransactionWithMeta,
+    inOutFilter?: TransferFilter
+  ) => {
     const v: TransferHistory = {
       info: {},
       type: '',
@@ -51,11 +57,11 @@ export namespace Transaction {
       date: new Date(),
       innerInstruction: false
     };
-    v.memo = t.parsed;
-    v.type = t.program;
-    v.date = convertTimestmapToDate(tx.value.blockTime as number);
-    v.sig = tx.value.transaction.signatures[0];
-    if (tx.value.meta?.innerInstructions && tx.value.meta?.innerInstructions.length !== 0) {
+    v.memo = instruction.parsed;
+    v.type = instruction.program;
+    v.date = convertTimestmapToDate(value.blockTime as number);
+    v.sig = value.transaction.signatures[0];
+    if (value.meta?.innerInstructions && value.meta?.innerInstructions.length !== 0) {
       // inner instructions
       v.innerInstruction = true;
     } else {
@@ -77,14 +83,14 @@ export namespace Transaction {
     const hist: TransferHistory[] = [];
     transactions.forEach(tx => {
       if (tx.isErr) return tx;
-      tx.value.transaction.message.instructions.forEach(t => {
-        if (isParsedInstructon(t)) {
-          if (filterOptions.includes(t.parsed.type)) {
-            hist.push(createTransferHistoryObject(t, tx, inOutFilter));
+      tx.value.transaction.message.instructions.forEach(instruction => {
+        if (isParsedInstructon(instruction)) {
+          if (filterOptions.includes(instruction.parsed.type)) {
+            hist.push(createTransferHistoryObject(instruction, tx.value, inOutFilter));
           } else {
-            //spl-memo
-            if (filterOptions.includes(t.program as Filter)) {
-              hist.push(createMemoHistoryObject(t, tx, inOutFilter));
+            //spl-memo, other?
+            if (filterOptions.includes(instruction.program as Filter)) {
+              hist.push(createMemoHistoryObject(instruction, tx.value, inOutFilter));
             }
           }
         }
