@@ -129,7 +129,7 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  it('Max memo 283 length by i18n', async () => {
+  it.only('Max memo 283 length by i18n', async () => {
     const data500byte = `
     アメリカの地質調査所から気象庁に入った連絡によりますと、
     日本時間の14日午後0時20分ごろ、インドネシア付近のフローレス海を
@@ -159,14 +159,9 @@ describe('Memo', () => {
   it.only('Get memo data in transaction', async () => {
     const res = await Transaction.getTransactionHistory(
       source.toPublicKey(),
-      [Transaction.Filter.Memo, Transaction.Filter.TransferChecked]
-      // [Transaction.Filter.Memo]
+      [Transaction.Filter.Memo]
     );
-    console.log(res);
-    // if (res.isOk) {
-      // console.log(res);
-      // res.value.forEach(v => console.log(v));
-    // }
+    res.isOk && res.value.forEach(console.log);
   });
 
   it('[Err] Over max limit', async () => {

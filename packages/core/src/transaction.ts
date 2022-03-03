@@ -24,14 +24,49 @@ export namespace Transaction {
     return arg !== null && typeof arg === 'object' && arg.parsed;
   }
 
-  const createTransferHistoryObject = () => {
+  const createTransferHistoryObject = (t: any, tx: any, inOutFilter?: TransferFilter) => {
+    const v: TransferHistory = t.parsed;
+    v.date = convertTimestmapToDate(tx.value.blockTime as number);
+    v.sig = tx.value.transaction.signatures[0];
+    if (tx.value.meta?.innerInstructions && tx.value.meta?.innerInstructions.length !== 0) {
+      // inner instructions
+      v.innerInstruction = true;
+    } else {
+      v.innerInstruction = false;
+    }
 
-
+    if (inOutFilter) {
+      if (v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
+        return v;
+      }
+    }
+    return v;
   }
 
-  const createMemoHistoryObject = () => {
-
-
+  const createMemoHistoryObject = (t: any, tx: any, inOutFilter?: TransferFilter) => {
+    const v: TransferHistory = {
+      info: {},
+      type: '',
+      sig: '',
+      date: new Date(),
+      innerInstruction: false
+    };
+    v.memo = t.parsed;
+    v.type = t.program;
+    v.date = convertTimestmapToDate(tx.value.blockTime as number);
+    v.sig = tx.value.transaction.signatures[0];
+    if (tx.value.meta?.innerInstructions && tx.value.meta?.innerInstructions.length !== 0) {
+      // inner instructions
+      v.innerInstruction = true;
+    } else {
+      v.innerInstruction = false;
+    }
+    if (inOutFilter) {
+      if (v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
+        return v;
+      }
+    }
+    return v;
   }
 
   const filterTransactions = (
@@ -44,44 +79,12 @@ export namespace Transaction {
       if (tx.isErr) return tx;
       tx.value.transaction.message.instructions.forEach(t => {
         if (isParsedInstructon(t)) {
-          // ParsedInstruction
           if (filterOptions.includes(t.parsed.type)) {
-            const v: TransferHistory = t.parsed;
-            v.date = convertTimestmapToDate(tx.value.blockTime as number);
-            v.sig = tx.value.transaction.signatures[0];
-            if (tx.value.meta?.innerInstructions && tx.value.meta?.innerInstructions.length !== 0) {
-              // inner instructions
-              v.innerInstruction = true;
-            } else {
-              v.innerInstruction = false;
-            } if (inOutFilter) {
-              if (v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
-                hist.push(v);
-              }
-            } else {
-              hist.push(v);
-            }
+            hist.push(createTransferHistoryObject(t, tx, inOutFilter));
           } else {
             //spl-memo
             if (filterOptions.includes(t.program as Filter)) {
-              const v: TransferHistory = {info: {}, type: '', sig: '', date: new Date(), innerInstruction: false};
-              v.memo = t.parsed;
-              v.type = t.program;
-              v.date = convertTimestmapToDate(tx.value.blockTime as number);
-              v.sig = tx.value.transaction.signatures[0];
-              if (tx.value.meta?.innerInstructions && tx.value.meta?.innerInstructions.length !== 0) {
-                // inner instructions
-                v.innerInstruction = true;
-              } else {
-                v.innerInstruction = false;
-              }
-              if (inOutFilter) {
-                if (v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
-                  hist.push(v);
-                }
-              } else {
-                hist.push(v);
-              }
+              hist.push(createMemoHistoryObject(t, tx, inOutFilter));
             }
           }
         }
