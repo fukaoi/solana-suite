@@ -24,31 +24,28 @@ describe('Transaction', () => {
   it('Get all transaction data with limit', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
     const limit = 10;
-    const res = await Transaction.getAll(tokenKey.toPublicKey(), limit);
+    const res = await Transaction.getForAddress(tokenKey.toPublicKey(), limit);
 
-    if (res.isOk) {
-      assert.equal(res.value.length, limit);
-      assert.isArray(res.value);
-      assert.isObject((res.value as ParsedTransactionWithMeta[])[0]);
+    if (res[0].isOk) {
+      assert.equal(res.length, limit);
+      assert.isArray(res);
     } else {
-      assert.isFalse(res.isErr, res.isErr && res.error.message);
+      assert.isFalse(res[0].isErr, res[0].isErr && res[0].error.message);
     }
   });
 
   it('Get all transaction data with limit, until', async () => {
     const tokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
-    const res = await Transaction.getAll(
+    const res = await Transaction.getForAddress(
       tokenKey.toPublicKey(),
       undefined,
       undefined,
       '4BpP9ugxmnJbCegPXfXXP78A25chuNcLVZzRT4Gu1vPT8nEAbZzWuX8BWeytLR45qASFLb7PzakLCn29wJLQciQ5'
     );
-
-    if (res.isOk) {
-      assert.isArray(res.value);
-      assert.isObject((res.value as ParsedTransactionWithMeta[])[0]);
+    if (res[0].isOk) {
+      assert.isArray(res);
     } else {
-      assert.isFalse(res.isErr, res.isErr && res.error.message);
+      assert.isFalse(res[0].isErr, res[0].isErr && res[0].error.message);
     }
   });
 
@@ -140,7 +137,6 @@ describe('Transaction', () => {
     const limit = 3;
     const owner = 'HeH2PRj4GEdLCsbKQ18LvwhbuH4anmPQ3HoeRsJmymVw'.toPublicKey();
     const res = await Transaction.getTransactionHistory(owner, [], limit);
-    console.log(res);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotEmpty(v.type);
