@@ -159,7 +159,9 @@ describe('Memo', () => {
   it('Get memo data in transaction', async () => {
     const res = await Transaction.getTransactionHistory(
       source.toPublicKey(),
-      [Transaction.Filter.Memo]
+      {
+        actionFilter: [Transaction.Filter.Memo]
+      }
     );
     assert.isOk(res.isOk);
     assert.isNotEmpty(res.unwrap()[0].memo)
