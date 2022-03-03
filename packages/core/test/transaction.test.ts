@@ -47,13 +47,14 @@ describe('Transaction', () => {
     }
   });
 
-  it.only('Get transfer history by tokenKey', async () => {
-    const limit = 20;
+  it('Get transfer history by tokenKey', async () => {
+    const limit = 10;
     const res = await Transaction.getTransactionHistory(
       tokenKey.toPublicKey(),
       {limit}
     );
     assert.isTrue(res.isOk);
+    assert.equal(res.unwrap().length, limit)
     res.unwrap().forEach((v) => {
       assert.isNotNull(v.date);
     });

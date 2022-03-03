@@ -101,29 +101,6 @@ export namespace Transaction {
     return hist;
   }
 
-  const filterTransactionsCallback = (
-    transactions: Result<ParsedTransactionWithMeta>[],
-    filterOptions: Filter[],
-    callback: (data: any) => never,
-    inOutFilter?: TransferFilter,
-  ) => {
-    transactions.forEach(tx => {
-      if (tx.isErr) return tx;
-      tx.value.transaction.message.instructions.forEach(instruction => {
-        if (isParsedInstructon(instruction)) {
-          if (filterOptions.includes(instruction.parsed.type)) {
-            callback(createTransferHistory(instruction, tx.value, inOutFilter));
-          } else {
-            //spl-memo, other?
-            if (filterOptions.includes(instruction.program as Filter)) {
-              callback(createMemoHistory(instruction, tx.value, inOutFilter));
-            }
-          }
-        }
-      });
-    });
-  }
-
   const convertTimestmapToDate = (blockTime: number): Date =>
     new Date(blockTime * 1000);
 
@@ -239,7 +216,6 @@ export namespace Transaction {
       limit?: number,
       actionFilter?: Filter[],
       transferFilter?: TransferFilter,
-      callback?: (data: any) => never
     }
   ): Promise<Result<TransferHistory[], Error>> => {
     const actionFilter =
@@ -263,21 +239,11 @@ export namespace Transaction {
     while (true) {
       const transactions = await Transaction.getForAddress(pubkey, bufferedLimit, before);
       console.debug('# getTransactionHistory loop');
-      let res: TransferHistory[] = [];
-      if (options.callback) {
-        filterTransactionsCallback(
-          transactions,
-          actionFilter,
-          options.callback,
-          options.transferFilter
-        );
-      } else {
-        res = filterTransactions(
-          transactions,
-          actionFilter,
-          options.transferFilter
-        );
-      }
+      const res = filterTransactions(
+        transactions,
+        actionFilter,
+        options.transferFilter
+      );
       hist = hist.concat(res);
       if (hist.length >= options.limit || res.length === 0) {
         hist = hist.slice(0, options.limit);
