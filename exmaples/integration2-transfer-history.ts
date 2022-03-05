@@ -89,5 +89,4 @@ import {
 
   console.log('# Transfer token history by publish: ', historyPublish.unwrap());
 
-
 })();

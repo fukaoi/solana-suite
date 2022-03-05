@@ -212,13 +212,13 @@ export namespace Transaction {
 
   export const getHistory = async (
     pubkey: PublicKey,
-    options: {
+    options?: {
       limit?: number,
       actionFilter?: Filter[],
       transferFilter?: TransferFilter,
     }
   ): Promise<Result<TransferHistory[], Error>> => {
-
+   
     if (options === undefined || !Object.keys(options).length) {
       options = {
         limit: 0,
@@ -266,7 +266,7 @@ export namespace Transaction {
   export const getTokenHistory = async (
     tokenKey: PublicKey,
     pubkey: PublicKey,
-    options: {
+    options?: {
       limit?: number,
       actionFilter?: Filter[],
       transferFilter?: TransferFilter
@@ -285,7 +285,7 @@ export namespace Transaction {
       return Result.err(tokenPubkey.error);
     }
     const actionFilter =
-      options.actionFilter !== undefined && options.actionFilter.length > 0
+      options?.actionFilter !== undefined && options.actionFilter.length > 0
         ? options.actionFilter
         : [
           Filter.Transfer,
@@ -295,9 +295,9 @@ export namespace Transaction {
     return getHistory(
       tokenPubkey.value,
       {
-        limit: options.limit,
+        limit: options?.limit,
         actionFilter,
-        transferFilter: options.transferFilter
+        transferFilter: options?.transferFilter
       }
     );
   }

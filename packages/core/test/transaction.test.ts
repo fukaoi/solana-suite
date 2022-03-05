@@ -136,7 +136,6 @@ describe('Transaction', () => {
     const res = await Transaction.getTokenHistory(
       tokenKey,
       owner,
-      {}
     );
     assert.isTrue(res.isOk);
     assert.isTrue(res.unwrap().length > 0);
