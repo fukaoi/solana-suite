@@ -157,7 +157,7 @@ describe('Memo', () => {
   });
 
   it('Get memo data in transaction', async () => {
-    const res = await Transaction.getTransactionHistory(
+    const res = await Transaction.getHistory(
       source.toPublicKey(),
       {
         actionFilter: [Transaction.Filter.Memo]

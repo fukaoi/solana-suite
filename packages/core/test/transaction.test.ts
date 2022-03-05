@@ -49,7 +49,7 @@ describe('Transaction', () => {
 
   it('Get transfer history by tokenKey', async () => {
     const limit = 10;
-    const res = await Transaction.getTransactionHistory(
+    const res = await Transaction.getHistory(
       tokenKey.toPublicKey(),
       {limit}
     );
@@ -62,7 +62,7 @@ describe('Transaction', () => {
 
   it('Get transfer history with set optional filter', async () => {
     const limit = 20;
-    const res = await Transaction.getTransactionHistory(
+    const res = await Transaction.getHistory(
       tokenKey.toPublicKey(),
       {
         limit,
@@ -78,7 +78,7 @@ describe('Transaction', () => {
 
   it('Get transfer history with transfer destination filter', async () => {
     const destination = '2wxMtAe3nwQu5Ai2XuMgX4gxvYhTvXtedrvo7p9jDepn';
-    const res = await Transaction.getTransactionHistory(
+    const res = await Transaction.getHistory(
       tokenKey.toPublicKey(),
       {
         transferFilter: {
@@ -97,7 +97,7 @@ describe('Transaction', () => {
 
   it('Get transfer history with transfer source filter', async () => {
     const source = '2wxMtAe3nwQu5Ai2XuMgX4gxvYhTvXtedrvo7p9jDepn';
-    const res = await Transaction.getTransactionHistory(
+    const res = await Transaction.getHistory(
       tokenKey.toPublicKey(),
       {
         transferFilter: {
@@ -116,7 +116,7 @@ describe('Transaction', () => {
 
   it('Get transfer history by address', async () => {
     const owner = 'HeH2PRj4GEdLCsbKQ18LvwhbuH4anmPQ3HoeRsJmymVw'.toPublicKey();
-    const res = await Transaction.getTransactionHistory(
+    const res = await Transaction.getHistory(
       owner,
       {}
     );
@@ -133,7 +133,7 @@ describe('Transaction', () => {
   it('Get token transfer history by owner address', async () => {
     const tokenKey = '9v7HRkw3Fdt3Ee45z4Y9Mn9jzakHBQmSRZudPJGjbruY'.toPublicKey();
     const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPublicKey();
-    const res = await Transaction.getTokenTransactionHistory(
+    const res = await Transaction.getTokenHistory(
       tokenKey,
       owner,
       {}
@@ -147,7 +147,7 @@ describe('Transaction', () => {
 
   it('Get token transfer history by owner address, Use action filter MintTo', async () => {
     const tokenKey = 'Cz6q12K9MuZHsekKPp71Fny24hVBY3pVhsBkgnksXVKV';
-    const res = await Transaction.getTransactionHistory(
+    const res = await Transaction.getHistory(
       tokenKey.toPublicKey(),
       {
         actionFilter: [
@@ -164,7 +164,7 @@ describe('Transaction', () => {
 
   it('Get token transfer history by owner address, Use action filter create', async () => {
     const tokenKey = 'Cz6q12K9MuZHsekKPp71Fny24hVBY3pVhsBkgnksXVKV';
-    const res = await Transaction.getTransactionHistory(
+    const res = await Transaction.getHistory(
       tokenKey.toPublicKey(),
       {
         actionFilter: [
