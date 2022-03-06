@@ -117,8 +117,7 @@ describe('Transaction', () => {
   it('Get transfer history by address', async () => {
     const owner = 'HeH2PRj4GEdLCsbKQ18LvwhbuH4anmPQ3HoeRsJmymVw'.toPublicKey();
     const res = await Transaction.getHistory(
-      owner,
-      {}
+      owner
     );
     console.log(res);
     assert.isTrue(res.isOk);
