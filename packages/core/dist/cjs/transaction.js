@@ -90,7 +90,7 @@ var Transaction;
     const convertTimestmapToDate = (blockTime) => new Date(blockTime * 1000);
     Transaction.subscribeAccount = (pubkey, callback) => {
         return shared_1.Node.getConnection().onAccountChange(pubkey, () => __awaiter(this, void 0, void 0, function* () {
-            const res = yield Transaction.getTransactionHistory(pubkey, {
+            const res = yield Transaction.getHistory(pubkey, {
                 actionFilter: [
                     Filter.Transfer,
                     Filter.TransferChecked
@@ -146,8 +146,15 @@ var Transaction;
             return yield Promise.all(signatures);
         }
     });
-    Transaction.getTransactionHistory = (pubkey, options) => __awaiter(this, void 0, void 0, function* () {
-        const actionFilter = options.actionFilter !== undefined && options.actionFilter.length > 0
+    Transaction.getHistory = (pubkey, options) => __awaiter(this, void 0, void 0, function* () {
+        if (options === undefined || !Object.keys(options).length) {
+            options = {
+                limit: 0,
+                actionFilter: [],
+                transferFilter: undefined,
+            };
+        }
+        const actionFilter = (options === null || options === void 0 ? void 0 : options.actionFilter) !== undefined && options.actionFilter.length > 0
             ? options.actionFilter
             : [
                 Filter.Transfer,
@@ -176,22 +183,22 @@ var Transaction;
         }
         return shared_1.Result.ok(hist);
     });
-    Transaction.getTokenTransactionHistory = (tokenKey, pubkey, options) => __awaiter(this, void 0, void 0, function* () {
+    Transaction.getTokenHistory = (tokenKey, pubkey, options) => __awaiter(this, void 0, void 0, function* () {
         const tokenPubkey = yield spl_token_1.Token.getAssociatedTokenAddress(spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID, spl_token_1.TOKEN_PROGRAM_ID, tokenKey, pubkey).then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (tokenPubkey.isErr) {
             return shared_1.Result.err(tokenPubkey.error);
         }
-        const actionFilter = options.actionFilter !== undefined && options.actionFilter.length > 0
+        const actionFilter = (options === null || options === void 0 ? void 0 : options.actionFilter) !== undefined && options.actionFilter.length > 0
             ? options.actionFilter
             : [
                 Filter.Transfer,
                 Filter.TransferChecked,
             ];
-        return Transaction.getTransactionHistory(tokenPubkey.value, {
-            limit: options.limit,
+        return Transaction.getHistory(tokenPubkey.value, {
+            limit: options === null || options === void 0 ? void 0 : options.limit,
             actionFilter,
-            transferFilter: options.transferFilter
+            transferFilter: options === null || options === void 0 ? void 0 : options.transferFilter
         });
     });
     Transaction.confirmedSig = (signature, commitment = shared_1.Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {

@@ -41,15 +41,15 @@ export declare namespace Transaction {
     }
     const get: (signature: string) => Promise<Result<ParsedTransactionWithMeta, Error>>;
     const getForAddress: (pubkey: PublicKey, limit?: number | undefined, before?: string | undefined, until?: string | undefined) => Promise<Result<ParsedTransactionWithMeta, Error>[]>;
-    const getTransactionHistory: (pubkey: PublicKey, options: {
-        limit?: number;
-        actionFilter?: Filter[];
-        transferFilter?: TransferFilter;
-    }) => Promise<Result<TransferHistory[], Error>>;
-    const getTokenTransactionHistory: (tokenKey: PublicKey, pubkey: PublicKey, options: {
-        limit?: number;
-        actionFilter?: Filter[];
-        transferFilter?: TransferFilter;
-    }) => Promise<Result<TransferHistory[], Error>>;
+    const getHistory: (pubkey: PublicKey, options?: {
+        limit?: number | undefined;
+        actionFilter?: Filter[] | undefined;
+        transferFilter?: TransferFilter | undefined;
+    } | undefined) => Promise<Result<TransferHistory[], Error>>;
+    const getTokenHistory: (tokenKey: PublicKey, pubkey: PublicKey, options?: {
+        limit?: number | undefined;
+        actionFilter?: Filter[] | undefined;
+        transferFilter?: TransferFilter | undefined;
+    } | undefined) => Promise<Result<TransferHistory[], Error>>;
     const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result<RpcResponseAndContext<SignatureResult> | unknown, Error>>;
 }

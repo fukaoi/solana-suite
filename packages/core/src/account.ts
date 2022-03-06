@@ -140,7 +140,7 @@ export namespace Account {
       .catch(Result.err);
 
     if (sig.isErr) {
-      return Result.err(Error('Failed airdrop'));
+      return Result.err(Error(`Failed airdrop. ${sig.error.message}`));
     }
     await Transaction.confirmedSig(sig.value);
     return Result.ok('success');
