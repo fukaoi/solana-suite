@@ -83,7 +83,7 @@ export var Account;
             .then(Result.ok)
             .catch(Result.err);
         if (sig.isErr) {
-            return Result.err(Error('Failed airdrop'));
+            return Result.err(Error(`Failed airdrop. ${sig.error.message}`));
         }
         yield Transaction.confirmedSig(sig.value);
         return Result.ok('success');

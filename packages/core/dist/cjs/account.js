@@ -90,7 +90,7 @@ var Account;
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (sig.isErr) {
-            return shared_1.Result.err(Error('Failed airdrop'));
+            return shared_1.Result.err(Error(`Failed airdrop. ${sig.error.message}`));
         }
         yield _1.Transaction.confirmedSig(sig.value);
         return shared_1.Result.ok('success');
