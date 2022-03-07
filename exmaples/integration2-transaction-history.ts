@@ -71,7 +71,7 @@ import {
   );
 
   //////////////////////////////////////////////
-  // Get token toransaction history
+  // Get toransaction history
   //////////////////////////////////////////////
 
   const hist = await Transaction.getHistory(
@@ -111,5 +111,17 @@ import {
     }
   );
   console.log('# history via transfer filter : ', hist5.unwrap());
+
+  const hist6 = await Transaction.getTokenHistory(
+    tokenKey.toPublicKey(),
+    publisher.toPublicKey(),
+    {
+      transferFilter: {
+        filter: Transaction.DirectionType.Dest,
+        pubkey: publisher.toPublicKey()
+      }
+    }
+  );
+  console.log('# token history via transfer filter : ', hist6.unwrap());
 
 })();

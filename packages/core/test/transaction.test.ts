@@ -81,7 +81,7 @@ describe('Transaction', () => {
     const res = await Transaction.getHistory(
       tokenKey.toPublicKey(),
       {
-        transferFilter: {
+        directionFilter: {
           filter: Transaction.DirectionType.Dest,
           pubkey: destination.toPublicKey()
         }
@@ -100,7 +100,7 @@ describe('Transaction', () => {
     const res = await Transaction.getHistory(
       tokenKey.toPublicKey(),
       {
-        transferFilter: {
+        directionFilter: {
           filter: Transaction.DirectionType.Source,
           pubkey: source.toPublicKey()
         }
@@ -135,6 +135,26 @@ describe('Transaction', () => {
     const res = await Transaction.getTokenHistory(
       tokenKey,
       owner,
+    );
+    assert.isTrue(res.isOk);
+    assert.isTrue(res.unwrap().length > 0);
+    res.unwrap().forEach((v) => {
+      assert.isNotNull(v.date);
+    });
+  });
+
+  it.only('Get token transfer history with transfer source filter', async () => {
+    const tokenKey = '9v7HRkw3Fdt3Ee45z4Y9Mn9jzakHBQmSRZudPJGjbruY'.toPublicKey();
+    const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPublicKey();
+    const res = await Transaction.getTokenHistory(
+      tokenKey,
+      owner,
+      {
+        dicretionFilter: {
+          filter: Transaction.DirectionType.Source,
+          pubkey: owner
+        }
+      }
     );
     assert.isTrue(res.isOk);
     assert.isTrue(res.unwrap().length > 0);

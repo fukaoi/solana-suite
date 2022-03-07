@@ -25,7 +25,7 @@ export namespace Transaction {
   const createTransferHistory = (
     instruction: ParsedInstruction,
     value: ParsedTransactionWithMeta,
-    inOutFilter?: TransferFilter
+    inOutFilter?: DirectionFilter
   ) => {
     const v: TransferHistory = instruction.parsed;
     v.date = convertTimestmapToDate(value.blockTime as number);
@@ -48,7 +48,7 @@ export namespace Transaction {
   const createMemoHistory = (
     instruction: ParsedInstruction,
     value: ParsedTransactionWithMeta,
-    inOutFilter?: TransferFilter
+    inOutFilter?: DirectionFilter
   ) => {
     const v: TransferHistory = {
       info: {},
@@ -78,7 +78,7 @@ export namespace Transaction {
   const filterTransactions = (
     transactions: Result<ParsedTransactionWithMeta>[],
     filterOptions: Filter[],
-    inOutFilter?: TransferFilter,
+    inOutFilter?: DirectionFilter,
   ) => {
     const hist: TransferHistory[] = [];
     transactions.forEach(tx => {
@@ -165,7 +165,7 @@ export namespace Transaction {
     Source = 'source',
   }
 
-  export interface TransferFilter {
+  export interface DirectionFilter {
     filter: DirectionType,
     pubkey: PublicKey,
   }
@@ -215,15 +215,15 @@ export namespace Transaction {
     options?: {
       limit?: number,
       actionFilter?: Filter[],
-      transferFilter?: TransferFilter,
+      directionFilter?: DirectionFilter,
     }
   ): Promise<Result<TransferHistory[], Error>> => {
-   
+
     if (options === undefined || !Object.keys(options).length) {
       options = {
         limit: 0,
         actionFilter: [],
-        transferFilter: undefined,
+        directionFilter: undefined,
       }
     }
 
@@ -251,7 +251,7 @@ export namespace Transaction {
       const res = filterTransactions(
         transactions,
         actionFilter,
-        options.transferFilter
+        options.directionFilter
       );
       hist = hist.concat(res);
       if (hist.length >= options.limit || res.length === 0) {
@@ -269,7 +269,7 @@ export namespace Transaction {
     options?: {
       limit?: number,
       actionFilter?: Filter[],
-      transferFilter?: TransferFilter
+      dicretionFilter?: DirectionFilter
     }
   ): Promise<Result<TransferHistory[], Error>> => {
 
@@ -292,12 +292,16 @@ export namespace Transaction {
           Filter.TransferChecked,
         ];
 
+    if (options?.dicretionFilter !== undefined) {
+      options.dicretionFilter.pubkey = tokenPubkey.value;
+    }
+
     return getHistory(
       tokenPubkey.value,
       {
         limit: options?.limit,
         actionFilter,
-        transferFilter: options?.transferFilter
+        directionFilter: options?.dicretionFilter
       }
     );
   }
