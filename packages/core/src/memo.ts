@@ -1,9 +1,7 @@
 import {
-  ParsedInstruction,
   PublicKey,
   TransactionInstruction,
   Signer,
-  ParsedTransactionWithMeta,
 } from '@solana/web3.js';
 
 import bs from 'bs58';
@@ -47,13 +45,4 @@ export namespace Memo {
       feePayer,
     );
   };
-
-  export const parse = (tx: ParsedTransactionWithMeta):
-    string => {
-    const res = tx.transaction.message.instructions.filter(d => {
-      const value = d as ParsedInstruction;
-      return value.program === 'spl-memo';
-    }) as ParsedInstruction[];
-    return res[0].parsed;
-  }
 }
