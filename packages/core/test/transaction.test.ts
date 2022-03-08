@@ -128,7 +128,7 @@ describe('Transaction', () => {
     });
   });
 
-  it.only('Get token transfer history by owner address', async () => {
+  it('Get token transfer history by owner address', async () => {
     const tokenKey = '9v7HRkw3Fdt3Ee45z4Y9Mn9jzakHBQmSRZudPJGjbruY'.toPublicKey();
     const owner = 'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPublicKey();
     const res = await Transaction.getTokenHistory(
@@ -138,7 +138,6 @@ describe('Transaction', () => {
     assert.isTrue(res.isOk);
     assert.isTrue(res.unwrap().length > 0);
     res.unwrap().forEach((v) => {
-    console.log(v);
       assert.isNotEmpty(v.type);
       assert.isNotEmpty(v.info.source);
       assert.isNotEmpty(v.info.destination);
@@ -153,7 +152,7 @@ describe('Transaction', () => {
       tokenKey,
       owner,
       {
-        dicretionFilter: {
+        directionFilter: {
           filter: Transaction.DirectionType.Source,
           pubkey: owner
         }

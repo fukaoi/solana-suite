@@ -13,7 +13,11 @@ import {
   Constants
 } from '@solana-suite/shared';
 
-import {ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID} from '@solana/spl-token';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  Token,
+  TOKEN_PROGRAM_ID
+} from '@solana/spl-token';
 
 export namespace Transaction {
 
@@ -22,24 +26,30 @@ export namespace Transaction {
     return arg !== null && typeof arg === 'object' && arg.parsed;
   }
 
-  const createTransferHistory = (
+  const createHistory = (
     instruction: ParsedInstruction,
     value: ParsedTransactionWithMeta,
     inOutFilter?: DirectionFilter,
     mappingTokenAccount?: any[],
+    isToken?: boolean,
   ) => {
-    console.log(mappingTokenAccount);
     const v: TransferHistory = instruction.parsed;
-    const destindex = `${v.info.destination}` as string;
-    const foundDest = mappingTokenAccount!.find(m => m.account === destindex);
-    const sourceindex = `${v.info.source}` as string;
-    const foundSource = mappingTokenAccount!.find(m => m.account === sourceindex);
-    v.info.destination = foundDest?.owner;
-    v.info.source = foundSource?.owner;
+
+    if (isToken && instruction.program === 'spl-token') {
+      const foundSource = mappingTokenAccount!.find(m => m.account === v.info.source);
+      const foundDest = mappingTokenAccount!.find(m => m.account === v.info.destination);
+      v.info.source = foundSource.owner;
+      v.info.destination = foundDest.owner;
+    }
+
     v.date = convertTimestmapToDate(value.blockTime as number);
     v.sig = value.transaction.signatures[0];
     v.innerInstruction = false;
-    if (value.meta?.innerInstructions && value.meta?.innerInstructions.length !== 0) {
+
+    if (
+      value.meta?.innerInstructions
+      && value.meta?.innerInstructions.length !== 0
+    ) {
       // inner instructions
       v.innerInstruction = true;
     }
@@ -86,6 +96,7 @@ export namespace Transaction {
   const filterTransactions = (
     transactions: Result<ParsedTransactionWithMeta>[],
     filterOptions: Filter[],
+    isToken: boolean = false,
     inOutFilter?: DirectionFilter,
   ) => {
     const hist: TransferHistory[] = [];
@@ -94,16 +105,30 @@ export namespace Transaction {
       if (tx.isErr) return tx;
 
       const accountKeys = tx.value.transaction.message.accountKeys.map(t => t.pubkey.toBase58());
+      //set  mapping list
       tx.value.meta?.postTokenBalances?.forEach(t => {
         if (accountKeys[t.accountIndex] && t.owner) {
-          const v = {account: accountKeys[t.accountIndex], owner: t.owner}
+          const v = {
+            account: accountKeys[t.accountIndex],
+            owner: t.owner
+          }
           mappingTokenAccount.push(v);
         }
       });
+
       tx.value.transaction.message.instructions.forEach(instruction => {
         if (isParsedInstructon(instruction)) {
+          if (isToken && instruction.program !== 'spl-token') {
+            return;
+          } 
           if (filterOptions.includes(instruction.parsed.type)) {
-            const res = createTransferHistory(instruction, tx.value, inOutFilter, mappingTokenAccount);
+            const res = createHistory(
+              instruction,
+              tx.value,
+              inOutFilter,
+              mappingTokenAccount,
+              isToken
+            );
             res && hist.push(res);
           } else {
             //spl-memo, other?
@@ -268,6 +293,7 @@ export namespace Transaction {
       const res = filterTransactions(
         transactions,
         actionFilter,
+        false,
         options.directionFilter
       );
       hist = hist.concat(res);
@@ -286,9 +312,25 @@ export namespace Transaction {
     options?: {
       limit?: number,
       actionFilter?: Filter[],
-      dicretionFilter?: DirectionFilter
+      directionFilter?: DirectionFilter
     }
   ): Promise<Result<TransferHistory[], Error>> => {
+
+    if (options === undefined || !Object.keys(options).length) {
+      options = {
+        limit: 0,
+        actionFilter: [],
+        directionFilter: undefined,
+      }
+    }
+
+    const actionFilter =
+      options?.actionFilter !== undefined && options.actionFilter.length > 0
+        ? options.actionFilter
+        : [
+          Filter.Transfer,
+          Filter.TransferChecked,
+        ];
 
     const tokenPubkey = await Token.getAssociatedTokenAddress(
       ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -301,26 +343,34 @@ export namespace Transaction {
     if (tokenPubkey.isErr) {
       return Result.err(tokenPubkey.error);
     }
-    const actionFilter =
-      options?.actionFilter !== undefined && options.actionFilter.length > 0
-        ? options.actionFilter
-        : [
-          Filter.Transfer,
-          Filter.TransferChecked,
-        ];
 
-    if (options?.dicretionFilter !== undefined) {
-      options.dicretionFilter.pubkey = tokenPubkey.value;
+    let bufferedLimit = 0;
+    if (options.limit && options.limit < 50) {
+      bufferedLimit = options.limit * 1.5; //To get more data, threshold
+    } else {
+      bufferedLimit = 10;
+      options.limit = 10;
     }
+    let hist: TransferHistory[] = [];
+    let before;
 
-    return getHistory(
-      tokenPubkey.value,
-      {
-        limit: options?.limit,
+    while (true) {
+      const transactions = await Transaction.getForAddress(pubkey, bufferedLimit, before);
+      console.debug('# getTransactionHistory loop');
+      const res = filterTransactions(
+        transactions,
         actionFilter,
-        directionFilter: options?.dicretionFilter
+        true,
+        options.directionFilter
+      );
+      hist = hist.concat(res);
+      if (hist.length >= options.limit || res.length === 0) {
+        hist = hist.slice(0, options.limit);
+        break;
       }
-    );
+      before = hist[hist.length - 1].sig;
+    }
+    return Result.ok(hist);
   }
 
   export const confirmedSig = async (
