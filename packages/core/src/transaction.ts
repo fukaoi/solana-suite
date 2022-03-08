@@ -25,9 +25,17 @@ export namespace Transaction {
   const createTransferHistory = (
     instruction: ParsedInstruction,
     value: ParsedTransactionWithMeta,
-    inOutFilter?: DirectionFilter
+    inOutFilter?: DirectionFilter,
+    mappingTokenAccount?: any[],
   ) => {
+    console.log(mappingTokenAccount);
     const v: TransferHistory = instruction.parsed;
+    const destindex = `${v.info.destination}` as string;
+    const foundDest = mappingTokenAccount!.find(m => m.account === destindex);
+    const sourceindex = `${v.info.source}` as string;
+    const foundSource = mappingTokenAccount!.find(m => m.account === sourceindex);
+    v.info.destination = foundDest?.owner;
+    v.info.source = foundSource?.owner;
     v.date = convertTimestmapToDate(value.blockTime as number);
     v.sig = value.transaction.signatures[0];
     v.innerInstruction = false;
@@ -81,12 +89,21 @@ export namespace Transaction {
     inOutFilter?: DirectionFilter,
   ) => {
     const hist: TransferHistory[] = [];
+    let mappingTokenAccount: {account: string, owner: string}[] = [];
     transactions.forEach(tx => {
       if (tx.isErr) return tx;
+
+      const accountKeys = tx.value.transaction.message.accountKeys.map(t => t.pubkey.toBase58());
+      tx.value.meta?.postTokenBalances?.forEach(t => {
+        if (accountKeys[t.accountIndex] && t.owner) {
+          const v = {account: accountKeys[t.accountIndex], owner: t.owner}
+          mappingTokenAccount.push(v);
+        }
+      });
       tx.value.transaction.message.instructions.forEach(instruction => {
         if (isParsedInstructon(instruction)) {
           if (filterOptions.includes(instruction.parsed.type)) {
-            const res = createTransferHistory(instruction, tx.value, inOutFilter);
+            const res = createTransferHistory(instruction, tx.value, inOutFilter, mappingTokenAccount);
             res && hist.push(res);
           } else {
             //spl-memo, other?
