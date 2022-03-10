@@ -20,10 +20,6 @@ export declare namespace Transaction {
         sig: string;
         memo?: string;
     }
-    interface TransferDestinationList {
-        dest: PublicKey;
-        date: Date;
-    }
     enum Filter {
         Transfer = "transfer",
         TransferChecked = "transferChecked",
