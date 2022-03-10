@@ -28,10 +28,11 @@ export namespace Transaction {
 
   const createHistory = (
     instruction: ParsedInstruction,
-    value: ParsedTransactionWithMeta,
+    meta: ParsedTransactionWithMeta,
     inOutFilter?: DirectionFilter,
     mappingTokenAccount?: any[],
     isToken?: boolean,
+    withMemos?: any[]
   ) => {
     const v: TransferHistory = instruction.parsed;
 
@@ -42,13 +43,16 @@ export namespace Transaction {
       v.info.destination = foundDest.owner;
     }
 
-    v.date = convertTimestmapToDate(value.blockTime as number);
-    v.sig = value.transaction.signatures[0];
+    v.date = convertTimestmapToDate(meta.blockTime as number);
+    v.sig = meta.transaction.signatures[0];
     v.innerInstruction = false;
+    v.memo = withMemos 
+      && withMemos.length > 0 
+      && withMemos.find(obj => obj.sig === meta.transaction.signatures).memo;
 
     if (
-      value.meta?.innerInstructions
-      && value.meta?.innerInstructions.length !== 0
+      meta.meta?.innerInstructions
+      && meta.meta?.innerInstructions.length !== 0
     ) {
       // inner instructions
       v.innerInstruction = true;
@@ -116,23 +120,36 @@ export namespace Transaction {
         }
       });
 
+      // set transaction with memo
+      const withMemos: {sig: string[], memo: string}[] = [];
+      tx.value.transaction.message.instructions.forEach(v => {
+        if (isParsedInstructon(v) && v.program === 'spl-memo') {
+          withMemos.push({
+            sig: tx.value.transaction.signatures,
+            memo: JSON.parse(v.parsed).memo
+          });
+        }
+      });
+
       tx.value.transaction.message.instructions.forEach(instruction => {
         if (isParsedInstructon(instruction)) {
           if (isToken && instruction.program !== 'spl-token') {
             return;
-          } 
+          }
+
           if (filterOptions.includes(instruction.parsed.type)) {
             const res = createHistory(
               instruction,
               tx.value,
               inOutFilter,
               mappingTokenAccount,
-              isToken
+              isToken,
+              withMemos,
             );
             res && hist.push(res);
           } else {
-            //spl-memo, other?
-            if (filterOptions.includes(instruction.program as Filter)) {
+            // Only memo
+            if (filterOptions.includes(Filter.OnlyMemo)) {
               const res = createMemoHistory(instruction, tx.value, inOutFilter);
               res && hist.push(res);
             }
@@ -197,7 +214,7 @@ export namespace Transaction {
   export enum Filter {
     Transfer = 'transfer',
     TransferChecked = 'transferChecked',
-    Memo = 'spl-memo',
+    OnlyMemo = 'spl-memo',
     MintTo = 'mintTo',
     Create = 'create',
   }

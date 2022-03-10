@@ -156,15 +156,18 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  it('Get memo data in transaction', async () => {
+  it.only('Get memo data in transaction', async () => {
     const res = await Transaction.getHistory(
       source.toPublicKey(),
-      {
-        actionFilter: [Transaction.Filter.Memo]
-      }
     );
     assert.isOk(res.isOk);
     assert.isNotEmpty(res.unwrap()[0].memo)
+    res.unwrap().forEach(r => {
+      if (r.memo) {
+        console.log('# memo in transaction: ', r.memo);
+        assert.isNotEmpty(r.memo);
+      }
+    });
   });
 
   it('[Err] Over max limit', async () => {
