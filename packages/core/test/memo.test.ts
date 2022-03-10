@@ -1,10 +1,18 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../../shared/test/testSetup';
-import {Memo, KeypairStr, Account, SolNative, Transaction, SplToken} from '../src';
+import {
+  Memo, 
+  KeypairStr, 
+  Account, 
+  SolNative, 
+  Transaction, 
+  SplToken
+} from '../src';
 
 let source: KeypairStr;
 let dest: KeypairStr;
+let tokenKey: string;
 const DUMMY_DATA = 'dummy memo data';
 
 describe('Memo', () => {
@@ -23,12 +31,8 @@ describe('Memo', () => {
   it('create instruction', async () => {
     const res = Memo.create(
       DUMMY_DATA,
-      [
-        source.toPublicKey(),
-      ],
-      [
-        source.toKeypair()
-      ]
+      source.toPublicKey(),
+      source.toKeypair()
     );
     console.log(`# create: `, res);
     assert.isObject(res);
@@ -44,31 +48,8 @@ describe('Memo', () => {
   it('send memo by own', async () => {
     const inst = Memo.create(
       '{"memo": "send memo by own"}',
-      [
-        source.toPublicKey(),
-      ],
-      [
-        source.toKeypair()
-      ]
-    );
-
-    const res = await inst.submit();
-    assert.isTrue(res.isOk, res.unwrap());
-    console.log('# tx signature: ', res.unwrap());
-  });
-
-  it('send memo by owners', async () => {
-    console.log(source);
-    const otherOwner = Account.create();
-    const inst = Memo.create(
-      '{"memo": "send memo by owners"}',
-      [
-        otherOwner.toPublicKey()
-      ],
-      [
-        source.toKeypair(),
-        otherOwner.toKeypair(),
-      ],
+      source.toPublicKey(),
+      source.toKeypair()
     );
 
     const res = await inst.submit();
@@ -77,19 +58,12 @@ describe('Memo', () => {
   });
 
   it('send memo by owners with fee payer', async () => {
-    const owner1 = Account.create();
-    const owner2 = Account.create();
+    const owner = Account.create();
 
     const inst = Memo.create(
       '{"memo": "send memo by owners with fee payer"}',
-      [
-        owner1.toPublicKey(),
-        owner2.toPublicKey(),
-      ],
-      [
-        owner1.toKeypair(),
-        owner2.toKeypair(),
-      ],
+      owner.toPublicKey(),
+      owner.toKeypair(),
       source.toKeypair()
     );
 
@@ -99,28 +73,16 @@ describe('Memo', () => {
   });
 
   it('send memo and sol transfer by owner', async () => {
-    const owner1 = Account.create();
-    const owner2 = Account.create();
-
     const inst1 = Memo.create(
-      '{"memo": "send memo by owners with fee payer"}',
-      [
-        owner1.toPublicKey(),
-        owner2.toPublicKey(),
-      ],
-      [
-        owner1.toKeypair(),
-        owner2.toKeypair(),
-      ],
-      source.toKeypair()
+      `send memo and sol transfer: ${new Date()}`,
+      source.toPublicKey(),
+      source.toKeypair(),
     );
 
     const inst2 = await SolNative.transfer(
       source.toPublicKey(),
       dest.toPublicKey(),
-      [
-        source.toKeypair()
-      ],
+      [source.toKeypair()],
       0.00001
     );
 
@@ -130,20 +92,10 @@ describe('Memo', () => {
   });
 
   it('send memo and spl token transfer', async () => {
-    const owner1 = Account.create();
-    const owner2 = Account.create();
-
     const inst1 = Memo.create(
-      'send memo and spl token transfer',
-      [
-        owner1.toPublicKey(),
-        owner2.toPublicKey(),
-      ],
-      [
-        owner1.toKeypair(),
-        owner2.toKeypair(),
-      ],
-      source.toKeypair()
+      `${new Date()}`,
+      source.toPublicKey(),
+      source.toKeypair(),
     );
 
     const inst2 = await SplToken.mint(
@@ -153,8 +105,10 @@ describe('Memo', () => {
       0
     );
 
+    tokenKey = inst2.unwrap().data as string;
+
     const inst3 = await SplToken.transfer(
-      (inst2.unwrap().data as string).toPublicKey(),
+      tokenKey.toPublicKey(),
       source.toPublicKey(),
       dest.toPublicKey(),
       [
@@ -169,37 +123,26 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  it('Max memo 283 length by i18n', async () => {
-    const data500byte = `
-    アメリカの地質調査所から気象庁に入った連絡によりますと、
-    日本時間の14日午後0時20分ごろ、インドネシア付近のフローレス海を
-    震源とするマグニチュード7.6の大きな地震がありました。
-    気象庁によりますと、この地震による日本への津波の影響はありません。
-    フローレス島など 最大50センチの津波のおそれインドネシアの気象当局は、
-    この地震でフローレス島やその周辺のシッカ島、レンバタ島に最大で高さ
-    50センチの津波が到達するおそれがあるとして海岸近くの人たちに避難を呼びかけています。
-    震源は米国地質調査所国立地震情報センター(USGS,NEIC)による。太平洋津波警報センター.....
-    `;
-
-    const inst = Memo.create(
-      data500byte,
-      [
-        source.toPublicKey()
-      ],
-      [
-        source.toKeypair()
-      ]
+  it('Get memo data in transaction from dest', async () => {
+    const res = await Transaction.getHistory(
+      dest.toPublicKey(),
     );
-
-    const res = await inst.submit();
-    assert.isTrue(res.isOk, res.unwrap());
-    console.log('# tx signature: ', res.unwrap());
+    assert.isOk(res.isOk);
+    assert.isNotEmpty(res.unwrap()[0].memo)
+    res.unwrap().forEach(r => {
+      if (r.memo) {
+        console.log('# memo in transaction: ', r.memo);
+        assert.isNotEmpty(r.memo);
+      }
+    });
   });
 
-  it('Get memo data in transaction', async () => {
-    const res = await Transaction.getHistory(
-      source.toPublicKey(),
+  it('Get memo data in spl transaction from dest', async () => {
+    const res = await Transaction.getTokenHistory(
+      tokenKey.toPublicKey(),
+      dest.toPublicKey(),
     );
+    console.log(res);
     assert.isOk(res.isOk);
     assert.isNotEmpty(res.unwrap()[0].memo)
     res.unwrap().forEach(r => {
@@ -214,12 +157,8 @@ describe('Memo', () => {
     const overData = 'a'.repeat(2000);
     const inst = Memo.create(
       overData,
-      [
-        source.toPublicKey()
-      ],
-      [
-        source.toKeypair()
-      ]
+      source.toPublicKey(),
+      source.toKeypair()
     );
 
     const res = await inst.submit();

@@ -15,23 +15,19 @@ export namespace Memo {
 
   export const create = (
     data: string,
-    owners: PublicKey[],
-    signers: Signer[],
+    owner: PublicKey,
+    signer: Signer,
     feePayer?: Signer,
   )
     : Instruction => {
 
     const key =
-      owners && owners.length > 0
-        ?
-        owners.map(owner => {
-          return {
-            pubkey: owner,
-            isSigner: true,
-            isWritable: true
-          }
-        }
-        )
+      owner
+        ? [{
+          pubkey: owner,
+          isSigner: false,
+          isWritable: true
+        }]
         : [];
 
     const instruction = new TransactionInstruction({
@@ -41,7 +37,7 @@ export namespace Memo {
     });
     return new Instruction(
       [instruction],
-      signers,
+      [signer],
       feePayer,
     );
   };

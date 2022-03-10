@@ -46,9 +46,9 @@ export namespace Transaction {
     v.date = convertTimestmapToDate(meta.blockTime as number);
     v.sig = meta.transaction.signatures[0];
     v.innerInstruction = false;
-    v.memo = withMemos 
-      && withMemos.length > 0 
-      && withMemos.find(obj => obj.sig === meta.transaction.signatures).memo;
+    if (withMemos && withMemos.length > 0) {
+      v.memo = withMemos.find(obj => obj.sig === meta.transaction.signatures).memo;
+    }
 
     if (
       meta.meta?.innerInstructions
@@ -123,7 +123,7 @@ export namespace Transaction {
       // set transaction with memo
       const withMemos: {sig: string[], memo: string}[] = [];
       tx.value.transaction.message.instructions.forEach(v => {
-        if (isParsedInstructon(v) && v.program === 'spl-memo' && tx.value.transaction.signatures.length > 1) {
+        if (isParsedInstructon(v) && v.program === 'spl-memo') {
           withMemos.push({
             sig: tx.value.transaction.signatures,
             memo: v.parsed
