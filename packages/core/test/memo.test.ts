@@ -2,11 +2,11 @@ import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../../shared/test/testSetup';
 import {
-  Memo, 
-  KeypairStr, 
-  Account, 
-  SolNative, 
-  Transaction, 
+  Memo,
+  KeypairStr,
+  Account,
+  SolNative,
+  Transaction,
   SplToken
 } from '../src';
 
@@ -57,25 +57,10 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  it('send memo by owners with fee payer', async () => {
-    const owner = Account.create();
-
-    const inst = Memo.create(
-      '{"memo": "send memo by owners with fee payer"}',
-      owner.toPublicKey(),
-      owner.toKeypair(),
-      source.toKeypair()
-    );
-
-    const res = await inst.submit();
-    assert.isTrue(res.isOk, res.unwrap());
-    console.log('# tx signature: ', res.unwrap());
-  });
-
   it('send memo and sol transfer by owner', async () => {
     const inst1 = Memo.create(
       `send memo and sol transfer: ${new Date()}`,
-      source.toPublicKey(),
+      dest.toPublicKey(),
       source.toKeypair(),
     );
 
@@ -94,7 +79,7 @@ describe('Memo', () => {
   it('send memo and spl token transfer', async () => {
     const inst1 = Memo.create(
       `${new Date()}`,
-      source.toPublicKey(),
+      dest.toPublicKey(),
       source.toKeypair(),
     );
 
