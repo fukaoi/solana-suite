@@ -31,22 +31,18 @@ export declare namespace Transaction {
         MintTo = "mintTo",
         Create = "create"
     }
-    enum DirectionType {
+    enum DirectionFilter {
         Dest = "destination",
         Source = "source"
     }
-    interface DirectionFilter {
-        filter: DirectionType;
-        pubkey: PublicKey;
-    }
     const get: (signature: string) => Promise<Result<ParsedTransactionWithMeta, Error>>;
     const getForAddress: (pubkey: PublicKey, limit?: number | undefined, before?: string | undefined, until?: string | undefined) => Promise<Result<ParsedTransactionWithMeta, Error>[]>;
-    const getHistory: (pubkey: PublicKey, options?: {
+    const getHistory: (searchKey: PublicKey, options?: {
         limit?: number | undefined;
         actionFilter?: Filter[] | undefined;
         directionFilter?: DirectionFilter | undefined;
     } | undefined) => Promise<Result<TransferHistory[], Error>>;
-    const getTokenHistory: (tokenKey: PublicKey, pubkey: PublicKey, options?: {
+    const getTokenHistory: (tokenKey: PublicKey, searchKey: PublicKey, options?: {
         limit?: number | undefined;
         actionFilter?: Filter[] | undefined;
         directionFilter?: DirectionFilter | undefined;

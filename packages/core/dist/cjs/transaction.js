@@ -18,7 +18,7 @@ var Transaction;
     const isParsedInstructon = (arg) => {
         return arg !== null && typeof arg === 'object' && arg.parsed;
     };
-    const createHistory = (instruction, meta, inOutFilter, mappingTokenAccount, isToken, withMemos) => {
+    const createHistory = (searchKey, instruction, meta, inOutFilter, mappingTokenAccount, isToken, withMemos) => {
         var _a, _b;
         const v = instruction.parsed;
         if (isToken && instruction.program === 'spl-token') {
@@ -39,7 +39,7 @@ var Transaction;
             v.innerInstruction = true;
         }
         if (inOutFilter) {
-            if (inOutFilter && v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
+            if (v.info[inOutFilter] === searchKey.toString()) {
                 return v;
             }
         }
@@ -47,7 +47,7 @@ var Transaction;
             return v;
         }
     };
-    const createMemoHistory = (instruction, value, inOutFilter) => {
+    const createMemoHistory = (searchKey, instruction, value, directionFilter) => {
         var _a, _b;
         const v = {
             info: {},
@@ -65,8 +65,8 @@ var Transaction;
             // inner instructions
             v.innerInstruction = true;
         }
-        if (inOutFilter) {
-            if (v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
+        if (directionFilter) {
+            if (v.info[directionFilter] === searchKey.toString()) {
                 return v;
             }
         }
@@ -74,7 +74,7 @@ var Transaction;
             return v;
         }
     };
-    const filterTransactions = (transactions, filterOptions, isToken = false, inOutFilter) => {
+    const filterTransactions = (searchKey, transactions, filterOptions, isToken = false, directionFilter) => {
         const hist = [];
         let mappingTokenAccount = [];
         transactions.forEach(tx => {
@@ -108,13 +108,13 @@ var Transaction;
                         return;
                     }
                     if (filterOptions.includes(instruction.parsed.type)) {
-                        const res = createHistory(instruction, tx.value, inOutFilter, mappingTokenAccount, isToken, withMemos);
+                        const res = createHistory(searchKey, instruction, tx.value, directionFilter, mappingTokenAccount, isToken, withMemos);
                         res && hist.push(res);
                     }
                     else {
                         // Only memo
                         if (filterOptions.includes(Filter.OnlyMemo)) {
-                            const res = createMemoHistory(instruction, tx.value, inOutFilter);
+                            const res = createMemoHistory(searchKey, instruction, tx.value, directionFilter);
                             res && hist.push(res);
                         }
                     }
@@ -147,11 +147,11 @@ var Transaction;
         Filter["MintTo"] = "mintTo";
         Filter["Create"] = "create";
     })(Filter = Transaction.Filter || (Transaction.Filter = {}));
-    let DirectionType;
-    (function (DirectionType) {
-        DirectionType["Dest"] = "destination";
-        DirectionType["Source"] = "source";
-    })(DirectionType = Transaction.DirectionType || (Transaction.DirectionType = {}));
+    let DirectionFilter;
+    (function (DirectionFilter) {
+        DirectionFilter["Dest"] = "destination";
+        DirectionFilter["Source"] = "source";
+    })(DirectionFilter = Transaction.DirectionFilter || (Transaction.DirectionFilter = {}));
     Transaction.get = (signature) => __awaiter(this, void 0, void 0, function* () {
         const res = yield shared_1.Node.getConnection().getParsedTransaction(signature)
             .then(shared_1.Result.ok)
@@ -182,7 +182,7 @@ var Transaction;
             return yield Promise.all(signatures);
         }
     });
-    Transaction.getHistory = (pubkey, options) => __awaiter(this, void 0, void 0, function* () {
+    Transaction.getHistory = (searchKey, options) => __awaiter(this, void 0, void 0, function* () {
         if (options === undefined || !Object.keys(options).length) {
             options = {
                 limit: 0,
@@ -207,9 +207,9 @@ var Transaction;
         let hist = [];
         let before;
         while (true) {
-            const transactions = yield Transaction.getForAddress(pubkey, bufferedLimit, before);
+            const transactions = yield Transaction.getForAddress(searchKey, bufferedLimit, before);
             console.debug('# getTransactionHistory loop');
-            const res = filterTransactions(transactions, actionFilter, false, options.directionFilter);
+            const res = filterTransactions(searchKey, transactions, actionFilter, false, options.directionFilter);
             hist = hist.concat(res);
             if (hist.length >= options.limit || res.length === 0) {
                 hist = hist.slice(0, options.limit);
@@ -219,7 +219,7 @@ var Transaction;
         }
         return shared_1.Result.ok(hist);
     });
-    Transaction.getTokenHistory = (tokenKey, pubkey, options) => __awaiter(this, void 0, void 0, function* () {
+    Transaction.getTokenHistory = (tokenKey, searchKey, options) => __awaiter(this, void 0, void 0, function* () {
         if (options === undefined || !Object.keys(options).length) {
             options = {
                 limit: 0,
@@ -233,7 +233,7 @@ var Transaction;
                 Filter.Transfer,
                 Filter.TransferChecked,
             ];
-        const tokenPubkey = yield spl_token_1.Token.getAssociatedTokenAddress(spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID, spl_token_1.TOKEN_PROGRAM_ID, tokenKey, pubkey).then(shared_1.Result.ok)
+        const tokenPubkey = yield spl_token_1.Token.getAssociatedTokenAddress(spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID, spl_token_1.TOKEN_PROGRAM_ID, tokenKey, searchKey).then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (tokenPubkey.isErr) {
             return shared_1.Result.err(tokenPubkey.error);
@@ -249,9 +249,9 @@ var Transaction;
         let hist = [];
         let before;
         while (true) {
-            const transactions = yield Transaction.getForAddress(pubkey, bufferedLimit, before);
+            const transactions = yield Transaction.getForAddress(searchKey, bufferedLimit, before);
             console.debug('# getTransactionHistory loop');
-            const res = filterTransactions(transactions, actionFilter, true, options.directionFilter);
+            const res = filterTransactions(searchKey, transactions, actionFilter, true, options.directionFilter);
             hist = hist.concat(res);
             if (hist.length >= options.limit || res.length === 0) {
                 hist = hist.slice(0, options.limit);
