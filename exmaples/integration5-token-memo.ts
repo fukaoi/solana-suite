@@ -20,14 +20,12 @@ import {
   // create token owner wallet, receive token receipt wallet.
   const owner = Account.create();
   const receipt = Account.create();
-  const receipt2 = Account.create();
 
   // faucet 1 sol
   await Account.requestAirdrop(owner.toPublicKey());
 
   console.log('# owner: ', owner.pubkey);
   console.log('# receipt: ', receipt.pubkey);
-  console.log('# receipt2: ', receipt2.pubkey);
 
 
   //////////////////////////////////////////////

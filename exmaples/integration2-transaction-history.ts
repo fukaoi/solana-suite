@@ -104,7 +104,7 @@ import {
   const hist5 = await Transaction.getHistory(
     publisher.toPublicKey(),
     {
-      transferFilter: {
+      directionFilter: {
         filter: Transaction.DirectionType.Dest,
         pubkey: publisher.toPublicKey()
       }
@@ -116,7 +116,7 @@ import {
     tokenKey.toPublicKey(),
     publisher.toPublicKey(),
     {
-      transferFilter: {
+      directionFilter: {
         filter: Transaction.DirectionType.Dest,
         pubkey: publisher.toPublicKey()
       }
