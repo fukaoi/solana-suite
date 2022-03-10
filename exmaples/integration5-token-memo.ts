@@ -62,8 +62,8 @@ import {
   `;
   const inst2 = Memo.create(
     memoData,
-    receipt.toPublicKey(),
-    owner.toKeypair(),
+    receipt.toPublicKey(), // memo's owner
+    owner.toKeypair(),     // signer or feePayer
   );
 
 

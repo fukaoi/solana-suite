@@ -17,7 +17,6 @@ export namespace Memo {
     data: string,
     owner: PublicKey,
     signer: Signer,
-    feePayer?: Signer,
   )
     : Instruction => {
 
@@ -38,7 +37,7 @@ export namespace Memo {
     return new Instruction(
       [instruction],
       [signer],
-      feePayer,
+      signer,
     );
   };
 }
