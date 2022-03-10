@@ -123,7 +123,7 @@ export namespace Transaction {
       // set transaction with memo
       const withMemos: {sig: string[], memo: string}[] = [];
       tx.value.transaction.message.instructions.forEach(v => {
-        if (isParsedInstructon(v) && v.program === 'spl-memo') {
+        if (isParsedInstructon(v) && v.program === 'spl-memo' && tx.value.transaction.signatures.length > 1) {
           withMemos.push({
             sig: tx.value.transaction.signatures,
             memo: JSON.parse(v.parsed).memo

@@ -156,7 +156,7 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  it.only('Get memo data in transaction', async () => {
+  it('Get memo data in transaction', async () => {
     const res = await Transaction.getHistory(
       source.toPublicKey(),
     );
