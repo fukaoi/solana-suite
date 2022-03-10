@@ -27,7 +27,7 @@ export declare namespace Transaction {
     enum Filter {
         Transfer = "transfer",
         TransferChecked = "transferChecked",
-        Memo = "spl-memo",
+        OnlyMemo = "spl-memo",
         MintTo = "mintTo",
         Create = "create"
     }
@@ -35,7 +35,7 @@ export declare namespace Transaction {
         Dest = "destination",
         Source = "source"
     }
-    interface TransferFilter {
+    interface DirectionFilter {
         filter: DirectionType;
         pubkey: PublicKey;
     }
@@ -44,12 +44,12 @@ export declare namespace Transaction {
     const getHistory: (pubkey: PublicKey, options?: {
         limit?: number | undefined;
         actionFilter?: Filter[] | undefined;
-        transferFilter?: TransferFilter | undefined;
+        directionFilter?: DirectionFilter | undefined;
     } | undefined) => Promise<Result<TransferHistory[], Error>>;
     const getTokenHistory: (tokenKey: PublicKey, pubkey: PublicKey, options?: {
         limit?: number | undefined;
         actionFilter?: Filter[] | undefined;
-        transferFilter?: TransferFilter | undefined;
+        directionFilter?: DirectionFilter | undefined;
     } | undefined) => Promise<Result<TransferHistory[], Error>>;
     const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result<RpcResponseAndContext<SignatureResult> | unknown, Error>>;
 }
