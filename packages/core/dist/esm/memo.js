@@ -5,7 +5,7 @@ export var Memo;
 (function (Memo) {
     Memo.decode = (encoded) => bs.decode(encoded).toString();
     Memo.encode = (data) => Buffer.from(data);
-    Memo.create = (data, owner, signer, feePayer) => {
+    Memo.create = (data, owner, signer) => {
         const key = owner
             ? [{
                     pubkey: owner,
@@ -18,6 +18,6 @@ export var Memo;
             data: Memo.encode(data),
             keys: key
         });
-        return new Instruction([instruction], [signer], feePayer);
+        return new Instruction([instruction], [signer], signer);
     };
 })(Memo || (Memo = {}));

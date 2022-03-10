@@ -11,7 +11,7 @@ var Memo;
 (function (Memo) {
     Memo.decode = (encoded) => bs58_1.default.decode(encoded).toString();
     Memo.encode = (data) => Buffer.from(data);
-    Memo.create = (data, owner, signer, feePayer) => {
+    Memo.create = (data, owner, signer) => {
         const key = owner
             ? [{
                     pubkey: owner,
@@ -24,6 +24,6 @@ var Memo;
             data: Memo.encode(data),
             keys: key
         });
-        return new shared_1.Instruction([instruction], [signer], feePayer);
+        return new shared_1.Instruction([instruction], [signer], signer);
     };
 })(Memo = exports.Memo || (exports.Memo = {}));
