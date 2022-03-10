@@ -81,10 +81,7 @@ describe('Transaction', () => {
     const res = await Transaction.getHistory(
       tokenKey.toPublicKey(),
       {
-        directionFilter: {
-          filter: Transaction.DirectionType.Dest,
-          pubkey: destination.toPublicKey()
-        }
+        directionFilter: Transaction.DirectionFilter.Dest,
       }
     );
     assert.isTrue(res.isOk);
@@ -100,10 +97,7 @@ describe('Transaction', () => {
     const res = await Transaction.getHistory(
       tokenKey.toPublicKey(),
       {
-        directionFilter: {
-          filter: Transaction.DirectionType.Source,
-          pubkey: source.toPublicKey()
-        }
+        directionFilter: Transaction.DirectionFilter.Source,
       }
     );
 
@@ -152,10 +146,7 @@ describe('Transaction', () => {
       tokenKey,
       owner,
       {
-        directionFilter: {
-          filter: Transaction.DirectionType.Source,
-          pubkey: owner
-        }
+        directionFilter: Transaction.DirectionFilter.Source,
       }
     );
     assert.isTrue(res.isOk);

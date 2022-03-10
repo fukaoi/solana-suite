@@ -71,57 +71,32 @@ import {
   );
 
   //////////////////////////////////////////////
-  // Get toransaction history
+  // GET TRANSACTION HISTORY
   //////////////////////////////////////////////
 
-  const hist = await Transaction.getHistory(
-    tokenKey.toPublicKey()
+  const hist1 = await Transaction.getTokenHistory(
+    tokenKey.toPublicKey(),  // used tokenKey
+    publisher.toPublicKey()  // search key
   );
-  console.log('# history by token: ', hist.unwrap());
+  console.log('# token history by publish: ', hist1.unwrap());
 
-  const hist2 = await Transaction.getTokenHistory(
-    tokenKey.toPublicKey(),
-    publisher.toPublicKey()
-  );
-  console.log('# token history by publish: ', hist2.unwrap());
-
-  const hist3 = await Transaction.getHistory(
-    tokenKey.toPublicKey(),
+  // Not token history(Difference between getHistory and getTokenHistory)
+  const hist2 = await Transaction.getHistory(
+    publisher.toPublicKey(),  // search key
     {
-      actionFilter: [Transaction.Filter.Create]
+      actionFilter: [Transaction.Filter.Create] // Only 'create' history
     }
   );
-  console.log('# history via action filter : ', hist3.unwrap());
+  console.log('# history by create action filter: ', hist2.unwrap());
 
-  const hist4 = await Transaction.getHistory(
-    tokenKey.toPublicKey(),
-    {
-      limit: 10
-    }
-  );
-  console.log('# set limit history : ', hist4.unwrap());
-
-  const hist5 = await Transaction.getHistory(
-    publisher.toPublicKey(),
-    {
-      directionFilter: {
-        filter: Transaction.DirectionType.Dest,
-        pubkey: publisher.toPublicKey()
-      }
-    }
-  );
-  console.log('# history via transfer filter : ', hist5.unwrap());
-
-  const hist6 = await Transaction.getTokenHistory(
+  // History of receiptkey as the main destitnation.
+  const hist3 = await Transaction.getTokenHistory(
     tokenKey.toPublicKey(),
     publisher.toPublicKey(),
     {
-      directionFilter: {
-        filter: Transaction.DirectionType.Dest,
-        pubkey: publisher.toPublicKey()
-      }
+      Transaction.DirectionFilter.Dest, // Dest or Source
     }
   );
-  console.log('# token history via transfer filter : ', hist6.unwrap());
+  console.log('# token history result by destination filter : ', hist3.unwrap());
 
 })();
