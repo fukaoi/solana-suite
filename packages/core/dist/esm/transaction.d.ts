@@ -33,12 +33,12 @@ export declare namespace Transaction {
     }
     const get: (signature: string) => Promise<Result<ParsedTransactionWithMeta, Error>>;
     const getForAddress: (pubkey: PublicKey, limit?: number | undefined, before?: string | undefined, until?: string | undefined) => Promise<Result<ParsedTransactionWithMeta, Error>[]>;
-    const getHistory: (searchKey: PublicKey, options?: {
+    const getHistory: (searchPubkey: PublicKey, options?: {
         limit?: number | undefined;
         actionFilter?: Filter[] | undefined;
         directionFilter?: DirectionFilter | undefined;
     } | undefined) => Promise<Result<TransferHistory[], Error>>;
-    const getTokenHistory: (tokenKey: PublicKey, searchKey: PublicKey, options?: {
+    const getTokenHistory: (tokenKey: PublicKey, searchPubkey: PublicKey, options?: {
         limit?: number | undefined;
         actionFilter?: Filter[] | undefined;
         directionFilter?: DirectionFilter | undefined;
