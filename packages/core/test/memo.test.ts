@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../../shared/test/testSetup';
-import {Memo, KeypairStr, Account, SolNative, Transaction} from '../src';
+import {Memo, KeypairStr, Account, SolNative, Transaction, SplToken} from '../src';
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -125,6 +125,46 @@ describe('Memo', () => {
     );
 
     const res = await [inst1, inst2].submit();
+    assert.isTrue(res.isOk, res.unwrap());
+    console.log('# tx signature: ', res.unwrap());
+  });
+
+  it('send memo and spl token transfer', async () => {
+    const owner1 = Account.create();
+    const owner2 = Account.create();
+
+    const inst1 = Memo.create(
+      'send memo and spl token transfer',
+      [
+        owner1.toPublicKey(),
+        owner2.toPublicKey(),
+      ],
+      [
+        owner1.toKeypair(),
+        owner2.toKeypair(),
+      ],
+      source.toKeypair()
+    );
+
+    const inst2 = await SplToken.mint(
+      source.toPublicKey(),
+      [source.toKeypair()],
+      10000,
+      0
+    );
+
+    const inst3 = await SplToken.transfer(
+      (inst2.unwrap().data as string).toPublicKey(),
+      source.toPublicKey(),
+      dest.toPublicKey(),
+      [
+        source.toKeypair()
+      ],
+      100,
+      0
+    );
+
+    const res = await [inst1, inst2, inst3].submit();
     assert.isTrue(res.isOk, res.unwrap());
     console.log('# tx signature: ', res.unwrap());
   });

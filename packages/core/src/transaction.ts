@@ -126,7 +126,7 @@ export namespace Transaction {
         if (isParsedInstructon(v) && v.program === 'spl-memo' && tx.value.transaction.signatures.length > 1) {
           withMemos.push({
             sig: tx.value.transaction.signatures,
-            memo: JSON.parse(v.parsed).memo
+            memo: v.parsed
           });
         }
       });
