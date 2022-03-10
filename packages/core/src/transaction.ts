@@ -27,6 +27,7 @@ export namespace Transaction {
   }
 
   const createHistory = (
+    searchKey: PublicKey,
     instruction: ParsedInstruction,
     meta: ParsedTransactionWithMeta,
     inOutFilter?: DirectionFilter,
@@ -59,7 +60,7 @@ export namespace Transaction {
     }
 
     if (inOutFilter) {
-      if (inOutFilter && v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
+      if (v.info[inOutFilter] === searchKey.toString()) {
         return v;
       }
     } else {
@@ -68,9 +69,10 @@ export namespace Transaction {
   }
 
   const createMemoHistory = (
+    searchKey: PublicKey,
     instruction: ParsedInstruction,
     value: ParsedTransactionWithMeta,
-    inOutFilter?: DirectionFilter
+    directionFilter?: DirectionFilter
   ) => {
     const v: TransferHistory = {
       info: {},
@@ -88,8 +90,8 @@ export namespace Transaction {
       // inner instructions
       v.innerInstruction = true;
     }
-    if (inOutFilter) {
-      if (v.info[inOutFilter.filter] === inOutFilter.pubkey.toString()) {
+    if (directionFilter) {
+      if (v.info[directionFilter] === searchKey.toString()) {
         return v;
       }
     } else {
@@ -98,10 +100,11 @@ export namespace Transaction {
   }
 
   const filterTransactions = (
+    searchKey: PublicKey,
     transactions: Result<ParsedTransactionWithMeta>[],
     filterOptions: Filter[],
     isToken: boolean = false,
-    inOutFilter?: DirectionFilter,
+    directionFilter?: DirectionFilter,
   ) => {
     const hist: TransferHistory[] = [];
     let mappingTokenAccount: {account: string, owner: string}[] = [];
@@ -139,9 +142,10 @@ export namespace Transaction {
 
           if (filterOptions.includes(instruction.parsed.type)) {
             const res = createHistory(
+              searchKey,
               instruction,
               tx.value,
-              inOutFilter,
+              directionFilter,
               mappingTokenAccount,
               isToken,
               withMemos,
@@ -150,7 +154,7 @@ export namespace Transaction {
           } else {
             // Only memo
             if (filterOptions.includes(Filter.OnlyMemo)) {
-              const res = createMemoHistory(instruction, tx.value, inOutFilter);
+              const res = createMemoHistory(searchKey, instruction, tx.value, directionFilter);
               res && hist.push(res);
             }
           }
@@ -219,14 +223,9 @@ export namespace Transaction {
     Create = 'create',
   }
 
-  export enum DirectionType {
+  export enum DirectionFilter {
     Dest = 'destination',
     Source = 'source',
-  }
-
-  export interface DirectionFilter {
-    filter: DirectionType,
-    pubkey: PublicKey,
   }
 
   export const get = async (signature: string):
@@ -270,7 +269,7 @@ export namespace Transaction {
   }
 
   export const getHistory = async (
-    pubkey: PublicKey,
+    searchKey: PublicKey,
     options?: {
       limit?: number,
       actionFilter?: Filter[],
@@ -305,9 +304,10 @@ export namespace Transaction {
     let before;
 
     while (true) {
-      const transactions = await Transaction.getForAddress(pubkey, bufferedLimit, before);
+      const transactions = await Transaction.getForAddress(searchKey, bufferedLimit, before);
       console.debug('# getTransactionHistory loop');
       const res = filterTransactions(
+        searchKey,
         transactions,
         actionFilter,
         false,
@@ -325,7 +325,7 @@ export namespace Transaction {
 
   export const getTokenHistory = async (
     tokenKey: PublicKey,
-    pubkey: PublicKey,
+    searchKey: PublicKey,
     options?: {
       limit?: number,
       actionFilter?: Filter[],
@@ -353,7 +353,7 @@ export namespace Transaction {
       ASSOCIATED_TOKEN_PROGRAM_ID,
       TOKEN_PROGRAM_ID,
       tokenKey,
-      pubkey
+      searchKey
     ).then(Result.ok)
       .catch(Result.err);
 
@@ -372,9 +372,10 @@ export namespace Transaction {
     let before;
 
     while (true) {
-      const transactions = await Transaction.getForAddress(pubkey, bufferedLimit, before);
+      const transactions = await Transaction.getForAddress(searchKey, bufferedLimit, before);
       console.debug('# getTransactionHistory loop');
       const res = filterTransactions(
+        searchKey,
         transactions,
         actionFilter,
         true,
