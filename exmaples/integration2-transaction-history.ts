@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-// $ npx ts-node exmaples/integration2-transfer-history
+// $ npx ts-node exmaples/integration2-transaction-history
 //////////////////////////////////////////////
 
 import assert from 'assert';
@@ -71,22 +71,57 @@ import {
   );
 
   //////////////////////////////////////////////
-  // Get token toransaction history
+  // Get toransaction history
   //////////////////////////////////////////////
 
-  // Get history object by tokenKey
-  const history = await Transaction.getHistory(
+  const hist = await Transaction.getHistory(
     tokenKey.toPublicKey()
   );
+  console.log('# history by token: ', hist.unwrap());
 
-  console.log('# Transfer history by token: ', history.unwrap());
-
-  // Get Token history object by publish
-  const historyPublish = await Transaction.getTokenHistory(
-    tokenKey.toPublicKey(), 
+  const hist2 = await Transaction.getTokenHistory(
+    tokenKey.toPublicKey(),
     publisher.toPublicKey()
   );
+  console.log('# token history by publish: ', hist2.unwrap());
 
-  console.log('# Transfer token history by publish: ', historyPublish.unwrap());
+  const hist3 = await Transaction.getHistory(
+    tokenKey.toPublicKey(),
+    {
+      actionFilter: [Transaction.Filter.Create]
+    }
+  );
+  console.log('# history via action filter : ', hist3.unwrap());
+
+  const hist4 = await Transaction.getHistory(
+    tokenKey.toPublicKey(),
+    {
+      limit: 10
+    }
+  );
+  console.log('# set limit history : ', hist4.unwrap());
+
+  const hist5 = await Transaction.getHistory(
+    publisher.toPublicKey(),
+    {
+      transferFilter: {
+        filter: Transaction.DirectionType.Dest,
+        pubkey: publisher.toPublicKey()
+      }
+    }
+  );
+  console.log('# history via transfer filter : ', hist5.unwrap());
+
+  const hist6 = await Transaction.getTokenHistory(
+    tokenKey.toPublicKey(),
+    publisher.toPublicKey(),
+    {
+      transferFilter: {
+        filter: Transaction.DirectionType.Dest,
+        pubkey: publisher.toPublicKey()
+      }
+    }
+  );
+  console.log('# token history via transfer filter : ', hist6.unwrap());
 
 })();
