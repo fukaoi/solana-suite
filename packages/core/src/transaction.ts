@@ -210,11 +210,6 @@ export namespace Transaction {
     memo?: string,
   }
 
-  export interface TransferDestinationList {
-    dest: PublicKey,
-    date: Date,
-  }
-
   export enum Filter {
     Transfer = 'transfer',
     TransferChecked = 'transferChecked',
