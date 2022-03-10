@@ -8,7 +8,8 @@ import {
   Transaction,
   SplToken,
   Pubkey
-} from '@solana-suite/core';
+// } from '@solana-suite/core';
+} from '../packages/core/src/';
 
 (async () => {
 
@@ -17,13 +18,13 @@ import {
   //////////////////////////////////////////////
 
   // create token owner wallet, receive token receipt wallet.
-  const publisher = Account.create();
+  const owner = Account.create();
   const receipt = Account.create();
 
   // faucet 1 sol
-  await Account.requestAirdrop(publisher.toPublicKey());
+  await Account.requestAirdrop(owner.toPublicKey());
 
-  console.log('# publisher: ', publisher);
+  console.log('# owner: ', owner);
   console.log('# receipt: ', receipt);
 
 
@@ -36,8 +37,8 @@ import {
   const totalAmount = 100000;
   const decimals = 1;
   const inst1 = await SplToken.mint(
-    publisher.toPublicKey(),
-    [publisher.toKeypair()],
+    owner.toPublicKey(),
+    [owner.toKeypair()],
     totalAmount,
     decimals
   );
@@ -55,9 +56,9 @@ import {
   // transfer nft to receipt wallet
   const inst2 = await SplToken.transfer(
     tokenKey.toPublicKey(),
-    publisher.toPublicKey(),
+    owner.toPublicKey(),
     receipt.toPublicKey(),
-    [publisher.toKeypair()],
+    [owner.toKeypair()],
     10,
     decimals
   );
@@ -76,13 +77,13 @@ import {
 
   const hist1 = await Transaction.getTokenHistory(
     tokenKey.toPublicKey(),  // used tokenKey
-    publisher.toPublicKey()  // search key
+    owner.toPublicKey()  // search key
   );
   console.log('# token history by publish: ', hist1.unwrap());
 
   // Not token history(Difference between getHistory and getTokenHistory)
   const hist2 = await Transaction.getHistory(
-    publisher.toPublicKey(),  // search key
+    owner.toPublicKey(),  // search key
     {
       actionFilter: [Transaction.Filter.Create] // Only 'create' history
     }
@@ -92,9 +93,9 @@ import {
   // History of receiptkey as the main destitnation.
   const hist3 = await Transaction.getTokenHistory(
     tokenKey.toPublicKey(),
-    publisher.toPublicKey(),
+    receipt.toPublicKey(),
     {
-      Transaction.DirectionFilter.Dest, // Dest or Source
+      directionFilter: Transaction.DirectionFilter.Dest, // Dest or Source
     }
   );
   console.log('# token history result by destination filter : ', hist3.unwrap());

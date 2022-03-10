@@ -30,7 +30,7 @@ export namespace Transaction {
     searchKey: PublicKey,
     instruction: ParsedInstruction,
     meta: ParsedTransactionWithMeta,
-    inOutFilter?: DirectionFilter,
+    directionFilter?: DirectionFilter,
     mappingTokenAccount?: any[],
     isToken?: boolean,
     withMemos?: any[]
@@ -44,6 +44,7 @@ export namespace Transaction {
       v.info.destination = foundDest.owner;
     }
 
+
     v.date = convertTimestmapToDate(meta.blockTime as number);
     v.sig = meta.transaction.signatures[0];
     v.innerInstruction = false;
@@ -51,16 +52,14 @@ export namespace Transaction {
       v.memo = withMemos.find(obj => obj.sig === meta.transaction.signatures).memo;
     }
 
-    if (
-      meta.meta?.innerInstructions
-      && meta.meta?.innerInstructions.length !== 0
-    ) {
-      // inner instructions
+    // inner instructions
+    if (meta.meta?.innerInstructions
+      && meta.meta?.innerInstructions.length !== 0) {
       v.innerInstruction = true;
     }
 
-    if (inOutFilter) {
-      if (v.info[inOutFilter] === searchKey.toString()) {
+    if (directionFilter) {
+      if (v.info[directionFilter] === searchKey.toString()) {
         return v;
       }
     } else {
@@ -264,7 +263,7 @@ export namespace Transaction {
   }
 
   export const getHistory = async (
-    searchKey: PublicKey,
+    searchPubkey: PublicKey,
     options?: {
       limit?: number,
       actionFilter?: Filter[],
@@ -299,10 +298,10 @@ export namespace Transaction {
     let before;
 
     while (true) {
-      const transactions = await Transaction.getForAddress(searchKey, bufferedLimit, before);
+      const transactions = await Transaction.getForAddress(searchPubkey, bufferedLimit, before);
       console.debug('# getTransactionHistory loop');
       const res = filterTransactions(
-        searchKey,
+        searchPubkey,
         transactions,
         actionFilter,
         false,
@@ -320,7 +319,7 @@ export namespace Transaction {
 
   export const getTokenHistory = async (
     tokenKey: PublicKey,
-    searchKey: PublicKey,
+    searchPubkey: PublicKey,
     options?: {
       limit?: number,
       actionFilter?: Filter[],
@@ -344,16 +343,16 @@ export namespace Transaction {
           Filter.TransferChecked,
         ];
 
-    const tokenPubkey = await Token.getAssociatedTokenAddress(
+    const searchKeyAccount = await Token.getAssociatedTokenAddress(
       ASSOCIATED_TOKEN_PROGRAM_ID,
       TOKEN_PROGRAM_ID,
       tokenKey,
-      searchKey
+      searchPubkey
     ).then(Result.ok)
       .catch(Result.err);
 
-    if (tokenPubkey.isErr) {
-      return Result.err(tokenPubkey.error);
+    if (searchKeyAccount.isErr) {
+      return Result.err(searchKeyAccount.error);
     }
 
     let bufferedLimit = 0;
@@ -367,10 +366,10 @@ export namespace Transaction {
     let before;
 
     while (true) {
-      const transactions = await Transaction.getForAddress(searchKey, bufferedLimit, before);
+      const transactions = await Transaction.getForAddress(searchKeyAccount.value, bufferedLimit, before);
       console.debug('# getTransactionHistory loop');
       const res = filterTransactions(
-        searchKey,
+        searchPubkey,
         transactions,
         actionFilter,
         true,
