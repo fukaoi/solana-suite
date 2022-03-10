@@ -8,8 +8,7 @@ import {
   Transaction,
   SplToken,
   Pubkey
-// } from '@solana-suite/core';
-} from '../packages/core/src/';
+} from '@solana-suite/core';
 
 (async () => {
 
