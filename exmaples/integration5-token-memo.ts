@@ -64,12 +64,8 @@ import {
   `;
   const inst2 = Memo.create(
     memoData,
-    [
-      owner.toPublicKey()
-    ],
-    [
-      owner.toKeypair()
-    ]
+    receipt.toPublicKey(),
+    owner.toKeypair(),
   );
 
 
@@ -94,5 +90,16 @@ import {
     },
     (error) => assert(error)
   );
+
+  //////////////////////////////////////////////
+  // GET MEMO DATA
+  //////////////////////////////////////////////
+
+  const res = await Transaction.getTokenHistory(
+    tokenKey.toPublicKey(),
+    receipt.toPublicKey(),
+  );
+
+  res.isOk && console.log('# Transfer Memo: ', res.value[0].memo);
 
 })();
