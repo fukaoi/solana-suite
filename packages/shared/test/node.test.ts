@@ -55,6 +55,17 @@ describe('Node', () => {
     assert.equal(res2nd, res3rd);
   });
 
+  it('Change commitment, check singleton object', async () => {
+    const res = Node.getConnection().commitment;
+    Node.changeConnection({
+      commitment: 'finalized'
+    });
+    const res2nd = Node.getConnection().commitment;
+    assert.notEqual(res, res2nd);
+    const res3rd = Node.getConnection().commitment;
+    assert.equal(res2nd, res3rd);
+  });
+
   it('Change commitment destination, check singleton object', async () => {
     const res = Node.getConnection().commitment;
     Node.changeConnection({
