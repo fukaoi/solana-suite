@@ -1,13 +1,14 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../../shared/test/testSetup';
-import {Account, SplToken, Multisig, KeypairStr} from '../src/'
+import {Account, SplToken, Multisig, KeypairStr} from '../src/';
+import {Node} from '../../shared/src/node';
+import {Token, TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
-let source: KeypairStr;
-let dest: KeypairStr;
-let tokenKeyStr: string;
-
+let source: KeypairStr; let dest: KeypairStr; let tokenKeyStr: string;
+const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
+
 describe('SplToken', () => {
   before(async () => {
     const obj = await Setup.generatekeyPair();
@@ -16,7 +17,6 @@ describe('SplToken', () => {
   });
 
   it('Create token', async () => {
-    const TOKEN_TOTAL_AMOUNT = 10000000;
     const inst =
       await SplToken.mint(
         source.toPublicKey(),
@@ -45,7 +45,6 @@ describe('SplToken', () => {
       ]
     );
 
-    const TOKEN_TOTAL_AMOUNT = 10000000;
     const mint = await SplToken.mint(
       (multisig.unwrap().data as string).toPublicKey(),
       [
@@ -63,7 +62,6 @@ describe('SplToken', () => {
   });
 
   it('Create token, batch transfer', async () => {
-    const TOKEN_TOTAL_AMOUNT = 10000000;
     const inst1 =
       await SplToken.mint(
         source.toPublicKey(),
@@ -135,7 +133,6 @@ describe('SplToken', () => {
     console.log('# multisig address :', multisig.toBase58());
 
     // create nft
-    const TOKEN_TOTAL_AMOUNT = 10000000;
     const mintInst =
       await SplToken.mint(
         multisig,
@@ -177,5 +174,34 @@ describe('SplToken', () => {
     ].submit();
 
     console.log('signature: ', `${sig.unwrap()}`);
+  });
+
+  it('Retry getOrCreateAssociatedAccountInfo', async () => {
+    const mintInst =
+      await SplToken.mint(
+        source.toPublicKey(),
+        [
+          source.toKeypair(),
+        ],
+        TOKEN_TOTAL_AMOUNT,
+        MINT_DECIMAL,
+      );
+
+    await mintInst.submit();
+
+    assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
+    const tokenKey = (mintInst.unwrap().data as string);
+
+    const token = new Token(
+      Node.getConnection(),
+      tokenKey.toPublicKey(),
+      TOKEN_PROGRAM_ID,
+      source.toKeypair()
+    );
+    
+    SplToken.retryGetOrCreateAssociatedAccountInfo(
+      token, 
+      source.toPublicKey()
+    );
   });
 })

@@ -1,4 +1,5 @@
 import {
+  AccountInfo,
   Token,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
@@ -15,6 +16,27 @@ export namespace SplToken {
 
   const NFT_AMOUNT = 1;
   const NFT_DECIMALS = 0;
+  const RETREY_OVER_LIMIT = 10;
+  const RETREY_SLEEP_TIME = 3000;
+
+  export const retryGetOrCreateAssociatedAccountInfo = async (
+    token: Token,
+    owner: PublicKey
+  ): Promise<Result<AccountInfo, Error>> => {
+    let counter = 1;
+    while (counter < RETREY_OVER_LIMIT) {
+      try {
+        const accountInfo = await token.getOrCreateAssociatedAccountInfo(owner) as AccountInfo
+        console.log('#associatedAccountInfo: ', accountInfo.mint.toString());
+        return Result.ok(accountInfo);
+      } catch (e) {
+        console.log(`#retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
+      }
+      setTimeout(() => console.log('#sleep end!'), RETREY_SLEEP_TIME);
+      counter++;
+    }
+    return Result.err(Error(`retry action is over limit ${RETREY_OVER_LIMIT}`));
+  }
 
   export const mint = async (
     owner: PublicKey,
@@ -43,10 +65,7 @@ export namespace SplToken {
 
     const token = tokenRes.value;
 
-    const tokenAssociated =
-      await token.getOrCreateAssociatedAccountInfo(owner)
-        .then(Result.ok)
-        .catch(Result.err);
+    const tokenAssociated = await retryGetOrCreateAssociatedAccountInfo(token, owner);
 
     if (tokenAssociated.isErr) {
       return Result.err(tokenAssociated.error);
@@ -90,18 +109,12 @@ export namespace SplToken {
       feePayer
     );
 
-    const sourceToken = await token.getOrCreateAssociatedAccountInfo(owner)
-      .then(Result.ok)
-      .catch(Result.err);
-
+    const sourceToken = await retryGetOrCreateAssociatedAccountInfo(token, owner);
     if (sourceToken.isErr) {
       return Result.err(sourceToken.error);
     }
 
-    const destToken = await token.getOrCreateAssociatedAccountInfo(dest)
-      .then(Result.ok)
-      .catch(Result.err);
-
+    const destToken = await retryGetOrCreateAssociatedAccountInfo(token, dest);
     if (destToken.isErr) {
       return Result.err(destToken.error);
     }

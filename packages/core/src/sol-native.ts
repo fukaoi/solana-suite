@@ -12,6 +12,7 @@ import {
   Constants,
   Instruction
 } from '@solana-suite/shared';
+import {SplToken} from './spl-token';
 
 export namespace SolNative {
 
@@ -50,17 +51,19 @@ export namespace SolNative {
       payer
     );
 
-    const sourceToken = await token.getOrCreateAssociatedAccountInfo(owner)
-      .then(Result.ok)
-      .catch(Result.err);
+    const sourceToken = await SplToken.retryGetOrCreateAssociatedAccountInfo(
+      token, 
+      owner
+    );
 
     if (sourceToken.isErr) {
       return Result.err(sourceToken.error);
     }
 
-    const destToken = await token.getOrCreateAssociatedAccountInfo(wrapped.value)
-      .then(Result.ok)
-      .catch(Result.err);
+    const destToken = await SplToken.retryGetOrCreateAssociatedAccountInfo(
+      token, 
+      wrapped.value
+    );
 
     if (destToken.isErr) {
       return Result.err(destToken.error);
