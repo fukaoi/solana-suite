@@ -16,6 +16,24 @@ var SplToken;
 (function (SplToken) {
     const NFT_AMOUNT = 1;
     const NFT_DECIMALS = 0;
+    const RETREY_OVER_LIMIT = 10;
+    const RETREY_SLEEP_TIME = 3000;
+    SplToken.retryGetOrCreateAssociatedAccountInfo = (token, owner) => __awaiter(this, void 0, void 0, function* () {
+        let counter = 1;
+        while (counter < RETREY_OVER_LIMIT) {
+            try {
+                const accountInfo = yield token.getOrCreateAssociatedAccountInfo(owner);
+                console.log('#associatedAccountInfo: ', accountInfo.mint.toString());
+                return shared_1.Result.ok(accountInfo);
+            }
+            catch (e) {
+                console.log(`#retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
+            }
+            setTimeout(() => console.log('#sleep end!'), RETREY_SLEEP_TIME);
+            counter++;
+        }
+        return shared_1.Result.err(Error(`retry action is over limit ${RETREY_OVER_LIMIT}`));
+    });
     SplToken.mint = (owner, signers, totalAmount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         !feePayer && (feePayer = signers[0]);
         const tokenRes = yield spl_token_1.Token.createMint(shared_1.Node.getConnection(), feePayer, owner, owner, mintDecimal, spl_token_1.TOKEN_PROGRAM_ID)
@@ -25,9 +43,7 @@ var SplToken;
             return shared_1.Result.err(tokenRes.error);
         }
         const token = tokenRes.value;
-        const tokenAssociated = yield token.getOrCreateAssociatedAccountInfo(owner)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
+        const tokenAssociated = yield SplToken.retryGetOrCreateAssociatedAccountInfo(token, owner);
         if (tokenAssociated.isErr) {
             return shared_1.Result.err(tokenAssociated.error);
         }
@@ -37,15 +53,11 @@ var SplToken;
     SplToken.transfer = (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         !feePayer && (feePayer = signers[0]);
         const token = new spl_token_1.Token(shared_1.Node.getConnection(), tokenKey, spl_token_1.TOKEN_PROGRAM_ID, feePayer);
-        const sourceToken = yield token.getOrCreateAssociatedAccountInfo(owner)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
+        const sourceToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(token, owner);
         if (sourceToken.isErr) {
             return shared_1.Result.err(sourceToken.error);
         }
-        const destToken = yield token.getOrCreateAssociatedAccountInfo(dest)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
+        const destToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(token, dest);
         if (destToken.isErr) {
             return shared_1.Result.err(destToken.error);
         }

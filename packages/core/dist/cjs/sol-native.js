@@ -13,6 +13,7 @@ exports.SolNative = void 0;
 const spl_token_1 = require("@solana/spl-token");
 const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
+const spl_token_2 = require("./spl-token");
 var SolNative;
 (function (SolNative) {
     // NOTICE: There is a lamport fluctuation when transfer under 0.001 sol
@@ -28,15 +29,11 @@ var SolNative;
         }
         console.debug('# wrapped sol: ', wrapped.value.toBase58());
         const token = new spl_token_1.Token(connection, shared_1.Constants.WRAPPED_TOKEN_PROGRAM_ID, spl_token_1.TOKEN_PROGRAM_ID, payer);
-        const sourceToken = yield token.getOrCreateAssociatedAccountInfo(owner)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
+        const sourceToken = yield spl_token_2.SplToken.retryGetOrCreateAssociatedAccountInfo(token, owner);
         if (sourceToken.isErr) {
             return shared_1.Result.err(sourceToken.error);
         }
-        const destToken = yield token.getOrCreateAssociatedAccountInfo(wrapped.value)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
+        const destToken = yield spl_token_2.SplToken.retryGetOrCreateAssociatedAccountInfo(token, wrapped.value);
         if (destToken.isErr) {
             return shared_1.Result.err(destToken.error);
         }

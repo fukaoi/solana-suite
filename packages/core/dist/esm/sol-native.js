@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { LAMPORTS_PER_SOL, SystemProgram } from '@solana/web3.js';
 import { Result, Node, Constants, Instruction } from '@solana-suite/shared';
+import { SplToken } from './spl-token';
 export var SolNative;
 (function (SolNative) {
     // NOTICE: There is a lamport fluctuation when transfer under 0.001 sol
@@ -25,15 +26,11 @@ export var SolNative;
         }
         console.debug('# wrapped sol: ', wrapped.value.toBase58());
         const token = new Token(connection, Constants.WRAPPED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, payer);
-        const sourceToken = yield token.getOrCreateAssociatedAccountInfo(owner)
-            .then(Result.ok)
-            .catch(Result.err);
+        const sourceToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(token, owner);
         if (sourceToken.isErr) {
             return Result.err(sourceToken.error);
         }
-        const destToken = yield token.getOrCreateAssociatedAccountInfo(wrapped.value)
-            .then(Result.ok)
-            .catch(Result.err);
+        const destToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(token, wrapped.value);
         if (destToken.isErr) {
             return Result.err(destToken.error);
         }
