@@ -24,14 +24,15 @@ export namespace SplToken {
     owner: PublicKey
   ): Promise<Result<AccountInfo, Error>> => {
     let counter = 1;
-    while (counter > RETREY_OVER_LIMIT) {
+    while (counter < RETREY_OVER_LIMIT) {
       try {
         const accountInfo = await token.getOrCreateAssociatedAccountInfo(owner) as AccountInfo
+        console.log('#associatedAccountInfo: ', accountInfo.mint.toString());
         return Result.ok(accountInfo);
       } catch (e) {
-        console.debug(`#retry:${counter} getOrCreateAssociatedAccountInfo`, e);
+        console.log(`#retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
       }
-      setTimeout(() => console.debug('#sleep end!'), RETREY_SLEEP_TIME);
+      setTimeout(() => console.log('#sleep end!'), RETREY_SLEEP_TIME);
       counter++;
     }
     return Result.err(Error(`retry action is over limit ${RETREY_OVER_LIMIT}`));

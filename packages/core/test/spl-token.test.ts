@@ -176,7 +176,7 @@ describe('SplToken', () => {
     console.log('signature: ', `${sig.unwrap()}`);
   });
 
-  it.only('Retry getOrCreateAssociatedAccountInfo', async () => {
+  it('Retry getOrCreateAssociatedAccountInfo', async () => {
     const mintInst =
       await SplToken.mint(
         source.toPublicKey(),
