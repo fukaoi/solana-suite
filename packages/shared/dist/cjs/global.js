@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tryCatch = void 0;
+exports.sleep = exports.tryCatch = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const bs58_1 = __importDefault(require("bs58"));
 const _1 = require("./");
@@ -65,3 +65,5 @@ const tryCatch = (fn) => {
     }
 };
 exports.tryCatch = tryCatch;
+const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise(r => setTimeout(r, sec * 1000)); });
+exports.sleep = sleep;

@@ -23,13 +23,13 @@ var SplToken;
         while (counter < RETREY_OVER_LIMIT) {
             try {
                 const accountInfo = yield token.getOrCreateAssociatedAccountInfo(owner);
-                console.log('#associatedAccountInfo: ', accountInfo.mint.toString());
+                console.log('# associatedAccountInfo: ', accountInfo.mint.toString());
                 return shared_1.Result.ok(accountInfo);
             }
             catch (e) {
-                console.log(`#retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
+                console.log(`# retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
             }
-            setTimeout(() => console.log('#sleep end!'), RETREY_SLEEP_TIME);
+            sleep(RETREY_SLEEP_TIME);
             counter++;
         }
         return shared_1.Result.err(Error(`retry action is over limit ${RETREY_OVER_LIMIT}`));
