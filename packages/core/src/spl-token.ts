@@ -10,7 +10,7 @@ import {
   Signer,
 } from '@solana/web3.js';
 
-import {Node, Result, Instruction} from '@solana-suite/shared';
+import {Node, Result, Instruction, sleep} from '@solana-suite/shared';
 
 export namespace SplToken {
 
@@ -27,12 +27,12 @@ export namespace SplToken {
     while (counter < RETREY_OVER_LIMIT) {
       try {
         const accountInfo = await token.getOrCreateAssociatedAccountInfo(owner) as AccountInfo
-        console.log('#associatedAccountInfo: ', accountInfo.mint.toString());
+        console.log('# associatedAccountInfo: ', accountInfo.mint.toString());
         return Result.ok(accountInfo);
       } catch (e) {
-        console.log(`#retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
+        console.log(`# retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
       }
-      setTimeout(() => console.log('#sleep end!'), RETREY_SLEEP_TIME);
+      sleep(RETREY_SLEEP_TIME);
       counter++;
     }
     return Result.err(Error(`retry action is over limit ${RETREY_OVER_LIMIT}`));

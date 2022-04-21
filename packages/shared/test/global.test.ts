@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import '../src/global';
-import {tryCatch} from '../src/global';
+import {sleep, tryCatch} from '../src/global';
 
 describe('Global', () => {
   it('Convert string to PublicKey', async () => {
@@ -38,5 +38,12 @@ describe('Global', () => {
     console.debug(
       'debug test', {title: 'test'}, () => {return }
     );
+  });
+
+  it('sleep', async () => {
+    const id = setInterval(console.log, 990, 'sleep count');
+    await sleep(3);
+    assert.isOk(id);
+    clearInterval(id);
   });
 })
