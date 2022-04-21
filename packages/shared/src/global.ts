@@ -76,3 +76,5 @@ export const tryCatch = (fn: () => {}) => {
     return Result.err(e as Error);
   }
 }
+
+export const sleep = async (sec: number) => new Promise(r => setTimeout(r, sec * 1000));
