@@ -58,3 +58,4 @@ export const tryCatch = (fn) => {
         return Result.err(e);
     }
 };
+export const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise(r => setTimeout(r, sec * 1000)); });
