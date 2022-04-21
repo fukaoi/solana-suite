@@ -12,3 +12,4 @@ declare global {
     }
 }
 export declare const tryCatch: (fn: () => {}) => Result.Ok<{}, Error> | Result.Err<{}, Error>;
+export declare const sleep: (sec: number) => Promise<unknown>;

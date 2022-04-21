@@ -29,7 +29,7 @@ var SplToken;
             catch (e) {
                 console.log(`# retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
             }
-            sleep(RETREY_SLEEP_TIME);
+            (0, shared_1.sleep)(RETREY_SLEEP_TIME);
             counter++;
         }
         return shared_1.Result.err(Error(`retry action is over limit ${RETREY_OVER_LIMIT}`));
