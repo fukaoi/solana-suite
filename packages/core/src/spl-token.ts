@@ -27,7 +27,7 @@ export namespace SplToken {
     while (counter < RETREY_OVER_LIMIT) {
       try {
         const accountInfo = await token.getOrCreateAssociatedAccountInfo(owner) as AccountInfo
-        console.log('# associatedAccountInfo: ', accountInfo.mint.toString());
+        console.log('# associatedAccountInfo: ', accountInfo.address.toString());
         return Result.ok(accountInfo);
       } catch (e) {
         console.log(`# retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
