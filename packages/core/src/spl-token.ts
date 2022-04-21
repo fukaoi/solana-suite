@@ -10,8 +10,7 @@ import {
   Signer,
 } from '@solana/web3.js';
 
-// import {Node, Result, Instruction, sleep} from '@solana-suite/shared';
-import {Node, Result, Instruction, sleep} from '../../shared/src/';
+import {Node, Result, Instruction, sleep} from '@solana-suite/shared';
 
 export namespace SplToken {
 
