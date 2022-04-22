@@ -9,6 +9,8 @@ import './global';
 export namespace Constants {
   export enum Cluster {
     prd = 'mainnet-beta',
+    prd2 = 'mainnet-beta-sereum',
+    prdrr = 'mainnet-beta-round-robin',
     dev = 'devnet',
     test = 'testnet',
     localhost = 'localhost-devnet',
@@ -23,10 +25,22 @@ export namespace ConstantsFunc {
     switch (env) {
       case Constants.Cluster.prd:
         return 'https://api.mainnet-beta.solana.com';
+      case Constants.Cluster.prd2:
+        return 'https://solana-api.projectserum.com';
       case Constants.Cluster.test:
         return 'https://api.testnet.solana.com';
       case Constants.Cluster.dev:
         return 'https://api.devnet.solana.com';
+      case Constants.Cluster.prdrr:
+        // don't require rigor, as it can be repeated alternately
+        const index = Date.now() % 4;
+        const clusters = [
+          'https://api.mainnet-beta.solana.com',
+          'https://solana-api.projectserum.com',
+          'https://api.mainnet-beta.solana.com',
+          'https://solana-api.projectserum.com',
+        ];
+        return clusters[index];
       default:
         return 'http://api.devnet.solana.com';
     }
@@ -38,7 +52,7 @@ export namespace ConstantsFunc {
         `
         [Warning]
         --------------------------------------
-        If will use @solana-suite/nft package 
+        If will use @solana-suite/nft package
         your need to update nftstorage.apikey defin parameter in solana-suite.json.
         can get apikey from https://nft.storage/
         --------------------------------------

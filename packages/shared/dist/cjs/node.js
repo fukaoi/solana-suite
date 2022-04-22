@@ -7,7 +7,7 @@ var Node;
 (function (Node) {
     let connection;
     Node.getConnection = () => {
-        console.debug('# Current cluster: ', constants_1.Constants.currentCluster);
+        console.debug('# Current cluster: ', constants_1.Constants.currentCluster, constants_1.ConstantsFunc.switchApi(constants_1.Constants.currentCluster));
         if (connection) {
             return connection;
         }

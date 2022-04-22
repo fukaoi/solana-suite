@@ -3,6 +3,8 @@ import './global';
 export declare namespace Constants {
     enum Cluster {
         prd = "mainnet-beta",
+        prd2 = "mainnet-beta-sereum",
+        prdrr = "mainnet-beta-round-robin",
         dev = "devnet",
         test = "testnet",
         localhost = "localhost-devnet"
@@ -11,7 +13,7 @@ export declare namespace Constants {
     const isDebugging: boolean;
 }
 export declare namespace ConstantsFunc {
-    const switchApi: (env: string | undefined) => "https://api.mainnet-beta.solana.com" | "https://api.testnet.solana.com" | "https://api.devnet.solana.com" | "http://api.devnet.solana.com";
+    const switchApi: (env: string | undefined) => string;
     const getNftStorageApiKey: () => string;
 }
 export declare namespace Constants {
