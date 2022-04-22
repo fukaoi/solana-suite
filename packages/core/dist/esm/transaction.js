@@ -73,13 +73,13 @@ export var Transaction;
     };
     const filterTransactions = (searchKey, transactions, filterOptions, isToken = false, directionFilter) => {
         const hist = [];
-        let mappingTokenAccount = [];
+        const mappingTokenAccount = [];
         transactions.forEach(tx => {
             var _a, _b;
             if (tx.isErr)
                 return tx;
             const accountKeys = tx.value.transaction.message.accountKeys.map(t => t.pubkey.toBase58());
-            //set  mapping list
+            // set  mapping list
             (_b = (_a = tx.value.meta) === null || _a === void 0 ? void 0 : _a.postTokenBalances) === null || _b === void 0 ? void 0 : _b.forEach(t => {
                 if (accountKeys[t.accountIndex] && t.owner) {
                     const v = {
@@ -195,7 +195,7 @@ export var Transaction;
             ];
         let bufferedLimit = 0;
         if (options.limit && options.limit < 50) {
-            bufferedLimit = options.limit * 1.5; //To get more data, threshold
+            bufferedLimit = options.limit * 1.5; // To get more data, threshold
         }
         else {
             bufferedLimit = 10;
@@ -237,7 +237,7 @@ export var Transaction;
         }
         let bufferedLimit = 0;
         if (options.limit && options.limit < 50) {
-            bufferedLimit = options.limit * 1.5; //To get more data, threshold
+            bufferedLimit = options.limit * 1.5; // To get more data, threshold
         }
         else {
             bufferedLimit = 10;

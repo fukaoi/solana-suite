@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConstantsFunc = exports.Constants = void 0;
 const web3_js_1 = require("@solana/web3.js");
-const crypto_1 = __importDefault(require("crypto"));
 const solana_suite_json_1 = __importDefault(require("./solana-suite.json"));
 require("./global");
 var Constants;
@@ -21,6 +20,7 @@ var Constants;
     })(Cluster = Constants.Cluster || (Constants.Cluster = {}));
     Constants.currentCluster = solana_suite_json_1.default.cluster;
     Constants.isDebugging = solana_suite_json_1.default.debugging;
+    Constants.nftstorageApikey = solana_suite_json_1.default.nftstorage.apikey;
 })(Constants = exports.Constants || (exports.Constants = {}));
 var ConstantsFunc;
 (function (ConstantsFunc) {
@@ -35,30 +35,18 @@ var ConstantsFunc;
             case Constants.Cluster.dev:
                 return 'https://api.devnet.solana.com';
             case Constants.Cluster.prdrr:
-                console.log(111111111111);
-                const crypto = crypto_1.default;
-                const index = crypto.getRandomValues(new Uint8Array(1))[0] % 2;
+                // don't require rigor, as it can be repeated alternately
+                const index = Date.now() % 4;
                 const clusters = [
                     'https://api.mainnet-beta.solana.com',
-                    'https://solana-api.projectserum.com'
+                    'https://solana-api.projectserum.com',
+                    'https://api.mainnet-beta.solana.com',
+                    'https://solana-api.projectserum.com',
                 ];
                 return clusters[index];
             default:
                 return 'http://api.devnet.solana.com';
         }
-    };
-    ConstantsFunc.getNftStorageApiKey = () => {
-        if (!solana_suite_json_1.default.nftstorage.apikey) {
-            console.warn(`
-        [Warning]
-        --------------------------------------
-        If will use @solana-suite/nft package 
-        your need to update nftstorage.apikey defin parameter in solana-suite.json.
-        can get apikey from https://nft.storage/
-        --------------------------------------
-        `);
-        }
-        return solana_suite_json_1.default.nftstorage.apikey;
     };
 })(ConstantsFunc = exports.ConstantsFunc || (exports.ConstantsFunc = {}));
 (function (Constants) {
@@ -69,8 +57,7 @@ var ConstantsFunc;
     Constants.MEMO_PROGRAM_ID = 'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo'.toPublicKey();
     Constants.METAPLEX_PROGRAM_ID = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'.toPublicKey();
     Constants.COMMITMENT = 'confirmed';
-    // NFT.storage can store NFTs up to 32GB in size!
-    Constants.NFT_STORAGE_API_KEY = ConstantsFunc.getNftStorageApiKey() || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE';
+    Constants.NFT_STORAGE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE';
     Constants.NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
     Constants.ARWEAVE_UPLOAD_SRV_URL = 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile4';
     Constants.ARWEAVE_GATEWAY_URL = 'https://arweave.net';
