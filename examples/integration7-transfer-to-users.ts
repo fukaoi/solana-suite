@@ -1,7 +1,6 @@
 //////////////////////////////////////////////
-// $ npx ts-node exmaples/integration7-transfer-to-users
+// $ npx ts-node examples/integration7-transfer-to-users
 //////////////////////////////////////////////
-
 
 import assert from 'assert';
 import {
@@ -11,14 +10,21 @@ import {
   SplToken,
 } from '@solana-suite/core';
 
-import {Node, sleep} from '@solana-suite/shared';
+import {
+  Node,
+  Constants,
+  sleep
+} from '@solana-suite/shared';
 
 const USERS_COUNT = 50;
-const SLEEP_TIME_WAIT = 1;
+const SLEEP_TIME_WAIT = 2;
 
 (async () => {
 
-  Node.changeConnection({commitment: 'finalized'});
+  // Node.changeConnection({
+  // cluster: Constants.Cluster.prd, 
+  // commitment: 'finalized'
+  // });
 
   //////////////////////////////////////////////
   // CREATE WALLET 
@@ -29,17 +35,18 @@ const SLEEP_TIME_WAIT = 1;
     users.push(Account.create());
   }
 
-
   // manual setting
   // const owner = new KeypairStr(
-  // '',
-  // ''
+    // '',
+    // ''
   // );
+
 
   // random create
   const owner = Account.create();
   await Account.requestAirdrop(owner.toPublicKey());
   console.log('# owner: ', owner.pubkey);
+  console.log('# owner balance: ', await Account.getBalance(owner.toPublicKey()));
 
   //////////////////////////////////////////////
   // CREATE TOKEN 
@@ -85,6 +92,7 @@ const SLEEP_TIME_WAIT = 1;
   // (error) => {assert(error); return;}
   // );
   // });
+
 
   // ============== sync ============== 
   let i = 1;

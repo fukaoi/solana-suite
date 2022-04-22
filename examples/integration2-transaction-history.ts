@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-// $ npx ts-node exmaples/integration5-token-memo
+// $ npx ts-node examples/integration2-transaction-history
 //////////////////////////////////////////////
 
 import assert from 'assert';
@@ -7,8 +7,7 @@ import {
   Account,
   Transaction,
   SplToken,
-  Pubkey,
-  Memo
+  Pubkey
 } from '@solana-suite/core';
 
 (async () => {
@@ -24,8 +23,8 @@ import {
   // faucet 1 sol
   await Account.requestAirdrop(owner.toPublicKey());
 
-  console.log('# owner: ', owner.pubkey);
-  console.log('# receipt: ', receipt.pubkey);
+  console.log('# owner: ', owner);
+  console.log('# receipt: ', receipt);
 
 
   //////////////////////////////////////////////
@@ -49,30 +48,12 @@ import {
   // this is NFT ID
   console.log('# tokenKey: ', tokenKey);
 
-
-  //////////////////////////////////////////////
-  // CREATE MEMO
-  //////////////////////////////////////////////
-
-  const memoData = `
-  Omicron Is a Dress Rehearsal for the Next Pandemic
-  America’s response to the variant highlights both
-  how much progress we have made over the past two years — and
-  how much work remains
-  `;
-  const inst2 = Memo.create(
-    memoData,
-    receipt.toPublicKey(), // memo's owner
-    owner.toKeypair(),     // signer or feePayer
-  );
-
-
   //////////////////////////////////////////////
   // TRANSFER RECEIPR USER FROM THIS LINE
   //////////////////////////////////////////////
 
   // transfer nft to receipt wallet
-  const inst3 = await SplToken.transfer(
+  const inst2 = await SplToken.transfer(
     tokenKey.toPublicKey(),
     owner.toPublicKey(),
     receipt.toPublicKey(),
@@ -81,7 +62,7 @@ import {
     decimals
   );
 
-  (await [inst1, inst2, inst3].submit()).match(
+  (await [inst1, inst2].submit()).match(
     async (value) => {
       console.log('# Transfer nft sig: ', value.toExplorerUrl());
       await Transaction.confirmedSig(value);
@@ -90,14 +71,32 @@ import {
   );
 
   //////////////////////////////////////////////
-  // GET MEMO DATA
+  // GET TRANSACTION HISTORY
   //////////////////////////////////////////////
 
-  const res = await Transaction.getTokenHistory(
+  const hist1 = await Transaction.getTokenHistory(
+    tokenKey.toPublicKey(),  // used tokenKey
+    owner.toPublicKey()  // search key
+  );
+  console.log('# token history by publish: ', hist1.unwrap());
+
+  // Not token history(Difference between getHistory and getTokenHistory)
+  const hist2 = await Transaction.getHistory(
+    owner.toPublicKey(),  // search key
+    {
+      actionFilter: [Transaction.Filter.Create] // Only 'create' history
+    }
+  );
+  console.log('# history by create action filter: ', hist2.unwrap());
+
+  // History of receiptkey as the main destitnation.
+  const hist3 = await Transaction.getTokenHistory(
     tokenKey.toPublicKey(),
     receipt.toPublicKey(),
+    {
+      directionFilter: Transaction.DirectionFilter.Dest, // Dest or Source
+    }
   );
-
-  res.isOk && console.log('# Transfer Memo: ', res.value[0].memo);
+  console.log('# token history result by destination filter : ', hist3.unwrap());
 
 })();

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-// $ npx ts-node exmaples/integration4-multisig.ts
+// $ npx ts-node examples/integration4-multisig.ts
 //////////////////////////////////////////////
 
 import assert from 'assert';
