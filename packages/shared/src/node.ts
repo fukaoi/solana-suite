@@ -9,29 +9,35 @@ import {
 } from '@solana/web3.js';
 
 export namespace Node {
-  let connection: Connection | undefined;
+  let cluster: string;
+  let commitment: Commitment;
   export const getConnection = (): Connection => {
-    console.debug('# Current cluster: ', Constants.currentCluster);
-    if (connection) {
-      return connection;
+
+    // default setting
+    if (!cluster) {
+      cluster = ConstantsFunc.switchApi(Constants.currentCluster);
     }
-    connection = new Connection(
-      ConstantsFunc.switchApi(Constants.currentCluster),
-      Constants.COMMITMENT
-    );
-    return connection;
+
+    // default setting
+    if (!commitment) {
+      commitment = Constants.COMMITMENT;
+    }
+
+    console.debug('# Node info: ', cluster, commitment);
+
+    return new Connection(cluster, commitment);
   };
 
   export const changeConnection = (param: {
     cluster?: string,
     commitment?: Commitment,
   }): void => {
-    // reset for initialize
-    connection = undefined;
     if (param.commitment) {
-      connection = new Connection(ConstantsFunc.switchApi(param.cluster), param.commitment);
-    } else {
-      connection = new Connection(ConstantsFunc.switchApi(param.cluster), Constants.COMMITMENT);
+      commitment = param.commitment;
+    }
+
+    if (param.cluster) {
+      cluster = ConstantsFunc.switchApi(param.cluster);
     }
   }
 }
