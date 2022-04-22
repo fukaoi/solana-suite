@@ -5,23 +5,26 @@ const constants_1 = require("./constants");
 const web3_js_1 = require("@solana/web3.js");
 var Node;
 (function (Node) {
-    let connection;
+    let cluster;
+    let commitment;
     Node.getConnection = () => {
-        console.debug('# Current cluster: ', constants_1.Constants.currentCluster, constants_1.ConstantsFunc.switchApi(constants_1.Constants.currentCluster));
-        if (connection) {
-            return connection;
+        // default setting
+        if (!cluster) {
+            cluster = constants_1.ConstantsFunc.switchApi(constants_1.Constants.currentCluster);
         }
-        connection = new web3_js_1.Connection(constants_1.ConstantsFunc.switchApi(constants_1.Constants.currentCluster), constants_1.Constants.COMMITMENT);
-        return connection;
+        // default setting
+        if (!commitment) {
+            commitment = constants_1.Constants.COMMITMENT;
+        }
+        console.debug('# Node info: ', cluster, commitment);
+        return new web3_js_1.Connection(cluster, commitment);
     };
     Node.changeConnection = (param) => {
-        // reset for initialize
-        connection = undefined;
         if (param.commitment) {
-            connection = new web3_js_1.Connection(constants_1.ConstantsFunc.switchApi(param.cluster), param.commitment);
+            commitment = param.commitment;
         }
-        else {
-            connection = new web3_js_1.Connection(constants_1.ConstantsFunc.switchApi(param.cluster), constants_1.Constants.COMMITMENT);
+        if (param.cluster) {
+            cluster = constants_1.ConstantsFunc.switchApi(param.cluster);
         }
     };
 })(Node = exports.Node || (exports.Node = {}));

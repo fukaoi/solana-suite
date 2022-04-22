@@ -12,8 +12,24 @@ import fs from 'fs';
 import { Constants, Result } from '@solana-suite/shared';
 export var StorageNftStorage;
 (function (StorageNftStorage) {
+    const getNftStorageApiKey = () => {
+        if (!Constants.nftstorageApikey) {
+            console.warn(`
+        [Warning]
+        --------------------------------------
+        If will use @solana-suite/nft package
+        your need to update nftstorage.apikey defin parameter in solana-suite.json.
+        can get apikey from https://nft.storage/
+        --------------------------------------
+        `);
+            return Constants.NFT_STORAGE_API_KEY;
+        }
+        else {
+            return Constants.nftstorageApikey;
+        }
+    };
     const createGatewayUrl = (cid) => `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
-    const connect = () => new NFTStorage({ token: Constants.NFT_STORAGE_API_KEY });
+    const connect = () => new NFTStorage({ token: getNftStorageApiKey() });
     const preUploadImage = (client, imagePath) => __awaiter(this, void 0, void 0, function* () {
         const blobImage = new Blob([fs.readFileSync(imagePath)]);
         const cid = yield client.storeBlob(blobImage);

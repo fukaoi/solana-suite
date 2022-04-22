@@ -2,23 +2,26 @@ import { Constants, ConstantsFunc, } from './constants';
 import { Connection, } from '@solana/web3.js';
 export var Node;
 (function (Node) {
-    let connection;
+    let cluster;
+    let commitment;
     Node.getConnection = () => {
-        console.debug('# Current cluster: ', Constants.currentCluster);
-        if (connection) {
-            return connection;
+        // default setting
+        if (!cluster) {
+            cluster = ConstantsFunc.switchApi(Constants.currentCluster);
         }
-        connection = new Connection(ConstantsFunc.switchApi(Constants.currentCluster), Constants.COMMITMENT);
-        return connection;
+        // default setting
+        if (!commitment) {
+            commitment = Constants.COMMITMENT;
+        }
+        console.debug('# Node info: ', cluster, commitment);
+        return new Connection(cluster, commitment);
     };
     Node.changeConnection = (param) => {
-        // reset for initialize
-        connection = undefined;
         if (param.commitment) {
-            connection = new Connection(ConstantsFunc.switchApi(param.cluster), param.commitment);
+            commitment = param.commitment;
         }
-        else {
-            connection = new Connection(ConstantsFunc.switchApi(param.cluster), Constants.COMMITMENT);
+        if (param.cluster) {
+            cluster = ConstantsFunc.switchApi(param.cluster);
         }
     };
 })(Node || (Node = {}));
