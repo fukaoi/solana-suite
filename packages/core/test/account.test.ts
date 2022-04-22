@@ -12,8 +12,8 @@ describe('Account', () => {
     source = obj.source;
   });
 
-  it('Reuest airdrop with 3 SOL', async () => {
-    const res = await Account.requestAirdrop(source.toPublicKey(), 3);
+  it('Reuest airdrop with 1 SOL', async () => {
+    const res = await Account.requestAirdrop(source.toPublicKey(), 1);
     assert.isTrue(res.isOk, res.unwrap());
     const balance = await Account.getBalance(source.toPublicKey());
     assert.isTrue(balance.isOk, balance.unwrap().toString());

@@ -24,7 +24,7 @@ export var SplToken;
                 return Result.ok(accountInfo);
             }
             catch (e) {
-                console.log(`# retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
+                console.debug(`# retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
             }
             sleep(RETREY_SLEEP_TIME);
             counter++;

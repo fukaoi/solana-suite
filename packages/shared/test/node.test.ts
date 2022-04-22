@@ -25,6 +25,20 @@ describe('Node', () => {
     assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.Cluster.prd));
   });
 
+  it('Connect mainnet sereum', async () => {
+    Node.changeConnection({cluster: Constants.Cluster.prd2});
+    const res = Node.getConnection();
+    assert.isNotEmpty(res);
+    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.Cluster.prd2));
+  });
+
+  it('Connect mainnet round robin', async () => {
+    Node.changeConnection({cluster: Constants.Cluster.prdrr});
+    const res = Node.getConnection();
+    assert.isNotEmpty(res);
+    console.log('# Connect round robin: ', res.rpcEndpoint);
+  });
+
   it('Connect devnet for localhost', async () => {
     Node.changeConnection({cluster: Constants.Cluster.localhost});
     const res = Node.getConnection();
@@ -47,11 +61,11 @@ describe('Node', () => {
   });
 
   it('Change cluster destination, check singleton object', async () => {
-    const res = Node.getConnection();
+    const res = Node.getConnection().rpcEndpoint;
     Node.changeConnection({cluster: Constants.Cluster.prd});
-    const res2nd = Node.getConnection();
+    const res2nd = Node.getConnection().rpcEndpoint;
     assert.notEqual(res, res2nd);
-    const res3rd = Node.getConnection();
+    const res3rd = Node.getConnection().rpcEndpoint;
     assert.equal(res2nd, res3rd);
   });
 

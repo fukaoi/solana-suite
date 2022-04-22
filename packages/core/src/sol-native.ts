@@ -52,7 +52,7 @@ export namespace SolNative {
     );
 
     const sourceToken = await SplToken.retryGetOrCreateAssociatedAccountInfo(
-      token, 
+      token,
       owner
     );
 
@@ -61,7 +61,7 @@ export namespace SolNative {
     }
 
     const destToken = await SplToken.retryGetOrCreateAssociatedAccountInfo(
-      token, 
+      token,
       wrapped.value
     );
 

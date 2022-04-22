@@ -106,12 +106,12 @@ export namespace Transaction {
     directionFilter?: DirectionFilter,
   ) => {
     const hist: TransferHistory[] = [];
-    let mappingTokenAccount: {account: string, owner: string}[] = [];
+    const mappingTokenAccount: {account: string, owner: string}[] = [];
     transactions.forEach(tx => {
       if (tx.isErr) return tx;
 
       const accountKeys = tx.value.transaction.message.accountKeys.map(t => t.pubkey.toBase58());
-      //set  mapping list
+      // set  mapping list
       tx.value.meta?.postTokenBalances?.forEach(t => {
         if (accountKeys[t.accountIndex] && t.owner) {
           const v = {
@@ -289,7 +289,7 @@ export namespace Transaction {
 
     let bufferedLimit = 0;
     if (options.limit && options.limit < 50) {
-      bufferedLimit = options.limit * 1.5; //To get more data, threshold
+      bufferedLimit = options.limit * 1.5; // To get more data, threshold
     } else {
       bufferedLimit = 10;
       options.limit = 10;
@@ -357,7 +357,7 @@ export namespace Transaction {
 
     let bufferedLimit = 0;
     if (options.limit && options.limit < 50) {
-      bufferedLimit = options.limit * 1.5; //To get more data, threshold
+      bufferedLimit = options.limit * 1.5; // To get more data, threshold
     } else {
       bufferedLimit = 10;
       options.limit = 10;

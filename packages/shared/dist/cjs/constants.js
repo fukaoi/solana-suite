@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConstantsFunc = exports.Constants = void 0;
 const web3_js_1 = require("@solana/web3.js");
+const crypto_1 = __importDefault(require("crypto"));
 const solana_suite_json_1 = __importDefault(require("./solana-suite.json"));
 require("./global");
 var Constants;
@@ -12,6 +13,8 @@ var Constants;
     let Cluster;
     (function (Cluster) {
         Cluster["prd"] = "mainnet-beta";
+        Cluster["prd2"] = "mainnet-beta-sereum";
+        Cluster["prdrr"] = "mainnet-beta-round-robin";
         Cluster["dev"] = "devnet";
         Cluster["test"] = "testnet";
         Cluster["localhost"] = "localhost-devnet";
@@ -25,10 +28,21 @@ var ConstantsFunc;
         switch (env) {
             case Constants.Cluster.prd:
                 return 'https://api.mainnet-beta.solana.com';
+            case Constants.Cluster.prd2:
+                return 'https://solana-api.projectserum.com';
             case Constants.Cluster.test:
                 return 'https://api.testnet.solana.com';
             case Constants.Cluster.dev:
                 return 'https://api.devnet.solana.com';
+            case Constants.Cluster.prdrr:
+                console.log(111111111111);
+                const crypto = crypto_1.default;
+                const index = crypto.getRandomValues(new Uint8Array(1))[0] % 2;
+                const clusters = [
+                    'https://api.mainnet-beta.solana.com',
+                    'https://solana-api.projectserum.com'
+                ];
+                return clusters[index];
             default:
                 return 'http://api.devnet.solana.com';
         }
