@@ -23,6 +23,10 @@ declare global {
   interface Array<T> {
     submit(): Promise<Result<TransactionSignature, Error>>;
   }
+
+  interface Console {
+    debug(data: unknown, data2?: unknown, data3?: unknown): void;
+  }
 }
 
 // @ts-ignore
