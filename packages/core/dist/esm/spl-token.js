@@ -20,7 +20,7 @@ export var SplToken;
         while (counter < RETREY_OVER_LIMIT) {
             try {
                 const accountInfo = yield token.getOrCreateAssociatedAccountInfo(owner);
-                console.debug('# associatedAccountInfo: ', accountInfo.address.toString());
+                console.log('# associatedAccountInfo: ', accountInfo.address.toString());
                 return Result.ok(accountInfo);
             }
             catch (e) {
