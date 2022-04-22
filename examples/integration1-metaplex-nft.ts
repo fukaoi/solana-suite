@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-// $ npx ts-node exmaples/integration1-metaplex-nft.ts
+// $ npx ts-node examples/integration1-metaplex-nft.ts
 //////////////////////////////////////////////
 
 import assert from 'assert';

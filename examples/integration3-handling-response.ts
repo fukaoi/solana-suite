@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-// $ npx ts-node exmaples/integration3-handling-response
+// $ npx ts-node examples/integration3-handling-response
 //////////////////////////////////////////////
 
 import {
