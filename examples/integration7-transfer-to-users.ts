@@ -17,7 +17,7 @@ import {
 } from '@solana-suite/shared';
 
 const USERS_COUNT = 50;
-const SLEEP_TIME_WAIT = 2;
+const SLEEP_TIME_WAIT = 0;
 
 (async () => {
 
@@ -37,10 +37,9 @@ const SLEEP_TIME_WAIT = 2;
 
   // manual setting
   // const owner = new KeypairStr(
-    // '',
-    // ''
+  // '',
+  // ''
   // );
-
 
   // random create
   const owner = Account.create();
@@ -74,27 +73,6 @@ const SLEEP_TIME_WAIT = 2;
   // TRANSFER RECEIPR USER FROM THIS LINE 
   //////////////////////////////////////////////
 
-  // ============== async ==============
-  // users.forEach(async (user) => {
-  // const inst2 = await SplToken.transfer(
-  // tokenKey.toPublicKey(),
-  // owner.toPublicKey(),
-  // user.toPublicKey(),
-  // [
-  // owner.toKeypair()
-  // ],
-  // 10,
-  // decimals
-  // );
-
-  // (await inst2.submit()).match(
-  // (value) => console.log('# Transfer nft sig: ', value),
-  // (error) => {assert(error); return;}
-  // );
-  // });
-
-
-  // ============== sync ============== 
   let i = 1;
   for (const user of users) {
     await sleep(SLEEP_TIME_WAIT);
