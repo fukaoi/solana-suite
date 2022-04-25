@@ -9,7 +9,10 @@
     "lint:core": "npx tslint --fix --project packages/core",
     "lint:nft": "npx tslint --fix --project packages/nft",
     "lint:shared": "npx tslint --fix --project packages/shared",
-    "test": "npm run test:all -ws"
+    "test:all": "npm run test:shared && npm run test:nft && npm run test:core",
+    "test:shared": "npm run test:all -w packages/shared",
+    "test:nft": "npm run test:all -w packages/nft",
+    "test:core": "npm run test:all -w packages/core"
   },
   "workspaces": [
     "packages/shared",
