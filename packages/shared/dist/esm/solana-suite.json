@@ -1,1 +1,7 @@
-{"cluster":"mainnet-beta-round-robin","nftstorage":{"apikey":""},"debugging":true}
+{
+    "cluster": "localhost-devnet",
+    "debugging": false,
+    "nftstorage": {
+        "apikey": ""
+    }
+}
