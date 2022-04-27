@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Account, KeypairStr, Multisig, SplToken} from '@solana-suite/core';
+import {Account, KeypairStr, Multisig, SplToken, Transaction} from '@solana-suite/core';
 import {Metaplex, MetaplexInstructure} from '../../src/metaplex';
 import {Setup} from '../../../shared/test/testSetup';
 
@@ -137,6 +137,8 @@ describe('Metaplex', () => {
 
     const res = await inst2.submit();
     console.log('# signature: ', res.unwrap());
+
+    Transaction.confirmedSig(res.unwrap());
 
     const afterFeePayer = await Account.getBalance(feePayer.toPublicKey());
     const afterSource = await Account.getBalance(source.toPublicKey());

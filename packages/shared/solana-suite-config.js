@@ -39,11 +39,13 @@ loadConfigFile();
 program
   .name('solana-suite-config')
   .description('Setup solana-suite.json')
-  .version('0.1');
+  .version('0.2');
 
 program.command('cluster')
   .description('select want connect to cluster type')
   .option('prd', 'Connect to mainnet-beta')
+  .option('prd2', 'Connect to mainnet-beta-serum')
+  .option('prdrr', 'Connect to mainnet-beta and mainnet-beta-serum alternately')
   .option('dev', 'Connect to devnet')
   .option('test', 'Connect to testnet')
   .option('localhost', 'Connect to devnet in localhost')
@@ -52,6 +54,12 @@ program.command('cluster')
     switch (arg) {
       case 'prd':
         value = 'mainnet-beta';
+        break;
+      case 'prd2':
+        value = 'mainnet-beta-serum';
+        break;
+      case 'prdrr':
+        value = 'mainnet-beta-round-robin';
         break;
       case 'dev':
         value = 'devnet';
@@ -65,7 +73,7 @@ program.command('cluster')
       default:
         console.warn(`
           No match parameter: need parameter is 
-          "prd", "dev", "test", "localhost". any one of them
+          "prd", "prd2", "prdrr", "dev", "test", "localhost". any one of them
         `);
     }
     updateConfigFile('cluster', value);
