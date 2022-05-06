@@ -68,7 +68,7 @@ describe('Memo', () => {
       source.toPublicKey(),
       dest.toPublicKey(),
       [source.toKeypair()],
-      0.00001
+      0.01  // Too low lamports, but  error occures
     );
 
     const res = await [inst1, inst2].submit();

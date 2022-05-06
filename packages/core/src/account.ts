@@ -135,7 +135,10 @@ export namespace Account {
       return Result.err(Error(`Over max airdrop amount: ${airdropAmount}`))
     }
 
-    const sig = await Node.getConnection().requestAirdrop(pubkey, airdropAmount)
+    const sig = await Node.getConnection().requestAirdrop(
+      pubkey, 
+      airdropAmount
+    )
       .then(Result.ok)
       .catch(Result.err);
 
