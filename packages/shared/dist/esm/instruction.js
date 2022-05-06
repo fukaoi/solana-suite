@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var _a;
 import { sendAndConfirmTransaction, Transaction, } from '@solana/web3.js';
 import { Node, Result } from './';
+const MAX_RETRIES = 3;
 export class Instruction {
     constructor(instructions, signers, feePayer, data) {
         this.submit = () => __awaiter(this, void 0, void 0, function* () {
@@ -23,7 +24,11 @@ export class Instruction {
                 finalSigners = [this.feePayer, ...this.signers];
             }
             this.instructions.map(inst => transaction.add(inst));
-            return yield sendAndConfirmTransaction(Node.getConnection(), transaction, finalSigners)
+            const options = {
+                maxRetries: MAX_RETRIES
+            };
+            const rentExempt = yield Node.getConnection().getMinimumBalanceForRentExemption(90);
+            return yield sendAndConfirmTransaction(Node.getConnection(), transaction, finalSigners, options)
                 .then(Result.ok)
                 .catch(Result.err);
         });
@@ -58,7 +63,10 @@ Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, function* (
         finalSigners = [feePayer, ...signers];
     }
     instructions.map(inst => transaction.add(inst));
-    return yield sendAndConfirmTransaction(Node.getConnection(), transaction, finalSigners)
+    const options = {
+        maxRetries: MAX_RETRIES
+    };
+    return yield sendAndConfirmTransaction(Node.getConnection(), transaction, finalSigners, options)
         .then(Result.ok)
         .catch(Result.err);
 });

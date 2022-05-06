@@ -13,6 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Instruction = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const _1 = require("./");
+const MAX_RETRIES = 3;
 class Instruction {
     constructor(instructions, signers, feePayer, data) {
         this.submit = () => __awaiter(this, void 0, void 0, function* () {
@@ -26,7 +27,11 @@ class Instruction {
                 finalSigners = [this.feePayer, ...this.signers];
             }
             this.instructions.map(inst => transaction.add(inst));
-            return yield (0, web3_js_1.sendAndConfirmTransaction)(_1.Node.getConnection(), transaction, finalSigners)
+            const options = {
+                maxRetries: MAX_RETRIES
+            };
+            const rentExempt = yield _1.Node.getConnection().getMinimumBalanceForRentExemption(90);
+            return yield (0, web3_js_1.sendAndConfirmTransaction)(_1.Node.getConnection(), transaction, finalSigners, options)
                 .then(_1.Result.ok)
                 .catch(_1.Result.err);
         });
@@ -62,7 +67,10 @@ Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, function* (
         finalSigners = [feePayer, ...signers];
     }
     instructions.map(inst => transaction.add(inst));
-    return yield (0, web3_js_1.sendAndConfirmTransaction)(_1.Node.getConnection(), transaction, finalSigners)
+    const options = {
+        maxRetries: MAX_RETRIES
+    };
+    return yield (0, web3_js_1.sendAndConfirmTransaction)(_1.Node.getConnection(), transaction, finalSigners, options)
         .then(_1.Result.ok)
         .catch(_1.Result.err);
 });
