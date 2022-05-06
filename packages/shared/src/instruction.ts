@@ -4,6 +4,7 @@ import {
   Signer,
   TransactionInstruction,
   Transaction,
+  ConfirmOptions,
 } from '@solana/web3.js';
 
 import {
@@ -11,7 +12,11 @@ import {
   Result
 } from './';
 
+const MAX_RETRIES = 3;
+
 export class Instruction {
+
+
   instructions: TransactionInstruction[];
   signers: Signer[];
   feePayer?: Signer;
@@ -43,10 +48,21 @@ export class Instruction {
       finalSigners = [this.feePayer, ...this.signers];
     }
     this.instructions.map(inst => transaction.add(inst));
+
+    const options: ConfirmOptions = {
+      maxRetries: MAX_RETRIES
+    }
+
+    const rentExempt =
+      await Node.getConnection().getMinimumBalanceForRentExemption(
+        90,
+      );
+
     return await sendAndConfirmTransaction(
       Node.getConnection(),
       transaction,
-      finalSigners
+      finalSigners,
+      options
     )
       .then(Result.ok)
       .catch(Result.err);
@@ -61,7 +77,7 @@ export class Instruction {
       if (!a.instructions && !a.signers) {
         return Result.err(
           Error(
-          `only Instruction object that can use batchSubmit().
+            `only Instruction object that can use batchSubmit().
             Setted: ${a}, Index: ${i}`
           )
         );
@@ -84,10 +100,16 @@ export class Instruction {
       finalSigners = [feePayer, ...signers];
     }
     instructions.map(inst => transaction.add(inst));
+
+    const options: ConfirmOptions = {
+      maxRetries: MAX_RETRIES
+    }
+
     return await sendAndConfirmTransaction(
       Node.getConnection(),
       transaction,
-      finalSigners
+      finalSigners,
+      options
     )
       .then(Result.ok)
       .catch(Result.err);
