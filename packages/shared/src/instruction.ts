@@ -53,11 +53,6 @@ export class Instruction {
       maxRetries: MAX_RETRIES
     }
 
-    const rentExempt =
-      await Node.getConnection().getMinimumBalanceForRentExemption(
-        90,
-      );
-
     return await sendAndConfirmTransaction(
       Node.getConnection(),
       transaction,

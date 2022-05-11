@@ -3,7 +3,8 @@ import {
   LAMPORTS_PER_SOL,
   PublicKey,
   SystemProgram,
-  Signer
+  Signer,
+  Transaction
 } from '@solana/web3.js';
 
 import {
@@ -115,5 +116,38 @@ export namespace SolNative {
         feePayer
       )
     );
+  }
+
+  export const feePayerPartialSignTransfer = async (
+    source: PublicKey,
+    destination: PublicKey,
+    signers: Signer[],
+    amountSol: number,
+    feePayer: PublicKey
+  ): Promise<Result<string, Error>> => {
+    const inst = SystemProgram.transfer({
+      fromPubkey: source,
+      toPubkey: destination,
+      lamports: amountSol * LAMPORTS_PER_SOL,
+    });
+
+    const tx = new Transaction(
+      {
+        feePayer
+      }
+    ).add(inst);
+
+    const blocks = await Node.getConnection().getLatestBlockhash();
+    tx.recentBlockhash = blocks.blockhash;
+
+    signers.forEach(signer => {
+      tx.partialSign(signer);
+    });
+
+    const serializedTx = tx.serialize({
+      requireAllSignatures: false,
+    });
+
+    return Result.ok(serializedTx.toString('hex'));
   }
 }

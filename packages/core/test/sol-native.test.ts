@@ -29,6 +29,21 @@ describe('SolNative', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
+  it('feePayerPartialSignTransfer', async () => {
+    const solAmount = 0.0001;
+    const serialized =
+      await SolNative.feePayerPartialSignTransfer(
+        source.toPublicKey(),
+        dest.toPublicKey(),
+        [source.toKeypair()],
+        solAmount,
+        source.pubkey.toPublicKey()
+      );
+
+    assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
+    assert.isString(serialized.unwrap());
+  });
+
   it('transfer transaction with fee payer', async () => {
     const solAmount = 0.0001;
     const owner = Account.create();

@@ -155,4 +155,52 @@ export namespace SplToken {
       feePayer
     );
   }
+
+  export const feePayerPartialSignTransfer = async (
+    tokenKey: PublicKey,
+    owner: PublicKey,
+    dest: PublicKey,
+    signers: Signer[],
+    amount: number,
+    mintDecimal: number,
+    feePayer: PublicKey,
+  // ): Promise<Result<Instruction, Error>> => {
+  ) => {
+
+
+    const token = new Token(
+      Node.getConnection(),
+      tokenKey,
+      TOKEN_PROGRAM_ID,
+      feePayer
+    );
+
+    const sourceToken = await retryGetOrCreateAssociatedAccountInfo(token, owner);
+    if (sourceToken.isErr) {
+      return Result.err(sourceToken.error);
+    }
+
+    const destToken = await retryGetOrCreateAssociatedAccountInfo(token, dest);
+    if (destToken.isErr) {
+      return Result.err(destToken.error);
+    }
+
+    const inst = Token.createTransferCheckedInstruction(
+      TOKEN_PROGRAM_ID,
+      sourceToken.value.address,
+      tokenKey,
+      destToken.value.address,
+      owner,
+      signers,
+      amount,
+      mintDecimal
+    );
+
+    return Result.ok(
+      new Instruction(
+        [inst],
+        signers,
+        feePayer
+      ));
+  }
 }
