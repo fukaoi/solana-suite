@@ -1,4 +1,4 @@
-import {Token, TOKEN_PROGRAM_ID} from '@solana/spl-token';
+import {TOKEN_PROGRAM_ID, Token} from 'old-spl-token';
 import {
   LAMPORTS_PER_SOL,
   PublicKey,
@@ -53,8 +53,9 @@ export namespace SolNative {
     );
 
     const sourceToken = await SplToken.retryGetOrCreateAssociatedAccountInfo(
-      token,
-      owner
+      token.publicKey,
+      owner,
+      feePayer!
     );
 
     if (sourceToken.isErr) {
@@ -62,8 +63,9 @@ export namespace SolNative {
     }
 
     const destToken = await SplToken.retryGetOrCreateAssociatedAccountInfo(
-      token,
-      wrapped.value
+      token.publicKey,
+      wrapped.value,
+      feePayer!
     );
 
     if (destToken.isErr) {

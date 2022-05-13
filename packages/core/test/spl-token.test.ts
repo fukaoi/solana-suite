@@ -1,9 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../../shared/test/testSetup';
-import {Account, SplToken, Multisig, KeypairStr} from '../src/';
-import {Node} from '../../shared/src/node';
-import {Token, TOKEN_PROGRAM_ID} from '@solana/spl-token';
+import {Account, SplToken, KeypairStr, Multisig} from '../src/';
 
 let source: KeypairStr; let dest: KeypairStr; let tokenKeyStr: string;
 const TOKEN_TOTAL_AMOUNT = 10000000;
@@ -112,7 +110,7 @@ describe('SplToken', () => {
     console.log('signature: ', sig.unwrap());
   });
 
-  it('Create token, transfer with multisig and fee payer', async () => {
+  it.only('Create token, transfer with multisig and fee payer', async () => {
     // create multisig
     const signer1 = Account.create();
     const signer2 = Account.create();
@@ -127,9 +125,14 @@ describe('SplToken', () => {
       );
 
     assert.isTrue(multiInst.isOk, `${multiInst.unwrap()}`);
+   // await [
+      // multiInst,
+    // ].submit();
 
     const multisig = (multiInst.unwrap().data as string).toPublicKey();
 
+    console.log('# signer1 address :', signer1.pubkey);
+    console.log('# signer2 address :', signer2.pubkey);
     console.log('# multisig address :', multisig.toBase58());
 
     // create nft
@@ -147,6 +150,10 @@ describe('SplToken', () => {
       );
 
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
+    // await [
+      // mintInst,
+    // ].submit();
+
 
     const token = (mintInst.unwrap().data as string).toPublicKey();
 
@@ -167,13 +174,13 @@ describe('SplToken', () => {
     );
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
-    const sig = await [
-      multiInst,
-      mintInst,
-      inst
-    ].submit();
+    // const sig = await [
+      // // multiInst,
+      // // mintInst,
+      // inst
+    // ].submit();
 
-    console.log('signature: ', `${sig.unwrap()}`);
+    // console.log('signature: ', `${sig.unwrap()}`);
   });
 
   it('Retry getOrCreateAssociatedAccountInfo', async () => {
@@ -192,16 +199,10 @@ describe('SplToken', () => {
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
     const tokenKey = (mintInst.unwrap().data as string);
 
-    const token = new Token(
-      Node.getConnection(),
-      tokenKey.toPublicKey(),
-      TOKEN_PROGRAM_ID,
-      source.toKeypair()
-    );
-    
     SplToken.retryGetOrCreateAssociatedAccountInfo(
-      token, 
-      source.toPublicKey()
+      tokenKey.toPublicKey(),
+      source.toPublicKey(),
+      source.toKeypair()
     );
   });
 })

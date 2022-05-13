@@ -13,7 +13,8 @@ import {
   Keypair,
 } from '@solana/web3.js';
 
-import * as BufferLayout from '@solana/buffer-layout';
+// import * as BufferLayout from '@solana/buffer-layout';
+import * as BufferLayout from 'old-buffer';
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
 // @internal
