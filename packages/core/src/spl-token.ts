@@ -2,7 +2,6 @@ import {
   TOKEN_PROGRAM_ID,
   Account,
   createMint,
-  mintTo,
   createMintToCheckedInstruction,
   createTransferCheckedInstruction,
   getOrCreateAssociatedTokenAccount,
@@ -12,6 +11,9 @@ import {
 import {
   PublicKey,
   Signer,
+  Transaction,
+  SystemProgram,
+  LAMPORTS_PER_SOL,
 } from '@solana/web3.js';
 
 import {Node, Result, Instruction, sleep} from '@solana-suite/shared';
@@ -54,7 +56,7 @@ export namespace SplToken {
     totalAmount: number,
     mintDecimal: number,
     feePayer?: Signer,
-    ): Promise<Result<Instruction, Error>> => {
+  ): Promise<Result<Instruction, Error>> => {
 
     !feePayer && (feePayer = signers[0]);
 
@@ -65,7 +67,8 @@ export namespace SplToken {
       owner,
       owner,
       mintDecimal
-    ).then(Result.ok)
+    )
+      .then(Result.ok)
       .catch(Result.err);
 
     if (tokenRes.isErr) {
@@ -173,51 +176,44 @@ export namespace SplToken {
     );
   }
 
-  // export const feePayerPartialSignTransfer = async (
-  // tokenKey: PublicKey,
-  // owner: PublicKey,
-  // dest: PublicKey,
-  // signers: Signer[],
-  // amount: number,
-  // mintDecimal: number,
-  // feePayer: PublicKey,
-  // // ): Promise<Result<Instruction, Error>> => {
-  // ) => {
+  export const feePayerPartialSignTransfer = async (
+    owner: PublicKey,
+    dest: PublicKey,
+    signers: Signer[],
+    amount: number,
+    feePayer: PublicKey,
+  ): Promise<Result<string, Error>> => {
+    const tx = new Transaction(
+      {
+        feePayer: feePayer
+      }
+    ).add(
+      SystemProgram.transfer(
+        {
+          fromPubkey: owner,
+          toPubkey: dest,
+          lamports: amount * LAMPORTS_PER_SOL,
+        }
+      ),
+    );
 
+    // partially sign transaction
+    const blockhashObj = await Node.getConnection().getLatestBlockhash();
+    tx.recentBlockhash = blockhashObj.blockhash;
+    signers.forEach(signer => {
+      tx.partialSign(signer);
+    });
 
-  // const token = new Token(
-  // Node.getConnection(),
-  // tokenKey,
-  // TOKEN_PROGRAM_ID,
-  // feePayer
-  // );
-
-  // const sourceToken = await retryGetOrCreateAssociatedAccountInfo(token, owner);
-  // if (sourceToken.isErr) {
-  // return Result.err(sourceToken.error);
-  // }
-
-  // const destToken = await retryGetOrCreateAssociatedAccountInfo(token, dest);
-  // if (destToken.isErr) {
-  // return Result.err(destToken.error);
-  // }
-
-  // const inst = Token.createTransferCheckedInstruction(
-  // TOKEN_PROGRAM_ID,
-  // sourceToken.value.address,
-  // tokenKey,
-  // destToken.value.address,
-  // owner,
-  // signers,
-  // amount,
-  // mintDecimal
-  // );
-
-  // return Result.ok(
-  // new Instruction(
-  // [inst],
-  // signers,
-  // feePayer
-  // ));
-  // }
+    try {
+      const sirializedTx = tx.serialize(
+        {
+          requireAllSignatures: false,
+        }
+      )
+      const hex = sirializedTx.toString('hex');
+      return Result.ok(hex);
+    } catch (ex) {
+      return Result.err(ex as Error);
+    }
+  }
 }
