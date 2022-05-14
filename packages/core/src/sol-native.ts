@@ -121,35 +121,44 @@ export namespace SolNative {
   }
 
   export const feePayerPartialSignTransfer = async (
-    source: PublicKey,
-    destination: PublicKey,
+    owner: PublicKey,
+    dest: PublicKey,
     signers: Signer[],
-    amountSol: number,
-    feePayer: PublicKey
+    amount: number,
+    feePayer: PublicKey,
   ): Promise<Result<string, Error>> => {
-    const inst = SystemProgram.transfer({
-      fromPubkey: source,
-      toPubkey: destination,
-      lamports: amountSol * LAMPORTS_PER_SOL,
-    });
-
     const tx = new Transaction(
       {
-        feePayer
+        feePayer: feePayer
       }
-    ).add(inst);
+    ).add(
+      SystemProgram.transfer(
+        {
+          fromPubkey: owner,
+          toPubkey: dest,
+          lamports: amount * LAMPORTS_PER_SOL,
+        }
+      ),
+    );
 
-    const blocks = await Node.getConnection().getLatestBlockhash();
-    tx.recentBlockhash = blocks.blockhash;
-
+    // partially sign transaction
+    const blockhashObj = await Node.getConnection().getLatestBlockhash();
+    tx.recentBlockhash = blockhashObj.blockhash;
     signers.forEach(signer => {
       tx.partialSign(signer);
     });
 
-    const serializedTx = tx.serialize({
-      requireAllSignatures: false,
-    });
-
-    return Result.ok(serializedTx.toString('hex'));
+    try {
+      const sirializedTx = tx.serialize(
+        {
+          requireAllSignatures: false,
+        }
+      )
+      const hex = sirializedTx.toString('hex');
+      return Result.ok(hex);
+    } catch (ex) {
+      return Result.err(ex as Error);
+    }
   }
+
 }
