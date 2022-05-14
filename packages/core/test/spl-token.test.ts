@@ -31,6 +31,44 @@ describe('SplToken', () => {
     console.log('# tokenKey: ', tokenKeyStr);
   });
 
+  it('Create token with multisig', async () => {
+    const signer1 = Account.create();
+    const signer2 = Account.create();
+    const multisigInst = await Multisig.create(
+      2,
+      source.toKeypair(),
+      [
+        signer1.toPublicKey(),
+        signer2.toPublicKey()
+      ],
+    );
+
+    assert.isTrue(multisigInst.isOk, `${multisigInst.unwrap()}`);
+
+    const multisig = multisigInst.unwrap().data as string;
+
+    console.log('# multisig address :', multisig);
+
+    const inst =
+      await SplToken.mint(
+        multisig.toPublicKey(),
+        [
+          signer1.toKeypair(),
+          signer2.toKeypair()
+        ],
+        TOKEN_TOTAL_AMOUNT,
+        MINT_DECIMAL,
+        source.toKeypair()
+      );
+
+    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
+
+    const res = await [multisigInst, inst].submit();
+    assert.isTrue(res.isOk, res.unwrap());
+    tokenKeyStr = inst.unwrap().data as string;
+    console.log('# tokenKey: ', tokenKeyStr);
+  });
+
   it('[Err]lack signer for multisig', async () => {
     const signer1 = Account.create();
     const signer2 = Account.create();
@@ -110,7 +148,7 @@ describe('SplToken', () => {
     console.log('signature: ', sig.unwrap());
   });
 
-  it.only('Create token, transfer with multisig and fee payer', async () => {
+  it('Create token, transfer with multisig and fee payer', async () => {
     // create multisig
     const signer1 = Account.create();
     const signer2 = Account.create();
@@ -125,9 +163,6 @@ describe('SplToken', () => {
       );
 
     assert.isTrue(multiInst.isOk, `${multiInst.unwrap()}`);
-   // await [
-      // multiInst,
-    // ].submit();
 
     const multisig = (multiInst.unwrap().data as string).toPublicKey();
 
@@ -150,16 +185,11 @@ describe('SplToken', () => {
       );
 
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
-    // await [
-      // mintInst,
-    // ].submit();
-
 
     const token = (mintInst.unwrap().data as string).toPublicKey();
 
     console.log('# tokenKey: ', token.toBase58());
 
-    // transfer from multisig to dest
     const inst = await SplToken.transfer(
       token,
       multisig,
@@ -174,13 +204,13 @@ describe('SplToken', () => {
     );
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
-    // const sig = await [
-      // // multiInst,
-      // // mintInst,
-      // inst
-    // ].submit();
+    const sig = await [
+      multiInst,
+      mintInst,
+      inst
+    ].submit();
 
-    // console.log('signature: ', `${sig.unwrap()}`);
+    console.log('signature: ', `${sig.unwrap()}`);
   });
 
   it('Retry getOrCreateAssociatedAccountInfo', async () => {

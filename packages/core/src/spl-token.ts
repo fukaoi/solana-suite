@@ -2,6 +2,7 @@ import {
   TOKEN_PROGRAM_ID,
   Account,
   createMint,
+  mintTo,
   createMintToCheckedInstruction,
   createTransferCheckedInstruction,
   getOrCreateAssociatedTokenAccount,
@@ -53,7 +54,7 @@ export namespace SplToken {
     totalAmount: number,
     mintDecimal: number,
     feePayer?: Signer,
-  ): Promise<Result<Instruction, Error>> => {
+    ): Promise<Result<Instruction, Error>> => {
 
     !feePayer && (feePayer = signers[0]);
 
@@ -61,8 +62,8 @@ export namespace SplToken {
     const tokenRes = await createMint(
       connection,
       feePayer,
-      feePayer.publicKey,
-      null,
+      owner,
+      owner,
       mintDecimal
     ).then(Result.ok)
       .catch(Result.err);
@@ -145,8 +146,6 @@ export namespace SplToken {
       signers,
       TOKEN_PROGRAM_ID,
     );
-
-    console.log(inst);
 
     return Result.ok(
       new Instruction(
