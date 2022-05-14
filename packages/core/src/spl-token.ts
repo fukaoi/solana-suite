@@ -177,12 +177,24 @@ export namespace SplToken {
   }
 
   export const feePayerPartialSignTransfer = async (
+    tokenKey: PublicKey,
     owner: PublicKey,
     dest: PublicKey,
     signers: Signer[],
     amount: number,
+    mintDecimal: number,
     feePayer: PublicKey,
   ): Promise<Result<string, Error>> => {
+    
+    transfer(
+      tokenKey,
+      owner,
+      dest,
+      signers,
+      amount,
+      mintDecimal,
+    );
+
     const tx = new Transaction(
       {
         feePayer: feePayer
@@ -200,9 +212,9 @@ export namespace SplToken {
     // partially sign transaction
     const blockhashObj = await Node.getConnection().getLatestBlockhash();
     tx.recentBlockhash = blockhashObj.blockhash;
-    signers.forEach(signer => {
-      tx.partialSign(signer);
-    });
+    // signers.forEach(signer => {
+      // tx.partialSign(signer);
+    // });
 
     try {
       const sirializedTx = tx.serialize(

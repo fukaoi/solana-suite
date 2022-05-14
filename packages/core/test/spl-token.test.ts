@@ -3,7 +3,10 @@ import {assert} from 'chai';
 import {Setup} from '../../shared/test/testSetup';
 import {Account, SplToken, KeypairStr, Multisig} from '../src/';
 
-let source: KeypairStr; let dest: KeypairStr; let tokenKeyStr: string;
+let source: KeypairStr; 
+let dest: KeypairStr; 
+let tokenKeyStr: string;
+
 const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
 
@@ -234,5 +237,36 @@ describe('SplToken', () => {
       source.toPublicKey(),
       source.toKeypair()
     );
+  });
+
+  it('feePayerPartialSignTransfer', async () => {
+    const inst1 =
+      await SplToken.mint(
+        source.toPublicKey(),
+        [
+          source.toKeypair(),
+        ],
+        TOKEN_TOTAL_AMOUNT,
+        MINT_DECIMAL,
+      );
+
+    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
+    const token = inst1.unwrap().data as string;
+    console.log('# tokenKey: ', token);
+
+    const tokenAmount = 1;
+    const serialized =
+      await SplToken.feePayerPartialSignTransfer(
+        token.toPublicKey(),
+        source.toPublicKey(),
+        dest.toPublicKey(),
+        [source.toKeypair()],
+        tokenAmount,
+        MINT_DECIMAL,
+        source.pubkey.toPublicKey()
+      );
+
+    assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
+    assert.isString(serialized.unwrap());
   });
 })
