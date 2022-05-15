@@ -1,1 +1,7 @@
-{"debugging":false,"nftstorage":{"apikey":""}}
+{
+    "cluster": "localhost-devnet",
+    "debugging": false,
+    "nftstorage": {
+        "apikey": ""
+    }
+}
