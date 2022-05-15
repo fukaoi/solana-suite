@@ -1,12 +1,8 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
-import {Result, Constants} from '../src';
-import {Memo} from '../../core/src/';
+import {Result} from '../src/index';
+import {Memo} from '../../core/src/index';
 import {Setup, KeypairStr} from './testSetup';
-import {
-  TransactionInstruction,
-} from '@solana/web3.js';
-
 
 let source: KeypairStr;
 
@@ -96,15 +92,15 @@ describe('Instruction', () => {
     }
   });
 
-  it.only('[Err]Submit batch instructions, Include Error in Result type', async () => {
-    const message = 'Raise error, seconde instructure';
-    const inst1 = new TransactionInstruction({
-      programId: Constants.MEMO_PROGRAM_ID,
-      data: Buffer.from('data'),
-      keys: []
-    });
+  it('[Err]Submit batch instructions, Include Error in Result type', async () => {
+    const inst1 =
+      Result.ok(Memo.create(
+        '{"title": "Submit first instruction"}',
+        source.toPublicKey(),
+        source.toKeypair(),
+      ));
 
-    const inst2 = Result.err(Error(message));
+    const inst2 = Result.err(Error('Raise error, seconde instructure'));
 
     const res = await [inst1, inst2].submit();
     assert.isTrue(res.isErr);

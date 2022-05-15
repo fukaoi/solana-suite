@@ -35,7 +35,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Multisig = void 0;
 const shared_1 = require("@solana-suite/shared");
 const web3_js_1 = require("@solana/web3.js");
-const BufferLayout = __importStar(require("@solana/buffer-layout"));
+// import * as BufferLayout from '@solana/buffer-layout';
+const BufferLayout = __importStar(require("old-buffer"));
 const spl_token_1 = require("@solana/spl-token");
 // @internal
 var MultisigInstruction;

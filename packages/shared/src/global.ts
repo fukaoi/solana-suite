@@ -32,15 +32,19 @@ declare global {
 // @ts-ignore
 Array.prototype.submit = async function () {
   const instructions: Instruction[] = [];
-  this.forEach((obj, i) => {
+  // dont use forEach
+  // It is not possible to stop the process by RETURN in the middle of the process.
+  let i = 0;
+  for (const obj of this) {
     if (obj.isErr) {
-      return Result.err(Error(`[Array index: ${i}]${obj.error.message}`));
+      return Result.err(Error(`[Array index of caught 'Result.err': ${i}]${obj.error.message}`));
     } else if (obj.isOk) {
       instructions.push(obj.value);
     } else {
       instructions.push(obj);
     }
-  });
+    i++;
+  };
   return await Instruction.batchSubmit(instructions);
 }
 

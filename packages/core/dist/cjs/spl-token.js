@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SplToken = void 0;
 const spl_token_1 = require("@solana/spl-token");
+const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
 var SplToken;
 (function (SplToken) {
@@ -18,11 +19,11 @@ var SplToken;
     const NFT_DECIMALS = 0;
     const RETREY_OVER_LIMIT = 10;
     const RETREY_SLEEP_TIME = 3000;
-    SplToken.retryGetOrCreateAssociatedAccountInfo = (token, owner) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.retryGetOrCreateAssociatedAccountInfo = (tokenKey, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let counter = 1;
         while (counter < RETREY_OVER_LIMIT) {
             try {
-                const accountInfo = yield token.getOrCreateAssociatedAccountInfo(owner);
+                const accountInfo = yield (0, spl_token_1.getOrCreateAssociatedTokenAccount)(shared_1.Node.getConnection(), feePayer, tokenKey, owner);
                 console.debug('# associatedAccountInfo: ', accountInfo.address.toString());
                 return shared_1.Result.ok(accountInfo);
             }
@@ -36,35 +37,61 @@ var SplToken;
     });
     SplToken.mint = (owner, signers, totalAmount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         !feePayer && (feePayer = signers[0]);
-        const tokenRes = yield spl_token_1.Token.createMint(shared_1.Node.getConnection(), feePayer, owner, owner, mintDecimal, spl_token_1.TOKEN_PROGRAM_ID)
+        const connection = shared_1.Node.getConnection();
+        const tokenRes = yield (0, spl_token_1.createMint)(connection, feePayer, owner, owner, mintDecimal)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (tokenRes.isErr) {
             return shared_1.Result.err(tokenRes.error);
         }
         const token = tokenRes.value;
-        const tokenAssociated = yield SplToken.retryGetOrCreateAssociatedAccountInfo(token, owner);
+        const tokenAssociated = yield SplToken.retryGetOrCreateAssociatedAccountInfo(token, owner, feePayer);
         if (tokenAssociated.isErr) {
             return shared_1.Result.err(tokenAssociated.error);
         }
-        const inst = spl_token_1.Token.createMintToInstruction(spl_token_1.TOKEN_PROGRAM_ID, token.publicKey, tokenAssociated.value.address, owner, signers, totalAmount);
-        return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer, token.publicKey.toBase58()));
+        const inst = (0, spl_token_1.createMintToCheckedInstruction)(token, tokenAssociated.value.address, owner, totalAmount, mintDecimal, signers, spl_token_1.TOKEN_PROGRAM_ID);
+        return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer, token.toBase58()));
     });
     SplToken.transfer = (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         !feePayer && (feePayer = signers[0]);
-        const token = new spl_token_1.Token(shared_1.Node.getConnection(), tokenKey, spl_token_1.TOKEN_PROGRAM_ID, feePayer);
-        const sourceToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(token, owner);
+        const sourceToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(tokenKey, owner, feePayer);
         if (sourceToken.isErr) {
             return shared_1.Result.err(sourceToken.error);
         }
-        const destToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(token, dest);
+        const destToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(tokenKey, dest, feePayer);
         if (destToken.isErr) {
             return shared_1.Result.err(destToken.error);
         }
-        const inst = spl_token_1.Token.createTransferCheckedInstruction(spl_token_1.TOKEN_PROGRAM_ID, sourceToken.value.address, tokenKey, destToken.value.address, owner, signers, amount, mintDecimal);
+        const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.value.address, tokenKey, destToken.value.address, owner, amount, mintDecimal, signers, spl_token_1.TOKEN_PROGRAM_ID);
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
     });
     SplToken.transferNft = (tokenKey, owner, dest, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return SplToken.transfer(tokenKey, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
+    });
+    SplToken.feePayerPartialSignTransfer = (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        SplToken.transfer(tokenKey, owner, dest, signers, amount, mintDecimal);
+        const tx = new web3_js_1.Transaction({
+            feePayer: feePayer
+        }).add(web3_js_1.SystemProgram.transfer({
+            fromPubkey: owner,
+            toPubkey: dest,
+            lamports: amount * web3_js_1.LAMPORTS_PER_SOL,
+        }));
+        // partially sign transaction
+        const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
+        tx.recentBlockhash = blockhashObj.blockhash;
+        // signers.forEach(signer => {
+        // tx.partialSign(signer);
+        // });
+        try {
+            const sirializedTx = tx.serialize({
+                requireAllSignatures: false,
+            });
+            const hex = sirializedTx.toString('hex');
+            return shared_1.Result.ok(hex);
+        }
+        catch (ex) {
+            return shared_1.Result.err(ex);
+        }
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));
