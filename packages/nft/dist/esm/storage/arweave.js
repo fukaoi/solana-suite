@@ -129,8 +129,7 @@ export var StorageArweave;
         const totalConst = yield calculateArweave(fileBuffers);
         if (totalConst.isErr)
             return Result.err(totalConst.error);
-        const inst = yield SolNative.transfer(payer.publicKey, Constants.AR_SOL_HOLDER_ID, [payer], Math.ceil(totalConst.value) //Convert bigint
-        );
+        const inst = yield SolNative.transfer(payer.publicKey, Constants.AR_SOL_HOLDER_ID, [payer], totalConst.value);
         if (inst.isErr) {
             return Result.err(inst.error);
         }

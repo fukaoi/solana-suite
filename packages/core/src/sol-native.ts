@@ -29,7 +29,7 @@ export namespace SolNative {
     owner: PublicKey,
     dest: PublicKey,
     signers: Signer[],
-    amountSol: number,
+    amount: number,
     feePayer?: Signer,
   ): Promise<Result<Instruction, Error>> => {
 
@@ -39,7 +39,7 @@ export namespace SolNative {
       connection,
       payer,
       owner,
-      amountSol * LAMPORTS_PER_SOL,
+      parseInt(`${amount * LAMPORTS_PER_SOL}`),
     )
       .then(Result.ok)
       .catch(Result.err);
@@ -96,7 +96,7 @@ export namespace SolNative {
       sourceToken.value.address,
       destToken.value.address,
       owner,
-      parseInt(`${amountSol}`),
+      parseInt(`${amount}`), // No lamports, its sol
       signers,
     );
 
@@ -120,13 +120,13 @@ export namespace SolNative {
     source: PublicKey,
     destination: PublicKey,
     signers: Signer[],
-    amountSol: number,
+    amount: number,
     feePayer?: Signer
   ): Promise<Result<Instruction, Error>> => {
     const inst = SystemProgram.transfer({
       fromPubkey: source,
       toPubkey: destination,
-      lamports: amountSol * LAMPORTS_PER_SOL,
+      lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`),
     });
 
     return Result.ok(
@@ -151,7 +151,7 @@ export namespace SolNative {
           {
             fromPubkey: owner,
             toPubkey: dest,
-            lamports: amount * LAMPORTS_PER_SOL,
+            lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`),
           }
         ),
       );

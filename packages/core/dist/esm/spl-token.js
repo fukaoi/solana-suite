@@ -20,12 +20,12 @@ export var SplToken;
         let counter = 1;
         while (counter < RETREY_OVER_LIMIT) {
             try {
-                const accountInfo = yield getOrCreateAssociatedTokenAccount(Node.getConnection(), feePayer, tokenKey, owner);
+                const accountInfo = yield getOrCreateAssociatedTokenAccount(Node.getConnection(), feePayer, tokenKey, owner, true);
                 console.debug('# associatedAccountInfo: ', accountInfo.address.toString());
                 return Result.ok(accountInfo);
             }
             catch (e) {
-                console.debug(`# retry: ${counter} get or create token account`, e);
+                console.debug(`# retry: ${counter} get or create token account: `, e);
             }
             sleep(RETREY_SLEEP_TIME);
             counter++;

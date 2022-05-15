@@ -15,10 +15,10 @@ export var SolNative;
 (function (SolNative) {
     // NOTICE: There is a lamport fluctuation when transfer under 0.001 sol
     // for multiSig only function
-    SolNative.transferWithMultisig = (owner, dest, signers, amountSol, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    SolNative.transferWithMultisig = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const connection = Node.getConnection();
         const payer = feePayer ? feePayer : signers[0];
-        const wrapped = yield createWrappedNativeAccount(connection, payer, owner, amountSol * LAMPORTS_PER_SOL)
+        const wrapped = yield createWrappedNativeAccount(connection, payer, owner, parseInt(`${amount * LAMPORTS_PER_SOL}`))
             .then(Result.ok)
             .catch(Result.err);
         if (wrapped.isErr) {
@@ -36,21 +36,21 @@ export var SolNative;
         if (sourceToken.isErr) {
             return Result.err(sourceToken.error);
         }
-        console.debug('# sourceToken: ', sourceToken);
+        console.debug('# sourceToken: ', sourceToken.value.address.toString());
         const destToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(token, wrapped.value, payer);
         if (destToken.isErr) {
             return Result.err(destToken.error);
         }
-        console.debug('# destToken: ', destToken);
-        const inst1 = createTransferInstruction(sourceToken.value.address, destToken.value.address, owner, amountSol, signers);
+        console.debug('# destToken: ', destToken.value.address.toString());
+        const inst1 = createTransferInstruction(sourceToken.value.address, destToken.value.address, owner, parseInt(`${amount * LAMPORTS_PER_SOL}`), signers);
         const inst2 = createCloseAccountInstruction(wrapped.value, dest, owner, signers);
         return Result.ok(new Instruction([inst1, inst2], signers, feePayer));
     });
-    SolNative.transfer = (source, destination, signers, amountSol, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    SolNative.transfer = (source, destination, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const inst = SystemProgram.transfer({
             fromPubkey: source,
             toPubkey: destination,
-            lamports: amountSol * LAMPORTS_PER_SOL,
+            lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`),
         });
         return Result.ok(new Instruction([inst], signers, feePayer));
     });
@@ -59,7 +59,7 @@ export var SolNative;
             .add(SystemProgram.transfer({
             fromPubkey: owner,
             toPubkey: dest,
-            lamports: amount * LAMPORTS_PER_SOL,
+            lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`),
         }));
         // partially sign transaction
         const blockhashObj = yield Node.getConnection().getLatestBlockhash();

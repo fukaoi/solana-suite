@@ -18,10 +18,10 @@ var SolNative;
 (function (SolNative) {
     // NOTICE: There is a lamport fluctuation when transfer under 0.001 sol
     // for multiSig only function
-    SolNative.transferWithMultisig = (owner, dest, signers, amountSol, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    SolNative.transferWithMultisig = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const connection = shared_1.Node.getConnection();
         const payer = feePayer ? feePayer : signers[0];
-        const wrapped = yield (0, spl_token_1.createWrappedNativeAccount)(connection, payer, owner, amountSol * web3_js_1.LAMPORTS_PER_SOL)
+        const wrapped = yield (0, spl_token_1.createWrappedNativeAccount)(connection, payer, owner, parseInt(`${amount * web3_js_1.LAMPORTS_PER_SOL}`))
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (wrapped.isErr) {
@@ -45,15 +45,15 @@ var SolNative;
             return shared_1.Result.err(destToken.error);
         }
         console.debug('# destToken: ', destToken.value.address.toString());
-        const inst1 = (0, spl_token_1.createTransferInstruction)(sourceToken.value.address, destToken.value.address, owner, parseInt(`${amountSol}`), signers);
+        const inst1 = (0, spl_token_1.createTransferInstruction)(sourceToken.value.address, destToken.value.address, owner, parseInt(`${amount}`), signers);
         const inst2 = (0, spl_token_1.createCloseAccountInstruction)(wrapped.value, dest, owner, signers);
         return shared_1.Result.ok(new shared_1.Instruction([inst1, inst2], signers, feePayer));
     });
-    SolNative.transfer = (source, destination, signers, amountSol, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    SolNative.transfer = (source, destination, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const inst = web3_js_1.SystemProgram.transfer({
             fromPubkey: source,
             toPubkey: destination,
-            lamports: amountSol * web3_js_1.LAMPORTS_PER_SOL,
+            lamports: parseInt(`${amount * web3_js_1.LAMPORTS_PER_SOL}`),
         });
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
     });
@@ -62,7 +62,7 @@ var SolNative;
             .add(web3_js_1.SystemProgram.transfer({
             fromPubkey: owner,
             toPubkey: dest,
-            lamports: amount * web3_js_1.LAMPORTS_PER_SOL,
+            lamports: parseInt(`${amount * web3_js_1.LAMPORTS_PER_SOL}`),
         }));
         // partially sign transaction
         const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
