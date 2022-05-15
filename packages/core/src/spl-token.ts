@@ -42,7 +42,7 @@ export namespace SplToken {
         console.debug('# associatedAccountInfo: ', accountInfo.address.toString());
         return Result.ok(accountInfo);
       } catch (e) {
-        console.debug(`# retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
+        console.debug(`# retry: ${counter} get or create token account`, e);
       }
       sleep(RETREY_SLEEP_TIME);
       counter++;

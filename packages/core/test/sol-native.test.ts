@@ -79,21 +79,6 @@ describe('SolNative', () => {
     assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
 
-  it('Use internal multisigTransfer()', async () => {
-    const amount = 0.01;
-    const inst = await SolNative.transferWithMultisig(
-      source.toPublicKey(),
-      dest.toPublicKey(),
-      [
-        source.toKeypair(),
-      ],
-      amount,
-    );
-    const res = await inst.submit();
-    assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# signature :', res.unwrap());
-  });
-
   it('transfer transaction with multi sig', async () => {
     const signer1 = Account.create();
     const signer2 = Account.create();

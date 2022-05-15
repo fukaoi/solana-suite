@@ -28,7 +28,7 @@ var SplToken;
                 return shared_1.Result.ok(accountInfo);
             }
             catch (e) {
-                console.debug(`# retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
+                console.debug(`# retry: ${counter} get or create token account`, e);
             }
             (0, shared_1.sleep)(RETREY_SLEEP_TIME);
             counter++;
