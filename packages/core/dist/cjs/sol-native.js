@@ -68,7 +68,7 @@ var SolNative;
                 requireAllSignatures: false,
             });
             const hex = sirializedTx.toString('hex');
-            return shared_1.Result.ok(hex);
+            return shared_1.Result.ok(new shared_1.PartialSignInstruction(hex));
         }
         catch (ex) {
             return shared_1.Result.err(ex);

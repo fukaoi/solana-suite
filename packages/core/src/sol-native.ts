@@ -11,7 +11,8 @@ import {
   Result,
   Node,
   Constants,
-  Instruction
+  Instruction,
+  PartialSignInstruction,
 } from '@solana-suite/shared';
 import {SplToken} from './spl-token';
 
@@ -126,7 +127,7 @@ export namespace SolNative {
     signers: Signer[],
     amount: number,
     feePayer: PublicKey,
-  ): Promise<Result<string, Error>> => {
+  ): Promise<Result<PartialSignInstruction, Error>> => {
     const tx = new Transaction(
       {
         feePayer: feePayer
@@ -155,7 +156,7 @@ export namespace SolNative {
         }
       )
       const hex = sirializedTx.toString('hex');
-      return Result.ok(hex);
+      return Result.ok(new PartialSignInstruction(hex));
     } catch (ex) {
       return Result.err(ex as Error);
     }
