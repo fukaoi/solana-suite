@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
-import {Result} from '../src/index';
+import {PartialSignInstruction, Result} from '../src/index';
 import {Memo} from '../../core/src/index';
 import {Setup, KeypairStr} from './testSetup';
 

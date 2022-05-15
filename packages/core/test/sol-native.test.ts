@@ -14,7 +14,7 @@ describe('SolNative', () => {
   });
 
   it('transfer transaction', async () => {
-    const solAmount = 0.0001;
+    const solAmount = 0.01;
     const inst =
       await SolNative.transfer(
         source.toPublicKey(),
@@ -30,7 +30,7 @@ describe('SolNative', () => {
   });
 
   it('feePayerPartialSignTransfer', async () => {
-    const solAmount = 0.0001;
+    const solAmount = 0.01;
     const serialized =
       await SolNative.feePayerPartialSignTransfer(
         source.toPublicKey(),
@@ -41,11 +41,14 @@ describe('SolNative', () => {
       );
 
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
-    assert.isString(serialized.unwrap());
+    if (serialized.isOk) {
+      assert.isString(serialized.value);
+      console.log(serialized.value);
+    }
   });
 
   it('transfer transaction with fee payer', async () => {
-    const solAmount = 0.0001;
+    const solAmount = 0.01;
     const owner = Account.create();
     await Account.requestAirdrop(owner.toPublicKey());
     const feePayer = source;
@@ -77,7 +80,7 @@ describe('SolNative', () => {
   });
 
   it('Use internal multisigTransfer()', async () => {
-    const amount = 0.0001;
+    const amount = 0.01;
     const inst = await SolNative.transferWithMultisig(
       source.toPublicKey(),
       dest.toPublicKey(),
@@ -105,7 +108,7 @@ describe('SolNative', () => {
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
 
-    const amount = 0.0001;
+    const amount = 0.01;
     const multisig = (inst1.unwrap().data as string);
 
     const inst2 = await SolNative.transferWithMultisig(
