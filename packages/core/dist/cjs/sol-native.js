@@ -10,10 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SolNative = void 0;
-const old_spl_token_1 = require("old-spl-token");
+const spl_token_1 = require("@solana/spl-token");
 const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
-const spl_token_1 = require("./spl-token");
+const spl_token_2 = require("./spl-token");
 var SolNative;
 (function (SolNative) {
     // NOTICE: There is a lamport fluctuation when transfer under 0.001 sol
@@ -21,24 +21,32 @@ var SolNative;
     SolNative.transferWithMultisig = (owner, dest, signers, amountSol, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const connection = shared_1.Node.getConnection();
         const payer = feePayer ? feePayer : signers[0];
-        const wrapped = yield old_spl_token_1.Token.createWrappedNativeAccount(connection, old_spl_token_1.TOKEN_PROGRAM_ID, owner, payer, amountSol * web3_js_1.LAMPORTS_PER_SOL)
+        const wrapped = yield (0, spl_token_1.createWrappedNativeAccount)(connection, payer, owner, amountSol * web3_js_1.LAMPORTS_PER_SOL)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (wrapped.isErr) {
             return wrapped.error;
         }
         console.debug('# wrapped sol: ', wrapped.value.toBase58());
-        const token = new old_spl_token_1.Token(connection, shared_1.Constants.WRAPPED_TOKEN_PROGRAM_ID, old_spl_token_1.TOKEN_PROGRAM_ID, payer);
-        const sourceToken = yield spl_token_1.SplToken.retryGetOrCreateAssociatedAccountInfo(token.publicKey, owner, feePayer);
+        const tokenRes = yield (0, spl_token_1.createMint)(connection, payer, owner, owner, 0)
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
+        if (tokenRes.isErr) {
+            return shared_1.Result.err(tokenRes.error);
+        }
+        const token = tokenRes.value;
+        const sourceToken = yield spl_token_2.SplToken.retryGetOrCreateAssociatedAccountInfo(token, owner, payer);
         if (sourceToken.isErr) {
             return shared_1.Result.err(sourceToken.error);
         }
-        const destToken = yield spl_token_1.SplToken.retryGetOrCreateAssociatedAccountInfo(token.publicKey, wrapped.value, feePayer);
+        console.debug('# sourceToken: ', sourceToken.value.address.toString());
+        const destToken = yield spl_token_2.SplToken.retryGetOrCreateAssociatedAccountInfo(token, wrapped.value, payer);
         if (destToken.isErr) {
             return shared_1.Result.err(destToken.error);
         }
-        const inst1 = old_spl_token_1.Token.createTransferInstruction(old_spl_token_1.TOKEN_PROGRAM_ID, sourceToken.value.address, destToken.value.address, owner, signers, amountSol);
-        const inst2 = old_spl_token_1.Token.createCloseAccountInstruction(old_spl_token_1.TOKEN_PROGRAM_ID, wrapped.value, dest, owner, signers);
+        console.debug('# destToken: ', destToken.value.address.toString());
+        const inst1 = (0, spl_token_1.createTransferInstruction)(sourceToken.value.address, destToken.value.address, owner, parseInt(`${amountSol}`), signers);
+        const inst2 = (0, spl_token_1.createCloseAccountInstruction)(wrapped.value, dest, owner, signers);
         return shared_1.Result.ok(new shared_1.Instruction([inst1, inst2], signers, feePayer));
     });
     SolNative.transfer = (source, destination, signers, amountSol, feePayer) => __awaiter(this, void 0, void 0, function* () {

@@ -23,12 +23,12 @@ var SplToken;
         let counter = 1;
         while (counter < RETREY_OVER_LIMIT) {
             try {
-                const accountInfo = yield (0, spl_token_1.getOrCreateAssociatedTokenAccount)(shared_1.Node.getConnection(), feePayer, tokenKey, owner);
+                const accountInfo = yield (0, spl_token_1.getOrCreateAssociatedTokenAccount)(shared_1.Node.getConnection(), feePayer, tokenKey, owner, true);
                 console.debug('# associatedAccountInfo: ', accountInfo.address.toString());
                 return shared_1.Result.ok(accountInfo);
             }
             catch (e) {
-                console.debug(`# retry: ${counter} get or create token account`, e);
+                console.debug(`# retry: ${counter} get or create token account: `, e);
             }
             (0, shared_1.sleep)(RETREY_SLEEP_TIME);
             counter++;
@@ -49,7 +49,7 @@ var SplToken;
         if (tokenAssociated.isErr) {
             return shared_1.Result.err(tokenAssociated.error);
         }
-        const inst = (0, spl_token_1.createMintToCheckedInstruction)(token, tokenAssociated.value.address, owner, totalAmount, mintDecimal, signers, spl_token_1.TOKEN_PROGRAM_ID);
+        const inst = (0, spl_token_1.createMintToCheckedInstruction)(token, tokenAssociated.value.address, owner, totalAmount, mintDecimal, signers);
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer, token.toBase58()));
     });
     SplToken.transfer = (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
@@ -62,7 +62,7 @@ var SplToken;
         if (destToken.isErr) {
             return shared_1.Result.err(destToken.error);
         }
-        const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.value.address, tokenKey, destToken.value.address, owner, amount, mintDecimal, signers, spl_token_1.TOKEN_PROGRAM_ID);
+        const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.value.address, tokenKey, destToken.value.address, owner, amount, mintDecimal, signers);
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
     });
     SplToken.transferNft = (tokenKey, owner, dest, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {

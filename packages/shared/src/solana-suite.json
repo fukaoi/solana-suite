@@ -1,6 +1,6 @@
   {
     "cluster": "localhost-devnet",
-    "debugging": false,
+    "debugging": true,
     "nftstorage": {
       "apikey": ""
     }

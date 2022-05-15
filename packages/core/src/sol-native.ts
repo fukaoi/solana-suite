@@ -1,4 +1,10 @@
-import {TOKEN_PROGRAM_ID, Token} from 'old-spl-token';
+import {
+  createWrappedNativeAccount,
+  createMint,
+  createTransferInstruction,
+  createCloseAccountInstruction,
+} from '@solana/spl-token';
+
 import {
   LAMPORTS_PER_SOL,
   PublicKey,
@@ -10,7 +16,6 @@ import {
 import {
   Result,
   Node,
-  Constants,
   Instruction,
   PartialSignInstruction,
 } from '@solana-suite/shared';
@@ -30,11 +35,10 @@ export namespace SolNative {
 
     const connection = Node.getConnection();
     const payer = feePayer ? feePayer : signers[0];
-    const wrapped = await Token.createWrappedNativeAccount(
+    const wrapped = await createWrappedNativeAccount(
       connection,
-      TOKEN_PROGRAM_ID,
-      owner,
       payer,
+      owner,
       amountSol * LAMPORTS_PER_SOL,
     )
       .then(Result.ok)
@@ -46,44 +50,57 @@ export namespace SolNative {
 
     console.debug('# wrapped sol: ', wrapped.value.toBase58());
 
-    const token = new Token(
+    const tokenRes = await createMint(
       connection,
-      Constants.WRAPPED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      payer
-    );
+      payer,
+      owner,
+      owner,
+      0,
+    )
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (tokenRes.isErr) {
+      return Result.err(tokenRes.error);
+    }
+
+    const token = tokenRes.value;
+
+
 
     const sourceToken = await SplToken.retryGetOrCreateAssociatedAccountInfo(
-      token.publicKey,
+      token,
       owner,
-      feePayer!
+      payer
     );
 
     if (sourceToken.isErr) {
       return Result.err(sourceToken.error);
     }
 
+    console.debug('# sourceToken: ', sourceToken.value.address.toString());
+
     const destToken = await SplToken.retryGetOrCreateAssociatedAccountInfo(
-      token.publicKey,
+      token,
       wrapped.value,
-      feePayer!
+      payer
     );
 
     if (destToken.isErr) {
       return Result.err(destToken.error);
     }
 
-    const inst1 = Token.createTransferInstruction(
-      TOKEN_PROGRAM_ID,
+    console.debug('# destToken: ', destToken.value.address.toString());
+
+    const inst1 = createTransferInstruction(
       sourceToken.value.address,
       destToken.value.address,
       owner,
+      parseInt(`${amountSol}`),
       signers,
-      amountSol
     );
 
-    const inst2 = Token.createCloseAccountInstruction(
-      TOKEN_PROGRAM_ID,
+    const inst2 = createCloseAccountInstruction(
       wrapped.value,
       dest,
       owner,

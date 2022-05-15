@@ -11,7 +11,7 @@ import { TransactionInstruction, SystemProgram, SYSVAR_RENT_PUBKEY } from '@sola
 import { Metaplex, MetaplexSerialize, MetaplexAccount, } from './index';
 import { Node, Constants, Result } from '@solana-suite/shared';
 import { Account } from '@solana-suite/core';
-import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, Token, } from '@solana/spl-token';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, createMintToInstruction, } from '@solana/spl-token';
 export var MetaplexMetaData;
 (function (MetaplexMetaData) {
     const createAssociatedTokenAccountInstruction = (metaAccount, tokenKey, mintAuthorityKey, updateAuthority, payer, txnData) => {
@@ -157,7 +157,7 @@ export var MetaplexMetaData;
             return Result.err(associatedToken.error);
         }
         inst.push(updateAssociatedTokenAccountInstruction(associatedToken.value, updateAuthority, updateAuthority, tokenKey));
-        inst.push(Token.createMintToInstruction(TOKEN_PROGRAM_ID, tokenKey, associatedToken.value, updateAuthority, signers, 1));
+        inst.push(createMintToInstruction(tokenKey, associatedToken.value, updateAuthority, 1, signers, TOKEN_PROGRAM_ID));
         const metaAccount = yield MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
         if (metaAccount.isErr) {
             return Result.err(metaAccount.error);

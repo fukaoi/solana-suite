@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Token, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { createInitializeMintInstruction, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { SystemProgram, Keypair, } from '@solana/web3.js';
 import { Node, Instruction, Result, } from '@solana-suite/shared';
 import { MetaplexMetaData } from './metadata';
@@ -36,7 +36,7 @@ export var MetaplexInstruction;
     });
     MetaplexInstruction.mint = (instructions, createdAccount, owner, freezeAuthority) => __awaiter(this, void 0, void 0, function* () {
         const decimals = 0;
-        instructions.push(Token.createInitMintInstruction(TOKEN_PROGRAM_ID, createdAccount, decimals, owner, freezeAuthority));
+        instructions.push(createInitializeMintInstruction(createdAccount, decimals, owner, freezeAuthority, TOKEN_PROGRAM_ID));
         return createdAccount.toBase58();
     });
 })(MetaplexInstruction || (MetaplexInstruction = {}));

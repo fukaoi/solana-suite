@@ -98,6 +98,8 @@ describe('SolNative', () => {
     const amount = 0.01;
     const multisig = (inst1.unwrap().data as string);
 
+    console.log('# multisig: ', multisig);
+
     const inst2 = await SolNative.transferWithMultisig(
       multisig.toPublicKey(),
       dest.toPublicKey(),

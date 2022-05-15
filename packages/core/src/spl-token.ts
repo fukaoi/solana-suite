@@ -1,5 +1,4 @@
 import {
-  TOKEN_PROGRAM_ID,
   Account,
   createMint,
   createMintToCheckedInstruction,
@@ -42,11 +41,12 @@ export namespace SplToken {
           feePayer,
           tokenKey,
           owner,
+          true
         );
         console.debug('# associatedAccountInfo: ', accountInfo.address.toString());
         return Result.ok(accountInfo);
       } catch (e) {
-        console.debug(`# retry: ${counter} get or create token account`, e);
+        console.debug(`# retry: ${counter} get or create token account: `, e);
       }
       sleep(RETREY_SLEEP_TIME);
       counter++;
@@ -98,7 +98,6 @@ export namespace SplToken {
       totalAmount,
       mintDecimal,
       signers,
-      TOKEN_PROGRAM_ID
     );
 
     return Result.ok(
@@ -151,7 +150,6 @@ export namespace SplToken {
       amount,
       mintDecimal,
       signers,
-      TOKEN_PROGRAM_ID,
     );
 
     return Result.ok(
