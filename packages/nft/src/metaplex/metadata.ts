@@ -29,7 +29,7 @@ import {
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
-  Token,
+  createMintToInstruction,
 } from '@solana/spl-token';
 
 export namespace MetaplexMetaData {
@@ -247,14 +247,14 @@ export namespace MetaplexMetaData {
     );
 
     inst.push(
-      Token.createMintToInstruction(
-        TOKEN_PROGRAM_ID,
+      createMintToInstruction(
         tokenKey,
         associatedToken.value as PublicKey,
         updateAuthority,
-        signers,
         1,
-      ),
+        signers,
+        TOKEN_PROGRAM_ID
+      )
     );
 
     const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);

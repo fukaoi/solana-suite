@@ -1,5 +1,5 @@
 import {
-  Token,
+  createInitializeMintInstruction,
   MintLayout,
   TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
@@ -65,13 +65,13 @@ export namespace MetaplexInstruction {
     const decimals: number = 0;
 
     instructions.push(
-      Token.createInitMintInstruction(
-        TOKEN_PROGRAM_ID,
+      createInitializeMintInstruction(
         createdAccount,
         decimals,
         owner,
         freezeAuthority,
-      ),
+        TOKEN_PROGRAM_ID
+      )
     );
     return createdAccount.toBase58();
   }

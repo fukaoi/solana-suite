@@ -201,7 +201,7 @@ export namespace StorageArweave {
         payer.publicKey,
         Constants.AR_SOL_HOLDER_ID,
         [payer],
-        totalConst.value
+        Math.ceil(totalConst.value) //Convert bigint
       );
 
     if (inst.isErr) {
