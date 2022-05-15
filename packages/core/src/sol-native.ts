@@ -128,19 +128,16 @@ export namespace SolNative {
     amount: number,
     feePayer: PublicKey,
   ): Promise<Result<PartialSignInstruction, Error>> => {
-    const tx = new Transaction(
-      {
-        feePayer: feePayer
-      }
-    ).add(
-      SystemProgram.transfer(
-        {
-          fromPubkey: owner,
-          toPubkey: dest,
-          lamports: amount * LAMPORTS_PER_SOL,
-        }
-      ),
-    );
+    const tx = new Transaction({feePayer})
+      .add(
+        SystemProgram.transfer(
+          {
+            fromPubkey: owner,
+            toPubkey: dest,
+            lamports: amount * LAMPORTS_PER_SOL,
+          }
+        ),
+      );
 
     // partially sign transaction
     const blockhashObj = await Node.getConnection().getLatestBlockhash();

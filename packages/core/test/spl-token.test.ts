@@ -1,10 +1,10 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../../shared/test/testSetup';
-import {Account, SplToken, KeypairStr, Multisig} from '../src/';
+import {Account, SplToken, KeypairStr, Multisig, Transaction} from '../src/';
 
-let source: KeypairStr; 
-let dest: KeypairStr; 
+let source: KeypairStr;
+let dest: KeypairStr;
 let tokenKeyStr: string;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;
@@ -239,7 +239,7 @@ describe('SplToken', () => {
     );
   });
 
-  it('feePayerPartialSignTransfer', async () => {
+  it('transfer feePayerPartialSign', async () => {
     const inst1 =
       await SplToken.mint(
         source.toPublicKey(),
@@ -251,6 +251,7 @@ describe('SplToken', () => {
       );
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
+    await inst1.submit();
     const token = inst1.unwrap().data as string;
     console.log('# tokenKey: ', token);
 
@@ -267,6 +268,10 @@ describe('SplToken', () => {
       );
 
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
-    assert.isString(serialized.unwrap());
+    if (serialized.isOk) {
+      const res = await serialized.value.submit(source.toKeypair());
+      assert.isTrue(res.isOk, `${res.unwrap()}`);
+      console.log('# tx signature: ', res.unwrap());
+    }
   });
 })

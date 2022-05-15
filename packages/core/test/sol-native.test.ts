@@ -29,7 +29,7 @@ describe('SolNative', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  it('feePayerPartialSignTransfer', async () => {
+  it('transfer feePayerPartialSign', async () => {
     const solAmount = 0.01;
     const serialized =
       await SolNative.feePayerPartialSignTransfer(

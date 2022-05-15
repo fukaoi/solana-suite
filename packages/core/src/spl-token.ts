@@ -12,11 +12,15 @@ import {
   PublicKey,
   Signer,
   Transaction,
-  SystemProgram,
-  LAMPORTS_PER_SOL,
 } from '@solana/web3.js';
 
-import {Node, Result, Instruction, sleep} from '@solana-suite/shared';
+import {
+  Node,
+  Result,
+  Instruction,
+  PartialSignInstruction,
+  sleep
+} from '@solana-suite/shared';
 
 export namespace SplToken {
 
@@ -184,9 +188,9 @@ export namespace SplToken {
     amount: number,
     mintDecimal: number,
     feePayer: PublicKey,
-  ): Promise<Result<string, Error>> => {
-    
-    transfer(
+  ): Promise<Result<PartialSignInstruction, Error>> => {
+
+    const inst = await transfer(
       tokenKey,
       owner,
       dest,
@@ -195,26 +199,20 @@ export namespace SplToken {
       mintDecimal,
     );
 
-    const tx = new Transaction(
-      {
-        feePayer: feePayer
-      }
-    ).add(
-      SystemProgram.transfer(
-        {
-          fromPubkey: owner,
-          toPubkey: dest,
-          lamports: amount * LAMPORTS_PER_SOL,
-        }
-      ),
-    );
+    if (inst.isErr) {
+      return Result.err(inst.error);
+    }
+
+    const instruction = inst.value.instructions[0];
+
+    const tx = new Transaction({feePayer}).add(instruction);
 
     // partially sign transaction
     const blockhashObj = await Node.getConnection().getLatestBlockhash();
     tx.recentBlockhash = blockhashObj.blockhash;
-    // signers.forEach(signer => {
-      // tx.partialSign(signer);
-    // });
+    signers.forEach(signer => {
+      tx.partialSign(signer);
+    });
 
     try {
       const sirializedTx = tx.serialize(
@@ -223,7 +221,7 @@ export namespace SplToken {
         }
       )
       const hex = sirializedTx.toString('hex');
-      return Result.ok(hex);
+      return Result.ok(new PartialSignInstruction(hex));
     } catch (ex) {
       return Result.err(ex as Error);
     }

@@ -50,9 +50,8 @@ var SolNative;
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
     });
     SolNative.feePayerPartialSignTransfer = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const tx = new web3_js_1.Transaction({
-            feePayer: feePayer
-        }).add(web3_js_1.SystemProgram.transfer({
+        const tx = new web3_js_1.Transaction({ feePayer })
+            .add(web3_js_1.SystemProgram.transfer({
             fromPubkey: owner,
             toPubkey: dest,
             lamports: amount * web3_js_1.LAMPORTS_PER_SOL,

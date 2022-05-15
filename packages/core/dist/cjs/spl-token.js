@@ -69,26 +69,24 @@ var SplToken;
         return SplToken.transfer(tokenKey, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
     });
     SplToken.feePayerPartialSignTransfer = (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        SplToken.transfer(tokenKey, owner, dest, signers, amount, mintDecimal);
-        const tx = new web3_js_1.Transaction({
-            feePayer: feePayer
-        }).add(web3_js_1.SystemProgram.transfer({
-            fromPubkey: owner,
-            toPubkey: dest,
-            lamports: amount * web3_js_1.LAMPORTS_PER_SOL,
-        }));
+        const inst = yield SplToken.transfer(tokenKey, owner, dest, signers, amount, mintDecimal);
+        if (inst.isErr) {
+            return shared_1.Result.err(inst.error);
+        }
+        const instruction = inst.value.instructions[0];
+        const tx = new web3_js_1.Transaction({ feePayer }).add(instruction);
         // partially sign transaction
         const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
         tx.recentBlockhash = blockhashObj.blockhash;
-        // signers.forEach(signer => {
-        // tx.partialSign(signer);
-        // });
+        signers.forEach(signer => {
+            tx.partialSign(signer);
+        });
         try {
             const sirializedTx = tx.serialize({
                 requireAllSignatures: false,
             });
             const hex = sirializedTx.toString('hex');
-            return shared_1.Result.ok(hex);
+            return shared_1.Result.ok(new shared_1.PartialSignInstruction(hex));
         }
         catch (ex) {
             return shared_1.Result.err(ex);
