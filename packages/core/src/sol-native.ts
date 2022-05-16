@@ -19,6 +19,7 @@ import {
   Instruction,
   PartialSignInstruction,
 } from '@solana-suite/shared';
+
 import {SplToken} from './spl-token';
 
 export namespace SolNative {
