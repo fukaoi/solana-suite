@@ -14,7 +14,7 @@ describe('SolNative', () => {
   });
 
   it('transfer transaction', async () => {
-    const solAmount = 0.0001;
+    const solAmount = 0.01;
     const inst =
       await SolNative.transfer(
         source.toPublicKey(),
@@ -29,8 +29,28 @@ describe('SolNative', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
+  it('transfer feePayerPartialSign', async () => {
+    const solAmount = 0.01;
+    const serialized =
+      await SolNative.feePayerPartialSignTransfer(
+        source.toPublicKey(),
+        dest.toPublicKey(),
+        [source.toKeypair()],
+        solAmount,
+        source.pubkey.toPublicKey()
+      );
+
+    assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
+    if (serialized.isOk) {
+      console.log(serialized.value);
+      const res = await serialized.value.submit(source.toKeypair());
+      assert.isTrue(res.isOk, `${res.unwrap()}`);
+      console.log('# tx signature: ', res.unwrap());
+    }
+  });
+
   it('transfer transaction with fee payer', async () => {
-    const solAmount = 0.0001;
+    const solAmount = 0.01;
     const owner = Account.create();
     await Account.requestAirdrop(owner.toPublicKey());
     const feePayer = source;
@@ -61,21 +81,6 @@ describe('SolNative', () => {
     assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
 
-  it('Use internal multisigTransfer()', async () => {
-    const amount = 0.0001;
-    const inst = await SolNative.transferWithMultisig(
-      source.toPublicKey(),
-      dest.toPublicKey(),
-      [
-        source.toKeypair(),
-      ],
-      amount,
-    );
-    const res = await inst.submit();
-    assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log('# signature :', res.unwrap());
-  });
-
   it('transfer transaction with multi sig', async () => {
     const signer1 = Account.create();
     const signer2 = Account.create();
@@ -90,8 +95,10 @@ describe('SolNative', () => {
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
 
-    const amount = 0.0001;
+    const amount = 0.01;
     const multisig = (inst1.unwrap().data as string);
+
+    console.log('# multisig: ', multisig);
 
     const inst2 = await SolNative.transferWithMultisig(
       multisig.toPublicKey(),

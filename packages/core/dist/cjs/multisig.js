@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,18 +12,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Multisig = void 0;
 const shared_1 = require("@solana-suite/shared");
 const web3_js_1 = require("@solana/web3.js");
-const BufferLayout = __importStar(require("@solana/buffer-layout"));
+const buffer_layout_1 = require("@solana/buffer-layout");
 const spl_token_1 = require("@solana/spl-token");
 // @internal
 var MultisigInstruction;
 (function (MultisigInstruction) {
-    const createLayoutPubKey = (property = 'publicKey') => {
-        return BufferLayout.blob(32, property);
+    const createLayoutPubKey = (property) => {
+        return (0, buffer_layout_1.blob)(32, property);
     };
-    MultisigInstruction.Layout = BufferLayout.struct([
-        BufferLayout.u8('m'),
-        BufferLayout.u8('n'),
-        BufferLayout.u8('is_initialized'),
+    MultisigInstruction.Layout = (0, buffer_layout_1.struct)([
+        (0, buffer_layout_1.u8)('m'),
+        (0, buffer_layout_1.u8)('n'),
+        (0, buffer_layout_1.u8)('is_initialized'),
         createLayoutPubKey('signer1'),
         createLayoutPubKey('signer2'),
         createLayoutPubKey('signer3'),
@@ -86,9 +63,9 @@ var MultisigInstruction;
             isSigner: false,
             isWritable: false
         }));
-        const dataLayout = BufferLayout.struct([
-            BufferLayout.u8('instruction'),
-            BufferLayout.u8('m'),
+        const dataLayout = (0, buffer_layout_1.struct)([
+            (0, buffer_layout_1.u8)('instruction'),
+            (0, buffer_layout_1.u8)('m'),
         ]);
         const data = Buffer.alloc(dataLayout.span);
         dataLayout.encode({

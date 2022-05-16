@@ -9,18 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Node, Result, Instruction, } from '@solana-suite/shared';
 import { PublicKey, TransactionInstruction, SYSVAR_RENT_PUBKEY, SystemProgram, Keypair, } from '@solana/web3.js';
-import * as BufferLayout from '@solana/buffer-layout';
+import Lo from '@solana/buffer-layout';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 // @internal
 var MultisigInstruction;
 (function (MultisigInstruction) {
     const createLayoutPubKey = (property = 'publicKey') => {
-        return BufferLayout.blob(32, property);
+        return Lo.blob(32, property);
     };
-    MultisigInstruction.Layout = BufferLayout.struct([
-        BufferLayout.u8('m'),
-        BufferLayout.u8('n'),
-        BufferLayout.u8('is_initialized'),
+    MultisigInstruction.Layout = Lo.struct([
+        Lo.u8('m'),
+        Lo.u8('n'),
+        Lo.u8('is_initialized'),
         createLayoutPubKey('signer1'),
         createLayoutPubKey('signer2'),
         createLayoutPubKey('signer3'),
@@ -60,9 +60,9 @@ var MultisigInstruction;
             isSigner: false,
             isWritable: false
         }));
-        const dataLayout = BufferLayout.struct([
-            BufferLayout.u8('instruction'),
-            BufferLayout.u8('m'),
+        const dataLayout = Lo.struct([
+            Lo.u8('instruction'),
+            Lo.u8('m'),
         ]);
         const data = Buffer.alloc(dataLayout.span);
         dataLayout.encode({

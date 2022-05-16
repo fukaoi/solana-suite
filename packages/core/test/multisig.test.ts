@@ -1,6 +1,7 @@
 import {assert} from 'chai';
 import {Multisig, Account, KeypairStr} from '../src/';
 import {Setup} from '../../shared/test/testSetup';
+import {PublicKey} from '@solana/web3.js';
 
 let source: KeypairStr;
 
@@ -116,6 +117,8 @@ describe('Multisig', () => {
     const res = await Multisig.getMultisigInfo(
       (inst.unwrap().data as string).toPublicKey()
     );
+    assert.equal(res.unwrap().signer1.toString(), signer1.pubkey);
+    assert.equal(res.unwrap().signer2.toString(), signer2.pubkey);
     assert.isTrue(res.isOk, `${res.unwrap()}`);
   });
 })

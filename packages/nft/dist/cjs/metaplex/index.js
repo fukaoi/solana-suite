@@ -53,7 +53,7 @@ var MetaplexInstruction;
     });
     MetaplexInstruction.mint = (instructions, createdAccount, owner, freezeAuthority) => __awaiter(this, void 0, void 0, function* () {
         const decimals = 0;
-        instructions.push(spl_token_1.Token.createInitMintInstruction(spl_token_1.TOKEN_PROGRAM_ID, createdAccount, decimals, owner, freezeAuthority));
+        instructions.push((0, spl_token_1.createInitializeMintInstruction)(createdAccount, decimals, owner, freezeAuthority, spl_token_1.TOKEN_PROGRAM_ID));
         return createdAccount.toBase58();
     });
 })(MetaplexInstruction = exports.MetaplexInstruction || (exports.MetaplexInstruction = {}));

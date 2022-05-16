@@ -15,8 +15,6 @@ import {
 const MAX_RETRIES = 3;
 
 export class Instruction {
-
-
   instructions: TransactionInstruction[];
   signers: Signer[];
   feePayer?: Signer;
@@ -53,11 +51,6 @@ export class Instruction {
       maxRetries: MAX_RETRIES
     }
 
-    const rentExempt =
-      await Node.getConnection().getMinimumBalanceForRentExemption(
-        90,
-      );
-
     return await sendAndConfirmTransaction(
       Node.getConnection(),
       transaction,
@@ -78,7 +71,7 @@ export class Instruction {
         return Result.err(
           Error(
             `only Instruction object that can use batchSubmit().
-            Setted: ${a}, Index: ${i}`
+            Index: ${i}, Set value: ${JSON.stringify(a)}`,
           )
         );
       }
@@ -116,3 +109,34 @@ export class Instruction {
   }
 }
 
+export class PartialSignInstruction {
+  hexInstruction: string;
+
+  constructor(instructions: string) {
+    this.hexInstruction = instructions;
+  }
+
+  submit = async (feePayer: Signer)
+    : Promise<Result<TransactionSignature, Error>> => {
+    if (!(this instanceof PartialSignInstruction)) {
+      return Result.err(
+        Error('only PartialSignInstruction object that can use this')
+      );
+    }
+
+    const decode = Buffer.from(this.hexInstruction, 'hex');
+    let transactionFromJson = Transaction.from(decode);
+    transactionFromJson.partialSign(feePayer);
+
+    const options: ConfirmOptions = {
+      maxRetries: MAX_RETRIES
+    }
+    const wireTransaction = transactionFromJson.serialize();
+    return await Node.getConnection().sendRawTransaction(
+      wireTransaction,
+      options
+    )
+      .then(Result.ok)
+      .catch(Result.err);
+  }
+}

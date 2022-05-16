@@ -27,7 +27,6 @@ export class Instruction {
             const options = {
                 maxRetries: MAX_RETRIES
             };
-            const rentExempt = yield Node.getConnection().getMinimumBalanceForRentExemption(90);
             return yield sendAndConfirmTransaction(Node.getConnection(), transaction, finalSigners, options)
                 .then(Result.ok)
                 .catch(Result.err);
@@ -45,7 +44,7 @@ Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, function* (
     for (const a of arr) {
         if (!a.instructions && !a.signers) {
             return Result.err(Error(`only Instruction object that can use batchSubmit().
-            Setted: ${a}, Index: ${i}`));
+            Index: ${i}, Set value: ${JSON.stringify(a)}`));
         }
         i++;
     }
@@ -70,3 +69,23 @@ Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, function* (
         .then(Result.ok)
         .catch(Result.err);
 });
+export class PartialSignInstruction {
+    constructor(instructions) {
+        this.submit = (feePayer) => __awaiter(this, void 0, void 0, function* () {
+            if (!(this instanceof PartialSignInstruction)) {
+                return Result.err(Error('only PartialSignInstruction object that can use this'));
+            }
+            const decode = Buffer.from(this.hexInstruction, 'hex');
+            let transactionFromJson = Transaction.from(decode);
+            transactionFromJson.partialSign(feePayer);
+            const options = {
+                maxRetries: MAX_RETRIES
+            };
+            const wireTransaction = transactionFromJson.serialize();
+            return yield Node.getConnection().sendRawTransaction(wireTransaction, options)
+                .then(Result.ok)
+                .catch(Result.err);
+        });
+        this.hexInstruction = instructions;
+    }
+}

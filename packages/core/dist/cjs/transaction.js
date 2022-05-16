@@ -233,7 +233,7 @@ var Transaction;
                 Filter.Transfer,
                 Filter.TransferChecked,
             ];
-        const searchKeyAccount = yield spl_token_1.Token.getAssociatedTokenAddress(spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID, spl_token_1.TOKEN_PROGRAM_ID, tokenKey, searchPubkey).then(shared_1.Result.ok)
+        const searchKeyAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(tokenKey, searchPubkey, true).then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (searchKeyAccount.isErr) {
             return shared_1.Result.err(searchKeyAccount.error);
@@ -262,6 +262,7 @@ var Transaction;
         return shared_1.Result.ok(hist);
     });
     Transaction.confirmedSig = (signature, commitment = shared_1.Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {
+        /** @deprecated Instead, call `confirmTransaction` using a `TransactionConfirmationConfig` */
         return yield shared_1.Node.getConnection().confirmTransaction(signature, commitment)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);

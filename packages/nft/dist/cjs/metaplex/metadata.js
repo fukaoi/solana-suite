@@ -160,7 +160,7 @@ var MetaplexMetaData;
             return shared_1.Result.err(associatedToken.error);
         }
         inst.push(updateAssociatedTokenAccountInstruction(associatedToken.value, updateAuthority, updateAuthority, tokenKey));
-        inst.push(spl_token_1.Token.createMintToInstruction(spl_token_1.TOKEN_PROGRAM_ID, tokenKey, associatedToken.value, updateAuthority, signers, 1));
+        inst.push((0, spl_token_1.createMintToInstruction)(tokenKey, associatedToken.value, updateAuthority, 1, signers, spl_token_1.TOKEN_PROGRAM_ID));
         const metaAccount = yield index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
         if (metaAccount.isErr) {
             return shared_1.Result.err(metaAccount.error);

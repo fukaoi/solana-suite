@@ -20,9 +20,12 @@ const _1 = require("./");
 Array.prototype.submit = function () {
     return __awaiter(this, void 0, void 0, function* () {
         const instructions = [];
-        this.forEach((obj, i) => {
+        // dont use forEach
+        // It is not possible to stop the process by RETURN in the middle of the process.
+        let i = 0;
+        for (const obj of this) {
             if (obj.isErr) {
-                return _1.Result.err(Error(`[Array index: ${i}]${obj.error.message}`));
+                return _1.Result.err(Error(`[Array index of caught 'Result.err': ${i}]${obj.error.message}`));
             }
             else if (obj.isOk) {
                 instructions.push(obj.value);
@@ -30,7 +33,9 @@ Array.prototype.submit = function () {
             else {
                 instructions.push(obj);
             }
-        });
+            i++;
+        }
+        ;
         return yield _1.Instruction.batchSubmit(instructions);
     });
 };

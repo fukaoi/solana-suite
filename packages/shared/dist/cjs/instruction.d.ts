@@ -9,3 +9,8 @@ export declare class Instruction {
     submit: () => Promise<Result<TransactionSignature, Error>>;
     static batchSubmit: (arr: Instruction[]) => Promise<Result<TransactionSignature, Error>>;
 }
+export declare class PartialSignInstruction {
+    hexInstruction: string;
+    constructor(instructions: string);
+    submit: (feePayer: Signer) => Promise<Result<TransactionSignature, Error>>;
+}

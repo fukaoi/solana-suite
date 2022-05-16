@@ -15,8 +15,8 @@ import {
 
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  Token,
-  TOKEN_PROGRAM_ID
+  TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress,
 } from '@solana/spl-token';
 
 export namespace Transaction {
@@ -343,11 +343,10 @@ export namespace Transaction {
           Filter.TransferChecked,
         ];
 
-    const searchKeyAccount = await Token.getAssociatedTokenAddress(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
+    const searchKeyAccount = await getAssociatedTokenAddress(
       tokenKey,
-      searchPubkey
+      searchPubkey,
+      true,
     ).then(Result.ok)
       .catch(Result.err);
 
@@ -389,6 +388,7 @@ export namespace Transaction {
     signature: string,
     commitment: Commitment = Constants.COMMITMENT
   ): Promise<Result<RpcResponseAndContext<SignatureResult> | unknown, Error>> => {
+    /** @deprecated Instead, call `confirmTransaction` using a `TransactionConfirmationConfig` */
     return await Node.getConnection().confirmTransaction(signature, commitment)
       .then(Result.ok)
       .catch(Result.err);

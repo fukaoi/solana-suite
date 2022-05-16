@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Instruction = void 0;
+exports.PartialSignInstruction = exports.Instruction = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const _1 = require("./");
 const MAX_RETRIES = 3;
@@ -30,7 +30,6 @@ class Instruction {
             const options = {
                 maxRetries: MAX_RETRIES
             };
-            const rentExempt = yield _1.Node.getConnection().getMinimumBalanceForRentExemption(90);
             return yield (0, web3_js_1.sendAndConfirmTransaction)(_1.Node.getConnection(), transaction, finalSigners, options)
                 .then(_1.Result.ok)
                 .catch(_1.Result.err);
@@ -49,7 +48,7 @@ Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, function* (
     for (const a of arr) {
         if (!a.instructions && !a.signers) {
             return _1.Result.err(Error(`only Instruction object that can use batchSubmit().
-            Setted: ${a}, Index: ${i}`));
+            Index: ${i}, Set value: ${JSON.stringify(a)}`));
         }
         i++;
     }
@@ -74,3 +73,24 @@ Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, function* (
         .then(_1.Result.ok)
         .catch(_1.Result.err);
 });
+class PartialSignInstruction {
+    constructor(instructions) {
+        this.submit = (feePayer) => __awaiter(this, void 0, void 0, function* () {
+            if (!(this instanceof PartialSignInstruction)) {
+                return _1.Result.err(Error('only PartialSignInstruction object that can use this'));
+            }
+            const decode = Buffer.from(this.hexInstruction, 'hex');
+            let transactionFromJson = web3_js_1.Transaction.from(decode);
+            transactionFromJson.partialSign(feePayer);
+            const options = {
+                maxRetries: MAX_RETRIES
+            };
+            const wireTransaction = transactionFromJson.serialize();
+            return yield _1.Node.getConnection().sendRawTransaction(wireTransaction, options)
+                .then(_1.Result.ok)
+                .catch(_1.Result.err);
+        });
+        this.hexInstruction = instructions;
+    }
+}
+exports.PartialSignInstruction = PartialSignInstruction;

@@ -1,16 +1,25 @@
 import {
-  AccountInfo,
-  Token,
-  TOKEN_PROGRAM_ID,
+  Account,
+  createMint,
+  createMintToCheckedInstruction,
+  createTransferCheckedInstruction,
+  getOrCreateAssociatedTokenAccount,
 } from '@solana/spl-token';
 
 
 import {
   PublicKey,
   Signer,
+  Transaction,
 } from '@solana/web3.js';
 
-import {Node, Result, Instruction, sleep} from '@solana-suite/shared';
+import {
+  Node,
+  Result,
+  Instruction,
+  PartialSignInstruction,
+  sleep
+} from '@solana-suite/shared';
 
 export namespace SplToken {
 
@@ -20,17 +29,24 @@ export namespace SplToken {
   const RETREY_SLEEP_TIME = 3000;
 
   export const retryGetOrCreateAssociatedAccountInfo = async (
-    token: Token,
-    owner: PublicKey
-  ): Promise<Result<AccountInfo, Error>> => {
+    tokenKey: PublicKey,
+    owner: PublicKey,
+    feePayer: Signer,
+  ): Promise<Result<Account, Error>> => {
     let counter = 1;
     while (counter < RETREY_OVER_LIMIT) {
       try {
-        const accountInfo = await token.getOrCreateAssociatedAccountInfo(owner) as AccountInfo
+        const accountInfo = await getOrCreateAssociatedTokenAccount(
+          Node.getConnection(),
+          feePayer,
+          tokenKey,
+          owner,
+          true
+        );
         console.debug('# associatedAccountInfo: ', accountInfo.address.toString());
         return Result.ok(accountInfo);
       } catch (e) {
-        console.debug(`# retry: ${counter} getOrCreateAssociatedAccountInfo`, e);
+        console.debug(`# retry: ${counter} get or create token account: `, e);
       }
       sleep(RETREY_SLEEP_TIME);
       counter++;
@@ -48,13 +64,13 @@ export namespace SplToken {
 
     !feePayer && (feePayer = signers[0]);
 
-    const tokenRes = await Token.createMint(
-      Node.getConnection(),
+    const connection = Node.getConnection();
+    const tokenRes = await createMint(
+      connection,
       feePayer,
       owner,
       owner,
-      mintDecimal,
-      TOKEN_PROGRAM_ID
+      mintDecimal
     )
       .then(Result.ok)
       .catch(Result.err);
@@ -65,19 +81,23 @@ export namespace SplToken {
 
     const token = tokenRes.value;
 
-    const tokenAssociated = await retryGetOrCreateAssociatedAccountInfo(token, owner);
+    const tokenAssociated = await retryGetOrCreateAssociatedAccountInfo(
+      token,
+      owner,
+      feePayer
+    );
 
     if (tokenAssociated.isErr) {
       return Result.err(tokenAssociated.error);
     }
 
-    const inst = Token.createMintToInstruction(
-      TOKEN_PROGRAM_ID,
-      token.publicKey,
+    const inst = createMintToCheckedInstruction(
+      token,
       tokenAssociated.value.address,
       owner,
+      totalAmount,
+      mintDecimal,
       signers,
-      totalAmount
     );
 
     return Result.ok(
@@ -85,7 +105,7 @@ export namespace SplToken {
         [inst],
         signers,
         feePayer,
-        token.publicKey.toBase58()
+        token.toBase58()
       )
     );
   }
@@ -102,32 +122,34 @@ export namespace SplToken {
 
     !feePayer && (feePayer = signers[0]);
 
-    const token = new Token(
-      Node.getConnection(),
+    const sourceToken = await retryGetOrCreateAssociatedAccountInfo(
       tokenKey,
-      TOKEN_PROGRAM_ID,
-      feePayer
+      owner,
+      feePayer,
     );
 
-    const sourceToken = await retryGetOrCreateAssociatedAccountInfo(token, owner);
     if (sourceToken.isErr) {
       return Result.err(sourceToken.error);
     }
 
-    const destToken = await retryGetOrCreateAssociatedAccountInfo(token, dest);
+    const destToken = await retryGetOrCreateAssociatedAccountInfo(
+      tokenKey,
+      dest,
+      feePayer,
+    );
+
     if (destToken.isErr) {
       return Result.err(destToken.error);
     }
 
-    const inst = Token.createTransferCheckedInstruction(
-      TOKEN_PROGRAM_ID,
+    const inst = createTransferCheckedInstruction(
       sourceToken.value.address,
       tokenKey,
       destToken.value.address,
       owner,
-      signers,
       amount,
-      mintDecimal
+      mintDecimal,
+      signers,
     );
 
     return Result.ok(
@@ -154,5 +176,52 @@ export namespace SplToken {
       NFT_DECIMALS,
       feePayer
     );
+  }
+
+  export const feePayerPartialSignTransfer = async (
+    tokenKey: PublicKey,
+    owner: PublicKey,
+    dest: PublicKey,
+    signers: Signer[],
+    amount: number,
+    mintDecimal: number,
+    feePayer: PublicKey,
+  ): Promise<Result<PartialSignInstruction, Error>> => {
+
+    const inst = await transfer(
+      tokenKey,
+      owner,
+      dest,
+      signers,
+      amount,
+      mintDecimal,
+    );
+
+    if (inst.isErr) {
+      return Result.err(inst.error);
+    }
+
+    const instruction = inst.value.instructions[0];
+
+    const tx = new Transaction({feePayer}).add(instruction);
+
+    // partially sign transaction
+    const blockhashObj = await Node.getConnection().getLatestBlockhash();
+    tx.recentBlockhash = blockhashObj.blockhash;
+    signers.forEach(signer => {
+      tx.partialSign(signer);
+    });
+
+    try {
+      const sirializedTx = tx.serialize(
+        {
+          requireAllSignatures: false,
+        }
+      )
+      const hex = sirializedTx.toString('hex');
+      return Result.ok(new PartialSignInstruction(hex));
+    } catch (ex) {
+      return Result.err(ex as Error);
+    }
   }
 }
