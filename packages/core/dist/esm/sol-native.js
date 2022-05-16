@@ -42,7 +42,8 @@ export var SolNative;
             return Result.err(destToken.error);
         }
         console.debug('# destToken: ', destToken.value.address.toString());
-        const inst1 = createTransferInstruction(sourceToken.value.address, destToken.value.address, owner, parseInt(`${amount * LAMPORTS_PER_SOL}`), signers);
+        const inst1 = createTransferInstruction(sourceToken.value.address, destToken.value.address, owner, parseInt(`${amount}`), // No lamports, its sol
+        signers);
         const inst2 = createCloseAccountInstruction(wrapped.value, dest, owner, signers);
         return Result.ok(new Instruction([inst1, inst2], signers, feePayer));
     });

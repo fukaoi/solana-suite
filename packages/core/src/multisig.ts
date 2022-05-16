@@ -13,20 +13,34 @@ import {
   Keypair,
 } from '@solana/web3.js';
 
-// import * as BufferLayout from '@solana/buffer-layout';
-import * as BufferLayout from 'old-buffer';
+import {struct, u8, blob, LayoutObject, Blob} from '@solana/buffer-layout';
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
 // @internal
 namespace MultisigInstruction {
-  const createLayoutPubKey = (property: string = 'publicKey') => {
-    return BufferLayout.blob(32, property);
+  const createLayoutPubKey = (property: string): any => {
+    return blob(32, property);
   }
 
-  export const Layout = BufferLayout.struct([
-    BufferLayout.u8('m'),
-    BufferLayout.u8('n'),
-    BufferLayout.u8('is_initialized'),
+  export const Layout = struct<{
+    m: number,
+    n: number,
+    is_initialized: number,
+    signer1: PublicKey,
+    signer2: PublicKey,
+    signer3: PublicKey,
+    signer4: PublicKey,
+    signer5: PublicKey,
+    signer6: PublicKey,
+    signer7: PublicKey,
+    signer8: PublicKey,
+    signer9: PublicKey,
+    signer10: PublicKey,
+    signer11: PublicKey,
+  }>([
+    u8('m'),
+    u8('n'),
+    u8('is_initialized'),
     createLayoutPubKey('signer1'),
     createLayoutPubKey('signer2'),
     createLayoutPubKey('signer3'),
@@ -83,9 +97,9 @@ namespace MultisigInstruction {
       ),
     );
 
-    const dataLayout = BufferLayout.struct([
-      BufferLayout.u8('instruction'),
-      BufferLayout.u8('m'),
+    const dataLayout = struct<{instruction: number, m: number}>([
+      u8('instruction'),
+      u8('m'),
     ]);
 
     const data = Buffer.alloc(dataLayout.span);
@@ -105,6 +119,7 @@ namespace MultisigInstruction {
     });
   }
 }
+
 export namespace Multisig {
   export const isAddress = async (multisig: PublicKey)
     : Promise<Result<boolean, Error>> => {
@@ -117,7 +132,7 @@ export namespace Multisig {
   }
 
   export const getMultisigInfo = async (multisig: PublicKey)
-    : Promise<Result<BufferLayout.LayoutObject, Error>> => {
+    : Promise<Result<LayoutObject, Error>> => {
     const info = await Node.getConnection().getAccountInfo(multisig);
     if (info === null) {
       return Result.err(Error('Failed to find multisig'));
@@ -142,7 +157,6 @@ export namespace Multisig {
     multisigInfo.signer9 = new PublicKey(multisigInfo.signer9);
     multisigInfo.signer10 = new PublicKey(multisigInfo.signer10);
     multisigInfo.signer11 = new PublicKey(multisigInfo.signer11);
-
     return Result.ok(multisigInfo);
   }
 

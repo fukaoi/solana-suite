@@ -45,7 +45,8 @@ var SolNative;
             return shared_1.Result.err(destToken.error);
         }
         console.debug('# destToken: ', destToken.value.address.toString());
-        const inst1 = (0, spl_token_1.createTransferInstruction)(sourceToken.value.address, destToken.value.address, owner, parseInt(`${amount}`), signers);
+        const inst1 = (0, spl_token_1.createTransferInstruction)(sourceToken.value.address, destToken.value.address, owner, parseInt(`${amount}`), // No lamports, its sol
+        signers);
         const inst2 = (0, spl_token_1.createCloseAccountInstruction)(wrapped.value, dest, owner, signers);
         return shared_1.Result.ok(new shared_1.Instruction([inst1, inst2], signers, feePayer));
     });
