@@ -9,18 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Node, Result, Instruction, } from '@solana-suite/shared';
 import { PublicKey, TransactionInstruction, SYSVAR_RENT_PUBKEY, SystemProgram, Keypair, } from '@solana/web3.js';
-import Lo from '@solana/buffer-layout';
+import { struct, u8, blob } from '@solana/buffer-layout';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 // @internal
 var MultisigInstruction;
 (function (MultisigInstruction) {
-    const createLayoutPubKey = (property = 'publicKey') => {
-        return Lo.blob(32, property);
+    const createLayoutPubKey = (property) => {
+        return blob(32, property);
     };
-    MultisigInstruction.Layout = Lo.struct([
-        Lo.u8('m'),
-        Lo.u8('n'),
-        Lo.u8('is_initialized'),
+    MultisigInstruction.Layout = struct([
+        u8('m'),
+        u8('n'),
+        u8('is_initialized'),
         createLayoutPubKey('signer1'),
         createLayoutPubKey('signer2'),
         createLayoutPubKey('signer3'),
@@ -60,9 +60,9 @@ var MultisigInstruction;
             isSigner: false,
             isWritable: false
         }));
-        const dataLayout = Lo.struct([
-            Lo.u8('instruction'),
-            Lo.u8('m'),
+        const dataLayout = struct([
+            u8('instruction'),
+            u8('m'),
         ]);
         const data = Buffer.alloc(dataLayout.span);
         dataLayout.encode({

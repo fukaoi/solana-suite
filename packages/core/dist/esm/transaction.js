@@ -8,9 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Node, Result, Constants } from '@solana-suite/shared';
-import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID
-// } from '@solana/spl-token';
- } from 'old-spl-token';
+import { getAssociatedTokenAddress, } from '@solana/spl-token';
 export var Transaction;
 (function (Transaction) {
     // type guard
@@ -232,7 +230,7 @@ export var Transaction;
                 Filter.Transfer,
                 Filter.TransferChecked,
             ];
-        const searchKeyAccount = yield Token.getAssociatedTokenAddress(ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, tokenKey, searchPubkey).then(Result.ok)
+        const searchKeyAccount = yield getAssociatedTokenAddress(tokenKey, searchPubkey, true).then(Result.ok)
             .catch(Result.err);
         if (searchKeyAccount.isErr) {
             return Result.err(searchKeyAccount.error);
@@ -261,6 +259,7 @@ export var Transaction;
         return Result.ok(hist);
     });
     Transaction.confirmedSig = (signature, commitment = Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {
+        /** @deprecated Instead, call `confirmTransaction` using a `TransactionConfirmationConfig` */
         return yield Node.getConnection().confirmTransaction(signature, commitment)
             .then(Result.ok)
             .catch(Result.err);
