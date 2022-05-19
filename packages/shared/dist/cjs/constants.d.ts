@@ -8,15 +8,15 @@ export declare namespace Constants {
         dev = "devnet",
         test = "testnet",
         localhost = "localhost-devnet",
-        customUrl = "custom"
+        custom = "custom"
     }
     const currentCluster: string;
-    const customClusterUrl: string;
+    const customUrl: string;
     const isDebugging: boolean;
     const nftstorageApikey: string;
 }
 export declare namespace ConstantsFunc {
-    const switchApi: (env: string | undefined) => string;
+    const switchApi: (env: string | undefined, customUrl?: string) => string;
 }
 export declare namespace Constants {
     const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;

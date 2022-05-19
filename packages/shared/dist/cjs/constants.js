@@ -17,16 +17,16 @@ var Constants;
         Cluster["dev"] = "devnet";
         Cluster["test"] = "testnet";
         Cluster["localhost"] = "localhost-devnet";
-        Cluster["customUrl"] = "custom";
+        Cluster["custom"] = "custom";
     })(Cluster = Constants.Cluster || (Constants.Cluster = {}));
     Constants.currentCluster = solana_suite_json_1.default.cluster.type;
-    Constants.customClusterUrl = solana_suite_json_1.default.cluster.customUrl;
+    Constants.customUrl = solana_suite_json_1.default.cluster.customUrl;
     Constants.isDebugging = solana_suite_json_1.default.debugging;
     Constants.nftstorageApikey = solana_suite_json_1.default.nftstorage.apikey;
 })(Constants = exports.Constants || (exports.Constants = {}));
 var ConstantsFunc;
 (function (ConstantsFunc) {
-    ConstantsFunc.switchApi = (env) => {
+    ConstantsFunc.switchApi = (env, customUrl = Constants.customUrl) => {
         switch (env) {
             case Constants.Cluster.prd:
                 return 'https://api.mainnet-beta.solana.com';
@@ -46,8 +46,8 @@ var ConstantsFunc;
                     'https://solana-api.projectserum.com',
                 ];
                 return clusters[index];
-            case Constants.Cluster.customUrl:
-                return Constants.customClusterUrl;
+            case Constants.Cluster.custom:
+                return customUrl;
             default:
                 return 'http://api.devnet.solana.com';
         }
