@@ -15,4 +15,10 @@ describe('Constants', () => {
       assert.isNotEmpty(cluster);
     }
   });
+  it('ConstantsFunc use custom and customUrl', () => {
+      const dummyUrl = 'https://hoge.hoge';
+      const cluster = ConstantsFunc.switchApi(Constants.Cluster.custom, dummyUrl);
+      console.log('# cluster url: ', cluster);
+      assert.equal(cluster, dummyUrl);
+  });
 })

@@ -7,9 +7,11 @@ export declare namespace Constants {
         prdrr = "mainnet-beta-round-robin",
         dev = "devnet",
         test = "testnet",
-        localhost = "localhost-devnet"
+        localhost = "localhost-devnet",
+        customUrl = "custom"
     }
     const currentCluster: string;
+    const customClusterUrl: string;
     const isDebugging: boolean;
     const nftstorageApikey: string;
 }

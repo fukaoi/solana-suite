@@ -1,5 +1,8 @@
   {
-    "cluster": "localhost-devnet",
+    "cluster": {
+      "type": "localhost-devnet",
+      "customUrl": ""
+    },
     "debugging": false,
     "nftstorage": {
       "apikey": ""
