@@ -7,14 +7,16 @@ export declare namespace Constants {
         prdrr = "mainnet-beta-round-robin",
         dev = "devnet",
         test = "testnet",
-        localhost = "localhost-devnet"
+        localhost = "localhost-devnet",
+        custom = "custom"
     }
     const currentCluster: string;
+    const customUrl: string;
     const isDebugging: boolean;
     const nftstorageApikey: string;
 }
 export declare namespace ConstantsFunc {
-    const switchApi: (env: string | undefined) => string;
+    const switchApi: (env: string | undefined, customUrl?: string) => string;
 }
 export declare namespace Constants {
     const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;

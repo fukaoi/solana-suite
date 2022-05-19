@@ -20,11 +20,23 @@ const loadConfigFile = () => {
   }
 }
 
+const successMessage = () =>  console.log('Update solana suite config.');
+
 const updateConfigFile = (key, value) => {
   const parsed = JSON.parse(cjs);
   parsed[key] = value;
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
+  successMessage();
+}
+
+const updateClusterConfigFile = (key, value, customUrl = '') => {
+  const parsed = JSON.parse(cjs);
+  parsed[key].type = value;
+  parsed[key].customUrl = customUrl;
+  fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
+  fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
+  successMessage();
 }
 
 const updateNftStorageConfigFile = (key, value) => {
@@ -32,6 +44,7 @@ const updateNftStorageConfigFile = (key, value) => {
   parsed.nftstorage[key] = value;
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
+  successMessage();
 }
 
 loadConfigFile();
@@ -49,7 +62,8 @@ program.command('cluster')
   .option('dev', 'Connect to devnet')
   .option('test', 'Connect to testnet')
   .option('localhost', 'Connect to devnet in localhost')
-  .action(arg => {
+  .option('custom', 'Use custom url connect to devnet(mainnet-beta). e.g: custom `https://....`')
+  .action((arg, option) => {
     let value;
     switch (arg) {
       case 'prd':
@@ -70,13 +84,18 @@ program.command('cluster')
       case 'localhost':
         value = 'localhost-devnet';
         break;
+      case 'custom':
+        if (!option || !/https?:\/\/[-_.!~*\\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(option)) {
+          console.warn('Not found custom cluster url. e.g: custom `https://....`');
+          return;
+        }
+        value = 'custom';
+        customUrl = option;
+        break;
       default:
-        console.warn(`
-          No match parameter: need parameter is 
-          "prd", "prd2", "prdrr", "dev", "test", "localhost". any one of them
-        `);
+        console.warn(`No match parameter: need parameter is\n"prd", "prd2", "prdrr", "dev", "test", "localhost", "custom". any one of them`);
     }
-    updateConfigFile('cluster', value);
+    updateClusterConfigFile('cluster', value, customUrl);
   });
 
 program.command('debug')

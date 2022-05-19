@@ -14,15 +14,17 @@ export namespace Constants {
     dev = 'devnet',
     test = 'testnet',
     localhost = 'localhost-devnet',
+    custom = 'custom',
   }
 
-  export const currentCluster = Config.cluster;
+  export const currentCluster = Config.cluster.type;
+  export const customUrl = Config.cluster.customUrl;
   export const isDebugging = Config.debugging;
   export const nftstorageApikey = Config.nftstorage.apikey;
 }
 
 export namespace ConstantsFunc {
-  export const switchApi = (env: string | undefined) => {
+  export const switchApi = (env: string | undefined, customUrl = Constants.customUrl) => {
     switch (env) {
       case Constants.Cluster.prd:
         return 'https://api.mainnet-beta.solana.com';
@@ -42,6 +44,8 @@ export namespace ConstantsFunc {
           'https://solana-api.projectserum.com',
         ];
         return clusters[index];
+      case Constants.Cluster.custom:
+        return customUrl;
       default:
         return 'http://api.devnet.solana.com';
     }
