@@ -1,1 +1,10 @@
-{"cluster":{"type":"custom","customUrl":"https://www.google.com"},"debugging":false,"nftstorage":{"apikey":""}}
+{
+    "cluster": {
+        "type": "localhost-devnet",
+        "customUrl": ""
+    },
+    "debugging": false,
+    "nftstorage": {
+        "apikey": ""
+    }
+}
