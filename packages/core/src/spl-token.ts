@@ -203,10 +203,15 @@ export namespace SplToken {
 
     const instruction = inst.value.instructions[0];
 
-    const tx = new Transaction({feePayer}).add(instruction);
 
     // partially sign transaction
     const blockhashObj = await Node.getConnection().getLatestBlockhash();
+    const tx = new Transaction({
+      lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
+      blockhash: blockhashObj.blockhash, 
+      feePayer
+    }).add(instruction);
+
     tx.recentBlockhash = blockhashObj.blockhash;
     signers.forEach(signer => {
       tx.partialSign(signer);
