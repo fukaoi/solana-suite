@@ -146,20 +146,22 @@ export namespace SolNative {
     amount: number,
     feePayer: PublicKey,
   ): Promise<Result<PartialSignInstruction, Error>> => {
-    const tx = new Transaction({feePayer})
-      .add(
-        SystemProgram.transfer(
-          {
-            fromPubkey: owner,
-            toPubkey: dest,
-            lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`),
-          }
-        ),
-      );
 
-    // partially sign transaction
     const blockhashObj = await Node.getConnection().getLatestBlockhash();
-    tx.recentBlockhash = blockhashObj.blockhash;
+    const tx = new Transaction({
+      blockhash: blockhashObj.blockhash,
+      lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
+      feePayer
+    }).add(
+      SystemProgram.transfer(
+        {
+          fromPubkey: owner,
+          toPubkey: dest,
+          lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`),
+        }
+      ),
+    );
+
     signers.forEach(signer => {
       tx.partialSign(signer);
     });
@@ -176,5 +178,4 @@ export namespace SolNative {
       return Result.err(ex as Error);
     }
   }
-
 }
