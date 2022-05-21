@@ -151,6 +151,58 @@ describe('SplToken', () => {
     console.log('signature: ', sig.unwrap());
   });
 
+  it.only('Create token, burn token', async () => {
+    const inst1 =
+      await SplToken.mint(
+        source.toPublicKey(),
+        [
+          source.toKeypair(),
+        ],
+        TOKEN_TOTAL_AMOUNT,
+        MINT_DECIMAL,
+      );
+
+    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
+    const token = inst1.unwrap().data as string;
+    console.log('# tokenKey: ', token);
+
+    const inst2 = await SplToken.transfer(
+      token.toPublicKey(),
+      source.toPublicKey(),
+      dest.toPublicKey(),
+      [
+        source.toKeypair(),
+      ],
+      1,
+      MINT_DECIMAL,
+      source.toKeypair(),
+    );
+    assert.isTrue(inst2.isOk);
+
+    const sig = await [
+      inst1,
+      inst2,
+    ].submit();
+
+    assert.isTrue(sig.isOk, sig.unwrap());
+    console.log('signature: ', sig.unwrap());
+
+    await Transaction.confirmedSig(sig.unwrap());
+
+    const res = await SplToken.burn(
+      token.toPublicKey(),
+      source.toPublicKey(),
+      dest.toPublicKey(),
+      [source.toKeypair()],
+      1,
+      MINT_DECIMAL,
+    );
+
+    // assert.isTrue(res.isOk);
+    const sig2 = await res.unwrap().submit();
+    console.log('signature: ', sig2.unwrap());
+  });
+
   it('Create token, transfer with multisig and fee payer', async () => {
     // create multisig
     const signer1 = Account.create();

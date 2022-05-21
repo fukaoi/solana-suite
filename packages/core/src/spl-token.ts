@@ -1,6 +1,7 @@
 import {
   Account,
   createMint,
+  createBurnCheckedInstruction,
   createMintToCheckedInstruction,
   createTransferCheckedInstruction,
   getOrCreateAssociatedTokenAccount,
@@ -20,6 +21,10 @@ import {
   PartialSignInstruction,
   sleep
 } from '@solana-suite/shared';
+
+import {
+  Account as Acc
+} from './';
 
 export namespace SplToken {
 
@@ -110,6 +115,53 @@ export namespace SplToken {
     );
   }
 
+  export const burn = async (
+    tokenKey: PublicKey,
+    owner: PublicKey,
+    burnAddress: PublicKey,
+    signers: Signer[],
+    burnAmount: number,
+    tokenDecimals: number,
+    feePayer?: Signer
+
+  ) => {
+    const ownerAccount = await Acc.findAssocaiatedTokenAddress(
+      tokenKey,
+      owner
+    );
+
+    if (ownerAccount.isErr) {
+      Result.err(ownerAccount.error);
+    }
+
+    const burnAccount = await Acc.findAssocaiatedTokenAddress(
+      tokenKey,
+      burnAddress
+    );
+
+    if (burnAccount.isErr) {
+      Result.err(burnAccount.error);
+    }
+
+    console.log(burnAccount.unwrap().toBase58())
+
+    const inst = createBurnCheckedInstruction(
+      tokenKey,
+      burnAccount.unwrap(),
+      ownerAccount.unwrap(),
+      burnAmount * tokenDecimals ** 10,
+      tokenDecimals,
+      signers,
+    );
+
+    return Result.ok(
+      new Instruction(
+        [inst],
+        signers,
+        feePayer
+      ));
+  }
+
   export const transfer = async (
     tokenKey: PublicKey,
     owner: PublicKey,
@@ -147,7 +199,7 @@ export namespace SplToken {
       tokenKey,
       destToken.value.address,
       owner,
-      amount,
+      amount * mintDecimal ** 10,
       mintDecimal,
       signers,
     );
@@ -193,7 +245,7 @@ export namespace SplToken {
       owner,
       dest,
       signers,
-      amount,
+      amount * mintDecimal ** 10,
       mintDecimal,
     );
 
@@ -208,7 +260,7 @@ export namespace SplToken {
     const blockhashObj = await Node.getConnection().getLatestBlockhash();
     const tx = new Transaction({
       lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
-      blockhash: blockhashObj.blockhash, 
+      blockhash: blockhashObj.blockhash,
       feePayer
     }).add(instruction);
 
