@@ -125,15 +125,6 @@ export namespace SplToken {
     feePayer?: Signer
 
   ) => {
-    const ownerAccount = await Acc.findAssocaiatedTokenAddress(
-      tokenKey,
-      owner
-    );
-
-    if (ownerAccount.isErr) {
-      Result.err(ownerAccount.error);
-    }
-
     const burnAccount = await Acc.findAssocaiatedTokenAddress(
       tokenKey,
       burnAddress
@@ -148,7 +139,7 @@ export namespace SplToken {
     const inst = createBurnCheckedInstruction(
       tokenKey,
       burnAccount.unwrap(),
-      ownerAccount.unwrap(),
+      owner,
       burnAmount * tokenDecimals ** 10,
       tokenDecimals,
       signers,
