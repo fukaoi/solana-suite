@@ -122,29 +122,24 @@ export namespace SplToken {
   export const burn = async (
     tokenKey: PublicKey,
     owner: PublicKey,
-    burnAddress: PublicKey,
     signers: Signer[],
     burnAmount: number,
     tokenDecimals: number,
     feePayer?: Signer
 
   ) => {
-    const tokenAssociated = await retryGetOrCreateAssociatedAccountInfo(
-      // const burnAccount = await Acc.findAssocaiatedTokenAddress(
+    const tokenAccount = await Acc.findAssocaiatedTokenAddress(
       tokenKey,
-      burnAddress,
-      signers[0]
+      owner,
     );
 
-    // if (burnAccount.isErr) {
-    // Result.err(burnAccount.error);
-    // }
-
-    console.log(tokenAssociated.unwrap().address.toString())
+    if (tokenAccount.isErr) {
+      return Result.err(tokenAccount.error);
+    }
 
     const inst = createBurnCheckedInstruction(
+      tokenAccount.unwrap(),
       tokenKey,
-      tokenAssociated.unwrap().address,
       owner,
       calcurateAmount(burnAmount, tokenDecimals),
       tokenDecimals,
@@ -190,7 +185,6 @@ export namespace SplToken {
     if (destToken.isErr) {
       return Result.err(destToken.error);
     }
-
 
     const inst = createTransferCheckedInstruction(
       sourceToken.value.address,

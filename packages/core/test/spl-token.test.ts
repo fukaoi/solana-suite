@@ -165,7 +165,7 @@ describe('SplToken', () => {
     console.log('signature: ', sig.unwrap());
   });
 
-  it.only('Create token, burn token', async () => {
+  it('Create token, burn token', async () => {
     const inst1 =
       await SplToken.mint(
         source.toPublicKey(),
@@ -206,13 +206,12 @@ describe('SplToken', () => {
     const res = await SplToken.burn(
       token.toPublicKey(),
       source.toPublicKey(),
-      dest.toPublicKey(),
       [source.toKeypair()],
       0.01,
       MINT_DECIMAL,
     );
 
-    // assert.isTrue(res.isOk);
+    assert.isTrue(res.isOk);
     const sig2 = await res.unwrap().submit();
     console.log('signature: ', sig2.unwrap());
   });
