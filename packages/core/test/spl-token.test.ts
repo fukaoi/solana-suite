@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../../shared/test/testSetup';
-import {Account, SplToken, KeypairStr, Multisig, Transaction} from '../src/';
+import {Account, SplToken, KeypairStr, Multisig,} from '../src/';
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -180,40 +180,22 @@ describe('SplToken', () => {
     const token = inst1.unwrap().data as string;
     console.log('# tokenKey: ', token);
 
-    const inst2 = await SplToken.transfer(
-      token.toPublicKey(),
-      source.toPublicKey(),
-      dest.toPublicKey(),
-      [
-        source.toKeypair(),
-      ],
-      0.01,
-      MINT_DECIMAL,
-      source.toKeypair(),
-    );
-    assert.isTrue(inst2.isOk);
-
-    const sig = await [
-      inst1,
-      inst2,
-    ].submit();
-
-    assert.isTrue(sig.isOk, sig.unwrap());
-    console.log('signature: ', sig.unwrap());
-
-    await Transaction.confirmedSig(sig.unwrap());
-
-    const res = await SplToken.burn(
+    const burnAmount = 500000;
+    const inst2 = await SplToken.burn(
       token.toPublicKey(),
       source.toPublicKey(),
       [source.toKeypair()],
-      0.01,
+      burnAmount,
       MINT_DECIMAL,
     );
 
+    assert.isTrue(inst2.isOk);
+    const sig = await [inst1, inst2].submit();
+    console.log('signature: ', sig.unwrap());
+
+    const res = await Account.getTokenBalance(source.toPublicKey(), token.toPublicKey());
     assert.isTrue(res.isOk);
-    const sig2 = await res.unwrap().submit();
-    console.log('signature: ', sig2.unwrap());
+    assert.equal(res.unwrap().uiAmount, TOKEN_TOTAL_AMOUNT - burnAmount);
   });
 
   it('Create token, transfer with multisig and fee payer', async () => {

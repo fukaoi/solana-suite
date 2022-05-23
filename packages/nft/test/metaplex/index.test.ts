@@ -35,6 +35,27 @@ describe('Metaplex', () => {
     console.log('# signature: ', res.unwrap());
   });
 
+  it.only('Mint nft and Burn nft', async () => {
+    const data = new MetaplexInstructure.Data({
+      name: 'Sample',
+      symbol: 'SAMPLE',
+      uri: 'https://arweave.net/y43AREiMoMH4_pOQUtqVCd4eKG6W-sJf5STM13jq9w8',
+      sellerFeeBasisPoints: 100,
+      creators: null
+    });
+
+    const inst = await Metaplex.mint(
+      data,
+      source.toPublicKey(),
+      [source.toKeypair()],
+    );
+
+    assert.isTrue(inst.isOk);
+    const res = await inst.submit();
+    console.log('# tokenKey: ', inst.unwrap().data);
+    console.log('# signature: ', res.unwrap());
+  });
+
   it('Mint batched nft', async () => {
     const data = new MetaplexInstructure.Data({
       name: 'NFT',

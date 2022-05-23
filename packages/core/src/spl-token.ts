@@ -104,7 +104,7 @@ export namespace SplToken {
       token,
       tokenAssociated.value.address,
       owner,
-      totalAmount,
+      calcurateAmount(totalAmount, mintDecimal),
       mintDecimal,
       signers,
     );
