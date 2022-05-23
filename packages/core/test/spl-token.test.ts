@@ -17,6 +17,20 @@ describe('SplToken', () => {
     dest = obj.dest;
   });
 
+  it('Calculate token amount', async () => {
+    const res1 = SplToken.calcurateAmount(1, 2);
+    assert.equal(res1, 100);
+
+    const res2 = SplToken.calcurateAmount(0.1, 2);
+    assert.equal(res2, 10);
+
+    const res3 = SplToken.calcurateAmount(0.1, 0);
+    assert.equal(res3, 0.1);
+
+    const res4 = SplToken.calcurateAmount(0.001, 5);
+    assert.equal(res4, 100);
+  });
+
   it('Create token', async () => {
     const inst =
       await SplToken.mint(
@@ -173,7 +187,7 @@ describe('SplToken', () => {
       [
         source.toKeypair(),
       ],
-      1,
+      0.01,
       MINT_DECIMAL,
       source.toKeypair(),
     );
@@ -194,7 +208,7 @@ describe('SplToken', () => {
       source.toPublicKey(),
       dest.toPublicKey(),
       [source.toKeypair()],
-      1,
+      0.01,
       MINT_DECIMAL,
     );
 

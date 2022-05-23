@@ -33,6 +33,10 @@ export namespace SplToken {
   const RETREY_OVER_LIMIT = 10;
   const RETREY_SLEEP_TIME = 3000;
 
+  export const calcurateAmount = (amount: number, mintDecimal: number): number => {
+    return amount * (10 ** mintDecimal);
+  }
+
   export const retryGetOrCreateAssociatedAccountInfo = async (
     tokenKey: PublicKey,
     owner: PublicKey,
@@ -125,22 +129,24 @@ export namespace SplToken {
     feePayer?: Signer
 
   ) => {
-    const burnAccount = await Acc.findAssocaiatedTokenAddress(
+    const tokenAssociated = await retryGetOrCreateAssociatedAccountInfo(
+      // const burnAccount = await Acc.findAssocaiatedTokenAddress(
       tokenKey,
-      burnAddress
+      burnAddress,
+      signers[0]
     );
 
-    if (burnAccount.isErr) {
-      Result.err(burnAccount.error);
-    }
+    // if (burnAccount.isErr) {
+    // Result.err(burnAccount.error);
+    // }
 
-    console.log(burnAccount.unwrap().toBase58())
+    console.log(tokenAssociated.unwrap().address.toString())
 
     const inst = createBurnCheckedInstruction(
       tokenKey,
-      burnAccount.unwrap(),
+      tokenAssociated.unwrap().address,
       owner,
-      burnAmount * tokenDecimals ** 10,
+      calcurateAmount(burnAmount, tokenDecimals),
       tokenDecimals,
       signers,
     );
@@ -185,12 +191,13 @@ export namespace SplToken {
       return Result.err(destToken.error);
     }
 
+
     const inst = createTransferCheckedInstruction(
       sourceToken.value.address,
       tokenKey,
       destToken.value.address,
       owner,
-      amount * mintDecimal ** 10,
+      calcurateAmount(amount, mintDecimal),
       mintDecimal,
       signers,
     );
@@ -236,7 +243,7 @@ export namespace SplToken {
       owner,
       dest,
       signers,
-      amount * mintDecimal ** 10,
+      calcurateAmount(amount, mintDecimal),
       mintDecimal,
     );
 
