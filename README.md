@@ -1,3 +1,5 @@
+![compile workflow](https://github.com/atonoy/solana-suite/actions/workflows/compile.yml/badge.svg)
+
 # solana-suite
 
 ## Summary
