@@ -20,7 +20,12 @@
     "dist"
   ],
   "license": "MIT",
-  "author": "Akira Takachi <a.takachi@atonoy.co>", "homepage": "https://atonoy.github.io/solana-suite", "repository": { "type": "git", "url": "https://github.com/atonoy/solana-suite.git" },
+  "author": "Akira Takachi <a.takachi@atonoy.co>",
+  "homepage": "https://atonoy.github.io/solana-suite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atonoy/solana-suite.git"
+  },
   "bugs": {
     "url": "https://github.com/atonoy/solana-suite/issues"
   },
