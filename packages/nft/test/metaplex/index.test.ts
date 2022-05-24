@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Account, KeypairStr, Multisig, SplToken, Transaction} from '@solana-suite/core';
+import {Account, KeypairStr, Multisig, Pubkey, SplToken, Transaction} from '@solana-suite/core';
 import {Metaplex, MetaplexInstructure} from '../../src/metaplex';
 import {Setup} from '../../../shared/test/testSetup';
 
@@ -29,8 +29,8 @@ describe('Metaplex', () => {
       [source.toKeypair()],
     );
 
-    assert.isTrue(inst.isOk);
     const res = await inst.submit();
+    assert.isTrue(res.isOk, res.unwrap());
     console.log('# tokenKey: ', inst.unwrap().data);
     console.log('# signature: ', res.unwrap());
   });
@@ -50,10 +50,23 @@ describe('Metaplex', () => {
       [source.toKeypair()],
     );
 
-    assert.isTrue(inst.isOk);
     const res = await inst.submit();
-    console.log('# tokenKey: ', inst.unwrap().data);
+    assert.isTrue(res.isOk, res.unwrap());
+
+    const tokenKey = inst.unwrap().data as Pubkey;
+
+    console.log('# tokenKey: ', tokenKey);
     console.log('# signature: ', res.unwrap());
+
+    const inst2 = await Metaplex.burn(
+      tokenKey.toPublicKey(),
+      source.toPublicKey(),
+      [source.toKeypair()]
+    );
+
+    const res2 = await inst2.submit();
+    assert.isTrue(res2.isOk, res2.unwrap());
+    console.log('# signature: ', res2.unwrap());
   });
 
   it('Mint batched nft', async () => {

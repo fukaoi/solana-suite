@@ -59,15 +59,16 @@ var SolNative;
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
     });
     SolNative.feePayerPartialSignTransfer = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const tx = new web3_js_1.Transaction({ feePayer })
-            .add(web3_js_1.SystemProgram.transfer({
+        const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
+        const tx = new web3_js_1.Transaction({
+            blockhash: blockhashObj.blockhash,
+            lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
+            feePayer
+        }).add(web3_js_1.SystemProgram.transfer({
             fromPubkey: owner,
             toPubkey: dest,
             lamports: parseInt(`${amount * web3_js_1.LAMPORTS_PER_SOL}`),
         }));
-        // partially sign transaction
-        const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
-        tx.recentBlockhash = blockhashObj.blockhash;
         signers.forEach(signer => {
             tx.partialSign(signer);
         });

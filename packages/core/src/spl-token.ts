@@ -126,7 +126,6 @@ export namespace SplToken {
     burnAmount: number,
     tokenDecimals: number,
     feePayer?: Signer
-
   ) => {
     const tokenAccount = await Acc.findAssocaiatedTokenAddress(
       tokenKey,

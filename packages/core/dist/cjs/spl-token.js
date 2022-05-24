@@ -13,12 +13,16 @@ exports.SplToken = void 0;
 const spl_token_1 = require("@solana/spl-token");
 const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
+const _1 = require("./");
 var SplToken;
 (function (SplToken) {
     const NFT_AMOUNT = 1;
     const NFT_DECIMALS = 0;
     const RETREY_OVER_LIMIT = 10;
     const RETREY_SLEEP_TIME = 3000;
+    SplToken.calcurateAmount = (amount, mintDecimal) => {
+        return amount * (Math.pow(10, mintDecimal));
+    };
     SplToken.retryGetOrCreateAssociatedAccountInfo = (tokenKey, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let counter = 1;
         while (counter < RETREY_OVER_LIMIT) {
@@ -49,8 +53,16 @@ var SplToken;
         if (tokenAssociated.isErr) {
             return shared_1.Result.err(tokenAssociated.error);
         }
-        const inst = (0, spl_token_1.createMintToCheckedInstruction)(token, tokenAssociated.value.address, owner, totalAmount, mintDecimal, signers);
+        const inst = (0, spl_token_1.createMintToCheckedInstruction)(token, tokenAssociated.value.address, owner, SplToken.calcurateAmount(totalAmount, mintDecimal), mintDecimal, signers);
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer, token.toBase58()));
+    });
+    SplToken.burn = (tokenKey, owner, signers, burnAmount, tokenDecimals, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const tokenAccount = yield _1.Account.findAssocaiatedTokenAddress(tokenKey, owner);
+        if (tokenAccount.isErr) {
+            return shared_1.Result.err(tokenAccount.error);
+        }
+        const inst = (0, spl_token_1.createBurnCheckedInstruction)(tokenAccount.unwrap(), tokenKey, owner, SplToken.calcurateAmount(burnAmount, tokenDecimals), tokenDecimals, signers);
+        return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
     });
     SplToken.transfer = (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         !feePayer && (feePayer = signers[0]);
@@ -62,21 +74,25 @@ var SplToken;
         if (destToken.isErr) {
             return shared_1.Result.err(destToken.error);
         }
-        const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.value.address, tokenKey, destToken.value.address, owner, amount, mintDecimal, signers);
+        const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.value.address, tokenKey, destToken.value.address, owner, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers);
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
     });
     SplToken.transferNft = (tokenKey, owner, dest, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return SplToken.transfer(tokenKey, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
     });
     SplToken.feePayerPartialSignTransfer = (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const inst = yield SplToken.transfer(tokenKey, owner, dest, signers, amount, mintDecimal);
+        const inst = yield SplToken.transfer(tokenKey, owner, dest, signers, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal);
         if (inst.isErr) {
             return shared_1.Result.err(inst.error);
         }
         const instruction = inst.value.instructions[0];
-        const tx = new web3_js_1.Transaction({ feePayer }).add(instruction);
         // partially sign transaction
         const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
+        const tx = new web3_js_1.Transaction({
+            lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
+            blockhash: blockhashObj.blockhash,
+            feePayer
+        }).add(instruction);
         tx.recentBlockhash = blockhashObj.blockhash;
         signers.forEach(signer => {
             tx.partialSign(signer);

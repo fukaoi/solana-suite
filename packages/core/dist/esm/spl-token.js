@@ -7,15 +7,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { createMint, createMintToCheckedInstruction, createTransferCheckedInstruction, getOrCreateAssociatedTokenAccount, } from '@solana/spl-token';
+import { createMint, createBurnCheckedInstruction, createMintToCheckedInstruction, createTransferCheckedInstruction, getOrCreateAssociatedTokenAccount, } from '@solana/spl-token';
 import { Transaction, } from '@solana/web3.js';
 import { Node, Result, Instruction, PartialSignInstruction, sleep } from '@solana-suite/shared';
+import { Account as Acc } from './';
 export var SplToken;
 (function (SplToken) {
     const NFT_AMOUNT = 1;
     const NFT_DECIMALS = 0;
     const RETREY_OVER_LIMIT = 10;
     const RETREY_SLEEP_TIME = 3000;
+    SplToken.calcurateAmount = (amount, mintDecimal) => {
+        return amount * (Math.pow(10, mintDecimal));
+    };
     SplToken.retryGetOrCreateAssociatedAccountInfo = (tokenKey, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let counter = 1;
         while (counter < RETREY_OVER_LIMIT) {
@@ -46,8 +50,16 @@ export var SplToken;
         if (tokenAssociated.isErr) {
             return Result.err(tokenAssociated.error);
         }
-        const inst = createMintToCheckedInstruction(token, tokenAssociated.value.address, owner, totalAmount, mintDecimal, signers);
+        const inst = createMintToCheckedInstruction(token, tokenAssociated.value.address, owner, SplToken.calcurateAmount(totalAmount, mintDecimal), mintDecimal, signers);
         return Result.ok(new Instruction([inst], signers, feePayer, token.toBase58()));
+    });
+    SplToken.burn = (tokenKey, owner, signers, burnAmount, tokenDecimals, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const tokenAccount = yield Acc.findAssocaiatedTokenAddress(tokenKey, owner);
+        if (tokenAccount.isErr) {
+            return Result.err(tokenAccount.error);
+        }
+        const inst = createBurnCheckedInstruction(tokenAccount.unwrap(), tokenKey, owner, SplToken.calcurateAmount(burnAmount, tokenDecimals), tokenDecimals, signers);
+        return Result.ok(new Instruction([inst], signers, feePayer));
     });
     SplToken.transfer = (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         !feePayer && (feePayer = signers[0]);
@@ -59,21 +71,25 @@ export var SplToken;
         if (destToken.isErr) {
             return Result.err(destToken.error);
         }
-        const inst = createTransferCheckedInstruction(sourceToken.value.address, tokenKey, destToken.value.address, owner, amount, mintDecimal, signers);
+        const inst = createTransferCheckedInstruction(sourceToken.value.address, tokenKey, destToken.value.address, owner, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers);
         return Result.ok(new Instruction([inst], signers, feePayer));
     });
     SplToken.transferNft = (tokenKey, owner, dest, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return SplToken.transfer(tokenKey, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
     });
     SplToken.feePayerPartialSignTransfer = (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const inst = yield SplToken.transfer(tokenKey, owner, dest, signers, amount, mintDecimal);
+        const inst = yield SplToken.transfer(tokenKey, owner, dest, signers, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal);
         if (inst.isErr) {
             return Result.err(inst.error);
         }
         const instruction = inst.value.instructions[0];
-        const tx = new Transaction({ feePayer }).add(instruction);
         // partially sign transaction
         const blockhashObj = yield Node.getConnection().getLatestBlockhash();
+        const tx = new Transaction({
+            lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
+            blockhash: blockhashObj.blockhash,
+            feePayer
+        }).add(instruction);
         tx.recentBlockhash = blockhashObj.blockhash;
         signers.forEach(signer => {
             tx.partialSign(signer);
