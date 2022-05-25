@@ -1,11 +1,14 @@
 ![compile workflow](https://github.com/atonoy/solana-suite/actions/workflows/compile.yml/badge.svg)
 ![lint workflow](https://github.com/atonoy/solana-suite/actions/workflows/lint.yml/badge.svg)
+![test:core workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-core.yml/badge.svg)
+![test:shared workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-shared.yml/badge.svg)
+![test:nft workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-nft.yml/badge.svg)
 
 # solana-suite
 
 ## Summary
 
-![architecture image](https://bafkreic6qdvovjwyb6fbxutosavznk37chzklrs7ug6i4aiauy34nowqwu.ipfs.nftstorage.link/)
+![architecture image]( https://bafkreibolz2wpbpamryvdlcmbqfrit2wyvpx3ayyrjplth2s32ugp5uk2m.ipfs.nftstorage.link/)
 
 Solana suite is a convenience package for developing the Solana ecosystem. Using it will speed up your development.
 
