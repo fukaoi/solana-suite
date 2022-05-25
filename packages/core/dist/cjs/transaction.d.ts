@@ -34,14 +34,14 @@ export declare namespace Transaction {
     const get: (signature: string) => Promise<Result<ParsedTransactionWithMeta, Error>>;
     const getForAddress: (pubkey: PublicKey, limit?: number | undefined, before?: string | undefined, until?: string | undefined) => Promise<Result<ParsedTransactionWithMeta, Error>[]>;
     const getHistory: (searchPubkey: PublicKey, options?: {
-        limit?: number | undefined;
-        actionFilter?: Filter[] | undefined;
-        directionFilter?: DirectionFilter | undefined;
-    } | undefined) => Promise<Result<TransferHistory[], Error>>;
+        limit?: number;
+        actionFilter?: Filter[];
+        directionFilter?: DirectionFilter;
+    }) => Promise<Result<TransferHistory[], Error>>;
     const getTokenHistory: (tokenKey: PublicKey, searchPubkey: PublicKey, options?: {
-        limit?: number | undefined;
-        actionFilter?: Filter[] | undefined;
-        directionFilter?: DirectionFilter | undefined;
-    } | undefined) => Promise<Result<TransferHistory[], Error>>;
+        limit?: number;
+        actionFilter?: Filter[];
+        directionFilter?: DirectionFilter;
+    }) => Promise<Result<TransferHistory[], Error>>;
     const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result<RpcResponseAndContext<SignatureResult> | unknown, Error>>;
 }

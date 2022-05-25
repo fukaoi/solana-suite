@@ -27,6 +27,7 @@ exports.Metaplex = exports.MetaplexInstruction = void 0;
 const spl_token_1 = require("@solana/spl-token");
 const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
+const core_1 = require("@solana-suite/core");
 const metadata_1 = require("./metadata");
 __exportStar(require("./instructure"), exports);
 __exportStar(require("./metadata"), exports);
@@ -93,5 +94,10 @@ var Metaplex;
             return shared_1.Result.err(inst3.error);
         const mergeInstructions = inst1.instructions.concat(inst2.unwrap()).concat(inst3.unwrap());
         return shared_1.Result.ok(new shared_1.Instruction(mergeInstructions, signers, undefined, inst1.tokenKey));
+    });
+    Metaplex.burn = (tokenKey, owner, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const burnAmount = 1;
+        const tokenDecimals = 0;
+        return core_1.SplToken.burn(tokenKey, owner, signers, burnAmount, tokenDecimals, feePayer);
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));

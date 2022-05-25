@@ -31,4 +31,5 @@ export declare namespace Metaplex {
         tokenKey: string;
     }>;
     const mint: (data: MetaplexInstructure.Data, owner: PublicKey, signers: Signer[]) => Promise<Result<Instruction, Error>>;
+    const burn: (tokenKey: PublicKey, owner: PublicKey, signers: Signer[], feePayer?: Signer) => Promise<Result<Instruction, Error>>;
 }

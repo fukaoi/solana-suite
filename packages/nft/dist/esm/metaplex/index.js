@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { createInitializeMintInstruction, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { SystemProgram, Keypair, } from '@solana/web3.js';
 import { Node, Instruction, Result, } from '@solana-suite/shared';
+import { SplToken, } from '@solana-suite/core';
 import { MetaplexMetaData } from './metadata';
 export * from './instructure';
 export * from './metadata';
@@ -76,5 +77,10 @@ export var Metaplex;
             return Result.err(inst3.error);
         const mergeInstructions = inst1.instructions.concat(inst2.unwrap()).concat(inst3.unwrap());
         return Result.ok(new Instruction(mergeInstructions, signers, undefined, inst1.tokenKey));
+    });
+    Metaplex.burn = (tokenKey, owner, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const burnAmount = 1;
+        const tokenDecimals = 0;
+        return SplToken.burn(tokenKey, owner, signers, burnAmount, tokenDecimals, feePayer);
     });
 })(Metaplex || (Metaplex = {}));

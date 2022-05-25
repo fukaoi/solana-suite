@@ -34,7 +34,7 @@ export declare namespace Account {
     export const getInfo: (pubkey: PublicKey) => Promise<Result<AccountInfo | TokenAccountInfo, Error>>;
     export const getBalance: (pubkey: PublicKey, unit?: Unit) => Promise<Result<number, Error>>;
     export const getTokenBalance: (pubkey: PublicKey, tokenKey: PublicKey) => Promise<Result<TokenAmount, Error>>;
-    export const requestAirdrop: (pubkey: PublicKey, airdropAmount?: number | undefined) => Promise<Result<string, Error>>;
+    export const requestAirdrop: (pubkey: PublicKey, airdropAmount?: number) => Promise<Result<string, Error>>;
     export const create: () => KeypairStr;
     export const findAssocaiatedTokenAddress: (tokenKey: PublicKey, owner: PublicKey) => Promise<Result<PublicKey, Error>>;
     export {};
