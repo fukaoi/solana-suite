@@ -1,4 +1,5 @@
 ![compile workflow](https://github.com/atonoy/solana-suite/actions/workflows/compile.yml/badge.svg)
+![lint workflow](https://github.com/atonoy/solana-suite/actions/workflows/lint.yml/badge.svg)
 
 # solana-suite
 
