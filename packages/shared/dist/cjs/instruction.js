@@ -80,7 +80,7 @@ class PartialSignInstruction {
                 return _1.Result.err(Error('only PartialSignInstruction object that can use this'));
             }
             const decode = Buffer.from(this.hexInstruction, 'hex');
-            let transactionFromJson = web3_js_1.Transaction.from(decode);
+            const transactionFromJson = web3_js_1.Transaction.from(decode);
             transactionFromJson.partialSign(feePayer);
             const options = {
                 maxRetries: MAX_RETRIES
