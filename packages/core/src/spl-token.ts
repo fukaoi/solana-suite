@@ -1,6 +1,7 @@
 import {
   Account,
   createMint,
+  createBurnCheckedInstruction,
   createMintToCheckedInstruction,
   createTransferCheckedInstruction,
   getOrCreateAssociatedTokenAccount,
@@ -21,12 +22,20 @@ import {
   sleep
 } from '@solana-suite/shared';
 
+import {
+  Account as Acc
+} from './';
+
 export namespace SplToken {
 
   const NFT_AMOUNT = 1;
   const NFT_DECIMALS = 0;
   const RETREY_OVER_LIMIT = 10;
   const RETREY_SLEEP_TIME = 3000;
+
+  export const calcurateAmount = (amount: number, mintDecimal: number): number => {
+    return amount * (10 ** mintDecimal);
+  }
 
   export const retryGetOrCreateAssociatedAccountInfo = async (
     tokenKey: PublicKey,
@@ -95,7 +104,7 @@ export namespace SplToken {
       token,
       tokenAssociated.value.address,
       owner,
-      totalAmount,
+      calcurateAmount(totalAmount, mintDecimal),
       mintDecimal,
       signers,
     );
@@ -108,6 +117,40 @@ export namespace SplToken {
         token.toBase58()
       )
     );
+  }
+
+  export const burn = async (
+    tokenKey: PublicKey,
+    owner: PublicKey,
+    signers: Signer[],
+    burnAmount: number,
+    tokenDecimals: number,
+    feePayer?: Signer
+  ) => {
+    const tokenAccount = await Acc.findAssocaiatedTokenAddress(
+      tokenKey,
+      owner,
+    );
+
+    if (tokenAccount.isErr) {
+      return Result.err(tokenAccount.error);
+    }
+
+    const inst = createBurnCheckedInstruction(
+      tokenAccount.unwrap(),
+      tokenKey,
+      owner,
+      calcurateAmount(burnAmount, tokenDecimals),
+      tokenDecimals,
+      signers,
+    );
+
+    return Result.ok(
+      new Instruction(
+        [inst],
+        signers,
+        feePayer
+      ));
   }
 
   export const transfer = async (
@@ -147,7 +190,7 @@ export namespace SplToken {
       tokenKey,
       destToken.value.address,
       owner,
-      amount,
+      calcurateAmount(amount, mintDecimal),
       mintDecimal,
       signers,
     );
@@ -193,7 +236,7 @@ export namespace SplToken {
       owner,
       dest,
       signers,
-      amount,
+      calcurateAmount(amount, mintDecimal),
       mintDecimal,
     );
 
@@ -203,10 +246,15 @@ export namespace SplToken {
 
     const instruction = inst.value.instructions[0];
 
-    const tx = new Transaction({feePayer}).add(instruction);
 
     // partially sign transaction
     const blockhashObj = await Node.getConnection().getLatestBlockhash();
+    const tx = new Transaction({
+      lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
+      blockhash: blockhashObj.blockhash,
+      feePayer
+    }).add(instruction);
+
     tx.recentBlockhash = blockhashObj.blockhash;
     signers.forEach(signer => {
       tx.partialSign(signer);

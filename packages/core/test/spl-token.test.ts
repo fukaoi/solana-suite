@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../../shared/test/testSetup';
-import {Account, SplToken, KeypairStr, Multisig, Transaction} from '../src/';
+import {Account, SplToken, KeypairStr, Multisig,} from '../src/';
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -15,6 +15,20 @@ describe('SplToken', () => {
     const obj = await Setup.generatekeyPair();
     source = obj.source;
     dest = obj.dest;
+  });
+
+  it('Calculate token amount', async () => {
+    const res1 = SplToken.calcurateAmount(1, 2);
+    assert.equal(res1, 100);
+
+    const res2 = SplToken.calcurateAmount(0.1, 2);
+    assert.equal(res2, 10);
+
+    const res3 = SplToken.calcurateAmount(0.1, 0);
+    assert.equal(res3, 0.1);
+
+    const res4 = SplToken.calcurateAmount(0.001, 5);
+    assert.equal(res4, 100);
   });
 
   it('Create token', async () => {
@@ -149,6 +163,39 @@ describe('SplToken', () => {
 
     assert.isTrue(sig.isOk, sig.unwrap());
     console.log('signature: ', sig.unwrap());
+  });
+
+  it('Create token, burn token', async () => {
+    const inst1 =
+      await SplToken.mint(
+        source.toPublicKey(),
+        [
+          source.toKeypair(),
+        ],
+        TOKEN_TOTAL_AMOUNT,
+        MINT_DECIMAL,
+      );
+
+    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
+    const token = inst1.unwrap().data as string;
+    console.log('# tokenKey: ', token);
+
+    const burnAmount = 500000;
+    const inst2 = await SplToken.burn(
+      token.toPublicKey(),
+      source.toPublicKey(),
+      [source.toKeypair()],
+      burnAmount,
+      MINT_DECIMAL,
+    );
+
+    assert.isTrue(inst2.isOk);
+    const sig = await [inst1, inst2].submit();
+    console.log('signature: ', sig.unwrap());
+
+    const res = await Account.getTokenBalance(source.toPublicKey(), token.toPublicKey());
+    assert.isTrue(res.isOk);
+    assert.equal(res.unwrap().uiAmount, TOKEN_TOTAL_AMOUNT - burnAmount);
   });
 
   it('Create token, transfer with multisig and fee payer', async () => {

@@ -18,8 +18,13 @@ import {
 } from '@solana-suite/shared';
 
 import {
+  SplToken,
+} from '@solana-suite/core';
+
+import {
   MetaplexInstructure
 } from './';
+
 import {MetaplexMetaData} from './metadata';
 
 export * from './instructure';
@@ -178,5 +183,24 @@ export namespace Metaplex {
         undefined,
         inst1.tokenKey,
       ));
+  }
+
+  export const burn = async (
+    tokenKey: PublicKey,
+    owner: PublicKey,
+    signers: Signer[],
+    feePayer?: Signer
+  ): Promise<Result<Instruction, Error>> => {
+    const burnAmount = 1;
+    const tokenDecimals = 0;
+
+    return SplToken.burn(
+      tokenKey,
+      owner,
+      signers,
+      burnAmount,
+      tokenDecimals,
+      feePayer,
+    );
   }
 }
