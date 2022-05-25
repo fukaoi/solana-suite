@@ -35,7 +35,7 @@ describe('Metaplex', () => {
     console.log('# signature: ', res.unwrap());
   });
 
-  it.only('Mint nft and Burn nft', async () => {
+  it('Mint nft and Burn nft', async () => {
     const data = new MetaplexInstructure.Data({
       name: 'Sample',
       symbol: 'SAMPLE',
