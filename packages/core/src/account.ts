@@ -136,7 +136,7 @@ export namespace Account {
     }
 
     const sig = await Node.getConnection().requestAirdrop(
-      pubkey, 
+      pubkey,
       airdropAmount
     )
       .then(Result.ok)
