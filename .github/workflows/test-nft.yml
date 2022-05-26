@@ -4,6 +4,9 @@ name: Test:nft
 
 on:
   push:
+    paths-ignore:
+      - "examples/**"
+      - "README.md"
     branches: [ main ]
 
 jobs:

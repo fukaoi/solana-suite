@@ -4,7 +4,11 @@ name: Test:core
 
 on:
   push:
+    paths-ignore:
+      - "examples/**"
+      - "README.md"
     branches: [ main ]
+    
 
 jobs:
   build:
