@@ -29,8 +29,7 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: |
-        cd ./node_modules/\@solana-suite/shared/
+        cd ./node_modules/\@solana-suite/core/node_modules/\@solana-suite/shared/
         ./solana-suite-config.js debug on
         ./solana-suite-config.js cluster custom ${{secrets.SOLANA_CUSTOM_URL}}
-        cd ../../../
-        npm run test:core
+    - run: npm run test:core
