@@ -31,5 +31,5 @@ jobs:
         cd ./packages/shared/
         NODE_ENV=standalone ./solana-suite-config.js debug on
         NODE_ENV=standalone ./solana-suite-config.js cluster custom ${{secrets.SOLANA_CUSTOM_URL}}
-        echo src/solana-suite.json
+        cat src/solana-suite.json
 #    - run: npm run test:nft
