@@ -1,8 +1,6 @@
 import { PublicKey, ParsedTransactionWithMeta, Commitment, RpcResponseAndContext, SignatureResult } from '@solana/web3.js';
 import { Result } from '@solana-suite/shared';
 export declare namespace Transaction {
-    const subscribeAccount: (pubkey: PublicKey, callback: any) => number;
-    const unsubscribeAccount: (subscribeId: number) => Promise<void>;
     interface TransferHistory {
         info: {
             destination?: string;

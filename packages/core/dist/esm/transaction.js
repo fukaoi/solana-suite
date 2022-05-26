@@ -121,21 +121,6 @@ export var Transaction;
         return hist;
     };
     const convertTimestmapToDate = (blockTime) => new Date(blockTime * 1000);
-    Transaction.subscribeAccount = (pubkey, callback) => {
-        return Node.getConnection().onAccountChange(pubkey, () => __awaiter(this, void 0, void 0, function* () {
-            const res = yield Transaction.getHistory(pubkey, {
-                actionFilter: [
-                    Filter.Transfer,
-                    Filter.TransferChecked
-                ]
-            });
-            if (res.isErr) {
-                return res;
-            }
-            callback(res.value[0]);
-        }));
-    };
-    Transaction.unsubscribeAccount = (subscribeId) => Node.getConnection().removeAccountChangeListener(subscribeId);
     let Filter;
     (function (Filter) {
         Filter["Transfer"] = "transfer";
