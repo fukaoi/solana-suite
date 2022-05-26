@@ -33,5 +33,7 @@ jobs:
         NODE_ENV=standalone ./solana-suite-config.js cluster custom $SOLANA_CUSTOM_URL
       env: 
         SOLANA_CUSTOM_URL: ${{secrets.SOLANA_CUSTOM_URL}}
-    - run: cat src/solana-suite.json
+    - run: |
+        cd ./packages/shared/
+        cat src/solana-suite.json
 #    - run: npm run test:nft
