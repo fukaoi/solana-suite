@@ -4,6 +4,9 @@ name: Test:shared
 
 on:
   push:
+    paths-ignore:
+      - "examples/**"
+      - "README.md"
     branches: [ main ]
 
 jobs:

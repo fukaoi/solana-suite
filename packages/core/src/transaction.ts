@@ -14,8 +14,6 @@ import {
 } from '@solana-suite/shared';
 
 import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
 } from '@solana/spl-token';
 
@@ -165,31 +163,6 @@ export namespace Transaction {
 
   const convertTimestmapToDate = (blockTime: number): Date =>
     new Date(blockTime * 1000);
-
-  export const subscribeAccount = (
-    pubkey: PublicKey,
-    callback: any
-  ): number => {
-    return Node.getConnection().onAccountChange(pubkey, async () => {
-      const res = await getHistory(
-        pubkey,
-        {
-          actionFilter: [
-            Filter.Transfer,
-            Filter.TransferChecked
-          ]
-        }
-      );
-      if (res.isErr) {
-        return res;
-      }
-      callback((res.value as TransferHistory[])[0]);
-    });
-  }
-
-  export const unsubscribeAccount = (subscribeId: number)
-    : Promise<void> =>
-    Node.getConnection().removeAccountChangeListener(subscribeId);
 
   export interface TransferHistory {
     info: {
