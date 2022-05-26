@@ -1,20 +1,10 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
-import {Setup} from '../../shared/test/testSetup';
-import {KeypairStr, Pubkey, SplToken, Transaction} from '../src/'
+import {Transaction} from '../src/'
 
-
-let source: KeypairStr;
-let dest: KeypairStr;
 const searchTokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
 
 describe('Transaction', () => {
-  before(async () => {
-    const obj = await Setup.generatekeyPair();
-    source = obj.source;
-    dest = obj.dest;
-  });
-
   it('Get transaction data', async () => {
     const sig = 'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
     const res = await Transaction.get(sig);
@@ -206,53 +196,4 @@ describe('Transaction', () => {
       assert.isNotNull(v.date);
     });
   });
-
-  it('Subscribe a account(pubkey)', async () => {
-    const subscribeId = Transaction.subscribeAccount(
-      dest.pubkey.toPublicKey(),
-      (v: Transaction.TransferHistory) => {
-        console.log('# Subscribe result: ', v);
-        assert.isNotEmpty(v.type);
-        assert.isNotNull(v.date);
-        assert.isNotNull(v.info.mint);
-        assert.isNotEmpty(v.info.source);
-        assert.isNotEmpty(v.info.destination);
-      }
-    );
-    for (let i = 0; i < 3; i++) await sendContinuously();
-    await sleep(15);
-    Transaction.unsubscribeAccount(subscribeId);
-    assert.ok('success subscribe');
-  });
 });
-
-const sendContinuously = async (): Promise<void> => {
-  const TOKEN_TOTAL_AMOUNT = 10000000;
-  const MINT_DECIMAL = 2;
-
-  const inst1 =
-    await SplToken.mint(
-      source.toPublicKey(),
-      [source.toKeypair()],
-      TOKEN_TOTAL_AMOUNT,
-      MINT_DECIMAL
-    );
-
-  const tokenKey = inst1.unwrap().data as Pubkey;
-
-  const inst2 = await SplToken.transfer(
-    tokenKey.toPublicKey(),
-    source.pubkey.toPublicKey(),
-    dest.pubkey.toPublicKey(),
-    [source.secret.toKeypair()],
-    1,
-    MINT_DECIMAL
-  );
-
-  const res = await [inst1, inst2].submit();
-  res.isErr && console.error(res.error);
-}
-
-const sleep = async (sec: number) => new Promise(r => setTimeout(r, sec * 1000));
-
-
