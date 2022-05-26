@@ -30,6 +30,8 @@ jobs:
     - run: |
         cd ./packages/shared/
         NODE_ENV=standalone ./solana-suite-config.js debug on
-        NODE_ENV=standalone ./solana-suite-config.js cluster custom ${{secrets.SOLANA_CUSTOM_URL}}
-        cat src/solana-suite.json
+        NODE_ENV=standalone ./solana-suite-config.js cluster custom $SOLANA_CUSTOM_URL
+      env: 
+        SOLANA_CUSTOM_URL: ${{secrets.SOLANA_CUSTOM_URL}}
+    - run: cat src/solana-suite.json
 #    - run: npm run test:nft
