@@ -32,4 +32,4 @@ jobs:
         cd ./node_modules/\@solana-suite/shared/
         ./solana-suite-config.js debug on
         ./solana-suite-config.js cluster custom ${{secrets.SOLANA_CUSTOM_URL}}
-        npm run test:core
+    - run: npm run test:core
