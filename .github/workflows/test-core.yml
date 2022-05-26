@@ -28,7 +28,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+    - run: ls
     - run: cd node_modules/@solana-suite/shared/ 
-    - run: pwd
     - run: ./solana-suite-config.js cluster custom ${{secrets.SOLANA_CUSTOM_URL}}
     - run: npm run test:core
