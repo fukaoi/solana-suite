@@ -4,9 +4,15 @@ const fs = require('fs');
 const {Command} = require('commander');
 const assert = require('assert');
 const program = new Command();
-const CJS_JSON = './dist/cjs/solana-suite.json';
-const ESM_JSON = './dist/esm/solana-suite.json';
+
 let cjs;
+let CJS_JSON = './dist/cjs/solana-suite.json';
+let ESM_JSON = './dist/esm/solana-suite.json';
+
+if (process.env.NODE_ENV === 'standalone') {
+  CJS_JSON = './src/solana-suite.json';
+  ESM_JSON = './src/solana-suite.json';
+}
 
 const loadConfigFile = () => {
   try {
