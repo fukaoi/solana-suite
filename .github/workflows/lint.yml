@@ -4,6 +4,10 @@ name: Check lint
 
 on:
   push:
+    paths-ignore:
+      - "examples/**"
+      - "README.md"
+      - ".github/workflows/*.yml"
     branches: [ main ]
 
 jobs:
