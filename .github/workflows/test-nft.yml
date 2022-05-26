@@ -27,4 +27,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+    - run: |
+        cd ./packages/shared/
+        NODE_ENV=standalone ./solana-suite-config.js debug on
+        NODE_ENV=standalone ./solana-suite-config.js cluster custom ${{secrets.SOLANA_CUSTOM_URL}}
     - run: npm run test:nft
