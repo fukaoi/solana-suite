@@ -26,11 +26,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    # - run: npm ci
-    - run: echo ${{secrets.SOLANA_CUSTOM_URL}} | sed 's/./& /g'
-#    - run: |
-#        cd ./packages/shared/
-#        NODE_ENV=standalone ./solana-suite-config.js debug on
-#        cat ${{secrets.SOLANA_CUSTOM_URL}}
-#        NODE_ENV=standalone ./solana-suite-config.js cluster custom ${{secrets.SOLANA_CUSTOM_URL}}
+   # - run: npm ci
+    - run: |
+        cd ./packages/shared/
+        NODE_ENV=standalone ./solana-suite-config.js debug on
+        cat ${{secrets.SOLANA_CUSTOM_URL}}
+        NODE_ENV=standalone ./solana-suite-config.js cluster custom ${{secrets.SOLANA_CUSTOM_URL}}
+        echo src/solana-suite.json
 #    - run: npm run test:nft
