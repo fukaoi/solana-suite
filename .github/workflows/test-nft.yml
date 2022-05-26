@@ -7,7 +7,7 @@ on:
     paths-ignore:
       - "examples/**"
       - "README.md"
-      - ".github/workflows/*.yml"
+      # - ".github/workflows/*.yml"
     branches: [ main ]
 
 jobs:
