@@ -117,9 +117,9 @@ export namespace Account {
 
   export const getTokenBalance = async (
     pubkey: PublicKey,
-    tokenKey: PublicKey,
+    mint: PublicKey,
   ): Promise<Result<TokenAmount, Error>> => {
-    const res = await findAssocaiatedTokenAddress(tokenKey, pubkey);
+    const res = await findAssocaiatedTokenAddress(mint, pubkey);
     if (res.isErr) {
       return Result.err(res.error);
     }
@@ -188,14 +188,14 @@ export namespace Account {
   };
 
   export const findAssocaiatedTokenAddress = async (
-    tokenKey: PublicKey,
+    mint: PublicKey,
     owner: PublicKey
   ): Promise<Result<PublicKey, Error>> => {
     return await PublicKey.findProgramAddress(
       [
         owner.toBuffer(),
         TOKEN_PROGRAM_ID.toBuffer(),
-        tokenKey.toBuffer(),
+        mint.toBuffer(),
       ],
       ASSOCIATED_TOKEN_PROGRAM_ID
     )

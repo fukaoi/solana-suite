@@ -291,7 +291,7 @@ export namespace Transaction {
   }
 
   export const getTokenHistory = async (
-    tokenKey: PublicKey,
+    mint: PublicKey,
     searchPubkey: PublicKey,
     options?: {
       limit?: number,
@@ -317,7 +317,7 @@ export namespace Transaction {
         ];
 
     const searchKeyAccount = await getAssociatedTokenAddress(
-      tokenKey,
+      mint,
       searchPubkey,
       true,
     ).then(Result.ok)

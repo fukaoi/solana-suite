@@ -12,7 +12,7 @@ import {
 
 let source: KeypairStr;
 let dest: KeypairStr;
-let tokenKey: string;
+let mint: string;
 const DUMMY_DATA = 'dummy memo data';
 
 describe('Memo', () => {
@@ -90,10 +90,10 @@ describe('Memo', () => {
       0
     );
 
-    tokenKey = inst2.unwrap().data as string;
+    mint = inst2.unwrap().data as string;
 
     const inst3 = await SplToken.transfer(
-      tokenKey.toPublicKey(),
+      mint.toPublicKey(),
       source.toPublicKey(),
       dest.toPublicKey(),
       [
@@ -124,7 +124,7 @@ describe('Memo', () => {
 
   it('Get memo data in spl transaction from dest', async () => {
     const res = await Transaction.getTokenHistory(
-      tokenKey.toPublicKey(),
+      mint.toPublicKey(),
       dest.toPublicKey(),
     );
     console.log(res);
