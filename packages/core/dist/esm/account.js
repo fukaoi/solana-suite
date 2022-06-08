@@ -30,7 +30,7 @@ export var Account;
     Account.DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
     Account.MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 5;
     Account.getInfo = (pubkey) => __awaiter(this, void 0, void 0, function* () {
-        var _a, _b;
+        var _a, _b, _c, _d, _e;
         const accountInfo = yield Node.getConnection().getParsedAccountInfo(pubkey)
             .then(Result.ok)
             .catch(Result.err);
@@ -44,11 +44,19 @@ export var Account;
         }
         else if (data.parsed) {
             // token account publicKey
-            return Result.ok(data.parsed.info);
+            return Result.ok({
+                mint: data.parsed.info.mint,
+                owner: data.parsed.info.owner,
+                tokenAmount: data.parsed.info.tokenAmount.uiAmount
+            });
         }
         else {
             // native address publicKey
-            return Result.ok(accountInfo.value.value);
+            return Result.ok({
+                lamports: (_c = accountInfo.value.value) === null || _c === void 0 ? void 0 : _c.lamports,
+                owner: (_d = accountInfo.value.value) === null || _d === void 0 ? void 0 : _d.owner.toString(),
+                rentEpoch: (_e = accountInfo.value.value) === null || _e === void 0 ? void 0 : _e.rentEpoch
+            });
         }
     });
     Account.getBalance = (pubkey, unit = 'sol') => __awaiter(this, void 0, void 0, function* () {
@@ -72,6 +80,22 @@ export var Account;
         return yield Node.getConnection().getTokenAccountBalance(res.unwrap())
             .then((rpc) => Result.ok(rpc.value))
             .catch(Result.err);
+    });
+    Account.getTokenInfoOwned = (pubkey) => __awaiter(this, void 0, void 0, function* () {
+        const res = yield Node.getConnection().getParsedTokenAccountsByOwner(pubkey, {
+            programId: TOKEN_PROGRAM_ID
+        }).then(Result.ok)
+            .catch(Result.err);
+        if (res.isErr) {
+            return Result.err(res.error);
+        }
+        const modified = res.unwrap().value.map(d => {
+            return {
+                mint: d.account.data.parsed.info.mint,
+                tokenAmount: d.account.data.parsed.info.tokenAmount.uiAmount
+            };
+        });
+        return Result.ok(modified);
     });
     Account.requestAirdrop = (pubkey, airdropAmount) => __awaiter(this, void 0, void 0, function* () {
         console.debug('Now airdropping...please wait');
