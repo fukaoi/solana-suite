@@ -5,7 +5,7 @@ import {Account, SplToken, KeypairStr, Multisig,} from '../src/';
 
 let source: KeypairStr;
 let dest: KeypairStr;
-let tokenKeyStr: string;
+let mintStr: string;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
@@ -44,8 +44,8 @@ describe('SplToken', () => {
 
     const res = await inst.submit();
     assert.isTrue(res.isOk, res.unwrap());
-    tokenKeyStr = inst.unwrap().data as string;
-    console.log('# tokenKey: ', tokenKeyStr);
+    mintStr = inst.unwrap().data as string;
+    console.log('# mint: ', mintStr);
   });
 
   it('Create token with multisig', async () => {
@@ -82,8 +82,8 @@ describe('SplToken', () => {
 
     const res = await [multisigInst, inst].submit();
     assert.isTrue(res.isOk, res.unwrap());
-    tokenKeyStr = inst.unwrap().data as string;
-    console.log('# tokenKey: ', tokenKeyStr);
+    mintStr = inst.unwrap().data as string;
+    console.log('# mint: ', mintStr);
   });
 
   it('[Err]lack signer for multisig', async () => {
@@ -127,7 +127,7 @@ describe('SplToken', () => {
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
     const token = inst1.unwrap().data as string;
-    console.log('# tokenKey: ', token);
+    console.log('# mint: ', token);
 
     const inst2 = await SplToken.transfer(
       token.toPublicKey(),
@@ -178,7 +178,7 @@ describe('SplToken', () => {
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
     const token = inst1.unwrap().data as string;
-    console.log('# tokenKey: ', token);
+    console.log('# mint: ', token);
 
     const burnAmount = 500000;
     const inst2 = await SplToken.burn(
@@ -238,7 +238,7 @@ describe('SplToken', () => {
 
     const token = (mintInst.unwrap().data as string).toPublicKey();
 
-    console.log('# tokenKey: ', token.toBase58());
+    console.log('# mint: ', token.toBase58());
 
     const inst = await SplToken.transfer(
       token,
@@ -277,10 +277,10 @@ describe('SplToken', () => {
     await mintInst.submit();
 
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
-    const tokenKey = (mintInst.unwrap().data as string);
+    const mint = (mintInst.unwrap().data as string);
 
     SplToken.retryGetOrCreateAssociatedAccountInfo(
-      tokenKey.toPublicKey(),
+      mint.toPublicKey(),
       source.toPublicKey(),
       source.toKeypair()
     );
@@ -300,7 +300,7 @@ describe('SplToken', () => {
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
     await inst1.submit();
     const token = inst1.unwrap().data as string;
-    console.log('# tokenKey: ', token);
+    console.log('# mint: ', token);
 
     const tokenAmount = 1;
     const serialized =

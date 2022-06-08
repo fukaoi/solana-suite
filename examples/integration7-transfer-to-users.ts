@@ -66,8 +66,8 @@ const SLEEP_TIME_WAIT = 0;
     (error) => assert(error)
   );
 
-  const tokenKey = inst1.unwrap().data as Pubkey;
-  console.log('# tokenKey: ', tokenKey);
+  const mint = inst1.unwrap().data as Pubkey;
+  console.log('# mint: ', mint);
 
   //////////////////////////////////////////////
   // TRANSFER RECEIPR USER FROM THIS LINE 
@@ -77,7 +77,7 @@ const SLEEP_TIME_WAIT = 0;
   for (const user of users) {
     await sleep(SLEEP_TIME_WAIT);
     const inst2 = await SplToken.transfer(
-      tokenKey.toPublicKey(),
+      mint.toPublicKey(),
       owner.toPublicKey(),
       user.toPublicKey(),
       [
