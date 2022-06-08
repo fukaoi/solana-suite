@@ -38,7 +38,7 @@ export namespace SplToken {
   }
 
   export const retryGetOrCreateAssociatedAccountInfo = async (
-    tokenKey: PublicKey,
+    mint: PublicKey,
     owner: PublicKey,
     feePayer: Signer,
   ): Promise<Result<Account, Error>> => {
@@ -48,7 +48,7 @@ export namespace SplToken {
         const accountInfo = await getOrCreateAssociatedTokenAccount(
           Node.getConnection(),
           feePayer,
-          tokenKey,
+          mint,
           owner,
           true
         );
@@ -120,7 +120,7 @@ export namespace SplToken {
   }
 
   export const burn = async (
-    tokenKey: PublicKey,
+    mint: PublicKey,
     owner: PublicKey,
     signers: Signer[],
     burnAmount: number,
@@ -128,7 +128,7 @@ export namespace SplToken {
     feePayer?: Signer
   ) => {
     const tokenAccount = await Acc.findAssocaiatedTokenAddress(
-      tokenKey,
+      mint,
       owner,
     );
 
@@ -138,7 +138,7 @@ export namespace SplToken {
 
     const inst = createBurnCheckedInstruction(
       tokenAccount.unwrap(),
-      tokenKey,
+      mint,
       owner,
       calcurateAmount(burnAmount, tokenDecimals),
       tokenDecimals,
@@ -154,7 +154,7 @@ export namespace SplToken {
   }
 
   export const transfer = async (
-    tokenKey: PublicKey,
+    mint: PublicKey,
     owner: PublicKey,
     dest: PublicKey,
     signers: Signer[],
@@ -166,7 +166,7 @@ export namespace SplToken {
     !feePayer && (feePayer = signers[0]);
 
     const sourceToken = await retryGetOrCreateAssociatedAccountInfo(
-      tokenKey,
+      mint,
       owner,
       feePayer,
     );
@@ -176,7 +176,7 @@ export namespace SplToken {
     }
 
     const destToken = await retryGetOrCreateAssociatedAccountInfo(
-      tokenKey,
+      mint,
       dest,
       feePayer,
     );
@@ -187,7 +187,7 @@ export namespace SplToken {
 
     const inst = createTransferCheckedInstruction(
       sourceToken.value.address,
-      tokenKey,
+      mint,
       destToken.value.address,
       owner,
       calcurateAmount(amount, mintDecimal),
@@ -204,14 +204,14 @@ export namespace SplToken {
   }
 
   export const transferNft = async (
-    tokenKey: PublicKey,
+    mint: PublicKey,
     owner: PublicKey,
     dest: PublicKey,
     signers: Signer[],
     feePayer?: Signer,
   ): Promise<Result<Instruction, Error>> => {
     return transfer(
-      tokenKey,
+      mint,
       owner,
       dest,
       signers,
@@ -222,7 +222,7 @@ export namespace SplToken {
   }
 
   export const feePayerPartialSignTransfer = async (
-    tokenKey: PublicKey,
+    mint: PublicKey,
     owner: PublicKey,
     dest: PublicKey,
     signers: Signer[],
@@ -232,7 +232,7 @@ export namespace SplToken {
   ): Promise<Result<PartialSignInstruction, Error>> => {
 
     const inst = await transfer(
-      tokenKey,
+      mint,
       owner,
       dest,
       signers,
