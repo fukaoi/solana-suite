@@ -81,15 +81,15 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
     (error) => assert(error)
   );
 
-  const tokenKey = (inst1.unwrap().data as Pubkey);
-  console.log('# tokenKey: ', tokenKey);
+  const mint = (inst1.unwrap().data as Pubkey);
+  console.log('# mint: ', mint);
 
   //////////////////////////////////////////////
   // Display metadata from blockchain(optional)
   //////////////////////////////////////////////
 
   const metadata = await MetaplexMetaData.getByTokenKey(
-    tokenKey.toPublicKey()
+    mint.toPublicKey()
   );
 
   metadata.match(
@@ -103,7 +103,7 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
 
   // transfer nft owner => publish
   const inst2 = await SplToken.transferNft(
-    tokenKey.toPublicKey(),
+    mint.toPublicKey(),
     owner.toPublicKey(),
     publisher.toPublicKey(),
     [
@@ -114,7 +114,7 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
 
   // transfer nft publish => receipt
   const inst3 = await SplToken.transferNft(
-    tokenKey.toPublicKey(),
+    mint.toPublicKey(),
     publisher.toPublicKey(),
     receipt.toPublicKey(),
     [

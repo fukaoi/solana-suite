@@ -44,10 +44,10 @@ import {
   );
 
 
-  const tokenKey = inst1.unwrap().data as Pubkey;
+  const mint = inst1.unwrap().data as Pubkey;
 
   // this is NFT ID
-  console.log('# tokenKey: ', tokenKey);
+  console.log('# mint: ', mint);
 
 
   //////////////////////////////////////////////
@@ -73,7 +73,7 @@ import {
 
   // transfer nft to receipt wallet
   const inst3 = await SplToken.transfer(
-    tokenKey.toPublicKey(),
+    mint.toPublicKey(),
     owner.toPublicKey(),
     receipt.toPublicKey(),
     [owner.toKeypair()],
@@ -94,7 +94,7 @@ import {
   //////////////////////////////////////////////
 
   const res = await Transaction.getTokenHistory(
-    tokenKey.toPublicKey(),
+    mint.toPublicKey(),
     receipt.toPublicKey(),
   );
 

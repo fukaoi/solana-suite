@@ -99,11 +99,11 @@ import {
       feePayer.toKeypair()   // pay transaction fee
     );
 
-  const tokenKey = (inst3.unwrap().data as Pubkey);
-  console.log('# tokenKey: ', tokenKey);
+  const mint = (inst3.unwrap().data as Pubkey);
+  console.log('# mint: ', mint);
 
   const inst4 = await SplToken.transfer(
-    tokenKey.toPublicKey(),   // tokenkey
+    mint.toPublicKey(),   // tokenkey
     publisher.toPublicKey(),  // from. own token
     receipt.toPublicKey(),    // to
     multiSigners,          // signning

@@ -43,10 +43,10 @@ import {
   );
 
 
-  const tokenKey = inst1.unwrap().data as Pubkey;
+  const mint = inst1.unwrap().data as Pubkey;
 
   // this is NFT ID
-  console.log('# tokenKey: ', tokenKey);
+  console.log('# mint: ', mint);
 
   //////////////////////////////////////////////
   // TRANSFER RECEIPR USER FROM THIS LINE
@@ -54,7 +54,7 @@ import {
 
   // transfer nft to receipt wallet
   const inst2 = await SplToken.transfer(
-    tokenKey.toPublicKey(),
+    mint.toPublicKey(),
     owner.toPublicKey(),
     receipt.toPublicKey(),
     [owner.toKeypair()],
@@ -75,7 +75,7 @@ import {
   //////////////////////////////////////////////
 
   const hist1 = await Transaction.getTokenHistory(
-    tokenKey.toPublicKey(),  // used tokenKey
+    mint.toPublicKey(),  // used mint
     owner.toPublicKey()  // search key
   );
   console.log('# token history by publish: ', hist1.unwrap());
@@ -91,7 +91,7 @@ import {
 
   // History of receiptkey as the main destitnation.
   const hist3 = await Transaction.getTokenHistory(
-    tokenKey.toPublicKey(),
+    mint.toPublicKey(),
     receipt.toPublicKey(),
     {
       directionFilter: Transaction.DirectionFilter.Dest, // Dest or Source
