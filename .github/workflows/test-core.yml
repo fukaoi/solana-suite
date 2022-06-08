@@ -8,6 +8,8 @@ on:
       - "examples/**"
       - "README.md"
       - ".github/workflows/*.yml"
+      - "packages/*/package.json"
+      - "package.json"
     branches: [ main ]
     
 
