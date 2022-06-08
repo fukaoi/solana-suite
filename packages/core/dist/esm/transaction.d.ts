@@ -36,7 +36,7 @@ export declare namespace Transaction {
         actionFilter?: Filter[];
         directionFilter?: DirectionFilter;
     }) => Promise<Result<TransferHistory[], Error>>;
-    const getTokenHistory: (tokenKey: PublicKey, searchPubkey: PublicKey, options?: {
+    const getTokenHistory: (mint: PublicKey, searchPubkey: PublicKey, options?: {
         limit?: number;
         actionFilter?: Filter[];
         directionFilter?: DirectionFilter;

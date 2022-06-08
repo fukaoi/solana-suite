@@ -11,11 +11,11 @@ import { PublicKey, } from '@solana/web3.js';
 import { Constants, Result } from '@solana-suite/shared';
 export var MetaplexAccount;
 (function (MetaplexAccount) {
-    MetaplexAccount.findMetaplexAssocaiatedTokenAddress = (tokenKey) => __awaiter(this, void 0, void 0, function* () {
+    MetaplexAccount.findMetaplexAssocaiatedTokenAddress = (mint) => __awaiter(this, void 0, void 0, function* () {
         return yield PublicKey.findProgramAddress([
             Buffer.from('metadata'),
             Constants.METAPLEX_PROGRAM_ID.toBuffer(),
-            tokenKey.toBuffer(),
+            mint.toBuffer(),
         ], Constants.METAPLEX_PROGRAM_ID)
             .then(v => Result.ok(v[0]))
             .catch((e) => Result.err(e));

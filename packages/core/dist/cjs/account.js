@@ -79,8 +79,8 @@ var Account;
             default: return shared_1.Result.err(Error('no match unit'));
         }
     });
-    Account.getTokenBalance = (pubkey, tokenKey) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield Account.findAssocaiatedTokenAddress(tokenKey, pubkey);
+    Account.getTokenBalance = (pubkey, mint) => __awaiter(this, void 0, void 0, function* () {
+        const res = yield Account.findAssocaiatedTokenAddress(mint, pubkey);
         if (res.isErr) {
             return shared_1.Result.err(res.error);
         }
@@ -123,11 +123,11 @@ var Account;
         const keypair = web3_js_1.Keypair.generate();
         return new KeypairStr(keypair.publicKey.toBase58(), bs58_1.default.encode(keypair.secretKey));
     };
-    Account.findAssocaiatedTokenAddress = (tokenKey, owner) => __awaiter(this, void 0, void 0, function* () {
+    Account.findAssocaiatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
         return yield web3_js_1.PublicKey.findProgramAddress([
             owner.toBuffer(),
             spl_token_1.TOKEN_PROGRAM_ID.toBuffer(),
-            tokenKey.toBuffer(),
+            mint.toBuffer(),
         ], spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID)
             .then(v => shared_1.Result.ok(v[0]))
             .catch(shared_1.Result.err);

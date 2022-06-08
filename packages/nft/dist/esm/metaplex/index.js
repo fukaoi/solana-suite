@@ -58,29 +58,29 @@ export var Metaplex;
         const instructions = [];
         const inst1 = yield MetaplexInstruction.mintAccount(instructions, payer, signers);
         signers = signers.concat(inst1.signers);
-        const tokenKey = yield MetaplexInstruction.mint(instructions, inst1.mintAccount, payer, payer);
+        const mint = yield MetaplexInstruction.mint(instructions, inst1.mintAccount, payer, payer);
         return {
             instructions,
             signers,
-            tokenKey
+            mint
         };
     });
     Metaplex.mint = (data, owner, signers) => __awaiter(this, void 0, void 0, function* () {
         const inst1 = yield Metaplex.initializeMint(owner, signers);
         signers = signers.concat(inst1.signers);
-        const inst2 = yield MetaplexMetaData.create(data, inst1.tokenKey.toPublicKey(), owner, owner, owner);
+        const inst2 = yield MetaplexMetaData.create(data, inst1.mint.toPublicKey(), owner, owner, owner);
         if (inst2.isErr) {
             return Result.err(inst2.error);
         }
-        const inst3 = yield MetaplexMetaData.update(data, undefined, undefined, inst1.tokenKey.toPublicKey(), owner, signers);
+        const inst3 = yield MetaplexMetaData.update(data, undefined, undefined, inst1.mint.toPublicKey(), owner, signers);
         if (inst3.isErr)
             return Result.err(inst3.error);
         const mergeInstructions = inst1.instructions.concat(inst2.unwrap()).concat(inst3.unwrap());
-        return Result.ok(new Instruction(mergeInstructions, signers, undefined, inst1.tokenKey));
+        return Result.ok(new Instruction(mergeInstructions, signers, undefined, inst1.mint));
     });
-    Metaplex.burn = (tokenKey, owner, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Metaplex.burn = (mint, owner, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const burnAmount = 1;
         const tokenDecimals = 0;
-        return SplToken.burn(tokenKey, owner, signers, burnAmount, tokenDecimals, feePayer);
+        return SplToken.burn(mint, owner, signers, burnAmount, tokenDecimals, feePayer);
     });
 })(Metaplex || (Metaplex = {}));

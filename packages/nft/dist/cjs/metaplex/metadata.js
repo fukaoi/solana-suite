@@ -17,7 +17,7 @@ const core_1 = require("@solana-suite/core");
 const spl_token_1 = require("@solana/spl-token");
 var MetaplexMetaData;
 (function (MetaplexMetaData) {
-    const createAssociatedTokenAccountInstruction = (metaAccount, tokenKey, mintAuthorityKey, updateAuthority, payer, txnData) => {
+    const createAssociatedTokenAccountInstruction = (metaAccount, mint, mintAuthorityKey, updateAuthority, payer, txnData) => {
         const keys = [
             {
                 pubkey: metaAccount,
@@ -25,7 +25,7 @@ var MetaplexMetaData;
                 isWritable: true,
             },
             {
-                pubkey: tokenKey,
+                pubkey: mint,
                 isSigner: false,
                 isWritable: false,
             },
@@ -105,9 +105,9 @@ var MetaplexMetaData;
             data: Buffer.from([]),
         });
     };
-    MetaplexMetaData.getByTokenKey = (tokenKey) => __awaiter(this, void 0, void 0, function* () {
+    MetaplexMetaData.getByTokenKey = (mint) => __awaiter(this, void 0, void 0, function* () {
         var _a;
-        const metaAccount = yield index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
+        const metaAccount = yield index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(mint);
         if (metaAccount.isErr) {
             return shared_1.Result.err(metaAccount.error);
         }
@@ -144,24 +144,24 @@ var MetaplexMetaData;
         }
         return shared_1.Result.ok(matches);
     });
-    MetaplexMetaData.create = (data, tokenKey, mintAuthorityKey, updateAuthority, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const metaAccount = yield index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    MetaplexMetaData.create = (data, mint, mintAuthorityKey, updateAuthority, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const metaAccount = yield index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(mint);
         if (metaAccount.isErr) {
             return shared_1.Result.err(metaAccount.error);
         }
         const txnData = index_1.MetaplexSerialize.serializeCreateArgs(data);
-        const inst = createAssociatedTokenAccountInstruction(metaAccount.unwrap(), tokenKey, mintAuthorityKey, updateAuthority, feePayer, txnData);
+        const inst = createAssociatedTokenAccountInstruction(metaAccount.unwrap(), mint, mintAuthorityKey, updateAuthority, feePayer, txnData);
         return shared_1.Result.ok([inst]);
     });
-    MetaplexMetaData.update = (data, newUpdateAuthority, primarySaleHappened, tokenKey, updateAuthority, signers) => __awaiter(this, void 0, void 0, function* () {
+    MetaplexMetaData.update = (data, newUpdateAuthority, primarySaleHappened, mint, updateAuthority, signers) => __awaiter(this, void 0, void 0, function* () {
         const inst = [];
-        const associatedToken = yield core_1.Account.findAssocaiatedTokenAddress(tokenKey, updateAuthority);
+        const associatedToken = yield core_1.Account.findAssocaiatedTokenAddress(mint, updateAuthority);
         if (associatedToken.isErr) {
             return shared_1.Result.err(associatedToken.error);
         }
-        inst.push(updateAssociatedTokenAccountInstruction(associatedToken.value, updateAuthority, updateAuthority, tokenKey));
-        inst.push((0, spl_token_1.createMintToInstruction)(tokenKey, associatedToken.value, updateAuthority, 1, signers, spl_token_1.TOKEN_PROGRAM_ID));
-        const metaAccount = yield index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
+        inst.push(updateAssociatedTokenAccountInstruction(associatedToken.value, updateAuthority, updateAuthority, mint));
+        inst.push((0, spl_token_1.createMintToInstruction)(mint, associatedToken.value, updateAuthority, 1, signers, spl_token_1.TOKEN_PROGRAM_ID));
+        const metaAccount = yield index_1.MetaplexAccount.findMetaplexAssocaiatedTokenAddress(mint);
         if (metaAccount.isErr) {
             return shared_1.Result.err(metaAccount.error);
         }

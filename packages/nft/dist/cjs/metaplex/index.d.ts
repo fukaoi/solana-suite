@@ -28,8 +28,8 @@ export declare namespace Metaplex {
     const initializeMint: (payer: PublicKey, signers: Signer[]) => Promise<{
         instructions: TransactionInstruction[];
         signers: Signer[];
-        tokenKey: string;
+        mint: string;
     }>;
     const mint: (data: MetaplexInstructure.Data, owner: PublicKey, signers: Signer[]) => Promise<Result<Instruction, Error>>;
-    const burn: (tokenKey: PublicKey, owner: PublicKey, signers: Signer[], feePayer?: Signer) => Promise<Result<Instruction, Error>>;
+    const burn: (mint: PublicKey, owner: PublicKey, signers: Signer[], feePayer?: Signer) => Promise<Result<Instruction, Error>>;
 }

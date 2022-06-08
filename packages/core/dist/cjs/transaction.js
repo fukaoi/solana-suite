@@ -204,7 +204,7 @@ var Transaction;
         }
         return shared_1.Result.ok(hist);
     });
-    Transaction.getTokenHistory = (tokenKey, searchPubkey, options) => __awaiter(this, void 0, void 0, function* () {
+    Transaction.getTokenHistory = (mint, searchPubkey, options) => __awaiter(this, void 0, void 0, function* () {
         if (options === undefined || !Object.keys(options).length) {
             options = {
                 limit: 0,
@@ -218,7 +218,7 @@ var Transaction;
                 Filter.Transfer,
                 Filter.TransferChecked,
             ];
-        const searchKeyAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(tokenKey, searchPubkey, true).then(shared_1.Result.ok)
+        const searchKeyAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, searchPubkey, true).then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (searchKeyAccount.isErr) {
             return shared_1.Result.err(searchKeyAccount.error);

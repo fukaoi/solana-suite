@@ -201,7 +201,7 @@ export var Transaction;
         }
         return Result.ok(hist);
     });
-    Transaction.getTokenHistory = (tokenKey, searchPubkey, options) => __awaiter(this, void 0, void 0, function* () {
+    Transaction.getTokenHistory = (mint, searchPubkey, options) => __awaiter(this, void 0, void 0, function* () {
         if (options === undefined || !Object.keys(options).length) {
             options = {
                 limit: 0,
@@ -215,7 +215,7 @@ export var Transaction;
                 Filter.Transfer,
                 Filter.TransferChecked,
             ];
-        const searchKeyAccount = yield getAssociatedTokenAddress(tokenKey, searchPubkey, true).then(Result.ok)
+        const searchKeyAccount = yield getAssociatedTokenAddress(mint, searchPubkey, true).then(Result.ok)
             .catch(Result.err);
         if (searchKeyAccount.isErr) {
             return Result.err(searchKeyAccount.error);

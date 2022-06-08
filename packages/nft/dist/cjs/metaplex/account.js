@@ -14,11 +14,11 @@ const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
 var MetaplexAccount;
 (function (MetaplexAccount) {
-    MetaplexAccount.findMetaplexAssocaiatedTokenAddress = (tokenKey) => __awaiter(this, void 0, void 0, function* () {
+    MetaplexAccount.findMetaplexAssocaiatedTokenAddress = (mint) => __awaiter(this, void 0, void 0, function* () {
         return yield web3_js_1.PublicKey.findProgramAddress([
             Buffer.from('metadata'),
             shared_1.Constants.METAPLEX_PROGRAM_ID.toBuffer(),
-            tokenKey.toBuffer(),
+            mint.toBuffer(),
         ], shared_1.Constants.METAPLEX_PROGRAM_ID)
             .then(v => shared_1.Result.ok(v[0]))
             .catch((e) => shared_1.Result.err(e));

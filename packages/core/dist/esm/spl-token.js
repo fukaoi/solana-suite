@@ -20,11 +20,11 @@ export var SplToken;
     SplToken.calcurateAmount = (amount, mintDecimal) => {
         return amount * (Math.pow(10, mintDecimal));
     };
-    SplToken.retryGetOrCreateAssociatedAccountInfo = (tokenKey, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.retryGetOrCreateAssociatedAccountInfo = (mint, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let counter = 1;
         while (counter < RETREY_OVER_LIMIT) {
             try {
-                const accountInfo = yield getOrCreateAssociatedTokenAccount(Node.getConnection(), feePayer, tokenKey, owner, true);
+                const accountInfo = yield getOrCreateAssociatedTokenAccount(Node.getConnection(), feePayer, mint, owner, true);
                 console.debug('# associatedAccountInfo: ', accountInfo.address.toString());
                 return Result.ok(accountInfo);
             }
@@ -53,32 +53,32 @@ export var SplToken;
         const inst = createMintToCheckedInstruction(token, tokenAssociated.value.address, owner, SplToken.calcurateAmount(totalAmount, mintDecimal), mintDecimal, signers);
         return Result.ok(new Instruction([inst], signers, feePayer, token.toBase58()));
     });
-    SplToken.burn = (tokenKey, owner, signers, burnAmount, tokenDecimals, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const tokenAccount = yield Acc.findAssocaiatedTokenAddress(tokenKey, owner);
+    SplToken.burn = (mint, owner, signers, burnAmount, tokenDecimals, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const tokenAccount = yield Acc.findAssocaiatedTokenAddress(mint, owner);
         if (tokenAccount.isErr) {
             return Result.err(tokenAccount.error);
         }
-        const inst = createBurnCheckedInstruction(tokenAccount.unwrap(), tokenKey, owner, SplToken.calcurateAmount(burnAmount, tokenDecimals), tokenDecimals, signers);
+        const inst = createBurnCheckedInstruction(tokenAccount.unwrap(), mint, owner, SplToken.calcurateAmount(burnAmount, tokenDecimals), tokenDecimals, signers);
         return Result.ok(new Instruction([inst], signers, feePayer));
     });
-    SplToken.transfer = (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.transfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         !feePayer && (feePayer = signers[0]);
-        const sourceToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(tokenKey, owner, feePayer);
+        const sourceToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(mint, owner, feePayer);
         if (sourceToken.isErr) {
             return Result.err(sourceToken.error);
         }
-        const destToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(tokenKey, dest, feePayer);
+        const destToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(mint, dest, feePayer);
         if (destToken.isErr) {
             return Result.err(destToken.error);
         }
-        const inst = createTransferCheckedInstruction(sourceToken.value.address, tokenKey, destToken.value.address, owner, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers);
+        const inst = createTransferCheckedInstruction(sourceToken.value.address, mint, destToken.value.address, owner, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers);
         return Result.ok(new Instruction([inst], signers, feePayer));
     });
-    SplToken.transferNft = (tokenKey, owner, dest, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        return SplToken.transfer(tokenKey, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
+    SplToken.transferNft = (mint, owner, dest, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        return SplToken.transfer(mint, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
     });
-    SplToken.feePayerPartialSignTransfer = (tokenKey, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const inst = yield SplToken.transfer(tokenKey, owner, dest, signers, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal);
+    SplToken.feePayerPartialSignTransfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const inst = yield SplToken.transfer(mint, owner, dest, signers, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal);
         if (inst.isErr) {
             return Result.err(inst.error);
         }
