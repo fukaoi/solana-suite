@@ -21,16 +21,16 @@ describe('Account', () => {
 
   it('Get account info', async () => {
     const res = await Account.getInfo(source.toPublicKey());
+
     if (res.isErr) {
       assert(res.error.message);
     }
+
     if (res.isOk) {
       const info = res.value as Account.AccountInfo;
       assert.isNumber(info.lamports);
-      assert.isDefined(info.data);
-      assert.isNotEmpty(info.owner);
+      assert.isString(info.owner);
       assert.isNumber(info.rentEpoch);
-      assert.isBoolean(info.executable);
     }
   });
 
@@ -45,10 +45,9 @@ describe('Account', () => {
       const info = res.value as Account.TokenAccountInfo;
       assert.isNotEmpty(info.owner);
       assert.isNotEmpty(info.mint);
-      assert.isNotEmpty(info.state);
-      assert.isNotEmpty(info.tokenAmount);
+      assert.isNumber(info.tokenAmount);
     }
- });
+  });
 
   it('[Err]Not found address', async () => {
     const tokenAccount = 'DUc7jGemNCv5A2q9GDDsnYn6JguMViVqfWyBdmPxvUG1'.toPublicKey();
@@ -107,5 +106,28 @@ describe('Account', () => {
     const account = Account.create();
     const res = account.toKeypair();
     assert.deepEqual(res, account.toKeypair());
+  });
+
+  it('Get token info owned', async () => {
+    const owner = 'Hc3FoHMo3Von8by8oKxx9nqTWkjQuGxM1sgyDQCLEMA9'.toPublicKey();
+    const res = await Account.getTokenInfoOwned(owner);
+    assert.isTrue(res.isOk, `${res.unwrap()}`);
+
+    res.unwrap().forEach(r => {
+      assert.isNotEmpty(r.mint);
+      assert.isString(r.mint);
+      assert.isNumber(r.tokenAmount);
+    });
+  });
+
+  it('Not found token', async () => {
+    const owner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT'.toPublicKey();
+    const res = await Account.getTokenInfoOwned(owner);
+    assert.isTrue(res.isOk, `${res.unwrap()}`);
+
+    res.unwrap().forEach(r => {
+      assert.isEmpty(r.mint);
+      assert.isEmpty(r.tokenAmount);
+    });
   });
 })

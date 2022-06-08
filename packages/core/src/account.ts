@@ -49,23 +49,20 @@ export namespace Account {
   export const MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 5;
 
   export interface AccountInfo {
-    data: any,
-    executable: boolean,
     lamports: number,
-    owner: PublicKey,
-    rentEpoch: 255
+    owner: string,
+    rentEpoch: number
   }
 
   export interface TokenAccountInfo {
     mint: string,
     owner: string,
-    state: string,
-    tokenAmount: {
-      amount: string,
-      decimals: number,
-      uiAmount: number,
-      uiAmountStirng: string
-    }
+    tokenAmount: number
+  }
+
+  export interface TokenInfoOwned {
+    mint: string,
+    tokenAmount: number,
   }
 
   export const getInfo = async (
@@ -84,10 +81,18 @@ export namespace Account {
       return Result.err(Error('Not found publicKey. invalid data'));
     } else if (data.parsed) {
       // token account publicKey
-      return Result.ok(data.parsed.info as TokenAccountInfo);
+      return Result.ok({
+        mint: data.parsed.info.mint,
+        owner: data.parsed.info.owner,
+        tokenAmount: data.parsed.info.tokenAmount.uiAmount
+      } as TokenAccountInfo);
     } else {
       // native address publicKey
-      return Result.ok(accountInfo.value.value as AccountInfo);
+      return Result.ok({
+        lamports: accountInfo.value.value?.lamports,
+        owner: accountInfo.value.value?.owner.toString(),
+        rentEpoch: accountInfo.value.value?.rentEpoch
+      } as AccountInfo);
     }
   }
 
@@ -121,6 +126,31 @@ export namespace Account {
     return await Node.getConnection().getTokenAccountBalance(res.unwrap())
       .then((rpc: RpcResponseAndContext<TokenAmount>) => Result.ok(rpc.value))
       .catch(Result.err);
+  };
+
+  export const getTokenInfoOwned = async (
+    pubkey: PublicKey,
+  ): Promise<Result<TokenInfoOwned[], Error>> => {
+    const res = await Node.getConnection().getParsedTokenAccountsByOwner(
+      pubkey,
+      {
+        programId: TOKEN_PROGRAM_ID
+      }
+    ).then(Result.ok)
+      .catch(Result.err);
+
+    if (res.isErr) {
+      return Result.err(res.error);
+    }
+
+    const modified = res.unwrap().value.map(d => {
+      return {
+        mint: d.account.data.parsed.info.mint,
+        tokenAmount: d.account.data.parsed.info.tokenAmount.uiAmount
+      }
+    });
+
+    return Result.ok(modified);
   };
 
   export const requestAirdrop = async (
