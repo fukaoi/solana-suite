@@ -31,7 +31,7 @@ describe('Metaplex', () => {
 
     const res = await inst.submit();
     assert.isTrue(res.isOk, res.unwrap());
-    console.log('# tokenKey: ', inst.unwrap().data);
+    console.log('# mint: ', inst.unwrap().data);
     console.log('# signature: ', res.unwrap());
   });
 
@@ -53,13 +53,13 @@ describe('Metaplex', () => {
     const res = await inst.submit();
     assert.isTrue(res.isOk, res.unwrap());
 
-    const tokenKey = inst.unwrap().data as Pubkey;
+    const mint = inst.unwrap().data as Pubkey;
 
-    console.log('# tokenKey: ', tokenKey);
+    console.log('# mint: ', mint);
     console.log('# signature: ', res.unwrap());
 
     const inst2 = await Metaplex.burn(
-      tokenKey.toPublicKey(),
+      mint.toPublicKey(),
       source.toPublicKey(),
       [source.toKeypair()]
     );
@@ -92,8 +92,8 @@ describe('Metaplex', () => {
     const res = await [inst1, inst2].submit();
 
     assert.isTrue(res.isOk, res.unwrap());
-    console.log('# tokenKey1: ', inst1.unwrap().data);
-    console.log('# tokenKey2: ', inst2.unwrap().data);
+    console.log('# mint1: ', inst1.unwrap().data);
+    console.log('# mint2: ', inst2.unwrap().data);
     console.log('# signature: ', res.unwrap());
   });
 
@@ -115,7 +115,7 @@ describe('Metaplex', () => {
     assert.isTrue(inst1.isOk);
 
     const resMint = await inst1.submit();
-    console.log('# tokenKey: ', inst1.unwrap().data);
+    console.log('# mint: ', inst1.unwrap().data);
     console.log('# signature: ', resMint.unwrap());
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`)
@@ -154,7 +154,7 @@ describe('Metaplex', () => {
     assert.isTrue(inst1.isOk);
 
     const resMint = await inst1.submit();
-    console.log('# tokenKey: ', inst1.unwrap().data);
+    console.log('# mint: ', inst1.unwrap().data);
     console.log('# signature: ', resMint.unwrap());
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`)
@@ -223,7 +223,7 @@ describe('Metaplex', () => {
     assert.isTrue(inst1.isOk);
 
     const resMint = await inst1.submit();
-    console.log('# tokenKey: ', inst1.unwrap().data);
+    console.log('# mint: ', inst1.unwrap().data);
     console.log('# signature: ', resMint.unwrap());
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`)

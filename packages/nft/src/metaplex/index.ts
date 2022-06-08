@@ -115,7 +115,7 @@ export namespace Metaplex {
   ): Promise<{
     instructions: TransactionInstruction[],
     signers: Signer[],
-    tokenKey: string
+    mint: string
   }> => {
     const instructions: TransactionInstruction[] = [];
 
@@ -127,7 +127,7 @@ export namespace Metaplex {
 
     signers = signers.concat(inst1.signers);
 
-    const tokenKey = await MetaplexInstruction.mint(
+    const mint = await MetaplexInstruction.mint(
       instructions,
       inst1.mintAccount,
       payer,
@@ -137,7 +137,7 @@ export namespace Metaplex {
     return {
       instructions,
       signers,
-      tokenKey
+      mint
     };
   }
 
@@ -153,7 +153,7 @@ export namespace Metaplex {
 
     const inst2 = await MetaplexMetaData.create(
       data,
-      inst1.tokenKey.toPublicKey(),
+      inst1.mint.toPublicKey(),
       owner,
       owner,
       owner,
@@ -167,7 +167,7 @@ export namespace Metaplex {
       data,
       undefined,
       undefined,
-      inst1.tokenKey.toPublicKey(),
+      inst1.mint.toPublicKey(),
       owner,
       signers,
     );
@@ -181,12 +181,12 @@ export namespace Metaplex {
         mergeInstructions,
         signers,
         undefined,
-        inst1.tokenKey,
+        inst1.mint,
       ));
   }
 
   export const burn = async (
-    tokenKey: PublicKey,
+    mint: PublicKey,
     owner: PublicKey,
     signers: Signer[],
     feePayer?: Signer
@@ -195,7 +195,7 @@ export namespace Metaplex {
     const tokenDecimals = 0;
 
     return SplToken.burn(
-      tokenKey,
+      mint,
       owner,
       signers,
       burnAmount,

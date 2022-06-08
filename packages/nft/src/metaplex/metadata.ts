@@ -35,7 +35,7 @@ import {
 export namespace MetaplexMetaData {
   const createAssociatedTokenAccountInstruction = (
     metaAccount: PublicKey,
-    tokenKey: PublicKey,
+    mint: PublicKey,
     mintAuthorityKey: PublicKey,
     updateAuthority: PublicKey,
     payer: PublicKey,
@@ -48,7 +48,7 @@ export namespace MetaplexMetaData {
         isWritable: true,
       },
       {
-        pubkey: tokenKey,
+        pubkey: mint,
         isSigner: false,
         isWritable: false,
       },
@@ -136,9 +136,9 @@ export namespace MetaplexMetaData {
     });
   }
 
-  export const getByTokenKey = async (tokenKey: PublicKey):
+  export const getByTokenKey = async (mint: PublicKey):
     Promise<Result<Metaplex.Format, Error>> => {
-    const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(mint);
 
     if (metaAccount.isErr) {
       return Result.err(metaAccount.error);
@@ -195,12 +195,12 @@ export namespace MetaplexMetaData {
 
   export const create = async (
     data: MetaplexInstructure.Data,
-    tokenKey: PublicKey,
+    mint: PublicKey,
     mintAuthorityKey: PublicKey,
     updateAuthority: PublicKey,
     feePayer: PublicKey,
   ): Promise<Result<TransactionInstruction[], Error>> => {
-    const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(mint);
     if (metaAccount.isErr) {
       return Result.err(metaAccount.error);
     }
@@ -209,7 +209,7 @@ export namespace MetaplexMetaData {
 
     const inst = createAssociatedTokenAccountInstruction(
       metaAccount.unwrap(),
-      tokenKey,
+      mint,
       mintAuthorityKey,
       updateAuthority,
       feePayer,
@@ -222,14 +222,14 @@ export namespace MetaplexMetaData {
     data: MetaplexInstructure.Data,
     newUpdateAuthority: PublicKey | null | undefined,
     primarySaleHappened: boolean | null | undefined,
-    tokenKey: PublicKey,
+    mint: PublicKey,
     updateAuthority: PublicKey,
     signers: Signer[],
   ): Promise<Result<TransactionInstruction[], Error>> => {
     const inst: TransactionInstruction[] = [];
 
     const associatedToken = await Account.findAssocaiatedTokenAddress(
-      tokenKey,
+      mint,
       updateAuthority,
     );
 
@@ -242,13 +242,13 @@ export namespace MetaplexMetaData {
         associatedToken.value as PublicKey,
         updateAuthority,
         updateAuthority,
-        tokenKey
+        mint
       )
     );
 
     inst.push(
       createMintToInstruction(
-        tokenKey,
+        mint,
         associatedToken.value as PublicKey,
         updateAuthority,
         1,
@@ -257,7 +257,7 @@ export namespace MetaplexMetaData {
       )
     );
 
-    const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(tokenKey);
+    const metaAccount = await MetaplexAccount.findMetaplexAssocaiatedTokenAddress(mint);
     if (metaAccount.isErr) {
       return Result.err(metaAccount.error);
     }
