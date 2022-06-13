@@ -1,40 +1,42 @@
 import {describe, it} from 'mocha';
-import {assert} from 'chai';
 import {Result} from '../src/result';
 
 describe('Result', () => {
   it('if/else condition', () => {
     const res = Result.ok('test');
+
+    // pattern:1
     if (res.isOk) {
       console.log(res.value);
     } else {
       console.log((res as Result.Err<string, Error>).error);
     }
 
+    // pattern:2
     if (res.isOk) {
       console.log(res.value);
-    } else {
+    } else if (res.isErr) {
       console.log(res.error);
     }
 
-    class Foo {
-      foo = 123;
+    // pattern:3
+    if (res.isOk) {
+      console.log(res.value);
+    } else {
+      // [tsserver 2339] [E] Property 'error' does not exist on type 'Result<string,Error>' 
+      // bug: https://github.com/microsoft/TypeScript/issues/10564
+      {/* @ts-ignore */}
+      console.log(res.error);
     }
 
-    class Bar {
-      bar = 123;
-    }
-
-    function doStuff(arg: Foo | Bar) {
-      if (arg instanceof Foo) {
-        console.log(arg.foo); // OK
+    // pattern:4
+    res.match(
+      (value) => {
+        console.log(value);
+      },
+      (err) => {
+        console.log(err);
       }
-      else {  // MUST BE Bar!
-        console.log(arg.bar); // OK
-      }
-    }
-
-    doStuff(new Foo());
-    doStuff(new Bar());
+    );
   });
 })
