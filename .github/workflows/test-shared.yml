@@ -30,5 +30,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - name: Cache solana-localhost-devnet-keypair 
+      id: cache-keypair
+      uses: actions/cache@v3
+      with:
+        path: /tmp/solana-localhost-devnet-keypair
+        key: ${{ runner.os }}-cache
     - run: npm ci
     - run: npm run test:shared
