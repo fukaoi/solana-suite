@@ -44,7 +44,7 @@
     "@solana-suite/shared": "latest",
     "@solana/buffer-layout": "^4.0.0",
     "@solana/spl-token": "^0.2.0",
-    "@solana/web3.js": "^1.29.2",
+    "@solana/web3.js": "^1.44.0",
     "form-data": "^3.0.1",
     "nft.storage": "^3.3.0",
     "node-fetch": "^3.0.0",
