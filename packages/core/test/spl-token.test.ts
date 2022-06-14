@@ -241,7 +241,12 @@ describe('SplToken', () => {
         source.toKeypair()
       );
 
-    const token = (mintInst.unwrap().data as string).toPublicKey();
+    let token!: PublicKey;
+    
+    (await mintInst.submit()).match(
+      (_) => token = (mintInst.unwrap().data as string).toPublicKey(),
+      (err) => assert.fail(err.message)
+    );
 
     console.log('# mint: ', token.toBase58());
 
@@ -258,7 +263,7 @@ describe('SplToken', () => {
       source.toKeypair(),
     );
 
-    (await [mintInst, inst].submit()).match(
+    (await inst.submit()).match(
       (ok) => console.log('signature: ', ok),
       (err) => assert.fail(err.message)
     );
