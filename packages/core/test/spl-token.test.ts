@@ -1,7 +1,8 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import {Setup} from '../../shared/test/testSetup';
-import {Account, SplToken, KeypairStr, Multisig,} from '../src/';
+import {Account, SplToken, KeypairStr, Multisig, Transaction, Pubkey} from '../src/';
+import {PublicKey} from '@solana/web3.js';
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -193,6 +194,9 @@ describe('SplToken', () => {
     const sig = await [inst1, inst2].submit();
     console.log('signature: ', sig.unwrap());
 
+    // time wait
+    await Transaction.confirmedSig(sig.unwrap());
+
     const res = await Account.getTokenBalance(source.toPublicKey(), token.toPublicKey());
     assert.isTrue(res.isOk);
     assert.equal(res.unwrap().uiAmount, TOKEN_TOTAL_AMOUNT - burnAmount);
@@ -212,9 +216,12 @@ describe('SplToken', () => {
         ]
       );
 
-    assert.isTrue(multiInst.isOk, `${multiInst.unwrap()}`);
+    let multisig!: PublicKey;
 
-    const multisig = (multiInst.unwrap().data as string).toPublicKey();
+    (await multiInst.submit()).match(
+      (_) => multisig = (multiInst.unwrap().data as string).toPublicKey(),
+      (err) => assert.fail(err.message)
+    );
 
     console.log('# signer1 address :', signer1.pubkey);
     console.log('# signer2 address :', signer2.pubkey);
@@ -234,8 +241,6 @@ describe('SplToken', () => {
         source.toKeypair()
       );
 
-    assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
-
     const token = (mintInst.unwrap().data as string).toPublicKey();
 
     console.log('# mint: ', token.toBase58());
@@ -252,15 +257,11 @@ describe('SplToken', () => {
       MINT_DECIMAL,
       source.toKeypair(),
     );
-    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
-    const sig = await [
-      multiInst,
-      mintInst,
-      inst
-    ].submit();
-
-    console.log('signature: ', `${sig.unwrap()}`);
+    (await [mintInst, inst].submit()).match(
+      (ok) => console.log('signature: ', ok),
+      (err) => assert.fail(err.message)
+    );
   });
 
   it('Retry getOrCreateAssociatedAccountInfo', async () => {
