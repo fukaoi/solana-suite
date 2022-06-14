@@ -10,6 +10,7 @@ on:
       - ".github/workflows/*.yml"
       - "packages/*/package.json"
       - "package.json"
+      - "package-lock.json"
     branches: [ main ]
 
 jobs:
