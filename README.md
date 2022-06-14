@@ -4,7 +4,7 @@
 ![test:shared workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-shared.yml/badge.svg)
 ![test:nft workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-nft.yml/badge.svg)
 
-<img src="https://bafkreibksjy2sdskvcrrlse2lwbskasub36bspidube7rlozhrd7wssg6i.ipfs.nftstorage.link/" width="90%" height="90%" />
+<img src="https://bafkreibksjy2sdskvcrrlse2lwbskasub36bspidube7rlozhrd7wssg6i.ipfs.nftstorage.link/" width="80%" height="80%" />
 
 
 ## Summary
