@@ -272,4 +272,22 @@ export namespace SplToken {
       return Result.err(ex as Error);
     }
   }
+
+  export const feePayerPartialSignTransferNft = async (
+    mint: PublicKey,
+    owner: PublicKey,
+    dest: PublicKey,
+    signers: Signer[],
+    feePayer: PublicKey,
+  ): Promise<Result<PartialSignInstruction, Error>> => {
+    return feePayerPartialSignTransfer(
+      mint,
+      owner,
+      dest,
+      signers,
+      NFT_AMOUNT,
+      NFT_DECIMALS,
+      feePayer
+    );
+  }
 }
