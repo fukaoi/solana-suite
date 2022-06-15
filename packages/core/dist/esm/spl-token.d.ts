@@ -9,4 +9,5 @@ export declare namespace SplToken {
     const transfer: (mint: PublicKey, owner: PublicKey, dest: PublicKey, signers: Signer[], amount: number, mintDecimal: number, feePayer?: Signer) => Promise<Result<Instruction, Error>>;
     const transferNft: (mint: PublicKey, owner: PublicKey, dest: PublicKey, signers: Signer[], feePayer?: Signer) => Promise<Result<Instruction, Error>>;
     const feePayerPartialSignTransfer: (mint: PublicKey, owner: PublicKey, dest: PublicKey, signers: Signer[], amount: number, mintDecimal: number, feePayer: PublicKey) => Promise<Result<PartialSignInstruction, Error>>;
+    const feePayerPartialSignTransferNft: (mint: PublicKey, owner: PublicKey, dest: PublicKey, signers: Signer[], feePayer: PublicKey) => Promise<Result<PartialSignInstruction, Error>>;
 }
