@@ -93,12 +93,15 @@ describe('SolNative', () => {
       ]
     );
 
-    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
+    let multisig!: string;
 
-    const amount = 0.01;
-    const multisig = (inst1.unwrap().data as string);
-
-    console.log('# multisig: ', multisig);
+    (await inst1.submit()).match(
+      (_) => {
+        multisig = (inst1.unwrap().data as string);
+        console.log('# multisig: ', multisig);
+      },
+      (err) => assert.fail(err.message)
+    );
 
     const inst2 = await SolNative.transferWithMultisig(
       multisig.toPublicKey(),
@@ -108,13 +111,13 @@ describe('SolNative', () => {
         signer1.toKeypair(),
         signer2.toKeypair(),
       ],
-      amount,
+      0.01,
       source.toKeypair(),
     );
-    assert.isTrue(inst2.isOk, `${inst2.unwrap()}`);
 
-    const res = await [inst1, inst2].submit();
-    assert.isTrue(res.isOk, res.unwrap().toString());
-    console.log('# signature: ', res.unwrap());
+    (await inst2.submit()).match(
+      (sig) => console.log('# signature: ', sig),
+      (err) => assert.fail(err.message)
+    );
   });
 })
