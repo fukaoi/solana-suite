@@ -242,7 +242,7 @@ describe('SplToken', () => {
       );
 
     let token!: PublicKey;
-    
+
     (await mintInst.submit()).match(
       (_) => token = (mintInst.unwrap().data as string).toPublicKey(),
       (err) => assert.fail(err.message)
@@ -285,10 +285,18 @@ describe('SplToken', () => {
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
     const mint = (mintInst.unwrap().data as string);
 
-    SplToken.retryGetOrCreateAssociatedAccountInfo(
+    const res = await SplToken.retryGetOrCreateAssociatedAccountInfo(
       mint.toPublicKey(),
       source.toPublicKey(),
       source.toKeypair()
+    );
+
+    res.match(
+      (ok) => {
+        console.log('# associated token account: ', ok);
+        assert.isString(ok)
+      },
+      (err) => assert.fail(err.message)
     );
   });
 

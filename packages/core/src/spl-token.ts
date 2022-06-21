@@ -4,7 +4,6 @@ import {
   createBurnCheckedInstruction,
   createMintToCheckedInstruction,
   createTransferCheckedInstruction,
-  getOrCreateAssociatedTokenAccount,
 } from '@solana/spl-token';
 
 
@@ -19,11 +18,12 @@ import {
   Result,
   Instruction,
   PartialSignInstruction,
-  sleep
+  sleep,
 } from '@solana-suite/shared';
 
 import {
-  Account as Acc
+  Account as Acc,
+  Transaction as LocalTransaction,
 } from './';
 
 export namespace SplToken {
@@ -31,7 +31,7 @@ export namespace SplToken {
   const NFT_AMOUNT = 1;
   const NFT_DECIMALS = 0;
   const RETREY_OVER_LIMIT = 10;
-  const RETREY_SLEEP_TIME = 3000;
+  const RETREY_SLEEP_TIME = 3;
 
   export const calcurateAmount = (amount: number, mintDecimal: number): number => {
     return amount * (10 ** mintDecimal);
@@ -41,23 +41,36 @@ export namespace SplToken {
     mint: PublicKey,
     owner: PublicKey,
     feePayer: Signer,
-  ): Promise<Result<Account, Error>> => {
+  ): Promise<Result<string, Error>> => {
     let counter = 1;
     while (counter < RETREY_OVER_LIMIT) {
       try {
-        const accountInfo = await getOrCreateAssociatedTokenAccount(
-          Node.getConnection(),
-          feePayer,
+        const inst = await Acc.getOrCreateAssociatedTokenAccount(
           mint,
           owner,
-          true
+          true,
+          feePayer
         );
-        console.debug('# associatedAccountInfo: ', accountInfo.address.toString());
-        return Result.ok(accountInfo);
+
+        if (inst.isOk && typeof inst.value === 'string') {
+          console.debug('# associatedTokenAccount: ', inst.value);
+          return Result.ok(inst.value);
+        }
+
+        return (await inst.submit()).map(
+          (ok: string) => {
+            LocalTransaction.confirmedSig(ok);
+            return (inst.unwrap() as Instruction).data as string;
+          },
+          (err: Error) => {
+            console.debug('# Error submit getOrCreateAssociatedTokenAccount: ', err);
+            throw err;
+          }
+        );
       } catch (e) {
-        console.debug(`# retry: ${counter} get or create token account: `, e);
+        console.debug(`# retry: ${counter} create token account: `, e);
       }
-      sleep(RETREY_SLEEP_TIME);
+      await sleep(RETREY_SLEEP_TIME);
       counter++;
     }
     return Result.err(Error(`retry action is over limit ${RETREY_OVER_LIMIT}`));
@@ -102,7 +115,7 @@ export namespace SplToken {
 
     const inst = createMintToCheckedInstruction(
       token,
-      tokenAssociated.value.address,
+      tokenAssociated.value.toPublicKey(),
       owner,
       calcurateAmount(totalAmount, mintDecimal),
       mintDecimal,
@@ -186,9 +199,9 @@ export namespace SplToken {
     }
 
     const inst = createTransferCheckedInstruction(
-      sourceToken.value.address,
+      sourceToken.value.toPublicKey(),
       mint,
-      destToken.value.address,
+      destToken.value.toPublicKey(),
       owner,
       calcurateAmount(amount, mintDecimal),
       mintDecimal,
@@ -246,7 +259,6 @@ export namespace SplToken {
     }
 
     const instruction = inst.value.instructions[0];
-
 
     // partially sign transaction
     const blockhashObj = await Node.getConnection().getLatestBlockhash();

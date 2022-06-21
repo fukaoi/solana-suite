@@ -3,7 +3,7 @@
         "type": "localhost-devnet",
         "customUrl": ""
     },
-    "debugging": false,
+    "debugging": true,
     "nftstorage": {
         "apikey": ""
     }

@@ -33,10 +33,12 @@ export namespace Node {
     commitment?: Commitment,
   }): void => {
     if (param.commitment) {
+      console.debug('# Node change commitment: ', commitment);
       commitment = param.commitment;
     }
 
     if (param.cluster) {
+      console.debug('# Node change cluster: ', cluster);
       cluster = ConstantsFunc.switchApi(param.cluster);
     }
   }

@@ -79,7 +79,7 @@ export namespace SolNative {
       return Result.err(sourceToken.error);
     }
 
-    console.debug('# sourceToken: ', sourceToken.value.address.toString());
+    console.debug('# sourceToken: ', sourceToken.value);
 
     const destToken = await SplToken.retryGetOrCreateAssociatedAccountInfo(
       token,
@@ -91,11 +91,11 @@ export namespace SolNative {
       return Result.err(destToken.error);
     }
 
-    console.debug('# destToken: ', destToken.value.address.toString());
+    console.debug('# destToken: ', destToken.value);
 
     const inst1 = createTransferInstruction(
-      sourceToken.value.address,
-      destToken.value.address,
+      sourceToken.value.toPublicKey(),
+      destToken.value.toPublicKey(),
       owner,
       parseInt(`${amount}`), // No lamports, its sol
       signers,
