@@ -1,6 +1,11 @@
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  TOKEN_PROGRAM_ID
+  TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress,
+  getAccount,
+  TokenAccountNotFoundError,
+  TokenInvalidAccountOwnerError,
+  createAssociatedTokenAccountInstruction,
 } from '@solana/spl-token';
 
 import {
@@ -10,12 +15,13 @@ import {
   PublicKey,
   RpcResponseAndContext,
   TokenAmount,
+  Signer,
 } from '@solana/web3.js';
 
 import bs from 'bs58';
 
 import {Transaction} from './';
-import {Node, Result} from '@solana-suite/shared';
+import {Instruction, Node, Result} from '@solana-suite/shared';
 
 export type Pubkey = string;
 export type Secret = string;
@@ -201,5 +207,67 @@ export namespace Account {
     )
       .then(v => Result.ok(v[0]))
       .catch(Result.err);
+  }
+
+  export const getOrCreateAssociatedTokenAccount = async (
+    mint: PublicKey,
+    owner: PublicKey,
+    signers: Signer[],
+    allowOwnerOffCurve = false,
+    feePayer?: Signer,
+  ): Promise<Result<string | Instruction, Error>> => {
+    const associatedToken = await getAssociatedTokenAddress(
+      mint,
+      owner,
+      allowOwnerOffCurve,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    )
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (associatedToken.isErr) {
+      return associatedToken.error;
+    }
+
+
+    const associatedTokenAccount = associatedToken.unwrap();
+    console.debug('# associatedTokenAccount: ', associatedTokenAccount.toString());
+
+    try {
+      // Dont use Result
+      await getAccount(
+        Node.getConnection(),
+        associatedTokenAccount,
+        Node.getConnection().commitment,
+        TOKEN_PROGRAM_ID
+      )
+      return Result.ok(associatedTokenAccount.toString());
+    } catch (error: unknown) {
+      if (!(error instanceof TokenAccountNotFoundError)
+        && !(error instanceof TokenInvalidAccountOwnerError)) {
+        return Result.err(Error('Unexpected error'));
+      }
+
+      const payer = feePayer ? feePayer : signers[0];
+
+      const inst =
+        createAssociatedTokenAccountInstruction(
+          payer.publicKey,
+          associatedTokenAccount,
+          owner,
+          mint,
+          TOKEN_PROGRAM_ID,
+          ASSOCIATED_TOKEN_PROGRAM_ID
+        );
+
+      return Result.ok(
+        new Instruction(
+          [inst],
+          signers,
+          payer,
+        )
+      );
+    }
   }
 }

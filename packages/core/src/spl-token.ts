@@ -238,6 +238,7 @@ export namespace SplToken {
       signers,
       calcurateAmount(amount, mintDecimal),
       mintDecimal,
+      signers[0]
     );
 
     if (inst.isErr) {

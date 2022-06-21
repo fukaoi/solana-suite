@@ -130,4 +130,39 @@ describe('Account', () => {
       assert.isEmpty(r.tokenAmount);
     });
   });
+
+  it('Get associatedToken account', async () => {
+    const mint = 'F3U1c11w8RFxkrwxLFbNB4jarcNmTiXxCdGWHu4CVrr3'.toPublicKey();
+    const owner = '83hSrAsWFYdhrqW77evWJb1yzVxyNhXk3CnrAJWEd1qm'.toPublicKey();
+    const expected = '2QSBPixtfHP2JGYfwGaxeLYji9F4NfemCvCJCXe5kMdt';
+    const res = await Account.getOrCreateAssociatedTokenAccount(
+      mint, 
+      owner, 
+      [],
+    );
+
+    res.match(
+      (ok) => assert.equal(ok, expected),
+      (err) => assert.fail(err.message)
+    );
+  });
+
+  it.only('Create associatedToken account', async () => {
+    const mint = 'F3U1c11w8RFxkrwxLFbNB4jarcNmTiXxCdGWHu4CVrr3'.toPublicKey();
+    const owner = Account.create();
+    const inst = await Account.getOrCreateAssociatedTokenAccount(
+      mint, 
+      owner.toPublicKey(), 
+      [owner.toKeypair()],
+      false,
+      source.toKeypair()
+    );
+
+    const res = await inst.submit(); 
+
+    res.match(
+      (ok) => console.log('# sig: ', ok),
+      (err) => assert.fail(err.message)
+    );
+  });
 })

@@ -81,7 +81,7 @@ var SplToken;
         return SplToken.transfer(mint, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
     });
     SplToken.feePayerPartialSignTransfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const inst = yield SplToken.transfer(mint, owner, dest, signers, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal);
+        const inst = yield SplToken.transfer(mint, owner, dest, signers, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers[0]);
         if (inst.isErr) {
             return shared_1.Result.err(inst.error);
         }
