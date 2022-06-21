@@ -3,6 +3,7 @@ import {Account, KeypairStr} from '../src';
 import {assert} from 'chai';
 import {PublicKey} from '@solana/web3.js';
 import {Setup} from '../../shared/test/testSetup';
+import {Instruction} from '@solana-suite/shared';
 
 let source: KeypairStr;
 
@@ -138,7 +139,6 @@ describe('Account', () => {
     const res = await Account.getOrCreateAssociatedTokenAccount(
       mint, 
       owner, 
-      [],
     );
 
     res.match(
@@ -147,13 +147,12 @@ describe('Account', () => {
     );
   });
 
-  it.only('Create associatedToken account', async () => {
+  it('Create associatedToken account', async () => {
     const mint = 'F3U1c11w8RFxkrwxLFbNB4jarcNmTiXxCdGWHu4CVrr3'.toPublicKey();
     const owner = Account.create();
     const inst = await Account.getOrCreateAssociatedTokenAccount(
       mint, 
       owner.toPublicKey(), 
-      [owner.toKeypair()],
       false,
       source.toKeypair()
     );
@@ -161,7 +160,7 @@ describe('Account', () => {
     const res = await inst.submit(); 
 
     res.match(
-      (ok) => console.log('# sig: ', ok),
+      (ok) => console.log('# sig: ', ok, '# tokenAccount: ', (inst.unwrap() as Instruction).data),
       (err) => assert.fail(err.message)
     );
   });

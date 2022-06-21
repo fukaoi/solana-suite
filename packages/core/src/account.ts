@@ -212,7 +212,6 @@ export namespace Account {
   export const getOrCreateAssociatedTokenAccount = async (
     mint: PublicKey,
     owner: PublicKey,
-    signers: Signer[],
     allowOwnerOffCurve = false,
     feePayer?: Signer,
   ): Promise<Result<string | Instruction, Error>> => {
@@ -249,11 +248,9 @@ export namespace Account {
         return Result.err(Error('Unexpected error'));
       }
 
-      const payer = feePayer ? feePayer : signers[0];
-
       const inst =
         createAssociatedTokenAccountInstruction(
-          payer.publicKey,
+          feePayer!.publicKey,
           associatedTokenAccount,
           owner,
           mint,
@@ -264,8 +261,9 @@ export namespace Account {
       return Result.ok(
         new Instruction(
           [inst],
-          signers,
-          payer,
+          [],
+          feePayer,
+          associatedTokenAccount.toString()
         )
       );
     }

@@ -45,6 +45,7 @@ export class Instruction {
       transaction.feePayer = this.feePayer.publicKey;
       finalSigners = [this.feePayer, ...this.signers];
     }
+
     this.instructions.map(inst => transaction.add(inst));
 
     const options: ConfirmOptions = {

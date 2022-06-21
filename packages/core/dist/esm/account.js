@@ -7,11 +7,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddress, getAccount, TokenAccountNotFoundError, TokenInvalidAccountOwnerError, createAssociatedTokenAccountInstruction, } from '@solana/spl-token';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, } from '@solana/web3.js';
 import bs from 'bs58';
 import { Transaction } from './';
-import { Node, Result } from '@solana-suite/shared';
+import { Instruction, Node, Result } from '@solana-suite/shared';
 export class KeypairStr {
     constructor(pubkey, secret) {
         this.pubkey = pubkey;
@@ -124,5 +124,28 @@ export var Account;
         ], ASSOCIATED_TOKEN_PROGRAM_ID)
             .then(v => Result.ok(v[0]))
             .catch(Result.err);
+    });
+    Account.getOrCreateAssociatedTokenAccount = (mint, owner, allowOwnerOffCurve = false, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const associatedToken = yield getAssociatedTokenAddress(mint, owner, allowOwnerOffCurve, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID)
+            .then(Result.ok)
+            .catch(Result.err);
+        if (associatedToken.isErr) {
+            return associatedToken.error;
+        }
+        const associatedTokenAccount = associatedToken.unwrap();
+        console.debug('# associatedTokenAccount: ', associatedTokenAccount.toString());
+        try {
+            // Dont use Result
+            yield getAccount(Node.getConnection(), associatedTokenAccount, Node.getConnection().commitment, TOKEN_PROGRAM_ID);
+            return Result.ok(associatedTokenAccount.toString());
+        }
+        catch (error) {
+            if (!(error instanceof TokenAccountNotFoundError)
+                && !(error instanceof TokenInvalidAccountOwnerError)) {
+                return Result.err(Error('Unexpected error'));
+            }
+            const inst = createAssociatedTokenAccountInstruction(feePayer.publicKey, associatedTokenAccount, owner, mint, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+            return Result.ok(new Instruction([inst], [], feePayer, associatedTokenAccount.toString()));
+        }
     });
 })(Account || (Account = {}));
