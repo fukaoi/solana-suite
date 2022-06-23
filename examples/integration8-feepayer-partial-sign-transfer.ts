@@ -7,8 +7,7 @@ import {
   Account,
   SolNative,
   SplToken,
-  // } from '@solana-suite/core';
-} from '../packages/core/src';
+} from '@solana-suite/core';
 
 import {
   PartialSignInstruction,
