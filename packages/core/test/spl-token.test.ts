@@ -300,32 +300,35 @@ describe('SplToken', () => {
     );
   });
 
-  it('transfer feePayerPartialSign', async () => {
+  it.only('transfer feePayerPartialSign', async () => {
+    const tokenowner = Account.create();
+    const receipt = Account.create();
+    console.log('# tokenowner: ', tokenowner.pubkey);
+    console.log('# receipt: ', receipt.pubkey);
+
     const inst1 =
       await SplToken.mint(
-        source.toPublicKey(),
+        tokenowner.toPublicKey(),
         [
-          source.toKeypair(),
+          tokenowner.toKeypair(),
         ],
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL,
+        source.toKeypair()
       );
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
     await inst1.submit();
     const token = inst1.unwrap().data as string;
-    const receipt = Account.create();
     console.log('# mint: ', token);
-    console.log('# receipt: ', receipt.pubkey);
 
-    const tokenAmount = 1;
     const serialized =
       await SplToken.feePayerPartialSignTransfer(
         token.toPublicKey(),
-        source.toPublicKey(),
+        tokenowner.toPublicKey(),
         receipt.toPublicKey(),
-        [source.toKeypair()],
-        tokenAmount,
+        [tokenowner.toKeypair()],
+        100,
         MINT_DECIMAL,
         source.toPublicKey()
       );

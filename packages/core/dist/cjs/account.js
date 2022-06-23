@@ -132,7 +132,7 @@ var Account;
             .then(v => shared_1.Result.ok(v[0]))
             .catch(shared_1.Result.err);
     });
-    Account.getOrCreateAssociatedTokenAccount = (mint, owner, allowOwnerOffCurve = false, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Account.getOrCreateAssociatedTokenAccountInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
         const associatedToken = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, owner, allowOwnerOffCurve, spl_token_1.TOKEN_PROGRAM_ID, spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
@@ -144,15 +144,31 @@ var Account;
         try {
             // Dont use Result
             yield (0, spl_token_1.getAccount)(shared_1.Node.getConnection(), associatedTokenAccount, shared_1.Node.getConnection().commitment, spl_token_1.TOKEN_PROGRAM_ID);
-            return shared_1.Result.ok(associatedTokenAccount.toString());
+            return shared_1.Result.ok({
+                tokenAccount: associatedTokenAccount.toString(),
+                inst: undefined
+            });
         }
         catch (error) {
             if (!(error instanceof spl_token_1.TokenAccountNotFoundError)
                 && !(error instanceof spl_token_1.TokenInvalidAccountOwnerError)) {
                 return shared_1.Result.err(Error('Unexpected error'));
             }
-            const inst = (0, spl_token_1.createAssociatedTokenAccountInstruction)(feePayer.publicKey, associatedTokenAccount, owner, mint, spl_token_1.TOKEN_PROGRAM_ID, spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID);
-            return shared_1.Result.ok(new shared_1.Instruction([inst], [], feePayer, associatedTokenAccount.toString()));
+            const inst = (0, spl_token_1.createAssociatedTokenAccountInstruction)(feePayer, associatedTokenAccount, owner, mint, spl_token_1.TOKEN_PROGRAM_ID, spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID);
+            return shared_1.Result.ok({
+                tokenAccount: associatedTokenAccount.toString(),
+                inst
+            });
         }
+    });
+    Account.getOrCreateAssociatedTokenAccount = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
+        const res = yield Account.getOrCreateAssociatedTokenAccountInstruction(mint, owner, feePayer.publicKey, allowOwnerOffCurve);
+        if (res.isErr) {
+            return shared_1.Result.err(res.error);
+        }
+        if (!res.value.inst) {
+            return shared_1.Result.ok(res.value.tokenAccount);
+        }
+        return shared_1.Result.ok(new shared_1.Instruction([res.value.inst], [], feePayer, res.value.tokenAccount));
     });
 })(Account = exports.Account || (exports.Account = {}));

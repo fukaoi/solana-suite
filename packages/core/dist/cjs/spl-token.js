@@ -27,20 +27,18 @@ var SplToken;
         let counter = 1;
         while (counter < RETREY_OVER_LIMIT) {
             try {
-                const inst = yield _1.Account.getOrCreateAssociatedTokenAccount(mint, owner, false, feePayer);
+                const inst = yield _1.Account.getOrCreateAssociatedTokenAccount(mint, owner, feePayer, true);
                 if (inst.isOk && typeof inst.value === 'string') {
                     console.debug('# associatedTokenAccount: ', inst.value);
                     return shared_1.Result.ok(inst.value);
                 }
-                const sig = yield inst.submit();
-                sig.match((ok) => {
-                    shared_1.Node.changeConnection({ commitment: 'finalized' });
+                return (yield inst.submit()).map((ok) => {
                     _1.Transaction.confirmedSig(ok);
+                    return inst.unwrap().data;
                 }, (err) => {
                     console.debug('# Error submit getOrCreateAssociatedTokenAccount: ', err);
                     throw err;
                 });
-                return shared_1.Result.ok(inst.unwrap().data);
             }
             catch (e) {
                 console.debug(`# retry: ${counter} create token account: `, e);
@@ -92,18 +90,28 @@ var SplToken;
         return SplToken.transfer(mint, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
     });
     SplToken.feePayerPartialSignTransfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const inst = yield SplToken.transfer(mint, owner, dest, signers, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers[0]);
-        if (inst.isErr) {
-            return shared_1.Result.err(inst.error);
+        const sourceToken = yield _1.Account.getOrCreateAssociatedTokenAccountInstruction(mint, owner, feePayer);
+        const destToken = yield _1.Account.getOrCreateAssociatedTokenAccountInstruction(mint, dest, feePayer);
+        if (destToken.isErr) {
+            return shared_1.Result.err(destToken.error);
         }
-        const instruction = inst.value.instructions[0];
-        // partially sign transaction
+        let inst2;
         const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
         const tx = new web3_js_1.Transaction({
             lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
             blockhash: blockhashObj.blockhash,
             feePayer
-        }).add(instruction);
+        });
+        // return associated token account
+        if (!destToken.value.inst) {
+            inst2 = (0, spl_token_1.createTransferCheckedInstruction)((sourceToken.unwrap().tokenAccount).toPublicKey(), mint, destToken.value.tokenAccount.toPublicKey(), owner, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers);
+            tx.add(inst2);
+        }
+        else {
+            // return instruction and undecided associated token account
+            inst2 = (0, spl_token_1.createTransferCheckedInstruction)((sourceToken.unwrap().tokenAccount).toPublicKey(), mint, destToken.value.tokenAccount.toPublicKey(), owner, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers);
+            tx.add(destToken.value.inst).add(inst2);
+        }
         tx.recentBlockhash = blockhashObj.blockhash;
         signers.forEach(signer => {
             tx.partialSign(signer);

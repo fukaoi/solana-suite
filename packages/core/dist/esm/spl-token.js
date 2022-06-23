@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { createMint, createBurnCheckedInstruction, createMintToCheckedInstruction, createTransferCheckedInstruction, } from '@solana/spl-token';
 import { Transaction, } from '@solana/web3.js';
 import { Node, Result, Instruction, PartialSignInstruction, sleep, } from '@solana-suite/shared';
-import { Account as Acc, Transaction as LocalTransaction, } from './';
+import { Account as Acc, Account, Transaction as LocalTransaction, } from './';
 export var SplToken;
 (function (SplToken) {
     const NFT_AMOUNT = 1;
@@ -24,20 +24,18 @@ export var SplToken;
         let counter = 1;
         while (counter < RETREY_OVER_LIMIT) {
             try {
-                const inst = yield Acc.getOrCreateAssociatedTokenAccount(mint, owner, false, feePayer);
+                const inst = yield Acc.getOrCreateAssociatedTokenAccount(mint, owner, feePayer, true);
                 if (inst.isOk && typeof inst.value === 'string') {
                     console.debug('# associatedTokenAccount: ', inst.value);
                     return Result.ok(inst.value);
                 }
-                const sig = yield inst.submit();
-                sig.match((ok) => {
-                    Node.changeConnection({ commitment: 'finalized' });
+                return (yield inst.submit()).map((ok) => {
                     LocalTransaction.confirmedSig(ok);
+                    return inst.unwrap().data;
                 }, (err) => {
                     console.debug('# Error submit getOrCreateAssociatedTokenAccount: ', err);
                     throw err;
                 });
-                return Result.ok(inst.unwrap().data);
             }
             catch (e) {
                 console.debug(`# retry: ${counter} create token account: `, e);
@@ -89,18 +87,28 @@ export var SplToken;
         return SplToken.transfer(mint, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
     });
     SplToken.feePayerPartialSignTransfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const inst = yield SplToken.transfer(mint, owner, dest, signers, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers[0]);
-        if (inst.isErr) {
-            return Result.err(inst.error);
+        const sourceToken = yield Account.getOrCreateAssociatedTokenAccountInstruction(mint, owner, feePayer);
+        const destToken = yield Account.getOrCreateAssociatedTokenAccountInstruction(mint, dest, feePayer);
+        if (destToken.isErr) {
+            return Result.err(destToken.error);
         }
-        const instruction = inst.value.instructions[0];
-        // partially sign transaction
+        let inst2;
         const blockhashObj = yield Node.getConnection().getLatestBlockhash();
         const tx = new Transaction({
             lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
             blockhash: blockhashObj.blockhash,
             feePayer
-        }).add(instruction);
+        });
+        // return associated token account
+        if (!destToken.value.inst) {
+            inst2 = createTransferCheckedInstruction((sourceToken.unwrap().tokenAccount).toPublicKey(), mint, destToken.value.tokenAccount.toPublicKey(), owner, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers);
+            tx.add(inst2);
+        }
+        else {
+            // return instruction and undecided associated token account
+            inst2 = createTransferCheckedInstruction((sourceToken.unwrap().tokenAccount).toPublicKey(), mint, destToken.value.tokenAccount.toPublicKey(), owner, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers);
+            tx.add(destToken.value.inst).add(inst2);
+        }
         tx.recentBlockhash = blockhashObj.blockhash;
         signers.forEach(signer => {
             tx.partialSign(signer);
