@@ -314,21 +314,24 @@ describe('SplToken', () => {
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
     await inst1.submit();
     const token = inst1.unwrap().data as string;
+    const receipt = Account.create();
     console.log('# mint: ', token);
+    console.log('# receipt: ', receipt.pubkey);
 
     const tokenAmount = 1;
     const serialized =
       await SplToken.feePayerPartialSignTransfer(
         token.toPublicKey(),
         source.toPublicKey(),
-        dest.toPublicKey(),
+        receipt.toPublicKey(),
         [source.toKeypair()],
         tokenAmount,
         MINT_DECIMAL,
-        source.pubkey.toPublicKey()
+        source.toPublicKey()
       );
 
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
+
     if (serialized.isOk) {
       const res = await serialized.value.submit(source.toKeypair());
       assert.isTrue(res.isOk, `${res.unwrap()}`);

@@ -137,8 +137,9 @@ describe('Account', () => {
     const owner = '83hSrAsWFYdhrqW77evWJb1yzVxyNhXk3CnrAJWEd1qm'.toPublicKey();
     const expected = '2QSBPixtfHP2JGYfwGaxeLYji9F4NfemCvCJCXe5kMdt';
     const res = await Account.getOrCreateAssociatedTokenAccount(
-      mint, 
-      owner, 
+      mint,
+      owner,
+      source.toKeypair()
     );
 
     res.match(
@@ -147,17 +148,16 @@ describe('Account', () => {
     );
   });
 
-  it('Create associatedToken account', async () => {
+  it.only('Create associatedToken account', async () => {
     const mint = 'F3U1c11w8RFxkrwxLFbNB4jarcNmTiXxCdGWHu4CVrr3'.toPublicKey();
     const owner = Account.create();
     const inst = await Account.getOrCreateAssociatedTokenAccount(
-      mint, 
-      owner.toPublicKey(), 
-      false,
+      mint,
+      owner.toPublicKey(),
       source.toKeypair()
     );
 
-    const res = await inst.submit(); 
+    const res = await inst.submit();
 
     res.match(
       (ok) => console.log('# sig: ', ok, '# tokenAccount: ', (inst.unwrap() as Instruction).data),

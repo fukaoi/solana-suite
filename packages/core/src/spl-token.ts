@@ -1,9 +1,12 @@
 import {
-  Account,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
   createMint,
   createBurnCheckedInstruction,
   createMintToCheckedInstruction,
   createTransferCheckedInstruction,
+  createAssociatedTokenAccountInstruction,
+  getAssociatedTokenAddress,
 } from '@solana/spl-token';
 
 
@@ -23,6 +26,7 @@ import {
 
 import {
   Account as Acc,
+  Account,
   Transaction as LocalTransaction,
 } from './';
 
@@ -48,8 +52,8 @@ export namespace SplToken {
         const inst = await Acc.getOrCreateAssociatedTokenAccount(
           mint,
           owner,
+          feePayer,
           true,
-          feePayer
         );
 
         if (inst.isOk && typeof inst.value === 'string') {
@@ -244,29 +248,57 @@ export namespace SplToken {
     feePayer: PublicKey,
   ): Promise<Result<PartialSignInstruction, Error>> => {
 
-    const inst = await transfer(
+    const sourceToken = await Account.getOrCreateAssociatedTokenAccountInstruction(
       mint,
       owner,
-      dest,
-      signers,
-      calcurateAmount(amount, mintDecimal),
-      mintDecimal,
-      signers[0]
+      feePayer
     );
 
-    if (inst.isErr) {
-      return Result.err(inst.error);
+    const destToken = await Account.getOrCreateAssociatedTokenAccountInstruction(
+      mint,
+      dest,
+      feePayer
+    );
+
+    if (destToken.isErr) {
+      return Result.err(destToken.error);
     }
 
-    const instruction = inst.value.instructions[0];
-
-    // partially sign transaction
+    let inst2;
     const blockhashObj = await Node.getConnection().getLatestBlockhash();
+
     const tx = new Transaction({
       lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
       blockhash: blockhashObj.blockhash,
       feePayer
-    }).add(instruction);
+    });
+
+    // return associated token account
+    if (!destToken.value.inst) {
+      inst2 = createTransferCheckedInstruction(
+        (sourceToken.unwrap().tokenAccount).toPublicKey(),
+        mint,
+        destToken.value.tokenAccount.toPublicKey(),
+        owner,
+        calcurateAmount(amount, mintDecimal),
+        mintDecimal,
+        signers,
+      );
+      tx.add(inst2);
+
+    } else {
+      // return instruction and undecided associated token account
+      inst2 = createTransferCheckedInstruction(
+        (sourceToken.unwrap().tokenAccount).toPublicKey(),
+        mint,
+        destToken.value.tokenAccount.toPublicKey(),
+        owner,
+        calcurateAmount(amount, mintDecimal),
+        mintDecimal,
+        signers,
+      );
+      tx.add(destToken.value.inst).add(inst2);
+    }
 
     tx.recentBlockhash = blockhashObj.blockhash;
     signers.forEach(signer => {
