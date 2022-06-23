@@ -3,6 +3,7 @@ import {Account, KeypairStr} from '../src';
 import {assert} from 'chai';
 import {PublicKey} from '@solana/web3.js';
 import {Setup} from '../../shared/test/testSetup';
+import {Instruction} from '@solana-suite/shared';
 
 let source: KeypairStr;
 
@@ -129,5 +130,38 @@ describe('Account', () => {
       assert.isEmpty(r.mint);
       assert.isEmpty(r.tokenAmount);
     });
+  });
+
+  it('Get associatedToken account', async () => {
+    const mint = 'F3U1c11w8RFxkrwxLFbNB4jarcNmTiXxCdGWHu4CVrr3'.toPublicKey();
+    const owner = '83hSrAsWFYdhrqW77evWJb1yzVxyNhXk3CnrAJWEd1qm'.toPublicKey();
+    const expected = '2QSBPixtfHP2JGYfwGaxeLYji9F4NfemCvCJCXe5kMdt';
+    const res = await Account.getOrCreateAssociatedTokenAccount(
+      mint,
+      owner,
+      source.toKeypair()
+    );
+
+    res.match(
+      (ok) => assert.equal(ok, expected),
+      (err) => assert.fail(err.message)
+    );
+  });
+
+  it.only('Create associatedToken account', async () => {
+    const mint = 'F3U1c11w8RFxkrwxLFbNB4jarcNmTiXxCdGWHu4CVrr3'.toPublicKey();
+    const owner = Account.create();
+    const inst = await Account.getOrCreateAssociatedTokenAccount(
+      mint,
+      owner.toPublicKey(),
+      source.toKeypair()
+    );
+
+    const res = await inst.submit();
+
+    res.match(
+      (ok) => console.log('# sig: ', ok, '# tokenAccount: ', (inst.unwrap() as Instruction).data),
+      (err) => assert.fail(err.message)
+    );
   });
 })

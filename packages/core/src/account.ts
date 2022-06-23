@@ -1,6 +1,11 @@
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  TOKEN_PROGRAM_ID
+  TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress,
+  getAccount,
+  TokenAccountNotFoundError,
+  TokenInvalidAccountOwnerError,
+  createAssociatedTokenAccountInstruction,
 } from '@solana/spl-token';
 
 import {
@@ -10,12 +15,14 @@ import {
   PublicKey,
   RpcResponseAndContext,
   TokenAmount,
+  Signer,
+  TransactionInstruction,
 } from '@solana/web3.js';
 
 import bs from 'bs58';
 
 import {Transaction} from './';
-import {Node, Result} from '@solana-suite/shared';
+import {Instruction, Node, Result} from '@solana-suite/shared';
 
 export type Pubkey = string;
 export type Secret = string;
@@ -201,5 +208,100 @@ export namespace Account {
     )
       .then(v => Result.ok(v[0]))
       .catch(Result.err);
+  }
+
+  export const getOrCreateAssociatedTokenAccountInstruction = async (
+    mint: PublicKey,
+    owner: PublicKey,
+    feePayer: PublicKey,
+    allowOwnerOffCurve = false,
+  ): Promise<Result<{tokenAccount: string, inst: TransactionInstruction | undefined}, Error>> => {
+    const associatedToken = await getAssociatedTokenAddress(
+      mint,
+      owner,
+      allowOwnerOffCurve,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    )
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (associatedToken.isErr) {
+      return associatedToken.error;
+    }
+
+
+    const associatedTokenAccount = associatedToken.unwrap();
+    console.debug('# associatedTokenAccount: ', associatedTokenAccount.toString());
+
+    try {
+      // Dont use Result
+      await getAccount(
+        Node.getConnection(),
+        associatedTokenAccount,
+        Node.getConnection().commitment,
+        TOKEN_PROGRAM_ID
+      )
+      return Result.ok(
+        {
+          tokenAccount: associatedTokenAccount.toString(),
+          inst: undefined
+        }
+      );
+    } catch (error: unknown) {
+      if (!(error instanceof TokenAccountNotFoundError)
+        && !(error instanceof TokenInvalidAccountOwnerError)) {
+        return Result.err(Error('Unexpected error'));
+      }
+
+      const inst =
+        createAssociatedTokenAccountInstruction(
+          feePayer,
+          associatedTokenAccount,
+          owner,
+          mint,
+          TOKEN_PROGRAM_ID,
+          ASSOCIATED_TOKEN_PROGRAM_ID
+        );
+
+      return Result.ok(
+        {
+          tokenAccount: associatedTokenAccount.toString(),
+          inst
+        }
+      );
+    }
+  }
+
+  export const getOrCreateAssociatedTokenAccount = async (
+    mint: PublicKey,
+    owner: PublicKey,
+    feePayer: Signer,
+    allowOwnerOffCurve = false,
+  ): Promise<Result<string | Instruction, Error>> => {
+
+    const res = await getOrCreateAssociatedTokenAccountInstruction(
+      mint,
+      owner,
+      feePayer.publicKey,
+      allowOwnerOffCurve,
+    );
+
+    if (res.isErr) {
+      return Result.err(res.error);
+    }
+
+    if (!res.value.inst) {
+      return Result.ok(res.value.tokenAccount);
+    }
+
+    return Result.ok(
+      new Instruction(
+        [res.value.inst],
+        [],
+        feePayer,
+        res.value.tokenAccount
+      )
+    );
   }
 }

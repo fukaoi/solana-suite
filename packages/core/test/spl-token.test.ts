@@ -242,7 +242,7 @@ describe('SplToken', () => {
       );
 
     let token!: PublicKey;
-    
+
     (await mintInst.submit()).match(
       (_) => token = (mintInst.unwrap().data as string).toPublicKey(),
       (err) => assert.fail(err.message)
@@ -285,22 +285,36 @@ describe('SplToken', () => {
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
     const mint = (mintInst.unwrap().data as string);
 
-    SplToken.retryGetOrCreateAssociatedAccountInfo(
+    const res = await SplToken.retryGetOrCreateAssociatedAccountInfo(
       mint.toPublicKey(),
       source.toPublicKey(),
       source.toKeypair()
     );
+
+    res.match(
+      (ok) => {
+        console.log('# associated token account: ', ok);
+        assert.isString(ok)
+      },
+      (err) => assert.fail(err.message)
+    );
   });
 
   it('transfer feePayerPartialSign', async () => {
+    const tokenowner = Account.create();
+    const receipt = Account.create();
+    console.log('# tokenowner: ', tokenowner.pubkey);
+    console.log('# receipt: ', receipt.pubkey);
+
     const inst1 =
       await SplToken.mint(
-        source.toPublicKey(),
+        tokenowner.toPublicKey(),
         [
-          source.toKeypair(),
+          tokenowner.toKeypair(),
         ],
         TOKEN_TOTAL_AMOUNT,
         MINT_DECIMAL,
+        source.toKeypair()
       );
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
@@ -308,19 +322,19 @@ describe('SplToken', () => {
     const token = inst1.unwrap().data as string;
     console.log('# mint: ', token);
 
-    const tokenAmount = 1;
     const serialized =
       await SplToken.feePayerPartialSignTransfer(
         token.toPublicKey(),
-        source.toPublicKey(),
-        dest.toPublicKey(),
-        [source.toKeypair()],
-        tokenAmount,
+        tokenowner.toPublicKey(),
+        receipt.toPublicKey(),
+        [tokenowner.toKeypair()],
+        100,
         MINT_DECIMAL,
-        source.pubkey.toPublicKey()
+        source.toPublicKey()
       );
 
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
+
     if (serialized.isOk) {
       const res = await serialized.value.submit(source.toKeypair());
       assert.isTrue(res.isOk, `${res.unwrap()}`);
