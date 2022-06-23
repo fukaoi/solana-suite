@@ -300,7 +300,7 @@ describe('SplToken', () => {
     );
   });
 
-  it.only('transfer feePayerPartialSign', async () => {
+  it('transfer feePayerPartialSign', async () => {
     const tokenowner = Account.create();
     const receipt = Account.create();
     console.log('# tokenowner: ', tokenowner.pubkey);
