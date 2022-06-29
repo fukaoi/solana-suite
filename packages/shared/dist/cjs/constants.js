@@ -26,7 +26,7 @@ var Constants;
 })(Constants = exports.Constants || (exports.Constants = {}));
 var ConstantsFunc;
 (function (ConstantsFunc) {
-    ConstantsFunc.switchApi = (env, customUrl = Constants.customUrl) => {
+    ConstantsFunc.switchCluster = (env, customUrl = Constants.customUrl) => {
         switch (env) {
             case Constants.Cluster.prd:
                 return 'https://api.mainnet-beta.solana.com';
@@ -52,6 +52,21 @@ var ConstantsFunc;
                 return 'http://api.devnet.solana.com';
         }
     };
+    ConstantsFunc.switchBundlr = (env) => {
+        switch (env) {
+            case Constants.Cluster.dev:
+            case Constants.Cluster.test:
+            case Constants.Cluster.localhost:
+                return 'https://devnet.bundlr.network';
+            default:
+                const index = Date.now() % 2;
+                const clusters = [
+                    'https://node1.bundlr.network',
+                    'https://node2.bundlr.network',
+                ];
+                return clusters[index];
+        }
+    };
 })(ConstantsFunc = exports.ConstantsFunc || (exports.ConstantsFunc = {}));
 (function (Constants) {
     String.prototype.toPublicKey = function () {
@@ -63,8 +78,5 @@ var ConstantsFunc;
     Constants.COMMITMENT = 'confirmed';
     Constants.NFT_STORAGE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE';
     Constants.NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
-    Constants.ARWEAVE_UPLOAD_SRV_URL = 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile4';
-    Constants.ARWEAVE_GATEWAY_URL = 'https://arweave.net';
-    Constants.AR_SOL_HOLDER_ID = 'HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm'.toPublicKey();
-    Constants.COIN_MARKET_URL = 'https://api.coingecko.com/api/v3/simple/price';
+    Constants.BUNDLR_NETWORK_URL = ConstantsFunc.switchBundlr(solana_suite_json_1.default.cluster.type);
 })(Constants = exports.Constants || (exports.Constants = {}));

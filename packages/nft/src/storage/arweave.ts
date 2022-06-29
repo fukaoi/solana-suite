@@ -1,47 +1,59 @@
-
-import {Metaplex, keypairIdentity, bundlrStorage, BundlrStorageDriver, useMetaplexFile} from "@metaplex-foundation/js";
-import {KeypairStr} from '@solana-suite/core';
-import {Node} from '@solana-suite/shared';
-import fs from 'fs';
-import {Storage} from './';
-
-// const connection = Node.getConnection();
-// const wallet = new KeypairStr(
-  // '3Uy2kBCKwThRKHDc8Wi3MakGHKMYjYH13HhP4tK3p4x7',
-  // '2WSrU7dhmgoS2Gseb63VphpGDycVQGoKf76TBeYbQdrB9rMcqKuob32G9j8faKSaiFxU3hywjuvM1ZYCu9bvNQfq'
-// ).toKeypair();
-
-// const metaplex = Metaplex
-  // .make(connection)
-  // .use(keypairIdentity(wallet))
-  // .use(bundlrStorage({
-    // address: 'https://devnet.bundlr.network',
-    // providerUrl: 'https://api.devnet.solana.com',
-    // timeout: 60000,
-  // }));
-
-
-
-// const bundlr = metaplex.storage().driver() as BundlrStorageDriver;
-
-// // bundlr.getBalance().then(console.log);
-
-// const buffer = fs.readFileSync('./demo.jpg');
-// const file = useMetaplexFile(buffer, 'demo.jpg');
-// bundlr.upload(file).then(console.log).catch(console.log);
-
+import {
+  Metaplex,
+  keypairIdentity,
+  bundlrStorage,
+  BundlrStorageDriver,
+  useMetaplexFile,
+  MetaplexFile
+} from "@metaplex-foundation/js";
 
 import {
   Keypair,
-  LAMPORTS_PER_SOL
 } from '@solana/web3.js';
 
+import fs from 'fs';
+import {
+  Node, 
+  Result, 
+  Constants,
+  ConstantsFunc,
+} from '@solana-suite/shared';
+
+export interface MetaplexFileOptions {
+  readonly displayName: string;
+  readonly uniqueName: string;
+  readonly contentType: string | undefined;
+  readonly extension: string | undefined;
+  readonly tags: {name: string; value: string}[];
+}
+
 export namespace StorageArweave {
-  export const upload = async (
+  export const uploadContent = async (
     payer: Keypair,
-    storageData: Storage.Format
-  // ): Promise<Result<string, Error>> => {
-  ) => {
-    // return Result.ok(`${Constants.ARWEAVE_GATEWAY_URL}/${manifest!.transactionId}`);
+    filePath: string,
+    fileName: string,
+    fileOptions?: MetaplexFileOptions
+  ): Promise<Result<string, Error>> => {
+    const metaplex = Metaplex
+      .make(Node.getConnection())
+      .use(keypairIdentity(payer))
+      .use(bundlrStorage({
+        address: Constants.BUNDLR_NETWORK_URL,
+        providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
+        timeout: 60000,
+      }));
+
+    const driver = metaplex.storage().driver() as BundlrStorageDriver;
+    const buffer = fs.readFileSync(filePath);
+    let file: MetaplexFile;
+    if (fileOptions) {
+      file = useMetaplexFile(buffer, fileName, fileOptions);
+    } else {
+      file = useMetaplexFile(buffer, fileName);
+    }
+
+    return driver.upload(file)
+      .then(Result.ok)
+      .catch(Result.err);
   }
 }

@@ -10,7 +10,7 @@ var Node;
     Node.getConnection = () => {
         // default setting
         if (!cluster) {
-            cluster = constants_1.ConstantsFunc.switchApi(constants_1.Constants.currentCluster);
+            cluster = constants_1.ConstantsFunc.switchCluster(constants_1.Constants.currentCluster);
         }
         // default setting
         if (!commitment) {
@@ -26,7 +26,7 @@ var Node;
         }
         if (param.cluster) {
             console.debug('# Node change cluster: ', cluster);
-            cluster = constants_1.ConstantsFunc.switchApi(param.cluster);
+            cluster = constants_1.ConstantsFunc.switchCluster(param.cluster);
         }
     };
 })(Node = exports.Node || (exports.Node = {}));

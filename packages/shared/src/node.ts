@@ -15,7 +15,7 @@ export namespace Node {
 
     // default setting
     if (!cluster) {
-      cluster = ConstantsFunc.switchApi(Constants.currentCluster);
+      cluster = ConstantsFunc.switchCluster(Constants.currentCluster);
     }
 
     // default setting
@@ -39,7 +39,7 @@ export namespace Node {
 
     if (param.cluster) {
       console.debug('# Node change cluster: ', cluster);
-      cluster = ConstantsFunc.switchApi(param.cluster);
+      cluster = ConstantsFunc.switchCluster(param.cluster);
     }
   }
 }
