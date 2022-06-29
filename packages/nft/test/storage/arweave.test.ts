@@ -20,9 +20,9 @@ describe('StorageArweave', () => {
       asset.image,
       asset.image,
     );
-    console.log(res);
-    // assert.isTrue(res.isOk);
-    // assert.isNotEmpty(res.unwrap());
-    // console.log('# arweave manifest url: ', res.unwrap());
+    res.match(
+      _ => console.log('# arweave manifest url: ', res.unwrap()),
+      err => assert.fail(err.message)
+    );
   });
 })
