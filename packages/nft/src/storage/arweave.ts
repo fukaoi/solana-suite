@@ -4,7 +4,9 @@ import {
   bundlrStorage,
   BundlrStorageDriver,
   useMetaplexFile,
-  MetaplexFile
+  MetaplexFile,
+  UploadMetadataInput,
+  JsonMetadata
 } from "@metaplex-foundation/js";
 
 import {
@@ -13,8 +15,8 @@ import {
 
 import fs from 'fs';
 import {
-  Node, 
-  Result, 
+  Node,
+  Result,
   Constants,
   ConstantsFunc,
 } from '@solana-suite/shared';
@@ -28,6 +30,8 @@ export interface MetaplexFileOptions {
 }
 
 export namespace StorageArweave {
+  const BUNDLR_CONNECT_TIMEOUT = 60000;
+
   export const uploadContent = async (
     payer: Keypair,
     filePath: string,
@@ -40,7 +44,7 @@ export namespace StorageArweave {
       .use(bundlrStorage({
         address: Constants.BUNDLR_NETWORK_URL,
         providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
-        timeout: 60000,
+        timeout: BUNDLR_CONNECT_TIMEOUT,
       }));
 
     const driver = metaplex.storage().driver() as BundlrStorageDriver;
@@ -55,5 +59,23 @@ export namespace StorageArweave {
     return driver.upload(file)
       .then(Result.ok)
       .catch(Result.err);
+  }
+
+  export const uploadMetadata = async (
+    payer: Keypair,
+    input: JsonMetadata
+  ): Promise<Result<string, Error>> => {
+    const metaplex = Metaplex
+      .make(Node.getConnection())
+      .use(keypairIdentity(payer))
+      .use(bundlrStorage({
+        address: Constants.BUNDLR_NETWORK_URL,
+        providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
+        timeout: BUNDLR_CONNECT_TIMEOUT,
+      }));
+
+    return metaplex.nfts().uploadMetadata(input)
+      .then(res => Result.ok(res.uri))
+      .catch(Result.err)
   }
 }

@@ -1,3 +1,4 @@
+import {JsonMetadata} from '@metaplex-foundation/js';
 import fs from 'fs';
 import {Storage} from '../src/storage';
 
@@ -35,8 +36,8 @@ export namespace RandomAsset {
     storageData.symbol = commonAsset.symbol;
   }
 
-  export const storage = (): Storage.Format => {
-    const storageData = Storage.initStorageData();
+  export const storage = (): JsonMetadata => {
+    let storageData: JsonMetadata = {};
     const commonAsset = createCommonAsset();
     storageData.name = commonAsset.name;
     storageData.image = commonAsset.image;
@@ -49,25 +50,22 @@ export namespace RandomAsset {
     storageData.attributes = [
       {
         limits: 'transfer',
-        value: 7
+        value: '7'
       },
       {
         limits: 'use_limit',
-        value: 3
+        value: '3'
       },
     ];
-    storageData.collection = {name: 'Pets in Japan'};
-    storageData.properties = [
-      {
-        'uri': 'https://www.arweave.net/abcd5678?ext=png',
-        'type': 'image/png'
-      },
-      {
-        'uri': 'https://watch.videodelivery.net/9876jkl',
-        'type': 'unknown',
-        'cdn': true
-      },
-    ];
+    storageData.collection = {name: 'Pets in Japan', family: 'PETS WORLD'};
+    storageData.properties = {
+      creators: [
+        {
+          address: '24W8B8DyYiieQH49eb7Xo2EQt3Qh3Xvu6yMq8mYywtML',
+          share: 45,
+        }
+      ]
+    };
 
     storageData.creators = [
       {
