@@ -103,7 +103,6 @@ program.parse();
 // actions
 
 const execCluser = (type) => {
-  console.log(type);
   let value;
   switch (type) {
     case 'prd':
@@ -174,5 +173,5 @@ if (options.cluster) {
 } else if (options.show) {
   execShow();
 } else {
-  assert(`No match parameter: need parameter is\n"prd", "prd2", "prdrr", "dev", "test", "localhost", "custom". any one of them`);
+  warnMessage(`No match parameter: need parameter is\n"prd", "prd2", "prdrr", "dev", "test", "localhost", "custom". any one of them`);
 }
