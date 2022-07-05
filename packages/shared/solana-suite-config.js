@@ -136,7 +136,7 @@ const execCustomCluster = (url) => {
     warnMessage('Not found custom cluster url. e.g: custom `https://....`');
     return;
   }
-  updateClusterConfigFile('cluster', value, url);
+  updateClusterConfigFile('cluster', 'custom', url);
 }
 
 const execDebug = (bool) => {

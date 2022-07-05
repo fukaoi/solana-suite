@@ -1,1 +1,10 @@
-{"cluster":{"customUrl":"","type":"mainnet-beta"},"debugging":false,"nftstorage":{"apikey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGYwYjM3ZDhBOTJkREI4ZDE2NDc1RDQwZmIxQjVFNThhMTg1Q0NBQjUiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MDYyNjkzMjgyNSwibmFtZSI6InNvbGFuYS1zdWl0ZS10ZXN0In0.oFRjef2iOiB9C3mEhcGj6AvGVNvv56LGnHSaVUaA_eQ"}}
+{
+    "cluster": {
+        "type": "localhost-devnet",
+        "customUrl": ""
+    },
+    "debugging": false,
+    "nftstorage": {
+        "apikey": ""
+    }
+}
