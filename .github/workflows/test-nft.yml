@@ -38,8 +38,8 @@ jobs:
     - run: npm ci
     - run: |
         cd ./packages/shared/
-        NODE_ENV=standalone ./solana-suite-config.js debug on
-        NODE_ENV=standalone ./solana-suite-config.js cluster custom $SOLANA_CUSTOM_URL
+        NODE_ENV=standalone ./solana-suite-config.js -d true
+        NODE_ENV=standalone ./solana-suite-config.js -cc $SOLANA_CUSTOM_URL
       env: 
         SOLANA_CUSTOM_URL: ${{secrets.SOLANA_CUSTOM_URL}}
     - run: |
