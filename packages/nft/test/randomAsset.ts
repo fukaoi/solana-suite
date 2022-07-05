@@ -1,6 +1,5 @@
 import {JsonMetadata} from '@metaplex-foundation/js';
 import fs from 'fs';
-import {Storage} from '../src/storage';
 
 export namespace RandomAsset {
   const ASSET_DIR = `${__dirname}/assets/`;
@@ -25,15 +24,6 @@ export namespace RandomAsset {
     const description = `This nft is ${name}:${created}`;
     const symbol = 'SUITE';
     return {name, description, image, symbol};
-  }
-
-  export const metadata = () => {
-    const storageData = Storage.initStorageData();
-    const commonAsset = createCommonAsset();
-    storageData.name = commonAsset.name;
-    storageData.image = commonAsset.image;
-    storageData.description = commonAsset.description;
-    storageData.symbol = commonAsset.symbol;
   }
 
   export const storage = (): JsonMetadata => {

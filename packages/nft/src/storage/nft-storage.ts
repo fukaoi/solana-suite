@@ -1,7 +1,7 @@
 import {NFTStorage, Blob} from 'nft.storage';
 import fs from 'fs';
 import {Constants, Result} from '@solana-suite/shared';
-import {Storage} from './index';
+import {JsonMetadata} from '@metaplex-foundation/js';
 
 export namespace StorageNftStorage {
 
@@ -23,35 +23,46 @@ export namespace StorageNftStorage {
     }
   }
 
-  const createGatewayUrl = (cid: string): string => `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
+  const createGatewayUrl = (cid: string): string => 
+    `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
 
-  const connect = () => new NFTStorage({token: getNftStorageApiKey()});
+  const connect = new NFTStorage({token: getNftStorageApiKey()});
 
-  const preUploadImage = async (client: NFTStorage, imagePath: string): Promise<string> => {
-    const blobImage = new Blob([fs.readFileSync(imagePath)]);
-    const cid = await client.storeBlob(blobImage);
-    return createGatewayUrl(cid);
+  export const uploadContent = async (filePath: string
+  ): Promise<Result<string, Error>> => {
+    const blobImage = new Blob([fs.readFileSync(filePath)]);
+    const res = await connect.storeBlob(blobImage)
+      .then(Result.ok)
+      .catch(Result.err) as Result<string, Error>;
+
+    return res.map(
+      ok => createGatewayUrl(ok),
+      err => err
+    );
   }
 
-  export const upload = async (
-    storageData: Storage.Format
+  export const uploadMetadata = async (
+    input: JsonMetadata
   ): Promise<Result<string, Error>> => {
-    const client = connect();
-    const imageUrl = await preUploadImage(client, storageData.image)
+    if (input.image) {
+      const imageUrl = await uploadContent(input.image)
+        .then(Result.ok)
+        .catch(Result.err) as Result<string, Error>;
+
+      if (imageUrl.isErr) {
+        return imageUrl;
+      }
+      input.image = imageUrl.value;
+    }
+
+    const blobJson = new Blob([JSON.stringify(input)]);
+    const metadata = await connect.storeBlob(blobJson)
       .then(Result.ok)
-      .catch(Result.err);
+      .catch(Result.err) as Result<string, Error>;
 
-    if (imageUrl.isErr) return imageUrl;
-
-    storageData.image = imageUrl.value;
-
-    const blobJson = new Blob([JSON.stringify(storageData)]);
-    const metadata = await client.storeBlob(blobJson)
-      .then(Result.ok)
-      .catch(Result.err);
-
-    if (metadata.isErr) return metadata;
-
-    return Result.ok(createGatewayUrl(metadata.value));
+    return metadata.map(
+      ok => createGatewayUrl(ok),
+      err => err
+    );
   }
 }

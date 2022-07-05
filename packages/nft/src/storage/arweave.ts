@@ -5,7 +5,6 @@ import {
   BundlrStorageDriver,
   useMetaplexFile,
   MetaplexFile,
-  UploadMetadataInput,
   JsonMetadata
 } from "@metaplex-foundation/js";
 
