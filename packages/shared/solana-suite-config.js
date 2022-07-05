@@ -2,31 +2,38 @@
 
 const fs = require('fs');
 const {Command} = require('commander');
-const assert = require('assert');
 const program = new Command();
 
 let cjs;
 let CJS_JSON = './dist/cjs/solana-suite.json';
 let ESM_JSON = './dist/esm/solana-suite.json';
 
+////////////////////////////////////////////////////////////////
+// for debug
+
 if (process.env.NODE_ENV === 'standalone') {
   CJS_JSON = './src/solana-suite.json';
   ESM_JSON = './src/solana-suite.json';
 }
 
-const loadConfigFile = () => {
+////////////////////////////////////////////////////////////////
+// local functions
+
+(() => {
   try {
     fs.statSync(CJS_JSON);
     fs.statSync(ESM_JSON);
-    const data = JSON.stringify(require(CJS_JSON));
+    JSON.stringify(require(CJS_JSON));
     cjs = JSON.stringify(require(CJS_JSON));
   } catch (e) {
     console.error(e.message);
     process.exit(0);
   }
-}
+})();
 
-const successMessage = () =>  console.log('Update solana suite config.');
+const successMessage = () => console.log('Update solana suite config.');
+const warnMessage = (mess) => console.error(mess);
+const showMessage = (mess) => console.log(mess);
 
 const updateConfigFile = (key, value) => {
   const parsed = JSON.parse(cjs);
@@ -53,89 +60,119 @@ const updateNftStorageConfigFile = (key, value) => {
   successMessage();
 }
 
-loadConfigFile();
+const showCurrentConfigFile = () => {
+  const cjs = fs.readFileSync(CJS_JSON);
+  const esm = fs.readFileSync(ESM_JSON);
+  showMessage(`# Current cjs\n${cjs.toString()}\n`);
+  showMessage(`# Current esm\n${esm.toString()}\n`);
+}
+
+////////////////////////////////////////////////////////////////
+// options
 
 program
   .name('solana-suite-config')
   .description('Setup solana-suite.json')
-  .version('0.2');
+  .version('0.3');
 
-program.command('cluster')
-  .description('select want connect to cluster type')
-  .option('prd', 'Connect to mainnet-beta')
-  .option('prd2', 'Connect to mainnet-beta-serum')
-  .option('prdrr', 'Connect to mainnet-beta and mainnet-beta-serum alternately')
-  .option('dev', 'Connect to devnet')
-  .option('test', 'Connect to testnet')
-  .option('localhost', 'Connect to devnet in localhost')
-  .option('custom', 'Use custom url connect to devnet(mainnet-beta). e.g: custom `https://....`')
-  .action((arg, option) => {
-    let value;
-    switch (arg) {
-      case 'prd':
-        value = 'mainnet-beta';
-        break;
-      case 'prd2':
-        value = 'mainnet-beta-serum';
-        break;
-      case 'prdrr':
-        value = 'mainnet-beta-round-robin';
-        break;
-      case 'dev':
-        value = 'devnet';
-        break;
-      case 'test':
-        value = 'testnet';
-        break;
-      case 'localhost':
-        value = 'localhost-devnet';
-        break;
-      case 'custom':
-        if (!option || !/https?:\/\/[-_.!~*\\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(option)) {
-          console.warn('Not found custom cluster url. e.g: custom `https://....`');
-          return;
-        }
-        value = 'custom';
-        customUrl = option;
-        break;
-      default:
-        console.warn(`No match parameter: need parameter is\n"prd", "prd2", "prdrr", "dev", "test", "localhost", "custom". any one of them`);
-    }
-    updateClusterConfigFile('cluster', value, customUrl);
-  });
+program
+  .option(
+    '-c --cluster <cluster type>',
+    'connect to cluster type. `prd`, `prd2`, `prdrr`, `dev`, `test`, `localhost`'
+  )
+  .option(
+    '-cc --custom-cluster <cluster url>',
+    'connect to cluster url. `https://...`'
+  )
+  .option(
+    '-d --debug <true or false>',
+    'display debug log on terminal. defalut `false` '
+  )
+  .option(
+    '-n --nftstorage <apikey>',
+    'Set apikey of nft.storage. `eyJhbGciO...`'
+  )
+  .option(
+    '-s --show',
+    'Show value current solana-suite.json'
+  );
 
-program.command('debug')
-  .description('Enable/Disable debug mode')
-  .option('on', 'Enable debug mode')
-  .option('off', 'Disable debug mode. default setting')
-  .action(arg => {
-    let value;
-    switch (arg) {
-      case 'on':
-        value = true;
-        break;
-      case 'off':
-        value = false;
-        break;
-      default:
-        console.warn(`
-          No match parameter: need parameter is 
-          "on", "off". any one of them
-        `);
-    }
-    updateConfigFile('debugging', value);
-  });
+program.parse();
 
-program.command('nftstorage')
-  .description('Set apikey of nft storage')
-  .action(arg => {
-    if (arg.length < 230) {
-      console.warn('Not found api key');
-      process.exit(0);
-    }
-    updateNftStorageConfigFile('apikey', arg);
-  });
+////////////////////////////////////////////////////////////////
+// actions
 
-program.parse(process.argv);
+const execCluser = (type) => {
+  console.log(type);
+  let value;
+  switch (type) {
+    case 'prd':
+      value = 'mainnet-beta';
+      break;
+    case 'prd2':
+      value = 'mainnet-beta-serum';
+      break;
+    case 'prdrr':
+      value = 'mainnet-beta-round-robin';
+      break;
+    case 'dev':
+      value = 'devnet';
+      break;
+    case 'test':
+      value = 'testnet';
+      break;
+    case 'localhost':
+      value = 'localhost-devnet';
+      break;
+    default:
+      warnMessage(`No match parameter: need parameter is\n"prd", "prd2", "prdrr", "dev", "test", "localhost", "custom". any one of them`);
+      return;
+  }
+  updateClusterConfigFile('cluster', value);
+}
 
+const execCustomCluster = (url) => {
+  if (!url || !/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(url)) {
+    warnMessage('Not found custom cluster url. e.g: custom `https://....`');
+    return;
+  }
+  updateClusterConfigFile('cluster', 'custom', url);
+}
 
+const execDebug = (bool) => {
+  if (bool != 'true' && bool != 'false') {
+    warnMessage(`No match parameter: need parameter is "on", "off". any one of them`);
+    return;
+  }
+  updateConfigFile('debugging', bool);
+}
+
+const execNftstorage = (arg) => {
+  if (arg.length < 230) {
+    warnMessage('Not found api key');
+    return;
+  }
+  updateNftStorageConfigFile('apikey', arg);
+}
+
+const execShow = () => {
+  showCurrentConfigFile();
+}
+
+////////////////////////////////////////////////////////////////
+// Parse options
+
+const options = program.opts();
+if (options.cluster) {
+  execCluser(options.cluster);
+} else if (options.customCluster) {
+  execCustomCluster(options.customCluster);
+} else if (options.debug) {
+  execDebug(options.debug);
+} else if (options.nftstorage) {
+  execNftstorage(options.nftstorage);
+} else if (options.show) {
+  execShow();
+} else {
+  assert(`No match parameter: need parameter is\n"prd", "prd2", "prdrr", "dev", "test", "localhost", "custom". any one of them`);
+}
