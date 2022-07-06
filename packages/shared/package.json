@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/shared",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "shared module for solana-suite",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -42,6 +42,6 @@
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
   "dependencies": {
-    "commander": "^2.20.3"
+    "commander": "9.3.0"
   }
 }

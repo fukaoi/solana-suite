@@ -54,7 +54,7 @@ import {
       hex = ok.hexInstruction;
       console.log('# hex instruction: ', hex);
     },
-    (err) => assert(err.message)
+    (err) => assert.fail(err.message)
   );
 
 
@@ -71,7 +71,7 @@ import {
   const res = await obj.submit(feePayer.toKeypair());
   res.match(
     (ok) => console.log('# tx signature: ', ok),
-    (err) => assert(err.message)
+    (err) => assert.fail(err.message)
   );
 
 
@@ -109,7 +109,7 @@ import {
       hex2 = ok.hexInstruction;
       console.log('# hex instruction: ', hex2);
     },
-    (err) => assert(err.message)
+    (err) => assert.fail(err.message)
   );
 
 
@@ -126,6 +126,6 @@ import {
   const res2 = await obj2.submit(feePayer.toKeypair());
   res2.match(
     (ok) => console.log('# tx signature: ', ok),
-    (err) => assert(err.message)
+    (err) => assert.fail(err.message)
   );
 })();

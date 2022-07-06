@@ -9,6 +9,8 @@ on:
       - "README.md"
       - ".github/workflows/*.yml"
     branches: [ main ]
+    
+  workflow_dispatch:
 
 jobs:
   build:

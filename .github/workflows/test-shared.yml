@@ -13,6 +13,8 @@ on:
       - "package-lock.json"
     branches: [ main ]
 
+  workflow_dispatch:
+
 jobs:
   build:
 
