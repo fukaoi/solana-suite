@@ -2,7 +2,7 @@ import {describe, it} from 'mocha';
 import {Result} from '../src/result';
 
 describe('Result', () => {
-  it('if/else condition', () => {
+  it('conditions', () => {
     const res = Result.ok('test');
 
     // pattern:1
@@ -39,4 +39,17 @@ describe('Result', () => {
       }
     );
   });
+
+  it('match()', () => {
+    const res = Result.err(Error('error'));
+    res.match(
+      (value) => {
+        console.log(value);
+      },
+      (err) => {
+        console.log(err.message);
+      }
+    );
+  });
+
 })
