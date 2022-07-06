@@ -77,12 +77,13 @@ console.debug = (
   data3: unknown = ''
 ) => Constants.isDebugging && console.log(data, data2, data3);
 
-export const tryCatch = (fn: () => {}) => {
-  try {
-    return Result.ok(fn());
-  } catch (e: unknown) {
-    return Result.err(e as Error);
-  }
-}
+export const sleep = async (sec: number) => 
+  new Promise(r => setTimeout(r, sec * 1000));
 
-export const sleep = async (sec: number) => new Promise(r => setTimeout(r, sec * 1000));
+export const isBrowser =
+  typeof window !== "undefined" && typeof window.document !== "undefined";
+
+export const isNode =
+  typeof process !== "undefined" &&
+  process.versions != null &&
+  process.versions.node != null;
