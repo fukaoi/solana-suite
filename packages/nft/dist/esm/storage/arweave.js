@@ -9,17 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Metaplex, keypairIdentity, bundlrStorage, useMetaplexFile } from "@metaplex-foundation/js";
 import fs from 'fs';
-import { Node, Result, Constants } from '@solana-suite/shared';
+import { Node, Result, Constants, ConstantsFunc, } from '@solana-suite/shared';
 export var StorageArweave;
 (function (StorageArweave) {
+    const BUNDLR_CONNECT_TIMEOUT = 60000;
     StorageArweave.uploadContent = (payer, filePath, fileName, fileOptions) => __awaiter(this, void 0, void 0, function* () {
         const metaplex = Metaplex
             .make(Node.getConnection())
             .use(keypairIdentity(payer))
             .use(bundlrStorage({
             address: Constants.BUNDLR_NETWORK_URL,
-            providerUrl: 'https://api.devnet.solana.com',
-            timeout: 60000,
+            providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
+            timeout: BUNDLR_CONNECT_TIMEOUT,
         }));
         const driver = metaplex.storage().driver();
         const buffer = fs.readFileSync(filePath);
@@ -32,6 +33,19 @@ export var StorageArweave;
         }
         return driver.upload(file)
             .then(Result.ok)
+            .catch(Result.err);
+    });
+    StorageArweave.uploadMetadata = (payer, input) => __awaiter(this, void 0, void 0, function* () {
+        const metaplex = Metaplex
+            .make(Node.getConnection())
+            .use(keypairIdentity(payer))
+            .use(bundlrStorage({
+            address: Constants.BUNDLR_NETWORK_URL,
+            providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
+            timeout: BUNDLR_CONNECT_TIMEOUT,
+        }));
+        return metaplex.nfts().uploadMetadata(input)
+            .then(res => Result.ok(res.uri))
             .catch(Result.err);
     });
 })(StorageArweave || (StorageArweave = {}));

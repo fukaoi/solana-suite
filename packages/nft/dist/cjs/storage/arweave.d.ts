@@ -1,3 +1,4 @@
+import { JsonMetadata } from "@metaplex-foundation/js";
 import { Keypair } from '@solana/web3.js';
 import { Result } from '@solana-suite/shared';
 export interface MetaplexFileOptions {
@@ -12,4 +13,5 @@ export interface MetaplexFileOptions {
 }
 export declare namespace StorageArweave {
     const uploadContent: (payer: Keypair, filePath: string, fileName: string, fileOptions?: MetaplexFileOptions) => Promise<Result<string, Error>>;
+    const uploadMetadata: (payer: Keypair, input: JsonMetadata) => Promise<Result<string, Error>>;
 }
