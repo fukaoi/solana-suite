@@ -52,7 +52,7 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
   const url = await StorageNftStorage.upload(asset);
 
   if (url.isErr) {
-    assert(url.error);
+    assert.fail(url.error);
   }
 
   //////////////////////////////////////////////
@@ -78,7 +78,7 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
   // this is NFT ID
   (await inst1.submit()).match(
     async (value) => await Transaction.confirmedSig(value, 'finalized'),
-    (error) => assert(error)
+    (error) => assert.fail(error)
   );
 
   const mint = (inst1.unwrap().data as Pubkey);
@@ -94,7 +94,7 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
 
   metadata.match(
     (value) => console.log('# metadata: ', value),
-    (error) => assert(error)
+    (error) => assert.fail(error)
   );
 
   //////////////////////////////////////////////
@@ -126,6 +126,6 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
   // submit batch instructions
   (await [inst2, inst3].submit()).match(
     (value) => console.log('# Transfer nft sig: ', value.toExplorerUrl()),
-    (error) => assert(error)
+    (error) => assert.fail(error)
   );
 })();

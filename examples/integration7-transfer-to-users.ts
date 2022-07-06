@@ -63,7 +63,7 @@ const SLEEP_TIME_WAIT = 0;
   // submit instructions
   (await inst1.submit()).match(
     (value) => console.log('# mint nft sig: ', value),
-    (error) => assert(error)
+    (error) => assert.fail(error)
   );
 
   const mint = inst1.unwrap().data as Pubkey;
@@ -94,8 +94,7 @@ const SLEEP_TIME_WAIT = 0;
         i++;
       },
       (error) => {
-        assert(error);
-        return;
+        assert.fail(error);
       }
     );
   };

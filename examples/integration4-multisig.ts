@@ -77,7 +77,7 @@ import {
       // [optional]if need this action. wait confirmation state
       await Transaction.confirmedSig(value);
     },
-    error => assert(error)
+    error => assert.fail(error)
   );
 
   //////////////////////////////////////////////
@@ -115,6 +115,6 @@ import {
   // submit batch instructions
   await (await [inst3, inst4].submit()).match(
     value => console.log('# sig url: ', value.toExplorerUrl()),
-    error => assert(error.message)
+    error => assert.fail(error.message)
   );
 })();

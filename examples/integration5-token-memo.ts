@@ -86,7 +86,7 @@ import {
       console.log('# Transfer nft sig: ', value.toExplorerUrl());
       await Transaction.confirmedSig(value);
     },
-    (error) => assert(error)
+    (error) => assert.fail(error)
   );
 
   //////////////////////////////////////////////
