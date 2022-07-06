@@ -9,6 +9,13 @@ on:
       - "README.md"
       - ".github/workflows/*.yml"
     branches: [ main ]
+    
+  workflow_dispatch:
+    inputs:
+      パラメーター名:
+        description: '説明'
+        required: true
+        default: 'デフォルト値'
 
 jobs:
   build:
