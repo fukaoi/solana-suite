@@ -12,6 +12,6 @@ export interface MetaplexFileOptions {
     }[];
 }
 export declare namespace StorageArweave {
-    const uploadContent: (payer: Keypair, filePath: string, fileName: string, fileOptions?: MetaplexFileOptions) => Promise<Result<string, Error>>;
+    const uploadContent: (payer: Keypair, filePath: string, fileOptions?: MetaplexFileOptions) => Promise<Result<string, Error>>;
     const uploadMetadata: (payer: Keypair, input: JsonMetadata) => Promise<Result<string, Error>>;
 }

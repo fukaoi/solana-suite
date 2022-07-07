@@ -34,7 +34,6 @@ export namespace StorageArweave {
   export const uploadContent = async (
     payer: Keypair,
     filePath: string,
-    fileName: string,
     fileOptions?: MetaplexFileOptions
   ): Promise<Result<string, Error>> => {
     const metaplex = Metaplex
@@ -50,9 +49,9 @@ export namespace StorageArweave {
     const buffer = fs.readFileSync(filePath);
     let file: MetaplexFile;
     if (fileOptions) {
-      file = useMetaplexFile(buffer, fileName, fileOptions);
+      file = useMetaplexFile(buffer, filePath, fileOptions);
     } else {
-      file = useMetaplexFile(buffer, fileName);
+      file = useMetaplexFile(buffer, filePath);
     }
 
     return driver.upload(file)

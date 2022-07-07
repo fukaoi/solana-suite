@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
-import {KeypairStr} from '@solana-suite/core';
+import {KeypairStr} from '../../../core';
 import {Setup} from '../../../shared/test/testSetup';
 import {RandomAsset} from '../randomAsset';
 import {StorageArweave} from '../../src';
@@ -18,7 +18,6 @@ describe('StorageArweave', () => {
     const res = await StorageArweave.uploadContent(
       source.toKeypair(),
       asset.image!,
-      asset.image!,
     );
     res.match(
       ok => console.log('# arweave url: ', ok),
@@ -30,7 +29,6 @@ describe('StorageArweave', () => {
     const asset = RandomAsset.storage();
     const res = await StorageArweave.uploadContent(
       source.toKeypair(),
-      asset.image!,
       asset.image!,
       {
         displayName: 'NFT test image',

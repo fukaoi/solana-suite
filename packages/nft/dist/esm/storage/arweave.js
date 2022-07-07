@@ -13,7 +13,7 @@ import { Node, Result, Constants, ConstantsFunc, } from '@solana-suite/shared';
 export var StorageArweave;
 (function (StorageArweave) {
     const BUNDLR_CONNECT_TIMEOUT = 60000;
-    StorageArweave.uploadContent = (payer, filePath, fileName, fileOptions) => __awaiter(this, void 0, void 0, function* () {
+    StorageArweave.uploadContent = (payer, filePath, fileOptions) => __awaiter(this, void 0, void 0, function* () {
         const metaplex = Metaplex
             .make(Node.getConnection())
             .use(keypairIdentity(payer))
@@ -26,10 +26,10 @@ export var StorageArweave;
         const buffer = fs.readFileSync(filePath);
         let file;
         if (fileOptions) {
-            file = useMetaplexFile(buffer, fileName, fileOptions);
+            file = useMetaplexFile(buffer, filePath, fileOptions);
         }
         else {
-            file = useMetaplexFile(buffer, fileName);
+            file = useMetaplexFile(buffer, filePath);
         }
         return driver.upload(file)
             .then(Result.ok)

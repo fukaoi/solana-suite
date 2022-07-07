@@ -19,7 +19,7 @@ const shared_1 = require("@solana-suite/shared");
 var StorageArweave;
 (function (StorageArweave) {
     const BUNDLR_CONNECT_TIMEOUT = 60000;
-    StorageArweave.uploadContent = (payer, filePath, fileName, fileOptions) => __awaiter(this, void 0, void 0, function* () {
+    StorageArweave.uploadContent = (payer, filePath, fileOptions) => __awaiter(this, void 0, void 0, function* () {
         const metaplex = js_1.Metaplex
             .make(shared_1.Node.getConnection())
             .use((0, js_1.keypairIdentity)(payer))
@@ -32,10 +32,10 @@ var StorageArweave;
         const buffer = fs_1.default.readFileSync(filePath);
         let file;
         if (fileOptions) {
-            file = (0, js_1.useMetaplexFile)(buffer, fileName, fileOptions);
+            file = (0, js_1.useMetaplexFile)(buffer, filePath, fileOptions);
         }
         else {
-            file = (0, js_1.useMetaplexFile)(buffer, fileName);
+            file = (0, js_1.useMetaplexFile)(buffer, filePath);
         }
         return driver.upload(file)
             .then(shared_1.Result.ok)
