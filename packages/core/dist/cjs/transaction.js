@@ -193,7 +193,7 @@ var Transaction;
         let before;
         while (true) {
             const transactions = yield Transaction.getForAddress(searchPubkey, bufferedLimit, before);
-            console.debug('# getTransactionHistory loop');
+            (0, shared_1.debugLog)('# getTransactionHistory loop');
             const res = filterTransactions(searchPubkey, transactions, actionFilter, false, options.directionFilter);
             hist = hist.concat(res);
             if (hist.length >= options.limit || res.length === 0) {
@@ -235,7 +235,7 @@ var Transaction;
         let before;
         while (true) {
             const transactions = yield Transaction.getForAddress(searchKeyAccount.value, bufferedLimit, before);
-            console.debug('# getTransactionHistory loop');
+            (0, shared_1.debugLog)('# getTransactionHistory loop');
             const res = filterTransactions(searchPubkey, transactions, actionFilter, true, options.directionFilter);
             hist = hist.concat(res);
             if (hist.length >= options.limit || res.length === 0) {

@@ -18,6 +18,7 @@ import {
   Node,
   Instruction,
   PartialSignInstruction,
+  debugLog,
 } from '@solana-suite/shared';
 
 import {SplToken} from './spl-token';
@@ -49,7 +50,7 @@ export namespace SolNative {
       return wrapped.error;
     }
 
-    console.debug('# wrapped sol: ', wrapped.value.toBase58());
+    debugLog('# wrapped sol: ', wrapped.value.toBase58());
 
     const tokenRes = await createMint(
       connection,
@@ -79,7 +80,7 @@ export namespace SolNative {
       return Result.err(sourceToken.error);
     }
 
-    console.debug('# sourceToken: ', sourceToken.value);
+    debugLog('# sourceToken: ', sourceToken.value);
 
     const destToken = await SplToken.retryGetOrCreateAssociatedAccountInfo(
       token,
@@ -91,7 +92,7 @@ export namespace SolNative {
       return Result.err(destToken.error);
     }
 
-    console.debug('# destToken: ', destToken.value);
+    debugLog('# destToken: ', destToken.value);
 
     const inst1 = createTransferInstruction(
       sourceToken.value.toPublicKey(),

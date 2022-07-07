@@ -1,6 +1,13 @@
 import fs from 'fs';
 import bs from 'bs58';
-import {Constants, Node} from '../src';
+import {
+  Constants, 
+  Node,
+} from '../src';
+
+import {
+  Transaction, 
+} from '../../core/src';
 
 import {
   Keypair,
@@ -9,8 +16,8 @@ import {
 } from '@solana/web3.js';
 
 
-console.debug(`\u001b[33m === DEBUG MODE ===`);
-console.debug(`\u001b[33m solana-network: ${Constants.currentCluster}`);
+console.log(`\u001b[33m === TEST START ===`);
+console.log(`\u001b[33m solana-network: ${Constants.currentCluster}`);
 
 export class KeypairStr {
   pubkey: string;
@@ -40,18 +47,18 @@ export namespace Setup {
   export const generatekeyPair = async ():
     Promise<{source: KeypairStr, dest: KeypairStr}> => {
     const {source, dest} = await fetechSourceAndDest();
-    debug(source, dest);
+    log(source, dest);
     return {
       source: new KeypairStr(source.pubkey, source.secret),
       dest: new KeypairStr(dest.pubkey, dest.secret),
     };
   }
 
-  const debug = (source: KeypairStr, dest: KeypairStr) => {
-    console.debug(`# source.pubkey:`, source.pubkey);
-    console.debug(`# source.secret: `, source.secret);
-    console.debug(`# destination.pubkey:`, dest.pubkey);
-    console.debug(`# destination.secret: `, dest.secret);
+  const log = (source: KeypairStr, dest: KeypairStr) => {
+    console.log(`# source.pubkey:`, source.pubkey);
+    console.log(`# source.secret: `, source.secret);
+    console.log(`# destination.pubkey:`, dest.pubkey);
+    console.log(`# destination.secret: `, dest.secret);
   }
 
   const fetechSourceAndDest = async () => {
@@ -70,10 +77,10 @@ export namespace Setup {
   const requestAirdrop = async (
     pubkey: PublicKey,
   ) => {
-    console.debug('Now airdropping...please wait');
+    console.log('Now airdropping...please wait');
     const sig = await Node.getConnection().requestAirdrop(pubkey, LAMPORTS_PER_SOL);
-    await Node.getConnection().confirmTransaction(sig);
-    console.debug('Confirmed !!');
+    await Transaction.confirmedSig(sig);
+    console.log('Confirmed !!');
   }
 
   const createTempFile = async () => {

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { createMint, createBurnCheckedInstruction, createMintToCheckedInstruction, createTransferCheckedInstruction, } from '@solana/spl-token';
 import { Transaction, } from '@solana/web3.js';
-import { Node, Result, Instruction, PartialSignInstruction, sleep, } from '@solana-suite/shared';
+import { Node, Result, Instruction, PartialSignInstruction, sleep, debugLog, } from '@solana-suite/shared';
 import { Account as Acc, Account, Transaction as LocalTransaction, } from './';
 export var SplToken;
 (function (SplToken) {
@@ -26,19 +26,19 @@ export var SplToken;
             try {
                 const inst = yield Acc.getOrCreateAssociatedTokenAccount(mint, owner, feePayer, true);
                 if (inst.isOk && typeof inst.value === 'string') {
-                    console.debug('# associatedTokenAccount: ', inst.value);
+                    debugLog('# associatedTokenAccount: ', inst.value);
                     return Result.ok(inst.value);
                 }
                 return (yield inst.submit()).map((ok) => {
                     LocalTransaction.confirmedSig(ok);
                     return inst.unwrap().data;
                 }, (err) => {
-                    console.debug('# Error submit getOrCreateAssociatedTokenAccount: ', err);
+                    debugLog('# Error submit getOrCreateAssociatedTokenAccount: ', err);
                     throw err;
                 });
             }
             catch (e) {
-                console.debug(`# retry: ${counter} create token account: `, e);
+                debugLog(`# retry: ${counter} create token account: `, e);
             }
             yield sleep(RETREY_SLEEP_TIME);
             counter++;

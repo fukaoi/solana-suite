@@ -1,12 +1,8 @@
 import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  TOKEN_PROGRAM_ID,
   createMint,
   createBurnCheckedInstruction,
   createMintToCheckedInstruction,
   createTransferCheckedInstruction,
-  createAssociatedTokenAccountInstruction,
-  getAssociatedTokenAddress,
 } from '@solana/spl-token';
 
 
@@ -22,6 +18,7 @@ import {
   Instruction,
   PartialSignInstruction,
   sleep,
+  debugLog,
 } from '@solana-suite/shared';
 
 import {
@@ -57,7 +54,7 @@ export namespace SplToken {
         );
 
         if (inst.isOk && typeof inst.value === 'string') {
-          console.debug('# associatedTokenAccount: ', inst.value);
+          debugLog('# associatedTokenAccount: ', inst.value);
           return Result.ok(inst.value);
         }
 
@@ -67,12 +64,12 @@ export namespace SplToken {
             return (inst.unwrap() as Instruction).data as string;
           },
           (err: Error) => {
-            console.debug('# Error submit getOrCreateAssociatedTokenAccount: ', err);
+            debugLog('# Error submit getOrCreateAssociatedTokenAccount: ', err);
             throw err;
           }
         );
       } catch (e) {
-        console.debug(`# retry: ${counter} create token account: `, e);
+        debugLog(`# retry: ${counter} create token account: `, e);
       }
       await sleep(RETREY_SLEEP_TIME);
       counter++;

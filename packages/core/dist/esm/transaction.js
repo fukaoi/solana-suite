@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Node, Result, Constants } from '@solana-suite/shared';
+import { Node, Result, Constants, debugLog, } from '@solana-suite/shared';
 import { getAssociatedTokenAddress, } from '@solana/spl-token';
 export var Transaction;
 (function (Transaction) {
@@ -190,7 +190,7 @@ export var Transaction;
         let before;
         while (true) {
             const transactions = yield Transaction.getForAddress(searchPubkey, bufferedLimit, before);
-            console.debug('# getTransactionHistory loop');
+            debugLog('# getTransactionHistory loop');
             const res = filterTransactions(searchPubkey, transactions, actionFilter, false, options.directionFilter);
             hist = hist.concat(res);
             if (hist.length >= options.limit || res.length === 0) {
@@ -232,7 +232,7 @@ export var Transaction;
         let before;
         while (true) {
             const transactions = yield Transaction.getForAddress(searchKeyAccount.value, bufferedLimit, before);
-            console.debug('# getTransactionHistory loop');
+            debugLog('# getTransactionHistory loop');
             const res = filterTransactions(searchPubkey, transactions, actionFilter, true, options.directionFilter);
             hist = hist.concat(res);
             if (hist.length >= options.limit || res.length === 0) {

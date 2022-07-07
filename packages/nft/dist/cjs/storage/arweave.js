@@ -19,7 +19,10 @@ const shared_1 = require("@solana-suite/shared");
 var StorageArweave;
 (function (StorageArweave) {
     const BUNDLR_CONNECT_TIMEOUT = 60000;
+    StorageArweave.getUploadPrice = () => {
+    };
     StorageArweave.uploadContent = (payer, filePath, fileOptions) => __awaiter(this, void 0, void 0, function* () {
+        (0, shared_1.debugLog)('# upload content: ', filePath);
         const metaplex = js_1.Metaplex
             .make(shared_1.Node.getConnection())
             .use((0, js_1.keypairIdentity)(payer))
@@ -29,19 +32,35 @@ var StorageArweave;
             timeout: BUNDLR_CONNECT_TIMEOUT,
         }));
         const driver = metaplex.storage().driver();
-        const buffer = fs_1.default.readFileSync(filePath);
         let file;
-        if (fileOptions) {
-            file = (0, js_1.useMetaplexFile)(buffer, filePath, fileOptions);
+        if (shared_1.isNode) {
+            const filepath = filePath;
+            const buffer = fs_1.default.readFileSync(filepath);
+            if (fileOptions) {
+                file = (0, js_1.useMetaplexFile)(buffer, filepath, fileOptions);
+            }
+            else {
+                file = (0, js_1.useMetaplexFile)(buffer, filepath);
+            }
+        }
+        else if (shared_1.isBrowser) {
+            const filepath = filePath;
+            if (fileOptions) {
+                file = yield (0, js_1.useMetaplexFileFromBrowser)(filepath, fileOptions);
+            }
+            else {
+                file = yield (0, js_1.useMetaplexFileFromBrowser)(filepath);
+            }
         }
         else {
-            file = (0, js_1.useMetaplexFile)(buffer, filePath);
+            return shared_1.Result.err(Error('Supported envriroment: only Node.js and Browser js'));
         }
         return driver.upload(file)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
     });
-    StorageArweave.uploadMetadata = (payer, input) => __awaiter(this, void 0, void 0, function* () {
+    StorageArweave.uploadMetadata = (payer, metadata) => __awaiter(this, void 0, void 0, function* () {
+        (0, shared_1.debugLog)('# upload meta data: ', metadata);
         const metaplex = js_1.Metaplex
             .make(shared_1.Node.getConnection())
             .use((0, js_1.keypairIdentity)(payer))
@@ -50,7 +69,7 @@ var StorageArweave;
             providerUrl: shared_1.ConstantsFunc.switchCluster(shared_1.Constants.currentCluster),
             timeout: BUNDLR_CONNECT_TIMEOUT,
         }));
-        return metaplex.nfts().uploadMetadata(input)
+        return metaplex.nfts().uploadMetadata(metadata)
             .then(res => shared_1.Result.ok(res.uri))
             .catch(shared_1.Result.err);
     });

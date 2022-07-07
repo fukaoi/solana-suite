@@ -10,7 +10,8 @@ import {
 import {
   Node,
   Result,
-  Constants
+  Constants,
+  debugLog,
 } from '@solana-suite/shared';
 
 import {
@@ -272,7 +273,7 @@ export namespace Transaction {
 
     while (true) {
       const transactions = await Transaction.getForAddress(searchPubkey, bufferedLimit, before);
-      console.debug('# getTransactionHistory loop');
+      debugLog('# getTransactionHistory loop');
       const res = filterTransactions(
         searchPubkey,
         transactions,
@@ -339,7 +340,7 @@ export namespace Transaction {
 
     while (true) {
       const transactions = await Transaction.getForAddress(searchKeyAccount.value, bufferedLimit, before);
-      console.debug('# getTransactionHistory loop');
+      debugLog('# getTransactionHistory loop');
       const res = filterTransactions(
         searchPubkey,
         transactions,

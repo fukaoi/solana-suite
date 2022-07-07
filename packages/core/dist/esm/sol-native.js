@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { createWrappedNativeAccount, createMint, createTransferInstruction, createCloseAccountInstruction, } from '@solana/spl-token';
 import { LAMPORTS_PER_SOL, SystemProgram, Transaction } from '@solana/web3.js';
-import { Result, Node, Instruction, PartialSignInstruction, } from '@solana-suite/shared';
+import { Result, Node, Instruction, PartialSignInstruction, debugLog, } from '@solana-suite/shared';
 import { SplToken } from './spl-token';
 export var SolNative;
 (function (SolNative) {
@@ -24,7 +24,7 @@ export var SolNative;
         if (wrapped.isErr) {
             return wrapped.error;
         }
-        console.debug('# wrapped sol: ', wrapped.value.toBase58());
+        debugLog('# wrapped sol: ', wrapped.value.toBase58());
         const tokenRes = yield createMint(connection, payer, owner, owner, 0)
             .then(Result.ok)
             .catch(Result.err);
@@ -36,12 +36,12 @@ export var SolNative;
         if (sourceToken.isErr) {
             return Result.err(sourceToken.error);
         }
-        console.debug('# sourceToken: ', sourceToken.value);
+        debugLog('# sourceToken: ', sourceToken.value);
         const destToken = yield SplToken.retryGetOrCreateAssociatedAccountInfo(token, wrapped.value, payer);
         if (destToken.isErr) {
             return Result.err(destToken.error);
         }
-        console.debug('# destToken: ', destToken.value);
+        debugLog('# destToken: ', destToken.value);
         const inst1 = createTransferInstruction(sourceToken.value.toPublicKey(), destToken.value.toPublicKey(), owner, parseInt(`${amount}`), // No lamports, its sol
         signers);
         const inst2 = createCloseAccountInstruction(wrapped.value, dest, owner, signers);

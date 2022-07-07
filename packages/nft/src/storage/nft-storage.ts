@@ -8,6 +8,7 @@ import {
   Result,
   isNode,
   isBrowser,
+  debugLog,
 } from '@solana-suite/shared';
 
 import {
@@ -42,7 +43,7 @@ export namespace StorageNftStorage {
 
   export const uploadContent = async (filePath: string | File
   ): Promise<Result<string, Error>> => {
-
+    debugLog('# upload content: ', filePath);
     let file!: Buffer;
     if (isNode) {
       const filepath = filePath as string;
@@ -66,25 +67,26 @@ export namespace StorageNftStorage {
   }
 
   export const uploadMetadata = async (
-    input: JsonMetadata
+    metadata: JsonMetadata
   ): Promise<Result<string, Error>> => {
-    if (input.image) {
-      const imageUrl = await uploadContent(input.image)
+    debugLog('# upload meta data: ', metadata);
+    if (metadata.image) {
+      const imageUrl = await uploadContent(metadata.image)
         .then(Result.ok)
         .catch(Result.err) as Result<string, Error>;
 
       if (imageUrl.isErr) {
         return imageUrl;
       }
-      input.image = imageUrl.value;
+      metadata.image = imageUrl.value;
     }
 
-    const blobJson = new Blob([JSON.stringify(input)]);
-    const metadata = await connect.storeBlob(blobJson)
+    const blobJson = new Blob([JSON.stringify(metadata)]);
+    const res = await connect.storeBlob(blobJson)
       .then(Result.ok)
       .catch(Result.err) as Result<string, Error>;
 
-    return metadata.map(
+    return res.map(
       ok => createGatewayUrl(ok),
       err => err
     );

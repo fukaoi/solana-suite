@@ -105,7 +105,7 @@ var Account;
         return shared_1.Result.ok(modified);
     });
     Account.requestAirdrop = (pubkey, airdropAmount) => __awaiter(this, void 0, void 0, function* () {
-        console.debug('Now airdropping...please wait');
+        (0, shared_1.debugLog)('Now airdropping...please wait');
         airdropAmount = !airdropAmount ? Account.DEFAULT_AIRDROP_AMOUNT : airdropAmount * web3_js_1.LAMPORTS_PER_SOL;
         if (airdropAmount > Account.MAX_AIRDROP_SOL) {
             return shared_1.Result.err(Error(`Over max airdrop amount: ${airdropAmount}`));
@@ -140,7 +140,7 @@ var Account;
             return associatedToken.error;
         }
         const associatedTokenAccount = associatedToken.unwrap();
-        console.debug('# associatedTokenAccount: ', associatedTokenAccount.toString());
+        (0, shared_1.debugLog)('# associatedTokenAccount: ', associatedTokenAccount.toString());
         try {
             // Dont use Result
             yield (0, spl_token_1.getAccount)(shared_1.Node.getConnection(), associatedTokenAccount, shared_1.Node.getConnection().commitment, spl_token_1.TOKEN_PROGRAM_ID);

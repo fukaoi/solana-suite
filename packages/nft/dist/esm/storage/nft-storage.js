@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { NFTStorage, Blob } from 'nft.storage';
 import fs from 'fs';
-import { Constants, Result } from '@solana-suite/shared';
+import { Constants, Result, isNode, isBrowser, debugLog, } from '@solana-suite/shared';
+import { useMetaplexFileFromBrowser, } from '@metaplex-foundation/js';
 export var StorageNftStorage;
 (function (StorageNftStorage) {
     const getNftStorageApiKey = () => {
@@ -31,26 +32,40 @@ export var StorageNftStorage;
     const createGatewayUrl = (cid) => `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
     const connect = new NFTStorage({ token: getNftStorageApiKey() });
     StorageNftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
-        const blobImage = new Blob([fs.readFileSync(filePath)]);
+        debugLog('# upload content: ', filePath);
+        let file;
+        if (isNode) {
+            const filepath = filePath;
+            file = fs.readFileSync(filepath);
+        }
+        else if (isBrowser) {
+            const filepath = filePath;
+            file = (yield useMetaplexFileFromBrowser(filepath)).buffer;
+        }
+        else {
+            return Result.err(Error('Supported envriroment: only Node.js and Browser js'));
+        }
+        const blobImage = new Blob([file]);
         const res = yield connect.storeBlob(blobImage)
             .then(Result.ok)
             .catch(Result.err);
         return res.map(ok => createGatewayUrl(ok), err => err);
     });
-    StorageNftStorage.uploadMetadata = (input) => __awaiter(this, void 0, void 0, function* () {
-        if (input.image) {
-            const imageUrl = yield StorageNftStorage.uploadContent(input.image)
+    StorageNftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
+        debugLog('# upload meta data: ', metadata);
+        if (metadata.image) {
+            const imageUrl = yield StorageNftStorage.uploadContent(metadata.image)
                 .then(Result.ok)
                 .catch(Result.err);
             if (imageUrl.isErr) {
                 return imageUrl;
             }
-            input.image = imageUrl.value;
+            metadata.image = imageUrl.value;
         }
-        const blobJson = new Blob([JSON.stringify(input)]);
-        const metadata = yield connect.storeBlob(blobJson)
+        const blobJson = new Blob([JSON.stringify(metadata)]);
+        const res = yield connect.storeBlob(blobJson)
             .then(Result.ok)
             .catch(Result.err);
-        return metadata.map(ok => createGatewayUrl(ok), err => err);
+        return res.map(ok => createGatewayUrl(ok), err => err);
     });
 })(StorageNftStorage || (StorageNftStorage = {}));

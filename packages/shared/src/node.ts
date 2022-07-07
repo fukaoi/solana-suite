@@ -4,6 +4,10 @@ import {
 } from './constants';
 
 import {
+  debugLog,
+} from './global';
+
+import {
   Connection,
   Commitment,
 } from '@solana/web3.js';
@@ -23,7 +27,7 @@ export namespace Node {
       commitment = Constants.COMMITMENT;
     }
 
-    console.debug('# Node info: ', cluster, commitment);
+    debugLog('# Node info: ', cluster, commitment);
 
     return new Connection(cluster, commitment);
   };
@@ -33,12 +37,12 @@ export namespace Node {
     commitment?: Commitment,
   }): void => {
     if (param.commitment) {
-      console.debug('# Node change commitment: ', commitment);
+      debugLog('# Node change commitment: ', commitment);
       commitment = param.commitment;
     }
 
     if (param.cluster) {
-      console.debug('# Node change cluster: ', cluster);
+      debugLog('# Node change cluster: ', cluster);
       cluster = ConstantsFunc.switchCluster(param.cluster);
     }
   }

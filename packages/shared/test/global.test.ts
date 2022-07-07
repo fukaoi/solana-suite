@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import '../src/global';
-import {sleep, isNode, isBrowser} from '../src/global';
+import {sleep, isNode, isBrowser, debugLog} from '../src/global';
 
 describe('Global', () => {
   it('Convert string to PublicKey', async () => {
@@ -24,8 +24,8 @@ describe('Global', () => {
     console.log(res);
   });
 
-  it('console.debug', async () => {
-    console.debug(
+  it('debugLog', async () => {
+    debugLog(
       'debug test', {title: 'test'}, () => {return }
     );
   });

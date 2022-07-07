@@ -22,7 +22,12 @@ import {
 import bs from 'bs58';
 
 import {Transaction} from './';
-import {Instruction, Node, Result} from '@solana-suite/shared';
+import {
+  Instruction, 
+  Node, 
+  Result,
+  debugLog,
+} from '@solana-suite/shared';
 
 export type Pubkey = string;
 export type Secret = string;
@@ -164,7 +169,7 @@ export namespace Account {
     pubkey: PublicKey,
     airdropAmount?: number
   ): Promise<Result<string, Error>> => {
-    console.debug('Now airdropping...please wait');
+    debugLog('Now airdropping...please wait');
 
     airdropAmount = !airdropAmount ? DEFAULT_AIRDROP_AMOUNT : airdropAmount * LAMPORTS_PER_SOL;
 
@@ -232,7 +237,7 @@ export namespace Account {
 
 
     const associatedTokenAccount = associatedToken.unwrap();
-    console.debug('# associatedTokenAccount: ', associatedTokenAccount.toString());
+    debugLog('# associatedTokenAccount: ', associatedTokenAccount.toString());
 
     try {
       // Dont use Result

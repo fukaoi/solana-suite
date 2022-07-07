@@ -16,6 +16,7 @@ exports.StorageNftStorage = void 0;
 const nft_storage_1 = require("nft.storage");
 const fs_1 = __importDefault(require("fs"));
 const shared_1 = require("@solana-suite/shared");
+const js_1 = require("@metaplex-foundation/js");
 var StorageNftStorage;
 (function (StorageNftStorage) {
     const getNftStorageApiKey = () => {
@@ -37,26 +38,40 @@ var StorageNftStorage;
     const createGatewayUrl = (cid) => `${shared_1.Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
     const connect = new nft_storage_1.NFTStorage({ token: getNftStorageApiKey() });
     StorageNftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
-        const blobImage = new nft_storage_1.Blob([fs_1.default.readFileSync(filePath)]);
+        (0, shared_1.debugLog)('# upload content: ', filePath);
+        let file;
+        if (shared_1.isNode) {
+            const filepath = filePath;
+            file = fs_1.default.readFileSync(filepath);
+        }
+        else if (shared_1.isBrowser) {
+            const filepath = filePath;
+            file = (yield (0, js_1.useMetaplexFileFromBrowser)(filepath)).buffer;
+        }
+        else {
+            return shared_1.Result.err(Error('Supported envriroment: only Node.js and Browser js'));
+        }
+        const blobImage = new nft_storage_1.Blob([file]);
         const res = yield connect.storeBlob(blobImage)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         return res.map(ok => createGatewayUrl(ok), err => err);
     });
-    StorageNftStorage.uploadMetadata = (input) => __awaiter(this, void 0, void 0, function* () {
-        if (input.image) {
-            const imageUrl = yield StorageNftStorage.uploadContent(input.image)
+    StorageNftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
+        (0, shared_1.debugLog)('# upload meta data: ', metadata);
+        if (metadata.image) {
+            const imageUrl = yield StorageNftStorage.uploadContent(metadata.image)
                 .then(shared_1.Result.ok)
                 .catch(shared_1.Result.err);
             if (imageUrl.isErr) {
                 return imageUrl;
             }
-            input.image = imageUrl.value;
+            metadata.image = imageUrl.value;
         }
-        const blobJson = new nft_storage_1.Blob([JSON.stringify(input)]);
-        const metadata = yield connect.storeBlob(blobJson)
+        const blobJson = new nft_storage_1.Blob([JSON.stringify(metadata)]);
+        const res = yield connect.storeBlob(blobJson)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
-        return metadata.map(ok => createGatewayUrl(ok), err => err);
+        return res.map(ok => createGatewayUrl(ok), err => err);
     });
 })(StorageNftStorage = exports.StorageNftStorage || (exports.StorageNftStorage = {}));

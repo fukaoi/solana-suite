@@ -27,7 +27,7 @@ var SolNative;
         if (wrapped.isErr) {
             return wrapped.error;
         }
-        console.debug('# wrapped sol: ', wrapped.value.toBase58());
+        (0, shared_1.debugLog)('# wrapped sol: ', wrapped.value.toBase58());
         const tokenRes = yield (0, spl_token_1.createMint)(connection, payer, owner, owner, 0)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
@@ -39,12 +39,12 @@ var SolNative;
         if (sourceToken.isErr) {
             return shared_1.Result.err(sourceToken.error);
         }
-        console.debug('# sourceToken: ', sourceToken.value);
+        (0, shared_1.debugLog)('# sourceToken: ', sourceToken.value);
         const destToken = yield spl_token_2.SplToken.retryGetOrCreateAssociatedAccountInfo(token, wrapped.value, payer);
         if (destToken.isErr) {
             return shared_1.Result.err(destToken.error);
         }
-        console.debug('# destToken: ', destToken.value);
+        (0, shared_1.debugLog)('# destToken: ', destToken.value);
         const inst1 = (0, spl_token_1.createTransferInstruction)(sourceToken.value.toPublicKey(), destToken.value.toPublicKey(), owner, parseInt(`${amount}`), // No lamports, its sol
         signers);
         const inst2 = (0, spl_token_1.createCloseAccountInstruction)(wrapped.value, dest, owner, signers);

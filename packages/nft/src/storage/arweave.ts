@@ -21,6 +21,7 @@ import {
   ConstantsFunc,
   isNode,
   isBrowser,
+  debugLog,
 } from '@solana-suite/shared';
 
 export interface MetaplexFileOptions {
@@ -34,11 +35,17 @@ export interface MetaplexFileOptions {
 export namespace StorageArweave {
   const BUNDLR_CONNECT_TIMEOUT = 60000;
 
+  export const getUploadPrice = () => {
+
+
+  }
+
   export const uploadContent = async (
     payer: Keypair,
     filePath: string | File,
     fileOptions?: MetaplexFileOptions
   ): Promise<Result<string, Error>> => {
+    debugLog('# upload content: ', filePath);
     const metaplex = Metaplex
       .make(Node.getConnection())
       .use(keypairIdentity(payer))
@@ -77,8 +84,9 @@ export namespace StorageArweave {
 
   export const uploadMetadata = async (
     payer: Keypair,
-    input: JsonMetadata
+    metadata: JsonMetadata
   ): Promise<Result<string, Error>> => {
+    debugLog('# upload meta data: ', metadata);
     const metaplex = Metaplex
       .make(Node.getConnection())
       .use(keypairIdentity(payer))
@@ -88,7 +96,7 @@ export namespace StorageArweave {
         timeout: BUNDLR_CONNECT_TIMEOUT,
       }));
 
-    return metaplex.nfts().uploadMetadata(input)
+    return metaplex.nfts().uploadMetadata(metadata)
       .then(res => Result.ok(res.uri))
       .catch(Result.err)
   }

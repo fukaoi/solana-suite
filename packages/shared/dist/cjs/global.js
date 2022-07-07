@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isNode = exports.isBrowser = exports.sleep = void 0;
+exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const bs58_1 = __importDefault(require("bs58"));
 const _1 = require("./");
@@ -60,7 +60,8 @@ String.prototype.toExplorerUrl = function () {
         return `https://solscan.io/tx/${this}?cluster=${cluster}`;
     }
 };
-console.debug = (data, data2 = '', data3 = '') => _1.Constants.isDebugging && console.log(data, data2, data3);
+const debugLog = (data, data2 = '', data3 = '') => _1.Constants.isDebugging && console.log('[DEBUG]', data, data2, data3);
+exports.debugLog = debugLog;
 const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise(r => setTimeout(r, sec * 1000)); });
 exports.sleep = sleep;
 exports.isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined";

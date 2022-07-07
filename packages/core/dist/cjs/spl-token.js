@@ -29,19 +29,19 @@ var SplToken;
             try {
                 const inst = yield _1.Account.getOrCreateAssociatedTokenAccount(mint, owner, feePayer, true);
                 if (inst.isOk && typeof inst.value === 'string') {
-                    console.debug('# associatedTokenAccount: ', inst.value);
+                    (0, shared_1.debugLog)('# associatedTokenAccount: ', inst.value);
                     return shared_1.Result.ok(inst.value);
                 }
                 return (yield inst.submit()).map((ok) => {
                     _1.Transaction.confirmedSig(ok);
                     return inst.unwrap().data;
                 }, (err) => {
-                    console.debug('# Error submit getOrCreateAssociatedTokenAccount: ', err);
+                    (0, shared_1.debugLog)('# Error submit getOrCreateAssociatedTokenAccount: ', err);
                     throw err;
                 });
             }
             catch (e) {
-                console.debug(`# retry: ${counter} create token account: `, e);
+                (0, shared_1.debugLog)(`# retry: ${counter} create token account: `, e);
             }
             yield (0, shared_1.sleep)(RETREY_SLEEP_TIME);
             counter++;

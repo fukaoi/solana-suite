@@ -10,14 +10,14 @@ describe('Constants', () => {
 
   it('ConstantsFunc use round robin function in mainnet-beta', () => {
     for (let i = 0; i < 30; i++) {
-      const cluster = ConstantsFunc.switchApi(Constants.Cluster.prdrr);
+      const cluster = ConstantsFunc.switchCluster(Constants.Cluster.prdrr);
       console.log('# cluster url: ', cluster);
       assert.isNotEmpty(cluster);
     }
   });
   it('ConstantsFunc use custom and customUrl', () => {
       const dummyUrl = 'https://hoge.hoge';
-      const cluster = ConstantsFunc.switchApi(Constants.Cluster.custom, dummyUrl);
+      const cluster = ConstantsFunc.switchCluster(Constants.Cluster.custom, dummyUrl);
       console.log('# cluster url: ', cluster);
       assert.equal(cluster, dummyUrl);
   });

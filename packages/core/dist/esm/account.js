@@ -11,7 +11,7 @@ import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddres
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, } from '@solana/web3.js';
 import bs from 'bs58';
 import { Transaction } from './';
-import { Instruction, Node, Result } from '@solana-suite/shared';
+import { Instruction, Node, Result, debugLog, } from '@solana-suite/shared';
 export class KeypairStr {
     constructor(pubkey, secret) {
         this.pubkey = pubkey;
@@ -98,7 +98,7 @@ export var Account;
         return Result.ok(modified);
     });
     Account.requestAirdrop = (pubkey, airdropAmount) => __awaiter(this, void 0, void 0, function* () {
-        console.debug('Now airdropping...please wait');
+        debugLog('Now airdropping...please wait');
         airdropAmount = !airdropAmount ? Account.DEFAULT_AIRDROP_AMOUNT : airdropAmount * LAMPORTS_PER_SOL;
         if (airdropAmount > Account.MAX_AIRDROP_SOL) {
             return Result.err(Error(`Over max airdrop amount: ${airdropAmount}`));
@@ -133,7 +133,7 @@ export var Account;
             return associatedToken.error;
         }
         const associatedTokenAccount = associatedToken.unwrap();
-        console.debug('# associatedTokenAccount: ', associatedTokenAccount.toString());
+        debugLog('# associatedTokenAccount: ', associatedTokenAccount.toString());
         try {
             // Dont use Result
             yield getAccount(Node.getConnection(), associatedTokenAccount, Node.getConnection().commitment, TOKEN_PROGRAM_ID);
