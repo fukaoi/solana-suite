@@ -55,12 +55,8 @@ String.prototype.toExplorerUrl = function () {
     }
 };
 console.debug = (data, data2 = '', data3 = '') => Constants.isDebugging && console.log(data, data2, data3);
-export const tryCatch = (fn) => {
-    try {
-        return Result.ok(fn());
-    }
-    catch (e) {
-        return Result.err(e);
-    }
-};
 export const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise(r => setTimeout(r, sec * 1000)); });
+export const isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined";
+export const isNode = typeof process !== "undefined" &&
+    process.versions != null &&
+    process.versions.node != null;

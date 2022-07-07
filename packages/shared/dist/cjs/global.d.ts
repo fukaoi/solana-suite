@@ -14,5 +14,6 @@ declare global {
         debug(data: unknown, data2?: unknown, data3?: unknown): void;
     }
 }
-export declare const tryCatch: (fn: () => {}) => Result.Ok<{}, Error> | Result.Err<{}, Error>;
 export declare const sleep: (sec: number) => Promise<unknown>;
+export declare const isBrowser: boolean;
+export declare const isNode: boolean;

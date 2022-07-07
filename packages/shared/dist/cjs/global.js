@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sleep = exports.tryCatch = void 0;
+exports.isNode = exports.isBrowser = exports.sleep = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const bs58_1 = __importDefault(require("bs58"));
 const _1 = require("./");
@@ -61,14 +61,9 @@ String.prototype.toExplorerUrl = function () {
     }
 };
 console.debug = (data, data2 = '', data3 = '') => _1.Constants.isDebugging && console.log(data, data2, data3);
-const tryCatch = (fn) => {
-    try {
-        return _1.Result.ok(fn());
-    }
-    catch (e) {
-        return _1.Result.err(e);
-    }
-};
-exports.tryCatch = tryCatch;
 const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise(r => setTimeout(r, sec * 1000)); });
 exports.sleep = sleep;
+exports.isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined";
+exports.isNode = typeof process !== "undefined" &&
+    process.versions != null &&
+    process.versions.node != null;
