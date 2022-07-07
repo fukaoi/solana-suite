@@ -5,7 +5,8 @@ import {
   BundlrStorageDriver,
   useMetaplexFile,
   MetaplexFile,
-  JsonMetadata
+  JsonMetadata,
+  useMetaplexFileFromBrowser
 } from "@metaplex-foundation/js";
 
 import {
@@ -18,6 +19,8 @@ import {
   Result,
   Constants,
   ConstantsFunc,
+  isNode,
+  isBrowser,
 } from '@solana-suite/shared';
 
 export interface MetaplexFileOptions {
@@ -33,7 +36,7 @@ export namespace StorageArweave {
 
   export const uploadContent = async (
     payer: Keypair,
-    filePath: string,
+    filePath: string | File,
     fileOptions?: MetaplexFileOptions
   ): Promise<Result<string, Error>> => {
     const metaplex = Metaplex
@@ -46,12 +49,25 @@ export namespace StorageArweave {
       }));
 
     const driver = metaplex.storage().driver() as BundlrStorageDriver;
-    const buffer = fs.readFileSync(filePath);
-    let file: MetaplexFile;
-    if (fileOptions) {
-      file = useMetaplexFile(buffer, filePath, fileOptions);
+
+    let file!: MetaplexFile;
+    if (isNode) {
+      const filepath = filePath as string;
+      const buffer = fs.readFileSync(filepath);
+      if (fileOptions) {
+        file = useMetaplexFile(buffer, filepath, fileOptions);
+      } else {
+        file = useMetaplexFile(buffer, filepath);
+      }
+    } else if (isBrowser) {
+      const filepath = filePath as File;
+      if (fileOptions) {
+        file = await useMetaplexFileFromBrowser(filepath, fileOptions);
+      } else {
+        file = await useMetaplexFileFromBrowser(filepath);
+      }
     } else {
-      file = useMetaplexFile(buffer, filePath);
+      return Result.err(Error('Supported envriroment: only Node.js and Browser js'));
     }
 
     return driver.upload(file)
