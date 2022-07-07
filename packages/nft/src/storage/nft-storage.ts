@@ -1,7 +1,19 @@
-import {NFTStorage, Blob} from 'nft.storage';
+import {
+  NFTStorage,
+  Blob
+} from 'nft.storage';
 import fs from 'fs';
-import {Constants, Result} from '@solana-suite/shared';
-import {JsonMetadata} from '@metaplex-foundation/js';
+import {
+  Constants,
+  Result,
+  isNode,
+  isBrowser,
+} from '@solana-suite/shared';
+
+import {
+  JsonMetadata,
+  useMetaplexFileFromBrowser,
+} from '@metaplex-foundation/js';
 
 export namespace StorageNftStorage {
 
@@ -23,14 +35,26 @@ export namespace StorageNftStorage {
     }
   }
 
-  const createGatewayUrl = (cid: string): string => 
+  const createGatewayUrl = (cid: string): string =>
     `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
 
   const connect = new NFTStorage({token: getNftStorageApiKey()});
 
-  export const uploadContent = async (filePath: string
+  export const uploadContent = async (filePath: string | File
   ): Promise<Result<string, Error>> => {
-    const blobImage = new Blob([fs.readFileSync(filePath)]);
+
+    let file!: Buffer;
+    if (isNode) {
+      const filepath = filePath as string;
+      file = fs.readFileSync(filepath);
+    } else if (isBrowser) {
+      const filepath = filePath as File;
+      file = (await useMetaplexFileFromBrowser(filepath)).buffer;
+    } else {
+      return Result.err(Error('Supported envriroment: only Node.js and Browser js'));
+    }
+
+    const blobImage = new Blob([file]);
     const res = await connect.storeBlob(blobImage)
       .then(Result.ok)
       .catch(Result.err) as Result<string, Error>;
