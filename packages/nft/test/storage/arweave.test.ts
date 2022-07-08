@@ -66,25 +66,15 @@ describe('StorageArweave', () => {
     );
   });
 
-  // it('Get file upload price', async () => {
-    // const asset = RandomAsset.storage();
-    // const res = await StorageArweave.uploadMetadata(
-      // source.toKeypair(),
-      // {
-        // name: asset.name,
-        // symbol: asset.symbol,
-        // description: asset.description,
-        // seller_fee_basis_points: asset.seller_fee_basis_points,
-        // image: asset.image,
-        // external_url: asset.external_url,
-        // attributes: asset.attributes,
-        // properties: asset.properties,
-        // collection: asset.collection,
-      // }
-    // );
-    // res.match(
-      // ok => console.log('# arweave url: ', ok),
-      // err => assert.fail(err.message)
-    // );
-  // });
+  it('Get file upload price', async () => {
+    const asset = RandomAsset.storage();
+    const res = await StorageArweave.getUploadPrice(
+      source.toKeypair(), 
+      asset.image!
+    );
+    res.match(
+      ok => console.log('# upload cost, currency: ', ok.price, ok.currency),
+      err => assert.fail(err.message)
+    );
+  });
 })
