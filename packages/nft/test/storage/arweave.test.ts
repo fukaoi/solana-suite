@@ -16,8 +16,8 @@ describe('StorageArweave', () => {
   it('Upload content data', async () => {
     const asset = RandomAsset.storage();
     const res = await StorageArweave.uploadContent(
-      source.toKeypair(),
       asset.image!,
+      source.toKeypair(),
     );
     res.match(
       ok => console.log('# arweave url: ', ok),
@@ -28,15 +28,15 @@ describe('StorageArweave', () => {
   it('Upload content data  with options', async () => {
     const asset = RandomAsset.storage();
     const res = await StorageArweave.uploadContent(
-      source.toKeypair(),
       asset.image!,
+      source.toKeypair(),
       {
         displayName: 'NFT test image',
         uniqueName: `randomAsset/${asset.image}`,
         contentType: 'image/jpeg',
         extension: 'jpg',
         tags: [{name: 'demo', value: 'test'}]
-      }
+      },
     );
     res.match(
       ok => console.log('# arweave url: ', ok),
@@ -47,7 +47,6 @@ describe('StorageArweave', () => {
   it('Upload meta data', async () => {
     const asset = RandomAsset.storage();
     const res = await StorageArweave.uploadMetadata(
-      source.toKeypair(),
       {
         name: asset.name,
         symbol: asset.symbol,
@@ -58,7 +57,8 @@ describe('StorageArweave', () => {
         attributes: asset.attributes,
         properties: asset.properties,
         collection: asset.collection,
-      }
+      },
+      source.toKeypair(),
     );
     res.match(
       ok => console.log('# arweave url: ', ok),
@@ -69,8 +69,8 @@ describe('StorageArweave', () => {
   it('Get file upload price', async () => {
     const asset = RandomAsset.storage();
     const res = await StorageArweave.getUploadPrice(
-      source.toKeypair(), 
-      asset.image!
+      asset.image!,
+      source.toKeypair(),
     );
     res.match(
       ok => console.log('# upload cost, currency: ', ok.price, ok.currency),

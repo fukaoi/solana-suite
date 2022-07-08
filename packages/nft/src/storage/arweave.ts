@@ -1,7 +1,4 @@
 import {
-  Metaplex,
-  keypairIdentity,
-  bundlrStorage,
   BundlrStorageDriver,
   useMetaplexFile,
   MetaplexFile,
@@ -11,21 +8,20 @@ import {
 } from "@metaplex-foundation/js";
 
 import {
-  KeyedAccountInfo,
   Keypair,
   LAMPORTS_PER_SOL,
 } from '@solana/web3.js';
 
 import fs from 'fs';
+
 import {
-  Node,
   Result,
-  Constants,
-  ConstantsFunc,
   isNode,
   isBrowser,
   debugLog,
 } from '@solana-suite/shared';
+
+import {Metaplex} from '../';
 
 export interface MetaplexFileOptions {
   readonly displayName: string;
@@ -36,25 +32,13 @@ export interface MetaplexFileOptions {
 }
 
 export namespace StorageArweave {
-  const BUNDLR_CONNECT_TIMEOUT = 60000;
-
-  const init = (payer: Keypair) => {
-    return Metaplex
-      .make(Node.getConnection())
-      .use(keypairIdentity(payer))
-      .use(bundlrStorage({
-        address: Constants.BUNDLR_NETWORK_URL,
-        providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
-        timeout: BUNDLR_CONNECT_TIMEOUT,
-      }));
-  }
 
   export const getUploadPrice = async (
-    payer: Keypair,
     filePath: string | File,
+    feePayer: Keypair,
   ): Promise<Result<{price: number, currency: Currency}, Error>> => {
 
-    const driver = init(payer).storage().driver() as BundlrStorageDriver;
+    const driver = Metaplex.init(feePayer).storage().driver() as BundlrStorageDriver;
 
     let buffer!: Buffer;
     if (isNode) {
@@ -76,13 +60,13 @@ export namespace StorageArweave {
   }
 
   export const uploadContent = async (
-    payer: Keypair,
     filePath: string | File,
-    fileOptions?: MetaplexFileOptions
+    feePayer: Keypair,
+    fileOptions?: MetaplexFileOptions,
   ): Promise<Result<string, Error>> => {
     debugLog('# upload content: ', filePath);
 
-    const driver = init(payer).storage().driver() as BundlrStorageDriver;
+    const driver = Metaplex.init(feePayer).storage().driver() as BundlrStorageDriver;
 
     let file!: MetaplexFile;
     if (isNode) {
@@ -110,12 +94,12 @@ export namespace StorageArweave {
   }
 
   export const uploadMetadata = async (
-    payer: Keypair,
-    metadata: JsonMetadata
+    metadata: JsonMetadata,
+    feePayer: Keypair,
   ): Promise<Result<string, Error>> => {
     debugLog('# upload meta data: ', metadata);
 
-    return init(payer).nfts().uploadMetadata(metadata)
+    return Metaplex.init(feePayer).nfts().uploadMetadata(metadata)
       .then(res => Result.ok(res.uri))
       .catch(Result.err)
   }
