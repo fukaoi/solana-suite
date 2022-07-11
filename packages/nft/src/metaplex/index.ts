@@ -11,6 +11,8 @@ import {
   keypairIdentity,
   bundlrStorage,
   CreateNftInput,
+  Task,
+  createNftOperation,
 } from "@metaplex-foundation/js";
 
 import {
@@ -35,11 +37,23 @@ export namespace Metaplex {
       }));
   }
 
-  export const mint = async(
+  export const mint = async (
     input: CreateNftInput,
     feePayer: Keypair,
   ) => {
+
+    // return new Task(async (scope) => {
+    //   const operation = createNftOperation(input);
+    //   const output = await init(feePayer).operations().execute(operation, scope);
+      
+    //   scope.throwIfCanceled();
+    //   console.log(output);
+      // const nft = await init(feePayer).nfts().findByMint(output.mintSigner.publicKey).run(scope);
+      // return {...output, nft};
+    // });
+
     const {nft} = await init(feePayer).nfts().create(input);
+    return nft;
   }
 
   export const update = () => {
