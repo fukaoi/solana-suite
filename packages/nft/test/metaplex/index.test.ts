@@ -52,7 +52,7 @@ describe('Metaplex', () => {
       name: asset.name,
       uri: uri,
       symbol: asset.symbol,
-      sellerFeeBasisPoints: 10000,
+      sellerFeeBasisPoints: 50,
       creators: [creator1, creator2],
       isMutable: true,
     },

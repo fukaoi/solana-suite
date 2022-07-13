@@ -1,6 +1,7 @@
 import {
   PublicKey,
   Keypair,
+  TransactionInstruction,
 } from '@solana/web3.js';
 
 import {
@@ -14,6 +15,7 @@ import {
   findMasterEditionV2Pda,
   findAssociatedTokenAccountPda,
   JsonMetadata,
+  TransactionBuilder,
 } from "@metaplex-foundation/js";
 
 import {
@@ -49,10 +51,31 @@ export namespace Metaplex {
       }));
   }
 
+  /**
+   * NFT mint
+   *
+   * @param {CreateNftInput}  input
+   * {
+   *   uri: {string}                 // basically storage uri
+   *   name?: {string}               // NFT content name
+   *   symbol?: {string}             // NFT ticker symbol
+   *   sellerFeeBasisPoints?: number // Royality percentage
+   *   creators?: Creator[]          // Other creators than owner
+   *   collection?: Collection       // collections of different colors, shapes, etc.
+   *   uses?: Uses                   // Usage feature: Burn, Single, Multipleu
+   *   isMutable?: boolean           // enable update()
+   *   maxSupply?: bignum            // mint copies
+   *   mintAuthority?: Signer        // 
+   *   updateAuthority?: Signer      //
+   *   freezeAuthority?: PublicKey   //
+   *   owner?: PublicKey             // PublicKey that Owns nft 
+   * }
+   * @param {Keypair} feePayer
+   */
   export const mint = async (
     input: CreateNftInput,
     feePayer: Keypair,
-  ) => {
+  ): Promise<Result<Instruction, Error>> => {
     const operation = createNftOperation(input);
     const mint = Keypair.generate();
     const tx = await createNft(
@@ -60,10 +83,11 @@ export namespace Metaplex {
       mint,
       feePayer
     );
+
     return Result.ok(new Instruction(
-      tx, 
-      [mint], 
-      feePayer, 
+      tx,
+      [mint],
+      feePayer,
       mint.publicKey.toString()
     ));
   }
@@ -81,9 +105,9 @@ export namespace Metaplex {
         verified: false,
       }));
 
-    let creators = input.creators ?? metadataCreators ?? null;
+    let creators = input.creators ?? metadataCreators ?? undefined;
 
-    if (creators === null) {
+    if (creators === undefined) {
       creators = [
         {
           address: updateAuthority,
@@ -118,7 +142,7 @@ export namespace Metaplex {
     operation: CreateNftOperation,
     mint: Keypair,
     feePayer: Keypair
-  ) => {
+  ): Promise<TransactionInstruction[]> => {
     const {
       uri,
       isMutable,
@@ -131,7 +155,6 @@ export namespace Metaplex {
       tokenProgram = TOKEN_PROGRAM_ID,
       associatedTokenProgram,
     } = operation.input;
-    let metadata = {};
 
     debugLog('# metadata input: ', operation.input);
     debugLog('# metadata feePayer: ', feePayer.publicKey.toString());
@@ -141,6 +164,14 @@ export namespace Metaplex {
     debugLog('# owner: ', owner.toString());
     freezeAuthority && debugLog('# freezeAuthority: ', freezeAuthority.toString());
 
+
+    // const json = await init(feePayer).storage().downloadJson(uri)
+    //   .then(Result.ok)
+    //   .catch(Result.err);
+
+    // const metadata: JsonMetadata<string> = json.isOk ? json.value : {} as JsonMetadata<string>;
+
+    let metadata = {};
     try {
       metadata = await init(feePayer).storage().downloadJson(uri);
     } catch (e) {
@@ -149,8 +180,8 @@ export namespace Metaplex {
     }
 
     const data = resolveData(
-      operation.input, 
-      metadata, 
+      operation.input,
+      metadata,
       updateAuthority.publicKey
     );
 
@@ -159,9 +190,9 @@ export namespace Metaplex {
     const lamports = await getMinimumBalanceForRentExemptMint(Node.getConnection());
 
     const associatedToken = findAssociatedTokenAccountPda(
-      mint.publicKey, 
-      owner, 
-      tokenProgram, 
+      mint.publicKey,
+      owner,
+      tokenProgram,
       associatedTokenProgram
     );
 
