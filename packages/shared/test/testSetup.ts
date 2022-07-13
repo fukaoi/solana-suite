@@ -3,6 +3,7 @@ import bs from 'bs58';
 import {
   Constants, 
   Node,
+  debugLog,
 } from '../src';
 
 import {
@@ -55,10 +56,10 @@ export namespace Setup {
   }
 
   const log = (source: KeypairStr, dest: KeypairStr) => {
-    console.log(`# source.pubkey:`, source.pubkey);
-    console.log(`# source.secret: `, source.secret);
-    console.log(`# destination.pubkey:`, dest.pubkey);
-    console.log(`# destination.secret: `, dest.secret);
+    debugLog(`# source.pubkey:`, source.pubkey);
+    debugLog(`# source.secret: `, source.secret);
+    debugLog(`# destination.pubkey:`, dest.pubkey);
+    debugLog(`# destination.secret: `, dest.secret);
   }
 
   const fetechSourceAndDest = async () => {

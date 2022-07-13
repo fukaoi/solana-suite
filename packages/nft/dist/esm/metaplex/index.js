@@ -7,80 +7,104 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { createInitializeMintInstruction, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { SystemProgram, Keypair, } from '@solana/web3.js';
-import { Node, Instruction, Result, } from '@solana-suite/shared';
-import { SplToken, } from '@solana-suite/core';
-import { MetaplexMetaData } from './metadata';
-export * from './instructure';
-export * from './metadata';
-export * from './serialize';
-export * from './account';
-export var MetaplexInstruction;
-(function (MetaplexInstruction) {
-    MetaplexInstruction.mintAccount = (instructions, owner, // need sufficient sol account
-    signers) => __awaiter(this, void 0, void 0, function* () {
-        const mintRentExempt = yield Node.getConnection().getMinimumBalanceForRentExemption(MintLayout.span);
-        const newAccount = Keypair.generate();
-        instructions.push(SystemProgram.createAccount({
-            fromPubkey: owner,
-            newAccountPubkey: newAccount.publicKey,
-            lamports: mintRentExempt,
-            space: MintLayout.span,
-            programId: TOKEN_PROGRAM_ID,
-        }));
-        signers.push(newAccount);
-        return {
-            mintAccount: newAccount.publicKey,
-            signers
-        };
-    });
-    MetaplexInstruction.mint = (instructions, createdAccount, owner, freezeAuthority) => __awaiter(this, void 0, void 0, function* () {
-        const decimals = 0;
-        instructions.push(createInitializeMintInstruction(createdAccount, decimals, owner, freezeAuthority, TOKEN_PROGRAM_ID));
-        return createdAccount.toBase58();
-    });
-})(MetaplexInstruction || (MetaplexInstruction = {}));
+import { PublicKey, Keypair, } from '@solana/web3.js';
+import { Metaplex as MetaplexFoundation, keypairIdentity, bundlrStorage, createNftOperation, createNftBuilder, findMetadataPda, findMasterEditionV2Pda, findAssociatedTokenAccountPda, } from "@metaplex-foundation/js";
+import { Node, Instruction, Result, Constants, ConstantsFunc, debugLog, } from '@solana-suite/shared';
+import { getMinimumBalanceForRentExemptMint, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 export var Metaplex;
 (function (Metaplex) {
-    Metaplex.initFormat = () => {
+    const BUNDLR_CONNECT_TIMEOUT = 60000;
+    Metaplex.init = (feePayer) => {
+        return MetaplexFoundation
+            .make(Node.getConnection())
+            .use(keypairIdentity(feePayer))
+            .use(bundlrStorage({
+            address: Constants.BUNDLR_NETWORK_URL,
+            providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
+            timeout: BUNDLR_CONNECT_TIMEOUT,
+        }));
+    };
+    Metaplex.mint = (input, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const operation = createNftOperation(input);
+        const mint = Keypair.generate();
+        const tx = yield createNft(operation, mint, feePayer);
+        return Result.ok(new Instruction(tx, [mint], feePayer, mint.publicKey.toString()));
+    });
+    const resolveData = (input, metadata, updateAuthority) => {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        const metadataCreators = (_b = (_a = metadata.properties) === null || _a === void 0 ? void 0 : _a.creators) === null || _b === void 0 ? void 0 : _b.filter((creator) => creator.address).map((creator) => {
+            var _a;
+            return ({
+                address: new PublicKey(creator.address),
+                share: (_a = creator.share) !== null && _a !== void 0 ? _a : 0,
+                verified: false,
+            });
+        });
+        let creators = (_d = (_c = input.creators) !== null && _c !== void 0 ? _c : metadataCreators) !== null && _d !== void 0 ? _d : null;
+        if (creators === null) {
+            creators = [
+                {
+                    address: updateAuthority,
+                    share: 100,
+                    verified: true,
+                },
+            ];
+        }
+        else {
+            creators = creators.map((creator) => {
+                if (creator.address.toBase58() === updateAuthority.toBase58()) {
+                    return Object.assign(Object.assign({}, creator), { verified: true });
+                }
+                else {
+                    return creator;
+                }
+            });
+        }
         return {
-            name: '',
-            uri: '',
-            symbol: '',
-            update_authority: '',
-            creators: [],
-            seller_fee_basis_points: 0,
-            primary_sale_happened: false
+            name: (_f = (_e = input.name) !== null && _e !== void 0 ? _e : metadata.name) !== null && _f !== void 0 ? _f : '',
+            symbol: (_h = (_g = input.symbol) !== null && _g !== void 0 ? _g : metadata.symbol) !== null && _h !== void 0 ? _h : '',
+            uri: input.uri,
+            sellerFeeBasisPoints: (_k = (_j = input.sellerFeeBasisPoints) !== null && _j !== void 0 ? _j : metadata.seller_fee_basis_points) !== null && _k !== void 0 ? _k : 500,
+            creators,
+            collection: (_l = input.collection) !== null && _l !== void 0 ? _l : null,
+            uses: (_m = input.uses) !== null && _m !== void 0 ? _m : null,
         };
     };
-    Metaplex.initializeMint = (payer, signers) => __awaiter(this, void 0, void 0, function* () {
-        const instructions = [];
-        const inst1 = yield MetaplexInstruction.mintAccount(instructions, payer, signers);
-        signers = signers.concat(inst1.signers);
-        const mint = yield MetaplexInstruction.mint(instructions, inst1.mintAccount, payer, payer);
-        return {
-            instructions,
-            signers,
-            mint
-        };
-    });
-    Metaplex.mint = (data, owner, signers) => __awaiter(this, void 0, void 0, function* () {
-        const inst1 = yield Metaplex.initializeMint(owner, signers);
-        signers = signers.concat(inst1.signers);
-        const inst2 = yield MetaplexMetaData.create(data, inst1.mint.toPublicKey(), owner, owner, owner);
-        if (inst2.isErr) {
-            return Result.err(inst2.error);
+    const createNft = (operation, mint, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const { uri, isMutable, maxSupply, payer = feePayer, mintAuthority = feePayer, updateAuthority = mintAuthority, owner = mintAuthority.publicKey, freezeAuthority, tokenProgram = TOKEN_PROGRAM_ID, associatedTokenProgram, } = operation.input;
+        let metadata = {};
+        console.log(process.env.DEBUG);
+        debugLog('# metadata input:', operation.input);
+        debugLog('# metadata feePayer', feePayer.publicKey.toString());
+        debugLog('# metadata mint', mint.publicKey.toString());
+        try {
+            metadata = yield Metaplex.init(feePayer).storage().downloadJson(uri);
         }
-        const inst3 = yield MetaplexMetaData.update(data, undefined, undefined, inst1.mint.toPublicKey(), owner, signers);
-        if (inst3.isErr)
-            return Result.err(inst3.error);
-        const mergeInstructions = inst1.instructions.concat(inst2.unwrap()).concat(inst3.unwrap());
-        return Result.ok(new Instruction(mergeInstructions, signers, undefined, inst1.mint));
-    });
-    Metaplex.burn = (mint, owner, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const burnAmount = 1;
-        const tokenDecimals = 0;
-        return SplToken.burn(mint, owner, signers, burnAmount, tokenDecimals, feePayer);
+        catch (e) {
+            debugLog('# Error in createNft:', e);
+            metadata = {};
+        }
+        const data = resolveData(operation.input, metadata, updateAuthority.publicKey);
+        const metadataPda = findMetadataPda(mint.publicKey);
+        const masterEditionPda = findMasterEditionV2Pda(mint.publicKey);
+        const lamports = yield getMinimumBalanceForRentExemptMint(Node.getConnection());
+        const associatedToken = findAssociatedTokenAccountPda(mint.publicKey, owner, tokenProgram, associatedTokenProgram);
+        return createNftBuilder({
+            lamports,
+            data,
+            isMutable,
+            maxSupply,
+            mint,
+            payer,
+            mintAuthority,
+            updateAuthority,
+            owner,
+            associatedToken,
+            freezeAuthority,
+            metadata: metadataPda,
+            masterEdition: masterEditionPda,
+            tokenProgram,
+            associatedTokenProgram
+        }).getInstructions();
     });
 })(Metaplex || (Metaplex = {}));

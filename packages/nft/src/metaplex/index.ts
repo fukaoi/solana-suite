@@ -1,8 +1,5 @@
 import {
   PublicKey,
-  SystemProgram,
-  TransactionInstruction,
-  Signer,
   Keypair,
 } from '@solana/web3.js';
 
@@ -13,15 +10,11 @@ import {
   CreateNftInput,
   createNftOperation,
   createNftBuilder,
-  CreateNftBuilderParams,
-  CreateNftOperation,
-  findMetadataPda,
+  CreateNftOperation, findMetadataPda,
   findMasterEditionV2Pda,
   findAssociatedTokenAccountPda,
   JsonMetadata,
 } from "@metaplex-foundation/js";
-
-import * as beet from '@metaplex-foundation/beet';
 
 import {
   DataV2,
@@ -34,11 +27,12 @@ import {
   Result,
   Constants,
   ConstantsFunc,
+  debugLog,
 } from '@solana-suite/shared';
 
 
 import {
-  getMinimumBalanceForRentExemptMint
+  getMinimumBalanceForRentExemptMint, TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
 
 export namespace Metaplex {
@@ -59,10 +53,18 @@ export namespace Metaplex {
     feePayer: Keypair,
   ) => {
     const operation = createNftOperation(input);
-    console.log('## mint.operation: ', operation);
-    // const tx = createNftBuilder(operation);
-    const {nft} = await init(feePayer).nfts().create(input);
-    // return nft;
+    const mint = Keypair.generate();
+    const tx = await createNft(
+      operation,
+      mint,
+      feePayer
+    );
+    return Result.ok(new Instruction(
+      tx, 
+      [mint], 
+      feePayer, 
+      mint.publicKey.toString()
+    ));
   }
 
   const resolveData = (
@@ -111,40 +113,53 @@ export namespace Metaplex {
   };
 
 
-  const createNftOperationHandler = async (
+  const createNft = async (
     operation: CreateNftOperation,
+    mint: Keypair,
     feePayer: Keypair
   ) => {
     const {
       uri,
       isMutable,
       maxSupply,
-      mint = Keypair.generate(),
       payer = feePayer,
       mintAuthority = feePayer,
       updateAuthority = mintAuthority,
       owner = mintAuthority.publicKey,
       freezeAuthority,
-      tokenProgram,
+      tokenProgram = TOKEN_PROGRAM_ID,
       associatedTokenProgram,
     } = operation.input;
     let metadata = {};
 
+    debugLog('# metadata input:', operation.input);
+    debugLog('# metadata feePayer', feePayer.publicKey.toString());
+    debugLog('# metadata mint', mint.publicKey.toString());
+
     try {
       metadata = await init(feePayer).storage().downloadJson(uri);
     } catch (e) {
+      debugLog('# Error in createNft:', e);
       metadata = {};
     }
 
-    console.log('## operation.createNftOperationHandler:', operation);
-    console.log('---------------------------------------------------------');
+    const data = resolveData(
+      operation.input, 
+      metadata, 
+      updateAuthority.publicKey
+    );
 
-
-    const data = resolveData(operation.input, metadata, updateAuthority.publicKey);
     const metadataPda = findMetadataPda(mint.publicKey);
     const masterEditionPda = findMasterEditionV2Pda(mint.publicKey);
     const lamports = await getMinimumBalanceForRentExemptMint(Node.getConnection());
-    const associatedToken = findAssociatedTokenAccountPda(mint.publicKey, owner, tokenProgram, associatedTokenProgram);
+
+    const associatedToken = findAssociatedTokenAccountPda(
+      mint.publicKey, 
+      owner, 
+      tokenProgram, 
+      associatedTokenProgram
+    );
+
     return createNftBuilder({
       lamports,
       data,
@@ -161,6 +176,6 @@ export namespace Metaplex {
       masterEdition: masterEditionPda,
       tokenProgram,
       associatedTokenProgram
-    });
+    }).getInstructions();
   };
 }

@@ -60,7 +60,11 @@ String.prototype.toExplorerUrl = function () {
         return `https://solscan.io/tx/${this}?cluster=${cluster}`;
     }
 };
-const debugLog = (data, data2 = '', data3 = '') => _1.Constants.isDebugging && console.log('[DEBUG]', data, data2, data3);
+const debugLog = (data, data2 = '', data3 = '') => {
+    if (_1.Constants.isDebugging || process.env.DEBUG) {
+        console.log('[DEBUG]', data, data2, data3);
+    }
+};
 exports.debugLog = debugLog;
 const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise(r => setTimeout(r, sec * 1000)); });
 exports.sleep = sleep;

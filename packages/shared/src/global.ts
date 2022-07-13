@@ -75,9 +75,13 @@ export const debugLog = (
   data: unknown,
   data2: unknown = '',
   data3: unknown = ''
-) => Constants.isDebugging && console.log('[DEBUG]', data, data2, data3);
+) => {
+  if (Constants.isDebugging || process.env.DEBUG) {
+    console.log('[DEBUG]', data, data2, data3);
+  }
+}
 
-export const sleep = async (sec: number) => 
+export const sleep = async (sec: number) =>
   new Promise(r => setTimeout(r, sec * 1000));
 
 export const isBrowser =

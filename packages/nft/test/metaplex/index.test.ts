@@ -16,7 +16,7 @@ describe('Metaplex', () => {
     dest = obj.dest;
   });
 
-  it.only('Mint nft', async () => {
+  it.only('Mint nft, Separate processing', async () => {
     const asset = RandomAsset.storage();
     const upload = await StorageArweave.uploadContent(
       asset.image!,
@@ -24,7 +24,18 @@ describe('Metaplex', () => {
     );
 
     assert.isTrue(upload.isOk, upload.unwrap());
-    const uri = upload.unwrap();
+    const imageUri = upload.unwrap();
+
+    const uploadMetadata = await StorageArweave.uploadMetadata({
+      image: imageUri,
+      name: asset.name,
+      symbol: asset.symbol,
+    },
+      source.toKeypair()
+    );
+
+    assert.isTrue(uploadMetadata.isOk, uploadMetadata.unwrap());
+    const uri = uploadMetadata.unwrap();
 
     const creator1 = {
       address: source.toPublicKey(),
@@ -48,7 +59,13 @@ describe('Metaplex', () => {
       source.toKeypair()
     );
 
-    console.log(res);
+    (await res.submit()).match(
+      ok => {
+        console.log('# mint:', res.unwrap().data);
+        console.log('# sig:', ok);
+      },
+      ng => assert.fail(ng.message) 
+    );
   });
 
   it('Mint nft and Burn nft', async () => {

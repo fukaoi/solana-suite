@@ -7,25 +7,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Metaplex, keypairIdentity, bundlrStorage, useMetaplexFile, useMetaplexFileFromBrowser } from "@metaplex-foundation/js";
+import { useMetaplexFile, useMetaplexFileFromBrowser } from "@metaplex-foundation/js";
+import { LAMPORTS_PER_SOL, } from '@solana/web3.js';
 import fs from 'fs';
-import { Node, Result, Constants, ConstantsFunc, isNode, isBrowser, debugLog, } from '@solana-suite/shared';
+import { Result, isNode, isBrowser, debugLog, } from '@solana-suite/shared';
+import { Metaplex } from '../';
 export var StorageArweave;
 (function (StorageArweave) {
-    const BUNDLR_CONNECT_TIMEOUT = 60000;
-    StorageArweave.getUploadPrice = () => {
-    };
-    StorageArweave.uploadContent = (payer, filePath, fileOptions) => __awaiter(this, void 0, void 0, function* () {
+    StorageArweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const driver = Metaplex.init(feePayer).storage().driver();
+        let buffer;
+        if (isNode) {
+            const filepath = filePath;
+            buffer = fs.readFileSync(filepath);
+        }
+        else if (isBrowser) {
+            const filepath = filePath;
+            buffer = (yield useMetaplexFileFromBrowser(filepath)).buffer;
+        }
+        else {
+            return Result.err(Error('Supported envriroment: only Node.js and Browser js'));
+        }
+        const res = yield driver.getUploadPrice(buffer.length);
+        debugLog('# buffer length, price', buffer.length, res.basisPoints / LAMPORTS_PER_SOL);
+        return Result.ok({
+            price: res.basisPoints / LAMPORTS_PER_SOL,
+            currency: res.currency
+        });
+    });
+    StorageArweave.uploadContent = (filePath, feePayer, fileOptions) => __awaiter(this, void 0, void 0, function* () {
         debugLog('# upload content: ', filePath);
-        const metaplex = Metaplex
-            .make(Node.getConnection())
-            .use(keypairIdentity(payer))
-            .use(bundlrStorage({
-            address: Constants.BUNDLR_NETWORK_URL,
-            providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
-            timeout: BUNDLR_CONNECT_TIMEOUT,
-        }));
-        const driver = metaplex.storage().driver();
+        const driver = Metaplex.init(feePayer).storage().driver();
         let file;
         if (isNode) {
             const filepath = filePath;
@@ -53,17 +65,9 @@ export var StorageArweave;
             .then(Result.ok)
             .catch(Result.err);
     });
-    StorageArweave.uploadMetadata = (payer, metadata) => __awaiter(this, void 0, void 0, function* () {
+    StorageArweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
         debugLog('# upload meta data: ', metadata);
-        const metaplex = Metaplex
-            .make(Node.getConnection())
-            .use(keypairIdentity(payer))
-            .use(bundlrStorage({
-            address: Constants.BUNDLR_NETWORK_URL,
-            providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
-            timeout: BUNDLR_CONNECT_TIMEOUT,
-        }));
-        return metaplex.nfts().uploadMetadata(metadata)
+        return Metaplex.init(feePayer).nfts().uploadMetadata(metadata)
             .then(res => Result.ok(res.uri))
             .catch(Result.err);
     });
