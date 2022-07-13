@@ -48,6 +48,7 @@ export namespace Metaplex {
         timeout: BUNDLR_CONNECT_TIMEOUT,
       }));
   }
+
   export const mint = async (
     input: CreateNftInput,
     feePayer: Keypair,
@@ -132,9 +133,13 @@ export namespace Metaplex {
     } = operation.input;
     let metadata = {};
 
-    debugLog('# metadata input:', operation.input);
-    debugLog('# metadata feePayer', feePayer.publicKey.toString());
-    debugLog('# metadata mint', mint.publicKey.toString());
+    debugLog('# metadata input: ', operation.input);
+    debugLog('# metadata feePayer: ', feePayer.publicKey.toString());
+    debugLog('# metadata mint: ', mint.publicKey.toString());
+    debugLog('# mintAuthority: ', mintAuthority.publicKey.toString());
+    debugLog('# updateAuthority: ', updateAuthority.publicKey.toString());
+    debugLog('# owner: ', owner.toString());
+    freezeAuthority && debugLog('# freezeAuthority: ', freezeAuthority.toString());
 
     try {
       metadata = await init(feePayer).storage().downloadJson(uri);
