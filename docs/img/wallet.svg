@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="45" height="35.6" viewBox="0 0 45 35.6">
+  <g id="icons" transform="translate(-9.5 -14.2)">
+    <g id="XMLID_431_">
+      <g id="XMLID_419_">
+        <path id="XMLID_425_" d="M52.5,15.2a.945.945,0,0,1,1,1V41a.945.945,0,0,1-1,1h-41a.945.945,0,0,1-1-1V16.2a.945.945,0,0,1,1-1h41Z" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+        <line id="XMLID_423_" x2="43" transform="translate(10.5 36.2)" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+        <line id="XMLID_422_" y2="7.4" transform="translate(21.3 41.4)" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+        <line id="XMLID_421_" y2="7.4" transform="translate(42.3 41.4)" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+        <line id="XMLID_420_" x2="28.7" transform="translate(17.5 48.8)" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+      </g>
+      <g id="XMLID_428_">
+        <path id="XMLID_426_" d="M17.9,32.8V21.3a.9.9,0,0,1,.9-.9h6.1a.9.9,0,0,1,.9.9V32.9" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+        <line id="XMLID_427_" x2="7.6" transform="translate(18.2 26.6)" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+        <path id="XMLID_424_" d="M32.2,32.8V21.3a1,1,0,0,1,1-1h6.7a1,1,0,0,1,1,1v4.3a1,1,0,0,1-1,1H32.3" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+        <line id="XMLID_429_" y2="13.1" transform="translate(46.2 19.7)" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+      </g>
+      <line id="XMLID_433_" x2="3.3" transform="translate(44.6 20.4)" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+      <line id="XMLID_430_" x2="3.2" transform="translate(44.6 31.8)" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+    </g>
+  </g>
+</svg>

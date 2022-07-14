@@ -1,1 +1,205 @@
-solana-suite
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <title>title</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+
+  <link rel="stylesheet" href="./css/normalize.css">
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./css/swiper.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="p_top">
+  <div id="container" class="container">
+    <header id="header" class="header">
+      <div class="header_l">
+        <h1>
+          <a href="/">
+            <figure>
+              <img src="./img/logo.png" alt="">
+            </figure>
+          </a>
+        </h1>
+        <!-- <span class="menu_icon show_sp" id="menu_icon">
+          <span class="menu_icon_in">
+            <span class="menu-trigger">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </span>
+        <i>MENU</i>
+        </span> -->
+      </div>
+      <div class="header_nav" id="header_nav">
+        <ul>
+          <li><a class="" href="#">DOCS</a></li>
+          <li><a class="" href="https://github.com/atonoy/solana-suite">GITHUB</a></li>
+        </ul>
+      </div>
+    </header>
+    <main>
+      <div class="mv">
+        <h2><img src="./img/txtSolana.png" alt=""></h2>
+        <p>Blockchain SDK Library</p>
+      </div>
+      <div class="about" id="about">
+        <div class="about__inner">
+          <h2><img src="./img/txtAbout.png" alt=""></h2>
+          <div class="intro">Making Solana Development Accessible to All Engineers.<br>Solana" has overwhelming processing speed and low cost compared to many blockchains. SolanaSuite is an SDK library for more efficient development with Solana.</div>
+          <div class="aboutWrap">
+            <article>
+              <h3>Easy to use all in package</h3>
+              <div class="txt">Create wallet, Transfer SOL/SPL-TOKEN, Mint SPL-TOKEN/NFT, Upload
+                <br>storage(nft.storage/arweave), Connect phantom wallet,,,,</div>
+              <dl>
+                <dt><img src="./img/logo.png" alt=""></dt>
+                <dd>
+                  <ul>
+                    <li>
+                      <figure><img src="./img/web3.svg" alt=""></figure>
+                      <p>@solana/web3.js</p>
+                    </li>
+                    <li>
+                      <figure><img src="./img/config.svg" alt=""></figure>
+                      <p>@solana/spl-token</p>
+                    </li>
+                    <li>
+                      <figure><img src="./img/api.svg" alt=""></figure>
+                      <p>metaplex api</p>
+                    </li>
+                    <li>
+                      <figure><img src="./img/storage.svg" alt=""></figure>
+                      <span>nft.storage</span>
+                      <p>arweave</p>
+                    </li>
+                    <li>
+                      <figure><img src="./img/wallet.svg" alt=""></figure>
+                      <p>Phantom wallet
+                        <br>api</p>
+                    </li>
+                  </ul>
+                </dd>
+              </dl>
+            </article>
+            <article>
+              <h3>Both Node.js and Broser does one code</h3>
+              <div class="txt">No need to change source code in Node.js and Borwser js. There is no need to be aware of
+                <br>the environment in which the calling program will run.It is useful for building most Solana
+                <br>blockchain services because it provides a variety of functions as a single library, including</div>
+              <pre>
+                <code class="language-javascript">
+//// Example Mint SPL-TOKEN ////
+const inst = await SplToken.mint(
+  {Owner PublicKey},
+  [{Owner Keypair}],
+  {totalAmount},
+  {decimals}
+);
+await inst.submit();
+                </code>
+              </pre>
+            </article>
+            <article>
+              <h3>Response handling using Result type</h3>
+              <div class="txt">It does not suddenly stop programs using solana-suite by throwing an Exception when
+                <br>an error occurs. Traditional try-catch is not necessary.</div>
+              <pre>
+                <code class="language-javascript">
+const response: Result&lt;string, Error&gt;
+//// response case: If/ElseIf condition ////
+  if (response.isOk) {
+   console.log('# success: ', response.value);
+  } else if (response.isErr) {
+   console.log('# error: ', response.error);
+  }
+//// response case: Match condition ////
+  response.match(
+    (value: string) =&gt; console.log('# success: ', value),
+    (error: Error) =&gt; console.error('# error: ', error)
+);
+                </code>
+              </pre>
+            </article>
+            <article>
+              <h3>Various search options</h3>
+              <div class="txt">Limit/Order, Source/Destination filter, Search address(include token account), Action
+                <br>filter(action type: Transfer, Mint, CreateAccount,,,,,)</div>
+                <pre>
+                  <code class="language-javascript">
+//// Limit/Order ////
+  Transaction.getHistory( {PublicKey}, {limit} );
+//// Source/Destination Filter ////
+  Transaction.getHistory( {PublicKey}, {
+    directionFilter: Transaction.DirectionFilter.Dest, or Transaction.Direct
+});
+//// Action Filter ////
+  Transaction.getHistory( {PublicKey}, {
+      actionFilter: [
+        Transaction.Filter.MintTo, or Transaction.Filter.Transfer,,,,, more
+] }
+);
+                  </code>
+                </pre>
+            </article>
+            <article>
+              <h3>Multiple transaction support</h3>
+              <div class="txt">Multiple instructions can be grouped together and executed as a single transaction.
+                <br> This makes it easy to implement batch processing. Also, by combining them into a
+                <br>single transaction, unnecessary access to the RPC server can be avoided.</div>
+              <pre>
+                <code class="language-javascript">
+//// Multiple transaction ////
+const instruction1 =  // Action of some kind
+const instruction2 =  // Action of some kind
+const instruction3 =  // Action of some kind
+await [instruction1, instruction2, instruction3].submit();
+                </code>
+              </pre>
+            </article>
+            <article>
+              <h3>SOL/SPL-TOKEN multisig support</h3>
+              <div class="txt">We support multisig as much as possible, transfer, mint SPL-TOKEN, making memos</div>
+              <pre>
+                <code class="language-javascript">
+//// Create Multisig ////
+  await Multisig.create(
+    {Number Of Signers},
+    {Owner Keypair},
+    [{Signer1 PublicKey}, {Signer1 PublicKey}]
+);
+                </code>
+              </pre>
+            </article>
+          </div>
+          <div class="aboutBtn">
+            <a href="https://github.com/atonoy/solana-suite">Getting Started</a>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <p>&copy;Supported by Atonoy</p>
+    </footer>
+  </div>
+  <script src="./js/libs.js"></script>
+  <script src="./js/base.js"></script>
+  <script src="./js/swiper.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <script src="./js/slider.js"></script>
+</body>
+
+</html>
