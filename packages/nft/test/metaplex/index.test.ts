@@ -16,7 +16,7 @@ describe('Metaplex', () => {
     dest = obj.dest;
   });
 
-  it.only('Mint nft, Separate processing', async () => {
+  it.only('Mint nft', async () => {
     const asset = RandomAsset.storage();
     const upload = await StorageArweave.uploadContent(
       asset.image!,
@@ -100,7 +100,6 @@ describe('Metaplex', () => {
     assert(resMulti.isOk, `${resMulti.unwrap()}`);
 
     const multisigAddress = multisig.unwrap().data as string;
-
     console.log('# multisig address: ', multisigAddress);
 
   });

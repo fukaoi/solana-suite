@@ -15,7 +15,6 @@ import {
   findMasterEditionV2Pda,
   findAssociatedTokenAccountPda,
   JsonMetadata,
-  TransactionBuilder,
 } from "@metaplex-foundation/js";
 
 import {
@@ -70,7 +69,7 @@ export namespace Metaplex {
    *   freezeAuthority?: PublicKey   //
    *   owner?: PublicKey             // PublicKey that Owns nft 
    * }
-   * @param {Keypair} feePayer
+   * @param {Keypair} feePayer       // fee payer
    */
   export const mint = async (
     input: CreateNftInput,
@@ -83,6 +82,8 @@ export namespace Metaplex {
       mint,
       feePayer
     );
+
+    // @todo  call validation 
 
     return Result.ok(new Instruction(
       tx,

@@ -24,10 +24,32 @@ export var Metaplex;
             timeout: BUNDLR_CONNECT_TIMEOUT,
         }));
     };
+    /**
+     * NFT mint
+     *
+     * @param {CreateNftInput}  input
+     * {
+     *   uri: {string}                 // basically storage uri
+     *   name?: {string}               // NFT content name
+     *   symbol?: {string}             // NFT ticker symbol
+     *   sellerFeeBasisPoints?: number // Royality percentage
+     *   creators?: Creator[]          // Other creators than owner
+     *   collection?: Collection       // collections of different colors, shapes, etc.
+     *   uses?: Uses                   // Usage feature: Burn, Single, Multipleu
+     *   isMutable?: boolean           // enable update()
+     *   maxSupply?: bignum            // mint copies
+     *   mintAuthority?: Signer        //
+     *   updateAuthority?: Signer      //
+     *   freezeAuthority?: PublicKey   //
+     *   owner?: PublicKey             // PublicKey that Owns nft
+     * }
+     * @param {Keypair} feePayer       // fee payer
+     */
     Metaplex.mint = (input, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const operation = createNftOperation(input);
         const mint = Keypair.generate();
         const tx = yield createNft(operation, mint, feePayer);
+        // @todo  call validation 
         return Result.ok(new Instruction(tx, [mint], feePayer, mint.publicKey.toString()));
     });
     const resolveData = (input, metadata, updateAuthority) => {
@@ -40,8 +62,8 @@ export var Metaplex;
                 verified: false,
             });
         });
-        let creators = (_d = (_c = input.creators) !== null && _c !== void 0 ? _c : metadataCreators) !== null && _d !== void 0 ? _d : null;
-        if (creators === null) {
+        let creators = (_d = (_c = input.creators) !== null && _c !== void 0 ? _c : metadataCreators) !== null && _d !== void 0 ? _d : undefined;
+        if (creators === undefined) {
             creators = [
                 {
                     address: updateAuthority,
@@ -72,11 +94,18 @@ export var Metaplex;
     };
     const createNft = (operation, mint, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const { uri, isMutable, maxSupply, payer = feePayer, mintAuthority = feePayer, updateAuthority = mintAuthority, owner = mintAuthority.publicKey, freezeAuthority, tokenProgram = TOKEN_PROGRAM_ID, associatedTokenProgram, } = operation.input;
+        debugLog('# metadata input: ', operation.input);
+        debugLog('# metadata feePayer: ', feePayer.publicKey.toString());
+        debugLog('# metadata mint: ', mint.publicKey.toString());
+        debugLog('# mintAuthority: ', mintAuthority.publicKey.toString());
+        debugLog('# updateAuthority: ', updateAuthority.publicKey.toString());
+        debugLog('# owner: ', owner.toString());
+        freezeAuthority && debugLog('# freezeAuthority: ', freezeAuthority.toString());
+        // const json = await init(feePayer).storage().downloadJson(uri)
+        //   .then(Result.ok)
+        //   .catch(Result.err);
+        // const metadata: JsonMetadata<string> = json.isOk ? json.value : {} as JsonMetadata<string>;
         let metadata = {};
-        console.log(process.env.DEBUG);
-        debugLog('# metadata input:', operation.input);
-        debugLog('# metadata feePayer', feePayer.publicKey.toString());
-        debugLog('# metadata mint', mint.publicKey.toString());
         try {
             metadata = yield Metaplex.init(feePayer).storage().downloadJson(uri);
         }
