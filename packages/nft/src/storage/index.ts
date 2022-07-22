@@ -1,10 +1,4 @@
-import path from 'path'
+interface StorageNftStorage {};
+interface StorageArweave {};
 
-export module Storage {
-  export class FilePath {
-    constructor(filePath: string | File) {
-      // path.basename(;) 
-
-    }
-  }
-}
+type NftStorage = StorageArweave | StorageNftStorage;

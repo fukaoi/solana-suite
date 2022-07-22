@@ -18,6 +18,7 @@ describe('Metaplex', () => {
 
   it.only('Mint nft', async () => {
     const asset = RandomAsset.storage();
+    // step1
     const upload = await StorageArweave.uploadContent(
       asset.image!,
       source.toKeypair()
@@ -26,6 +27,7 @@ describe('Metaplex', () => {
     assert.isTrue(upload.isOk, upload.unwrap());
     const imageUri = upload.unwrap();
 
+    // step2
     const uploadMetadata = await StorageArweave.uploadMetadata({
       image: imageUri,
       name: asset.name,
@@ -48,6 +50,7 @@ describe('Metaplex', () => {
       verified: false,
     };
 
+    // step3
     const res = await Metaplex.mint({
       name: asset.name,
       uri: uri,
