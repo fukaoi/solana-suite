@@ -38,12 +38,12 @@ an error occurs. Traditional try-catch is not necessary.
 Limit/Order, Source/Destination filter, Search address(include token account), Action
 filter(action type: Transfer, Mint, CreateAccount,,,,,)
 
-### Multisig support
+### Multiple transaction support
 Multiple instructions can be grouped together and executed as a single transaction.
 This makes it easy to implement batch processing. Also, by combining them into a
 single transaction, unnecessary access to the RPC server can be avoided.
 
-### Multiple transaction support
+### Multisig support 
 We support multisig as much as possible, transfer, mint SPL-TOKEN, making memos
 
 
