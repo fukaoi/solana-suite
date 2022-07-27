@@ -1,14 +1,42 @@
-interface StorageNftStorage {};
-interface StorageArweave {};
+import {
+  JsonMetadata,
+  CreateNftInput,
+} from "@metaplex-foundation/js";
+
+interface StorageNftStorage extends JsonMetadata {
+  storageType: 'nftStorage';
+};
+
+type StorageArweave = JsonMetadata & { 
+  storageType: 'arweave',
+  feePayer: string
+};
+
+const data: StorageArweave = {
+  name: 'test',
+  storageType: 'arweave',
+  feePayer: 'feePayer'
+};
+
+console.log(typeof data, data.storageType);
 
 type NftStorage = StorageArweave | StorageNftStorage;
 
-const demo = <NftStorage>(data: NftStorage) => {
-  console.log(typeof data);  
-  return `${data} +++++`; 
+type noNeedOptional = 'confirmOptions' | 'payer' | 'associatedTokenProgram' | 'tokenProgram';
+type MetaplexData = Omit<CreateNftInput, noNeedOptional>;
+
+
+const data3 :MetaplexData = {
+  uri: 'https://xxxxx.dom',
+};
+
+
+const data2: NftStorage = {
+  name: 'test',
+  storageType: 'nftStorage',
+  // feePayer: 'feePayer'
 }
 
 
-const res = demo<StorageNftStorage>('test');
+console.log(data2);
 
-console.log(res);
