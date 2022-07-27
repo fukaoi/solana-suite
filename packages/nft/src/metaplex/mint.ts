@@ -64,9 +64,9 @@ export namespace Metaplex {
    *   uses?: Uses                   // Usage feature: Burn, Single, Multipleu
    *   isMutable?: boolean           // enable update()
    *   maxSupply?: bignum            // mint copies
-   *   mintAuthority?: Signer        // 
-   *   updateAuthority?: Signer      //
-   *   freezeAuthority?: PublicKey   //
+   *   mintAuthority?: Signer        // mint authority
+   *   updateAuthority?: Signer      // update minted authority
+   *   freezeAuthority?: PublicKey   // freeze minted authority
    *   owner?: PublicKey             // PublicKey that Owns nft 
    * }
    * @param {Keypair} feePayer       // fee payer
