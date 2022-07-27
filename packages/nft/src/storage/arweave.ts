@@ -21,7 +21,7 @@ import {
 } from '@solana-suite/shared';
 
 import {Metaplex} from '../';
-import {StorageArweaveData} from ".";
+import {NftStorageMetadata} from ".";
 
 export interface MetaplexFileOptions {
   readonly displayName: string;
@@ -94,7 +94,7 @@ export namespace StorageArweave {
   }
 
   export const uploadMetadata = async (
-    metadata: StorageArweaveData,
+    metadata: NftStorageMetadata,
     feePayer: Keypair,
   ): Promise<Result<string, Error>> => {
     debugLog('# upload meta data: ', metadata);

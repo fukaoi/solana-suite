@@ -14,7 +14,7 @@ import {
 import {
   useMetaplexFileFromBrowser,
 } from '@metaplex-foundation/js';
-import {StorageNftStorageData} from '.';
+import {NftStorageMetadata} from '.';
 
 export namespace StorageNftStorage {
 
@@ -67,7 +67,7 @@ export namespace StorageNftStorage {
   }
 
   export const uploadMetadata = async (
-    metadata: StorageNftStorageData
+    metadata: NftStorageMetadata
   ): Promise<Result<string, Error>> => {
     debugLog('# upload meta data: ', metadata);
     if (metadata.image) {

@@ -2,12 +2,12 @@ import {
   JsonMetadata,
 } from "@metaplex-foundation/js";
 
-export type StorageNftStorageData = JsonMetadata & {
+export type StorageNftStorageMetadata = JsonMetadata & {
   storageType?: 'nftStorage';
 };
 
-export type StorageArweaveData = JsonMetadata & { 
+export type StorageArweaveMetadata = JsonMetadata & { 
   storageType?: 'arweave',
 };
 
-export type NftStorageData = StorageArweaveData | StorageNftStorageData;
+export type NftStorageMetadata = StorageArweaveMetadata | StorageNftStorageMetadata;
