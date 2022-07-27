@@ -12,9 +12,9 @@ import {
 } from '@solana-suite/shared';
 
 import {
-  JsonMetadata,
   useMetaplexFileFromBrowser,
 } from '@metaplex-foundation/js';
+import {StorageNftStorageData} from '.';
 
 export namespace StorageNftStorage {
 
@@ -67,7 +67,7 @@ export namespace StorageNftStorage {
   }
 
   export const uploadMetadata = async (
-    metadata: JsonMetadata
+    metadata: StorageNftStorageData
   ): Promise<Result<string, Error>> => {
     debugLog('# upload meta data: ', metadata);
     if (metadata.image) {
