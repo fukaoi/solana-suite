@@ -33,8 +33,11 @@ import {
 
 
 import {
-  getMinimumBalanceForRentExemptMint, TOKEN_PROGRAM_ID
+  getMinimumBalanceForRentExemptMint, 
+  TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
+
+import {MetaplexMetadata, NftStorageMetaplexMetadata} from '.';
 
 export namespace Metaplex {
   const BUNDLR_CONNECT_TIMEOUT = 60000;
@@ -53,7 +56,7 @@ export namespace Metaplex {
   /**
    * NFT mint
    *
-   * @param {CreateNftInput}  input
+   * @param {MetaplexMetadata}  input
    * {
    *   uri: {string}                 // basically storage uri
    *   name?: {string}               // NFT content name
@@ -67,12 +70,14 @@ export namespace Metaplex {
    *   mintAuthority?: Signer        // mint authority
    *   updateAuthority?: Signer      // update minted authority
    *   freezeAuthority?: PublicKey   // freeze minted authority
-   *   owner?: PublicKey             // PublicKey that Owns nft 
    * }
+   * @param {PublicKey} owner        // PublicKey that Owns nft 
    * @param {Keypair} feePayer       // fee payer
+   * @return {Promise<Result<Instruction, Error>>}
    */
   export const mint = async (
-    input: CreateNftInput,
+    input: MetaplexMetadata,
+    owner: PublicKey,
     feePayer: Keypair,
   ): Promise<Result<Instruction, Error>> => {
     const operation = createNftOperation(input);
@@ -80,6 +85,7 @@ export namespace Metaplex {
     const tx = await createNft(
       operation,
       mint,
+      owner,
       feePayer
     );
 
@@ -138,10 +144,45 @@ export namespace Metaplex {
     };
   };
 
+  /**
+   * Upload content and NFT mint
+   *
+   * @param {NftStorageMetaplexMetadata}  input
+   * {
+   *   uri: {string}                 // basically storage uri
+   *   name?: {string}               // nft content name
+   *   symbol?: {string}             // nft ticker symbol
+   *   filePath?: {string | File}    // nft ticker symbol
+   *   description?: {string}        // nft content description
+   *   external_url?: {string}       // landing page, home page uri, related url
+   *   sellerFeeBasisPoints?: number // royality percentage
+   *   attributes?: {JsonMetadataAttribute[]}     // game character parameter, personality, characteristics
+   *   properties?: {JsonMetadataProperties<Uri>} // inluced file name, uri, supported file type
+   *   collection?: Collection                    // collections of different colors, shapes, etc.
+   *   [key: string]: {unknown}                   // optional param, Usually not used.
+   *   creators?: Creator[]          // other creators than owner
+   *   uses?: Uses                   // usage feature: burn, single, multipleu
+   *   isMutable?: boolean           // enable update()
+   *   maxSupply?: bignum            // mint copies
+   *   mintAuthority?: Signer        // mint authority
+   *   updateAuthority?: Signer      // update minted authority
+   *   freezeAuthority?: PublicKey   // freeze minted authority
+   * }
+   * @param {Keypair} feePayer       // fee payer
+   * @return Promise<Result<Instruction, Error>>
+   */
+  export const uploadContentMint = async (
+    input: NftStorageMetaplexMetadata,
+    owner: Keypair,
+    feePayer: Keypair,
+    // ): Promise<Result<Instruction, Error>> => {
+  ) => {
+  }
 
   const createNft = async (
     operation: CreateNftOperation,
     mint: Keypair,
+    owner: PublicKey,
     feePayer: Keypair
   ): Promise<TransactionInstruction[]> => {
     const {
@@ -151,7 +192,6 @@ export namespace Metaplex {
       payer = feePayer,
       mintAuthority = feePayer,
       updateAuthority = mintAuthority,
-      owner = mintAuthority.publicKey,
       freezeAuthority,
       tokenProgram = TOKEN_PROGRAM_ID,
       associatedTokenProgram,

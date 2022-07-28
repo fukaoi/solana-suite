@@ -9,10 +9,11 @@ import {
 } from '../storage';
 
 type noNeedOptional =
-  'confirmOptions' |
   'payer' |
+  'owner' |
   'associatedTokenProgram' |
-  'tokenProgram';
+  'tokenProgram' |
+  'confirmOptions'; 
 
 export type MetaplexMetadata = Omit<CreateNftInput, noNeedOptional>;
 

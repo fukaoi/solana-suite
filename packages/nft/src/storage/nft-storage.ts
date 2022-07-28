@@ -41,7 +41,8 @@ export namespace StorageNftStorage {
 
   const connect = new NFTStorage({token: getNftStorageApiKey()});
 
-  export const uploadContent = async (filePath: string | File
+  export const uploadContent = async (
+    filePath: string | File
   ): Promise<Result<string, Error>> => {
     debugLog('# upload content: ', filePath);
     let file!: Buffer;
@@ -66,6 +67,24 @@ export namespace StorageNftStorage {
     );
   }
 
+  /**
+   * Upload content
+   *
+   * @param {NftStorageMetadata} metadata 
+   * {
+   *   name?: {string}                      // nft content name
+   *   symbol?: {string}                    // nft ticker symbol
+   *   description?: {string}               // nft content description
+   *   sellerFeeBasisPoints?: number        // royality percentage
+   *   image?: {string}                     // uploaded uri of original content
+   *   external_url?: {string}              // landing page, home page uri, related url
+   *   attributes?: {JsonMetadataAttribute[]}     // game character parameter, personality, characteristics
+   *   properties?: {JsonMetadataProperties<Uri>} // inluced file name, uri, supported file type
+   *   collection?: Collection              // collections of different colors, shapes, etc.
+   *   [key: string]: {unknown}             // optional param, Usually not used.
+   * }
+   * @return Promise<Result<string, Error>>
+   */
   export const uploadMetadata = async (
     metadata: NftStorageMetadata
   ): Promise<Result<string, Error>> => {

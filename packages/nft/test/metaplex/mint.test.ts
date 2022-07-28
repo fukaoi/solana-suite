@@ -1,19 +1,17 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai'
-import {Account, KeypairStr, Multisig, } from '@solana-suite/core';
+import {KeypairStr} from '@solana-suite/core';
 import {Setup} from '../../../shared/test/testSetup';
 import {Metaplex} from '../../src/metaplex';
 import {RandomAsset} from '../randomAsset';
 import {StorageArweave} from '../../src';
 
 let source: KeypairStr;
-let dest: KeypairStr;
 
 describe('Metaplex', () => {
   before(async () => {
     const obj = await Setup.generatekeyPair();
     source = obj.source;
-    dest = obj.dest;
   });
 
   it.only('Mint nft', async () => {
@@ -59,6 +57,7 @@ describe('Metaplex', () => {
       creators: [creator1, creator2],
       isMutable: true,
     },
+      source.toPublicKey(),
       source.toKeypair()
     );
 
