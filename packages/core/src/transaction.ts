@@ -21,7 +21,7 @@ import {
 export namespace Transaction {
 
   // type guard
-  const isParsedInstructon = (arg: any): arg is ParsedInstruction => {
+  const isParsedInstruction = (arg: any): arg is ParsedInstruction => {
     return arg !== null && typeof arg === 'object' && arg.parsed;
   }
 
@@ -44,7 +44,7 @@ export namespace Transaction {
     }
 
 
-    v.date = convertTimestmapToDate(meta.blockTime as number);
+    v.date = convertTimestampToDate(meta.blockTime as number);
     v.sig = meta.transaction.signatures[0];
     v.innerInstruction = false;
     if (withMemos && withMemos.length > 0) {
@@ -81,7 +81,7 @@ export namespace Transaction {
     };
     v.memo = instruction.parsed;
     v.type = instruction.program;
-    v.date = convertTimestmapToDate(value.blockTime as number);
+    v.date = convertTimestampToDate(value.blockTime as number);
     v.sig = value.transaction.signatures[0];
     v.innerInstruction = false;
     if (value.meta?.innerInstructions && value.meta?.innerInstructions.length !== 0) {
@@ -124,7 +124,7 @@ export namespace Transaction {
       // set transaction with memo
       const withMemos: {sig: string[], memo: string}[] = [];
       tx.value.transaction.message.instructions.forEach(v => {
-        if (isParsedInstructon(v) && v.program === 'spl-memo') {
+        if (isParsedInstruction(v) && v.program === 'spl-memo') {
           withMemos.push({
             sig: tx.value.transaction.signatures,
             memo: v.parsed
@@ -133,7 +133,7 @@ export namespace Transaction {
       });
 
       tx.value.transaction.message.instructions.forEach(instruction => {
-        if (isParsedInstructon(instruction)) {
+        if (isParsedInstruction(instruction)) {
           if (isToken && instruction.program !== 'spl-token') {
             return;
           }
@@ -162,7 +162,7 @@ export namespace Transaction {
     return hist;
   }
 
-  const convertTimestmapToDate = (blockTime: number): Date =>
+  const convertTimestampToDate = (blockTime: number): Date =>
     new Date(blockTime * 1000);
 
   export interface TransferHistory {
