@@ -13,7 +13,7 @@ import {
   Keypair,
 } from '@solana/web3.js';
 
-import {struct, u8, blob, LayoutObject, Blob} from '@solana/buffer-layout';
+import {struct, u8, blob, LayoutObject} from '@solana/buffer-layout';
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
 // @internal
