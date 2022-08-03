@@ -18,19 +18,19 @@ export namespace RandomAsset {
     const files = fs.readdirSync(ASSET_DIR);
     const index = Math.floor(Math.random() * files.length)
     const asset = files[index];
-    const image = `${ASSET_DIR}${asset}`;
+    const filePath = `${ASSET_DIR}${asset}`;
     const created = `created at ${dateFormat()}`;
     const name = (asset.split(/.jpeg|.png|.jpg/i)[0]).toUpperCase();
     const description = `This nft is ${name}:${created}`;
     const symbol = 'SUITE';
-    return {name, description, image, symbol};
+    return {name, description, filePath, symbol};
   }
 
   export const storage = (): JsonMetadata => {
     let storageData: JsonMetadata = {};
     const commonAsset = createCommonAsset();
     storageData.name = commonAsset.name;
-    storageData.image = commonAsset.image;
+    storageData.filePath = commonAsset.filePath;
     storageData.description = commonAsset.description;
     storageData.symbol = commonAsset.symbol;
     storageData.seller_fee_basis_points = 100;

@@ -1,24 +1,24 @@
-import {describe, it} from 'mocha';
-import {assert} from 'chai'
-import {KeypairStr} from '@solana-suite/core';
-import {Setup} from '../../../shared/test/testSetup';
-import {Metaplex} from '../../src/metaplex';
-import {RandomAsset} from '../randomAsset';
-import {StorageArweave} from '../../src';
+import { describe, it } from "mocha";
+import { assert } from "chai";
+import { KeypairStr } from "@solana-suite/core";
+import { Setup } from "../../../shared/test/testSetup";
+import { Metaplex } from "../../src/metaplex";
+import { RandomAsset } from "../randomAsset";
+import { StorageArweave } from "../../src";
 
 let source: KeypairStr;
 
-describe('Metaplex', () => {
+describe("Metaplex", () => {
   before(async () => {
-    const obj = await Setup.generatekeyPair();
+    const obj = await Setup.generateKeyPair();
     source = obj.source;
   });
 
-  it.only('Mint nft', async () => {
+  it.only("Mint nft", async () => {
     const asset = RandomAsset.storage();
     // step1 upload content(image, movie, file,,,)
     const upload = await StorageArweave.uploadContent(
-      asset.image!,
+      asset.filePath!,
       source.toKeypair()
     );
 
@@ -26,11 +26,12 @@ describe('Metaplex', () => {
     const imageUri = upload.unwrap();
 
     // step2 upload metadata for metaplex(usually text data)
-    const uploadMetadata = await StorageArweave.uploadMetadata({
-      image: imageUri,
-      name: asset.name,
-      symbol: asset.symbol,
-    },
+    const uploadMetadata = await StorageArweave.uploadMetadata(
+      {
+        filePath: imageUri,
+        name: asset.name,
+        symbol: asset.symbol,
+      },
       source.toKeypair()
     );
 
@@ -43,30 +44,40 @@ describe('Metaplex', () => {
       verified: false,
     };
     const creator2 = {
-      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk'.toPublicKey(),
+      address: "93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk".toPublicKey(),
       share: 30,
       verified: false,
     };
 
     // step3 mint on Solana
-    const res = await Metaplex.mint({
-      name: asset.name,
-      uri: uri,
-      symbol: asset.symbol,
-      sellerFeeBasisPoints: 50,
-      creators: [creator1, creator2],
-      isMutable: true,
-    },
+    const res = await Metaplex.mint(
+      {
+        name: asset.name,
+        uri,
+        symbol: asset.symbol,
+        sellerFeeBasisPoints: 50,
+        creators: [creator1, creator2],
+        isMutable: true,
+      },
       source.toPublicKey(),
       source.toKeypair()
     );
 
     (await res.submit()).match(
-      ok => {
-        console.log('# mint:', res.unwrap().data);
-        console.log('# sig:', ok);
+      (ok) => {
+        console.log("# mint:", res.unwrap().data);
+        console.log("# sig:", ok);
       },
-      ng => assert.fail(ng.message) 
+      (ng) => assert.fail(ng.message)
+    );
+  });
+
+  it('one lump upload content and mint nft', async () => {
+    const asset = RandomAsset.storage();
+    const res = Metaplex.uploadContentMint(
+      asset,
+      source.toPublicKey(),
+      source.toKeypair(),
     );
   });
 

@@ -1,23 +1,19 @@
-export * from './mint';
+export * from "./mint";
 
-import {
-  CreateNftInput,
-} from '@metaplex-foundation/js';
+import { CreateNftInput } from "@metaplex-foundation/js";
 
-import {
-  NftStorageMetadata
-} from '../storage';
+import { NftStorageMetadata } from "../storage";
 
 type noNeedOptional =
-  'payer' |
-  'owner' |
-  'associatedTokenProgram' |
-  'tokenProgram' |
-  'confirmOptions'; 
+  | "payer"
+  | "owner"
+  | "associatedTokenProgram"
+  | "tokenProgram"
+  | "confirmOptions";
 
 export type MetaplexMetadata = Omit<CreateNftInput, noNeedOptional>;
 
-export type NftStorageMetaplexMetadata = NftStorageMetadata & MetaplexMetadata & {
-  filePath: string | File
-};
-
+export type NftStorageMetaplexMetadata = NftStorageMetadata &
+  Omit<MetaplexMetadata, "uri"> & {
+    filePath: string | File;
+  };

@@ -45,9 +45,9 @@ export class KeypairStr {
 export namespace Setup {
   const TEMP_KEYPAIR_FILE = `/tmp/solana-${Constants.currentCluster}-keypair`;
 
-  export const generatekeyPair = async ():
+  export const generateKeyPair = async ():
     Promise<{source: KeypairStr, dest: KeypairStr}> => {
-    const {source, dest} = await fetechSourceAndDest();
+    const {source, dest} = await fetchSourceAndDest();
     log(source, dest);
     return {
       source: new KeypairStr(source.pubkey, source.secret),
@@ -62,7 +62,7 @@ export namespace Setup {
     debugLog(`# destination.secret: `, dest.secret);
   }
 
-  const fetechSourceAndDest = async () => {
+  const fetchSourceAndDest = async () => {
     if (fs.existsSync(TEMP_KEYPAIR_FILE)) {
       return await loadTempFile();
     } else {
