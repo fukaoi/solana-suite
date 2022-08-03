@@ -168,8 +168,15 @@ export namespace Metaplex {
 
     const uploadMetadata = await StorageArweave.uploadMetadata(input, feePayer);
     input.uri = uploadMetadata.unwrap();
+    input.storageType = 'arweave';
 
-    return mint(input, owner, feePayer);
+    const mintInput: MetaplexMetadata = {
+      uri: uploadMetadata.unwrap(),
+      ...input
+      
+    }; 
+
+    return mint(mintInput, owner, feePayer);
   };
 
   const createNft = async (

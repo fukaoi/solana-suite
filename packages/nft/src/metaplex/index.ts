@@ -15,5 +15,6 @@ export type MetaplexMetadata = Omit<CreateNftInput, noNeedOptional>;
 
 export type NftStorageMetaplexMetadata = NftStorageMetadata &
   Omit<MetaplexMetadata, "uri"> & {
-    filePath: string | File;
+    filePath: string | File,
+    storageType: 'arweave' | 'nftStorage',
   };

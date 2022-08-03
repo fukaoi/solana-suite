@@ -4,7 +4,7 @@ import { KeypairStr } from "@solana-suite/core";
 import { Setup } from "../../../shared/test/testSetup";
 import { Metaplex } from "../../src/metaplex";
 import { RandomAsset } from "../randomAsset";
-import { StorageArweave } from "../../src";
+import { StorageArweave } from "../../src/storage";
 
 let source: KeypairStr;
 
@@ -17,8 +17,9 @@ describe("Metaplex", () => {
   it.only("Mint nft", async () => {
     const asset = RandomAsset.storage();
     // step1 upload content(image, movie, file,,,)
+    console.log(StorageArweave);
     const upload = await StorageArweave.uploadContent(
-      asset.filePath!,
+      asset.filePath as string,
       source.toKeypair()
     );
 
@@ -72,13 +73,34 @@ describe("Metaplex", () => {
     );
   });
 
-  it('one lump upload content and mint nft', async () => {
+  it("one lump upload content and mint nft", async () => {
     const asset = RandomAsset.storage();
+
+    const creator1 = {
+      address: source.toPublicKey(),
+      share: 70,
+      verified: false,
+    };
+
+    const creator2 = {
+      address: "93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk".toPublicKey(),
+      share: 30,
+      verified: false,
+    };
+
     const res = Metaplex.uploadContentMint(
-      asset,
+      {
+        filePath: asset.filePath as string,
+        storageType: "nftStorage",
+        symbol: asset.symbol,
+        sellerFeeBasisPoints: 50,
+        creators: [creator1, creator2],
+        isMutable: false,
+      },
       source.toPublicKey(),
-      source.toKeypair(),
+      source.toKeypair()
     );
+    console.log(res);
   });
 
   // it('Mint nft and Burn nft', async () => {

@@ -48,7 +48,7 @@ export namespace StorageArweave {
       const filepath = filePath as File;
       buffer = (await useMetaplexFileFromBrowser(filepath)).buffer;
     } else {
-      return Result.err(Error('Supported envriroment: only Node.js and Browser js'));
+      return Result.err(Error('Supported environment: only Node.js and Browser js'));
     }
 
     const res = await driver.getUploadPrice(buffer.length);
@@ -85,7 +85,7 @@ export namespace StorageArweave {
         file = await useMetaplexFileFromBrowser(filepath);
       }
     } else {
-      return Result.err(Error('Supported envriroment: only Node.js and Browser js'));
+      return Result.err(Error('Supported environment: only Node.js and Browser js'));
     }
 
     return driver.upload(file)
