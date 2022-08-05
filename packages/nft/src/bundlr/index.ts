@@ -12,8 +12,8 @@ import { Node, Constants, ConstantsFunc } from "@solana-suite/shared";
 export namespace Bundlr {
   const BUNDLR_CONNECT_TIMEOUT = 60000;
 
-  export const driver = (feePayer: Keypair): BundlrStorageDriver => {
-    const foundation = MetaplexFoundation.make(Node.getConnection())
+  export const make = (feePayer: Keypair): MetaplexFoundation => {
+    return MetaplexFoundation.make(Node.getConnection())
       .use(keypairIdentity(feePayer))
       .use(
         bundlrStorage({
@@ -22,6 +22,9 @@ export namespace Bundlr {
           timeout: BUNDLR_CONNECT_TIMEOUT,
         })
       );
-    return foundation.storage().driver() as BundlrStorageDriver;
+  };
+
+  export const useStorage = (feePayer: Keypair): BundlrStorageDriver => {
+    return make(feePayer).storage().driver() as BundlrStorageDriver;
   };
 }
