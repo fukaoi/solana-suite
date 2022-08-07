@@ -17,11 +17,10 @@ const js_1 = require("@metaplex-foundation/js");
 const web3_js_1 = require("@solana/web3.js");
 const fs_1 = __importDefault(require("fs"));
 const shared_1 = require("@solana-suite/shared");
-const __1 = require("../");
+const bundlr_1 = require("../bundlr");
 var StorageArweave;
 (function (StorageArweave) {
     StorageArweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const driver = __1.Metaplex.init(feePayer).storage().driver();
         let buffer;
         if (shared_1.isNode) {
             const filepath = filePath;
@@ -32,9 +31,9 @@ var StorageArweave;
             buffer = (yield (0, js_1.useMetaplexFileFromBrowser)(filepath)).buffer;
         }
         else {
-            return shared_1.Result.err(Error('Supported envriroment: only Node.js and Browser js'));
+            return shared_1.Result.err(Error('Supported environment: only Node.js and Browser js'));
         }
-        const res = yield driver.getUploadPrice(buffer.length);
+        const res = yield bundlr_1.Bundlr.useStorage(feePayer).getUploadPrice(buffer.length);
         (0, shared_1.debugLog)('# buffer length, price', buffer.length, res.basisPoints / web3_js_1.LAMPORTS_PER_SOL);
         return shared_1.Result.ok({
             price: res.basisPoints / web3_js_1.LAMPORTS_PER_SOL,
@@ -43,7 +42,6 @@ var StorageArweave;
     });
     StorageArweave.uploadContent = (filePath, feePayer, fileOptions) => __awaiter(this, void 0, void 0, function* () {
         (0, shared_1.debugLog)('# upload content: ', filePath);
-        const driver = __1.Metaplex.init(feePayer).storage().driver();
         let file;
         if (shared_1.isNode) {
             const filepath = filePath;
@@ -65,15 +63,15 @@ var StorageArweave;
             }
         }
         else {
-            return shared_1.Result.err(Error('Supported envriroment: only Node.js and Browser js'));
+            return shared_1.Result.err(Error('Supported environment: only Node.js and Browser js'));
         }
-        return driver.upload(file)
+        return bundlr_1.Bundlr.useStorage(feePayer).upload(file)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
     });
     StorageArweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
         (0, shared_1.debugLog)('# upload meta data: ', metadata);
-        return __1.Metaplex.init(feePayer).nfts().uploadMetadata(metadata)
+        return bundlr_1.Bundlr.make(feePayer).nfts().uploadMetadata(metadata)
             .then(res => shared_1.Result.ok(res.uri))
             .catch(shared_1.Result.err);
     });

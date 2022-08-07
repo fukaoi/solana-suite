@@ -7,15 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { useMetaplexFile, useMetaplexFileFromBrowser } from "@metaplex-foundation/js";
+import { useMetaplexFile, useMetaplexFileFromBrowser, } from "@metaplex-foundation/js";
 import { LAMPORTS_PER_SOL, } from '@solana/web3.js';
 import fs from 'fs';
 import { Result, isNode, isBrowser, debugLog, } from '@solana-suite/shared';
-import { Metaplex } from '../';
+import { Bundlr } from "../bundlr";
 export var StorageArweave;
 (function (StorageArweave) {
     StorageArweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const driver = Metaplex.init(feePayer).storage().driver();
         let buffer;
         if (isNode) {
             const filepath = filePath;
@@ -26,9 +25,9 @@ export var StorageArweave;
             buffer = (yield useMetaplexFileFromBrowser(filepath)).buffer;
         }
         else {
-            return Result.err(Error('Supported envriroment: only Node.js and Browser js'));
+            return Result.err(Error('Supported environment: only Node.js and Browser js'));
         }
-        const res = yield driver.getUploadPrice(buffer.length);
+        const res = yield Bundlr.useStorage(feePayer).getUploadPrice(buffer.length);
         debugLog('# buffer length, price', buffer.length, res.basisPoints / LAMPORTS_PER_SOL);
         return Result.ok({
             price: res.basisPoints / LAMPORTS_PER_SOL,
@@ -37,7 +36,6 @@ export var StorageArweave;
     });
     StorageArweave.uploadContent = (filePath, feePayer, fileOptions) => __awaiter(this, void 0, void 0, function* () {
         debugLog('# upload content: ', filePath);
-        const driver = Metaplex.init(feePayer).storage().driver();
         let file;
         if (isNode) {
             const filepath = filePath;
@@ -59,15 +57,15 @@ export var StorageArweave;
             }
         }
         else {
-            return Result.err(Error('Supported envriroment: only Node.js and Browser js'));
+            return Result.err(Error('Supported environment: only Node.js and Browser js'));
         }
-        return driver.upload(file)
+        return Bundlr.useStorage(feePayer).upload(file)
             .then(Result.ok)
             .catch(Result.err);
     });
     StorageArweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
         debugLog('# upload meta data: ', metadata);
-        return Metaplex.init(feePayer).nfts().uploadMetadata(metadata)
+        return Bundlr.make(feePayer).nfts().uploadMetadata(metadata)
             .then(res => Result.ok(res.uri))
             .catch(Result.err);
     });

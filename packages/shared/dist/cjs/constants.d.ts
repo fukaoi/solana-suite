@@ -13,7 +13,7 @@ export declare namespace Constants {
     const currentCluster: string;
     const customUrl: string;
     const isDebugging: boolean;
-    const nftstorageApikey: string;
+    const nftStorageApiKey: string;
 }
 export declare namespace ConstantsFunc {
     const switchCluster: (env: string | undefined, customUrl?: string) => string;

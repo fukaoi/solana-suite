@@ -9,14 +9,14 @@ let source: KeypairStr;
 
 describe('StorageArweave', () => {
   before(async () => {
-    const obj = await Setup.generatekeyPair();
+    const obj = await Setup.generateKeyPair();
     source = obj.source;
   });
 
   it('Upload content data', async () => {
-    const asset = RandomAsset.storage();
+    const asset = RandomAsset.get();
     const res = await StorageArweave.uploadContent(
-      asset.image!,
+      asset.filePath!,
       source.toKeypair(),
     );
     res.match(
@@ -26,9 +26,9 @@ describe('StorageArweave', () => {
   });
 
   it('Upload content data  with options', async () => {
-    const asset = RandomAsset.storage();
+    const asset = RandomAsset.get();
     const res = await StorageArweave.uploadContent(
-      asset.image!,
+      asset.filePath!,
       source.toKeypair(),
       {
         displayName: 'NFT test image',
@@ -45,7 +45,7 @@ describe('StorageArweave', () => {
   });
 
   it('Upload meta data', async () => {
-    const asset = RandomAsset.storage();
+    const asset = RandomAsset.get();
     const res = await StorageArweave.uploadMetadata(
       {
         name: asset.name,
@@ -67,9 +67,9 @@ describe('StorageArweave', () => {
   });
 
   it('Get file upload price', async () => {
-    const asset = RandomAsset.storage();
+    const asset = RandomAsset.get();
     const res = await StorageArweave.getUploadPrice(
-      asset.image!,
+      asset.filePath!,
       source.toKeypair(),
     );
     res.match(

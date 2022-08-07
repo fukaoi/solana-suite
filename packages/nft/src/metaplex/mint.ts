@@ -32,22 +32,9 @@ import {
 
 import { MetaplexMetadata, NftStorageMetaplexMetadata } from ".";
 import { StorageArweave } from "../storage";
+import { Bundlr } from "../bundlr";
 
 export namespace Metaplex {
-  const BUNDLR_CONNECT_TIMEOUT = 60000;
-
-  export const init = (feePayer: Keypair) => {
-    return MetaplexFoundation.make(Node.getConnection())
-      .use(keypairIdentity(feePayer))
-      .use(
-        bundlrStorage({
-          address: Constants.BUNDLR_NETWORK_URL,
-          providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
-          timeout: BUNDLR_CONNECT_TIMEOUT,
-        })
-      );
-  };
-
   /**
    * NFT mint
    *
@@ -61,7 +48,7 @@ export namespace Metaplex {
    *   collection?: Collection       // collections of different colors, shapes, etc.
    *   uses?: Uses                   // Usage feature: Burn, Single, Multiple
    *   isMutable?: boolean           // enable update()
-   *   maxSupply?: bignum            // mint copies
+   *   maxSupply?: BigNumber         // mint copies
    *   mintAuthority?: Signer        // mint authority
    *   updateAuthority?: Signer      // update minted authority
    *   freezeAuthority?: PublicKey   // freeze minted authority
@@ -150,7 +137,7 @@ export namespace Metaplex {
    *   creators?: Creator[]          // other creators than owner
    *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()
-   *   maxSupply?: bignum            // mint copies
+   *   maxSupply?: BigNumber         // mint copies
    *   mintAuthority?: Signer        // mint authority
    *   updateAuthority?: Signer      // update minted authority
    *   freezeAuthority?: PublicKey   // freeze minted authority
@@ -168,13 +155,12 @@ export namespace Metaplex {
 
     const uploadMetadata = await StorageArweave.uploadMetadata(input, feePayer);
     input.uri = uploadMetadata.unwrap();
-    input.storageType = 'arweave';
+    input.storageType = "arweave";
 
     const mintInput: MetaplexMetadata = {
       uri: uploadMetadata.unwrap(),
-      ...input
-      
-    }; 
+      ...input,
+    };
 
     return mint(mintInput, owner, feePayer);
   };
@@ -214,7 +200,7 @@ export namespace Metaplex {
 
     let metadata = {};
     try {
-      metadata = await init(feePayer).storage().downloadJson(uri);
+      metadata = await Bundlr.make(feePayer).storage().downloadJson(uri);
     } catch (e) {
       debugLog("# Error in createNft:", e);
       metadata = {};

@@ -19,20 +19,20 @@ import {NftStorageMetadata} from '.';
 export namespace StorageNftStorage {
 
   const getNftStorageApiKey = (): string => {
-    if (!Constants.nftstorageApikey) {
+    if (!Constants.nftStorageApiKey) {
       console.warn(
         `
         [Warning]
         --------------------------------------
         If will use @solana-suite/nft package
-        your need to update nftstorage.apikey defin parameter in solana-suite.json.
-        can get apikey from https://nft.storage/
+        your need to update nftStorage.apiKey define parameter in solana-suite.json.
+        can get apiKey from https://nft.storage/
         --------------------------------------
         `
       );
       return Constants.NFT_STORAGE_API_KEY;
     } else {
-      return Constants.nftstorageApikey;
+      return Constants.nftStorageApiKey;
     }
   }
 
@@ -53,7 +53,7 @@ export namespace StorageNftStorage {
       const filepath = filePath as File;
       file = (await useMetaplexFileFromBrowser(filepath)).buffer;
     } else {
-      return Result.err(Error('Supported envriroment: only Node.js and Browser js'));
+      return Result.err(Error('Supported environment: only Node.js and Browser js'));
     }
 
     const blobImage = new Blob([file]);
@@ -75,11 +75,11 @@ export namespace StorageNftStorage {
    *   name?: {string}                      // nft content name
    *   symbol?: {string}                    // nft ticker symbol
    *   description?: {string}               // nft content description
-   *   sellerFeeBasisPoints?: number        // royality percentage
+   *   sellerFeeBasisPoints?: number        // royalty percentage
    *   image?: {string}                     // uploaded uri of original content
    *   external_url?: {string}              // landing page, home page uri, related url
    *   attributes?: {JsonMetadataAttribute[]}     // game character parameter, personality, characteristics
-   *   properties?: {JsonMetadataProperties<Uri>} // inluced file name, uri, supported file type
+   *   properties?: {JsonMetadataProperties<Uri>} // included file name, uri, supported file type
    *   collection?: Collection              // collections of different colors, shapes, etc.
    *   [key: string]: {unknown}             // optional param, Usually not used.
    * }

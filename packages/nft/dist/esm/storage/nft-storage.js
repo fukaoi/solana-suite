@@ -14,19 +14,19 @@ import { useMetaplexFileFromBrowser, } from '@metaplex-foundation/js';
 export var StorageNftStorage;
 (function (StorageNftStorage) {
     const getNftStorageApiKey = () => {
-        if (!Constants.nftstorageApikey) {
+        if (!Constants.nftStorageApiKey) {
             console.warn(`
         [Warning]
         --------------------------------------
         If will use @solana-suite/nft package
-        your need to update nftstorage.apikey defin parameter in solana-suite.json.
-        can get apikey from https://nft.storage/
+        your need to update nftStorage.apiKey define parameter in solana-suite.json.
+        can get apiKey from https://nft.storage/
         --------------------------------------
         `);
             return Constants.NFT_STORAGE_API_KEY;
         }
         else {
-            return Constants.nftstorageApikey;
+            return Constants.nftStorageApiKey;
         }
     };
     const createGatewayUrl = (cid) => `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
@@ -43,7 +43,7 @@ export var StorageNftStorage;
             file = (yield useMetaplexFileFromBrowser(filepath)).buffer;
         }
         else {
-            return Result.err(Error('Supported envriroment: only Node.js and Browser js'));
+            return Result.err(Error('Supported environment: only Node.js and Browser js'));
         }
         const blobImage = new Blob([file]);
         const res = yield connect.storeBlob(blobImage)
@@ -51,6 +51,24 @@ export var StorageNftStorage;
             .catch(Result.err);
         return res.map(ok => createGatewayUrl(ok), err => err);
     });
+    /**
+     * Upload content
+     *
+     * @param {NftStorageMetadata} metadata
+     * {
+     *   name?: {string}                      // nft content name
+     *   symbol?: {string}                    // nft ticker symbol
+     *   description?: {string}               // nft content description
+     *   sellerFeeBasisPoints?: number        // royalty percentage
+     *   image?: {string}                     // uploaded uri of original content
+     *   external_url?: {string}              // landing page, home page uri, related url
+     *   attributes?: {JsonMetadataAttribute[]}     // game character parameter, personality, characteristics
+     *   properties?: {JsonMetadataProperties<Uri>} // included file name, uri, supported file type
+     *   collection?: Collection              // collections of different colors, shapes, etc.
+     *   [key: string]: {unknown}             // optional param, Usually not used.
+     * }
+     * @return Promise<Result<string, Error>>
+     */
     StorageNftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
         debugLog('# upload meta data: ', metadata);
         if (metadata.image) {

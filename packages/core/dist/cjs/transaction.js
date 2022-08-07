@@ -15,7 +15,7 @@ const spl_token_1 = require("@solana/spl-token");
 var Transaction;
 (function (Transaction) {
     // type guard
-    const isParsedInstructon = (arg) => {
+    const isParsedInstruction = (arg) => {
         return arg !== null && typeof arg === 'object' && arg.parsed;
     };
     const createHistory = (searchKey, instruction, meta, directionFilter, mappingTokenAccount, isToken, withMemos) => {
@@ -27,7 +27,7 @@ var Transaction;
             v.info.source = foundSource.owner;
             v.info.destination = foundDest.owner;
         }
-        v.date = convertTimestmapToDate(meta.blockTime);
+        v.date = convertTimestampToDate(meta.blockTime);
         v.sig = meta.transaction.signatures[0];
         v.innerInstruction = false;
         if (withMemos && withMemos.length > 0) {
@@ -58,7 +58,7 @@ var Transaction;
         };
         v.memo = instruction.parsed;
         v.type = instruction.program;
-        v.date = convertTimestmapToDate(value.blockTime);
+        v.date = convertTimestampToDate(value.blockTime);
         v.sig = value.transaction.signatures[0];
         v.innerInstruction = false;
         if (((_a = value.meta) === null || _a === void 0 ? void 0 : _a.innerInstructions) && ((_b = value.meta) === null || _b === void 0 ? void 0 : _b.innerInstructions.length) !== 0) {
@@ -95,7 +95,7 @@ var Transaction;
             // set transaction with memo
             const withMemos = [];
             tx.value.transaction.message.instructions.forEach(v => {
-                if (isParsedInstructon(v) && v.program === 'spl-memo') {
+                if (isParsedInstruction(v) && v.program === 'spl-memo') {
                     withMemos.push({
                         sig: tx.value.transaction.signatures,
                         memo: v.parsed
@@ -103,7 +103,7 @@ var Transaction;
                 }
             });
             tx.value.transaction.message.instructions.forEach(instruction => {
-                if (isParsedInstructon(instruction)) {
+                if (isParsedInstruction(instruction)) {
                     if (isToken && instruction.program !== 'spl-token') {
                         return;
                     }
@@ -123,7 +123,7 @@ var Transaction;
         });
         return hist;
     };
-    const convertTimestmapToDate = (blockTime) => new Date(blockTime * 1000);
+    const convertTimestampToDate = (blockTime) => new Date(blockTime * 1000);
     let Filter;
     (function (Filter) {
         Filter["Transfer"] = "transfer";

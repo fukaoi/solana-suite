@@ -22,7 +22,7 @@ var Constants;
     Constants.currentCluster = solana_suite_json_1.default.cluster.type;
     Constants.customUrl = solana_suite_json_1.default.cluster.customUrl;
     Constants.isDebugging = solana_suite_json_1.default.debugging;
-    Constants.nftstorageApikey = solana_suite_json_1.default.nftstorage.apikey;
+    Constants.nftStorageApiKey = solana_suite_json_1.default.nftstorage.apikey;
 })(Constants = exports.Constants || (exports.Constants = {}));
 var ConstantsFunc;
 (function (ConstantsFunc) {

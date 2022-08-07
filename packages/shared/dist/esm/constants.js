@@ -16,7 +16,7 @@ export var Constants;
     Constants.currentCluster = Config.cluster.type;
     Constants.customUrl = Config.cluster.customUrl;
     Constants.isDebugging = Config.debugging;
-    Constants.nftstorageApikey = Config.nftstorage.apikey;
+    Constants.nftStorageApiKey = Config.nftstorage.apikey;
 })(Constants || (Constants = {}));
 export var ConstantsFunc;
 (function (ConstantsFunc) {

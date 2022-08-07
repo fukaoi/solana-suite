@@ -1,9 +1,8 @@
 import {
-  BundlrStorageDriver,
   useMetaplexFile,
   MetaplexFile,
   useMetaplexFileFromBrowser,
-  Currency
+  Currency,
 } from "@metaplex-foundation/js";
 
 import {
@@ -20,8 +19,8 @@ import {
   debugLog,
 } from '@solana-suite/shared';
 
-import {Metaplex} from '../';
 import {NftStorageMetadata} from ".";
+import {Bundlr} from "../bundlr";
 
 export interface MetaplexFileOptions {
   readonly displayName: string;
@@ -38,8 +37,6 @@ export namespace StorageArweave {
     feePayer: Keypair,
   ): Promise<Result<{price: number, currency: Currency}, Error>> => {
 
-    const driver = Metaplex.init(feePayer).storage().driver() as BundlrStorageDriver;
-
     let buffer!: Buffer;
     if (isNode) {
       const filepath = filePath as string;
@@ -51,7 +48,7 @@ export namespace StorageArweave {
       return Result.err(Error('Supported environment: only Node.js and Browser js'));
     }
 
-    const res = await driver.getUploadPrice(buffer.length);
+    const res = await Bundlr.useStorage(feePayer).getUploadPrice(buffer.length);
     debugLog('# buffer length, price', buffer.length, res.basisPoints / LAMPORTS_PER_SOL);
     return Result.ok({
       price: res.basisPoints / LAMPORTS_PER_SOL,
@@ -65,8 +62,6 @@ export namespace StorageArweave {
     fileOptions?: MetaplexFileOptions,
   ): Promise<Result<string, Error>> => {
     debugLog('# upload content: ', filePath);
-
-    const driver = Metaplex.init(feePayer).storage().driver() as BundlrStorageDriver;
 
     let file!: MetaplexFile;
     if (isNode) {
@@ -88,7 +83,7 @@ export namespace StorageArweave {
       return Result.err(Error('Supported environment: only Node.js and Browser js'));
     }
 
-    return driver.upload(file)
+    return  Bundlr.useStorage(feePayer).upload(file)
       .then(Result.ok)
       .catch(Result.err);
   }
@@ -99,7 +94,7 @@ export namespace StorageArweave {
   ): Promise<Result<string, Error>> => {
     debugLog('# upload meta data: ', metadata);
 
-    return Metaplex.init(feePayer).nfts().uploadMetadata(metadata)
+    return Bundlr.make(feePayer).nfts().uploadMetadata(metadata)
       .then(res => Result.ok(res.uri))
       .catch(Result.err)
   }

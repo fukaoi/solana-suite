@@ -20,7 +20,7 @@ export namespace Constants {
   export const currentCluster = Config.cluster.type;
   export const customUrl = Config.cluster.customUrl;
   export const isDebugging = Config.debugging;
-  export const nftstorageApikey = Config.nftstorage.apikey;
+  export const nftStorageApiKey = Config.nftstorage.apikey;
 }
 
 export namespace ConstantsFunc {
