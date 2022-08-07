@@ -52,7 +52,7 @@ describe('StorageArweave', () => {
         symbol: asset.symbol,
         description: asset.description,
         seller_fee_basis_points: asset.seller_fee_basis_points,
-        image: asset.image,
+        image: 'https://arweave.net/mVT6g3X99bZG0oMlTBB8fdbH7arnQ9lKWMUR9jMTXbQ',
         external_url: asset.external_url,
         attributes: asset.attributes,
         properties: asset.properties,

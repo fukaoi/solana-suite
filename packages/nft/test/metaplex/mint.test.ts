@@ -14,7 +14,7 @@ describe("Metaplex", () => {
     source = obj.source;
   });
 
-  it("Mint nft", async () => {
+  it.only("Mint nft", async () => {
     const asset = RandomAsset.get();
     // step1 upload content(image, movie, file,,,)
     const upload = await StorageArweave.uploadContent(
@@ -72,7 +72,7 @@ describe("Metaplex", () => {
     );
   });
 
-  it.only("one lump upload content and mint nft", async () => {
+  it("one lump upload content and mint nft", async () => {
     const asset = RandomAsset.get();
 
     const creator1 = {

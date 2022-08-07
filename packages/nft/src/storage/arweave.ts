@@ -68,7 +68,7 @@ export namespace StorageArweave {
       const filepath = filePath as string;
       const buffer = fs.readFileSync(filepath);
       if (fileOptions) {
-        file = useMetaplexFile(buffer, filepath, fileOptions);
+       file = useMetaplexFile(buffer, filepath, fileOptions);
       } else {
         file = useMetaplexFile(buffer, filepath);
       }
@@ -93,6 +93,8 @@ export namespace StorageArweave {
     feePayer: Keypair,
   ): Promise<Result<string, Error>> => {
     debugLog('# upload meta data: ', metadata);
+
+    console.log(metadata);
 
     return Bundlr.make(feePayer).nfts().uploadMetadata(metadata)
       .then(res => Result.ok(res.uri))
