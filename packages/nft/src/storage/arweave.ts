@@ -94,8 +94,6 @@ export namespace StorageArweave {
   ): Promise<Result<string, Error>> => {
     debugLog('# upload meta data: ', metadata);
 
-    console.log(metadata);
-
     return Bundlr.make(feePayer).nfts().uploadMetadata(metadata)
       .then(res => Result.ok(res.uri))
       .catch(Result.err)

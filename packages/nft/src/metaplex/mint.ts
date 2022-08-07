@@ -1,9 +1,6 @@
 import { PublicKey, Keypair, TransactionInstruction } from "@solana/web3.js";
 
 import {
-  Metaplex as MetaplexFoundation,
-  keypairIdentity,
-  bundlrStorage,
   CreateNftInput,
   createNftOperation,
   createNftBuilder,
@@ -20,8 +17,6 @@ import {
   Node,
   Instruction,
   Result,
-  Constants,
-  ConstantsFunc,
   debugLog,
 } from "@solana-suite/shared";
 
@@ -151,7 +146,7 @@ export namespace Metaplex {
     feePayer: Keypair
   ): Promise<Result<Instruction, Error>> => {
     const upload = await StorageArweave.uploadContent(input.filePath, feePayer);
-    input.filePath = upload.unwrap();
+    input.image = upload.unwrap();
 
     const uploadMetadata = await StorageArweave.uploadMetadata(input, feePayer);
     input.uri = uploadMetadata.unwrap();

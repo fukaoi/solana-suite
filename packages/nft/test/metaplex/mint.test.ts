@@ -14,9 +14,9 @@ describe("Metaplex", () => {
     source = obj.source;
   });
 
-  it.only("Mint nft", async () => {
+  it("Mint nft", async () => {
     const asset = RandomAsset.get();
-    // step1 upload content(image, movie, file,,,)
+    console.log("[step1] upload content(image, movie, file,,,)");
     const upload = await StorageArweave.uploadContent(
       asset.filePath as string,
       source.toKeypair()
@@ -25,10 +25,10 @@ describe("Metaplex", () => {
     assert.isTrue(upload.isOk, upload.unwrap());
     const imageUri = upload.unwrap();
 
-    // step2 upload metadata for metaplex(usually text data)
+    console.log("[step2] upload metadata for metaplex(usually text data)");
     const uploadMetadata = await StorageArweave.uploadMetadata(
       {
-        filePath: imageUri,
+        image: imageUri,
         name: asset.name,
         symbol: asset.symbol,
       },
@@ -49,7 +49,7 @@ describe("Metaplex", () => {
       verified: false,
     };
 
-    // step3 mint on Solana
+    console.log('[step3] mint on Solana');
     const res = await Metaplex.mint(
       {
         name: asset.name,
@@ -91,10 +91,11 @@ describe("Metaplex", () => {
       {
         filePath: asset.filePath as string,
         storageType: "nftStorage",
+        name: asset.name,
         symbol: asset.symbol,
         sellerFeeBasisPoints: 50,
         creators: [creator1, creator2],
-        isMutable: false,
+        isMutable: true,
       },
       source.toPublicKey(),
       source.toKeypair()
