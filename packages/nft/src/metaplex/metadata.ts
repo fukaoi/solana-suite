@@ -121,7 +121,7 @@ export namespace MetaplexMetadata {
     feePayer: Keypair
   ): Promise<TransactionInstruction[]> => {
     const {
-      uri,
+      // uri,
       isMutable,
       maxSupply,
       payer = feePayer,
@@ -141,25 +141,21 @@ export namespace MetaplexMetadata {
     freezeAuthority &&
       debugLog('# freezeAuthority: ', freezeAuthority.toString());
 
-    // const json = await init(feePayer).storage().downloadJson(uri)
-    //   .then(Result.ok)
-    //   .catch(Result.err);
-
-    // const metadata: JsonMetadata<string> = json.isOk ? json.value : {} as JsonMetadata<string>;
-
     let metadata = {};
-    try {
-      metadata = await Bundlr.make(feePayer).storage().downloadJson(uri);
-    } catch (e) {
-      debugLog('# Error in createNft:', e);
-      metadata = {};
-    }
+    // try {
+    //   metadata = await Bundlr.make(feePayer).storage().downloadJson(uri);
+    // } catch (e) {
+    //   debugLog('# Error in createNft:', e);
+    //   metadata = {};
+    // }
 
     const data = resolveData(
       operation.input,
       metadata,
       updateAuthority.publicKey
     );
+
+    debugLog('# resolveData: ', data);
 
     const metadataPda = findMetadataPda(mint.publicKey);
     const masterEditionPda = findMasterEditionV2Pda(mint.publicKey);

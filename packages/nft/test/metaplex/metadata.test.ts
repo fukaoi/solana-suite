@@ -73,7 +73,7 @@ describe('MetaplexMetadata', () => {
     );
   });
 
-  it.only('[NFTStorage]Mint nft', async () => {
+  it('[NFTStorage]Mint nft', async () => {
     const asset = RandomAsset.get();
     console.log('[step1] upload content(image, movie, file,,,)');
     const upload = await StorageNftStorage.uploadContent(
