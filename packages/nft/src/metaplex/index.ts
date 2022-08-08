@@ -67,6 +67,6 @@ export module Metaplex {
       ...input,
     };
 
-    return MetaplexMetadata.mint(mintInput, owner, feePayer);
+    return MetaplexMetadata.create(mintInput, owner, feePayer);
   };
 }

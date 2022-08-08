@@ -50,7 +50,7 @@ describe('MetaplexMetadata', () => {
     };
 
     console.log('[step3] mint on Solana');
-    const res = await MetaplexMetadata.mint(
+    const res = await MetaplexMetadata.create(
       {
         name: asset.name,
         uri,

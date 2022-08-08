@@ -15,6 +15,7 @@ import {
   useMetaplexFileFromBrowser,
 } from '@metaplex-foundation/js';
 import {NftStorageMetadata} from '.';
+import {MetaplexRoyalty} from '../metaplex';
 
 export namespace StorageNftStorage {
 
@@ -98,6 +99,11 @@ export namespace StorageNftStorage {
         return imageUrl;
       }
       metadata.image = imageUrl.value;
+    }
+
+    if (metadata.seller_fee_basis_points) {
+      metadata.seller_fee_basis_points 
+        = MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
     }
 
     const blobJson = new Blob([JSON.stringify(metadata)]);

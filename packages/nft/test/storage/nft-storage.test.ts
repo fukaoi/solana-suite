@@ -9,7 +9,7 @@ describe("StorageNftStorage", () => {
     const res = await StorageNftStorage.uploadContent(asset.filePath!);
 
     res.match(
-      (ok) => console.log("# nft.storage url: ", ok),
+      (ok) => console.log("# nft.storage content url: ", ok),
       (err) => assert.fail(err.message)
     );
   });
@@ -19,7 +19,7 @@ describe("StorageNftStorage", () => {
     const res = await StorageNftStorage.uploadMetadata(asset);
 
     res.match(
-      (ok) => console.log("# nft.storage url: ", ok),
+      (ok) => console.log("# nft.storage metadata url: ", ok),
       (err) => assert.fail(err.message)
     );
   });

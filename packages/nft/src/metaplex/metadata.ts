@@ -1,4 +1,4 @@
-import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
+import { PublicKey, Keypair, TransactionInstruction } from "@solana/web3.js";
 
 import {
   CreateNftInput,
@@ -9,25 +9,26 @@ import {
   findMasterEditionV2Pda,
   findAssociatedTokenAccountPda,
   JsonMetadata,
-} from '@metaplex-foundation/js';
+} from "@metaplex-foundation/js";
 
-import { DataV2, Creator } from '@metaplex-foundation/mpl-token-metadata';
+import { DataV2, Creator } from "@metaplex-foundation/mpl-token-metadata";
 
-import { Node, Instruction, Result, debugLog } from '@solana-suite/shared';
+import { Node, Instruction, Result, debugLog } from "@solana-suite/shared";
 
 import {
   getMinimumBalanceForRentExemptMint,
   TOKEN_PROGRAM_ID,
-} from '@solana/spl-token';
+} from "@solana/spl-token";
 
-import { MetaplexMetadata as Metadata} from '.';
-import { Bundlr } from '../bundlr';
+import { Bundlr } from "../bundlr";
+import { MetaplexMetadata as Metadata } from "./index";
+import { MetaplexRoyalty } from "./royalty";
 
 export namespace MetaplexMetadata {
   /**
    * NFT mint
    *
-   * @param {MetaplexMetadata}  input
+   * @param {MetaplexMetadata}  metadata
    * {
    *   uri: {string}                 // basically storage uri
    *   name?: {string}               // NFT content name
@@ -46,16 +47,21 @@ export namespace MetaplexMetadata {
    * @param {Keypair} feePayer       // fee payer
    * @return {Promise<Result<Instruction, Error>>}
    */
-  export const mint = async (
-    input: Metadata,
+  export const create = async (
+    metadata: Metadata,
     owner: PublicKey,
     feePayer: Keypair
   ): Promise<Result<Instruction, Error>> => {
-    const operation = createNftOperation(input);
+    // @todo  call validation
+
+    if (metadata.sellerFeeBasisPoints) {
+      metadata.sellerFeeBasisPoints = MetaplexRoyalty.convertValue(
+        metadata.sellerFeeBasisPoints
+      );
+    }
+    const operation = createNftOperation(metadata);
     const mint = Keypair.generate();
     const tx = await createNft(operation, mint, owner, feePayer);
-
-    // @todo  call validation
 
     return Result.ok(
       new Instruction(tx, [mint], feePayer, mint.publicKey.toString())
