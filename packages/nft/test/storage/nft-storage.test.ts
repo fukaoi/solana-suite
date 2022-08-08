@@ -16,6 +16,9 @@ describe("StorageNftStorage", () => {
 
   it("Upload metadata json", async () => {
     const asset = RandomAsset.get();
+    const image = await StorageNftStorage.uploadContent(asset.filePath!);
+    asset.image = image.unwrap();
+    delete(asset.filePath);
     const res = await StorageNftStorage.uploadMetadata(asset);
 
     res.match(

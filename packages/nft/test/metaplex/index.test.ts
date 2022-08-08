@@ -13,7 +13,45 @@ describe('Metaplex', () => {
     source = obj.source;
   });
 
-  it('one lump upload content and mint nft', async () => {
+  it('[Arweave] one lump upload content and mint nft', async () => {
+    const asset = RandomAsset.get();
+
+    const creator1 = {
+      address: source.toPublicKey(),
+      share: 70,
+      verified: false,
+    };
+
+    const creator2 = {
+      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk'.toPublicKey(),
+      share: 30,
+      verified: false,
+    };
+
+    const res = await Metaplex.mint(
+      {
+        filePath: asset.filePath as string,
+        storageType: 'arweave',
+        name: asset.name,
+        symbol: asset.symbol,
+        sellerFeeBasisPoints: 50,
+        creators: [creator1, creator2],
+        isMutable: true,
+      },
+      source.toPublicKey(),
+      source.toKeypair()
+    );
+
+    (await res.submit()).match(
+      (ok) => {
+        console.log('# mint:', res.unwrap().data);
+        console.log('# sig:', ok);
+      },
+      (ng) => assert.fail(ng.message)
+    );
+  });
+
+  it.only('[Nft Storage] one lump upload content and mint nft', async () => {
     const asset = RandomAsset.get();
 
     const creator1 = {
@@ -34,7 +72,7 @@ describe('Metaplex', () => {
         storageType: 'nftStorage',
         name: asset.name,
         symbol: asset.symbol,
-        sellerFeeBasisPoints: 50,
+        sellerFeeBasisPoints: 20,
         creators: [creator1, creator2],
         isMutable: true,
       },

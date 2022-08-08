@@ -1,33 +1,34 @@
-export * from './metadata';
-export * from './royalty';
+export * from "./metadata";
+export * from "./royalty";
 
-import { CreateNftInput } from '@metaplex-foundation/js';
-import { PublicKey, Keypair } from '@solana/web3.js';
-import { NftStorageMetadata } from '../storage';
-import { Instruction, Result } from '@solana-suite/shared';
-import { StorageArweave } from '../storage';
-import {MetaplexMetadata} from './metadata';
+import { CreateNftInput } from "@metaplex-foundation/js";
+import { PublicKey, Keypair } from "@solana/web3.js";
+import { NftStorageMetadata, StorageNftStorage } from "../storage";
+import { Instruction, Result } from "@solana-suite/shared";
+import { StorageArweave } from "../storage";
+import { MetaplexMetadata } from "./metadata";
+import { MetaplexRoyalty } from "./royalty";
 
 type noNeedOptional =
-  | 'payer'
-  | 'owner'
-  | 'associatedTokenProgram'
-  | 'tokenProgram'
-  | 'confirmOptions';
+  | "payer"
+  | "owner"
+  | "associatedTokenProgram"
+  | "tokenProgram"
+  | "confirmOptions";
 
 export type MetaplexMetadata = Omit<CreateNftInput, noNeedOptional>;
 
 export type NftStorageMetaplexMetadata = NftStorageMetadata &
-  Omit<MetaplexMetadata, 'uri'> & {
+  Omit<MetaplexMetadata, "uri"> & {
     filePath: string | File;
-    storageType: 'arweave' | 'nftStorage';
+    storageType: "arweave" | "nftStorage";
   };
 
 export module Metaplex {
   /**
    * Upload content and NFT mint
    *
-   * @param {NftStorageMetaplexMetadata}  input
+   * @param {NftStorageMetaplexMetadata}  metadata
    * {
    *   name?: {string}               // nft content name
    *   symbol?: {string}             // nft ticker symbol
@@ -51,20 +52,36 @@ export module Metaplex {
    * @return Promise<Result<Instruction, Error>>
    */
   export const mint = async (
-    input: NftStorageMetaplexMetadata,
+    metadata: NftStorageMetaplexMetadata,
     owner: PublicKey,
     feePayer: Keypair
   ): Promise<Result<Instruction, Error>> => {
-    const upload = await StorageArweave.uploadContent(input.filePath, feePayer);
-    input.image = upload.unwrap();
+    const upload = await StorageArweave.uploadContent(
+      metadata.filePath,
+      feePayer
+    );
+    metadata.image = upload.unwrap();
 
-    const uploadMetadata = await StorageArweave.uploadMetadata(input, feePayer);
-    input.uri = uploadMetadata.unwrap();
-    input.storageType = 'arweave';
+    if (metadata.seller_fee_basis_points) {
+      metadata.seller_fee_basis_points = MetaplexRoyalty.convertValue(
+        metadata.seller_fee_basis_points
+      );
+    }
+
+    let uploadMetadata;
+    if (metadata.storageType === "arweave") {
+      uploadMetadata = await StorageArweave.uploadMetadata(metadata, feePayer);
+    } else if (metadata.storageType === 'nftStorage') {
+      uploadMetadata = await StorageNftStorage.uploadMetadata(metadata);
+    } else {
+      return Result.err(Error('storageType is `arweave` or `nftStorage`'));
+    }
+
+    metadata.uri = uploadMetadata.unwrap();
 
     const mintInput: MetaplexMetadata = {
       uri: uploadMetadata.unwrap(),
-      ...input,
+      ...metadata,
     };
 
     return MetaplexMetadata.create(mintInput, owner, feePayer);

@@ -89,17 +89,7 @@ export namespace StorageNftStorage {
   export const uploadMetadata = async (
     metadata: NftStorageMetadata
   ): Promise<Result<string, Error>> => {
-    debugLog('# upload meta data: ', metadata);
-    if (metadata.image) {
-      const imageUrl = await uploadContent(metadata.image)
-        .then(Result.ok)
-        .catch(Result.err) as Result<string, Error>;
-
-      if (imageUrl.isErr) {
-        return imageUrl;
-      }
-      metadata.image = imageUrl.value;
-    }
+    debugLog('# upload metadata: ', metadata);
 
     if (metadata.seller_fee_basis_points) {
       metadata.seller_fee_basis_points 
