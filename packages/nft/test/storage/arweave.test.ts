@@ -20,7 +20,7 @@ describe('StorageArweave', () => {
       source.toKeypair(),
     );
     res.match(
-      ok => console.log('# arweave url: ', ok),
+      ok => console.log('# arweave content upload url: ', ok),
       err => assert.fail(err.message)
     );
   });
@@ -39,7 +39,7 @@ describe('StorageArweave', () => {
       },
     );
     res.match(
-      ok => console.log('# arweave url: ', ok),
+      ok => console.log('# arweave content upload url: ', ok),
       err => assert.fail(err.message)
     );
   });
@@ -61,7 +61,7 @@ describe('StorageArweave', () => {
       source.toKeypair(),
     );
     res.match(
-      ok => console.log('# arweave url: ', ok),
+      ok => console.log('# arweave metadata url: ', ok),
       err => assert.fail(err.message)
     );
   });

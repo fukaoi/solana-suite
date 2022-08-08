@@ -1,4 +1,5 @@
 export * from './metadata';
+export * from './royalty';
 
 import { CreateNftInput } from '@metaplex-foundation/js';
 import { PublicKey, Keypair } from '@solana/web3.js';

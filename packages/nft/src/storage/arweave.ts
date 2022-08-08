@@ -21,6 +21,7 @@ import {
 
 import {NftStorageMetadata} from ".";
 import {Bundlr} from "../bundlr";
+import {MetaplexRoyalty} from "../metaplex";
 
 export interface MetaplexFileOptions {
   readonly displayName: string;
@@ -93,6 +94,11 @@ export namespace StorageArweave {
     feePayer: Keypair,
   ): Promise<Result<string, Error>> => {
     debugLog('# upload meta data: ', metadata);
+
+    if (metadata.seller_fee_basis_points) {
+      metadata.seller_fee_basis_points 
+        = MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
+    }
 
     return Bundlr.make(feePayer).nfts().uploadMetadata(metadata)
       .then(res => Result.ok(res.uri))
