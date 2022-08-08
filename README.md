@@ -1,10 +1,10 @@
+<img src="https://bafkreibksjy2sdskvcrrlse2lwbskasub36bspidube7rlozhrd7wssg6i.ipfs.nftstorage.link/" width="70%" height="70%" />
+
 ![compile workflow](https://github.com/atonoy/solana-suite/actions/workflows/compile.yml/badge.svg)
 ![lint workflow](https://github.com/atonoy/solana-suite/actions/workflows/lint.yml/badge.svg)
 ![test:core workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-core.yml/badge.svg)
 ![test:shared workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-shared.yml/badge.svg)
 ![test:nft workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-nft.yml/badge.svg)
-
-<img src="https://bafkreibksjy2sdskvcrrlse2lwbskasub36bspidube7rlozhrd7wssg6i.ipfs.nftstorage.link/" width="80%" height="80%" />
 
 
 ## Summary
@@ -18,27 +18,37 @@ By using Solana Suite allows for rapid development of blockchain products.
 <img src="https://bafkreibolz2wpbpamryvdlcmbqfrit2wyvpx3ayyrjplth2s32ugp5uk2m.ipfs.nftstorage.link/" width="90%" height="90%" />
 
 ## Motivation
-Solana is a flexible, versatile, and wonderful blockchain. However, it backfires and makes it difficult to quickly develop what you want to do.
-We aim to make it easy for engineers who are not familiar with solana to develop with less source code
+Solana is a flexible, versatile, and wonderful blockchain. However, it backfires and makes it difficult to quickly develop what you want to do. We aim to make it easy for engineers who are not familiar with solana to develop with less source code
 
 ## Features
-### Easy development for web engineers
-Wrap @solana/web3.js makes it easy for web engineers to develop the Solana ecosystem. Connect to Solana with less source code, allowing engineers to focus on business logic and accelerate development of the Solana ecosystem.
+### Easy to use all in package
+Create wallet, Transfer SOL/SPL-TOKEN, Mint SPL-TOKEN/NFT, Upload
+storage(nft.storage/arweave), Connect phantom wallet,,,,
 
-### All-In-One Package
-Various functions such as wallet generation, transaction retrieval, memo addition, multisig, SPL token/NFT mint, content upload to NFT Storage and Arweave, and SOL,SPL token,NFT transfer are provided as an all-in-one package, allowing you to do everything you want with just one Solana suite.
+### Both Node.js and Broser does one code
+No need to change source code in Node.js and Borwser js. There is no need to be aware of
+the environment in which the calling program will run.It is useful for building most Solana
+blockchain services because it provides a variety of functions as a single library, including
 
-### Supports Node.js and Browser JS
-It is developping in Typescript and transpiled to both Node.js (cjs) and Browser JS(mjs) environments. Therefore, it can be used in both server and client environments.
+### Response handling using Result type
+It does not suddenly stop programs using solana-suite by throwing an Exception when
+an error occurs. Traditional try-catch is not necessary.
 
-### Result Type
-The function response type is Result<T, E>, which is often introduced in functional languages. Users can implement appropriate response handling on a case-by-case basis without throwing an Exception in the event of an error.
+### Various search options
+Limit/Order, Source/Destination filter, Search address(include token account), Action
+filter(action type: Transfer, Mint, CreateAccount,,,,,)
 
-### Transaction Search
-Search by user address or token address, filter function by Souce address or Destination address, and various filter functions by transaction type such as transfer, mint, create, etc.
+### Multiple transaction support
+Multiple instructions can be grouped together and executed as a single transaction.
+This makes it easy to implement batch processing. Also, by combining them into a
+single transaction, unnecessary access to the RPC server can be avoided.
+
+### Multisig support 
+We support multisig as much as possible, transfer, mint SPL-TOKEN, making memos
+
 
 ## Official Page
-comming soon
+:house: https://atonoy.github.io/solana-suite/
 ## Docs
-comming soon
+:books: comming soon
 
