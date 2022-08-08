@@ -56,32 +56,33 @@ export module Metaplex {
     owner: PublicKey,
     feePayer: Keypair
   ): Promise<Result<Instruction, Error>> => {
-    const upload = await StorageArweave.uploadContent(
-      metadata.filePath,
-      feePayer
-    );
-    metadata.image = upload.unwrap();
-
     if (metadata.seller_fee_basis_points) {
       metadata.seller_fee_basis_points = MetaplexRoyalty.convertValue(
         metadata.seller_fee_basis_points
       );
     }
 
-    let uploadMetadata;
-    if (metadata.storageType === "arweave") {
-      uploadMetadata = await StorageArweave.uploadMetadata(metadata, feePayer);
-    } else if (metadata.storageType === 'nftStorage') {
-      uploadMetadata = await StorageNftStorage.uploadMetadata(metadata);
+    let uri;
+    const { filePath, storageType, ...reducedMetadata } = metadata;
+    if (storageType === "arweave") {
+      reducedMetadata.image = (
+        await StorageArweave.uploadContent(filePath, feePayer)
+      ).unwrap();
+      uri = (
+        await StorageArweave.uploadMetadata(reducedMetadata, feePayer)
+      ).unwrap();
+    } else if (storageType === "nftStorage") {
+      reducedMetadata.image = (
+        await StorageArweave.uploadContent(filePath, feePayer)
+      ).unwrap();
+      uri = (await StorageNftStorage.uploadMetadata(reducedMetadata)).unwrap();
     } else {
-      return Result.err(Error('storageType is `arweave` or `nftStorage`'));
+      return Result.err(Error("storageType is `arweave` or `nftStorage`"));
     }
 
-    metadata.uri = uploadMetadata.unwrap();
-
     const mintInput: MetaplexMetadata = {
-      uri: uploadMetadata.unwrap(),
-      ...metadata,
+      uri,
+      ...reducedMetadata,
     };
 
     return MetaplexMetadata.create(mintInput, owner, feePayer);
