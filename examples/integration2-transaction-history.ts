@@ -49,7 +49,7 @@ import {
   console.log('# mint: ', mint);
 
   //////////////////////////////////////////////
-  // TRANSFER RECEIPR USER FROM THIS LINE
+  // TRANSFER RECEIPT USER FROM THIS LINE
   //////////////////////////////////////////////
 
   // transfer nft to receipt wallet
@@ -89,7 +89,7 @@ import {
   );
   console.log('# history by create action filter: ', hist2.unwrap());
 
-  // History of receiptkey as the main destitnation.
+  // History of receipt as the main destination.
   const hist3 = await Transaction.getTokenHistory(
     mint.toPublicKey(),
     receipt.toPublicKey(),
