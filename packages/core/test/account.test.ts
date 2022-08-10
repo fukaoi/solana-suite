@@ -9,11 +9,11 @@ let source: KeypairStr;
 
 describe('Account', () => {
   before(async () => {
-    const obj = await Setup.generatekeyPair();
+    const obj = await Setup.generateKeyPair();
     source = obj.source;
   });
 
-  it('Reuest airdrop with 1 SOL', async () => {
+  it('Request airdrop with 1 SOL', async () => {
     const res = await Account.requestAirdrop(source.toPublicKey(), 1);
     assert.isTrue(res.isOk, res.unwrap());
     const balance = await Account.getBalance(source.toPublicKey());
@@ -64,10 +64,10 @@ describe('Account', () => {
 
   it('Get token balance at publicKey', async () => {
     const pubkey = 'D1r8Uea5uVQ9u3uNr8Nrg49t6BmkgnwLYYVmwZ3WhbPT';
-    const tokenkey = '5k1WAQeAYUPiQnNWF557zBTqhMHfsi5utnE7TVSjd5Ut';
+    const tokenKey = '5k1WAQeAYUPiQnNWF557zBTqhMHfsi5utnE7TVSjd5Ut';
     const res = await Account.getTokenBalance(
       pubkey.toPublicKey(),
-      tokenkey.toPublicKey()
+      tokenKey.toPublicKey()
     );
     assert.isTrue(res.isOk);
     console.log('# balance token: ', res.unwrap());
@@ -83,7 +83,7 @@ describe('Account', () => {
   });
 
   it('find token address', async () => {
-    const res = await Account.findAssocaiatedTokenAddress(
+    const res = await Account.findAssociatedTokenAddress(
       'D7dKBiFxWKiSSew4fzinML1so4vEaSPmtiKV6qWMDUJJ'.toPublicKey(),
       '5hj62erLKeKSM29C5oZR8TGei7RrMG79voFkiCotRZmS'.toPublicKey(),
     );
@@ -148,7 +148,7 @@ describe('Account', () => {
     );
   });
 
-  it.only('Create associatedToken account', async () => {
+  it('Create associatedToken account', async () => {
     const mint = 'F3U1c11w8RFxkrwxLFbNB4jarcNmTiXxCdGWHu4CVrr3'.toPublicKey();
     const owner = Account.create();
     const inst = await Account.getOrCreateAssociatedTokenAccount(

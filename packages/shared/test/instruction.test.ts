@@ -8,7 +8,7 @@ let source: KeypairStr;
 
 describe('Instruction', () => {
   before(async () => {
-    const obj = await Setup.generatekeyPair();
+    const obj = await Setup.generateKeyPair();
     source = obj.source;
   });
 

@@ -131,7 +131,7 @@ export namespace Account {
     pubkey: PublicKey,
     mint: PublicKey,
   ): Promise<Result<TokenAmount, Error>> => {
-    const res = await findAssocaiatedTokenAddress(mint, pubkey);
+    const res = await findAssociatedTokenAddress(mint, pubkey);
     if (res.isErr) {
       return Result.err(res.error);
     }
@@ -199,7 +199,7 @@ export namespace Account {
     );
   };
 
-  export const findAssocaiatedTokenAddress = async (
+  export const findAssociatedTokenAddress = async (
     mint: PublicKey,
     owner: PublicKey
   ): Promise<Result<PublicKey, Error>> => {

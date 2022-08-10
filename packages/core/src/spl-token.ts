@@ -141,7 +141,7 @@ export namespace SplToken {
     tokenDecimals: number,
     feePayer?: Signer
   ) => {
-    const tokenAccount = await Acc.findAssocaiatedTokenAddress(
+    const tokenAccount = await Acc.findAssociatedTokenAddress(
       mint,
       owner,
     );
