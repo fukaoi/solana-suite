@@ -31,10 +31,10 @@ export namespace SplToken {
 
   const NFT_AMOUNT = 1;
   const NFT_DECIMALS = 0;
-  const RETREY_OVER_LIMIT = 10;
-  const RETREY_SLEEP_TIME = 3;
+  const RETRY_OVER_LIMIT = 10;
+  const RETRY_SLEEP_TIME = 3;
 
-  export const calcurateAmount = (amount: number, mintDecimal: number): number => {
+  export const calculateAmount = (amount: number, mintDecimal: number): number => {
     return amount * (10 ** mintDecimal);
   }
 
@@ -44,7 +44,7 @@ export namespace SplToken {
     feePayer: Signer,
   ): Promise<Result<string, Error>> => {
     let counter = 1;
-    while (counter < RETREY_OVER_LIMIT) {
+    while (counter < RETRY_OVER_LIMIT) {
       try {
         const inst = await Acc.getOrCreateAssociatedTokenAccount(
           mint,
@@ -71,10 +71,10 @@ export namespace SplToken {
       } catch (e) {
         debugLog(`# retry: ${counter} create token account: `, e);
       }
-      await sleep(RETREY_SLEEP_TIME);
+      await sleep(RETRY_SLEEP_TIME);
       counter++;
     }
-    return Result.err(Error(`retry action is over limit ${RETREY_OVER_LIMIT}`));
+    return Result.err(Error(`retry action is over limit ${RETRY_OVER_LIMIT}`));
   }
 
   export const mint = async (
@@ -118,7 +118,7 @@ export namespace SplToken {
       token,
       tokenAssociated.value.toPublicKey(),
       owner,
-      calcurateAmount(totalAmount, mintDecimal),
+      calculateAmount(totalAmount, mintDecimal),
       mintDecimal,
       signers,
     );
@@ -154,7 +154,7 @@ export namespace SplToken {
       tokenAccount.unwrap(),
       mint,
       owner,
-      calcurateAmount(burnAmount, tokenDecimals),
+      calculateAmount(burnAmount, tokenDecimals),
       tokenDecimals,
       signers,
     );
@@ -204,7 +204,7 @@ export namespace SplToken {
       mint,
       destToken.value.toPublicKey(),
       owner,
-      calcurateAmount(amount, mintDecimal),
+      calculateAmount(amount, mintDecimal),
       mintDecimal,
       signers,
     );
@@ -277,7 +277,7 @@ export namespace SplToken {
         mint,
         destToken.value.tokenAccount.toPublicKey(),
         owner,
-        calcurateAmount(amount, mintDecimal),
+        calculateAmount(amount, mintDecimal),
         mintDecimal,
         signers,
       );
@@ -290,7 +290,7 @@ export namespace SplToken {
         mint,
         destToken.value.tokenAccount.toPublicKey(),
         owner,
-        calcurateAmount(amount, mintDecimal),
+        calculateAmount(amount, mintDecimal),
         mintDecimal,
         signers,
       );

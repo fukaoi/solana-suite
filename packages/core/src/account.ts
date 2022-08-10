@@ -23,8 +23,8 @@ import bs from 'bs58';
 
 import {Transaction} from './';
 import {
-  Instruction, 
-  Node, 
+  Instruction,
+  Node,
   Result,
   debugLog,
 } from '@solana-suite/shared';
