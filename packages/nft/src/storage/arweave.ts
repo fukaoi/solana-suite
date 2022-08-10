@@ -3,7 +3,7 @@ import {
   MetaplexFile,
   useMetaplexFileFromBrowser,
   Currency,
-} from "@metaplex-foundation/js";
+} from '@metaplex-foundation/js';
 
 import {
   Keypair,
@@ -19,9 +19,9 @@ import {
   debugLog,
 } from '@solana-suite/shared';
 
-import {NftStorageMetadata} from ".";
-import {Bundlr} from "../bundlr";
-import {MetaplexRoyalty} from "../metaplex";
+import {NftStorageMetadata} from '.';
+import {Bundlr} from '../bundlr';
+import {MetaplexRoyalty} from '../metaplex';
 
 export interface MetaplexFileOptions {
   readonly displayName: string;
@@ -96,7 +96,7 @@ export namespace StorageArweave {
     debugLog('# upload meta data: ', metadata);
 
     if (metadata.seller_fee_basis_points) {
-      metadata.seller_fee_basis_points 
+      metadata.seller_fee_basis_points
         = MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
     }
 

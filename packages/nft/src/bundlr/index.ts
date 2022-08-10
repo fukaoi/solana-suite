@@ -3,11 +3,11 @@ import {
   keypairIdentity,
   bundlrStorage,
   BundlrStorageDriver,
-} from "@metaplex-foundation/js";
+} from '@metaplex-foundation/js';
 
-import { Keypair } from "@solana/web3.js";
+import { Keypair } from '@solana/web3.js';
 
-import { Node, Constants, ConstantsFunc } from "@solana-suite/shared";
+import { Node, Constants, ConstantsFunc } from '@solana-suite/shared';
 
 export namespace Bundlr {
   const BUNDLR_CONNECT_TIMEOUT = 60000;

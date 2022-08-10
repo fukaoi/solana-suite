@@ -3,13 +3,13 @@ export * from './nft-storage';
 
 import {
   JsonMetadata,
-} from "@metaplex-foundation/js";
+} from '@metaplex-foundation/js';
 
 export type StorageNftStorageMetadata = JsonMetadata & {
   storageType?: 'nftStorage';
 };
 
-export type StorageArweaveMetadata = JsonMetadata & { 
+export type StorageArweaveMetadata = JsonMetadata & {
   storageType?: 'arweave',
 };
 

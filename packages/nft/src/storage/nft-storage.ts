@@ -71,7 +71,7 @@ export namespace StorageNftStorage {
   /**
    * Upload content
    *
-   * @param {NftStorageMetadata} metadata 
+   * @param {NftStorageMetadata} metadata
    * {
    *   name?: {string}                      // nft content name
    *   symbol?: {string}                    // nft ticker symbol
@@ -92,7 +92,7 @@ export namespace StorageNftStorage {
     debugLog('# upload metadata: ', metadata);
 
     if (metadata.seller_fee_basis_points) {
-      metadata.seller_fee_basis_points 
+      metadata.seller_fee_basis_points
         = MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
     }
 

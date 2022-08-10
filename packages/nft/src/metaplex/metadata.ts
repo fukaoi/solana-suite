@@ -1,4 +1,4 @@
-import { PublicKey, Keypair, TransactionInstruction } from "@solana/web3.js";
+import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
 
 import {
   CreateNftInput,
@@ -9,20 +9,20 @@ import {
   findMasterEditionV2Pda,
   findAssociatedTokenAccountPda,
   JsonMetadata,
-} from "@metaplex-foundation/js";
+} from '@metaplex-foundation/js';
 
-import { DataV2, Creator } from "@metaplex-foundation/mpl-token-metadata";
+import { DataV2, Creator } from '@metaplex-foundation/mpl-token-metadata';
 
-import { Node, Instruction, Result, debugLog } from "@solana-suite/shared";
+import { Node, Instruction, Result, debugLog } from '@solana-suite/shared';
 
 import {
   getMinimumBalanceForRentExemptMint,
   TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
+} from '@solana/spl-token';
 
-import { Bundlr } from "../bundlr";
-import { MetaplexMetadata as Metadata } from "./index";
-import { MetaplexRoyalty } from "./royalty";
+import { Bundlr } from '../bundlr';
+import { MetaplexMetadata as Metadata } from './index';
+import { MetaplexRoyalty } from './royalty';
 
 export namespace MetaplexMetadata {
   /**
@@ -141,7 +141,7 @@ export namespace MetaplexMetadata {
     freezeAuthority &&
       debugLog('# freezeAuthority: ', freezeAuthority.toString());
 
-    let metadata = {};
+    const metadata = {};
     // try {
     //   metadata = await Bundlr.make(feePayer).storage().downloadJson(uri);
     // } catch (e) {

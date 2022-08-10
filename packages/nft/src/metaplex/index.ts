@@ -1,30 +1,30 @@
-export * from "./metadata";
-export * from "./royalty";
+export * from './metadata';
+export * from './royalty';
 
-import { CreateNftInput } from "@metaplex-foundation/js";
-import { PublicKey, Keypair } from "@solana/web3.js";
-import { NftStorageMetadata, StorageNftStorage } from "../storage";
-import { Instruction, Result } from "@solana-suite/shared";
-import { StorageArweave } from "../storage";
-import { MetaplexMetadata } from "./metadata";
-import { MetaplexRoyalty } from "./royalty";
+import { CreateNftInput } from '@metaplex-foundation/js';
+import { PublicKey, Keypair } from '@solana/web3.js';
+import { NftStorageMetadata, StorageNftStorage } from '../storage';
+import { Instruction, Result } from '@solana-suite/shared';
+import { StorageArweave } from '../storage';
+import { MetaplexMetadata } from './metadata';
+import { MetaplexRoyalty } from './royalty';
 
 type noNeedOptional =
-  | "payer"
-  | "owner"
-  | "associatedTokenProgram"
-  | "tokenProgram"
-  | "confirmOptions";
+  | 'payer'
+  | 'owner'
+  | 'associatedTokenProgram'
+  | 'tokenProgram'
+  | 'confirmOptions';
 
 export type MetaplexMetadata = Omit<CreateNftInput, noNeedOptional>;
 
 export type NftStorageMetaplexMetadata = NftStorageMetadata &
-  Omit<MetaplexMetadata, "uri"> & {
+  Omit<MetaplexMetadata, 'uri'> & {
     filePath: string | File;
-    storageType: "arweave" | "nftStorage";
+    storageType: 'arweave' | 'nftStorage';
   };
 
-export module Metaplex {
+export namespace Metaplex {
   /**
    * Upload content and NFT mint
    *
@@ -64,20 +64,20 @@ export module Metaplex {
 
     let uri;
     const { filePath, storageType, ...reducedMetadata } = metadata;
-    if (storageType === "arweave") {
+    if (storageType === 'arweave') {
       reducedMetadata.image = (
         await StorageArweave.uploadContent(filePath, feePayer)
       ).unwrap();
       uri = (
         await StorageArweave.uploadMetadata(reducedMetadata, feePayer)
       ).unwrap();
-    } else if (storageType === "nftStorage") {
+    } else if (storageType === 'nftStorage') {
       reducedMetadata.image = (
         await StorageArweave.uploadContent(filePath, feePayer)
       ).unwrap();
       uri = (await StorageNftStorage.uploadMetadata(reducedMetadata)).unwrap();
     } else {
-      return Result.err(Error("storageType is `arweave` or `nftStorage`"));
+      return Result.err(Error('storageType is `arweave` or `nftStorage`'));
     }
 
     const mintInput: MetaplexMetadata = {
