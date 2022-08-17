@@ -36,7 +36,6 @@ describe("Validator", () => {
     const res = Validator.isSymbol("SYMBOL");
     assert.isOk(res.isOk);
     const res2 = Validator.isSymbol("LONG-LONG-SYMBOL");
-    console.log(res2);
     assert.isOk(res2.isErr);
     assert.equal(
       res2.isErr && res2.error.message,
@@ -50,6 +49,8 @@ describe("Validator", () => {
     const data = {
       name: "long-name-long-name",
       seller_fee_basis_points: 150,
+      symbol: 'LONG-SYMBOL-LONG-SYMBOL',
+      image: 'url',
     };
     const res = Validator.checkAll(data);
     console.log(res);
@@ -60,6 +61,8 @@ describe("Validator", () => {
     const data = {
       name: "name",
       seller_fee_basis_points: 50,
+      symbol: 'SYMBOL',
+      image: 'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50',
     };
     const res = Validator.checkAll(data);
     console.log(res);

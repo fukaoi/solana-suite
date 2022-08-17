@@ -59,31 +59,31 @@ export namespace Validator {
     const keys = Object.keys(metadata);
     const results: ValidatorErrors[] = [];
     keys.map((key) => {
+      let res: Result<string, Error> = Result.ok(''); //initial
       switch (key) {
         case "name":
           if (metadata.name) {
-            const res = isName(metadata.name);
-            if (res.isErr) {
-              results.push({ key, error: res.error.message });
-            }
+            res = isName(metadata.name);
           }
           break;
         case "seller_fee_basis_points":
           if (metadata.seller_fee_basis_points) {
-            const res2 = isRoyalty(metadata.seller_fee_basis_points);
-            if (res2.isErr) {
-              results.push({ key, error: res2.error.message });
-            }
+            res = isRoyalty(metadata.seller_fee_basis_points);
           }
           break;
         case "symbol":
           if (metadata.symbol) {
-            const res2 = isSymbol(metadata.symbol);
-            if (res2.isErr) {
-              results.push({ key, error: res2.error.message });
-            }
+            res = isSymbol(metadata.symbol);
           }
           break;
+        case "image":
+          if (metadata.image) {
+            res = isImageUrl(metadata.image);
+          }
+          break;
+      }
+      if (res.isErr) {
+        results.push({ key, error: res.error.message });
       }
     });
     if (results.length > 0) {
