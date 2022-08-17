@@ -1,47 +1,70 @@
-import { Result } from '@solana-suite/shared';
-import {NftStorageMetadata} from '../storage';
+import { Result } from "@solana-suite/shared";
+import { Message } from "@solana/web3.js";
+import { NftStorageMetadata } from "../storage";
 
 export namespace Validator {
   export namespace Message {
-    export const SUCCESS = 'success'
-    export const SMALL = 'too small'
-    export const BIG = 'too big'
-
+    export const SUCCESS = "success";
+    export const SMALL_NUMBER = "too small, 0 or higher";
+    export const BIG_NUMBER = "too big, max 100";
+    export const LONG_LENGTH = "too long, max 10";
+    export const EMPTY = "invalid empty value";
   }
   export const isRoyalty = (actual: number): Result<string, Error> => {
     if (actual < 0) {
-      return Result.err(Error(Message.SMALL));
+      return Result.err(Error(Message.SMALL_NUMBER));
     } else if (actual > 100) {
-      return Result.err(Error(Message.BIG));
+      return Result.err(Error(Message.BIG_NUMBER));
     }
     return Result.ok(Message.SUCCESS);
   };
 
   export const isName = (actual: string): Result<string, Error> => {
-    if (actual.length < 0) {
-      return Result.err(Error(Message.SMALL));
+    if (actual.length <= 0) {
+      return Result.err(Error(Message.EMPTY));
     } else if (actual.length > 10) {
-      return Result.err(Error(Message.BIG));
+      return Result.err(Error(Message.LONG_LENGTH));
     }
     return Result.ok(Message.SUCCESS);
   };
 
-  export const checkAll = (actualData: NftStorageMetadata) => {
-    const keys = Object.keys(actualData);
-    let results: Array<{key: string, error: string}> = [];
-    keys.map(key => {
+  export const isSymbol = (actual: string): Result<string, Error> => {
+    if (actual.length <= 0) {
+      return Result.err(Error(Message.EMPTY));
+    } else if (actual.length > 8) {
+      return Result.err(Error(Message.LONG_LENGTH));
+    }
+    return Result.ok(Message.SUCCESS);
+  };
+
+  export const checkAll = (
+    metadata: NftStorageMetadata
+  ): Result<string, Error> => {
+    const keys = Object.keys(metadata);
+    let results: Array<{ key: string; error: string }> = [];
+    keys.map((key) => {
       switch (key) {
-        case 'name':
-          const res = isName(actualData[key] as string);
-          if (res.isErr) {
-            results.push({ key, error: res.error.message });
+        case "name":
+          if (metadata.name) {
+            const res = isName(metadata.name);
+            if (res.isErr) {
+              results.push({ key, error: res.error.message });
+            }
           }
           break;
-        case 'royalty':
-          // results.push(isRoyalty(actualData[key] as number));
+        case "seller_fee_basis_points":
+          if (metadata.seller_fee_basis_points) {
+            const res2 = isRoyalty(metadata.seller_fee_basis_points);
+            if (res2.isErr) {
+              results.push({ key, error: res2.error.message });
+            }
+          }
           break;
-     }
+      }
     });
-    return Result.err(results as any);
-  }
+    if (results.length > 0) {
+      return Result.err(results as any);
+    }
+    return Result.ok(Message.SUCCESS);
+  };
 }
