@@ -32,6 +32,20 @@ describe("Validator", () => {
     assert.equal(res3.isErr && res3.error.message, Validator.Message.EMPTY);
   });
 
+  it("isSymbol", async () => {
+    const res = Validator.isSymbol("SYMBOL");
+    assert.isOk(res.isOk);
+    const res2 = Validator.isSymbol("LONG-LONG-SYMBOL");
+    console.log(res2);
+    assert.isOk(res2.isErr);
+    assert.equal(
+      res2.isErr && res2.error.message,
+      Validator.Message.LONG_LENGTH
+    );
+    const res3 = Validator.isName("");
+    assert.equal(res3.isErr && res3.error.message, Validator.Message.EMPTY);
+  });
+
   it("[Error]checkAll", async () => {
     const data = {
       name: "long-name-long-name",

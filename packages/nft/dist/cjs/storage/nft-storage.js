@@ -17,6 +17,7 @@ const nft_storage_1 = require("nft.storage");
 const fs_1 = __importDefault(require("fs"));
 const shared_1 = require("@solana-suite/shared");
 const js_1 = require("@metaplex-foundation/js");
+const metaplex_1 = require("../metaplex");
 var StorageNftStorage;
 (function (StorageNftStorage) {
     const getNftStorageApiKey = () => {
@@ -76,15 +77,10 @@ var StorageNftStorage;
      * @return Promise<Result<string, Error>>
      */
     StorageNftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
-        (0, shared_1.debugLog)('# upload meta data: ', metadata);
-        if (metadata.image) {
-            const imageUrl = yield StorageNftStorage.uploadContent(metadata.image)
-                .then(shared_1.Result.ok)
-                .catch(shared_1.Result.err);
-            if (imageUrl.isErr) {
-                return imageUrl;
-            }
-            metadata.image = imageUrl.value;
+        (0, shared_1.debugLog)('# upload metadata: ', metadata);
+        if (metadata.seller_fee_basis_points) {
+            metadata.seller_fee_basis_points
+                = metaplex_1.MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
         }
         const blobJson = new nft_storage_1.Blob([JSON.stringify(metadata)]);
         const res = yield connect.storeBlob(blobJson)

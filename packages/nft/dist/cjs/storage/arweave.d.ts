@@ -1,7 +1,7 @@
-import { Currency } from "@metaplex-foundation/js";
+import { Currency } from '@metaplex-foundation/js';
 import { Keypair } from '@solana/web3.js';
 import { Result } from '@solana-suite/shared';
-import { NftStorageMetadata } from ".";
+import { NftStorageMetadata } from '.';
 export interface MetaplexFileOptions {
     readonly displayName: string;
     readonly uniqueName: string;

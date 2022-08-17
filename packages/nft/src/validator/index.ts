@@ -1,5 +1,4 @@
 import { Result } from "@solana-suite/shared";
-import { Message } from "@solana/web3.js";
 import { NftStorageMetadata } from "../storage";
 
 export namespace Validator {
@@ -9,7 +8,13 @@ export namespace Validator {
     export const BIG_NUMBER = "too big, max 100";
     export const LONG_LENGTH = "too long, max 10";
     export const EMPTY = "invalid empty value";
+    export const INVALID_URL = "invalid url";
   }
+  export interface ValidatorErrors {
+    key: string;
+    error: string;
+  }
+
   export const isRoyalty = (actual: number): Result<string, Error> => {
     if (actual < 0) {
       return Result.err(Error(Message.SMALL_NUMBER));
@@ -37,11 +42,22 @@ export namespace Validator {
     return Result.ok(Message.SUCCESS);
   };
 
+  export const isImageUrl = (actual: string): Result<string, Error> => {
+    if (actual.length <= 0) {
+      return Result.err(Error(Message.EMPTY));
+    } else if (
+      !/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(actual)
+    ) {
+      return Result.err(Error(Message.INVALID_URL));
+    }
+    return Result.ok(Message.SUCCESS);
+  };
+
   export const checkAll = (
     metadata: NftStorageMetadata
-  ): Result<string, Error> => {
+  ): Result<string, any> => {
     const keys = Object.keys(metadata);
-    let results: Array<{ key: string; error: string }> = [];
+    const results: ValidatorErrors[] = [];
     keys.map((key) => {
       switch (key) {
         case "name":
@@ -55,6 +71,14 @@ export namespace Validator {
         case "seller_fee_basis_points":
           if (metadata.seller_fee_basis_points) {
             const res2 = isRoyalty(metadata.seller_fee_basis_points);
+            if (res2.isErr) {
+              results.push({ key, error: res2.error.message });
+            }
+          }
+          break;
+        case "symbol":
+          if (metadata.symbol) {
+            const res2 = isSymbol(metadata.symbol);
             if (res2.isErr) {
               results.push({ key, error: res2.error.message });
             }

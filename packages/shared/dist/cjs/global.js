@@ -68,7 +68,7 @@ const debugLog = (data, data2 = '', data3 = '') => {
 exports.debugLog = debugLog;
 const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise(r => setTimeout(r, sec * 1000)); });
 exports.sleep = sleep;
-exports.isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined";
-exports.isNode = typeof process !== "undefined" &&
+exports.isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
+exports.isNode = typeof process !== 'undefined' &&
     process.versions != null &&
     process.versions.node != null;

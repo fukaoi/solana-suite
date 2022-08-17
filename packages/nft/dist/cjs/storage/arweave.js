@@ -18,6 +18,7 @@ const web3_js_1 = require("@solana/web3.js");
 const fs_1 = __importDefault(require("fs"));
 const shared_1 = require("@solana-suite/shared");
 const bundlr_1 = require("../bundlr");
+const metaplex_1 = require("../metaplex");
 var StorageArweave;
 (function (StorageArweave) {
     StorageArweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
@@ -71,6 +72,10 @@ var StorageArweave;
     });
     StorageArweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
         (0, shared_1.debugLog)('# upload meta data: ', metadata);
+        if (metadata.seller_fee_basis_points) {
+            metadata.seller_fee_basis_points
+                = metaplex_1.MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
+        }
         return bundlr_1.Bundlr.make(feePayer).nfts().uploadMetadata(metadata)
             .then(res => shared_1.Result.ok(res.uri))
             .catch(shared_1.Result.err);

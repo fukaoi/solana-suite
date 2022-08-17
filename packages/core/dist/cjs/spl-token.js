@@ -18,14 +18,14 @@ var SplToken;
 (function (SplToken) {
     const NFT_AMOUNT = 1;
     const NFT_DECIMALS = 0;
-    const RETREY_OVER_LIMIT = 10;
-    const RETREY_SLEEP_TIME = 3;
-    SplToken.calcurateAmount = (amount, mintDecimal) => {
+    const RETRY_OVER_LIMIT = 10;
+    const RETRY_SLEEP_TIME = 3;
+    SplToken.calculateAmount = (amount, mintDecimal) => {
         return amount * (Math.pow(10, mintDecimal));
     };
     SplToken.retryGetOrCreateAssociatedAccountInfo = (mint, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let counter = 1;
-        while (counter < RETREY_OVER_LIMIT) {
+        while (counter < RETRY_OVER_LIMIT) {
             try {
                 const inst = yield _1.Account.getOrCreateAssociatedTokenAccount(mint, owner, feePayer, true);
                 if (inst.isOk && typeof inst.value === 'string') {
@@ -43,10 +43,10 @@ var SplToken;
             catch (e) {
                 (0, shared_1.debugLog)(`# retry: ${counter} create token account: `, e);
             }
-            yield (0, shared_1.sleep)(RETREY_SLEEP_TIME);
+            yield (0, shared_1.sleep)(RETRY_SLEEP_TIME);
             counter++;
         }
-        return shared_1.Result.err(Error(`retry action is over limit ${RETREY_OVER_LIMIT}`));
+        return shared_1.Result.err(Error(`retry action is over limit ${RETRY_OVER_LIMIT}`));
     });
     SplToken.mint = (owner, signers, totalAmount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         !feePayer && (feePayer = signers[0]);
@@ -62,15 +62,15 @@ var SplToken;
         if (tokenAssociated.isErr) {
             return shared_1.Result.err(tokenAssociated.error);
         }
-        const inst = (0, spl_token_1.createMintToCheckedInstruction)(token, tokenAssociated.value.toPublicKey(), owner, SplToken.calcurateAmount(totalAmount, mintDecimal), mintDecimal, signers);
+        const inst = (0, spl_token_1.createMintToCheckedInstruction)(token, tokenAssociated.value.toPublicKey(), owner, SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer, token.toBase58()));
     });
     SplToken.burn = (mint, owner, signers, burnAmount, tokenDecimals, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const tokenAccount = yield _1.Account.findAssocaiatedTokenAddress(mint, owner);
+        const tokenAccount = yield _1.Account.findAssociatedTokenAddress(mint, owner);
         if (tokenAccount.isErr) {
             return shared_1.Result.err(tokenAccount.error);
         }
-        const inst = (0, spl_token_1.createBurnCheckedInstruction)(tokenAccount.unwrap(), mint, owner, SplToken.calcurateAmount(burnAmount, tokenDecimals), tokenDecimals, signers);
+        const inst = (0, spl_token_1.createBurnCheckedInstruction)(tokenAccount.unwrap(), mint, owner, SplToken.calculateAmount(burnAmount, tokenDecimals), tokenDecimals, signers);
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
     });
     SplToken.transfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
@@ -83,7 +83,7 @@ var SplToken;
         if (destToken.isErr) {
             return shared_1.Result.err(destToken.error);
         }
-        const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.value.toPublicKey(), mint, destToken.value.toPublicKey(), owner, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers);
+        const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.value.toPublicKey(), mint, destToken.value.toPublicKey(), owner, SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
     });
     SplToken.transferNft = (mint, owner, dest, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
@@ -104,12 +104,12 @@ var SplToken;
         });
         // return associated token account
         if (!destToken.value.inst) {
-            inst2 = (0, spl_token_1.createTransferCheckedInstruction)((sourceToken.unwrap().tokenAccount).toPublicKey(), mint, destToken.value.tokenAccount.toPublicKey(), owner, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers);
+            inst2 = (0, spl_token_1.createTransferCheckedInstruction)((sourceToken.unwrap().tokenAccount).toPublicKey(), mint, destToken.value.tokenAccount.toPublicKey(), owner, SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
             tx.add(inst2);
         }
         else {
             // return instruction and undecided associated token account
-            inst2 = (0, spl_token_1.createTransferCheckedInstruction)((sourceToken.unwrap().tokenAccount).toPublicKey(), mint, destToken.value.tokenAccount.toPublicKey(), owner, SplToken.calcurateAmount(amount, mintDecimal), mintDecimal, signers);
+            inst2 = (0, spl_token_1.createTransferCheckedInstruction)((sourceToken.unwrap().tokenAccount).toPublicKey(), mint, destToken.value.tokenAccount.toPublicKey(), owner, SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
             tx.add(destToken.value.inst).add(inst2);
         }
         tx.recentBlockhash = blockhashObj.blockhash;
