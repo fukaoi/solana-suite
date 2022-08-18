@@ -4,57 +4,69 @@ import { NftStorageMetadata } from '../storage';
 export namespace Validator {
   export namespace Message {
     export const SUCCESS = 'success';
-    export const SMALL_NUMBER = 'too small, 0 or higher';
-    export const BIG_NUMBER = 'too big, max 100';
-    export const LONG_LENGTH = 'too long, max 10';
+    export const SMALL_NUMBER = 'too small 0 or higher';
+    export const BIG_NUMBER = 'too big';
+    export const LONG_LENGTH = 'too long';
     export const EMPTY = 'invalid empty value';
     export const INVALID_URL = 'invalid url';
   }
+
+  export const NAME_LENGTH = 32;
+  export const SYMBOL_LENGTH = 10;
+  export const URL_LENGTH = 200;
+  export const ROYALTY_MAX = 100;
+  export const ROYALTY_MIN = 0;
+
   export interface ValidatorErrors {
     key: string;
     error: string;
   }
 
-  export const isRoyalty = (actual: number): Result<string, Error> => {
-    if (!actual) {
-      return Result.err(Error(Message.EMPTY));
+  export const isRoyalty = (royalty: number): Result<string, Error> => {
+    if (!royalty) {
+      return Result.err(errorMessage(Message.EMPTY, royalty));
     }
-    if (actual < 0) {
-      return Result.err(Error(Message.SMALL_NUMBER));
-    } else if (actual > 100) {
-      return Result.err(Error(Message.BIG_NUMBER));
-    }
-    return Result.ok(Message.SUCCESS);
-  };
-
-  export const isName = (actual: string): Result<string, Error> => {
-    if (!actual) {
-      return Result.err(Error(Message.EMPTY));
-    }
-    if (actual.length > 10) {
-      return Result.err(Error(Message.LONG_LENGTH));
+    if (royalty < ROYALTY_MIN) {
+      return Result.err(errorMessage(Message.SMALL_NUMBER, royalty));
+    } else if (royalty > ROYALTY_MAX) {
+      return Result.err(errorMessage(Message.BIG_NUMBER, royalty, ROYALTY_MAX));
     }
     return Result.ok(Message.SUCCESS);
   };
 
-  export const isSymbol = (actual: string): Result<string, Error> => {
-    if (!actual) {
-      return Result.err(Error(Message.EMPTY));
+  export const isName = (name: string): Result<string, Error> => {
+    if (!name) {
+      return Result.err(errorMessage(Message.EMPTY, name));
     }
-    if (actual.length > 8) {
-      return Result.err(Error(Message.LONG_LENGTH));
+    if (byteLength(name) > NAME_LENGTH) {
+      return Result.err(errorMessage(Message.LONG_LENGTH, name, NAME_LENGTH));
     }
     return Result.ok(Message.SUCCESS);
   };
 
-  export const isImageUrl = (actual: string): Result<string, Error> => {
-    if (!actual) {
-      return Result.err(Error(Message.EMPTY));
+  export const isSymbol = (symbol: string): Result<string, Error> => {
+    if (!symbol) {
+      return Result.err(errorMessage(Message.EMPTY, symbol));
     }
-    if (
-      !/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(actual)
-    ) {
-      return Result.err(Error(Message.INVALID_URL));
+    if (byteLength(symbol) > SYMBOL_LENGTH) {
+      return Result.err(
+        errorMessage(Message.LONG_LENGTH, symbol, SYMBOL_LENGTH)
+      );
+    }
+    return Result.ok(Message.SUCCESS);
+  };
+
+  export const isImageUrl = (imageUrl: string): Result<string, Error> => {
+    if (!imageUrl) {
+      return Result.err(errorMessage(Message.EMPTY, imageUrl));
+    }
+    if (byteLength(imageUrl) > URL_LENGTH) {
+      return Result.err(
+        errorMessage(Message.LONG_LENGTH, imageUrl, URL_LENGTH)
+      );
+    }
+    if (!/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(imageUrl)) {
+      return Result.err(errorMessage(Message.INVALID_URL, imageUrl));
     }
     return Result.ok(Message.SUCCESS);
   };
@@ -96,5 +108,22 @@ export namespace Validator {
       return Result.err(results as any);
     }
     return Result.ok(Message.SUCCESS);
+  };
+
+  const byteLength = (value: string): number => {
+    const text = new TextEncoder();
+    return text.encode(value).length;
+  };
+
+  const errorMessage = (
+    message: string,
+    actual: string | number,
+    limit?: number
+  ): Error => {
+    if (limit) {
+      return Error(`${message}, actual: ${actual}, limit: ${limit}`);
+    } else {
+      return Error(`${message}, actual: ${actual}`);
+    }
   };
 }

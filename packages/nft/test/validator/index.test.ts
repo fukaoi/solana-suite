@@ -10,8 +10,7 @@ describe('Validator', () => {
 
   it('[Error]isRoyalty: too small number', async () => {
     const res = Validator.isRoyalty(-1);
-    assert.isOk(res.isErr);
-    assert.equal(
+    assert.include(
       res.isErr && res.error.message,
       Validator.Message.SMALL_NUMBER
     );
@@ -19,12 +18,15 @@ describe('Validator', () => {
 
   it('[Error]isRoyalty: too big number', async () => {
     const res = Validator.isRoyalty(200);
-    assert.equal(res.isErr && res.error.message, Validator.Message.BIG_NUMBER);
+    assert.include(
+      res.isErr && res.error.message,
+      Validator.Message.BIG_NUMBER
+    );
   });
 
   it('[Error]isRoyalty: empty value', async () => {
     const res = Validator.isRoyalty(parseInt(''));
-    assert.equal(res.isErr && res.error.message, Validator.Message.EMPTY);
+    assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
   });
 
   it('[Success]isName', async () => {
@@ -33,14 +35,18 @@ describe('Validator', () => {
   });
 
   it('[Error]isName: too long length', async () => {
-    const res = Validator.isName('long-long-name');
-    assert.isOk(res.isErr);
-    assert.equal(res.isErr && res.error.message, Validator.Message.LONG_LENGTH);
+    const res = Validator.isName(
+      'long-long-name-long-long-name-long-long-name'
+    );
+    assert.include(
+      res.isErr && res.error.message,
+      Validator.Message.LONG_LENGTH
+    );
   });
 
   it('[Error]isName: empty value', async () => {
     const res = Validator.isName('');
-    assert.equal(res.isErr && res.error.message, Validator.Message.EMPTY);
+    assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
   });
 
   it('[Success]isSymbol', async () => {
@@ -50,13 +56,15 @@ describe('Validator', () => {
 
   it('[Error]isSymbol: too long length', async () => {
     const res = Validator.isSymbol('LONG-LONG-SYMBOL');
-    assert.isOk(res.isErr);
-    assert.equal(res.isErr && res.error.message, Validator.Message.LONG_LENGTH);
+    assert.include(
+      res.isErr && res.error.message,
+      Validator.Message.LONG_LENGTH
+    );
   });
 
   it('[Error]isSymbol: empty value', async () => {
-    const res3 = Validator.isName('');
-    assert.equal(res3.isErr && res3.error.message, Validator.Message.EMPTY);
+    const res = Validator.isName('');
+    assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
   });
 
   it('[Success]isImageUrl', async () => {
@@ -68,12 +76,23 @@ describe('Validator', () => {
 
   it('[Error]isImageUrl: empty value', async () => {
     const res = Validator.isImageUrl('');
-    assert.isOk(res.isErr);
+    assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
   });
 
   it('[Error]isImageUrl: invalid value', async () => {
     const res = Validator.isImageUrl('invalid url');
-    assert.isOk(res.isErr);
+    assert.include(
+      res.isErr && res.error.message,
+      Validator.Message.INVALID_URL
+    );
+  });
+
+  it('[Error]isImageUrl: too long length', async () => {
+    const res = Validator.isImageUrl(`https://example.com/${'x'.repeat(200)}`);
+    assert.include(
+      res.isErr && res.error.message,
+      Validator.Message.LONG_LENGTH
+    );
   });
 
   it('[Success]checkAll', async () => {
@@ -90,7 +109,7 @@ describe('Validator', () => {
 
   it('[Error]checkAll', async () => {
     const data = {
-      name: 'long-name-long-name',
+      name: 'long-name-long-name-long-name-long-name',
       seller_fee_basis_points: 150,
       symbol: 'LONG-SYMBOL-LONG-SYMBOL',
       image: 'url',
