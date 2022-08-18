@@ -150,10 +150,10 @@ export namespace SolNative {
     feePayer: PublicKey,
   ): Promise<Result<PartialSignInstruction, Error>> => {
 
-    const blockhashObj = await Node.getConnection().getLatestBlockhash();
+    const blockHashObj = await Node.getConnection().getLatestBlockhash();
     const tx = new Transaction({
-      blockhash: blockhashObj.blockhash,
-      lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
+      blockhash: blockHashObj.blockhash,
+      lastValidBlockHeight: blockHashObj.lastValidBlockHeight,
       feePayer
     }).add(
       SystemProgram.transfer(
@@ -170,12 +170,12 @@ export namespace SolNative {
     });
 
     try {
-      const sirializedTx = tx.serialize(
+      const serializedTx = tx.serialize(
         {
           requireAllSignatures: false,
         }
       )
-      const hex = sirializedTx.toString('hex');
+      const hex = serializedTx.toString('hex');
       return Result.ok(new PartialSignInstruction(hex));
     } catch (ex) {
       return Result.err(ex as Error);
