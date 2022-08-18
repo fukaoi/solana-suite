@@ -1,5 +1,5 @@
-import { JsonMetadata } from "@metaplex-foundation/js";
-import fs from "fs";
+import { JsonMetadata } from '@metaplex-foundation/js';
+import fs from 'fs';
 
 export namespace RandomAsset {
   const ASSET_DIR = `${__dirname}/assets/`;
@@ -8,16 +8,16 @@ export namespace RandomAsset {
     const t = new Date();
     return (
       t.getFullYear() +
-      "-" +
-      ("0" + (t.getMonth() + 1)).slice(-2) +
-      "-" +
-      ("0" + t.getDate()).slice(-2) +
-      "/" +
-      ("0" + t.getHours()).slice(-2) +
-      ":" +
-      ("0" + t.getMinutes()).slice(-2) +
-      ":" +
-      ("0" + t.getSeconds()).slice(-2)
+      '-' +
+      ('0' + (t.getMonth() + 1)).slice(-2) +
+      '-' +
+      ('0' + t.getDate()).slice(-2) +
+      '/' +
+      ('0' + t.getHours()).slice(-2) +
+      ':' +
+      ('0' + t.getMinutes()).slice(-2) +
+      ':' +
+      ('0' + t.getSeconds()).slice(-2)
     );
   };
 
@@ -29,7 +29,7 @@ export namespace RandomAsset {
     const created = `created at ${dateFormat()}`;
     const name = asset.split(/.jpeg|.png|.jpg/i)[0].toUpperCase();
     const description = `This nft is ${name}:${created}`;
-    const symbol = "SUITE";
+    const symbol = 'SUITE';
     return { name, description, filePath, symbol };
   };
 
@@ -44,24 +44,24 @@ export namespace RandomAsset {
     storageData.symbol = commonAsset.symbol;
     storageData.seller_fee_basis_points = 100;
     storageData.animation_url =
-      "https://ipfs.infura.io/ipfs/QmPkRtkGn5ckAY5m6ejpWcDPmnAUJgphtJWFkyQP7LNAcx";
-    storageData.external_url = "https://example.org/top";
-    storageData.category = "image";
+      'https://ipfs.infura.io/ipfs/QmPkRtkGn5ckAY5m6ejpWcDPmnAUJgphtJWFkyQP7LNAcx';
+    storageData.external_url = 'https://example.org/top';
+    storageData.category = 'image';
     storageData.attributes = [
       {
-        limits: "transfer",
-        value: "7",
+        limits: 'transfer',
+        value: '7',
       },
       {
-        limits: "use_limit",
-        value: "3",
+        limits: 'use_limit',
+        value: '3',
       },
     ];
-    storageData.collection = { name: "Pets in Japan", family: "PETS WORLD" };
+    storageData.collection = { name: 'Pets in Japan', family: 'PETS WORLD' };
     storageData.properties = {
       creators: [
         {
-          address: "24W8B8DyYiieQH49eb7Xo2EQt3Qh3Xvu6yMq8mYywtML",
+          address: '24W8B8DyYiieQH49eb7Xo2EQt3Qh3Xvu6yMq8mYywtML',
           share: 45,
         },
       ],
@@ -69,7 +69,7 @@ export namespace RandomAsset {
 
     storageData.creators = [
       {
-        address: "2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U",
+        address: '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U',
         share: 100,
       },
     ];
