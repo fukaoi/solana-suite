@@ -1,19 +1,19 @@
-import { describe, it, before } from "mocha";
-import { SolNative, Account, Multisig, KeypairStr } from "../src";
-import { assert } from "chai";
-import { Setup } from "../../shared/test/testSetup";
+import { describe, it, before } from 'mocha';
+import { SolNative, Account, Multisig, KeypairStr } from '../src';
+import { assert } from 'chai';
+import { Setup } from '../../shared/test/testSetup';
 
 let source: KeypairStr;
 let dest: KeypairStr;
 
-describe("SolNative", () => {
+describe('SolNative', () => {
   before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
     dest = obj.dest;
   });
 
-  it("transfer transaction", async () => {
+  it('transfer transaction', async () => {
     const solAmount = 0.01;
     const inst = await SolNative.transfer(
       source.toPublicKey(),
@@ -25,10 +25,10 @@ describe("SolNative", () => {
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     const res = await inst.submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log("# tx signature: ", res.unwrap());
+    console.log('# tx signature: ', res.unwrap());
   });
 
-  it("transfer feePayerPartialSign", async () => {
+  it('transfer feePayerPartialSign', async () => {
     const solAmount = 0.01;
     const serialized = await SolNative.feePayerPartialSignTransfer(
       source.toPublicKey(),
@@ -43,11 +43,11 @@ describe("SolNative", () => {
       console.log(serialized.value);
       const res = await serialized.value.submit(source.toKeypair());
       assert.isTrue(res.isOk, `${res.unwrap()}`);
-      console.log("# tx signature: ", res.unwrap());
+      console.log('# tx signature: ', res.unwrap());
     }
   });
 
-  it("transfer transaction with fee payer", async () => {
+  it('transfer transaction with fee payer', async () => {
     const solAmount = 0.01;
     const owner = Account.create();
     await Account.requestAirdrop(owner.toPublicKey());
@@ -70,14 +70,14 @@ describe("SolNative", () => {
 
     const res = await inst.submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
-    console.log("# tx signature: ", res.unwrap());
+    console.log('# tx signature: ', res.unwrap());
     const after = (
       await Account.getBalance(feePayer.pubkey.toPublicKey())
     ).unwrap();
     assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
 
-  it("transfer transaction with multi sig", async () => {
+  it('transfer transaction with multi sig', async () => {
     const signer1 = Account.create();
     const signer2 = Account.create();
     const inst1 = await Multisig.create(2, source.toKeypair(), [
@@ -90,7 +90,7 @@ describe("SolNative", () => {
     (await inst1.submit()).match(
       (_) => {
         multisig = inst1.unwrap().data as string;
-        console.log("# multisig: ", multisig);
+        console.log('# multisig: ', multisig);
       },
       (err) => assert.fail(err.message)
     );
@@ -104,7 +104,7 @@ describe("SolNative", () => {
     );
 
     (await inst2.submit()).match(
-      (sig) => console.log("# signature: ", sig),
+      (sig) => console.log('# signature: ', sig),
       (err) => assert.fail(err.message)
     );
   });

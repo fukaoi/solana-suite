@@ -25,7 +25,7 @@ describe('Node', () => {
     assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchCluster(Constants.Cluster.prd));
   });
 
-  it('Connect mainnet sereum', async () => {
+  it('Connect mainnet serum', async () => {
     Node.changeConnection({cluster: Constants.Cluster.prd2});
     const res = Node.getConnection();
     assert.isNotEmpty(res);

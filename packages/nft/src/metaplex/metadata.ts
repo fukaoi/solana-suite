@@ -20,7 +20,6 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
-import { Bundlr } from '../bundlr';
 import { MetaplexMetadata as Metadata } from './index';
 import { MetaplexRoyalty } from './royalty';
 

@@ -1,15 +1,14 @@
-import { describe, it } from "mocha";
-import { assert } from "chai";
-import { Setup } from "../../shared/test/testSetup";
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
+import { Setup } from '../../shared/test/testSetup';
 import {
   Account,
   SplToken,
   KeypairStr,
   Multisig,
   Transaction,
-  Pubkey,
-} from "../src/";
-import { PublicKey } from "@solana/web3.js";
+} from '../src/';
+import { PublicKey } from '@solana/web3.js';
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -18,14 +17,14 @@ let mintStr: string;
 const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
 
-describe("SplToken", () => {
+describe('SplToken', () => {
   before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
     dest = obj.dest;
   });
 
-  it("Calculate token amount", async () => {
+  it('Calculate token amount', async () => {
     const res1 = SplToken.calculateAmount(1, 2);
     assert.equal(res1, 100);
 
@@ -39,7 +38,7 @@ describe("SplToken", () => {
     assert.equal(res4, 100);
   });
 
-  it("Create token", async () => {
+  it('Create token', async () => {
     const inst = await SplToken.mint(
       source.toPublicKey(),
       [source.toKeypair()],
@@ -52,10 +51,10 @@ describe("SplToken", () => {
     const res = await inst.submit();
     assert.isTrue(res.isOk, res.unwrap());
     mintStr = inst.unwrap().data as string;
-    console.log("# mint: ", mintStr);
+    console.log('# mint: ', mintStr);
   });
 
-  it("Create token with multisig", async () => {
+  it('Create token with multisig', async () => {
     const signer1 = Account.create();
     const signer2 = Account.create();
     const multisigInst = await Multisig.create(2, source.toKeypair(), [
@@ -67,7 +66,7 @@ describe("SplToken", () => {
 
     const multisig = multisigInst.unwrap().data as string;
 
-    console.log("# multisig address :", multisig);
+    console.log('# multisig address :', multisig);
 
     const inst = await SplToken.mint(
       multisig.toPublicKey(),
@@ -82,10 +81,10 @@ describe("SplToken", () => {
     const res = await [multisigInst, inst].submit();
     assert.isTrue(res.isOk, res.unwrap());
     mintStr = inst.unwrap().data as string;
-    console.log("# mint: ", mintStr);
+    console.log('# mint: ', mintStr);
   });
 
-  it("[Err]lack signer for multisig", async () => {
+  it('[Err]lack signer for multisig', async () => {
     const signer1 = Account.create();
     const signer2 = Account.create();
     const multisig = await Multisig.create(2, source.toKeypair(), [
@@ -103,7 +102,7 @@ describe("SplToken", () => {
     assert.isFalse(res.isOk);
   });
 
-  it("Create token, batch transfer", async () => {
+  it('Create token, batch transfer', async () => {
     const inst1 = await SplToken.mint(
       source.toPublicKey(),
       [source.toKeypair()],
@@ -113,7 +112,7 @@ describe("SplToken", () => {
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
     const token = inst1.unwrap().data as string;
-    console.log("# mint: ", token);
+    console.log('# mint: ', token);
 
     const inst2 = await SplToken.transfer(
       token.toPublicKey(),
@@ -140,10 +139,10 @@ describe("SplToken", () => {
     const sig = await [inst1, inst2, inst3].submit();
 
     assert.isTrue(sig.isOk, sig.unwrap());
-    console.log("signature: ", sig.unwrap());
+    console.log('signature: ', sig.unwrap());
   });
 
-  it("Create token, burn token", async () => {
+  it('Create token, burn token', async () => {
     const inst1 = await SplToken.mint(
       source.toPublicKey(),
       [source.toKeypair()],
@@ -153,7 +152,7 @@ describe("SplToken", () => {
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
     const token = inst1.unwrap().data as string;
-    console.log("# mint: ", token);
+    console.log('# mint: ', token);
 
     const burnAmount = 500000;
     const inst2 = await SplToken.burn(
@@ -166,7 +165,7 @@ describe("SplToken", () => {
 
     assert.isTrue(inst2.isOk);
     const sig = await [inst1, inst2].submit();
-    console.log("signature: ", sig.unwrap());
+    console.log('signature: ', sig.unwrap());
 
     // time wait
     await Transaction.confirmedSig(sig.unwrap());
@@ -179,7 +178,7 @@ describe("SplToken", () => {
     assert.equal(res.unwrap().uiAmount, TOKEN_TOTAL_AMOUNT - burnAmount);
   });
 
-  it("Create token, transfer with multisig and fee payer", async () => {
+  it('Create token, transfer with multisig and fee payer', async () => {
     // create multisig
     const signer1 = Account.create();
     const signer2 = Account.create();
@@ -195,9 +194,9 @@ describe("SplToken", () => {
       (err) => assert.fail(err.message)
     );
 
-    console.log("# signer1 address :", signer1.pubkey);
-    console.log("# signer2 address :", signer2.pubkey);
-    console.log("# multisig address :", multisig.toBase58());
+    console.log('# signer1 address :', signer1.pubkey);
+    console.log('# signer2 address :', signer2.pubkey);
+    console.log('# multisig address :', multisig.toBase58());
 
     // create nft
     const mintInst = await SplToken.mint(
@@ -215,7 +214,7 @@ describe("SplToken", () => {
       (err) => assert.fail(err.message)
     );
 
-    console.log("# mint: ", token.toBase58());
+    console.log('# mint: ', token.toBase58());
 
     const inst = await SplToken.transfer(
       token,
@@ -228,12 +227,12 @@ describe("SplToken", () => {
     );
 
     (await inst.submit()).match(
-      (ok) => console.log("signature: ", ok),
+      (ok) => console.log('signature: ', ok),
       (err) => assert.fail(err.message)
     );
   });
 
-  it("Retry getOrCreateAssociatedAccountInfo", async () => {
+  it('Retry getOrCreateAssociatedAccountInfo', async () => {
     const mintInst = await SplToken.mint(
       source.toPublicKey(),
       [source.toKeypair()],
@@ -254,18 +253,18 @@ describe("SplToken", () => {
 
     res.match(
       (ok) => {
-        console.log("# associated token account: ", ok);
+        console.log('# associated token account: ', ok);
         assert.isString(ok);
       },
       (err) => assert.fail(err.message)
     );
   });
 
-  it("transfer feePayerPartialSign", async () => {
+  it('transfer feePayerPartialSign', async () => {
     const tokenOwner = Account.create();
     const receipt = Account.create();
-    console.log("# tokenOwner: ", tokenOwner.pubkey);
-    console.log("# receipt: ", receipt.pubkey);
+    console.log('# tokenOwner: ', tokenOwner.pubkey);
+    console.log('# receipt: ', receipt.pubkey);
 
     const inst1 = await SplToken.mint(
       tokenOwner.toPublicKey(),
@@ -278,7 +277,7 @@ describe("SplToken", () => {
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
     await inst1.submit();
     const token = inst1.unwrap().data as string;
-    console.log("# mint: ", token);
+    console.log('# mint: ', token);
 
     const serialized = await SplToken.feePayerPartialSignTransfer(
       token.toPublicKey(),
@@ -295,7 +294,7 @@ describe("SplToken", () => {
     if (serialized.isOk) {
       const res = await serialized.value.submit(source.toKeypair());
       assert.isTrue(res.isOk, `${res.unwrap()}`);
-      console.log("# tx signature: ", res.unwrap());
+      console.log('# tx signature: ', res.unwrap());
     }
   });
 });
