@@ -24,7 +24,7 @@ describe('Validator', () => {
 
   it('[Error]isRoyalty: empty value', async () => {
     const res = Validator.isRoyalty(parseInt(''));
-    assert.equal(res.isErr && res.error.message, Validator.Message.BIG_NUMBER);
+    assert.equal(res.isErr && res.error.message, Validator.Message.EMPTY);
   });
 
   it('[Success]isName', async () => {
@@ -68,13 +68,12 @@ describe('Validator', () => {
 
   it('[Error]isImageUrl: empty value', async () => {
     const res = Validator.isImageUrl('');
-    assert.isOk(res.isOk);
+    assert.isOk(res.isErr);
   });
 
-  it('[Error]isSymbol: too long length', async () => {
-    const res = Validator.isSymbol('LONG-LONG-SYMBOL');
+  it('[Error]isImageUrl: invalid value', async () => {
+    const res = Validator.isImageUrl('invalid url');
     assert.isOk(res.isErr);
-    assert.equal(res.isErr && res.error.message, Validator.Message.LONG_LENGTH);
   });
 
   it('[Success]checkAll', async () => {
