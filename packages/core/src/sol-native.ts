@@ -25,7 +25,9 @@ import {SplToken} from './spl-token';
 
 export namespace SolNative {
 
-  // NOTICE: There is a lamport fluctuation when transfer under 0.001 sol
+  const RADIX = 10;
+
+  // NOTICE: There is a lamports fluctuation when transfer under 0.001 sol
   // for multiSig only function
   export const transferWithMultisig = async (
     owner: PublicKey,
@@ -41,7 +43,7 @@ export namespace SolNative {
       connection,
       payer,
       owner,
-      parseInt(`${amount * LAMPORTS_PER_SOL}`),
+      parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
     )
       .then(Result.ok)
       .catch(Result.err);
@@ -98,7 +100,7 @@ export namespace SolNative {
       sourceToken.value.toPublicKey(),
       destToken.value.toPublicKey(),
       owner,
-      parseInt(`${amount}`), // No lamports, its sol
+      parseInt(`${amount}`, RADIX), // No lamports, its sol
       signers,
     );
 
@@ -128,7 +130,7 @@ export namespace SolNative {
     const inst = SystemProgram.transfer({
       fromPubkey: source,
       toPubkey: destination,
-      lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`),
+      lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
     });
 
     return Result.ok(
@@ -158,7 +160,7 @@ export namespace SolNative {
         {
           fromPubkey: owner,
           toPubkey: dest,
-          lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`),
+          lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
         }
       ),
     );
