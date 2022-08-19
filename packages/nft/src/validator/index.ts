@@ -117,7 +117,8 @@ export namespace Validator {
       }
     });
     if (results.length > 0) {
-      const message = 'Caught in the validation errors';
+      const message =
+        'Caught in the validation errors';
       return Result.err(new ValidatorError(message, results));
     }
     return Result.ok(Message.SUCCESS);

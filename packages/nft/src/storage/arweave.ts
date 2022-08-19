@@ -96,7 +96,6 @@ export namespace StorageArweave {
     debugLog('# upload meta data: ', metadata);
 
     const valid = Validator.checkAll(metadata);
-    console.log(valid);
     if (valid.isErr) {
       return valid;
     }

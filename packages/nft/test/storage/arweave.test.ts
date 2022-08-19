@@ -1,9 +1,9 @@
-import {describe, it} from 'mocha';
-import {assert} from 'chai';
-import {KeypairStr} from '../../../core';
-import {Setup} from '../../../shared/test/testSetup';
-import {RandomAsset} from '../randomAsset';
-import {StorageArweave} from '../../src';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
+import { KeypairStr } from '../../../core';
+import { Setup } from '../../../shared/test/testSetup';
+import { RandomAsset } from '../randomAsset';
+import { StorageArweave, ValidatorError } from '../../src';
 
 let source: KeypairStr;
 
@@ -17,11 +17,11 @@ describe('StorageArweave', () => {
     const asset = RandomAsset.get();
     const res = await StorageArweave.uploadContent(
       asset.filePath!,
-      source.toKeypair(),
+      source.toKeypair()
     );
     res.match(
-      ok => console.log('# arweave content upload url: ', ok),
-      err => assert.fail(err.message)
+      (ok) => console.log('# arweave content upload url: ', ok),
+      (err) => assert.fail(err.message)
     );
   });
 
@@ -35,12 +35,12 @@ describe('StorageArweave', () => {
         uniqueName: `randomAsset/${asset.image}`,
         contentType: 'image/jpeg',
         extension: 'jpg',
-        tags: [{name: 'demo', value: 'test'}]
-      },
+        tags: [{ name: 'demo', value: 'test' }],
+      }
     );
     res.match(
-      ok => console.log('# arweave content upload url: ', ok),
-      err => assert.fail(err.message)
+      (ok) => console.log('# arweave content upload url: ', ok),
+      (err) => assert.fail(err.message)
     );
   });
 
@@ -52,17 +52,18 @@ describe('StorageArweave', () => {
         symbol: asset.symbol,
         description: asset.description,
         seller_fee_basis_points: asset.seller_fee_basis_points,
-        image: 'https://arweave.net/mVT6g3X99bZG0oMlTBB8fdbH7arnQ9lKWMUR9jMTXbQ',
+        image:
+          'https://arweave.net/mVT6g3X99bZG0oMlTBB8fdbH7arnQ9lKWMUR9jMTXbQ',
         external_url: asset.external_url,
         attributes: asset.attributes,
         properties: asset.properties,
         collection: asset.collection,
       },
-      source.toKeypair(),
+      source.toKeypair()
     );
     res.match(
-      ok => console.log('# arweave metadata url: ', ok),
-      err => assert.fail(err.message)
+      (ok) => console.log('# arweave metadata url: ', ok),
+      (err) => assert.fail(err.message)
     );
   });
 
@@ -80,14 +81,15 @@ describe('StorageArweave', () => {
         properties: asset.properties,
         collection: asset.collection,
       },
-      source.toKeypair(),
+      source.toKeypair()
     );
 
-    console.log(res);
-
     res.match(
-      ok => console.log('# arweave metadata url: ', ok),
-      err => assert.fail(err.message)
+      (ok) => console.log('# arweave metadata url: ', ok),
+      (err) => {
+        assert.isNotEmpty(err.message);
+        console.log((err as ValidatorError).details);
+      }
     );
   });
 
@@ -95,11 +97,11 @@ describe('StorageArweave', () => {
     const asset = RandomAsset.get();
     const res = await StorageArweave.getUploadPrice(
       asset.filePath!,
-      source.toKeypair(),
+      source.toKeypair()
     );
     res.match(
-      ok => console.log('# upload cost, currency: ', ok.price, ok.currency),
-      err => assert.fail(err.message)
+      (ok) => console.log('# upload cost, currency: ', ok.price, ok.currency),
+      (err) => assert.fail(err.message)
     );
   });
-})
+});

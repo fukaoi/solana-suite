@@ -109,7 +109,7 @@ describe('Validator', () => {
 
   it('[Error]checkAll', async () => {
     const data = {
-      name: 'long-name-long-name-long-name-long-name',
+      name: '',
       seller_fee_basis_points: 150,
       symbol: 'LONG-SYMBOL-LONG-SYMBOL',
       image: 'url',
