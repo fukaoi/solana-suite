@@ -22,14 +22,6 @@ export namespace Validator {
     error: string;
   }
 
-  export class ValidatorError extends Error {
-    details: Details[];
-    constructor(message: string, details: Details[]) {
-      super(message);
-      this.details = details;
-    }
-  }
-
   export const isRoyalty = (
     royalty: number
   ): Result<string, ValidatorError> => {
@@ -120,13 +112,12 @@ export namespace Validator {
           }
           break;
       }
-      if (res.isErr) {
+      if (res && res.isErr) {
         results.push({ key, error: res.error.message });
       }
     });
     if (results.length > 0) {
-      const message =
-        'Caught in the validation errors, get error reasons from `err.fails`';
+      const message = 'Caught in the validation errors';
       return Result.err(new ValidatorError(message, results));
     }
     return Result.ok(Message.SUCCESS);
@@ -151,4 +142,12 @@ export namespace Validator {
     }
     return new ValidatorError(error, [{ key, error }]);
   };
+}
+
+export class ValidatorError extends Error {
+  details: Validator.Details[];
+  constructor(message: string, details: Validator.Details[]) {
+    super(message);
+    this.details = details;
+  }
 }

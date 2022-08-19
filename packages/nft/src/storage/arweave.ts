@@ -5,40 +5,30 @@ import {
   Currency,
 } from '@metaplex-foundation/js';
 
-import {
-  Keypair,
-  LAMPORTS_PER_SOL,
-} from '@solana/web3.js';
+import { Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 import fs from 'fs';
 
-import {
-  Result,
-  isNode,
-  isBrowser,
-  debugLog,
-} from '@solana-suite/shared';
+import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
 
-import {NftStorageMetadata} from '.';
-import {Bundlr} from '../bundlr';
-import {MetaplexRoyalty} from '../metaplex';
-import {Validator} from '../validator';
+import { NftStorageMetadata } from '.';
+import { Bundlr } from '../bundlr';
+import { MetaplexRoyalty } from '../metaplex';
+import { Validator, ValidatorError } from '../validator';
 
 export interface MetaplexFileOptions {
   readonly displayName: string;
   readonly uniqueName: string;
   readonly contentType: string | undefined;
   readonly extension: string | undefined;
-  readonly tags: {name: string; value: string}[];
+  readonly tags: { name: string; value: string }[];
 }
 
 export namespace StorageArweave {
-
   export const getUploadPrice = async (
     filePath: string | File,
-    feePayer: Keypair,
-  ): Promise<Result<{price: number, currency: Currency}, Error>> => {
-
+    feePayer: Keypair
+  ): Promise<Result<{ price: number; currency: Currency }, Error>> => {
     let buffer!: Buffer;
     if (isNode) {
       const filepath = filePath as string;
@@ -47,21 +37,27 @@ export namespace StorageArweave {
       const filepath = filePath as File;
       buffer = (await useMetaplexFileFromBrowser(filepath)).buffer;
     } else {
-      return Result.err(Error('Supported environment: only Node.js and Browser js'));
+      return Result.err(
+        Error('Supported environment: only Node.js and Browser js')
+      );
     }
 
     const res = await Bundlr.useStorage(feePayer).getUploadPrice(buffer.length);
-    debugLog('# buffer length, price', buffer.length, res.basisPoints / LAMPORTS_PER_SOL);
+    debugLog(
+      '# buffer length, price',
+      buffer.length,
+      res.basisPoints / LAMPORTS_PER_SOL
+    );
     return Result.ok({
       price: res.basisPoints / LAMPORTS_PER_SOL,
-      currency: res.currency
+      currency: res.currency,
     });
-  }
+  };
 
   export const uploadContent = async (
     filePath: string | File,
     feePayer: Keypair,
-    fileOptions?: MetaplexFileOptions, // only arweave, not nft-storage
+    fileOptions?: MetaplexFileOptions // only arweave, not nft-storage
   ): Promise<Result<string, Error>> => {
     debugLog('# upload content: ', filePath);
 
@@ -70,7 +66,7 @@ export namespace StorageArweave {
       const filepath = filePath as string;
       const buffer = fs.readFileSync(filepath);
       if (fileOptions) {
-       file = useMetaplexFile(buffer, filepath, fileOptions);
+        file = useMetaplexFile(buffer, filepath, fileOptions);
       } else {
         file = useMetaplexFile(buffer, filepath);
       }
@@ -82,32 +78,39 @@ export namespace StorageArweave {
         file = await useMetaplexFileFromBrowser(filepath);
       }
     } else {
-      return Result.err(Error('Supported environment: only Node.js and Browser js'));
+      return Result.err(
+        Error('Supported environment: only Node.js and Browser js')
+      );
     }
 
-    return  Bundlr.useStorage(feePayer).upload(file)
+    return Bundlr.useStorage(feePayer)
+      .upload(file)
       .then(Result.ok)
       .catch(Result.err);
-  }
+  };
 
   export const uploadMetadata = async (
     metadata: NftStorageMetadata,
-    feePayer: Keypair,
-  ): Promise<Result<string, Error>> => {
+    feePayer: Keypair
+  ): Promise<Result<string, Error | ValidatorError>> => {
     debugLog('# upload meta data: ', metadata);
 
     const valid = Validator.checkAll(metadata);
-    if (valid.isErr){
+    console.log(valid);
+    if (valid.isErr) {
       return valid;
     }
 
     if (metadata.seller_fee_basis_points) {
-      metadata.seller_fee_basis_points
-        = MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
+      metadata.seller_fee_basis_points = MetaplexRoyalty.convertValue(
+        metadata.seller_fee_basis_points
+      );
     }
 
-    return Bundlr.make(feePayer).nfts().uploadMetadata(metadata)
-      .then(res => Result.ok(res.uri))
-      .catch(Result.err)
-  }
+    return Bundlr.make(feePayer)
+      .nfts()
+      .uploadMetadata(metadata)
+      .then((res) => Result.ok(res.uri))
+      .catch(Result.err);
+  };
 }

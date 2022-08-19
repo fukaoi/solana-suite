@@ -18,7 +18,6 @@ describe('Validator', () => {
 
   it('[Error]isRoyalty: too big number', async () => {
     const res = Validator.isRoyalty(200);
-    console.log(res);
     assert.include(
       res.isErr && res.error.message,
       Validator.Message.BIG_NUMBER
