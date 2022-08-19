@@ -92,24 +92,16 @@ export namespace Validator {
       let res!: Result<string, ValidatorError>; // initial
       switch (key) {
         case 'name':
-          if (metadata.name) {
-            res = isName(metadata.name);
-          }
+          res = isName(metadata.name!);
           break;
         case 'seller_fee_basis_points':
-          if (metadata.seller_fee_basis_points) {
-            res = isRoyalty(metadata.seller_fee_basis_points);
-          }
+          res = isRoyalty(metadata.seller_fee_basis_points!);
           break;
         case 'symbol':
-          if (metadata.symbol) {
-            res = isSymbol(metadata.symbol);
-          }
+          res = isSymbol(metadata.symbol!);
           break;
         case 'image':
-          if (metadata.image) {
-            res = isImageUrl(metadata.image);
-          }
+          res = isImageUrl(metadata.image!);
           break;
       }
       if (res && res.isErr) {
@@ -117,8 +109,7 @@ export namespace Validator {
       }
     });
     if (results.length > 0) {
-      const message =
-        'Caught in the validation errors';
+      const message = 'Caught in the validation errors';
       return Result.err(new ValidatorError(message, results));
     }
     return Result.ok(Message.SUCCESS);
