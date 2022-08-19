@@ -60,7 +60,7 @@ export namespace StorageArweave {
   export const uploadContent = async (
     filePath: string | File,
     feePayer: Keypair,
-    fileOptions?: MetaplexFileOptions,
+    fileOptions?: MetaplexFileOptions, // only arweave, not nft-storage
   ): Promise<Result<string, Error>> => {
     debugLog('# upload content: ', filePath);
 
