@@ -66,6 +66,31 @@ describe('StorageArweave', () => {
     );
   });
 
+  it.only('Raise validation error when upload meta data', async () => {
+    const asset = RandomAsset.get();
+    const res = await StorageArweave.uploadMetadata(
+      {
+        name: '',
+        symbol: 'LONG-SYMBOL-LONG',
+        description: asset.description,
+        seller_fee_basis_points: -100,
+        image: `https://example.com/${'x'.repeat(200)}`,
+        external_url: asset.external_url,
+        attributes: asset.attributes,
+        properties: asset.properties,
+        collection: asset.collection,
+      },
+      source.toKeypair(),
+    );
+
+    console.log(res);
+
+    res.match(
+      ok => console.log('# arweave metadata url: ', ok),
+      err => assert.fail(err.message)
+    );
+  });
+
   it('Get file upload price', async () => {
     const asset = RandomAsset.get();
     const res = await StorageArweave.getUploadPrice(

@@ -17,67 +17,87 @@ export namespace Validator {
   export const ROYALTY_MAX = 100;
   export const ROYALTY_MIN = 0;
 
-  export interface ValidatorErrors {
+  export interface Details {
     key: string;
     error: string;
   }
 
-  export const isRoyalty = (royalty: number): Result<string, Error> => {
+  export class ValidatorError extends Error {
+    details: Details[];
+    constructor(message: string, details: Details[]) {
+      super(message);
+      this.details = details;
+    }
+  }
+
+  export const isRoyalty = (
+    royalty: number
+  ): Result<string, ValidatorError> => {
+    const key = 'royalty';
     if (!royalty) {
-      return Result.err(errorMessage(Message.EMPTY, royalty));
+      return Result.err(errorMessage(key, Message.EMPTY, royalty));
     }
     if (royalty < ROYALTY_MIN) {
-      return Result.err(errorMessage(Message.SMALL_NUMBER, royalty));
+      return Result.err(errorMessage(key, Message.SMALL_NUMBER, royalty));
     } else if (royalty > ROYALTY_MAX) {
-      return Result.err(errorMessage(Message.BIG_NUMBER, royalty, ROYALTY_MAX));
+      return Result.err(
+        errorMessage(key, Message.BIG_NUMBER, royalty, ROYALTY_MAX)
+      );
     }
     return Result.ok(Message.SUCCESS);
   };
 
-  export const isName = (name: string): Result<string, Error> => {
+  export const isName = (name: string): Result<string, ValidatorError> => {
+    const key = 'name';
     if (!name) {
-      return Result.err(errorMessage(Message.EMPTY, name));
+      return Result.err(errorMessage(key, Message.EMPTY, name));
     }
     if (byteLength(name) > NAME_LENGTH) {
-      return Result.err(errorMessage(Message.LONG_LENGTH, name, NAME_LENGTH));
+      return Result.err(
+        errorMessage(key, Message.LONG_LENGTH, name, NAME_LENGTH)
+      );
     }
     return Result.ok(Message.SUCCESS);
   };
 
-  export const isSymbol = (symbol: string): Result<string, Error> => {
+  export const isSymbol = (symbol: string): Result<string, ValidatorError> => {
+    const key = 'symbol';
     if (!symbol) {
-      return Result.err(errorMessage(Message.EMPTY, symbol));
+      return Result.err(errorMessage(key, Message.EMPTY, symbol));
     }
     if (byteLength(symbol) > SYMBOL_LENGTH) {
       return Result.err(
-        errorMessage(Message.LONG_LENGTH, symbol, SYMBOL_LENGTH)
+        errorMessage(key, Message.LONG_LENGTH, symbol, SYMBOL_LENGTH)
       );
     }
     return Result.ok(Message.SUCCESS);
   };
 
-  export const isImageUrl = (imageUrl: string): Result<string, Error> => {
+  export const isImageUrl = (
+    imageUrl: string
+  ): Result<string, ValidatorError> => {
+    const key = 'image';
     if (!imageUrl) {
-      return Result.err(errorMessage(Message.EMPTY, imageUrl));
+      return Result.err(errorMessage(key, Message.EMPTY, imageUrl));
     }
     if (byteLength(imageUrl) > URL_LENGTH) {
       return Result.err(
-        errorMessage(Message.LONG_LENGTH, imageUrl, URL_LENGTH)
+        errorMessage(key, Message.LONG_LENGTH, imageUrl, URL_LENGTH)
       );
     }
     if (!/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(imageUrl)) {
-      return Result.err(errorMessage(Message.INVALID_URL, imageUrl));
+      return Result.err(errorMessage(key, Message.INVALID_URL, imageUrl));
     }
     return Result.ok(Message.SUCCESS);
   };
 
   export const checkAll = (
     metadata: NftStorageMetadata
-  ): Result<string, any> => {
+  ): Result<string, ValidatorError> => {
     const keys = Object.keys(metadata);
-    const results: ValidatorErrors[] = [];
+    const results: Details[] = [];
     keys.map((key) => {
-      let res: Result<string, Error> = Result.ok(''); // initial
+      let res!: Result<string, ValidatorError>; // initial
       switch (key) {
         case 'name':
           if (metadata.name) {
@@ -105,7 +125,9 @@ export namespace Validator {
       }
     });
     if (results.length > 0) {
-      return Result.err(results as any);
+      const message =
+        'Caught in the validation errors, get error reasons from `err.fails`';
+      return Result.err(new ValidatorError(message, results));
     }
     return Result.ok(Message.SUCCESS);
   };
@@ -116,14 +138,17 @@ export namespace Validator {
   };
 
   const errorMessage = (
+    key: string,
     message: string,
     actual: string | number,
     limit?: number
-  ): Error => {
+  ): ValidatorError => {
+    let error: string;
     if (limit) {
-      return Error(`${message}, actual: ${actual}, limit: ${limit}`);
+      error = `${message}, actual: ${actual}, limit: ${limit}`;
     } else {
-      return Error(`${message}, actual: ${actual}`);
+      error = `${message}, actual: ${actual}, limit: ${limit}`;
     }
+    return new ValidatorError(error, [{ key, error }]);
   };
 }

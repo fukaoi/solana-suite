@@ -22,6 +22,7 @@ import {
 import {NftStorageMetadata} from '.';
 import {Bundlr} from '../bundlr';
 import {MetaplexRoyalty} from '../metaplex';
+import {Validator} from '../validator';
 
 export interface MetaplexFileOptions {
   readonly displayName: string;
@@ -94,6 +95,11 @@ export namespace StorageArweave {
     feePayer: Keypair,
   ): Promise<Result<string, Error>> => {
     debugLog('# upload meta data: ', metadata);
+
+    const valid = Validator.checkAll(metadata);
+    if (valid.isErr){
+      return valid;
+    }
 
     if (metadata.seller_fee_basis_points) {
       metadata.seller_fee_basis_points

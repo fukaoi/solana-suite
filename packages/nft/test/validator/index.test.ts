@@ -10,14 +10,15 @@ describe('Validator', () => {
 
   it('[Error]isRoyalty: too small number', async () => {
     const res = Validator.isRoyalty(-1);
-    assert.include(
-      res.isErr && res.error.message,
-      Validator.Message.SMALL_NUMBER
-    );
+    if (res.isErr) {
+      assert.include(res.error.message, Validator.Message.SMALL_NUMBER);
+      assert.isArray(res.error.details);
+    }
   });
 
   it('[Error]isRoyalty: too big number', async () => {
     const res = Validator.isRoyalty(200);
+    console.log(res);
     assert.include(
       res.isErr && res.error.message,
       Validator.Message.BIG_NUMBER
@@ -115,7 +116,9 @@ describe('Validator', () => {
       image: 'url',
     };
     const res = Validator.checkAll(data);
-    console.log(res);
-    assert.isTrue(res.isErr);
+    res.match(
+      (_) => assert.fail('Unexpected Error'),
+      (err) => console.log(err.details)
+    );
   });
 });
