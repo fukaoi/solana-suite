@@ -4,6 +4,7 @@ import { KeypairStr } from '@solana-suite/core';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../randomAsset';
+import { ValidatorError } from '../../src';
 
 let source: KeypairStr;
 
@@ -51,7 +52,7 @@ describe('Metaplex', () => {
     );
   });
 
-  it('[Nft Storage] one lump upload content and mint nft', async () => {
+  it.only('[Nft Storage] one lump upload content and mint nft', async () => {
     const asset = RandomAsset.get();
 
     const creator1 = {
@@ -86,6 +87,29 @@ describe('Metaplex', () => {
         console.log('# sig:', ok);
       },
       (ng) => assert.fail(ng.message)
+    );
+  });
+
+  it.only('Raise validation error when upload meta data', async () => {
+    const res = await Metaplex.mint(
+      {
+        filePath: '',
+        uri: `https://example.com/${'x'.repeat(200)}`,
+        name: '',
+        symbol: 'LONG-SYMBOL-LONG',
+        sellerFeeBasisPoints: -100,
+        storageType: 'nftStorage',
+      },
+      source.toPublicKey(),
+      source.toKeypair()
+    );
+
+    res.match(
+      (_) => assert.fail('Unrecognized error'),
+      (err) => {
+        assert.isNotEmpty(err.message);
+        console.log((err as ValidatorError).details);
+      }
     );
   });
 

@@ -1,7 +1,4 @@
-import {
-  NFTStorage,
-  Blob
-} from 'nft.storage';
+import { NFTStorage, Blob } from 'nft.storage';
 import fs from 'fs';
 import {
   Constants,
@@ -11,14 +8,12 @@ import {
   debugLog,
 } from '@solana-suite/shared';
 
-import {
-  useMetaplexFileFromBrowser,
-} from '@metaplex-foundation/js';
-import {NftStorageMetadata} from '.';
-import {MetaplexRoyalty} from '../metaplex';
+import { useMetaplexFileFromBrowser } from '@metaplex-foundation/js';
+import { NftStorageMetadata } from '.';
+import { MetaplexRoyalty } from '../metaplex';
+import { Validator, ValidatorError } from '../validator';
 
 export namespace StorageNftStorage {
-
   const getNftStorageApiKey = (): string => {
     if (!Constants.nftStorageApiKey) {
       console.warn(
@@ -35,12 +30,12 @@ export namespace StorageNftStorage {
     } else {
       return Constants.nftStorageApiKey;
     }
-  }
+  };
 
   const createGatewayUrl = (cid: string): string =>
     `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
 
-  const connect = new NFTStorage({token: getNftStorageApiKey()});
+  const connect = new NFTStorage({ token: getNftStorageApiKey() });
 
   export const uploadContent = async (
     filePath: string | File
@@ -54,19 +49,22 @@ export namespace StorageNftStorage {
       const filepath = filePath as File;
       file = (await useMetaplexFileFromBrowser(filepath)).buffer;
     } else {
-      return Result.err(Error('Supported environment: only Node.js and Browser js'));
+      return Result.err(
+        Error('Supported environment: only Node.js and Browser js')
+      );
     }
 
     const blobImage = new Blob([file]);
-    const res = await connect.storeBlob(blobImage)
+    const res = (await connect
+      .storeBlob(blobImage)
       .then(Result.ok)
-      .catch(Result.err) as Result<string, Error>;
+      .catch(Result.err)) as Result<string, Error>;
 
     return res.map(
-      ok => createGatewayUrl(ok),
-      err => err
+      (ok) => createGatewayUrl(ok),
+      (err) => err
     );
-  }
+  };
 
   /**
    * Upload content
@@ -88,22 +86,29 @@ export namespace StorageNftStorage {
    */
   export const uploadMetadata = async (
     metadata: NftStorageMetadata
-  ): Promise<Result<string, Error>> => {
+  ): Promise<Result<string, Error | ValidatorError>> => {
     debugLog('# upload metadata: ', metadata);
 
+    const valid = Validator.checkAll(metadata);
+    if (valid.isErr) {
+      return valid;
+    }
+
     if (metadata.seller_fee_basis_points) {
-      metadata.seller_fee_basis_points
-        = MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
+      metadata.seller_fee_basis_points = MetaplexRoyalty.convertValue(
+        metadata.seller_fee_basis_points
+      );
     }
 
     const blobJson = new Blob([JSON.stringify(metadata)]);
-    const res = await connect.storeBlob(blobJson)
+    const res = (await connect
+      .storeBlob(blobJson)
       .then(Result.ok)
-      .catch(Result.err) as Result<string, Error>;
+      .catch(Result.err)) as Result<string, Error>;
 
     return res.map(
-      ok => createGatewayUrl(ok),
-      err => err
+      (ok) => createGatewayUrl(ok),
+      (err) => err
     );
-  }
+  };
 }

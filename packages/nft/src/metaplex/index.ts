@@ -48,6 +48,7 @@ export namespace Metaplex {
    *   updateAuthority?: Signer      // update minted authority
    *   freezeAuthority?: PublicKey   // freeze minted authority
    * }
+   * @param {PublicKey} owner        // first minted owner
    * @param {Keypair} feePayer       // fee payer
    * @return Promise<Result<Instruction, Error>>
    */

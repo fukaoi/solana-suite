@@ -22,6 +22,7 @@ import {
 
 import { MetaplexMetadata as Metadata } from './index';
 import { MetaplexRoyalty } from './royalty';
+import { Validator, ValidatorError } from '../validator';
 
 export namespace MetaplexMetadata {
   /**
@@ -44,14 +45,17 @@ export namespace MetaplexMetadata {
    * }
    * @param {PublicKey} owner        // PublicKey that Owns nft
    * @param {Keypair} feePayer       // fee payer
-   * @return {Promise<Result<Instruction, Error>>}
+   * @return {Promise<Result<Instruction, Error | ValidatorError>>}
    */
   export const create = async (
     metadata: Metadata,
     owner: PublicKey,
     feePayer: Keypair
-  ): Promise<Result<Instruction, Error>> => {
-    // @todo  call validation
+  ): Promise<Result<Instruction, Error | ValidatorError>> => {
+    const valid = Validator.checkAll(metadata);
+    if (valid.isErr) {
+      return Result.err(valid.error);
+    }
 
     if (metadata.sellerFeeBasisPoints) {
       metadata.sellerFeeBasisPoints = MetaplexRoyalty.convertValue(

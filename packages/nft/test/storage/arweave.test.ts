@@ -67,7 +67,7 @@ describe('StorageArweave', () => {
     );
   });
 
-  it.only('Raise validation error when upload meta data', async () => {
+  it('Raise validation error when upload meta data', async () => {
     const asset = RandomAsset.get();
     const res = await StorageArweave.uploadMetadata(
       {
@@ -85,7 +85,7 @@ describe('StorageArweave', () => {
     );
 
     res.match(
-      (ok) => console.log('# arweave metadata url: ', ok),
+      (_) => assert.fail('Unrecognized error'),
       (err) => {
         assert.isNotEmpty(err.message);
         console.log((err as ValidatorError).details);

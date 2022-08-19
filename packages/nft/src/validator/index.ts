@@ -87,23 +87,23 @@ export namespace Validator {
     return Result.ok(Message.SUCCESS);
   };
 
-  export const isImageUrl = (
-    imageUrl: string
+  export const isUriOrImage = (
+    imageOrUri: string
   ): Result<string, ValidatorError> => {
-    const key = 'image';
-    if (!imageUrl) {
-      return Result.err(createError(key, Message.EMPTY, imageUrl));
+    const key = 'uri or image';
+    if (!imageOrUri) {
+      return Result.err(createError(key, Message.EMPTY, imageOrUri));
     }
-    if (byteLength(imageUrl) > URL_LENGTH) {
+    if (byteLength(imageOrUri) > URL_LENGTH) {
       return Result.err(
-        createError(key, Message.LONG_LENGTH, imageUrl, {
+        createError(key, Message.LONG_LENGTH, imageOrUri, {
           threshold: URL_LENGTH,
           condition: 'overMax',
         })
       );
     }
-    if (!/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(imageUrl)) {
-      return Result.err(createError(key, Message.INVALID_URL, imageUrl));
+    if (!/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(imageOrUri)) {
+      return Result.err(createError(key, Message.INVALID_URL, imageOrUri));
     }
     return Result.ok(Message.SUCCESS);
   };
@@ -125,8 +125,10 @@ export namespace Validator {
         case 'symbol':
           res = isSymbol(metadata.symbol!);
           break;
+        case 'uri':
         case 'image':
-          res = isImageUrl(metadata.image!);
+          const actual = metadata.image! ? metadata.image : metadata.uri;
+          res = isUriOrImage(actual as string);
           break;
       }
       if (res && res.isErr) {

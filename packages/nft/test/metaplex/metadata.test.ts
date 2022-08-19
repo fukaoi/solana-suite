@@ -4,8 +4,8 @@ import { KeypairStr } from '@solana-suite/core';
 import { Setup } from '../../../shared/test/testSetup';
 import { RandomAsset } from '../randomAsset';
 import { StorageArweave } from '../../src/storage/arweave';
-import {MetaplexMetadata} from '../../src/metaplex/metadata';
-import {StorageNftStorage} from '../../src';
+import { MetaplexMetadata } from '../../src/metaplex/metadata';
+import { StorageNftStorage, ValidatorError } from '../../src';
 
 let source: KeypairStr;
 
@@ -77,20 +77,18 @@ describe('MetaplexMetadata', () => {
     const asset = RandomAsset.get();
     console.log('[step1] upload content(image, movie, file,,,)');
     const upload = await StorageNftStorage.uploadContent(
-      asset.filePath as string,
+      asset.filePath as string
     );
 
     assert.isTrue(upload.isOk, upload.unwrap());
     const imageUri = upload.unwrap();
 
     console.log('[step2] upload metadata for metaplex(usually text data)');
-    const uploadMetadata = await StorageNftStorage.uploadMetadata(
-      {
-        image: imageUri,
-        name: asset.name,
-        symbol: asset.symbol,
-      },
-    );
+    const uploadMetadata = await StorageNftStorage.uploadMetadata({
+      image: imageUri,
+      name: asset.name,
+      symbol: asset.symbol,
+    });
 
     assert.isTrue(uploadMetadata.isOk, uploadMetadata.unwrap());
     const uri = uploadMetadata.unwrap();
@@ -126,6 +124,27 @@ describe('MetaplexMetadata', () => {
         console.log('# sig:', ok);
       },
       (ng) => assert.fail(ng.message)
+    );
+  });
+
+  it('Raise validation error when upload meta data', async () => {
+    const res = await MetaplexMetadata.create(
+      {
+        uri: `https://example.com/${'x'.repeat(200)}`,
+        name: '',
+        symbol: 'LONG-SYMBOL-LONG',
+        sellerFeeBasisPoints: -100,
+      },
+      source.toPublicKey(),
+      source.toKeypair()
+    );
+
+    res.match(
+      (_) => assert.fail('Unrecognized error'),
+      (err) => {
+        assert.isNotEmpty(err.message);
+        console.log((err as ValidatorError).details);
+      }
     );
   });
 });
