@@ -112,7 +112,7 @@ describe('Validator', () => {
       symbol: 'SYMBOL',
       image: 'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50',
     };
-    const res = Validator.checkAllStorage(data);
+    const res = Validator.checkAll(data);
     console.log(res);
     assert.isTrue(res.isOk);
   });
@@ -120,11 +120,14 @@ describe('Validator', () => {
   it('[Error]checkAll', async () => {
     const data = {
       name: '',
+      uri: '',
       seller_fee_basis_points: 150,
       symbol: 'LONG-SYMBOL-LONG-SYMBOL',
-      image: 'url',
+      image: `https://example.com/${'x'.repeat(200)}`,
+      filePath: '',
+      sellerFeeBasisPoints: -10,
     };
-    const res = Validator.checkAllStorage(data);
+    const res = Validator.checkAll(data);
     res.match(
       (_) => assert.fail('Unexpected Error'),
       (err) => console.log(err.details)

@@ -119,6 +119,49 @@ export namespace Validator {
     return Result.ok(Message.SUCCESS);
   };
 
+  export const checkAll = <
+    T extends NftStorageMetadata | NftStorageMetaplexMetadata
+  >(
+    metadata: T
+  ): Result<string, ValidatorError> => {
+    const keys = Object.keys(metadata);
+    const results: Details[] = [];
+    keys.map((key) => {
+      let res!: Result<string, ValidatorError>;
+      switch (key) {
+        case 'uri':
+        case 'image':
+          // res = isUriOrImage(actual as string);
+          break;
+        case 'seller_fee_basis_points':
+        case 'sellerFeeBasisPoints':
+          const actual = key === 
+            'seller_fee_basis_points'! ? 
+            metadata.seller_fee_basis_points : 
+            metadata.sellerFeeBasisPoints;
+          res = isRoyalty(actual as number);
+          break;
+        case 'name':
+          res = isName(metadata.name!);
+          break;
+        case 'symbol':
+          res = isSymbol(metadata.symbol!);
+          break;
+        case 'filePath':
+          res = isFilePath((metadata as NftStorageMetaplexMetadata).filePath!);
+          break;
+      }
+      if (res && res.isErr) {
+        results.push(...res.error.details);
+      }
+    });
+    if (results.length > 0) {
+      const message = 'Caught in the validation errors';
+      return Result.err(new ValidatorError(message, results));
+    }
+    return Result.ok(Message.SUCCESS);
+  };
+
   export const checkAllStorage = (
     metadata: NftStorageMetadata
   ): Result<string, ValidatorError> => {
