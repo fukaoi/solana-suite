@@ -162,81 +162,9 @@ export namespace Validator {
     return Result.ok(Message.SUCCESS);
   };
 
-  export const checkAllStorage = (
-    metadata: NftStorageMetadata
-  ): Result<string, ValidatorError> => {
-    const keys = Object.keys(metadata);
-    const results: Details[] = checkAllCommon(metadata);
-    keys.map((key) => {
-      let res!: Result<string, ValidatorError>;
-      switch (key) {
-        case 'uri':
-        case 'image':
-          const actual = metadata.image! ? metadata.image : metadata.uri;
-          res = isUriOrImage(actual as string);
-          break;
-      }
-      if (res && res.isErr) {
-        results.push(...res.error.details);
-      }
-    });
-    if (results.length > 0) {
-      const message = 'Caught in the validation errors';
-      return Result.err(new ValidatorError(message, results));
-    }
-    return Result.ok(Message.SUCCESS);
-  };
-
-  export const checkAllMetadata = (
-    metadata: NftStorageMetaplexMetadata
-  ): Result<string, ValidatorError> => {
-    const keys = Object.keys(metadata);
-    const results: Details[] = checkAllCommon(metadata);
-    keys.map((key) => {
-      let res!: Result<string, ValidatorError>;
-      switch (key) {
-        case 'filePath':
-          res = isFilePath(metadata.filePath!);
-          break;
-      }
-      if (res && res.isErr) {
-        results.push(...res.error.details);
-      }
-    });
-    if (results.length > 0) {
-      const message = 'Caught in the validation errors';
-      return Result.err(new ValidatorError(message, results));
-    }
-    return Result.ok(Message.SUCCESS);
-  };
-
   const byteLength = (value: string): number => {
     const text = new TextEncoder();
     return text.encode(value).length;
-  };
-
-  const checkAllCommon = (metadata: NftStorageMetadata): Details[] => {
-    const keys = Object.keys(metadata);
-    const results: Details[] = [];
-    keys.map((key) => {
-      let res!: Result<string, ValidatorError>;
-      switch (key) {
-        case 'seller_fee_basis_points':
-        case 'sellerFeeBasisPoints':
-          res = isRoyalty(metadata.seller_fee_basis_points!);
-          break;
-        case 'name':
-          res = isName(metadata.name!);
-          break;
-        case 'symbol':
-          res = isSymbol(metadata.symbol!);
-          break;
-      }
-      if (res && res.isErr) {
-        results.push(...res.error.details);
-      }
-    });
-    return results;
   };
 
   const createError = (
