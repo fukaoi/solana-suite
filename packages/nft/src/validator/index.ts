@@ -1,4 +1,5 @@
 import { Result } from '@solana-suite/shared';
+import { NftStorageMetaplexMetadata } from '../metaplex';
 import { NftStorageMetadata } from '../storage';
 
 export namespace Validator {
@@ -87,6 +88,37 @@ export namespace Validator {
     return Result.ok(Message.SUCCESS);
   };
 
+  export const isFilePath = (
+    filePath: string | File
+  ): Result<string, ValidatorError> => {
+    const key = 'filePath';
+    if (!filePath) {
+      return Result.err(createError(key, Message.EMPTY, filePath));
+    }
+
+    if (typeof filePath === 'string') {
+      if (byteLength(filePath) > SYMBOL_LENGTH) {
+        return Result.err(
+          createError(key, Message.LONG_LENGTH, filePath, {
+            threshold: SYMBOL_LENGTH,
+            condition: 'overMax',
+          })
+        );
+      }
+    } else {
+      if (filePath.size > SYMBOL_LENGTH) {
+        return Result.err(
+          createError(key, Message.LONG_LENGTH, filePath.text(), {
+            threshold: SYMBOL_LENGTH,
+            condition: 'overMax',
+          })
+        );
+      }
+    }
+
+    return Result.ok(Message.SUCCESS);
+  };
+
   export const isUriOrImage = (
     imageOrUri: string
   ): Result<string, ValidatorError> => {
@@ -112,18 +144,12 @@ export namespace Validator {
     metadata: NftStorageMetadata
   ): Result<string, ValidatorError> => {
     const keys = Object.keys(metadata);
-    const results: Details[] = [];
+    const results: Details[] = checkAllCommon(metadata);
     keys.map((key) => {
       let res!: Result<string, ValidatorError>;
       switch (key) {
-        case 'name':
-          res = isName(metadata.name!);
-          break;
         case 'seller_fee_basis_points':
           res = isRoyalty(metadata.seller_fee_basis_points!);
-          break;
-        case 'symbol':
-          res = isSymbol(metadata.symbol!);
           break;
         case 'uri':
         case 'image':
@@ -142,9 +168,55 @@ export namespace Validator {
     return Result.ok(Message.SUCCESS);
   };
 
+  export const checkAllMetadata = (
+    metadata: NftStorageMetaplexMetadata
+  ): Result<string, ValidatorError> => {
+    const keys = Object.keys(metadata);
+    const results: Details[] = checkAllCommon(metadata);
+    keys.map((key) => {
+      let res!: Result<string, ValidatorError>;
+      switch (key) {
+        case 'sellerFeeBasisPoints':
+          res = isRoyalty(metadata.seller_fee_basis_points!);
+          break;
+        case 'filePath':
+          res = isFilePath(metadata.filePath!);
+          break;
+      }
+      if (res && res.isErr) {
+        results.push(...res.error.details);
+      }
+    });
+    if (results.length > 0) {
+      const message = 'Caught in the validation errors';
+      return Result.err(new ValidatorError(message, results));
+    }
+    return Result.ok(Message.SUCCESS);
+  };
+
   const byteLength = (value: string): number => {
     const text = new TextEncoder();
     return text.encode(value).length;
+  };
+
+  const checkAllCommon = (metadata: NftStorageMetadata): Details[] => {
+    const keys = Object.keys(metadata);
+    const results: Details[] = [];
+    keys.map((key) => {
+      let res!: Result<string, ValidatorError>;
+      switch (key) {
+        case 'name':
+          res = isName(metadata.name!);
+          break;
+        case 'symbol':
+          res = isSymbol(metadata.symbol!);
+          break;
+      }
+      if (res && res.isErr) {
+        results.push(...res.error.details);
+      }
+    });
+    return results;
   };
 
   const createError = (
