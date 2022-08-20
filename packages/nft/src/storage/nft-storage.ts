@@ -89,7 +89,7 @@ export namespace StorageNftStorage {
   ): Promise<Result<string, Error | ValidatorError>> => {
     debugLog('# upload metadata: ', metadata);
 
-    const valid = Validator.checkAll(metadata);
+    const valid = Validator.checkAllStorage(metadata);
     if (valid.isErr) {
       return valid;
     }

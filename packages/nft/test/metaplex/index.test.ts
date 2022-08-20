@@ -90,11 +90,10 @@ describe('Metaplex', () => {
     );
   });
 
-  it.only('Raise validation error when upload meta data', async () => {
+  it('Raise validation error when upload meta data', async () => {
     const res = await Metaplex.mint(
       {
         filePath: '',
-        uri: `https://example.com/${'x'.repeat(200)}`,
         name: '',
         symbol: 'LONG-SYMBOL-LONG',
         sellerFeeBasisPoints: -100,

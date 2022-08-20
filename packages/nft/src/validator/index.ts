@@ -108,7 +108,7 @@ export namespace Validator {
     return Result.ok(Message.SUCCESS);
   };
 
-  export const checkAll = (
+  export const checkAllStorage = (
     metadata: NftStorageMetadata
   ): Result<string, ValidatorError> => {
     const keys = Object.keys(metadata);

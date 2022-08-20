@@ -95,7 +95,7 @@ export namespace StorageArweave {
   ): Promise<Result<string, Error | ValidatorError>> => {
     debugLog('# upload meta data: ', metadata);
 
-    const valid = Validator.checkAll(metadata);
+    const valid = Validator.checkAllStorage(metadata);
     if (valid.isErr) {
       return valid;
     }

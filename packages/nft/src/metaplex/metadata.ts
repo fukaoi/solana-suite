@@ -52,7 +52,7 @@ export namespace MetaplexMetadata {
     owner: PublicKey,
     feePayer: Keypair
   ): Promise<Result<Instruction, Error | ValidatorError>> => {
-    const valid = Validator.checkAll(metadata);
+    const valid = Validator.checkAllStorage(metadata);
     if (valid.isErr) {
       return Result.err(valid.error);
     }

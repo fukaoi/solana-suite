@@ -20,7 +20,7 @@ export type MetaplexMetadata = Omit<CreateNftInput, noNeedOptional>;
 
 export type NftStorageMetaplexMetadata = NftStorageMetadata &
   Omit<MetaplexMetadata, 'uri'> & {
-    filePath: string | File;
+    filePath?: string | File;
     storageType: 'arweave' | 'nftStorage';
   };
 
@@ -30,9 +30,9 @@ export namespace Metaplex {
    *
    * @param {NftStorageMetaplexMetadata}  metadata
    * {
-   *   name?: {string}               // nft content name
-   *   symbol?: {string}             // nft ticker symbol
-   *   filePath?: {string | File}    // nft ticker symbol
+   *   name: {string}               // nft content name
+   *   symbol: {string}             // nft ticker symbol
+   *   filePath: {string | File}    // nft ticker symbol
    *   description?: {string}        // nft content description
    *   external_url?: {string}       // landing page, home page uri, related url
    *   sellerFeeBasisPoints?: number // royalty percentage
@@ -67,14 +67,14 @@ export namespace Metaplex {
     const { filePath, storageType, ...reducedMetadata } = metadata;
     if (storageType === 'arweave') {
       reducedMetadata.image = (
-        await StorageArweave.uploadContent(filePath, feePayer)
+        await StorageArweave.uploadContent(filePath!, feePayer)
       ).unwrap();
       uri = (
         await StorageArweave.uploadMetadata(reducedMetadata, feePayer)
       ).unwrap();
     } else if (storageType === 'nftStorage') {
       reducedMetadata.image = (
-        await StorageArweave.uploadContent(filePath, feePayer)
+        await StorageArweave.uploadContent(filePath!, feePayer)
       ).unwrap();
       uri = (await StorageNftStorage.uploadMetadata(reducedMetadata)).unwrap();
     } else {
