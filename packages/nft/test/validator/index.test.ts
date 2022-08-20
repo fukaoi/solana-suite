@@ -49,6 +49,16 @@ describe('Validator', () => {
     assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
   });
 
+  it('[Success]isFilePath', async () => {
+    const res = Validator.isFilePath('../../');
+    assert.isOk(res.isOk);
+  });
+
+  it('[Error]isFilePath: empty value', async () => {
+    const res = Validator.isFilePath('');
+    assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
+  });
+
   it('[Success]isSymbol', async () => {
     const res = Validator.isSymbol('SYMBOL');
     assert.isOk(res.isOk);

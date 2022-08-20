@@ -95,27 +95,6 @@ export namespace Validator {
     if (!filePath) {
       return Result.err(createError(key, Message.EMPTY, filePath));
     }
-
-    if (typeof filePath === 'string') {
-      if (byteLength(filePath) > SYMBOL_LENGTH) {
-        return Result.err(
-          createError(key, Message.LONG_LENGTH, filePath, {
-            threshold: SYMBOL_LENGTH,
-            condition: 'overMax',
-          })
-        );
-      }
-    } else {
-      if (filePath.size > SYMBOL_LENGTH) {
-        return Result.err(
-          createError(key, Message.LONG_LENGTH, filePath.text(), {
-            threshold: SYMBOL_LENGTH,
-            condition: 'overMax',
-          })
-        );
-      }
-    }
-
     return Result.ok(Message.SUCCESS);
   };
 
@@ -148,9 +127,6 @@ export namespace Validator {
     keys.map((key) => {
       let res!: Result<string, ValidatorError>;
       switch (key) {
-        case 'seller_fee_basis_points':
-          res = isRoyalty(metadata.seller_fee_basis_points!);
-          break;
         case 'uri':
         case 'image':
           const actual = metadata.image! ? metadata.image : metadata.uri;
@@ -176,9 +152,6 @@ export namespace Validator {
     keys.map((key) => {
       let res!: Result<string, ValidatorError>;
       switch (key) {
-        case 'sellerFeeBasisPoints':
-          res = isRoyalty(metadata.seller_fee_basis_points!);
-          break;
         case 'filePath':
           res = isFilePath(metadata.filePath!);
           break;
@@ -205,6 +178,10 @@ export namespace Validator {
     keys.map((key) => {
       let res!: Result<string, ValidatorError>;
       switch (key) {
+        case 'seller_fee_basis_points':
+        case 'sellerFeeBasisPoints':
+          res = isRoyalty(metadata.seller_fee_basis_points!);
+          break;
         case 'name':
           res = isName(metadata.name!);
           break;
