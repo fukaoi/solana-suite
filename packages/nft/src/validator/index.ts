@@ -1,5 +1,5 @@
 import { Result } from '@solana-suite/shared';
-import { NftStorageMetaplexMetadata } from '../metaplex';
+import { MetaplexMetaData, NftStorageMetaplexMetadata } from '../metaplex';
 import { NftStorageMetadata } from '../storage';
 
 export namespace Validator {
@@ -98,31 +98,14 @@ export namespace Validator {
     return Result.ok(Message.SUCCESS);
   };
 
-  export const isUriOrImage = (
-    imageOrUri: string
-  ): Result<string, ValidatorError> => {
-    const key = 'uri or image';
-    if (!imageOrUri) {
-      return Result.err(createError(key, Message.EMPTY, imageOrUri));
-    }
-    if (byteLength(imageOrUri) > URL_LENGTH) {
-      return Result.err(
-        createError(key, Message.LONG_LENGTH, imageOrUri, {
-          threshold: URL_LENGTH,
-          condition: 'overMax',
-        })
-      );
-    }
-    if (!/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(imageOrUri)) {
-      return Result.err(createError(key, Message.INVALID_URL, imageOrUri));
-    }
-    return Result.ok(Message.SUCCESS);
-  };
+  export const isUri = (uri: string): Result<string, ValidatorError> =>
+    isUriOrImage(uri, 'uri');
 
-  export const checkAll = <
-    T extends NftStorageMetadata | NftStorageMetaplexMetadata
-  >(
-    metadata: T
+  export const isImageUrl = (image: string): Result<string, ValidatorError> =>
+    isUriOrImage(image, 'image');
+
+  export const checkAll = (
+    metadata: PickNftStorage | PickNftStorageMetaplex | PickMetaplex
   ): Result<string, ValidatorError> => {
     const keys = Object.keys(metadata);
     const results: Details[] = [];
@@ -130,16 +113,24 @@ export namespace Validator {
       let res!: Result<string, ValidatorError>;
       switch (key) {
         case 'uri':
+          if (key in metadata) {
+            res = isUri(metadata.uri!);
+          }
+          break;
         case 'image':
-          // res = isUriOrImage(actual as string);
+          if (key in metadata) {
+            res = isImageUrl(metadata.image!);
+          }
           break;
         case 'seller_fee_basis_points':
+          if (key in metadata) {
+            res = isRoyalty(metadata.seller_fee_basis_points!);
+          }
+          break;
         case 'sellerFeeBasisPoints':
-          const actual = key === 
-            'seller_fee_basis_points'! ? 
-            metadata.seller_fee_basis_points : 
-            metadata.sellerFeeBasisPoints;
-          res = isRoyalty(actual as number);
+          if (key in metadata) {
+            res = isRoyalty(metadata.sellerFeeBasisPoints!);
+          }
           break;
         case 'name':
           res = isName(metadata.name!);
@@ -148,7 +139,9 @@ export namespace Validator {
           res = isSymbol(metadata.symbol!);
           break;
         case 'filePath':
-          res = isFilePath((metadata as NftStorageMetaplexMetadata).filePath!);
+          if (key in metadata) {
+            res = isFilePath(metadata.filePath!);
+          }
           break;
       }
       if (res && res.isErr) {
@@ -161,6 +154,19 @@ export namespace Validator {
     }
     return Result.ok(Message.SUCCESS);
   };
+
+  type PickNftStorage = Pick<
+    NftStorageMetadata,
+    'name' | 'symbol' | 'image' | 'seller_fee_basis_points'
+  >;
+  type PickNftStorageMetaplex = Pick<
+    NftStorageMetaplexMetadata,
+    'name' | 'symbol' | 'sellerFeeBasisPoints' | 'filePath'
+  >;
+  type PickMetaplex = Pick<
+    MetaplexMetaData,
+    'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'
+  >;
 
   const byteLength = (value: string): number => {
     const text = new TextEncoder();
@@ -180,6 +186,27 @@ export namespace Validator {
       error = new ValidatorError(message, [{ key, message, actual }]);
     }
     return error;
+  };
+
+  const isUriOrImage = (
+    imageOrUri: string,
+    key: string
+  ): Result<string, ValidatorError> => {
+    if (!imageOrUri) {
+      return Result.err(createError(key, Message.EMPTY, imageOrUri));
+    }
+    if (byteLength(imageOrUri) > URL_LENGTH) {
+      return Result.err(
+        createError(key, Message.LONG_LENGTH, imageOrUri, {
+          threshold: URL_LENGTH,
+          condition: 'overMax',
+        })
+      );
+    }
+    if (!/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(imageOrUri)) {
+      return Result.err(createError(key, Message.INVALID_URL, imageOrUri));
+    }
+    return Result.ok(Message.SUCCESS);
   };
 }
 

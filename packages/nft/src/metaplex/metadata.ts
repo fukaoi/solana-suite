@@ -20,7 +20,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
-import { MetaplexMetadata as Metadata } from './index';
+import { MetaplexMetaData } from './index';
 import { MetaplexRoyalty } from './royalty';
 import { Validator, ValidatorError } from '../validator';
 
@@ -28,7 +28,7 @@ export namespace MetaplexMetadata {
   /**
    * NFT mint
    *
-   * @param {MetaplexMetadata}  metadata
+   * @param {MetaplexMetaData}  metadata
    * {
    *   uri: {string}                 // basically storage uri
    *   name?: {string}               // NFT content name
@@ -48,11 +48,11 @@ export namespace MetaplexMetadata {
    * @return {Promise<Result<Instruction, Error | ValidatorError>>}
    */
   export const create = async (
-    metadata: Metadata,
+    metadata: MetaplexMetaData,
     owner: PublicKey,
     feePayer: Keypair
   ): Promise<Result<Instruction, Error | ValidatorError>> => {
-    const valid = Validator.checkAllStorage(metadata);
+    const valid = Validator.checkAll(metadata);
     if (valid.isErr) {
       return Result.err(valid.error);
     }

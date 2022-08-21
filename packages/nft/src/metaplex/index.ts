@@ -16,10 +16,10 @@ type noNeedOptional =
   | 'tokenProgram'
   | 'confirmOptions';
 
-export type MetaplexMetadata = Omit<CreateNftInput, noNeedOptional>;
+export type MetaplexMetaData = Omit<CreateNftInput, noNeedOptional>;
 
 export type NftStorageMetaplexMetadata = NftStorageMetadata &
-  Omit<MetaplexMetadata, 'uri'> & {
+  Omit<MetaplexMetaData, 'uri'> & {
     filePath?: string | File;
     storageType: 'arweave' | 'nftStorage';
   };
@@ -81,7 +81,7 @@ export namespace Metaplex {
       return Result.err(Error('storageType is `arweave` or `nftStorage`'));
     }
 
-    const mintInput: MetaplexMetadata = {
+    const mintInput: MetaplexMetaData = {
       uri,
       ...reducedMetadata,
     };

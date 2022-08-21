@@ -78,19 +78,19 @@ describe('Validator', () => {
   });
 
   it('[Success]isImageUrl', async () => {
-    const res = Validator.isUriOrImage(
+    const res = Validator.isImageUrl(
       'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50'
     );
     assert.isOk(res.isOk);
   });
 
   it('[Error]isImageUrl: empty value', async () => {
-    const res = Validator.isUriOrImage('');
+    const res = Validator.isImageUrl('');
     assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
   });
 
   it('[Error]isImageUrl: invalid value', async () => {
-    const res = Validator.isUriOrImage('invalid url');
+    const res = Validator.isImageUrl('invalid url');
     assert.include(
       res.isErr && res.error.message,
       Validator.Message.INVALID_URL
@@ -98,7 +98,35 @@ describe('Validator', () => {
   });
 
   it('[Error]isImageUrl: too long length', async () => {
-    const res = Validator.isUriOrImage(`https://example.com/${'x'.repeat(200)}`);
+    const res = Validator.isImageUrl(`https://example.com/${'x'.repeat(200)}`);
+    assert.include(
+      res.isErr && res.error.message,
+      Validator.Message.LONG_LENGTH
+    );
+  });
+
+  it('[Success]isUri', async () => {
+    const res = Validator.isUri(
+      'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50'
+    );
+    assert.isOk(res.isOk);
+  });
+
+  it('[Error]isUri: empty value', async () => {
+    const res = Validator.isUri('');
+    assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
+  });
+
+  it('[Error]isUri: invalid value', async () => {
+    const res = Validator.isUri('invalid url');
+    assert.include(
+      res.isErr && res.error.message,
+      Validator.Message.INVALID_URL
+    );
+  });
+
+  it('[Error]isUri: too long length', async () => {
+    const res = Validator.isUri(`https://example.com/${'x'.repeat(200)}`);
     assert.include(
       res.isErr && res.error.message,
       Validator.Message.LONG_LENGTH
