@@ -33,9 +33,9 @@ describe('Metaplex', () => {
       {
         filePath: asset.filePath as string,
         storageType: 'arweave',
-        name: asset.name,
-        symbol: asset.symbol,
-        sellerFeeBasisPoints: 50,
+        name: asset.name!,
+        symbol: asset.symbol!,
+        royalty: 50,
         creators: [creator1, creator2],
         isMutable: true,
       },
@@ -71,9 +71,9 @@ describe('Metaplex', () => {
       {
         filePath: asset.filePath as string,
         storageType: 'nftStorage',
-        name: asset.name,
-        symbol: asset.symbol,
-        sellerFeeBasisPoints: 20,
+        name: asset.name!,
+        symbol: asset.symbol!,
+        royalty: 20,
         creators: [creator1, creator2],
         isMutable: true,
       },
@@ -81,12 +81,16 @@ describe('Metaplex', () => {
       source.toKeypair()
     );
 
+    console.log('W#@####################', res);
+
     (await res.submit()).match(
       (ok) => {
         console.log('# mint:', res.unwrap().data);
         console.log('# sig:', ok);
       },
-      (ng) => assert.fail(ng.message)
+      (ng) => {
+        assert.fail(ng.message)
+      }
     );
   });
 
@@ -96,7 +100,7 @@ describe('Metaplex', () => {
         filePath: '',
         name: '',
         symbol: 'LONG-SYMBOL-LONG',
-        sellerFeeBasisPoints: -100,
+        royalty: -100,
         storageType: 'nftStorage',
       },
       source.toPublicKey(),

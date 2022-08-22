@@ -114,12 +114,17 @@ export namespace Validator {
       switch (key) {
         case 'uri':
           if (key in metadata) {
-            res = isUri(metadata.uri!);
+            res = isUri(metadata.uri);
           }
           break;
         case 'image':
           if (key in metadata) {
             res = isImageUrl(metadata.image!);
+          }
+          break;
+        case 'royalty':
+          if (key in metadata) {
+            res = isRoyalty(metadata.royalty);
           }
           break;
         case 'seller_fee_basis_points':
@@ -140,7 +145,7 @@ export namespace Validator {
           break;
         case 'filePath':
           if (key in metadata) {
-            res = isFilePath(metadata.filePath!);
+            res = isFilePath(metadata.filePath);
           }
           break;
       }
@@ -161,7 +166,7 @@ export namespace Validator {
   >;
   type PickNftStorageMetaplex = Pick<
     NftStorageMetaplexMetadata,
-    'name' | 'symbol' | 'sellerFeeBasisPoints' | 'filePath'
+    'name' | 'symbol' | 'royalty' | 'filePath'
   >;
   type PickMetaplex = Pick<
     MetaplexMetaData,

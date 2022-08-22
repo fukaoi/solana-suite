@@ -19,6 +19,7 @@ const fs_1 = __importDefault(require("fs"));
 const shared_1 = require("@solana-suite/shared");
 const bundlr_1 = require("../bundlr");
 const metaplex_1 = require("../metaplex");
+const validator_1 = require("../validator");
 var StorageArweave;
 (function (StorageArweave) {
     StorageArweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
@@ -38,10 +39,11 @@ var StorageArweave;
         (0, shared_1.debugLog)('# buffer length, price', buffer.length, res.basisPoints / web3_js_1.LAMPORTS_PER_SOL);
         return shared_1.Result.ok({
             price: res.basisPoints / web3_js_1.LAMPORTS_PER_SOL,
-            currency: res.currency
+            currency: res.currency,
         });
     });
-    StorageArweave.uploadContent = (filePath, feePayer, fileOptions) => __awaiter(this, void 0, void 0, function* () {
+    StorageArweave.uploadContent = (filePath, feePayer, fileOptions // only arweave, not nft-storage
+    ) => __awaiter(this, void 0, void 0, function* () {
         (0, shared_1.debugLog)('# upload content: ', filePath);
         let file;
         if (shared_1.isNode) {
@@ -66,18 +68,24 @@ var StorageArweave;
         else {
             return shared_1.Result.err(Error('Supported environment: only Node.js and Browser js'));
         }
-        return bundlr_1.Bundlr.useStorage(feePayer).upload(file)
+        return bundlr_1.Bundlr.useStorage(feePayer)
+            .upload(file)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
     });
     StorageArweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
         (0, shared_1.debugLog)('# upload meta data: ', metadata);
-        if (metadata.seller_fee_basis_points) {
-            metadata.seller_fee_basis_points
-                = metaplex_1.MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
+        const valid = validator_1.Validator.checkAll(metadata);
+        if (valid.isErr) {
+            return valid;
         }
-        return bundlr_1.Bundlr.make(feePayer).nfts().uploadMetadata(metadata)
-            .then(res => shared_1.Result.ok(res.uri))
+        if (metadata.seller_fee_basis_points) {
+            metadata.seller_fee_basis_points = metaplex_1.MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
+        }
+        return bundlr_1.Bundlr.make(feePayer)
+            .nfts()
+            .uploadMetadata(metadata)
+            .then((res) => shared_1.Result.ok(res.uri))
             .catch(shared_1.Result.err);
     });
 })(StorageArweave = exports.StorageArweave || (exports.StorageArweave = {}));

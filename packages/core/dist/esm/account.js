@@ -73,7 +73,7 @@ export var Account;
         }
     });
     Account.getTokenBalance = (pubkey, mint) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield Account.findAssocaiatedTokenAddress(mint, pubkey);
+        const res = yield Account.findAssociatedTokenAddress(mint, pubkey);
         if (res.isErr) {
             return Result.err(res.error);
         }
@@ -116,7 +116,7 @@ export var Account;
         const keypair = Keypair.generate();
         return new KeypairStr(keypair.publicKey.toBase58(), bs.encode(keypair.secretKey));
     };
-    Account.findAssocaiatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
+    Account.findAssociatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
         return yield PublicKey.findProgramAddress([
             owner.toBuffer(),
             TOKEN_PROGRAM_ID.toBuffer(),

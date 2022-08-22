@@ -18,6 +18,7 @@ const fs_1 = __importDefault(require("fs"));
 const shared_1 = require("@solana-suite/shared");
 const js_1 = require("@metaplex-foundation/js");
 const metaplex_1 = require("../metaplex");
+const validator_1 = require("../validator");
 var StorageNftStorage;
 (function (StorageNftStorage) {
     const getNftStorageApiKey = () => {
@@ -53,10 +54,11 @@ var StorageNftStorage;
             return shared_1.Result.err(Error('Supported environment: only Node.js and Browser js'));
         }
         const blobImage = new nft_storage_1.Blob([file]);
-        const res = yield connect.storeBlob(blobImage)
+        const res = (yield connect
+            .storeBlob(blobImage)
             .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        return res.map(ok => createGatewayUrl(ok), err => err);
+            .catch(shared_1.Result.err));
+        return res.map((ok) => createGatewayUrl(ok), (err) => err);
     });
     /**
      * Upload content
@@ -78,14 +80,18 @@ var StorageNftStorage;
      */
     StorageNftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
         (0, shared_1.debugLog)('# upload metadata: ', metadata);
+        const valid = validator_1.Validator.checkAll(metadata);
+        if (valid.isErr) {
+            return valid;
+        }
         if (metadata.seller_fee_basis_points) {
-            metadata.seller_fee_basis_points
-                = metaplex_1.MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
+            metadata.seller_fee_basis_points = metaplex_1.MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
         }
         const blobJson = new nft_storage_1.Blob([JSON.stringify(metadata)]);
-        const res = yield connect.storeBlob(blobJson)
+        const res = (yield connect
+            .storeBlob(blobJson)
             .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        return res.map(ok => createGatewayUrl(ok), err => err);
+            .catch(shared_1.Result.err));
+        return res.map((ok) => createGatewayUrl(ok), (err) => err);
     });
 })(StorageNftStorage = exports.StorageNftStorage || (exports.StorageNftStorage = {}));

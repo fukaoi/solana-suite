@@ -20,20 +20,21 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
-import { MetaplexMetaData } from './index';
-import { MetaplexRoyalty } from './royalty';
-import { Validator, ValidatorError } from '../validator';
+import { MetaplexMetaData } from '../index';
+import { MetaplexRoyalty } from '../royalty';
+import { Validator, ValidatorError } from '../../validator';
 
-export namespace MetaplexMetadata {
+// @internal
+export namespace MetaplexInternal_Mint {
   /**
    * NFT mint
    *
    * @param {MetaplexMetaData}  metadata
    * {
-   *   uri: {string}                 // basically storage uri
-   *   name?: {string}               // NFT content name
-   *   symbol?: {string}             // NFT ticker symbol
-   *   sellerFeeBasisPoints?: number // Royalty percentage
+   *   uri: string                   // basically storage uri
+   *   name: string                  // NFT content name
+   *   symbol: string                // NFT ticker symbol
+   *   sellerFeeBasisPoints number   // Royalty percentage
    *   creators?: Creator[]          // Other creators than owner
    *   collection?: Collection       // collections of different colors, shapes, etc.
    *   uses?: Uses                   // Usage feature: Burn, Single, Multiple

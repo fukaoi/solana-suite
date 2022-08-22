@@ -10,7 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { NFTStorage, Blob } from 'nft.storage';
 import fs from 'fs';
 import { Constants, Result, isNode, isBrowser, debugLog, } from '@solana-suite/shared';
-import { useMetaplexFileFromBrowser, } from '@metaplex-foundation/js';
+import { useMetaplexFileFromBrowser } from '@metaplex-foundation/js';
+import { MetaplexRoyalty } from '../metaplex';
+import { Validator } from '../validator';
 export var StorageNftStorage;
 (function (StorageNftStorage) {
     const getNftStorageApiKey = () => {
@@ -46,10 +48,11 @@ export var StorageNftStorage;
             return Result.err(Error('Supported environment: only Node.js and Browser js'));
         }
         const blobImage = new Blob([file]);
-        const res = yield connect.storeBlob(blobImage)
+        const res = (yield connect
+            .storeBlob(blobImage)
             .then(Result.ok)
-            .catch(Result.err);
-        return res.map(ok => createGatewayUrl(ok), err => err);
+            .catch(Result.err));
+        return res.map((ok) => createGatewayUrl(ok), (err) => err);
     });
     /**
      * Upload content
@@ -70,20 +73,19 @@ export var StorageNftStorage;
      * @return Promise<Result<string, Error>>
      */
     StorageNftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
-        debugLog('# upload meta data: ', metadata);
-        if (metadata.image) {
-            const imageUrl = yield StorageNftStorage.uploadContent(metadata.image)
-                .then(Result.ok)
-                .catch(Result.err);
-            if (imageUrl.isErr) {
-                return imageUrl;
-            }
-            metadata.image = imageUrl.value;
+        debugLog('# upload metadata: ', metadata);
+        const valid = Validator.checkAll(metadata);
+        if (valid.isErr) {
+            return valid;
+        }
+        if (metadata.seller_fee_basis_points) {
+            metadata.seller_fee_basis_points = MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
         }
         const blobJson = new Blob([JSON.stringify(metadata)]);
-        const res = yield connect.storeBlob(blobJson)
+        const res = (yield connect
+            .storeBlob(blobJson)
             .then(Result.ok)
-            .catch(Result.err);
-        return res.map(ok => createGatewayUrl(ok), err => err);
+            .catch(Result.err));
+        return res.map((ok) => createGatewayUrl(ok), (err) => err);
     });
 })(StorageNftStorage || (StorageNftStorage = {}));

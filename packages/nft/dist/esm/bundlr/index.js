@@ -1,5 +1,5 @@
-import { Metaplex as MetaplexFoundation, keypairIdentity, bundlrStorage, } from "@metaplex-foundation/js";
-import { Node, Constants, ConstantsFunc } from "@solana-suite/shared";
+import { Metaplex as MetaplexFoundation, keypairIdentity, bundlrStorage, } from '@metaplex-foundation/js';
+import { Node, Constants, ConstantsFunc } from '@solana-suite/shared';
 export var Bundlr;
 (function (Bundlr) {
     const BUNDLR_CONNECT_TIMEOUT = 60000;

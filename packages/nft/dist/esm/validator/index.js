@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ValidatorError = exports.Validator = void 0;
-const shared_1 = require("@solana-suite/shared");
-var Validator;
+import { Result } from '@solana-suite/shared';
+export var Validator;
 (function (Validator) {
     let Message;
     (function (Message) {
@@ -21,54 +18,54 @@ var Validator;
     Validator.isRoyalty = (royalty) => {
         const key = 'royalty';
         if (!royalty) {
-            return shared_1.Result.err(createError(key, Message.EMPTY, royalty));
+            return Result.err(createError(key, Message.EMPTY, royalty));
         }
         if (royalty < Validator.ROYALTY_MIN) {
-            return shared_1.Result.err(createError(key, Message.SMALL_NUMBER, royalty, {
+            return Result.err(createError(key, Message.SMALL_NUMBER, royalty, {
                 threshold: Validator.ROYALTY_MIN,
                 condition: 'underMin',
             }));
         }
         else if (royalty > Validator.ROYALTY_MAX) {
-            return shared_1.Result.err(createError(key, Message.BIG_NUMBER, royalty, {
+            return Result.err(createError(key, Message.BIG_NUMBER, royalty, {
                 threshold: Validator.ROYALTY_MAX,
                 condition: 'overMax',
             }));
         }
-        return shared_1.Result.ok(Message.SUCCESS);
+        return Result.ok(Message.SUCCESS);
     };
     Validator.isName = (name) => {
         const key = 'name';
         if (!name) {
-            return shared_1.Result.err(createError(key, Message.EMPTY, name));
+            return Result.err(createError(key, Message.EMPTY, name));
         }
         if (byteLength(name) > Validator.NAME_LENGTH) {
-            return shared_1.Result.err(createError(key, Message.LONG_LENGTH, name, {
+            return Result.err(createError(key, Message.LONG_LENGTH, name, {
                 threshold: Validator.NAME_LENGTH,
                 condition: 'overMax',
             }));
         }
-        return shared_1.Result.ok(Message.SUCCESS);
+        return Result.ok(Message.SUCCESS);
     };
     Validator.isSymbol = (symbol) => {
         const key = 'symbol';
         if (!symbol) {
-            return shared_1.Result.err(createError(key, Message.EMPTY, symbol));
+            return Result.err(createError(key, Message.EMPTY, symbol));
         }
         if (byteLength(symbol) > Validator.SYMBOL_LENGTH) {
-            return shared_1.Result.err(createError(key, Message.LONG_LENGTH, symbol, {
+            return Result.err(createError(key, Message.LONG_LENGTH, symbol, {
                 threshold: Validator.SYMBOL_LENGTH,
                 condition: 'overMax',
             }));
         }
-        return shared_1.Result.ok(Message.SUCCESS);
+        return Result.ok(Message.SUCCESS);
     };
     Validator.isFilePath = (filePath) => {
         const key = 'filePath';
         if (!filePath) {
-            return shared_1.Result.err(createError(key, Message.EMPTY, filePath));
+            return Result.err(createError(key, Message.EMPTY, filePath));
         }
-        return shared_1.Result.ok(Message.SUCCESS);
+        return Result.ok(Message.SUCCESS);
     };
     Validator.isUri = (uri) => isUriOrImage(uri, 'uri');
     Validator.isImageUrl = (image) => isUriOrImage(image, 'image');
@@ -121,9 +118,9 @@ var Validator;
         });
         if (results.length > 0) {
             const message = 'Caught in the validation errors';
-            return shared_1.Result.err(new ValidatorError(message, results));
+            return Result.err(new ValidatorError(message, results));
         }
-        return shared_1.Result.ok(Message.SUCCESS);
+        return Result.ok(Message.SUCCESS);
     };
     const byteLength = (value) => {
         const text = new TextEncoder();
@@ -141,24 +138,23 @@ var Validator;
     };
     const isUriOrImage = (imageOrUri, key) => {
         if (!imageOrUri) {
-            return shared_1.Result.err(createError(key, Message.EMPTY, imageOrUri));
+            return Result.err(createError(key, Message.EMPTY, imageOrUri));
         }
         if (byteLength(imageOrUri) > Validator.URL_LENGTH) {
-            return shared_1.Result.err(createError(key, Message.LONG_LENGTH, imageOrUri, {
+            return Result.err(createError(key, Message.LONG_LENGTH, imageOrUri, {
                 threshold: Validator.URL_LENGTH,
                 condition: 'overMax',
             }));
         }
         if (!/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(imageOrUri)) {
-            return shared_1.Result.err(createError(key, Message.INVALID_URL, imageOrUri));
+            return Result.err(createError(key, Message.INVALID_URL, imageOrUri));
         }
-        return shared_1.Result.ok(Message.SUCCESS);
+        return Result.ok(Message.SUCCESS);
     };
-})(Validator = exports.Validator || (exports.Validator = {}));
-class ValidatorError extends Error {
+})(Validator || (Validator = {}));
+export class ValidatorError extends Error {
     constructor(message, details) {
         super(message);
         this.details = details;
     }
 }
-exports.ValidatorError = ValidatorError;

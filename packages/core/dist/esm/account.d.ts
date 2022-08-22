@@ -33,7 +33,7 @@ export declare namespace Account {
     export const getTokenInfoOwned: (pubkey: PublicKey) => Promise<Result<TokenInfoOwned[], Error>>;
     export const requestAirdrop: (pubkey: PublicKey, airdropAmount?: number) => Promise<Result<string, Error>>;
     export const create: () => KeypairStr;
-    export const findAssocaiatedTokenAddress: (mint: PublicKey, owner: PublicKey) => Promise<Result<PublicKey, Error>>;
+    export const findAssociatedTokenAddress: (mint: PublicKey, owner: PublicKey) => Promise<Result<PublicKey, Error>>;
     export const getOrCreateAssociatedTokenAccountInstruction: (mint: PublicKey, owner: PublicKey, feePayer: PublicKey, allowOwnerOffCurve?: boolean) => Promise<Result<{
         tokenAccount: string;
         inst: TransactionInstruction | undefined;

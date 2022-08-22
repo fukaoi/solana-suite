@@ -7,4 +7,8 @@ export declare type StorageNftStorageMetadata = JsonMetadata & {
 export declare type StorageArweaveMetadata = JsonMetadata & {
     storageType?: 'arweave';
 };
-export declare type NftStorageMetadata = StorageArweaveMetadata | StorageNftStorageMetadata;
+export declare type NftStorageMetadata = StorageArweaveMetadata | StorageNftStorageMetadata & {
+    name: string;
+    symbol: string;
+    seller_fee_basis_points: number;
+};

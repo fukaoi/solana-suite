@@ -13,12 +13,13 @@ import { Result, Node, Instruction, PartialSignInstruction, debugLog, } from '@s
 import { SplToken } from './spl-token';
 export var SolNative;
 (function (SolNative) {
-    // NOTICE: There is a lamport fluctuation when transfer under 0.001 sol
+    const RADIX = 10;
+    // NOTICE: There is a lamports fluctuation when transfer under 0.001 sol
     // for multiSig only function
     SolNative.transferWithMultisig = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const connection = Node.getConnection();
         const payer = feePayer ? feePayer : signers[0];
-        const wrapped = yield createWrappedNativeAccount(connection, payer, owner, parseInt(`${amount * LAMPORTS_PER_SOL}`))
+        const wrapped = yield createWrappedNativeAccount(connection, payer, owner, parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX))
             .then(Result.ok)
             .catch(Result.err);
         if (wrapped.isErr) {
@@ -42,7 +43,7 @@ export var SolNative;
             return Result.err(destToken.error);
         }
         debugLog('# destToken: ', destToken.value);
-        const inst1 = createTransferInstruction(sourceToken.value.toPublicKey(), destToken.value.toPublicKey(), owner, parseInt(`${amount}`), // No lamports, its sol
+        const inst1 = createTransferInstruction(sourceToken.value.toPublicKey(), destToken.value.toPublicKey(), owner, parseInt(`${amount}`, RADIX), // No lamports, its sol
         signers);
         const inst2 = createCloseAccountInstruction(wrapped.value, dest, owner, signers);
         return Result.ok(new Instruction([inst1, inst2], signers, feePayer));
@@ -51,29 +52,29 @@ export var SolNative;
         const inst = SystemProgram.transfer({
             fromPubkey: source,
             toPubkey: destination,
-            lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`),
+            lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
         });
         return Result.ok(new Instruction([inst], signers, feePayer));
     });
     SolNative.feePayerPartialSignTransfer = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const blockhashObj = yield Node.getConnection().getLatestBlockhash();
+        const blockHashObj = yield Node.getConnection().getLatestBlockhash();
         const tx = new Transaction({
-            blockhash: blockhashObj.blockhash,
-            lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
+            blockhash: blockHashObj.blockhash,
+            lastValidBlockHeight: blockHashObj.lastValidBlockHeight,
             feePayer
         }).add(SystemProgram.transfer({
             fromPubkey: owner,
             toPubkey: dest,
-            lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`),
+            lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
         }));
         signers.forEach(signer => {
             tx.partialSign(signer);
         });
         try {
-            const sirializedTx = tx.serialize({
+            const serializedTx = tx.serialize({
                 requireAllSignatures: false,
             });
-            const hex = sirializedTx.toString('hex');
+            const hex = serializedTx.toString('hex');
             return Result.ok(new PartialSignInstruction(hex));
         }
         catch (ex) {

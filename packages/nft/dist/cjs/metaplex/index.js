@@ -35,12 +35,12 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metaplex = void 0;
-__exportStar(require("./metadata"), exports);
+__exportStar(require("./internal/_mint"), exports);
 __exportStar(require("./royalty"), exports);
 const storage_1 = require("../storage");
 const shared_1 = require("@solana-suite/shared");
 const storage_2 = require("../storage");
-const metadata_1 = require("./metadata");
+const _mint_1 = require("./internal/_mint");
 const royalty_1 = require("./royalty");
 var Metaplex;
 (function (Metaplex) {
@@ -49,16 +49,16 @@ var Metaplex;
      *
      * @param {NftStorageMetaplexMetadata}  metadata
      * {
-     *   name?: {string}               // nft content name
-     *   symbol?: {string}             // nft ticker symbol
-     *   filePath?: {string | File}    // nft ticker symbol
-     *   description?: {string}        // nft content description
-     *   external_url?: {string}       // landing page, home page uri, related url
-     *   sellerFeeBasisPoints?: number // royalty percentage
-     *   attributes?: {JsonMetadataAttribute[]}     // game character parameter, personality, characteristics
-     *   properties?: {JsonMetadataProperties<Uri>} // include file name, uri, supported file type
-     *   collection?: Collection                    // collections of different colors, shapes, etc.
-     *   [key: string]: {unknown}                   // optional param, Usually not used.
+     *   name: string               // nft content name
+     *   symbol: string             // nft ticker symbol
+     *   filePath: string | File    // nft ticker symbol
+     *   royalty: number            // royalty percentage
+     *   description?: string       // nft content description
+     *   external_url?: string      // landing page, home page uri, related url
+     *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
+     *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
+     *   collection?: Collection                  // collections of different colors, shapes, etc.
+     *   [key: string]: unknown                   // optional param, Usually not used.
      *   creators?: Creator[]          // other creators than owner
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
@@ -67,18 +67,26 @@ var Metaplex;
      *   updateAuthority?: Signer      // update minted authority
      *   freezeAuthority?: PublicKey   // freeze minted authority
      * }
+     * @param {PublicKey} owner        // first minted owner
      * @param {Keypair} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
     Metaplex.mint = (metadata, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        if (metadata.seller_fee_basis_points) {
-            metadata.seller_fee_basis_points = royalty_1.MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
+        const data = metadata;
+        if (data.royalty) {
+            data.sellerFeeBasisPoints = royalty_1.MetaplexRoyalty.convertValue(data.royalty);
+            // copied to sellerFeeBasisPoints, no need key
+            delete data.royalty;
         }
         let uri;
-        const { filePath, storageType } = metadata, reducedMetadata = __rest(metadata, ["filePath", "storageType"]);
+        const { filePath, storageType } = data, reducedMetadata = __rest(data, ["filePath", "storageType"]);
         if (storageType === 'arweave') {
-            reducedMetadata.image = (yield storage_2.StorageArweave.uploadContent(filePath, feePayer)).unwrap();
-            uri = (yield storage_2.StorageArweave.uploadMetadata(reducedMetadata, feePayer)).unwrap();
+            uri = yield storage_2.StorageArweave.uploadContent(filePath, feePayer)
+                .map((ok) => __awaiter(this, void 0, void 0, function* () {
+                reducedMetadata.image = ok;
+                yield storage_2.StorageArweave.uploadMetadata(reducedMetadata, feePayer);
+            }), (err) => err)
+                .unwrap();
         }
         else if (storageType === 'nftStorage') {
             reducedMetadata.image = (yield storage_2.StorageArweave.uploadContent(filePath, feePayer)).unwrap();
@@ -87,7 +95,22 @@ var Metaplex;
         else {
             return shared_1.Result.err(Error('storageType is `arweave` or `nftStorage`'));
         }
+        // if (storageType === 'arweave') {
+        //     reducedMetadata.image = (
+        //       await StorageArweave.uploadContent(filePath!, feePayer)
+        //     ).unwrap();
+        //     uri = (
+        //       await StorageArweave.uploadMetadata(reducedMetadata, feePayer)
+        //     ).unwrap();
+        //   } else if (storageType === 'nftStorage') {
+        //     reducedMetadata.image = (
+        //       await StorageArweave.uploadContent(filePath!, feePayer)
+        //     ).unwrap();
+        //     uri = (await StorageNftStorage.uploadMetadata(reducedMetadata)).unwrap();
+        //   } else {
+        //     return Result.err(Error('storageType is `arweave` or `nftStorage`'));
+        //   }
         const mintInput = Object.assign({ uri }, reducedMetadata);
-        return metadata_1.MetaplexMetadata.create(mintInput, owner, feePayer);
+        return _mint_1.MetaplexInternal_Mint.create(mintInput, owner, feePayer);
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));
