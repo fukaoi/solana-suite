@@ -25,7 +25,33 @@ describe('Validator', () => {
   });
 
   it('[Error]isRoyalty: empty value', async () => {
-    const res = Validator.isRoyalty(parseInt(''));
+    const res = Validator.isSellerFeeBasisPoints(parseInt(''));
+    assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
+  });
+
+  it('[Success]isSellerFeeBasisPoints', async () => {
+    const res = Validator.isSellerFeeBasisPoints(3000);
+    assert.isOk(res.isOk);
+  });
+
+  it('[Error]isSellerFeeBasisPoints: too small number', async () => {
+    const res = Validator.isSellerFeeBasisPoints(-1);
+    if (res.isErr) {
+      assert.include(res.error.message, Validator.Message.SMALL_NUMBER);
+      assert.isArray(res.error.details);
+    }
+  });
+
+  it('[Error]isSellerFeeBasisPoints: too big number', async () => {
+    const res = Validator.isSellerFeeBasisPoints(20000);
+    assert.include(
+      res.isErr && res.error.message,
+      Validator.Message.BIG_NUMBER
+    );
+  });
+
+  it('[Error]isSellerFeeBasisPoints: empty value', async () => {
+    const res = Validator.isSellerFeeBasisPoints(parseInt(''));
     assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
   });
 
@@ -149,7 +175,7 @@ describe('Validator', () => {
     const data = {
       name: '',
       uri: '',
-      seller_fee_basis_points: 150,
+      seller_fee_basis_points: 15000,
       symbol: 'LONG-SYMBOL-LONG-SYMBOL',
       image: `https://example.com/${'x'.repeat(200)}`,
       filePath: '',
