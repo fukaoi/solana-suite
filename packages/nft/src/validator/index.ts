@@ -1,5 +1,5 @@
 import { Result } from '@solana-suite/shared';
-import { MetaplexMetaData, NftStorageMetaplexMetadata } from '../metaplex';
+import { MetaplexMetaData, MetaplexRoyalty, NftStorageMetaplexMetadata } from '../metaplex';
 import { NftStorageMetadata } from '../storage';
 
 export namespace Validator {
@@ -16,6 +16,7 @@ export namespace Validator {
   export const SYMBOL_LENGTH = 10;
   export const URL_LENGTH = 200;
   export const ROYALTY_MAX = 100;
+  export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
   export const ROYALTY_MIN = 0;
 
   export type Condition = 'overMax' | 'underMin';
@@ -49,6 +50,31 @@ export namespace Validator {
       return Result.err(
         createError(key, Message.BIG_NUMBER, royalty, {
           threshold: ROYALTY_MAX,
+          condition: 'overMax',
+        })
+      );
+    }
+    return Result.ok(Message.SUCCESS);
+  };
+
+  export const isSellerFeeBasisPoints = (
+    royalty: number
+  ): Result<string, ValidatorError> => {
+    const key = 'sellerFeeBasisPoints/seller_fee_basis_points';
+    if (!royalty) {
+      return Result.err(createError(key, Message.EMPTY, royalty));
+    }
+    if (royalty < ROYALTY_MIN) {
+      return Result.err(
+        createError(key, Message.SMALL_NUMBER, royalty, {
+          threshold: ROYALTY_MIN,
+          condition: 'underMin',
+        })
+      );
+    } else if (royalty > ROYALTY_MAX * MetaplexRoyalty.THRESHOLD) {
+      return Result.err(
+        createError(key, Message.BIG_NUMBER, royalty, {
+          threshold: SELLER_FEE_BASIS_POINTS_MAX,
           condition: 'overMax',
         })
       );
@@ -129,12 +155,12 @@ export namespace Validator {
           break;
         case 'seller_fee_basis_points':
           if (key in metadata) {
-            res = isRoyalty(metadata.seller_fee_basis_points!);
+            res = isSellerFeeBasisPoints(metadata.seller_fee_basis_points!);
           }
           break;
         case 'sellerFeeBasisPoints':
           if (key in metadata) {
-            res = isRoyalty(metadata.sellerFeeBasisPoints!);
+            res = isSellerFeeBasisPoints(metadata.sellerFeeBasisPoints!);
           }
           break;
         case 'name':
