@@ -8,7 +8,7 @@ import { Instruction, Result } from '@solana-suite/shared';
 import { StorageArweave } from '../storage';
 import { MetaplexInternal_Mint } from './internal/_mint';
 import { MetaplexRoyalty } from './royalty';
-import { ValidatorError } from '../validator';
+import { Validator, ValidatorError } from '../validator';
 
 type noNeedOptional =
   | 'payer'
@@ -64,6 +64,12 @@ export namespace Metaplex {
     owner: PublicKey,
     feePayer: Keypair
   ): Promise<Result<Instruction, Error | ValidatorError>> => {
+
+    const valid = Validator.checkAll(metadata);
+    if (valid.isErr) {
+      return Result.err(valid.error);
+    }
+
     const data: Partial<NftStorageMetaplexMetadata> = metadata;
     if (data.royalty) {
       data.sellerFeeBasisPoints = MetaplexRoyalty.convertValue(data.royalty);
@@ -71,28 +77,32 @@ export namespace Metaplex {
       delete data.royalty;
     }
 
-    let storageRes;
+    let storageRes!: any;
     const { filePath, storageType, ...reducedMetadata } = data;
     if (storageType === 'arweave') {
       storageRes = (
         await StorageArweave.uploadContent(filePath!, feePayer)
-      ).map(
+      ).unwrap(
         async (ok: string) => {
           reducedMetadata.image = ok;
           return await StorageArweave.uploadMetadata(reducedMetadata, feePayer);
         },
-        (err: Error) => err
+        (err) => err
       );
     } else if (storageType === 'nftStorage') {
-      storageRes = (await StorageNftStorage.uploadContent(filePath!)).map(
+      storageRes = (await StorageNftStorage.uploadContent(filePath!)).unwrap(
         async (ok: string) => {
           reducedMetadata.image = ok;
           return await StorageNftStorage.uploadMetadata(reducedMetadata);
         },
-        (err: Error) => err
+        (err) => Result.err(err)
       );
     } else {
       return Result.err(Error('storageType is `arweave` or `nftStorage`'));
+    }
+
+    if ((await storageRes).isErr) {
+      return storageRes;
     }
 
     // if (storageType === 'arweave') {
@@ -110,12 +120,6 @@ export namespace Metaplex {
     //   } else {
     //     return Result.err(Error('storageType is `arweave` or `nftStorage`'));
     //   }
-
-    console.log('###', storageRes.isErr);
-
-    if (storageRes.isErr) {
-      return Result.err(storageRes.error);
-    }
 
     const uri = '';
     const mintInput: MetaplexMetaData = {

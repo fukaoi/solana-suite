@@ -81,15 +81,14 @@ describe('Metaplex', () => {
       source.toKeypair()
     );
 
-    console.log('W#@####################', res);
-
     (await res.submit()).match(
       (ok) => {
         console.log('# mint:', res.unwrap().data);
         console.log('# sig:', ok);
       },
-      (ng) => {
-        assert.fail(ng.message)
+      (ng: Error) => {
+        console.log(ng);
+        assert.fail(ng.message);
       }
     );
   });
