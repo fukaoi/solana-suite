@@ -65,20 +65,13 @@ export namespace Metaplex {
     feePayer: Keypair
   ): Promise<Result<Instruction, Error | ValidatorError>> => {
 
-    const valid = Validator.checkAll(metadata);
+    const valid = Validator.checkAll<NftStorageMetaplexMetadata>(metadata);
     if (valid.isErr) {
       return Result.err(valid.error);
     }
 
-    const data: Partial<NftStorageMetaplexMetadata> = metadata;
-    if (data.royalty) {
-      data.sellerFeeBasisPoints = MetaplexRoyalty.convertValue(data.royalty);
-      // copied to sellerFeeBasisPoints, no need key
-      delete data.royalty;
-    }
-
     let storageRes!: any;
-    const { filePath, storageType, ...reducedMetadata } = data;
+    const { filePath, storageType, royalty, ...reducedMetadata } = metadata;
     if (storageType === 'arweave') {
       storageRes = (
         await StorageArweave.uploadContent(filePath!, feePayer)
@@ -105,23 +98,8 @@ export namespace Metaplex {
       return storageRes;
     }
 
-    // if (storageType === 'arweave') {
-    //     reducedMetadata.image = (
-    //       await StorageArweave.uploadContent(filePath!, feePayer)
-    //     ).unwrap();
-    //     uri = (
-    //       await StorageArweave.uploadMetadata(reducedMetadata, feePayer)
-    //     ).unwrap();
-    //   } else if (storageType === 'nftStorage') {
-    //     reducedMetadata.image = (
-    //       await StorageArweave.uploadContent(filePath!, feePayer)
-    //     ).unwrap();
-    //     uri = (await StorageNftStorage.uploadMetadata(reducedMetadata)).unwrap();
-    //   } else {
-    //     return Result.err(Error('storageType is `arweave` or `nftStorage`'));
-    //   }
-
-    const uri = '';
+    console.log(reducedMetadata);
+    const uri = (await storageRes).unwrap();
     const mintInput: MetaplexMetaData = {
       uri,
       ...reducedMetadata,

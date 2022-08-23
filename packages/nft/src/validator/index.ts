@@ -130,8 +130,8 @@ export namespace Validator {
   export const isImageUrl = (image: string): Result<string, ValidatorError> =>
     isUriOrImage(image, 'image');
 
-  export const checkAll = (
-    metadata: PickNftStorage | PickNftStorageMetaplex | PickMetaplex
+  export const checkAll = <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(
+    metadata: T,
   ): Result<string, ValidatorError> => {
     const keys = Object.keys(metadata);
     const results: Details[] = [];
