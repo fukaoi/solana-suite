@@ -1,5 +1,6 @@
 export namespace MetaplexRoyalty {
+  export const THRESHOLD = 100;
   export const convertValue = (percentage: number) => {
-    return percentage * 100;
+    return percentage * THRESHOLD;
   }
 }
