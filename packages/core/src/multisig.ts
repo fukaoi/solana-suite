@@ -12,7 +12,7 @@ import {
 
 import {LayoutObject} from '@solana/buffer-layout';
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
-import {} from './internal/_';
+import {Internal_Multisig} from './internal/_multisig';
 
 export namespace Multisig {
   export const isAddress = async (multisig: PublicKey)
@@ -34,12 +34,12 @@ export namespace Multisig {
     if (!info.owner.equals(TOKEN_PROGRAM_ID)) {
       return Result.err(Error('Invalid multisig owner'));
     }
-    if (info.data.length !== MultisigInstruction.Layout.span) {
+    if (info.data.length !== Internal_Multisig.Layout.span) {
       return Result.err(Error('Invalid multisig size'));
     }
 
     const data = Buffer.from(info.data);
-    const multisigInfo = MultisigInstruction.Layout.decode(data);
+    const multisigInfo = Internal_Multisig.Layout.decode(data);
     multisigInfo.signer1 = new PublicKey(multisigInfo.signer1);
     multisigInfo.signer2 = new PublicKey(multisigInfo.signer2);
     multisigInfo.signer3 = new PublicKey(multisigInfo.signer3);
@@ -67,20 +67,20 @@ export namespace Multisig {
     const account = Keypair.generate();
     const connection = Node.getConnection();
     const balanceNeeded = await connection.getMinimumBalanceForRentExemption(
-      MultisigInstruction.Layout.span
+      Internal_Multisig.Layout.span
     )
       .then(Result.ok)
       .catch(Result.err);
 
     if (balanceNeeded.isErr) return Result.err(balanceNeeded.error);
 
-    const inst1 = MultisigInstruction.account(
+    const inst1 = Internal_Multisig.account(
       account,
       feePayer,
       balanceNeeded.value
     );
 
-    const inst2 = MultisigInstruction.multisig(
+    const inst2 = Internal_Multisig.multisig(
       m,
       account,
       signerPubkey,

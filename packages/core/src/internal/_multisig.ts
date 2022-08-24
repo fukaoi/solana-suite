@@ -10,7 +10,7 @@ import {struct, u8, blob} from '@solana/buffer-layout';
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
 
 // @internal
-namespace Internal_Multisig {
+export namespace Internal_Multisig {
   const createLayoutPubKey = (property: string): any => {
     return blob(32, property);
   }
