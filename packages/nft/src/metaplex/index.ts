@@ -7,7 +7,6 @@ import { NftStorageMetadata, StorageNftStorage } from '../storage';
 import { Instruction, Result } from '@solana-suite/shared';
 import { StorageArweave } from '../storage';
 import { MetaplexInternal_Mint } from './internal/_mint';
-import { MetaplexRoyalty } from './royalty';
 import { Validator, ValidatorError } from '../validator';
 
 type noNeedOptional =
