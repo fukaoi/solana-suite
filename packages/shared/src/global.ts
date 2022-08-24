@@ -1,16 +1,9 @@
-import {
-  PublicKey,
-  Keypair,
-  TransactionSignature,
-} from '@solana/web3.js';
+import { PublicKey, Keypair, TransactionSignature } from '@solana/web3.js';
 
 import bs from 'bs58';
-import {
-  Constants,
-  Result,
-  Instruction,
-} from './';
+import { Constants, Result, Instruction } from './';
 
+import { Internal_Instruction } from './internal/_instruction';
 
 declare global {
   interface String {
@@ -37,25 +30,27 @@ Array.prototype.submit = async function () {
   let i = 0;
   for (const obj of this) {
     if (obj.isErr) {
-      return Result.err(Error(`[Array index of caught 'Result.err': ${i}]${obj.error.message}`));
+      return Result.err(
+        Error(`[Array index of caught 'Result.err': ${i}]${obj.error.message}`)
+      );
     } else if (obj.isOk) {
       instructions.push(obj.value);
     } else {
       instructions.push(obj);
     }
     i++;
-  };
-  return await Instruction.batchSubmit(instructions);
-}
+  }
+  return await Internal_Instruction.batchSubmit(instructions);
+};
 
 String.prototype.toPublicKey = function () {
   return new PublicKey(this);
-}
+};
 
 String.prototype.toKeypair = function () {
   const decoded = bs.decode(this as string);
   return Keypair.fromSecretKey(decoded);
-}
+};
 
 String.prototype.toExplorerUrl = function () {
   let cluster = Constants.currentCluster;
@@ -69,7 +64,7 @@ String.prototype.toExplorerUrl = function () {
   } catch (_) {
     return `https://solscan.io/tx/${this}?cluster=${cluster}`;
   }
-}
+};
 
 export const debugLog = (
   data: unknown,
@@ -79,10 +74,10 @@ export const debugLog = (
   if (Constants.isDebugging || process.env.DEBUG) {
     console.log('[DEBUG]', data, data2, data3);
   }
-}
+};
 
 export const sleep = async (sec: number) =>
-  new Promise(r => setTimeout(r, sec * 1000));
+  new Promise((r) => setTimeout(r, sec * 1000));
 
 export const isBrowser =
   typeof window !== 'undefined' && typeof window.document !== 'undefined';
