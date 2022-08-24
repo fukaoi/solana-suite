@@ -1,4 +1,5 @@
 import { Result } from '@solana-suite/shared';
+import { MetaplexRoyalty } from '../metaplex';
 export var Validator;
 (function (Validator) {
     let Message;
@@ -14,6 +15,7 @@ export var Validator;
     Validator.SYMBOL_LENGTH = 10;
     Validator.URL_LENGTH = 200;
     Validator.ROYALTY_MAX = 100;
+    Validator.SELLER_FEE_BASIS_POINTS_MAX = 10000;
     Validator.ROYALTY_MIN = 0;
     Validator.isRoyalty = (royalty) => {
         const key = 'royalty';
@@ -29,6 +31,25 @@ export var Validator;
         else if (royalty > Validator.ROYALTY_MAX) {
             return Result.err(createError(key, Message.BIG_NUMBER, royalty, {
                 threshold: Validator.ROYALTY_MAX,
+                condition: 'overMax',
+            }));
+        }
+        return Result.ok(Message.SUCCESS);
+    };
+    Validator.isSellerFeeBasisPoints = (royalty) => {
+        const key = 'sellerFeeBasisPoints/seller_fee_basis_points';
+        if (!royalty) {
+            return Result.err(createError(key, Message.EMPTY, royalty));
+        }
+        if (royalty < Validator.ROYALTY_MIN) {
+            return Result.err(createError(key, Message.SMALL_NUMBER, royalty, {
+                threshold: Validator.ROYALTY_MIN,
+                condition: 'underMin',
+            }));
+        }
+        else if (royalty > Validator.ROYALTY_MAX * MetaplexRoyalty.THRESHOLD) {
+            return Result.err(createError(key, Message.BIG_NUMBER, royalty, {
+                threshold: Validator.SELLER_FEE_BASIS_POINTS_MAX,
                 condition: 'overMax',
             }));
         }
@@ -92,12 +113,12 @@ export var Validator;
                     break;
                 case 'seller_fee_basis_points':
                     if (key in metadata) {
-                        res = Validator.isRoyalty(metadata.seller_fee_basis_points);
+                        res = Validator.isSellerFeeBasisPoints(metadata.seller_fee_basis_points);
                     }
                     break;
                 case 'sellerFeeBasisPoints':
                     if (key in metadata) {
-                        res = Validator.isRoyalty(metadata.sellerFeeBasisPoints);
+                        res = Validator.isSellerFeeBasisPoints(metadata.sellerFeeBasisPoints);
                     }
                     break;
                 case 'name':

@@ -24,7 +24,7 @@ import { StorageNftStorage } from '../storage';
 import { Result } from '@solana-suite/shared';
 import { StorageArweave } from '../storage';
 import { MetaplexInternal_Mint } from './internal/_mint';
-import { MetaplexRoyalty } from './royalty';
+import { Validator } from '../validator';
 export var Metaplex;
 (function (Metaplex) {
     /**
@@ -55,25 +55,32 @@ export var Metaplex;
      * @return Promise<Result<Instruction, Error>>
      */
     Metaplex.mint = (metadata, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const data = metadata;
-        if (data.royalty) {
-            data.sellerFeeBasisPoints = MetaplexRoyalty.convertValue(data.royalty);
-            // copied to sellerFeeBasisPoints, no need key
-            delete data.royalty;
+        const valid = Validator.checkAll(metadata);
+        if (valid.isErr) {
+            return Result.err(valid.error);
         }
-        let uri;
-        const { filePath, storageType } = data, reducedMetadata = __rest(data, ["filePath", "storageType"]);
+        let storageRes;
+        const { filePath, storageType, royalty } = metadata, reducedMetadata = __rest(metadata, ["filePath", "storageType", "royalty"]);
         if (storageType === 'arweave') {
-            reducedMetadata.image = (yield StorageArweave.uploadContent(filePath, feePayer)).unwrap();
-            uri = (yield StorageArweave.uploadMetadata(reducedMetadata, feePayer)).unwrap();
+            storageRes = (yield StorageArweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
+                reducedMetadata.image = ok;
+                return yield StorageArweave.uploadMetadata(reducedMetadata, feePayer);
+            }), (err) => err);
         }
         else if (storageType === 'nftStorage') {
-            reducedMetadata.image = (yield StorageArweave.uploadContent(filePath, feePayer)).unwrap();
-            uri = (yield StorageNftStorage.uploadMetadata(reducedMetadata)).unwrap();
+            storageRes = (yield StorageNftStorage.uploadContent(filePath)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
+                reducedMetadata.image = ok;
+                return yield StorageNftStorage.uploadMetadata(reducedMetadata);
+            }), (err) => Result.err(err));
         }
         else {
             return Result.err(Error('storageType is `arweave` or `nftStorage`'));
         }
+        if ((yield storageRes).isErr) {
+            return storageRes;
+        }
+        console.log(reducedMetadata);
+        const uri = (yield storageRes).unwrap();
         const mintInput = Object.assign({ uri }, reducedMetadata);
         return MetaplexInternal_Mint.create(mintInput, owner, feePayer);
     });

@@ -14,6 +14,7 @@ export declare namespace Validator {
     export const SYMBOL_LENGTH = 10;
     export const URL_LENGTH = 200;
     export const ROYALTY_MAX = 100;
+    export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
     export const ROYALTY_MIN = 0;
     export type Condition = 'overMax' | 'underMin';
     export interface Limit {
@@ -27,12 +28,13 @@ export declare namespace Validator {
         limit?: Limit;
     }
     export const isRoyalty: (royalty: number) => Result<string, ValidatorError>;
+    export const isSellerFeeBasisPoints: (royalty: number) => Result<string, ValidatorError>;
     export const isName: (name: string) => Result<string, ValidatorError>;
     export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
     export const isFilePath: (filePath: string | File) => Result<string, ValidatorError>;
     export const isUri: (uri: string) => Result<string, ValidatorError>;
     export const isImageUrl: (image: string) => Result<string, ValidatorError>;
-    export const checkAll: (metadata: PickNftStorage | PickNftStorageMetaplex | PickMetaplex) => Result<string, ValidatorError>;
+    export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
     type PickNftStorage = Pick<NftStorageMetadata, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
     type PickNftStorageMetaplex = Pick<NftStorageMetaplexMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
     type PickMetaplex = Pick<MetaplexMetaData, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
