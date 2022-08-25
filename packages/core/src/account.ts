@@ -21,25 +21,21 @@ import {
 
 import bs from 'bs58';
 
-import {Transaction} from './';
+import { Transaction } from './';
 import {
-  Instruction,
-  Node,
-  Result,
-  debugLog,
-} from '@solana-suite/shared';
-
-export type Pubkey = string;
-export type Secret = string;
+  Pubkey,
+  Secret,
+  AccountInfo,
+  TokenAccountInfo,
+  TokenInfoOwned,
+} from './types/account';
+import { Instruction, Node, Result, debugLog } from '@solana-suite/shared';
 
 export class KeypairStr {
   pubkey: Pubkey;
   secret: Secret;
 
-  constructor(
-    pubkey: Pubkey,
-    secret: Secret
-  ) {
+  constructor(pubkey: Pubkey, secret: Secret) {
     this.pubkey = pubkey;
     this.secret = secret;
   }
@@ -58,36 +54,20 @@ export namespace Account {
   type Unit = 'sol' | 'lamports';
 
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
-  export const MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 5;
-
-  export interface AccountInfo {
-    lamports: number,
-    owner: string,
-    rentEpoch: number
-  }
-
-  export interface TokenAccountInfo {
-    mint: string,
-    owner: string,
-    tokenAmount: number
-  }
-
-  export interface TokenInfoOwned {
-    mint: string,
-    tokenAmount: number,
-  }
+  export const MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 2;
 
   export const getInfo = async (
-    pubkey: PublicKey,
+    pubkey: PublicKey
   ): Promise<Result<AccountInfo | TokenAccountInfo, Error>> => {
-    const accountInfo = await Node.getConnection().getParsedAccountInfo(pubkey)
+    const accountInfo = await Node.getConnection()
+      .getParsedAccountInfo(pubkey)
       .then(Result.ok)
       .catch(Result.err);
 
     if (accountInfo.isErr) {
       return Result.err(accountInfo.error);
     }
-    const data = (accountInfo?.value?.value?.data) as ParsedAccountData;
+    const data = accountInfo?.value?.value?.data as ParsedAccountData;
     if (!data) {
       // invalid pubkey
       return Result.err(Error('Not found publicKey. invalid data'));
@@ -96,23 +76,24 @@ export namespace Account {
       return Result.ok({
         mint: data.parsed.info.mint,
         owner: data.parsed.info.owner,
-        tokenAmount: data.parsed.info.tokenAmount.uiAmount
+        tokenAmount: data.parsed.info.tokenAmount.uiAmount,
       } as TokenAccountInfo);
     } else {
       // native address publicKey
       return Result.ok({
         lamports: accountInfo.value.value?.lamports,
         owner: accountInfo.value.value?.owner.toString(),
-        rentEpoch: accountInfo.value.value?.rentEpoch
+        rentEpoch: accountInfo.value.value?.rentEpoch,
       } as AccountInfo);
     }
-  }
+  };
 
   export const getBalance = async (
     pubkey: PublicKey,
     unit: Unit = 'sol'
   ): Promise<Result<number, Error>> => {
-    const balance = await Node.getConnection().getBalance(pubkey)
+    const balance = await Node.getConnection()
+      .getBalance(pubkey)
       .then(Result.ok)
       .catch(Result.err);
 
@@ -121,45 +102,48 @@ export namespace Account {
     }
 
     switch (unit) {
-      case 'sol': return Result.ok((balance.value) / LAMPORTS_PER_SOL);
-      case 'lamports': return balance;
-      default: return Result.err(Error('no match unit'));
+      case 'sol':
+        return Result.ok(balance.value / LAMPORTS_PER_SOL);
+      case 'lamports':
+        return balance;
+      default:
+        return Result.err(Error('no match unit'));
     }
   };
 
   export const getTokenBalance = async (
     pubkey: PublicKey,
-    mint: PublicKey,
+    mint: PublicKey
   ): Promise<Result<TokenAmount, Error>> => {
     const res = await findAssociatedTokenAddress(mint, pubkey);
     if (res.isErr) {
       return Result.err(res.error);
     }
-    return await Node.getConnection().getTokenAccountBalance(res.unwrap())
+    return await Node.getConnection()
+      .getTokenAccountBalance(res.unwrap())
       .then((rpc: RpcResponseAndContext<TokenAmount>) => Result.ok(rpc.value))
       .catch(Result.err);
   };
 
   export const getTokenInfoOwned = async (
-    pubkey: PublicKey,
+    pubkey: PublicKey
   ): Promise<Result<TokenInfoOwned[], Error>> => {
-    const res = await Node.getConnection().getParsedTokenAccountsByOwner(
-      pubkey,
-      {
-        programId: TOKEN_PROGRAM_ID
-      }
-    ).then(Result.ok)
+    const res = await Node.getConnection()
+      .getParsedTokenAccountsByOwner(pubkey, {
+        programId: TOKEN_PROGRAM_ID,
+      })
+      .then(Result.ok)
       .catch(Result.err);
 
     if (res.isErr) {
       return Result.err(res.error);
     }
 
-    const modified = res.unwrap().value.map(d => {
+    const modified = res.unwrap().value.map((d) => {
       return {
         mint: d.account.data.parsed.info.mint,
-        tokenAmount: d.account.data.parsed.info.tokenAmount.uiAmount
-      }
+        tokenAmount: d.account.data.parsed.info.tokenAmount.uiAmount,
+      };
     });
 
     return Result.ok(modified);
@@ -171,16 +155,16 @@ export namespace Account {
   ): Promise<Result<string, Error>> => {
     debugLog('Now airdropping...please wait');
 
-    airdropAmount = !airdropAmount ? DEFAULT_AIRDROP_AMOUNT : airdropAmount * LAMPORTS_PER_SOL;
+    airdropAmount = !airdropAmount
+      ? DEFAULT_AIRDROP_AMOUNT
+      : airdropAmount * LAMPORTS_PER_SOL;
 
     if (airdropAmount > MAX_AIRDROP_SOL) {
-      return Result.err(Error(`Over max airdrop amount: ${airdropAmount}`))
+      return Result.err(Error(`Over max airdrop amount: ${airdropAmount}`));
     }
 
-    const sig = await Node.getConnection().requestAirdrop(
-      pubkey,
-      airdropAmount
-    )
+    const sig = await Node.getConnection()
+      .requestAirdrop(pubkey, airdropAmount)
       .then(Result.ok)
       .catch(Result.err);
 
@@ -189,7 +173,7 @@ export namespace Account {
     }
     await Transaction.confirmedSig(sig.value);
     return Result.ok('success');
-  }
+  };
 
   export const create = (): KeypairStr => {
     const keypair = Keypair.generate();
@@ -204,23 +188,24 @@ export namespace Account {
     owner: PublicKey
   ): Promise<Result<PublicKey, Error>> => {
     return await PublicKey.findProgramAddress(
-      [
-        owner.toBuffer(),
-        TOKEN_PROGRAM_ID.toBuffer(),
-        mint.toBuffer(),
-      ],
+      [owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
       ASSOCIATED_TOKEN_PROGRAM_ID
     )
-      .then(v => Result.ok(v[0]))
+      .then((v) => Result.ok(v[0]))
       .catch(Result.err);
-  }
+  };
 
   export const getOrCreateAssociatedTokenAccountInstruction = async (
     mint: PublicKey,
     owner: PublicKey,
     feePayer: PublicKey,
-    allowOwnerOffCurve = false,
-  ): Promise<Result<{tokenAccount: string, inst: TransactionInstruction | undefined}, Error>> => {
+    allowOwnerOffCurve = false
+  ): Promise<
+    Result<
+      { tokenAccount: string; inst: TransactionInstruction | undefined },
+      Error
+    >
+  > => {
     const associatedToken = await getAssociatedTokenAddress(
       mint,
       owner,
@@ -235,7 +220,6 @@ export namespace Account {
       return associatedToken.error;
     }
 
-
     const associatedTokenAccount = associatedToken.unwrap();
     debugLog('# associatedTokenAccount: ', associatedTokenAccount.toString());
 
@@ -246,50 +230,46 @@ export namespace Account {
         associatedTokenAccount,
         Node.getConnection().commitment,
         TOKEN_PROGRAM_ID
-      )
-      return Result.ok(
-        {
-          tokenAccount: associatedTokenAccount.toString(),
-          inst: undefined
-        }
       );
+      return Result.ok({
+        tokenAccount: associatedTokenAccount.toString(),
+        inst: undefined,
+      });
     } catch (error: unknown) {
-      if (!(error instanceof TokenAccountNotFoundError)
-        && !(error instanceof TokenInvalidAccountOwnerError)) {
+      if (
+        !(error instanceof TokenAccountNotFoundError) &&
+        !(error instanceof TokenInvalidAccountOwnerError)
+      ) {
         return Result.err(Error('Unexpected error'));
       }
 
-      const inst =
-        createAssociatedTokenAccountInstruction(
-          feePayer,
-          associatedTokenAccount,
-          owner,
-          mint,
-          TOKEN_PROGRAM_ID,
-          ASSOCIATED_TOKEN_PROGRAM_ID
-        );
-
-      return Result.ok(
-        {
-          tokenAccount: associatedTokenAccount.toString(),
-          inst
-        }
+      const inst = createAssociatedTokenAccountInstruction(
+        feePayer,
+        associatedTokenAccount,
+        owner,
+        mint,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
       );
+
+      return Result.ok({
+        tokenAccount: associatedTokenAccount.toString(),
+        inst,
+      });
     }
-  }
+  };
 
   export const getOrCreateAssociatedTokenAccount = async (
     mint: PublicKey,
     owner: PublicKey,
     feePayer: Signer,
-    allowOwnerOffCurve = false,
+    allowOwnerOffCurve = false
   ): Promise<Result<string | Instruction, Error>> => {
-
     const res = await getOrCreateAssociatedTokenAccountInstruction(
       mint,
       owner,
       feePayer.publicKey,
-      allowOwnerOffCurve,
+      allowOwnerOffCurve
     );
 
     if (res.isErr) {
@@ -301,12 +281,7 @@ export namespace Account {
     }
 
     return Result.ok(
-      new Instruction(
-        [res.value.inst],
-        [],
-        feePayer,
-        res.value.tokenAccount
-      )
+      new Instruction([res.value.inst], [], feePayer, res.value.tokenAccount)
     );
-  }
+  };
 }

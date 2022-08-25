@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../shared/test/testSetup';
-import { Memo, KeypairStr, SolNative, Transaction, SplToken } from '../src';
+import { Memo, SolNative, Transaction, SplToken, KeypairStr } from '../src';
 
 let source: KeypairStr;
 let dest: KeypairStr;

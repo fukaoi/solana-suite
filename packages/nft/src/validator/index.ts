@@ -4,7 +4,9 @@ import {
   MetaplexMetaData,
   NftStorageMetaplexMetadata,
 } from '../types/metaplex/mint';
+
 import { NftStorageMetadata } from '../types/storage';
+import { Limit, Details } from '../types/validator';
 
 export namespace Validator {
   export namespace Message {
@@ -22,19 +24,6 @@ export namespace Validator {
   export const ROYALTY_MAX = 100;
   export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
   export const ROYALTY_MIN = 0;
-
-  export type Condition = 'overMax' | 'underMin';
-  export interface Limit {
-    threshold: number;
-    condition: Condition;
-  }
-
-  export interface Details {
-    key: string;
-    message: string;
-    actual: string | number;
-    limit?: Limit;
-  }
 
   export const isRoyalty = (
     royalty: number
@@ -248,8 +237,8 @@ export namespace Validator {
 }
 
 export class ValidatorError extends Error {
-  details: Validator.Details[];
-  constructor(message: string, details: Validator.Details[]) {
+  details: Details[];
+  constructor(message: string, details: Details[]) {
     super(message);
     this.details = details;
   }

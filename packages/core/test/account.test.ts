@@ -1,9 +1,10 @@
-import {describe, it} from 'mocha';
-import {Account, KeypairStr} from '../src';
-import {assert} from 'chai';
-import {PublicKey} from '@solana/web3.js';
-import {Setup} from '../../shared/test/testSetup';
-import {Instruction} from '@solana-suite/shared';
+import { describe, it } from 'mocha';
+import { AccountInfo, TokenAccountInfo } from '../src/types/account';
+import { Account, KeypairStr } from '../src/account';
+import { assert } from 'chai';
+import { PublicKey } from '@solana/web3.js';
+import { Setup } from '../../shared/test/testSetup';
+import { Instruction } from '@solana-suite/shared';
 
 let source: KeypairStr;
 
@@ -28,7 +29,7 @@ describe('Account', () => {
     }
 
     if (res.isOk) {
-      const info = res.value as Account.AccountInfo;
+      const info = res.value as AccountInfo;
       assert.isNumber(info.lamports);
       assert.isString(info.owner);
       assert.isNumber(info.rentEpoch);
@@ -36,14 +37,15 @@ describe('Account', () => {
   });
 
   it('Get account info via token account', async () => {
-    const tokenAccount = '7huF1Cu7eXuaiSvJLuZvgAvS21K3M5PKvjm7mp5vRxE9'.toPublicKey();
+    const tokenAccount =
+      '7huF1Cu7eXuaiSvJLuZvgAvS21K3M5PKvjm7mp5vRxE9'.toPublicKey();
     const res = await Account.getInfo(tokenAccount);
     if (res.isErr) {
       assert(res.error.message);
     }
 
     if (res.isOk) {
-      const info = res.value as Account.TokenAccountInfo;
+      const info = res.value as TokenAccountInfo;
       assert.isNotEmpty(info.owner);
       assert.isNotEmpty(info.mint);
       assert.isNumber(info.tokenAmount);
@@ -51,7 +53,8 @@ describe('Account', () => {
   });
 
   it('[Err]Not found address', async () => {
-    const tokenAccount = 'DUc7jGemNCv5A2q9GDDsnYn6JguMViVqfWyBdmPxvUG1'.toPublicKey();
+    const tokenAccount =
+      'DUc7jGemNCv5A2q9GDDsnYn6JguMViVqfWyBdmPxvUG1'.toPublicKey();
     const res = await Account.getInfo(tokenAccount);
     assert.isTrue(res.isErr);
   });
@@ -74,10 +77,7 @@ describe('Account', () => {
   });
 
   it('Get lamports balance at publicKey', async () => {
-    const res = await Account.getBalance(
-      source.toPublicKey(),
-      'lamports'
-    );
+    const res = await Account.getBalance(source.toPublicKey(), 'lamports');
     assert.isTrue(res.isOk);
     console.log('# balance lamports: ', res.unwrap());
   });
@@ -85,7 +85,7 @@ describe('Account', () => {
   it('find token address', async () => {
     const res = await Account.findAssociatedTokenAddress(
       'D7dKBiFxWKiSSew4fzinML1so4vEaSPmtiKV6qWMDUJJ'.toPublicKey(),
-      '5hj62erLKeKSM29C5oZR8TGei7RrMG79voFkiCotRZmS'.toPublicKey(),
+      '5hj62erLKeKSM29C5oZR8TGei7RrMG79voFkiCotRZmS'.toPublicKey()
     );
     assert.isTrue(res.isOk);
     assert.isNotNull(res.unwrap());
@@ -114,7 +114,7 @@ describe('Account', () => {
     const res = await Account.getTokenInfoOwned(owner);
     assert.isTrue(res.isOk, `${res.unwrap()}`);
 
-    res.unwrap().forEach(r => {
+    res.unwrap().forEach((r) => {
       assert.isNotEmpty(r.mint);
       assert.isString(r.mint);
       assert.isNumber(r.tokenAmount);
@@ -126,7 +126,7 @@ describe('Account', () => {
     const res = await Account.getTokenInfoOwned(owner);
     assert.isTrue(res.isOk, `${res.unwrap()}`);
 
-    res.unwrap().forEach(r => {
+    res.unwrap().forEach((r) => {
       assert.isEmpty(r.mint);
       assert.isEmpty(r.tokenAmount);
     });
@@ -160,8 +160,14 @@ describe('Account', () => {
     const res = await inst.submit();
 
     res.match(
-      (ok) => console.log('# sig: ', ok, '# tokenAccount: ', (inst.unwrap() as Instruction).data),
+      (ok) =>
+        console.log(
+          '# sig: ',
+          ok,
+          '# tokenAccount: ',
+          (inst.unwrap() as Instruction).data
+        ),
       (err) => assert.fail(err.message)
     );
   });
-})
+});
