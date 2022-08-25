@@ -9,7 +9,7 @@ import { Node, Result } from '../';
 import { Instruction, MAX_RETRIES } from '../instruction';
 
 // @internal
-export class Internal_Instruction {
+export class Internals_Instruction {
   static batchSubmit = async (
     arr: Instruction[]
   ): Promise<Result<TransactionSignature, Error>> => {

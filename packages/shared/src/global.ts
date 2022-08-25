@@ -3,7 +3,7 @@ import { PublicKey, Keypair, TransactionSignature } from '@solana/web3.js';
 import bs from 'bs58';
 import { Constants, Result, Instruction } from './';
 
-import { Internal_Instruction } from './internal/_instruction';
+import { Internals_Instruction } from './internals/_instruction';
 
 declare global {
   interface String {
@@ -40,7 +40,7 @@ Array.prototype.submit = async function () {
     }
     i++;
   }
-  return await Internal_Instruction.batchSubmit(instructions);
+  return await Internals_Instruction.batchSubmit(instructions);
 };
 
 String.prototype.toPublicKey = function () {
