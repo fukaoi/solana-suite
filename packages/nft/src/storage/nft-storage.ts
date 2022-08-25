@@ -9,7 +9,7 @@ import {
 } from '@solana-suite/shared';
 
 import { useMetaplexFileFromBrowser } from '@metaplex-foundation/js';
-import { NftStorageMetadata } from '.';
+import { NftStorageMetadata } from '../types/storage';
 import { MetaplexRoyalty } from '../metaplex';
 import { Validator, ValidatorError } from '../validator';
 

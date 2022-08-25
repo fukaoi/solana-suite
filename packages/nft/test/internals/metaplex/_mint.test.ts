@@ -4,12 +4,12 @@ import { KeypairStr } from '@solana-suite/core';
 import { Setup } from '../../../../shared/test/testSetup';
 import { RandomAsset } from '../../randomAsset';
 import { StorageArweave } from '../../../src/storage/arweave';
-import { MetaplexInternal_Mint } from '../../../src/metaplex/internal/_mint';
+import { InternalsMetaplex_Mint } from '../../../src/internals/metaplex/_mint';
 import { StorageNftStorage, ValidatorError } from '../../../src';
 
 let source: KeypairStr;
 
-describe('MetaplexInternal_Mint', () => {
+describe('InternalsMetaplex_Mint', () => {
   before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
@@ -51,7 +51,7 @@ describe('MetaplexInternal_Mint', () => {
     };
 
     console.log('[step3] mint on Solana');
-    const res = await MetaplexInternal_Mint.create(
+    const res = await InternalsMetaplex_Mint.create(
       {
         name: asset.name,
         uri,
@@ -105,7 +105,7 @@ describe('MetaplexInternal_Mint', () => {
     };
 
     console.log('[step3] mint on Solana');
-    const res = await MetaplexInternal_Mint.create(
+    const res = await InternalsMetaplex_Mint.create(
       {
         name: asset.name,
         uri,
@@ -128,7 +128,7 @@ describe('MetaplexInternal_Mint', () => {
   });
 
   it('Raise validation error when upload meta data', async () => {
-    const res = await MetaplexInternal_Mint.create(
+    const res = await InternalsMetaplex_Mint.create(
       {
         uri: `https://example.com/${'x'.repeat(200)}`,
         name: '',

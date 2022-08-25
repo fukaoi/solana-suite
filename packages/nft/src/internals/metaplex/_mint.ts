@@ -20,12 +20,12 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
-import { MetaplexMetaData } from '../index';
-import { MetaplexRoyalty } from '../royalty';
+import { MetaplexMetaData } from '../../types/metaplex/mint';
 import { Validator, ValidatorError } from '../../validator';
+import {MetaplexRoyalty} from '../../metaplex';
 
 // @internal
-export namespace MetaplexInternal_Mint {
+export namespace InternalsMetaplex_Mint {
   /**
    * NFT mint
    *

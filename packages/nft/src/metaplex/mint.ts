@@ -1,31 +1,13 @@
-import { CreateNftInput } from '@metaplex-foundation/js';
 import { PublicKey, Keypair } from '@solana/web3.js';
-import { NftStorageMetadata, StorageNftStorage } from '../storage';
+import { StorageNftStorage } from '../storage';
 import { Instruction, Result } from '@solana-suite/shared';
 import { StorageArweave } from '../storage';
-import { MetaplexInternal_Mint } from './internal/_mint';
+import { InternalsMetaplex_Mint } from '../internals/metaplex/_mint';
 import { Validator, ValidatorError } from '../validator';
-
-type noNeedOptional =
-  | 'payer'
-  | 'owner'
-  | 'associatedTokenProgram'
-  | 'tokenProgram'
-  | 'confirmOptions';
-
-export type MetaplexMetaData = Omit<CreateNftInput, noNeedOptional>;
-
-export type NftStorageMetaplexMetadata = Omit<
-  NftStorageMetadata,
-  'seller_fee_basis_points'
-> &
-  Omit<MetaplexMetaData, 'uri' | 'sellerFeeBasisPoints'> & {
-    name: string;
-    symbol: string;
-    royalty: number;
-    filePath: string | File;
-    storageType: 'arweave' | 'nftStorage';
-  };
+import {
+  NftStorageMetaplexMetadata,
+  MetaplexMetaData,
+} from '../types/metaplex/mint';
 
 export namespace Metaplex {
   /**
@@ -100,6 +82,6 @@ export namespace Metaplex {
       ...reducedMetadata,
     };
 
-    return MetaplexInternal_Mint.create(mintInput, owner, feePayer);
+    return InternalsMetaplex_Mint.create(mintInput, owner, feePayer);
   };
 }

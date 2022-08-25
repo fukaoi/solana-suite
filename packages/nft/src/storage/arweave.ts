@@ -11,7 +11,7 @@ import fs from 'fs';
 
 import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
 
-import { NftStorageMetadata } from '.';
+import { NftStorageMetadata } from '../types/storage';
 import { Bundlr } from '../bundlr';
 import { MetaplexRoyalty } from '../metaplex';
 import { Validator, ValidatorError } from '../validator';

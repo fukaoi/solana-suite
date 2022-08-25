@@ -1,6 +1,10 @@
 import { Result } from '@solana-suite/shared';
-import { MetaplexMetaData, MetaplexRoyalty, NftStorageMetaplexMetadata } from '../metaplex';
-import { NftStorageMetadata } from '../storage';
+import { MetaplexRoyalty } from '../metaplex';
+import {
+  MetaplexMetaData,
+  NftStorageMetaplexMetadata,
+} from '../types/metaplex/mint';
+import { NftStorageMetadata } from '../types/storage';
 
 export namespace Validator {
   export namespace Message {
@@ -130,8 +134,10 @@ export namespace Validator {
   export const isImageUrl = (image: string): Result<string, ValidatorError> =>
     isUriOrImage(image, 'image');
 
-  export const checkAll = <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(
-    metadata: T,
+  export const checkAll = <
+    T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex
+  >(
+    metadata: T
   ): Result<string, ValidatorError> => {
     const keys = Object.keys(metadata);
     const results: Details[] = [];
