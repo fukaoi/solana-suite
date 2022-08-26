@@ -242,7 +242,7 @@ describe('SplToken', () => {
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
     const mint = mintInst.unwrap().data as string;
 
-    const res = await Internals].retryGetOrCreateAssociatedAccountInfo(
+    const res = await Internals.retryGetOrCreateAssociatedAccountInfo(
       mint.toPublicKey(),
       source.toPublicKey(),
       source.toKeypair()
