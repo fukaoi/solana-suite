@@ -7,9 +7,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { PublicKey, Keypair, } from '@solana/web3.js';
+import { PublicKey, Keypair } from '@solana/web3.js';
 import bs from 'bs58';
-import { Constants, Result, Instruction, } from './';
+import { Constants, Result } from './';
+import { Internals_Instruction } from './internals/_instruction';
 // @ts-ignore
 Array.prototype.submit = function () {
     return __awaiter(this, void 0, void 0, function* () {
@@ -29,8 +30,7 @@ Array.prototype.submit = function () {
             }
             i++;
         }
-        ;
-        return yield Instruction.batchSubmit(instructions);
+        return yield Internals_Instruction.batchSubmit(instructions);
     });
 };
 String.prototype.toPublicKey = function () {
@@ -59,7 +59,7 @@ export const debugLog = (data, data2 = '', data3 = '') => {
         console.log('[DEBUG]', data, data2, data3);
     }
 };
-export const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise(r => setTimeout(r, sec * 1000)); });
+export const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise((r) => setTimeout(r, sec * 1000)); });
 export const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 export const isNode = typeof process !== 'undefined' &&
     process.versions != null &&

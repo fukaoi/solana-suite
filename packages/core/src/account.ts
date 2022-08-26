@@ -21,7 +21,6 @@ import {
 
 import bs from 'bs58';
 
-import { Transaction } from './';
 import {
   Pubkey,
   Secret,
@@ -31,6 +30,7 @@ import {
 } from './types/account';
 import { Instruction, Node, Result, debugLog } from '@solana-suite/shared';
 
+// @todo: KeypairStr
 export class KeypairStr {
   pubkey: Pubkey;
   secret: Secret;
@@ -56,6 +56,9 @@ export namespace Account {
   export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
   export const MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 2;
 
+
+// @todo: SplToken.getInfo(), 
+// @todo: SolNative.getInfo(), 
   export const getInfo = async (
     pubkey: PublicKey
   ): Promise<Result<AccountInfo | TokenAccountInfo, Error>> => {
@@ -88,6 +91,7 @@ export namespace Account {
     }
   };
 
+// @todo: SolNative
   export const getBalance = async (
     pubkey: PublicKey,
     unit: Unit = 'sol'
@@ -111,6 +115,7 @@ export namespace Account {
     }
   };
 
+// @todo: SplToken
   export const getTokenBalance = async (
     pubkey: PublicKey,
     mint: PublicKey
@@ -125,6 +130,7 @@ export namespace Account {
       .catch(Result.err);
   };
 
+// @todo: SplToken
   export const getTokenInfoOwned = async (
     pubkey: PublicKey
   ): Promise<Result<TokenInfoOwned[], Error>> => {
@@ -149,6 +155,7 @@ export namespace Account {
     return Result.ok(modified);
   };
 
+// @todo: Common
   export const requestAirdrop = async (
     pubkey: PublicKey,
     airdropAmount?: number
@@ -171,10 +178,11 @@ export namespace Account {
     if (sig.isErr) {
       return Result.err(Error(`Failed airdrop. ${sig.error.message}`));
     }
-    await Transaction.confirmedSig(sig.value);
+    await Node.confirmedSig(sig.value);
     return Result.ok('success');
   };
 
+// @todo: KeypairStr
   export const create = (): KeypairStr => {
     const keypair = Keypair.generate();
     return new KeypairStr(
@@ -183,6 +191,7 @@ export namespace Account {
     );
   };
 
+// @todo: internal/SplToken
   export const findAssociatedTokenAddress = async (
     mint: PublicKey,
     owner: PublicKey
@@ -195,6 +204,7 @@ export namespace Account {
       .catch(Result.err);
   };
 
+// @todo: internals/SplToken
   export const getOrCreateAssociatedTokenAccountInstruction = async (
     mint: PublicKey,
     owner: PublicKey,
@@ -259,6 +269,7 @@ export namespace Account {
     }
   };
 
+// @todo: internals/SplToken
   export const getOrCreateAssociatedTokenAccount = async (
     mint: PublicKey,
     owner: PublicKey,

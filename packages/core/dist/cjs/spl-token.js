@@ -117,10 +117,10 @@ var SplToken;
             tx.partialSign(signer);
         });
         try {
-            const sirializedTx = tx.serialize({
+            const serializedTx = tx.serialize({
                 requireAllSignatures: false,
             });
-            const hex = sirializedTx.toString('hex');
+            const hex = serializedTx.toString('hex');
             return shared_1.Result.ok(new shared_1.PartialSignInstruction(hex));
         }
         catch (ex) {

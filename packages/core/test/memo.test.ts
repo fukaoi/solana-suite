@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../shared/test/testSetup';
-import { Memo, SolNative, Transaction, SplToken, KeypairStr } from '../src';
+import { Memo, SolNative, SplToken, KeypairStr } from '../src';
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -101,7 +101,7 @@ describe('Memo', () => {
   });
 
   it('Get memo data in transaction from dest', async () => {
-    const res = await Transaction.getHistory(dest.toPublicKey());
+    const res = await SolNative.findByOwner(dest.toPublicKey());
     assert.isOk(res.isOk);
     assert.isNotEmpty(res.unwrap()[0].memo);
     res.unwrap().forEach((r) => {
@@ -113,7 +113,7 @@ describe('Memo', () => {
   });
 
   it('Get memo data in spl transaction from dest', async () => {
-    const res = await Transaction.getTokenHistory(
+    const res = await SplToken.findByOwner(
       mint.toPublicKey(),
       dest.toPublicKey()
     );

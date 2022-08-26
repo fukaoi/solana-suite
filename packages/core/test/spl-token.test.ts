@@ -1,14 +1,11 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../shared/test/testSetup';
-import {
-  Account,
-  SplToken,
-  KeypairStr,
-  Multisig,
-  Transaction,
-} from '../src/';
+import { Account, SplToken, KeypairStr, Multisig } from '../src/';
+import { Node } from '../../shared/src/node';
 import { PublicKey } from '@solana/web3.js';
+import { DirectionFilter } from '../src/types/find';
+import { Internals_SplToken } from '../src/internals/_spl-token';
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -168,7 +165,7 @@ describe('SplToken', () => {
     console.log('signature: ', sig.unwrap());
 
     // time wait
-    await Transaction.confirmedSig(sig.unwrap());
+    await Node.confirmedSig(sig.unwrap());
 
     const res = await Account.getTokenBalance(
       source.toPublicKey(),
@@ -245,7 +242,7 @@ describe('SplToken', () => {
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
     const mint = mintInst.unwrap().data as string;
 
-    const res = await SplToken.retryGetOrCreateAssociatedAccountInfo(
+    const res = await Internals_SplToken.retryGetOrCreateAssociatedAccountInfo(
       mint.toPublicKey(),
       source.toPublicKey(),
       source.toKeypair()
@@ -296,5 +293,49 @@ describe('SplToken', () => {
       assert.isTrue(res.isOk, `${res.unwrap()}`);
       console.log('# tx signature: ', res.unwrap());
     }
+  });
+
+  it('Get token transfer history by owner address', async () => {
+    const mint = '9v7HRkw3Fdt3Ee45z4Y9Mn9jzakHBQmSRZudPJGjbruY'.toPublicKey();
+    const searchAddress =
+      'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPublicKey();
+    const res = await SplToken.findByOwner(mint, searchAddress);
+    assert.isTrue(res.isOk);
+    assert.isTrue(res.unwrap().length > 0);
+    res.unwrap().forEach((v) => {
+      assert.isNotEmpty(v.type);
+      assert.isNotEmpty(v.info.source);
+      assert.isNotEmpty(v.info.destination);
+      assert.isNotNull(v.date);
+    });
+  });
+
+  it('Get token transfer history with transfer source filter', async () => {
+    const mint = '9v7HRkw3Fdt3Ee45z4Y9Mn9jzakHBQmSRZudPJGjbruY'.toPublicKey();
+    const searchAddress =
+      'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPublicKey();
+    const res = await SplToken.findByOwner(mint, searchAddress);
+    assert.isTrue(res.isOk);
+    assert.isTrue(res.unwrap().length > 0);
+    res.unwrap().forEach((v) => {
+      assert.isNotEmpty(v.type);
+      assert.isNotEmpty(v.info.source);
+      assert.isNotEmpty(v.info.destination);
+      assert.isNotNull(v.date);
+    });
+  });
+
+  it('Get token transfer history with transfer dest filter', async () => {
+    const mint = '6yiSjqsmmW48zJ6bM2Fb6jHHebHRfDzXoYRV1f1nt3JX'.toPublicKey();
+    const searchAddress =
+      '8g66KBwriunG4PsKePYZaxd88dW3WKaryqtfpLqrijcV'.toPublicKey();
+    const res = await SplToken.findByOwner(mint, searchAddress, {
+      directionFilter: DirectionFilter.Dest,
+    });
+    assert.isTrue(res.isOk);
+    assert.isTrue(res.unwrap().length > 0);
+    res.unwrap().forEach((v) => {
+      assert.isNotNull(v.date);
+    });
   });
 });

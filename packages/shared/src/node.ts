@@ -1,15 +1,15 @@
 import {
+  debugLog,
   Constants,
   ConstantsFunc,
-} from './constants';
-
-import {
-  debugLog,
-} from './global';
+  Result,
+} from './';
 
 import {
   Connection,
   Commitment,
+  RpcResponseAndContext,
+  SignatureResult,
 } from '@solana/web3.js';
 
 export namespace Node {
@@ -45,5 +45,15 @@ export namespace Node {
       debugLog('# Node change cluster: ', cluster);
       cluster = ConstantsFunc.switchCluster(param.cluster);
     }
+  }
+
+ export const confirmedSig = async (
+    signature: string,
+    commitment: Commitment = Constants.COMMITMENT
+  ): Promise<Result<RpcResponseAndContext<SignatureResult> | unknown, Error>> => {
+    /** @deprecated Instead, call `confirmTransaction` using a `TransactionConfirmationConfig` */
+    return await Node.getConnection().confirmTransaction(signature, commitment)
+      .then(Result.ok)
+      .catch(Result.err);
   }
 }

@@ -7,75 +7,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Node, Result, Instruction, } from '@solana-suite/shared';
-import { PublicKey, TransactionInstruction, SYSVAR_RENT_PUBKEY, SystemProgram, Keypair, } from '@solana/web3.js';
-import { struct, u8, blob } from '@solana/buffer-layout';
+import { Node, Result, Instruction } from '@solana-suite/shared';
+import { PublicKey, Keypair } from '@solana/web3.js';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-// @internal
-var MultisigInstruction;
-(function (MultisigInstruction) {
-    const createLayoutPubKey = (property) => {
-        return blob(32, property);
-    };
-    MultisigInstruction.Layout = struct([
-        u8('m'),
-        u8('n'),
-        u8('is_initialized'),
-        createLayoutPubKey('signer1'),
-        createLayoutPubKey('signer2'),
-        createLayoutPubKey('signer3'),
-        createLayoutPubKey('signer4'),
-        createLayoutPubKey('signer5'),
-        createLayoutPubKey('signer6'),
-        createLayoutPubKey('signer7'),
-        createLayoutPubKey('signer8'),
-        createLayoutPubKey('signer9'),
-        createLayoutPubKey('signer10'),
-        createLayoutPubKey('signer11'),
-    ]);
-    MultisigInstruction.account = (newAccount, feePayer, balanceNeeded) => {
-        return SystemProgram.createAccount({
-            fromPubkey: feePayer.publicKey,
-            newAccountPubkey: newAccount.publicKey,
-            lamports: balanceNeeded,
-            space: MultisigInstruction.Layout.span,
-            programId: TOKEN_PROGRAM_ID
-        });
-    };
-    MultisigInstruction.multisig = (m, feePayer, signerPubkey) => {
-        const keys = [
-            {
-                pubkey: feePayer.publicKey,
-                isSigner: false,
-                isWritable: true
-            },
-            {
-                pubkey: SYSVAR_RENT_PUBKEY,
-                isSigner: false,
-                isWritable: false
-            },
-        ];
-        signerPubkey.forEach(pubkey => keys.push({
-            pubkey,
-            isSigner: false,
-            isWritable: false
-        }));
-        const dataLayout = struct([
-            u8('instruction'),
-            u8('m'),
-        ]);
-        const data = Buffer.alloc(dataLayout.span);
-        dataLayout.encode({
-            instruction: 2,
-            m
-        }, data);
-        return new TransactionInstruction({
-            keys,
-            programId: TOKEN_PROGRAM_ID,
-            data
-        });
-    };
-})(MultisigInstruction || (MultisigInstruction = {}));
+import { Internals_Multisig } from './internals/_multisig';
 export var Multisig;
 (function (Multisig) {
     Multisig.isAddress = (multisig) => __awaiter(this, void 0, void 0, function* () {
@@ -93,11 +28,11 @@ export var Multisig;
         if (!info.owner.equals(TOKEN_PROGRAM_ID)) {
             return Result.err(Error('Invalid multisig owner'));
         }
-        if (info.data.length !== MultisigInstruction.Layout.span) {
+        if (info.data.length !== Internals_Multisig.Layout.span) {
             return Result.err(Error('Invalid multisig size'));
         }
         const data = Buffer.from(info.data);
-        const multisigInfo = MultisigInstruction.Layout.decode(data);
+        const multisigInfo = Internals_Multisig.Layout.decode(data);
         multisigInfo.signer1 = new PublicKey(multisigInfo.signer1);
         multisigInfo.signer2 = new PublicKey(multisigInfo.signer2);
         multisigInfo.signer3 = new PublicKey(multisigInfo.signer3);
@@ -116,13 +51,14 @@ export var Multisig;
             return Result.err(Error('signers number less than m number'));
         const account = Keypair.generate();
         const connection = Node.getConnection();
-        const balanceNeeded = yield connection.getMinimumBalanceForRentExemption(MultisigInstruction.Layout.span)
+        const balanceNeeded = yield connection
+            .getMinimumBalanceForRentExemption(Internals_Multisig.Layout.span)
             .then(Result.ok)
             .catch(Result.err);
         if (balanceNeeded.isErr)
             return Result.err(balanceNeeded.error);
-        const inst1 = MultisigInstruction.account(account, feePayer, balanceNeeded.value);
-        const inst2 = MultisigInstruction.multisig(m, account, signerPubkey);
+        const inst1 = Internals_Multisig.account(account, feePayer, balanceNeeded.value);
+        const inst2 = Internals_Multisig.multisig(m, account, signerPubkey);
         return Result.ok(new Instruction([inst1, inst2], [account], feePayer, account.publicKey.toBase58()));
     });
 })(Multisig || (Multisig = {}));

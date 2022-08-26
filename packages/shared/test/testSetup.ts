@@ -7,10 +7,6 @@ import {
 } from '../src';
 
 import {
-  Transaction, 
-} from '../../core/src';
-
-import {
   Keypair,
   PublicKey,
   LAMPORTS_PER_SOL,
@@ -80,7 +76,7 @@ export namespace Setup {
   ) => {
     console.log('Now airdropping...please wait');
     const sig = await Node.getConnection().requestAirdrop(pubkey, LAMPORTS_PER_SOL);
-    await Transaction.confirmedSig(sig);
+    await Node.confirmedSig(sig);
     console.log('Confirmed !!');
   }
 

@@ -11,7 +11,8 @@ import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddres
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, } from '@solana/web3.js';
 import bs from 'bs58';
 import { Transaction } from './';
-import { Instruction, Node, Result, debugLog, } from '@solana-suite/shared';
+import { Instruction, Node, Result, debugLog } from '@solana-suite/shared';
+// @todo: KeypairStr
 export class KeypairStr {
     constructor(pubkey, secret) {
         this.pubkey = pubkey;
@@ -28,16 +29,19 @@ export class KeypairStr {
 export var Account;
 (function (Account) {
     Account.DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
-    Account.MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 5;
+    Account.MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 2;
+    // @todo: SplToken.getInfo(), 
+    // @todo: SolNative.getInfo(), 
     Account.getInfo = (pubkey) => __awaiter(this, void 0, void 0, function* () {
         var _a, _b, _c, _d, _e;
-        const accountInfo = yield Node.getConnection().getParsedAccountInfo(pubkey)
+        const accountInfo = yield Node.getConnection()
+            .getParsedAccountInfo(pubkey)
             .then(Result.ok)
             .catch(Result.err);
         if (accountInfo.isErr) {
             return Result.err(accountInfo.error);
         }
-        const data = ((_b = (_a = accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.value) === null || _a === void 0 ? void 0 : _a.value) === null || _b === void 0 ? void 0 : _b.data);
+        const data = (_b = (_a = accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.value) === null || _a === void 0 ? void 0 : _a.value) === null || _b === void 0 ? void 0 : _b.data;
         if (!data) {
             // invalid pubkey
             return Result.err(Error('Not found publicKey. invalid data'));
@@ -47,7 +51,7 @@ export var Account;
             return Result.ok({
                 mint: data.parsed.info.mint,
                 owner: data.parsed.info.owner,
-                tokenAmount: data.parsed.info.tokenAmount.uiAmount
+                tokenAmount: data.parsed.info.tokenAmount.uiAmount,
             });
         }
         else {
@@ -55,55 +59,69 @@ export var Account;
             return Result.ok({
                 lamports: (_c = accountInfo.value.value) === null || _c === void 0 ? void 0 : _c.lamports,
                 owner: (_d = accountInfo.value.value) === null || _d === void 0 ? void 0 : _d.owner.toString(),
-                rentEpoch: (_e = accountInfo.value.value) === null || _e === void 0 ? void 0 : _e.rentEpoch
+                rentEpoch: (_e = accountInfo.value.value) === null || _e === void 0 ? void 0 : _e.rentEpoch,
             });
         }
     });
+    // @todo: SolNative
     Account.getBalance = (pubkey, unit = 'sol') => __awaiter(this, void 0, void 0, function* () {
-        const balance = yield Node.getConnection().getBalance(pubkey)
+        const balance = yield Node.getConnection()
+            .getBalance(pubkey)
             .then(Result.ok)
             .catch(Result.err);
         if (balance.isErr) {
             return balance;
         }
         switch (unit) {
-            case 'sol': return Result.ok((balance.value) / LAMPORTS_PER_SOL);
-            case 'lamports': return balance;
-            default: return Result.err(Error('no match unit'));
+            case 'sol':
+                return Result.ok(balance.value / LAMPORTS_PER_SOL);
+            case 'lamports':
+                return balance;
+            default:
+                return Result.err(Error('no match unit'));
         }
     });
+    // @todo: SplToken
     Account.getTokenBalance = (pubkey, mint) => __awaiter(this, void 0, void 0, function* () {
         const res = yield Account.findAssociatedTokenAddress(mint, pubkey);
         if (res.isErr) {
             return Result.err(res.error);
         }
-        return yield Node.getConnection().getTokenAccountBalance(res.unwrap())
+        return yield Node.getConnection()
+            .getTokenAccountBalance(res.unwrap())
             .then((rpc) => Result.ok(rpc.value))
             .catch(Result.err);
     });
+    // @todo: SplToken
     Account.getTokenInfoOwned = (pubkey) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield Node.getConnection().getParsedTokenAccountsByOwner(pubkey, {
-            programId: TOKEN_PROGRAM_ID
-        }).then(Result.ok)
+        const res = yield Node.getConnection()
+            .getParsedTokenAccountsByOwner(pubkey, {
+            programId: TOKEN_PROGRAM_ID,
+        })
+            .then(Result.ok)
             .catch(Result.err);
         if (res.isErr) {
             return Result.err(res.error);
         }
-        const modified = res.unwrap().value.map(d => {
+        const modified = res.unwrap().value.map((d) => {
             return {
                 mint: d.account.data.parsed.info.mint,
-                tokenAmount: d.account.data.parsed.info.tokenAmount.uiAmount
+                tokenAmount: d.account.data.parsed.info.tokenAmount.uiAmount,
             };
         });
         return Result.ok(modified);
     });
+    // @todo: Common
     Account.requestAirdrop = (pubkey, airdropAmount) => __awaiter(this, void 0, void 0, function* () {
         debugLog('Now airdropping...please wait');
-        airdropAmount = !airdropAmount ? Account.DEFAULT_AIRDROP_AMOUNT : airdropAmount * LAMPORTS_PER_SOL;
+        airdropAmount = !airdropAmount
+            ? Account.DEFAULT_AIRDROP_AMOUNT
+            : airdropAmount * LAMPORTS_PER_SOL;
         if (airdropAmount > Account.MAX_AIRDROP_SOL) {
             return Result.err(Error(`Over max airdrop amount: ${airdropAmount}`));
         }
-        const sig = yield Node.getConnection().requestAirdrop(pubkey, airdropAmount)
+        const sig = yield Node.getConnection()
+            .requestAirdrop(pubkey, airdropAmount)
             .then(Result.ok)
             .catch(Result.err);
         if (sig.isErr) {
@@ -112,19 +130,18 @@ export var Account;
         yield Transaction.confirmedSig(sig.value);
         return Result.ok('success');
     });
+    // @todo: KeypairStr
     Account.create = () => {
         const keypair = Keypair.generate();
         return new KeypairStr(keypair.publicKey.toBase58(), bs.encode(keypair.secretKey));
     };
+    // @todo: internal/SplToken
     Account.findAssociatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
-        return yield PublicKey.findProgramAddress([
-            owner.toBuffer(),
-            TOKEN_PROGRAM_ID.toBuffer(),
-            mint.toBuffer(),
-        ], ASSOCIATED_TOKEN_PROGRAM_ID)
-            .then(v => Result.ok(v[0]))
+        return yield PublicKey.findProgramAddress([owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()], ASSOCIATED_TOKEN_PROGRAM_ID)
+            .then((v) => Result.ok(v[0]))
             .catch(Result.err);
     });
+    // @todo: internals/SplToken
     Account.getOrCreateAssociatedTokenAccountInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
         const associatedToken = yield getAssociatedTokenAddress(mint, owner, allowOwnerOffCurve, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID)
             .then(Result.ok)
@@ -139,21 +156,22 @@ export var Account;
             yield getAccount(Node.getConnection(), associatedTokenAccount, Node.getConnection().commitment, TOKEN_PROGRAM_ID);
             return Result.ok({
                 tokenAccount: associatedTokenAccount.toString(),
-                inst: undefined
+                inst: undefined,
             });
         }
         catch (error) {
-            if (!(error instanceof TokenAccountNotFoundError)
-                && !(error instanceof TokenInvalidAccountOwnerError)) {
+            if (!(error instanceof TokenAccountNotFoundError) &&
+                !(error instanceof TokenInvalidAccountOwnerError)) {
                 return Result.err(Error('Unexpected error'));
             }
             const inst = createAssociatedTokenAccountInstruction(feePayer, associatedTokenAccount, owner, mint, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
             return Result.ok({
                 tokenAccount: associatedTokenAccount.toString(),
-                inst
+                inst,
             });
         }
     });
+    // @todo: internals/SplToken
     Account.getOrCreateAssociatedTokenAccount = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
         const res = yield Account.getOrCreateAssociatedTokenAccountInstruction(mint, owner, feePayer.publicKey, allowOwnerOffCurve);
         if (res.isErr) {

@@ -21,7 +21,15 @@ import {
   debugLog,
 } from '@solana-suite/shared';
 
-import {SplToken} from './spl-token';
+
+import {
+  TransferHistory,
+  Filter,
+  DirectionFilter
+} from './types/find'; 
+
+import {Internals_find} from './internals/_find';
+import {Internals_SplToken} from './internals/_spl-token';
 
 export namespace SolNative {
 
@@ -72,7 +80,7 @@ export namespace SolNative {
 
 
 
-    const sourceToken = await SplToken.retryGetOrCreateAssociatedAccountInfo(
+    const sourceToken = await Internals_SplToken.retryGetOrCreateAssociatedAccountInfo(
       token,
       owner,
       payer
@@ -84,7 +92,7 @@ export namespace SolNative {
 
     debugLog('# sourceToken: ', sourceToken.value);
 
-    const destToken = await SplToken.retryGetOrCreateAssociatedAccountInfo(
+    const destToken = await Internals_SplToken.retryGetOrCreateAssociatedAccountInfo(
       token,
       wrapped.value,
       payer
@@ -180,5 +188,60 @@ export namespace SolNative {
     } catch (ex) {
       return Result.err(ex as Error);
     }
+  }
+
+  export const findByOwner = async (
+    searchPubkey: PublicKey,
+    options?: {
+      limit?: number,
+      actionFilter?: Filter[],
+      directionFilter?: DirectionFilter,
+    }
+  ): Promise<Result<TransferHistory[], Error>> => {
+
+    if (options === undefined || !Object.keys(options).length) {
+      options = {
+        limit: 0,
+        actionFilter: [],
+        directionFilter: undefined,
+      }
+    }
+
+    const actionFilter =
+      options?.actionFilter !== undefined && options.actionFilter.length > 0
+        ? options.actionFilter
+        : [
+          Filter.Transfer,
+          Filter.TransferChecked,
+        ];
+
+    let bufferedLimit = 0;
+    if (options.limit && options.limit < 50) {
+      bufferedLimit = options.limit * 1.5; // To get more data, threshold
+    } else {
+      bufferedLimit = 10;
+      options.limit = 10;
+    }
+    let hist: TransferHistory[] = [];
+    let before;
+
+    while (true) {
+      const transactions = await Internals_find.getForAddress(searchPubkey, bufferedLimit, before);
+      debugLog('# getTransactionHistory loop');
+      const res = Internals_find.filterTransactions(
+        searchPubkey,
+        transactions,
+        actionFilter,
+        false,
+        options.directionFilter
+      );
+      hist = hist.concat(res);
+      if (hist.length >= options.limit || res.length === 0) {
+        hist = hist.slice(0, options.limit);
+        break;
+      }
+      before = hist[hist.length - 1].sig;
+    }
+    return Result.ok(hist);
   }
 }

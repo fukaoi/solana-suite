@@ -1,6 +1,7 @@
 import { Result } from '@solana-suite/shared';
-import { MetaplexMetaData, NftStorageMetaplexMetadata } from '../metaplex';
-import { NftStorageMetadata } from '../storage';
+import { MetaplexMetaData, NftStorageMetaplexMetadata } from '../types/metaplex/mint';
+import { NftStorageMetadata } from '../types/storage';
+import { Details } from '../types/validator';
 export declare namespace Validator {
     export namespace Message {
         const SUCCESS = "success";
@@ -16,17 +17,6 @@ export declare namespace Validator {
     export const ROYALTY_MAX = 100;
     export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
     export const ROYALTY_MIN = 0;
-    export type Condition = 'overMax' | 'underMin';
-    export interface Limit {
-        threshold: number;
-        condition: Condition;
-    }
-    export interface Details {
-        key: string;
-        message: string;
-        actual: string | number;
-        limit?: Limit;
-    }
     export const isRoyalty: (royalty: number) => Result<string, ValidatorError>;
     export const isSellerFeeBasisPoints: (royalty: number) => Result<string, ValidatorError>;
     export const isName: (name: string) => Result<string, ValidatorError>;
@@ -41,6 +31,6 @@ export declare namespace Validator {
     export {};
 }
 export declare class ValidatorError extends Error {
-    details: Validator.Details[];
-    constructor(message: string, details: Validator.Details[]);
+    details: Details[];
+    constructor(message: string, details: Details[]);
 }

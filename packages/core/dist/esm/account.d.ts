@@ -1,7 +1,6 @@
 import { Keypair, PublicKey, TokenAmount, Signer, TransactionInstruction } from '@solana/web3.js';
+import { Pubkey, Secret, AccountInfo, TokenAccountInfo, TokenInfoOwned } from './types/account';
 import { Instruction, Result } from '@solana-suite/shared';
-export declare type Pubkey = string;
-export declare type Secret = string;
 export declare class KeypairStr {
     pubkey: Pubkey;
     secret: Secret;
@@ -13,20 +12,6 @@ export declare namespace Account {
     type Unit = 'sol' | 'lamports';
     export const DEFAULT_AIRDROP_AMOUNT: number;
     export const MAX_AIRDROP_SOL: number;
-    export interface AccountInfo {
-        lamports: number;
-        owner: string;
-        rentEpoch: number;
-    }
-    export interface TokenAccountInfo {
-        mint: string;
-        owner: string;
-        tokenAmount: number;
-    }
-    export interface TokenInfoOwned {
-        mint: string;
-        tokenAmount: number;
-    }
     export const getInfo: (pubkey: PublicKey) => Promise<Result<AccountInfo | TokenAccountInfo, Error>>;
     export const getBalance: (pubkey: PublicKey, unit?: Unit) => Promise<Result<number, Error>>;
     export const getTokenBalance: (pubkey: PublicKey, mint: PublicKey) => Promise<Result<TokenAmount, Error>>;
