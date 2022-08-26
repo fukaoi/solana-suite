@@ -29,7 +29,7 @@ import {
 } from './types/find'; 
 
 import {Internals_find} from './internals/_find';
-import {Internals_SplToken} from './internals/_spl-token';
+import {Internals} from './internals/_index';
 
 export namespace SolNative {
 
@@ -80,7 +80,7 @@ export namespace SolNative {
 
 
 
-    const sourceToken = await Internals_SplToken.retryGetOrCreateAssociatedAccountInfo(
+    const sourceToken = await Internals.retryGetOrCreateAssociatedAccountInfo(
       token,
       owner,
       payer
@@ -92,7 +92,7 @@ export namespace SolNative {
 
     debugLog('# sourceToken: ', sourceToken.value);
 
-    const destToken = await Internals_SplToken.retryGetOrCreateAssociatedAccountInfo(
+    const destToken = await Internals.retryGetOrCreateAssociatedAccountInfo(
       token,
       wrapped.value,
       payer

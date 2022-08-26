@@ -5,7 +5,7 @@ import { Account, SplToken, KeypairStr, Multisig } from '../src/';
 import { Node } from '../../shared/src/node';
 import { PublicKey } from '@solana/web3.js';
 import { DirectionFilter } from '../src/types/find';
-import { Internals_SplToken } from '../src/internals/_spl-token';
+import { Internals } from '../src/internals/_index';
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -242,7 +242,7 @@ describe('SplToken', () => {
     assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
     const mint = mintInst.unwrap().data as string;
 
-    const res = await Internals_SplToken.retryGetOrCreateAssociatedAccountInfo(
+    const res = await Internals].retryGetOrCreateAssociatedAccountInfo(
       mint.toPublicKey(),
       source.toPublicKey(),
       source.toKeypair()

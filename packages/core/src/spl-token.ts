@@ -20,7 +20,7 @@ import { Account as Acc, Account } from './';
 
 import { TransferHistory, Filter, DirectionFilter } from './types/find';
 import { Internals_find } from './internals/_find';
-import { Internals_SplToken } from './internals/_spl-token';
+import { Internals } from './internals/_index';
 
 export namespace SplToken {
   const NFT_AMOUNT = 1;
@@ -59,7 +59,7 @@ export namespace SplToken {
 
     const token = tokenRes.value;
 
-    const tokenAssociated = await Internals_SplToken.retryGetOrCreateAssociatedAccountInfo(
+    const tokenAssociated = await Internals.retryGetOrCreateAssociatedAccountInfo(
       token,
       owner,
       feePayer
@@ -120,7 +120,7 @@ export namespace SplToken {
   ): Promise<Result<Instruction, Error>> => {
     !feePayer && (feePayer = signers[0]);
 
-    const sourceToken = await Internals_SplToken.retryGetOrCreateAssociatedAccountInfo(
+    const sourceToken = await Internals.retryGetOrCreateAssociatedAccountInfo(
       mint,
       owner,
       feePayer
@@ -130,7 +130,7 @@ export namespace SplToken {
       return Result.err(sourceToken.error);
     }
 
-    const destToken = await Internals_SplToken.retryGetOrCreateAssociatedAccountInfo(
+    const destToken = await Internals.retryGetOrCreateAssociatedAccountInfo(
       mint,
       dest,
       feePayer
