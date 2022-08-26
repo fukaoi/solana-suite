@@ -4,9 +4,16 @@ import {
   createMintToCheckedInstruction,
   createTransferCheckedInstruction,
   getAssociatedTokenAddress,
+  TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
-import { PublicKey, Signer, Transaction } from '@solana/web3.js';
+import {
+  PublicKey,
+  Signer,
+  Transaction,
+  TokenAmount,
+  RpcResponseAndContext,
+} from '@solana/web3.js';
 
 import {
   Node,
@@ -16,11 +23,11 @@ import {
   debugLog,
 } from '@solana-suite/shared';
 
-import { Account as Acc, Account } from './';
-
 import { TransferHistory, Filter, DirectionFilter } from './types/find';
+import { TokenInfoOwned } from './types/spl-token';
 import { Internals_find } from './internals/_find';
 import { Internals } from './internals/_index';
+import {Internals_SplToken} from './internals/_spl-token';
 
 export namespace SplToken {
   const NFT_AMOUNT = 1;
@@ -59,11 +66,12 @@ export namespace SplToken {
 
     const token = tokenRes.value;
 
-    const tokenAssociated = await Internals.retryGetOrCreateAssociatedAccountInfo(
-      token,
-      owner,
-      feePayer
-    );
+    const tokenAssociated =
+      await Internals.retryGetOrCreateAssociatedAccountInfo(
+        token,
+        owner,
+        feePayer
+      );
 
     if (tokenAssociated.isErr) {
       return Result.err(tokenAssociated.error);
@@ -91,7 +99,7 @@ export namespace SplToken {
     tokenDecimals: number,
     feePayer?: Signer
   ) => {
-    const tokenAccount = await Acc.findAssociatedTokenAddress(mint, owner);
+    const tokenAccount = await Internals_SplToken.findAssociatedTokenAddress(mint, owner);
 
     if (tokenAccount.isErr) {
       return Result.err(tokenAccount.error);
@@ -181,14 +189,14 @@ export namespace SplToken {
     feePayer: PublicKey
   ): Promise<Result<PartialSignInstruction, Error>> => {
     const sourceToken =
-      await Account.getOrCreateAssociatedTokenAccountInstruction(
+      await Internals_SplToken.getOrCreateAssociatedTokenAccountInstruction(
         mint,
         owner,
         feePayer
       );
 
     const destToken =
-      await Account.getOrCreateAssociatedTokenAccountInstruction(
+      await Internals_SplToken.getOrCreateAssociatedTokenAccountInstruction(
         mint,
         dest,
         feePayer
@@ -333,5 +341,44 @@ export namespace SplToken {
       before = hist[hist.length - 1].sig;
     }
     return Result.ok(hist);
+  };
+
+  export const getBalance = async (
+    pubkey: PublicKey,
+    mint: PublicKey
+  ): Promise<Result<TokenAmount, Error>> => {
+    const res = await Internals_SplToken.findAssociatedTokenAddress(mint, pubkey);
+    if (res.isErr) {
+      return Result.err(res.error);
+    }
+    return await Node.getConnection()
+      .getTokenAccountBalance(res.unwrap())
+      .then((rpc: RpcResponseAndContext<TokenAmount>) => Result.ok(rpc.value))
+      .catch(Result.err);
+  };
+
+  // @todo: merge findByOwner
+  export const getTokenInfoOwned = async (
+    pubkey: PublicKey
+  ): Promise<Result<TokenInfoOwned[], Error>> => {
+    const res = await Node.getConnection()
+      .getParsedTokenAccountsByOwner(pubkey, {
+        programId: TOKEN_PROGRAM_ID,
+      })
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (res.isErr) {
+      return Result.err(res.error);
+    }
+
+    const modified = res.unwrap().value.map((d) => {
+      return {
+        mint: d.account.data.parsed.info.mint,
+        tokenAmount: d.account.data.parsed.info.tokenAmount.uiAmount,
+      };
+    });
+
+    return Result.ok(modified);
   };
 }

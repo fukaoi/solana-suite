@@ -1,55 +1,122 @@
-import { PublicKey, Signer} from '@solana/web3.js';
+import { PublicKey, Signer, TransactionInstruction } from '@solana/web3.js';
 
 import {
   Node,
   Result,
   Instruction,
-  sleep,
   debugLog,
 } from '@solana-suite/shared';
 
-import { Account as Acc } from '../';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress,
+  getAccount,
+  TokenAccountNotFoundError,
+  TokenInvalidAccountOwnerError,
+  createAssociatedTokenAccountInstruction,
+} from '@solana/spl-token';
 
-export namespace Internals {
-  const RETRY_OVER_LIMIT = 10;
-  const RETRY_SLEEP_TIME = 3;
+export namespace Internals_SplToken {
+  export const findAssociatedTokenAddress = async (
+    mint: PublicKey,
+    owner: PublicKey
+  ): Promise<Result<PublicKey, Error>> => {
+    return await PublicKey.findProgramAddress(
+      [owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    )
+      .then((v) => Result.ok(v[0]))
+      .catch(Result.err);
+  };
 
-  export const retryGetOrCreateAssociatedAccountInfo = async (
+  export const getOrCreateAssociatedTokenAccountInstruction = async (
     mint: PublicKey,
     owner: PublicKey,
-    feePayer: Signer
-  ): Promise<Result<string, Error>> => {
-    let counter = 1;
-    while (counter < RETRY_OVER_LIMIT) {
-      try {
-        const inst = await Acc.getOrCreateAssociatedTokenAccount(
-          mint,
-          owner,
-          feePayer,
-          true
-        );
+    feePayer: PublicKey,
+    allowOwnerOffCurve = false
+  ): Promise<
+    Result<
+      { tokenAccount: string; inst: TransactionInstruction | undefined },
+      Error
+    >
+  > => {
+    const associatedToken = await getAssociatedTokenAddress(
+      mint,
+      owner,
+      allowOwnerOffCurve,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    )
+      .then(Result.ok)
+      .catch(Result.err);
 
-        if (inst.isOk && typeof inst.value === 'string') {
-          debugLog('# associatedTokenAccount: ', inst.value);
-          return Result.ok(inst.value);
-        }
-
-        return (await inst.submit()).map(
-          (ok: string) => {
-            Node.confirmedSig(ok);
-            return (inst.unwrap() as Instruction).data as string;
-          },
-          (err: Error) => {
-            debugLog('# Error submit getOrCreateAssociatedTokenAccount: ', err);
-            throw err;
-          }
-        );
-      } catch (e) {
-        debugLog(`# retry: ${counter} create token account: `, e);
-      }
-      await sleep(RETRY_SLEEP_TIME);
-      counter++;
+    if (associatedToken.isErr) {
+      return associatedToken.error;
     }
-    return Result.err(Error(`retry action is over limit ${RETRY_OVER_LIMIT}`));
+
+    const associatedTokenAccount = associatedToken.unwrap();
+    debugLog('# associatedTokenAccount: ', associatedTokenAccount.toString());
+
+    try {
+      // Dont use Result
+      await getAccount(
+        Node.getConnection(),
+        associatedTokenAccount,
+        Node.getConnection().commitment,
+        TOKEN_PROGRAM_ID
+      );
+      return Result.ok({
+        tokenAccount: associatedTokenAccount.toString(),
+        inst: undefined,
+      });
+    } catch (error: unknown) {
+      if (
+        !(error instanceof TokenAccountNotFoundError) &&
+        !(error instanceof TokenInvalidAccountOwnerError)
+      ) {
+        return Result.err(Error('Unexpected error'));
+      }
+
+      const inst = createAssociatedTokenAccountInstruction(
+        feePayer,
+        associatedTokenAccount,
+        owner,
+        mint,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+
+      return Result.ok({
+        tokenAccount: associatedTokenAccount.toString(),
+        inst,
+      });
+    }
+  };
+
+  export const getOrCreateAssociatedTokenAccount = async (
+    mint: PublicKey,
+    owner: PublicKey,
+    feePayer: Signer,
+    allowOwnerOffCurve = false
+  ): Promise<Result<string | Instruction, Error>> => {
+    const res = await getOrCreateAssociatedTokenAccountInstruction(
+      mint,
+      owner,
+      feePayer.publicKey,
+      allowOwnerOffCurve
+    );
+
+    if (res.isErr) {
+      return Result.err(res.error);
+    }
+
+    if (!res.value.inst) {
+      return Result.ok(res.value.tokenAccount);
+    }
+
+    return Result.ok(
+      new Instruction([res.value.inst], [], feePayer, res.value.tokenAccount)
+    );
   };
 }

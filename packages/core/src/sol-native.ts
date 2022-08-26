@@ -10,7 +10,7 @@ import {
   PublicKey,
   SystemProgram,
   Signer,
-  Transaction
+  Transaction,
 } from '@solana/web3.js';
 
 import {
@@ -21,18 +21,13 @@ import {
   debugLog,
 } from '@solana-suite/shared';
 
+import { TransferHistory, Filter, DirectionFilter } from './types/find';
 
-import {
-  TransferHistory,
-  Filter,
-  DirectionFilter
-} from './types/find'; 
-
-import {Internals_find} from './internals/_find';
-import {Internals} from './internals/_index';
+import { Internals_find } from './internals/_find';
+import { Internals } from './internals/_index';
 
 export namespace SolNative {
-
+  type Unit = 'sol' | 'lamports';
   const RADIX = 10;
 
   // NOTICE: There is a lamports fluctuation when transfer under 0.001 sol
@@ -42,16 +37,15 @@ export namespace SolNative {
     dest: PublicKey,
     signers: Signer[],
     amount: number,
-    feePayer?: Signer,
+    feePayer?: Signer
   ): Promise<Result<Instruction, Error>> => {
-
     const connection = Node.getConnection();
     const payer = feePayer ? feePayer : signers[0];
     const wrapped = await createWrappedNativeAccount(
       connection,
       payer,
       owner,
-      parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
+      parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX)
     )
       .then(Result.ok)
       .catch(Result.err);
@@ -62,13 +56,7 @@ export namespace SolNative {
 
     debugLog('# wrapped sol: ', wrapped.value.toBase58());
 
-    const tokenRes = await createMint(
-      connection,
-      payer,
-      owner,
-      owner,
-      0,
-    )
+    const tokenRes = await createMint(connection, payer, owner, owner, 0)
       .then(Result.ok)
       .catch(Result.err);
 
@@ -77,8 +65,6 @@ export namespace SolNative {
     }
 
     const token = tokenRes.value;
-
-
 
     const sourceToken = await Internals.retryGetOrCreateAssociatedAccountInfo(
       token,
@@ -109,24 +95,18 @@ export namespace SolNative {
       destToken.value.toPublicKey(),
       owner,
       parseInt(`${amount}`, RADIX), // No lamports, its sol
-      signers,
+      signers
     );
 
     const inst2 = createCloseAccountInstruction(
       wrapped.value,
       dest,
       owner,
-      signers,
+      signers
     );
 
-    return Result.ok(
-      new Instruction(
-        [inst1, inst2],
-        signers,
-        feePayer
-      )
-    );
-  }
+    return Result.ok(new Instruction([inst1, inst2], signers, feePayer));
+  };
 
   export const transfer = async (
     source: PublicKey,
@@ -141,79 +121,64 @@ export namespace SolNative {
       lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
     });
 
-    return Result.ok(
-      new Instruction(
-        [inst],
-        signers,
-        feePayer
-      )
-    );
-  }
+    return Result.ok(new Instruction([inst], signers, feePayer));
+  };
 
   export const feePayerPartialSignTransfer = async (
     owner: PublicKey,
     dest: PublicKey,
     signers: Signer[],
     amount: number,
-    feePayer: PublicKey,
+    feePayer: PublicKey
   ): Promise<Result<PartialSignInstruction, Error>> => {
-
     const blockHashObj = await Node.getConnection().getLatestBlockhash();
     const tx = new Transaction({
       blockhash: blockHashObj.blockhash,
       lastValidBlockHeight: blockHashObj.lastValidBlockHeight,
-      feePayer
+      feePayer,
     }).add(
-      SystemProgram.transfer(
-        {
-          fromPubkey: owner,
-          toPubkey: dest,
-          lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
-        }
-      ),
+      SystemProgram.transfer({
+        fromPubkey: owner,
+        toPubkey: dest,
+        lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
+      })
     );
 
-    signers.forEach(signer => {
+    signers.forEach((signer) => {
       tx.partialSign(signer);
     });
 
     try {
-      const serializedTx = tx.serialize(
-        {
-          requireAllSignatures: false,
-        }
-      )
+      const serializedTx = tx.serialize({
+        requireAllSignatures: false,
+      });
       const hex = serializedTx.toString('hex');
       return Result.ok(new PartialSignInstruction(hex));
     } catch (ex) {
       return Result.err(ex as Error);
     }
-  }
+  };
 
   export const findByOwner = async (
     searchPubkey: PublicKey,
     options?: {
-      limit?: number,
-      actionFilter?: Filter[],
-      directionFilter?: DirectionFilter,
+      limit?: number;
+      actionFilter?: Filter[];
+      directionFilter?: DirectionFilter;
     }
   ): Promise<Result<TransferHistory[], Error>> => {
-
     if (options === undefined || !Object.keys(options).length) {
       options = {
         limit: 0,
         actionFilter: [],
         directionFilter: undefined,
-      }
+      };
     }
 
     const actionFilter =
       options?.actionFilter !== undefined && options.actionFilter.length > 0
         ? options.actionFilter
-        : [
-          Filter.Transfer,
-          Filter.TransferChecked,
-        ];
+        : [Filter.Transfer, Filter.TransferChecked];
 
     let bufferedLimit = 0;
     if (options.limit && options.limit < 50) {
@@ -226,7 +191,11 @@ export namespace SolNative {
     let before;
 
     while (true) {
-      const transactions = await Internals_find.getForAddress(searchPubkey, bufferedLimit, before);
+      const transactions = await Internals_find.getForAddress(
+        searchPubkey,
+        bufferedLimit,
+        before
+      );
       debugLog('# getTransactionHistory loop');
       const res = Internals_find.filterTransactions(
         searchPubkey,
@@ -243,5 +212,28 @@ export namespace SolNative {
       before = hist[hist.length - 1].sig;
     }
     return Result.ok(hist);
-  }
+  };
+
+  export const getBalance = async (
+    pubkey: PublicKey,
+    unit: Unit = 'sol'
+  ): Promise<Result<number, Error>> => {
+    const balance = await Node.getConnection()
+      .getBalance(pubkey)
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (balance.isErr) {
+      return balance;
+    }
+
+    switch (unit) {
+      case 'sol':
+        return Result.ok(balance.value / LAMPORTS_PER_SOL);
+      case 'lamports':
+        return balance;
+      default:
+        return Result.err(Error('no match unit'));
+    }
+  };
 }

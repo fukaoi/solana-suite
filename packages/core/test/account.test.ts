@@ -21,44 +21,6 @@ describe('Account', () => {
     assert.isTrue(balance.isOk, balance.unwrap().toString());
   });
 
-  it('Get account info', async () => {
-    const res = await Account.getInfo(source.toPublicKey());
-
-    if (res.isErr) {
-      assert(res.error.message);
-    }
-
-    if (res.isOk) {
-      const info = res.value as AccountInfo;
-      assert.isNumber(info.lamports);
-      assert.isString(info.owner);
-      assert.isNumber(info.rentEpoch);
-    }
-  });
-
-  it('Get account info via token account', async () => {
-    const tokenAccount =
-      '7huF1Cu7eXuaiSvJLuZvgAvS21K3M5PKvjm7mp5vRxE9'.toPublicKey();
-    const res = await Account.getInfo(tokenAccount);
-    if (res.isErr) {
-      assert(res.error.message);
-    }
-
-    if (res.isOk) {
-      const info = res.value as TokenAccountInfo;
-      assert.isNotEmpty(info.owner);
-      assert.isNotEmpty(info.mint);
-      assert.isNumber(info.tokenAmount);
-    }
-  });
-
-  it('[Err]Not found address', async () => {
-    const tokenAccount =
-      'DUc7jGemNCv5A2q9GDDsnYn6JguMViVqfWyBdmPxvUG1'.toPublicKey();
-    const res = await Account.getInfo(tokenAccount);
-    assert.isTrue(res.isErr);
-  });
-
   it('Get balance at publicKey', async () => {
     const res = await Account.getBalance(source.toPublicKey());
     assert.isTrue(res.isOk);

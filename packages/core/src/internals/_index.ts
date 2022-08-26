@@ -8,7 +8,10 @@ import {
   debugLog,
 } from '@solana-suite/shared';
 
-import { Account as Acc } from '../';
+import {
+  Internals_SplToken
+} from './_spl-token';
+
 
 export namespace Internals {
   const RETRY_OVER_LIMIT = 10;
@@ -22,7 +25,7 @@ export namespace Internals {
     let counter = 1;
     while (counter < RETRY_OVER_LIMIT) {
       try {
-        const inst = await Acc.getOrCreateAssociatedTokenAccount(
+        const inst = await Internals_SplToken.getOrCreateAssociatedTokenAccount(
           mint,
           owner,
           feePayer,
