@@ -2,8 +2,8 @@ import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Node, Result, debugLog } from '@solana-suite/shared';
 
 export namespace Airdrop {
-  export const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
-  export const MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 2;
+  const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
+  const MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 2;
 
   export const request = async (
     pubkey: PublicKey,

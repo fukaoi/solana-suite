@@ -14,5 +14,3 @@ export interface TokenInfoOwned {
   mint: string;
   tokenAmount: number;
 }
-
-
