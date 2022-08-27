@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../shared/test/testSetup';
-import { Account, SplToken, KeypairStr, Multisig } from '../src/';
+import { SplToken, KeypairStr, Multisig } from '../src/';
 import { Node } from '../../shared/src/node';
 import { PublicKey } from '@solana/web3.js';
 import { DirectionFilter } from '../src/types/find';
@@ -52,8 +52,8 @@ describe('SplToken', () => {
   });
 
   it('Create token with multisig', async () => {
-    const signer1 = Account.create();
-    const signer2 = Account.create();
+    const signer1 = KeypairStr.create();
+    const signer2 = KeypairStr.create();
     const multisigInst = await Multisig.create(2, source.toKeypair(), [
       signer1.toPublicKey(),
       signer2.toPublicKey(),
@@ -82,8 +82,8 @@ describe('SplToken', () => {
   });
 
   it('[Err]lack signer for multisig', async () => {
-    const signer1 = Account.create();
-    const signer2 = Account.create();
+    const signer1 = KeypairStr.create();
+    const signer2 = KeypairStr.create();
     const multisig = await Multisig.create(2, source.toKeypair(), [
       signer1.toPublicKey(),
       signer2.toPublicKey(),
@@ -167,7 +167,7 @@ describe('SplToken', () => {
     // time wait
     await Node.confirmedSig(sig.unwrap());
 
-    const res = await Account.getTokenBalance(
+    const res = await SplToken.getBalance(
       source.toPublicKey(),
       token.toPublicKey()
     );
@@ -177,8 +177,8 @@ describe('SplToken', () => {
 
   it('Create token, transfer with multisig and fee payer', async () => {
     // create multisig
-    const signer1 = Account.create();
-    const signer2 = Account.create();
+    const signer1 = KeypairStr.create();
+    const signer2 = KeypairStr.create();
     const multiInst = await Multisig.create(2, source.toKeypair(), [
       signer1.toPublicKey(),
       signer2.toPublicKey(),
@@ -258,8 +258,8 @@ describe('SplToken', () => {
   });
 
   it('transfer feePayerPartialSign', async () => {
-    const tokenOwner = Account.create();
-    const receipt = Account.create();
+    const tokenOwner = KeypairStr.create();
+    const receipt = KeypairStr.create();
     console.log('# tokenOwner: ', tokenOwner.pubkey);
     console.log('# receipt: ', receipt.pubkey);
 
@@ -336,6 +336,29 @@ describe('SplToken', () => {
     assert.isTrue(res.unwrap().length > 0);
     res.unwrap().forEach((v) => {
       assert.isNotNull(v.date);
+    });
+  });
+
+  it('Not found token', async () => {
+    const owner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT'.toPublicKey();
+    const res = await SplToken.getTokenInfoOwned(owner);
+    assert.isTrue(res.isOk, `${res.unwrap()}`);
+
+    res.unwrap().forEach((r) => {
+      assert.isEmpty(r.mint);
+      assert.isEmpty(r.tokenAmount);
+    });
+  });
+
+  it('Get token info owned', async () => {
+    const owner = 'Hc3FoHMo3Von8by8oKxx9nqTWkjQuGxM1sgyDQCLEMA9'.toPublicKey();
+    const res = await SplToken.getTokenInfoOwned(owner);
+    assert.isTrue(res.isOk, `${res.unwrap()}`);
+
+    res.unwrap().forEach((r) => {
+      assert.isNotEmpty(r.mint);
+      assert.isString(r.mint);
+      assert.isNumber(r.tokenAmount);
     });
   });
 });

@@ -1,5 +1,5 @@
 import { describe, it, before } from 'mocha';
-import { SolNative, Account, Multisig, KeypairStr } from '../src';
+import { SolNative, Multisig, KeypairStr, Airdrop, } from '../src';
 import { assert } from 'chai';
 import { Setup } from '../../shared/test/testSetup';
 import { Filter, DirectionFilter } from '../src/types/find';
@@ -51,13 +51,13 @@ describe('SolNative', () => {
 
   it('transfer transaction with fee payer', async () => {
     const solAmount = 0.01;
-    const owner = Account.create();
-    await Account.requestAirdrop(owner.toPublicKey());
+    const owner = KeypairStr.create();
+    await Airdrop.request(owner.toPublicKey());
     const feePayer = source;
 
     /* tslint:disable-next-line */
     const before = (
-      await Account.getBalance(feePayer.pubkey.toPublicKey())
+      await SolNative.getBalance(feePayer.pubkey.toPublicKey())
     ).unwrap();
 
     console.log(before);
@@ -74,14 +74,14 @@ describe('SolNative', () => {
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# tx signature: ', res.unwrap());
     const after = (
-      await Account.getBalance(feePayer.pubkey.toPublicKey())
+      await SolNative.getBalance(feePayer.pubkey.toPublicKey())
     ).unwrap();
     assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
   });
 
   it('transfer transaction with multi sig', async () => {
-    const signer1 = Account.create();
-    const signer2 = Account.create();
+    const signer1 = KeypairStr.create();
+    const signer2 = KeypairStr.create();
     const inst1 = await Multisig.create(2, source.toKeypair(), [
       signer1.toPublicKey(),
       signer2.toPublicKey(),
@@ -161,5 +161,11 @@ describe('SolNative', () => {
       assert.isNotEmpty(v.info.destination);
       assert.isNotNull(v.date);
     });
+  });
+
+ it('Get lamports balance at publicKey', async () => {
+    const res = await SolNative.getBalance(source.toPublicKey(), 'lamports');
+    assert.isTrue(res.isOk);
+    console.log('# balance lamports: ', res.unwrap());
   });
 });

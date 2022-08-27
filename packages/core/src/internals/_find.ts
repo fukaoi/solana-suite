@@ -8,7 +8,7 @@ import { Node, Result } from '@solana-suite/shared';
 
 import { TransferHistory, DirectionFilter, Filter } from '../types/find';
 
-export namespace Internals_find {
+export namespace Internals_Find {
   // type guard
   export const isParsedInstruction = (arg: any): arg is ParsedInstruction => {
     return arg !== null && typeof arg === 'object' && arg.parsed;
@@ -171,7 +171,6 @@ export namespace Internals_find {
   const convertTimestampToDate = (blockTime: number): Date =>
     new Date(blockTime * 1000);
 
-  // @todo: internal
   export const get = async (
     signature: string
   ): Promise<Result<ParsedTransactionWithMeta, Error>> => {

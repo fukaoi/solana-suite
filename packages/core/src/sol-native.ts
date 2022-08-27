@@ -23,7 +23,7 @@ import {
 
 import { TransferHistory, Filter, DirectionFilter } from './types/find';
 
-import { Internals_find } from './internals/_find';
+import { Internals_Find } from './internals/_find';
 import { Internals } from './internals/_index';
 
 export namespace SolNative {
@@ -191,13 +191,13 @@ export namespace SolNative {
     let before;
 
     while (true) {
-      const transactions = await Internals_find.getForAddress(
+      const transactions = await Internals_Find.getForAddress(
         searchPubkey,
         bufferedLimit,
         before
       );
       debugLog('# getTransactionHistory loop');
-      const res = Internals_find.filterTransactions(
+      const res = Internals_Find.filterTransactions(
         searchPubkey,
         transactions,
         actionFilter,
