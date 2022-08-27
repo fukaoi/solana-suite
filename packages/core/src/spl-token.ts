@@ -274,7 +274,8 @@ export namespace SplToken {
       feePayer
     );
   };
-
+ 
+  // @todo history
   export const findByOwner = async (
     mint: PublicKey,
     searchPubkey: PublicKey,
