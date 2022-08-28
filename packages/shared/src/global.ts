@@ -1,9 +1,7 @@
 import { PublicKey, Keypair, TransactionSignature } from '@solana/web3.js';
-
-import bs from 'bs58';
 import { Constants, Result, Instruction } from './';
-
 import { Internals_Instruction } from './internals/_instruction';
+import bs from 'bs58';
 
 declare global {
   interface String {
