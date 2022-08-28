@@ -16,6 +16,7 @@ exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const bs58_1 = __importDefault(require("bs58"));
 const _1 = require("./");
+const _instruction_1 = require("./internals/_instruction");
 // @ts-ignore
 Array.prototype.submit = function () {
     return __awaiter(this, void 0, void 0, function* () {
@@ -35,8 +36,7 @@ Array.prototype.submit = function () {
             }
             i++;
         }
-        ;
-        return yield _1.Instruction.batchSubmit(instructions);
+        return yield _instruction_1.Internals_Instruction.batchSubmit(instructions);
     });
 };
 String.prototype.toPublicKey = function () {
@@ -66,7 +66,7 @@ const debugLog = (data, data2 = '', data3 = '') => {
     }
 };
 exports.debugLog = debugLog;
-const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise(r => setTimeout(r, sec * 1000)); });
+const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise((r) => setTimeout(r, sec * 1000)); });
 exports.sleep = sleep;
 exports.isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 exports.isNode = typeof process !== 'undefined' &&

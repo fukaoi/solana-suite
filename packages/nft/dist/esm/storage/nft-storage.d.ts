@@ -1,5 +1,5 @@
 import { Result } from '@solana-suite/shared';
-import { NftStorageMetadata } from '.';
+import { NftStorageMetadata } from '../types/storage';
 import { ValidatorError } from '../validator';
 export declare namespace StorageNftStorage {
     const uploadContent: (filePath: string | File) => Promise<Result<string, Error>>;

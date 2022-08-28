@@ -8,12 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PartialSignInstruction = exports.Instruction = void 0;
+exports.PartialSignInstruction = exports.Instruction = exports.MAX_RETRIES = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const _1 = require("./");
-const MAX_RETRIES = 3;
+exports.MAX_RETRIES = 3;
 class Instruction {
     constructor(instructions, signers, feePayer, data) {
         this.submit = () => __awaiter(this, void 0, void 0, function* () {
@@ -26,9 +25,9 @@ class Instruction {
                 transaction.feePayer = this.feePayer.publicKey;
                 finalSigners = [this.feePayer, ...this.signers];
             }
-            this.instructions.map(inst => transaction.add(inst));
+            this.instructions.map((inst) => transaction.add(inst));
             const options = {
-                maxRetries: MAX_RETRIES
+                maxRetries: exports.MAX_RETRIES,
             };
             return yield (0, web3_js_1.sendAndConfirmTransaction)(_1.Node.getConnection(), transaction, finalSigners, options)
                 .then(_1.Result.ok)
@@ -41,38 +40,6 @@ class Instruction {
     }
 }
 exports.Instruction = Instruction;
-_a = Instruction;
-// @internal
-Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, function* () {
-    let i = 0;
-    for (const a of arr) {
-        if (!a.instructions && !a.signers) {
-            return _1.Result.err(Error(`only Instruction object that can use batchSubmit().
-            Index: ${i}, Set value: ${JSON.stringify(a)}`));
-        }
-        i++;
-    }
-    const instructions = arr.flatMap(a => a.instructions);
-    const signers = arr.flatMap(a => a.signers);
-    const feePayers = arr.filter(a => a.feePayer !== undefined);
-    let feePayer = signers[0];
-    if (feePayers.length > 0) {
-        feePayer = feePayers[0].feePayer;
-    }
-    const transaction = new web3_js_1.Transaction();
-    let finalSigners = signers;
-    if (feePayer) {
-        transaction.feePayer = feePayer.publicKey;
-        finalSigners = [feePayer, ...signers];
-    }
-    instructions.map(inst => transaction.add(inst));
-    const options = {
-        maxRetries: MAX_RETRIES
-    };
-    return yield (0, web3_js_1.sendAndConfirmTransaction)(_1.Node.getConnection(), transaction, finalSigners, options)
-        .then(_1.Result.ok)
-        .catch(_1.Result.err);
-});
 class PartialSignInstruction {
     constructor(instructions) {
         this.submit = (feePayer) => __awaiter(this, void 0, void 0, function* () {
@@ -83,10 +50,11 @@ class PartialSignInstruction {
             const transactionFromJson = web3_js_1.Transaction.from(decode);
             transactionFromJson.partialSign(feePayer);
             const options = {
-                maxRetries: MAX_RETRIES
+                maxRetries: exports.MAX_RETRIES,
             };
             const wireTransaction = transactionFromJson.serialize();
-            return yield _1.Node.getConnection().sendRawTransaction(wireTransaction, options)
+            return yield _1.Node.getConnection()
+                .sendRawTransaction(wireTransaction, options)
                 .then(_1.Result.ok)
                 .catch(_1.Result.err);
         });
