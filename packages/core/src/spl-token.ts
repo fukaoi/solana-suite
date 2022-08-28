@@ -27,12 +27,9 @@ import { TransferHistory, Filter, DirectionFilter } from './types/find';
 import { TokenInfoOwned } from './types/spl-token';
 import { Internals_Find } from './internals/_find';
 import { Internals } from './internals/_index';
-import {Internals_SplToken} from './internals/_spl-token';
+import { Internals_SplToken } from './internals/_spl-token';
 
 export namespace SplToken {
-  const NFT_AMOUNT = 1;
-  const NFT_DECIMALS = 0;
-
   export const calculateAmount = (
     amount: number,
     mintDecimal: number
@@ -99,7 +96,10 @@ export namespace SplToken {
     tokenDecimals: number,
     feePayer?: Signer
   ) => {
-    const tokenAccount = await Internals_SplToken.findAssociatedTokenAddress(mint, owner);
+    const tokenAccount = await Internals_SplToken.findAssociatedTokenAddress(
+      mint,
+      owner
+    );
 
     if (tokenAccount.isErr) {
       return Result.err(tokenAccount.error);
@@ -159,24 +159,6 @@ export namespace SplToken {
     );
 
     return Result.ok(new Instruction([inst], signers, feePayer));
-  };
-
-  export const transferNft = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    dest: PublicKey,
-    signers: Signer[],
-    feePayer?: Signer
-  ): Promise<Result<Instruction, Error>> => {
-    return transfer(
-      mint,
-      owner,
-      dest,
-      signers,
-      NFT_AMOUNT,
-      NFT_DECIMALS,
-      feePayer
-    );
   };
 
   export const feePayerPartialSignTransfer = async (
@@ -257,24 +239,6 @@ export namespace SplToken {
     }
   };
 
-  export const feePayerPartialSignTransferNft = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    dest: PublicKey,
-    signers: Signer[],
-    feePayer: PublicKey
-  ): Promise<Result<PartialSignInstruction, Error>> => {
-    return feePayerPartialSignTransfer(
-      mint,
-      owner,
-      dest,
-      signers,
-      NFT_AMOUNT,
-      NFT_DECIMALS,
-      feePayer
-    );
-  };
- 
   // @todo history
   export const findByOwner = async (
     mint: PublicKey,
@@ -348,7 +312,10 @@ export namespace SplToken {
     pubkey: PublicKey,
     mint: PublicKey
   ): Promise<Result<TokenAmount, Error>> => {
-    const res = await Internals_SplToken.findAssociatedTokenAddress(mint, pubkey);
+    const res = await Internals_SplToken.findAssociatedTokenAddress(
+      mint,
+      pubkey
+    );
     if (res.isErr) {
       return Result.err(res.error);
     }

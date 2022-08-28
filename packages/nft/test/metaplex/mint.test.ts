@@ -7,11 +7,13 @@ import { RandomAsset } from '../randomAsset';
 import { ValidatorError } from '../../src';
 
 let source: KeypairStr;
+let dest: KeypairStr;
 
 describe('Metaplex', () => {
   before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
+    dest = obj.dest;
   });
 
   it('[Arweave] one lump upload content and mint nft', async () => {
@@ -115,39 +117,77 @@ describe('Metaplex', () => {
     );
   });
 
+  it('Find owner info', async () => {
+    const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
+    const res = await Metaplex.findByOwner(owner.toPublicKey());
+    res.match(
+      (ok) => {
+        assert.isTrue(ok.length > 0);
+        console.log('# find owner info: ', ok);
+      },
+      (err) => {
+        assert.fail(err.message);
+      }
+    );
+  });
+
+  it.only('Transfer nft', async () => {
+    const asset = RandomAsset.get();
+
+    const creator1 = {
+      address: source.toPublicKey(),
+      share: 70,
+      verified: false,
+    };
+
+    const creator2 = {
+      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk'.toPublicKey(),
+      share: 30,
+      verified: false,
+    };
+
+    const mint = await Metaplex.mint(
+      {
+        filePath: asset.filePath as string,
+        storageType: 'arweave',
+        name: asset.name!,
+        symbol: asset.symbol!,
+        royalty: 50,
+        creators: [creator1, creator2],
+        isMutable: true,
+      },
+      source.toPublicKey(),
+      source.toKeypair()
+    );
+
+    const resMint = await mint.submit();
+
+    if (resMint.isErr) {
+      assert.fail(resMint.error.message);
+    }
+    const res = await (
+      await Metaplex.transfer(
+        (mint.unwrap().data as string).toPublicKey(),
+        source.toPublicKey(),
+        dest.toPublicKey(),
+        [source.toKeypair()]
+      )
+    ).submit();
+
+    res.match(
+      (ok) => {
+        console.log('# mint: ', mint.unwrap().data);
+        console.log('# sig: ', ok);
+      },
+      (err) => {
+        assert.fail(err.message);
+      }
+    );
+  });
+
   // it('Mint nft and Burn nft', async () => {
   // });
 
-  // it('Mint batched nft', async () => {
-  // });
-
-  // it('Transfer nft', async () => {
-  // });
-
   // it('Transfer nft with fee payer', async () => {
-  // });
-
-  // it('Transfer nft with multi sig', async () => {
-
-  //   // create multisig
-  //   const signer1 = Account.create();
-  //   const signer2 = Account.create();
-
-  //   const multisig = await Multisig.create(
-  //     2,
-  //     source.toKeypair(),
-  //     [
-  //       signer1.toPublicKey(),
-  //       signer2.toPublicKey(),
-  //     ]
-  //   );
-
-  //   const resMulti = await multisig.submit();
-
-  //   assert(resMulti.isOk, `${resMulti.unwrap()}`);
-
-  //   const multisigAddress = multisig.unwrap().data as string;
-  //   console.log('# multisig address: ', multisigAddress);
-
   // });
 });

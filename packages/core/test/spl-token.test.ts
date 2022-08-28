@@ -195,7 +195,6 @@ describe('SplToken', () => {
     console.log('# signer2 address :', signer2.pubkey);
     console.log('# multisig address :', multisig.toBase58());
 
-    // create nft
     const mintInst = await SplToken.mint(
       multisig,
       [source.toKeypair(), signer1.toKeypair(), signer2.toKeypair()],
