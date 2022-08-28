@@ -119,4 +119,11 @@ export namespace Internals_SplToken {
       new Instruction([res.value.inst], [], feePayer, res.value.tokenAccount)
     );
   };
+
+  export const calculateAmount = (
+    amount: number,
+    mintDecimal: number
+  ): number => {
+    return amount * 10 ** mintDecimal;
+  };
 }
