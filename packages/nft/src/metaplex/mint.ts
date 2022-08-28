@@ -1,11 +1,9 @@
-import { PublicKey, Keypair, Signer } from '@solana/web3.js';
+import { PublicKey, Keypair } from '@solana/web3.js';
 import { StorageNftStorage } from '../storage';
 import {
   Instruction,
   Result,
-  PartialSignInstruction,
 } from '@solana-suite/shared';
-import { SplToken } from '@solana-suite/core';
 import { StorageArweave } from '../storage';
 import { InternalsMetaplex_Mint } from '../internals/metaplex/_mint';
 import { Validator, ValidatorError } from '../validator';
@@ -13,13 +11,8 @@ import {
   NftStorageMetaplexMetadata,
   MetaplexMetaData,
 } from '../types/metaplex/mint';
-import { Bundlr } from '../bundlr';
-import { Nft } from '@metaplex-foundation/js';
 
 export namespace Metaplex {
-  const NFT_AMOUNT = 1;
-  const NFT_DECIMALS = 0;
-
   /**
    * Upload content and NFT mint
    *
@@ -92,50 +85,5 @@ export namespace Metaplex {
     };
 
     return InternalsMetaplex_Mint.create(mintInput, owner, feePayer);
-  };
-
-  export const findByOwner = (
-    owner: PublicKey
-  ): Promise<Result<Nft[], Error>> =>
-    Bundlr.make()
-      .nfts()
-      .findAllByOwner(owner)
-      .then(Result.ok)
-      .catch(Result.err);
-
-  export const transfer = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    dest: PublicKey,
-    signers: Signer[],
-    feePayer?: Signer
-  ): Promise<Result<Instruction, Error>> => {
-    return SplToken.transfer(
-      mint,
-      owner,
-      dest,
-      signers,
-      NFT_AMOUNT,
-      NFT_DECIMALS,
-      feePayer
-    );
-  };
-
-  export const feePayerPartialSignTransferNft = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    dest: PublicKey,
-    signers: Signer[],
-    feePayer: PublicKey
-  ): Promise<Result<PartialSignInstruction, Error>> => {
-    return SplToken.feePayerPartialSignTransfer(
-      mint,
-      owner,
-      dest,
-      signers,
-      NFT_AMOUNT,
-      NFT_DECIMALS,
-      feePayer
-    );
   };
 }
