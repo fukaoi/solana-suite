@@ -8,6 +8,7 @@ import {
   NftStorageMetaplexMetadata,
   MetaplexMetaData,
 } from '../types/metaplex/mint';
+import { Bundlr } from '../bundlr';
 
 export namespace Metaplex {
   /**
@@ -84,4 +85,7 @@ export namespace Metaplex {
 
     return InternalsMetaplex_Mint.create(mintInput, owner, feePayer);
   };
+
+  export const findByOwner = (owner: PublicKey) =>
+    Bundlr.make().nfts().findAllByOwner(owner);
 }

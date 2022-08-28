@@ -12,16 +12,18 @@ import { Node, Constants, ConstantsFunc } from '@solana-suite/shared';
 export namespace Bundlr {
   const BUNDLR_CONNECT_TIMEOUT = 60000;
 
-  export const make = (feePayer: Keypair): MetaplexFoundation => {
-    return MetaplexFoundation.make(Node.getConnection())
-      .use(keypairIdentity(feePayer))
-      .use(
-        bundlrStorage({
-          address: Constants.BUNDLR_NETWORK_URL,
-          providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
-          timeout: BUNDLR_CONNECT_TIMEOUT,
-        })
-      );
+  export const make = (feePayer?: Keypair): MetaplexFoundation => {
+    const object = MetaplexFoundation.make(Node.getConnection()).use(
+      bundlrStorage({
+        address: Constants.BUNDLR_NETWORK_URL,
+        providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
+        timeout: BUNDLR_CONNECT_TIMEOUT,
+      })
+    );
+    if (feePayer) {
+      object.use(keypairIdentity(feePayer));
+    }
+    return object;
   };
 
   export const useStorage = (feePayer: Keypair): BundlrStorageDriver => {
