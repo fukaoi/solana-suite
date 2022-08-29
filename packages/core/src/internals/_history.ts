@@ -6,9 +6,9 @@ import {
 
 import { Node, Result } from '@solana-suite/shared';
 
-import { TransferHistory, DirectionFilter, Filter } from '../types/find';
+import { TransferHistory, DirectionFilter, Filter } from '../types/history';
 
-export namespace Internals_Find {
+export namespace Internals_History {
   // type guard
   export const isParsedInstruction = (arg: any): arg is ParsedInstruction => {
     return arg !== null && typeof arg === 'object' && arg.parsed;
