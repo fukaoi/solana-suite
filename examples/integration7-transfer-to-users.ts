@@ -5,14 +5,14 @@
 import assert from 'assert';
 import {
   Account,
-  KeypairStr,
+  // KeypairStr,
   Pubkey,
   SplToken,
 } from '@solana-suite/core';
 
 import {
-  Node,
-  Constants,
+  // Node,
+  // Constants,
   sleep
 } from '@solana-suite/shared';
 

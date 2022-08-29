@@ -16,45 +16,82 @@ exports.StorageNftStorage = void 0;
 const nft_storage_1 = require("nft.storage");
 const fs_1 = __importDefault(require("fs"));
 const shared_1 = require("@solana-suite/shared");
+const js_1 = require("@metaplex-foundation/js");
+const metaplex_1 = require("../metaplex");
+const validator_1 = require("../validator");
 var StorageNftStorage;
 (function (StorageNftStorage) {
     const getNftStorageApiKey = () => {
-        if (!shared_1.Constants.nftstorageApikey) {
+        if (!shared_1.Constants.nftStorageApiKey) {
             console.warn(`
         [Warning]
         --------------------------------------
         If will use @solana-suite/nft package
-        your need to update nftstorage.apikey defin parameter in solana-suite.json.
-        can get apikey from https://nft.storage/
+        your need to update nftStorage.apiKey define parameter in solana-suite.json.
+        can get apiKey from https://nft.storage/
         --------------------------------------
         `);
             return shared_1.Constants.NFT_STORAGE_API_KEY;
         }
         else {
-            return shared_1.Constants.nftstorageApikey;
+            return shared_1.Constants.nftStorageApiKey;
         }
     };
     const createGatewayUrl = (cid) => `${shared_1.Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
-    const connect = () => new nft_storage_1.NFTStorage({ token: getNftStorageApiKey() });
-    const preUploadImage = (client, imagePath) => __awaiter(this, void 0, void 0, function* () {
-        const blobImage = new nft_storage_1.Blob([fs_1.default.readFileSync(imagePath)]);
-        const cid = yield client.storeBlob(blobImage);
-        return createGatewayUrl(cid);
+    const connect = new nft_storage_1.NFTStorage({ token: getNftStorageApiKey() });
+    StorageNftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
+        (0, shared_1.debugLog)('# upload content: ', filePath);
+        let file;
+        if (shared_1.isNode) {
+            const filepath = filePath;
+            file = fs_1.default.readFileSync(filepath);
+        }
+        else if (shared_1.isBrowser) {
+            const filepath = filePath;
+            file = (yield (0, js_1.useMetaplexFileFromBrowser)(filepath)).buffer;
+        }
+        else {
+            return shared_1.Result.err(Error('Supported environment: only Node.js and Browser js'));
+        }
+        const blobImage = new nft_storage_1.Blob([file]);
+        const res = (yield connect
+            .storeBlob(blobImage)
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err));
+        return res.map((ok) => createGatewayUrl(ok), (err) => err);
     });
-    StorageNftStorage.upload = (storageData) => __awaiter(this, void 0, void 0, function* () {
-        const client = connect();
-        const imageUrl = yield preUploadImage(client, storageData.image)
+    /**
+     * Upload content
+     *
+     * @param {NftStorageMetadata} metadata
+     * {
+     *   name?: {string}                      // nft content name
+     *   symbol?: {string}                    // nft ticker symbol
+     *   description?: {string}               // nft content description
+     *   sellerFeeBasisPoints?: number        // royalty percentage
+     *   image?: {string}                     // uploaded uri of original content
+     *   external_url?: {string}              // landing page, home page uri, related url
+     *   attributes?: {JsonMetadataAttribute[]}     // game character parameter, personality, characteristics
+     *   properties?: {JsonMetadataProperties<Uri>} // included file name, uri, supported file type
+     *   collection?: Collection              // collections of different colors, shapes, etc.
+     *   [key: string]: {unknown}             // optional param, Usually not used.
+     * }
+     * @return Promise<Result<string, Error>>
+     */
+    StorageNftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
+        (0, shared_1.debugLog)('# upload metadata: ', metadata);
+        const valid = validator_1.Validator.checkAll(metadata);
+        if (valid.isErr) {
+            return valid;
+        }
+        if (metadata.seller_fee_basis_points) {
+            metadata.seller_fee_basis_points = metaplex_1.MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
+        }
+        const blobJson = new nft_storage_1.Blob([JSON.stringify(metadata)]);
+        const res = (yield connect
+            .storeBlob(blobJson)
             .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (imageUrl.isErr)
-            return imageUrl;
-        storageData.image = imageUrl.value;
-        const blobJson = new nft_storage_1.Blob([JSON.stringify(storageData)]);
-        const metadata = yield client.storeBlob(blobJson)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (metadata.isErr)
-            return metadata;
-        return shared_1.Result.ok(createGatewayUrl(metadata.value));
+            .catch(shared_1.Result.err));
+        return res.map((ok) => createGatewayUrl(ok), (err) => err);
     });
 })(StorageNftStorage = exports.StorageNftStorage || (exports.StorageNftStorage = {}));

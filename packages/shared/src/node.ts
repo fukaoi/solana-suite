@@ -1,11 +1,15 @@
 import {
+  debugLog,
   Constants,
   ConstantsFunc,
-} from './constants';
+  Result,
+} from './';
 
 import {
   Connection,
   Commitment,
+  RpcResponseAndContext,
+  SignatureResult,
 } from '@solana/web3.js';
 
 export namespace Node {
@@ -15,7 +19,7 @@ export namespace Node {
 
     // default setting
     if (!cluster) {
-      cluster = ConstantsFunc.switchApi(Constants.currentCluster);
+      cluster = ConstantsFunc.switchCluster(Constants.currentCluster);
     }
 
     // default setting
@@ -23,7 +27,7 @@ export namespace Node {
       commitment = Constants.COMMITMENT;
     }
 
-    console.debug('# Node info: ', cluster, commitment);
+    debugLog('# Node info: ', cluster, commitment);
 
     return new Connection(cluster, commitment);
   };
@@ -33,13 +37,23 @@ export namespace Node {
     commitment?: Commitment,
   }): void => {
     if (param.commitment) {
-      console.debug('# Node change commitment: ', commitment);
+      debugLog('# Node change commitment: ', commitment);
       commitment = param.commitment;
     }
 
     if (param.cluster) {
-      console.debug('# Node change cluster: ', cluster);
-      cluster = ConstantsFunc.switchApi(param.cluster);
+      debugLog('# Node change cluster: ', cluster);
+      cluster = ConstantsFunc.switchCluster(param.cluster);
     }
+  }
+
+ export const confirmedSig = async (
+    signature: string,
+    commitment: Commitment = Constants.COMMITMENT
+  ): Promise<Result<RpcResponseAndContext<SignatureResult> | unknown, Error>> => {
+    /** @deprecated Instead, call `confirmTransaction` using a `TransactionConfirmationConfig` */
+    return await Node.getConnection().confirmTransaction(signature, commitment)
+      .then(Result.ok)
+      .catch(Result.err);
   }
 }

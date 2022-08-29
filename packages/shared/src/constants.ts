@@ -20,11 +20,11 @@ export namespace Constants {
   export const currentCluster = Config.cluster.type;
   export const customUrl = Config.cluster.customUrl;
   export const isDebugging = Config.debugging;
-  export const nftstorageApikey = Config.nftstorage.apikey;
+  export const nftStorageApiKey = Config.nftstorage.apikey;
 }
 
 export namespace ConstantsFunc {
-  export const switchApi = (env: string | undefined, customUrl = Constants.customUrl) => {
+  export const switchCluster = (env: string | undefined, customUrl = Constants.customUrl): string => {
     switch (env) {
       case Constants.Cluster.prd:
         return 'https://api.mainnet-beta.solana.com';
@@ -50,6 +50,23 @@ export namespace ConstantsFunc {
         return 'http://api.devnet.solana.com';
     }
   }
+
+  export const switchBundlr = (env: string): string => {
+    switch (env) {
+      case Constants.Cluster.dev:
+      case Constants.Cluster.test:
+      case Constants.Cluster.localhost:
+        return 'https://devnet.bundlr.network';
+      default:
+        const index = Date.now() % 2;
+        const clusters = [
+          'https://node1.bundlr.network',
+          'https://node2.bundlr.network',
+        ];
+        return clusters[index];
+    }
+  }
+
 }
 
 export namespace Constants {
@@ -61,11 +78,6 @@ export namespace Constants {
   export const METAPLEX_PROGRAM_ID = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'.toPublicKey();
   export const COMMITMENT: Commitment = 'confirmed';
   export const NFT_STORAGE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE';
-
   export const NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
-  export const ARWEAVE_UPLOAD_SRV_URL = 'https://us-central1-principal-lane-200702.cloudfunctions.net/uploadFile4';
-  export const ARWEAVE_GATEWAY_URL = 'https://arweave.net';
-  export const AR_SOL_HOLDER_ID = 'HvwC9QSAzvGXhhVrgPmauVwFWcYZhne3hVot9EbHuFTm'.toPublicKey();
-
-  export const COIN_MARKET_URL = 'https://api.coingecko.com/api/v3/simple/price';
+  export const BUNDLR_NETWORK_URL = ConstantsFunc.switchBundlr(Config.cluster.type);
 }

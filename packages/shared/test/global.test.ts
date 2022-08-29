@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {assert} from 'chai';
 import '../src/global';
-import {sleep, tryCatch} from '../src/global';
+import {sleep, isNode, isBrowser, debugLog} from '../src/global';
 
 describe('Global', () => {
   it('Convert string to PublicKey', async () => {
@@ -24,18 +24,8 @@ describe('Global', () => {
     console.log(res);
   });
 
-  it('try catch', async () => {
-    const message = 'test';
-    const res = tryCatch(() => {
-      return message;
-    });
-    if (res.isOk) {
-      assert.equal(res.value, message);
-    }
-  });
-
-  it('console.debug', async () => {
-    console.debug(
+  it('debugLog', async () => {
+    debugLog(
       'debug test', {title: 'test'}, () => {return }
     );
   });
@@ -45,5 +35,13 @@ describe('Global', () => {
     await sleep(3);
     assert.isOk(id);
     clearInterval(id);
+  });
+
+  it('is not Browser', async () => {
+    assert.isFalse(isBrowser);
+  });
+
+  it('is Node', async () => {
+    assert.isTrue(isNode);
   });
 })

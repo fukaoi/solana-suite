@@ -4,7 +4,6 @@ import {Result} from '../src/result';
 describe('Result', () => {
   it('conditions', () => {
     const res = Result.ok('test');
-
     // pattern:1
     if (res.isOk) {
       console.log(res.value);
@@ -51,5 +50,4 @@ describe('Result', () => {
       }
     );
   });
-
 })

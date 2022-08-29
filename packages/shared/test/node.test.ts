@@ -8,28 +8,28 @@ describe('Node', () => {
     Node.changeConnection({cluster: Constants.Cluster.dev});
     const res = Node.getConnection();
     assert.isNotEmpty(res);
-    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.Cluster.dev));
+    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchCluster(Constants.Cluster.dev));
   });
 
   it('Connect testnet', async () => {
     Node.changeConnection({cluster: Constants.Cluster.test});
     const res = Node.getConnection();
     assert.isNotEmpty(res);
-    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.Cluster.test));
+    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchCluster(Constants.Cluster.test));
   });
 
   it('Connect mainnet', async () => {
     Node.changeConnection({cluster: Constants.Cluster.prd});
     const res = Node.getConnection();
     assert.isNotEmpty(res);
-    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.Cluster.prd));
+    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchCluster(Constants.Cluster.prd));
   });
 
-  it('Connect mainnet sereum', async () => {
+  it('Connect mainnet serum', async () => {
     Node.changeConnection({cluster: Constants.Cluster.prd2});
     const res = Node.getConnection();
     assert.isNotEmpty(res);
-    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.Cluster.prd2));
+    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchCluster(Constants.Cluster.prd2));
   });
 
   it('Connect mainnet round robin', async () => {
@@ -43,13 +43,13 @@ describe('Node', () => {
     Node.changeConnection({cluster: Constants.Cluster.localhost});
     const res = Node.getConnection();
     assert.isNotEmpty(res);
-    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.Cluster.localhost));
+    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchCluster(Constants.Cluster.localhost));
   });
 
   it('Connect devnet for localhost by default no parameter', async () => {
     const res = Node.getConnection();
     assert.isNotEmpty(res);
-    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.Cluster.localhost));
+    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchCluster(Constants.Cluster.localhost));
   });
 
   it('Connect devnet and modified commitment', async () => {
@@ -57,7 +57,7 @@ describe('Node', () => {
     const res = Node.getConnection();
     assert.isNotEmpty(res);
     assert.propertyVal(res, '_commitment', 'processed');
-    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchApi(Constants.Cluster.dev));
+    assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchCluster(Constants.Cluster.dev));
   });
 
   it('Change cluster destination, check singleton object', async () => {

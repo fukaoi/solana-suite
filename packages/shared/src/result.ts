@@ -1,4 +1,4 @@
-// fork: https://github.com/badrap/result
+// forked: https://github.com/badrap/result, thank you advice  @jviide
 
 import {TransactionSignature} from '@solana/web3.js';
 import {Instruction} from './instruction';

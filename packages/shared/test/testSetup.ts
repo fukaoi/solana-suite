@@ -1,6 +1,10 @@
 import fs from 'fs';
 import bs from 'bs58';
-import {Constants, Node} from '../src';
+import {
+  Constants, 
+  Node,
+  debugLog,
+} from '../src';
 
 import {
   Keypair,
@@ -9,8 +13,8 @@ import {
 } from '@solana/web3.js';
 
 
-console.debug(`\u001b[33m === DEBUG MODE ===`);
-console.debug(`\u001b[33m solana-network: ${Constants.currentCluster}`);
+console.log(`\u001b[33m === TEST START ===`);
+console.log(`\u001b[33m solana-network: ${Constants.currentCluster}`);
 
 export class KeypairStr {
   pubkey: string;
@@ -37,24 +41,24 @@ export class KeypairStr {
 export namespace Setup {
   const TEMP_KEYPAIR_FILE = `/tmp/solana-${Constants.currentCluster}-keypair`;
 
-  export const generatekeyPair = async ():
+  export const generateKeyPair = async ():
     Promise<{source: KeypairStr, dest: KeypairStr}> => {
-    const {source, dest} = await fetechSourceAndDest();
-    debug(source, dest);
+    const {source, dest} = await fetchSourceAndDest();
+    log(source, dest);
     return {
       source: new KeypairStr(source.pubkey, source.secret),
       dest: new KeypairStr(dest.pubkey, dest.secret),
     };
   }
 
-  const debug = (source: KeypairStr, dest: KeypairStr) => {
-    console.debug(`# source.pubkey:`, source.pubkey);
-    console.debug(`# source.secret: `, source.secret);
-    console.debug(`# destination.pubkey:`, dest.pubkey);
-    console.debug(`# destination.secret: `, dest.secret);
+  const log = (source: KeypairStr, dest: KeypairStr) => {
+    debugLog(`# source.pubkey:`, source.pubkey);
+    debugLog(`# source.secret: `, source.secret);
+    debugLog(`# destination.pubkey:`, dest.pubkey);
+    debugLog(`# destination.secret: `, dest.secret);
   }
 
-  const fetechSourceAndDest = async () => {
+  const fetchSourceAndDest = async () => {
     if (fs.existsSync(TEMP_KEYPAIR_FILE)) {
       return await loadTempFile();
     } else {
@@ -70,10 +74,10 @@ export namespace Setup {
   const requestAirdrop = async (
     pubkey: PublicKey,
   ) => {
-    console.debug('Now airdropping...please wait');
+    console.log('Now airdropping...please wait');
     const sig = await Node.getConnection().requestAirdrop(pubkey, LAMPORTS_PER_SOL);
-    await Node.getConnection().confirmTransaction(sig);
-    console.debug('Confirmed !!');
+    await Node.confirmedSig(sig);
+    console.log('Confirmed !!');
   }
 
   const createTempFile = async () => {

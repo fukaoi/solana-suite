@@ -1,35 +1,8 @@
-import { PublicKey, TransactionInstruction, Signer } from '@solana/web3.js';
-import { Instruction, Result } from '@solana-suite/shared';
-import { MetaplexInstructure } from './';
-export * from './instructure';
-export * from './metadata';
-export * from './serialize';
-export * from './account';
-export declare namespace MetaplexInstruction {
-    const mintAccount: (instructions: TransactionInstruction[], owner: PublicKey, signers: Signer[]) => Promise<{
-        mintAccount: PublicKey;
-        signers: Signer[];
-    }>;
-    const mint: (instructions: TransactionInstruction[], createdAccount: PublicKey, owner: PublicKey, freezeAuthority: PublicKey) => Promise<string>;
-}
-export declare namespace Metaplex {
-    interface Creators {
-    }
-    interface Format {
-        name: string;
-        uri: string;
-        symbol: string;
-        update_authority: string;
-        creators?: Creators[];
-        seller_fee_basis_points?: number;
-        primary_sale_happened?: boolean;
-    }
-    const initFormat: () => Format;
-    const initializeMint: (payer: PublicKey, signers: Signer[]) => Promise<{
-        instructions: TransactionInstruction[];
-        signers: Signer[];
-        mint: string;
-    }>;
-    const mint: (data: MetaplexInstructure.Data, owner: PublicKey, signers: Signer[]) => Promise<Result<Instruction, Error>>;
-    const burn: (mint: PublicKey, owner: PublicKey, signers: Signer[], feePayer?: Signer) => Promise<Result<Instruction, Error>>;
-}
+/// <reference types="@solana/web3.js" />
+export declare const Metaplex: {
+    transfer: (mint: import("@solana/web3.js").PublicKey, owner: import("@solana/web3.js").PublicKey, dest: import("@solana/web3.js").PublicKey, signers: import("@solana/web3.js").Signer[], feePayer?: import("@solana/web3.js").Signer | undefined) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").Instruction, Error>>;
+    feePayerPartialSignTransferNft: (mint: import("@solana/web3.js").PublicKey, owner: import("@solana/web3.js").PublicKey, dest: import("@solana/web3.js").PublicKey, signers: import("@solana/web3.js").Signer[], feePayer: import("@solana/web3.js").PublicKey) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").PartialSignInstruction, Error>>;
+    findByOwner: (owner: import("@solana/web3.js").PublicKey) => Promise<import("@solana-suite/shared").Result<import("../types/metaplex").OutputMetaplexMetadata[], Error>>;
+    mint: (input: import("../types/metaplex").InputMetaplexMetadata, owner: import("@solana/web3.js").PublicKey, feePayer: import("@solana/web3.js").Keypair) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").Instruction, import("..").ValidatorError | Error>>;
+};
+export * from './royalty';

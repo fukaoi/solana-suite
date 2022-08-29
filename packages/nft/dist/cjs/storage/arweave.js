@@ -13,147 +13,79 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StorageArweave = void 0;
-const fs_1 = __importDefault(require("fs"));
-const cross_fetch_1 = __importDefault(require("cross-fetch"));
-const form_data_1 = __importDefault(require("form-data"));
-const path_1 = __importDefault(require("path"));
+const js_1 = require("@metaplex-foundation/js");
 const web3_js_1 = require("@solana/web3.js");
+const fs_1 = __importDefault(require("fs"));
 const shared_1 = require("@solana-suite/shared");
-const core_1 = require("@solana-suite/core");
+const bundlr_1 = require("../bundlr");
+const metaplex_1 = require("../metaplex");
+const validator_1 = require("../validator");
 var StorageArweave;
 (function (StorageArweave) {
-    const METADATA_FILE = 'metadata.json';
-    const LAMPORT_MULTIPLIER = Math.pow(10, 9);
-    const WINSTON_MULTIPLIER = Math.pow(10, 12);
-    const DEFAULT_RADIX = 10;
-    const totalBytes = (files) => {
-        const bytes = files.reduce((sum, f) => (sum += f.length), 0);
-        console.debug('# total bytes: ', bytes);
-        return bytes;
-    };
-    const fetchArweaveFeePrice = () => __awaiter(this, void 0, void 0, function* () {
-        const res = yield (yield (0, cross_fetch_1.default)(`${shared_1.Constants.ARWEAVE_GATEWAY_URL}/price/0`))
-            .text()
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (res.isErr)
-            return shared_1.Result.err(res.error);
-        const price = parseInt(res.value, DEFAULT_RADIX);
-        console.debug('# arweave txn fee: ', price);
-        return shared_1.Result.ok(price);
-    });
-    const fetchArweaveContentsCost = (cost) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield (yield (0, cross_fetch_1.default)(`${shared_1.Constants.ARWEAVE_GATEWAY_URL}/price/${cost.toString()}`))
-            .text()
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (res.isErr)
-            return shared_1.Result.err(res.error);
-        const price = parseInt(res.value, DEFAULT_RADIX);
-        console.debug('# arweave contents cost: ', price);
-        return shared_1.Result.ok(price);
-    });
-    const fetchConvesionRateSolAndAr = () => __awaiter(this, void 0, void 0, function* () {
-        const res = yield (yield (0, cross_fetch_1.default)(`${shared_1.Constants.COIN_MARKET_URL}?ids=solana,arweave&vs_currencies=usd`))
-            .text()
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (res.isErr)
-            return shared_1.Result.err(res.error);
-        console.debug('# conversion rate: ', JSON.stringify(res.value));
-        return shared_1.Result.ok(JSON.parse(res.value));
-    });
-    const calculateArweave = (files) => __awaiter(this, void 0, void 0, function* () {
-        const t = totalBytes(files);
-        const feePrice = yield fetchArweaveFeePrice();
-        if (feePrice.isErr)
-            return shared_1.Result.err(feePrice.error);
-        const contentsPrice = yield fetchArweaveContentsCost(t);
-        if (contentsPrice.isErr)
-            return shared_1.Result.err(contentsPrice.error);
-        const totalArCost = (feePrice.value * files.length + contentsPrice.value) / WINSTON_MULTIPLIER;
-        console.debug('# total arweave cost: ', totalArCost);
-        // MEMO: To figure out how many lamports are required, multiply ar byte cost by this number
-        const rates = yield fetchConvesionRateSolAndAr();
-        if (rates.isErr)
-            return shared_1.Result.err(rates.error);
-        const multiplier = (rates.value.arweave.usd / rates.value.solana.usd) / web3_js_1.LAMPORTS_PER_SOL;
-        console.debug('# arweave multiplier: ', multiplier);
-        // MEMO: We also always make a manifest file, which, though tiny, needs payment.
-        return shared_1.Result.ok(LAMPORT_MULTIPLIER * totalArCost * multiplier * 1.1);
-    });
-    const isJpegFile = (imageName) => {
-        const match = imageName.match(/.+(.jpeg|.jpg)$/i);
-        return match !== null;
-    };
-    const createMetadata = (storageData) => {
-        let image = path_1.default.basename(storageData.image);
-        if (isJpegFile(image)) {
-            const split = image.split('.jpeg');
-            image = `${split[0]}.png`;
+    StorageArweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        let buffer;
+        if (shared_1.isNode) {
+            const filepath = filePath;
+            buffer = fs_1.default.readFileSync(filepath);
         }
-        // update image name
-        storageData.image = image;
-        return {
-            buffer: Buffer.from(JSON.stringify(storageData)),
-            pngName: image
-        };
-    };
-    const createUploadData = (payedSignature, pngName, imageBuffer, metadataBuffer) => {
-        const uploadData = new form_data_1.default();
-        uploadData.append('transaction', payedSignature);
-        uploadData.append('env', shared_1.ConstantsFunc.switchApi(shared_1.Constants.currentCluster));
-        uploadData.append('file[]', imageBuffer, { filename: pngName, contentType: 'image/png' });
-        uploadData.append('file[]', metadataBuffer, METADATA_FILE);
-        return uploadData;
-    };
-    const uploadServer = (uploadData) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield (0, cross_fetch_1.default)(shared_1.Constants.ARWEAVE_UPLOAD_SRV_URL, {
-            method: 'POST',
-            body: uploadData,
-        })
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (res.isErr)
-            return res.error;
-        const json = yield res.value.json()
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (json.isErr)
-            return json;
-        return shared_1.Result.ok(json.value);
-    });
-    StorageArweave.upload = (payer, storageData) => __awaiter(this, void 0, void 0, function* () {
-        const imagePath = storageData.image;
-        const meta = createMetadata(storageData);
-        const fileBuffers = [];
-        const imageBuffer = fs_1.default.readFileSync(imagePath);
-        const metadataBuffer = meta.buffer;
-        fileBuffers.push(imageBuffer);
-        fileBuffers.push(metadataBuffer);
-        const formData = createUploadData(payer.publicKey.toBase58(), meta.pngName, imageBuffer, metadataBuffer);
-        const totalConst = yield calculateArweave(fileBuffers);
-        if (totalConst.isErr)
-            return shared_1.Result.err(totalConst.error);
-        const inst = yield core_1.SolNative.transfer(payer.publicKey, shared_1.Constants.AR_SOL_HOLDER_ID, [payer], totalConst.value);
-        if (inst.isErr) {
-            return shared_1.Result.err(inst.error);
+        else if (shared_1.isBrowser) {
+            const filepath = filePath;
+            buffer = (yield (0, js_1.useMetaplexFileFromBrowser)(filepath)).buffer;
         }
         else {
-            const sig = yield inst.submit();
-            if (sig.isErr) {
-                return shared_1.Result.err(sig.error);
+            return shared_1.Result.err(Error('Supported environment: only Node.js and Browser js'));
+        }
+        const res = yield bundlr_1.Bundlr.useStorage(feePayer).getUploadPrice(buffer.length);
+        (0, shared_1.debugLog)('# buffer length, price', buffer.length, res.basisPoints / web3_js_1.LAMPORTS_PER_SOL);
+        return shared_1.Result.ok({
+            price: res.basisPoints / web3_js_1.LAMPORTS_PER_SOL,
+            currency: res.currency,
+        });
+    });
+    StorageArweave.uploadContent = (filePath, feePayer, fileOptions // only arweave, not nft-storage
+    ) => __awaiter(this, void 0, void 0, function* () {
+        (0, shared_1.debugLog)('# upload content: ', filePath);
+        let file;
+        if (shared_1.isNode) {
+            const filepath = filePath;
+            const buffer = fs_1.default.readFileSync(filepath);
+            if (fileOptions) {
+                file = (0, js_1.useMetaplexFile)(buffer, filepath, fileOptions);
+            }
+            else {
+                file = (0, js_1.useMetaplexFile)(buffer, filepath);
             }
         }
-        // todo: No support FormData
-        const res = yield uploadServer(formData)
+        else if (shared_1.isBrowser) {
+            const filepath = filePath;
+            if (fileOptions) {
+                file = yield (0, js_1.useMetaplexFileFromBrowser)(filepath, fileOptions);
+            }
+            else {
+                file = yield (0, js_1.useMetaplexFileFromBrowser)(filepath);
+            }
+        }
+        else {
+            return shared_1.Result.err(Error('Supported environment: only Node.js and Browser js'));
+        }
+        return bundlr_1.Bundlr.useStorage(feePayer)
+            .upload(file)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
-        if (res.isErr)
-            return res.error;
-        const manifest = res.value.unwrap().messages[0];
-        if (!manifest)
-            return shared_1.Result.err(Error('Invalid manifest data'));
-        return shared_1.Result.ok(`${shared_1.Constants.ARWEAVE_GATEWAY_URL}/${manifest.transactionId}`);
+    });
+    StorageArweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        (0, shared_1.debugLog)('# upload meta data: ', metadata);
+        const valid = validator_1.Validator.checkAll(metadata);
+        if (valid.isErr) {
+            return valid;
+        }
+        if (metadata.seller_fee_basis_points) {
+            metadata.seller_fee_basis_points = metaplex_1.MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
+        }
+        return bundlr_1.Bundlr.make(feePayer)
+            .nfts()
+            .uploadMetadata(metadata)
+            .then((res) => shared_1.Result.ok(res.uri))
+            .catch(shared_1.Result.err);
     });
 })(StorageArweave = exports.StorageArweave || (exports.StorageArweave = {}));
