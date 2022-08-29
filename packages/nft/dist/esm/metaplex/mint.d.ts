@@ -1,12 +1,12 @@
 import { PublicKey, Keypair } from '@solana/web3.js';
 import { Instruction, Result } from '@solana-suite/shared';
 import { ValidatorError } from '../validator';
-import { NftStorageMetaplexMetadata } from '../types/metaplex/mint';
+import { InputMetaplexMetadata } from '../types/metaplex/index';
 export declare namespace Metaplex {
     /**
      * Upload content and NFT mint
      *
-     * @param {NftStorageMetaplexMetadata}  metadata
+     * @param {InputMetaplexMetadata}  input
      * {
      *   name: string               // nft content name
      *   symbol: string             // nft ticker symbol
@@ -30,5 +30,5 @@ export declare namespace Metaplex {
      * @param {Keypair} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    const mint: (metadata: NftStorageMetaplexMetadata, owner: PublicKey, feePayer: Keypair) => Promise<Result<Instruction, Error | ValidatorError>>;
+    const mint: (input: InputMetaplexMetadata, owner: PublicKey, feePayer: Keypair) => Promise<Result<Instruction, Error | ValidatorError>>;
 }

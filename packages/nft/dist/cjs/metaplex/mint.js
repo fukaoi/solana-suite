@@ -31,7 +31,7 @@ var Metaplex;
     /**
      * Upload content and NFT mint
      *
-     * @param {NftStorageMetaplexMetadata}  metadata
+     * @param {InputMetaplexMetadata}  input
      * {
      *   name: string               // nft content name
      *   symbol: string             // nft ticker symbol
@@ -55,13 +55,13 @@ var Metaplex;
      * @param {Keypair} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    Metaplex.mint = (metadata, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const valid = validator_1.Validator.checkAll(metadata);
+    Metaplex.mint = (input, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const valid = validator_1.Validator.checkAll(input);
         if (valid.isErr) {
             return shared_1.Result.err(valid.error);
         }
         let storageRes;
-        const { filePath, storageType, royalty } = metadata, reducedMetadata = __rest(metadata, ["filePath", "storageType", "royalty"]);
+        const { filePath, storageType, royalty } = input, reducedMetadata = __rest(input, ["filePath", "storageType", "royalty"]);
         if (storageType === 'arweave') {
             storageRes = (yield storage_2.StorageArweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 reducedMetadata.image = ok;
@@ -80,7 +80,6 @@ var Metaplex;
         if ((yield storageRes).isErr) {
             return storageRes;
         }
-        console.log(reducedMetadata);
         const uri = (yield storageRes).unwrap();
         const mintInput = Object.assign({ uri }, reducedMetadata);
         return _mint_1.InternalsMetaplex_Mint.create(mintInput, owner, feePayer);

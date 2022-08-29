@@ -1,6 +1,6 @@
 import { PublicKey, Keypair } from '@solana/web3.js';
 import { Instruction, Result } from '@solana-suite/shared';
-import { MetaplexMetaData } from '../../types/metaplex/mint';
+import { MetaplexMetaData } from '../../types/metaplex/index';
 import { ValidatorError } from '../../validator';
 export declare namespace InternalsMetaplex_Mint {
     /**

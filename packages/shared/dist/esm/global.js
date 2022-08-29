@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { PublicKey, Keypair } from '@solana/web3.js';
-import bs from 'bs58';
 import { Constants, Result } from './';
 import { Internals_Instruction } from './internals/_instruction';
+import bs from 'bs58';
 // @ts-ignore
 Array.prototype.submit = function () {
     return __awaiter(this, void 0, void 0, function* () {

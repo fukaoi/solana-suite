@@ -14,9 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = void 0;
 const web3_js_1 = require("@solana/web3.js");
-const bs58_1 = __importDefault(require("bs58"));
 const _1 = require("./");
 const _instruction_1 = require("./internals/_instruction");
+const bs58_1 = __importDefault(require("bs58"));
 // @ts-ignore
 Array.prototype.submit = function () {
     return __awaiter(this, void 0, void 0, function* () {

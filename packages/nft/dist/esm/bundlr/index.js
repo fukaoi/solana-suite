@@ -4,13 +4,15 @@ export var Bundlr;
 (function (Bundlr) {
     const BUNDLR_CONNECT_TIMEOUT = 60000;
     Bundlr.make = (feePayer) => {
-        return MetaplexFoundation.make(Node.getConnection())
-            .use(keypairIdentity(feePayer))
-            .use(bundlrStorage({
+        const object = MetaplexFoundation.make(Node.getConnection()).use(bundlrStorage({
             address: Constants.BUNDLR_NETWORK_URL,
             providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
             timeout: BUNDLR_CONNECT_TIMEOUT,
         }));
+        if (feePayer) {
+            object.use(keypairIdentity(feePayer));
+        }
+        return object;
     };
     Bundlr.useStorage = (feePayer) => {
         return Bundlr.make(feePayer).storage().driver();

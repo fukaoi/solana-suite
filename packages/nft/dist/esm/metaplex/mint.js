@@ -19,7 +19,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import { StorageNftStorage } from '../storage';
-import { Result } from '@solana-suite/shared';
+import { Result, } from '@solana-suite/shared';
 import { StorageArweave } from '../storage';
 import { InternalsMetaplex_Mint } from '../internals/metaplex/_mint';
 import { Validator } from '../validator';
@@ -28,7 +28,7 @@ export var Metaplex;
     /**
      * Upload content and NFT mint
      *
-     * @param {NftStorageMetaplexMetadata}  metadata
+     * @param {InputMetaplexMetadata}  input
      * {
      *   name: string               // nft content name
      *   symbol: string             // nft ticker symbol
@@ -52,13 +52,13 @@ export var Metaplex;
      * @param {Keypair} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    Metaplex.mint = (metadata, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const valid = Validator.checkAll(metadata);
+    Metaplex.mint = (input, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        const valid = Validator.checkAll(input);
         if (valid.isErr) {
             return Result.err(valid.error);
         }
         let storageRes;
-        const { filePath, storageType, royalty } = metadata, reducedMetadata = __rest(metadata, ["filePath", "storageType", "royalty"]);
+        const { filePath, storageType, royalty } = input, reducedMetadata = __rest(input, ["filePath", "storageType", "royalty"]);
         if (storageType === 'arweave') {
             storageRes = (yield StorageArweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 reducedMetadata.image = ok;
@@ -77,7 +77,6 @@ export var Metaplex;
         if ((yield storageRes).isErr) {
             return storageRes;
         }
-        console.log(reducedMetadata);
         const uri = (yield storageRes).unwrap();
         const mintInput = Object.assign({ uri }, reducedMetadata);
         return InternalsMetaplex_Mint.create(mintInput, owner, feePayer);
