@@ -1,4 +1,4 @@
-import { CreateNftInput } from '@metaplex-foundation/js';
+import { CreateNftInput, Nft } from '@metaplex-foundation/js';
 import { NftStorageMetadata } from '../storage/';
 
 type noNeedOptional =
@@ -10,7 +10,7 @@ type noNeedOptional =
 
 export type MetaplexMetaData = Omit<CreateNftInput, noNeedOptional>;
 
-export type NftStorageMetaplexMetadata = Omit<
+export type InputMetaplexMetadata = Omit<
   NftStorageMetadata,
   'seller_fee_basis_points'
 > &
@@ -21,3 +21,24 @@ export type NftStorageMetaplexMetadata = Omit<
     filePath: string | File;
     storageType: 'arweave' | 'nftStorage';
   };
+
+export type OutputMetaplexMetadata = Omit<
+  Nft,
+  | 'mint'
+  | 'updateAuthority'
+  | 'metadataAccount'
+  | 'metadataTask'
+  | 'editionAccount'
+  | 'editionTask'
+  | 'sellerFeeBasisPoints'
+  | 'metadata'
+  | 'originalEdition'
+  | 'printEdition'
+  | 'isOriginal'
+  | 'isPrint'
+  | 'equals'
+> & {
+  mint: string;
+  updateAuthority: string;
+  royalty: number;
+};

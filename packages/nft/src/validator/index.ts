@@ -1,9 +1,9 @@
 import { Result } from '@solana-suite/shared';
 import { MetaplexRoyalty } from '../metaplex';
 import {
+  InputMetaplexMetadata,
   MetaplexMetaData,
-  NftStorageMetaplexMetadata,
-} from '../types/metaplex/mint';
+} from '../types/metaplex/index';
 
 import { NftStorageMetadata } from '../types/storage';
 import { Limit, Details } from '../types/validator';
@@ -186,7 +186,7 @@ export namespace Validator {
     'name' | 'symbol' | 'image' | 'seller_fee_basis_points'
   >;
   type PickNftStorageMetaplex = Pick<
-    NftStorageMetaplexMetadata,
+    InputMetaplexMetadata,
     'name' | 'symbol' | 'royalty' | 'filePath'
   >;
   type PickMetaplex = Pick<

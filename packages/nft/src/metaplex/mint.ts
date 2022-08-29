@@ -8,15 +8,15 @@ import { StorageArweave } from '../storage';
 import { InternalsMetaplex_Mint } from '../internals/metaplex/_mint';
 import { Validator, ValidatorError } from '../validator';
 import {
-  NftStorageMetaplexMetadata,
+  InputMetaplexMetadata,
   MetaplexMetaData,
-} from '../types/metaplex/mint';
+} from '../types/metaplex/index';
 
 export namespace Metaplex {
   /**
    * Upload content and NFT mint
    *
-   * @param {NftStorageMetaplexMetadata}  metadata
+   * @param {InputMetaplexMetadata}  input
    * {
    *   name: string               // nft content name
    *   symbol: string             // nft ticker symbol
@@ -41,17 +41,17 @@ export namespace Metaplex {
    * @return Promise<Result<Instruction, Error>>
    */
   export const mint = async (
-    metadata: NftStorageMetaplexMetadata,
+    input: InputMetaplexMetadata,
     owner: PublicKey,
     feePayer: Keypair
   ): Promise<Result<Instruction, Error | ValidatorError>> => {
-    const valid = Validator.checkAll<NftStorageMetaplexMetadata>(metadata);
+    const valid = Validator.checkAll<InputMetaplexMetadata>(input);
     if (valid.isErr) {
       return Result.err(valid.error);
     }
 
     let storageRes!: any;
-    const { filePath, storageType, royalty, ...reducedMetadata } = metadata;
+    const { filePath, storageType, royalty, ...reducedMetadata } = input;
     if (storageType === 'arweave') {
       storageRes = (
         await StorageArweave.uploadContent(filePath!, feePayer)

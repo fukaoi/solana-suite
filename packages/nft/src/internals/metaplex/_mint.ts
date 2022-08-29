@@ -20,7 +20,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
-import { MetaplexMetaData } from '../../types/metaplex/mint';
+import { MetaplexMetaData } from '../../types/metaplex/index';
 import { Validator, ValidatorError } from '../../validator';
 import {MetaplexRoyalty} from '../../metaplex';
 

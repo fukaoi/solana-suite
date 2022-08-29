@@ -7,13 +7,11 @@ import { RandomAsset } from '../randomAsset';
 import { ValidatorError } from '../../src';
 
 let source: KeypairStr;
-let dest: KeypairStr;
 
 describe('Metaplex', () => {
   before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
-    dest = obj.dest;
   });
 
   it('[Arweave] one lump upload content and mint nft', async () => {
