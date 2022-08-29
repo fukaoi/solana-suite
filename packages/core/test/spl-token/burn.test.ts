@@ -49,7 +49,7 @@ describe('SplToken', () => {
       (ok) => {
         ok.forEach((data) => {
           if (data.mint === token) {
-            assert.equal(data.tokenAmount, TOKEN_TOTAL_AMOUNT - burnAmount);
+            assert.equal(data.amount, TOKEN_TOTAL_AMOUNT - burnAmount);
           }
         });
       },
