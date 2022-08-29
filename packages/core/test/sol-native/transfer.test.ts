@@ -47,35 +47,37 @@ describe('SolNative', () => {
     }
   });
 
-  // it('transfer transaction with fee payer', async () => {
-  //   const solAmount = 0.01;
-  //   const owner = KeypairStr.create();
-  //   await Airdrop.request(owner.toPublicKey());
-  //   const feePayer = source;
+  it('transfer transaction with fee payer', async () => {
+    const solAmount = 0.01;
+    const owner = KeypairStr.create();
+    await Airdrop.request(owner.toPublicKey());
+    const feePayer = source;
 
-  //   /* tslint:disable-next-line */
-  //   const before = (
-  //     await SolNative.getBalance(feePayer.pubkey.toPublicKey())
-  //   ).unwrap();
+    const before = (
+      await SolNative.findByOwner(feePayer.pubkey.toPublicKey())
+    ).unwrap();
 
-  //   console.log(before);
+    console.log(before);
 
-  //   const inst = await SolNative.transfer(
-  //     owner.toPublicKey(),
-  //     dest.toPublicKey(),
-  //     [owner.toKeypair()],
-  //     solAmount,
-  //     feePayer.toKeypair()
-  //   );
+    const inst = await SolNative.transfer(
+      owner.toPublicKey(),
+      dest.toPublicKey(),
+      [owner.toKeypair()],
+      solAmount,
+      feePayer.toKeypair()
+    );
 
-  //   const res = await inst.submit();
-  //   assert.isTrue(res.isOk, `${res.unwrap()}`);
-  //   console.log('# tx signature: ', res.unwrap());
-  //   const after = (
-  //     await SolNative.getBalance(feePayer.pubkey.toPublicKey())
-  //   ).unwrap();
-  //   assert.isTrue(before > after, `before fee: ${before}, after fee: ${after}`);
-  // });
+    const res = await inst.submit();
+    assert.isTrue(res.isOk, `${res.unwrap()}`);
+    console.log('# tx signature: ', res.unwrap());
+    const after = (
+      await SolNative.findByOwner(feePayer.pubkey.toPublicKey())
+    ).unwrap();
+    assert.isTrue(
+      before.sol > after.sol,
+      `before fee: ${before}, after fee: ${after}`
+    );
+  });
 
   it('transfer transaction with multi sig', async () => {
     const signer1 = KeypairStr.create();

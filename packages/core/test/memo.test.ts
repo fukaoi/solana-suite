@@ -31,14 +31,6 @@ describe('Memo', () => {
     assert.isObject(res);
   });
 
-  // @todo: raise error
-  it.skip('decode', async () => {
-    const data = 'U1Gg9T9EGN5tDRw28wR3GxXWZBkoS3rg2U3iMZdViMJhd5pVNsxh79RW';
-    const res = Memo.decode(data);
-    console.log(`# decode: `, res, data);
-    assert.equal(res, '{"nft": "art", "url": "http://hoge.hoge"}');
-  });
-
   it('send memo by own', async () => {
     const inst = Memo.create(
       '{"memo": "send memo by own"}',
