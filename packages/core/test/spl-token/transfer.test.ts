@@ -3,7 +3,6 @@ import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { SplToken, KeypairStr, Multisig } from '../../src/';
 import { PublicKey } from '@solana/web3.js';
-import { Internals } from '../../src/internals/_index';
 
 let source: KeypairStr;
 let dest: KeypairStr;

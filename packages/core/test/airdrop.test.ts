@@ -16,6 +16,6 @@ describe('Airdrop', () => {
     const res = await Airdrop.request(source.toPublicKey(), 1);
     assert.isTrue(res.isOk, res.unwrap());
     const info = await SolNative.findByOwner(source.toPublicKey());
-    assert.isNotEmpty(info.unwrap().lamports);
+    assert.isNumber(info.unwrap().sol);
   });
 });
