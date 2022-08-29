@@ -15,39 +15,39 @@ describe('SplToken', () => {
     source = obj.source;
   });
 
-  it('Create token, burn token', async () => {
-    const inst1 = await SplToken.mint(
-      source.toPublicKey(),
-      [source.toKeypair()],
-      TOKEN_TOTAL_AMOUNT,
-      MINT_DECIMAL
-    );
+  // it('Create token, burn token', async () => {
+  //   const inst1 = await SplToken.mint(
+  //     source.toPublicKey(),
+  //     [source.toKeypair()],
+  //     TOKEN_TOTAL_AMOUNT,
+  //     MINT_DECIMAL
+  //   );
 
-    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
-    const token = inst1.unwrap().data as string;
-    console.log('# mint: ', token);
+  //   assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
+  //   const token = inst1.unwrap().data as string;
+  //   console.log('# mint: ', token);
 
-    const burnAmount = 500000;
-    const inst2 = await SplToken.burn(
-      token.toPublicKey(),
-      source.toPublicKey(),
-      [source.toKeypair()],
-      burnAmount,
-      MINT_DECIMAL
-    );
+  //   const burnAmount = 500000;
+  //   const inst2 = await SplToken.burn(
+  //     token.toPublicKey(),
+  //     source.toPublicKey(),
+  //     [source.toKeypair()],
+  //     burnAmount,
+  //     MINT_DECIMAL
+  //   );
 
-    assert.isTrue(inst2.isOk);
-    const sig = await [inst1, inst2].submit();
-    console.log('signature: ', sig.unwrap());
+  //   assert.isTrue(inst2.isOk);
+  //   const sig = await [inst1, inst2].submit();
+  //   console.log('signature: ', sig.unwrap());
 
-    // time wait
-    await Node.confirmedSig(sig.unwrap());
+  //   // time wait
+  //   await Node.confirmedSig(sig.unwrap());
 
-    const res = await SplToken.getBalance(
-      source.toPublicKey(),
-      token.toPublicKey()
-    );
-    assert.isTrue(res.isOk);
-    assert.equal(res.unwrap().uiAmount, TOKEN_TOTAL_AMOUNT - burnAmount);
-  });
+  //   const res = await SplToken.getBalance(
+  //     source.toPublicKey(),
+  //     token.toPublicKey()
+  //   );
+  //   assert.isTrue(res.isOk);
+  //   assert.equal(res.unwrap().uiAmount, TOKEN_TOTAL_AMOUNT - burnAmount);
+  // });
 });

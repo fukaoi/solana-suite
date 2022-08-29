@@ -15,7 +15,7 @@ describe('Airdrop', () => {
   it('Request airdrop with 1 SOL', async () => {
     const res = await Airdrop.request(source.toPublicKey(), 1);
     assert.isTrue(res.isOk, res.unwrap());
-    const balance = await SolNative.getBalance(source.toPublicKey());
-    assert.isTrue(balance.isOk, balance.unwrap().toString());
+    const info = await SolNative.findByOwner(source.toPublicKey());
+    assert.isNotEmpty(info.unwrap().lamports);
   });
 });

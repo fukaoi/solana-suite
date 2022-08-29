@@ -100,34 +100,6 @@ describe('Memo', () => {
     console.log('# tx signature: ', res.unwrap());
   });
 
-  it('Get memo data in transaction from dest', async () => {
-    const res = await SolNative.findByOwner(dest.toPublicKey());
-    assert.isOk(res.isOk);
-    assert.isNotEmpty(res.unwrap()[0].memo);
-    res.unwrap().forEach((r) => {
-      if (r.memo) {
-        console.log('# memo in transaction: ', r.memo);
-        assert.isNotEmpty(r.memo);
-      }
-    });
-  });
-
-  it('Get memo data in spl transaction from dest', async () => {
-    const res = await SplToken.findByOwner(
-      mint.toPublicKey(),
-      dest.toPublicKey()
-    );
-    console.log(res);
-    assert.isOk(res.isOk);
-    assert.isNotEmpty(res.unwrap()[0].memo);
-    res.unwrap().forEach((r) => {
-      if (r.memo) {
-        console.log('# memo in transaction: ', r.memo);
-        assert.isNotEmpty(r.memo);
-      }
-    });
-  });
-
   it('[Err] Over max limit', async () => {
     const overData = 'a'.repeat(2000);
     const inst = Memo.create(
