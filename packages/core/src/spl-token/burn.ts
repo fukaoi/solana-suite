@@ -1,9 +1,6 @@
 import { createBurnCheckedInstruction } from '@solana/spl-token';
-
 import { PublicKey, Signer } from '@solana/web3.js';
-
 import { Result, Instruction } from '@solana-suite/shared';
-
 import { Internals_SplToken } from '../internals/_spl-token';
 
 export namespace SplToken {

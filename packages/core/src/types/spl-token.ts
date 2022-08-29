@@ -1,16 +1,5 @@
-export interface AccountInfo {
-  lamports: number;
+export interface OwnerInfo {
   owner: string;
-  rentEpoch: number;
-}
-
-export interface TokenAccountInfo {
   mint: string;
-  owner: string;
-  tokenAmount: number;
-}
-
-export interface TokenInfoOwned {
-  mint: string;
-  tokenAmount: number;
+  amount: number;
 }

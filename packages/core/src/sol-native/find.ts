@@ -1,6 +1,6 @@
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Node, Result } from '@solana-suite/shared';
-import { OwnerInfo } from '../types/find';
+import { OwnerInfo } from '../types/sol-native';
 
 export namespace SolNative {
   export const findByOwner = async (
