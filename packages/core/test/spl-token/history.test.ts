@@ -55,7 +55,8 @@ describe('SplToken', () => {
 
     res.unwrap().forEach((r) => {
       assert.isEmpty(r.mint);
-      assert.isEmpty(r.tokenAmount);
+      assert.isEmpty(r.amount);
+      assert.isEmpty(r.owner);
     });
   });
 
@@ -65,9 +66,9 @@ describe('SplToken', () => {
     assert.isTrue(res.isOk, `${res.unwrap()}`);
 
     res.unwrap().forEach((r) => {
-      assert.isNotEmpty(r.mint);
       assert.isString(r.mint);
-      assert.isNumber(r.tokenAmount);
+      assert.isString(r.owner);
+      assert.isNumber(r.amount);
     });
   });
 });
