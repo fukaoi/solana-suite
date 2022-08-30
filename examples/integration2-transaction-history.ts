@@ -4,11 +4,17 @@
 
 import assert from 'assert';
 import {
-  Account,
-  Transaction,
   SplToken,
-  Pubkey
+  Pubkey,
+  KeypairStr,
+  Airdrop,
+  DirectionFilter,
 } from '@solana-suite/core';
+
+import {
+  Node
+} from '@solana-suite/shared';
+
 
 (async () => {
 
@@ -17,11 +23,11 @@ import {
   //////////////////////////////////////////////
 
   // create token owner wallet, receive token receipt wallet.
-  const owner = Account.create();
-  const receipt = Account.create();
+  const owner = KeypairStr.create();
+  const receipt = KeypairStr.create();
 
   // faucet 1 sol
-  await Account.requestAirdrop(owner.toPublicKey());
+  await Airdrop.request(owner.toPublicKey());
 
   console.log('# owner: ', owner);
   console.log('# receipt: ', receipt);
@@ -65,7 +71,7 @@ import {
   (await [inst1, inst2].submit()).match(
     async (value) => {
       console.log('# Transfer nft sig: ', value.toExplorerUrl());
-      await Transaction.confirmedSig(value);
+      await Node.confirmedSig(value);
     },
     (error) => assert.fail(error)
   );
@@ -74,29 +80,19 @@ import {
   // GET TRANSACTION HISTORY
   //////////////////////////////////////////////
 
-  const hist1 = await Transaction.getTokenHistory(
+  const hist1 = await SplToken.getHistory(
     mint.toPublicKey(),  // used mint
     owner.toPublicKey()  // search key
   );
   console.log('# token history by publish: ', hist1.unwrap());
 
-  // Not token history(Difference between getHistory and getTokenHistory)
-  const hist2 = await Transaction.getHistory(
-    owner.toPublicKey(),  // search key
-    {
-      actionFilter: [Transaction.Filter.Create] // Only 'create' history
-    }
-  );
-  console.log('# history by create action filter: ', hist2.unwrap());
-
-  // History of receipt as the main destination.
-  const hist3 = await Transaction.getTokenHistory(
+  const hist2 = await SplToken.getHistory(
     mint.toPublicKey(),
     receipt.toPublicKey(),
     {
-      directionFilter: Transaction.DirectionFilter.Dest, // Dest or Source
+      directionFilter: DirectionFilter.Dest, // Dest or Source
     }
   );
-  console.log('# token history result by destination filter : ', hist3.unwrap());
+  console.log('# token history result by destination filter : ', hist2.unwrap());
 
 })();

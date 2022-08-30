@@ -3,36 +3,30 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import {
-  Account,
-  // KeypairStr,
-  Pubkey,
-  SplToken,
-} from '@solana-suite/core';
+import { KeypairStr, Airdrop, Pubkey, SplToken } from '@solana-suite/core';
 
 import {
-  // Node,
+  Node,
   // Constants,
-  sleep
+  sleep,
 } from '@solana-suite/shared';
 
 const USERS_COUNT = 50;
 const SLEEP_TIME_WAIT = 0;
 
 (async () => {
-
   // Node.changeConnection({
-  // cluster: Constants.Cluster.prd, 
+  // cluster: Constants.Cluster.prd,
   // commitment: 'finalized'
   // });
 
   //////////////////////////////////////////////
-  // CREATE WALLET 
+  // CREATE WALLET
   //////////////////////////////////////////////
 
   let users = [];
   for (let i = 0; i < USERS_COUNT; i++) {
-    users.push(Account.create());
+    users.push(KeypairStr.create());
   }
 
   // manual setting
@@ -42,13 +36,12 @@ const SLEEP_TIME_WAIT = 0;
   // );
 
   // random create
-  const owner = Account.create();
-  await Account.requestAirdrop(owner.toPublicKey());
+  const owner = KeypairStr.create();
+  await Airdrop.request(owner.toPublicKey());
   console.log('# owner: ', owner.pubkey);
-  console.log('# owner balance: ', await Account.getBalance(owner.toPublicKey()));
 
   //////////////////////////////////////////////
-  // CREATE TOKEN 
+  // CREATE TOKEN
   //////////////////////////////////////////////
 
   const totalAmount = 100000;
@@ -70,7 +63,7 @@ const SLEEP_TIME_WAIT = 0;
   console.log('# mint: ', mint);
 
   //////////////////////////////////////////////
-  // TRANSFER RECEIPR USER FROM THIS LINE 
+  // TRANSFER RECEIPT USER FROM THIS LINE
   //////////////////////////////////////////////
 
   let i = 1;
@@ -80,9 +73,7 @@ const SLEEP_TIME_WAIT = 0;
       mint.toPublicKey(),
       owner.toPublicKey(),
       user.toPublicKey(),
-      [
-        owner.toKeypair()
-      ],
+      [owner.toKeypair()],
       10,
       decimals
     );
@@ -97,5 +88,5 @@ const SLEEP_TIME_WAIT = 0;
         assert.fail(error);
       }
     );
-  };
+  }
 })();

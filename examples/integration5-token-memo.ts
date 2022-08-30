@@ -4,34 +4,33 @@
 
 import assert from 'assert';
 import {
-  Account,
-  Transaction,
+  KeypairStr,
   SplToken,
   Pubkey,
-  Memo
+  Memo,
+  Airdrop,
 } from '@solana-suite/core';
 
-(async () => {
+import { Node } from '@solana-suite/shared';
 
+(async () => {
   //////////////////////////////////////////////
   // CREATE WALLET
   //////////////////////////////////////////////
 
   // create token owner wallet, receive token receipt wallet.
-  const owner = Account.create();
-  const receipt = Account.create();
+  const owner = KeypairStr.create();
+  const receipt = KeypairStr.create();
 
   // faucet 1 sol
-  await Account.requestAirdrop(owner.toPublicKey());
+  await Airdrop.request(owner.toPublicKey());
 
   console.log('# owner: ', owner.pubkey);
   console.log('# receipt: ', receipt.pubkey);
 
-
   //////////////////////////////////////////////
   // CREATE SPL TOKEN
   //////////////////////////////////////////////
-
 
   // Basically SPL and Metaplex NFT is same logic
   const totalAmount = 100000;
@@ -43,12 +42,10 @@ import {
     decimals
   );
 
-
   const mint = inst1.unwrap().data as Pubkey;
 
   // this is NFT ID
   console.log('# mint: ', mint);
-
 
   //////////////////////////////////////////////
   // CREATE MEMO
@@ -63,12 +60,11 @@ import {
   const inst2 = Memo.create(
     memoData,
     receipt.toPublicKey(), // memo's owner
-    owner.toKeypair(),     // signer or feePayer
+    owner.toKeypair() // signer or feePayer
   );
 
-
   //////////////////////////////////////////////
-  // TRANSFER RECEIPR USER FROM THIS LINE
+  // TRANSFER RECEIPT USER FROM THIS LINE
   //////////////////////////////////////////////
 
   // transfer nft to receipt wallet
@@ -84,7 +80,7 @@ import {
   (await [inst1, inst2, inst3].submit()).match(
     async (value) => {
       console.log('# Transfer nft sig: ', value.toExplorerUrl());
-      await Transaction.confirmedSig(value);
+      await Node.confirmedSig(value);
     },
     (error) => assert.fail(error)
   );
@@ -93,11 +89,10 @@ import {
   // GET MEMO DATA
   //////////////////////////////////////////////
 
-  const res = await Transaction.getTokenHistory(
+  const res = await SplToken.getHistory(
     mint.toPublicKey(),
-    receipt.toPublicKey(),
+    receipt.toPublicKey()
   );
 
   res.isOk && console.log('# Transfer Memo: ', res.value[0].memo);
-
 })();

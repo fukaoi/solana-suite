@@ -4,13 +4,15 @@
 
 import assert from 'assert';
 import {
-  Account,
+  KeypairStr,
   Multisig,
   SolNative,
   SplToken,
-  Transaction,
   Pubkey,
+  Airdrop,
 } from '@solana-suite/core';
+
+import {Node} from '@solana-suite/shared';
 
 (async () => {
 
@@ -20,21 +22,21 @@ import {
 
   // [Type of wallet]
   // owner: stocked sol account, maybe be human wallet app(or hard ware wallet)
-  // feePayer: pay transactionn fee. maybe 0.0002-0.0005 SOL
+  // feePayer: pay transaction fee. maybe 0.0002-0.0005 SOL
   // publisher: mint token, transfer token and pay transaction fee account
   // receipt: generally user account. sol not stocked
 
-  const owner = Account.create();
-  const feePayer = Account.create();
-  const receipt = Account.create();
+  const owner = KeypairStr.create();
+  const feePayer = KeypairStr.create();
+  const receipt = KeypairStr.create();
 
   // signer for multisig
-  const signer1 = Account.create();
-  const signer2 = Account.create();
-  const signer3 = Account.create();
+  const signer1 = KeypairStr.create();
+  const signer2 = KeypairStr.create();
+  const signer3 = KeypairStr.create();
 
   // faucet 1 sol
-  await Account.requestAirdrop(owner.toPublicKey());
+  await Airdrop.request(owner.toPublicKey());
 
   console.log('# owner: ', owner.pubkey);
   console.log('# feePayer: ', receipt.pubkey);
@@ -46,7 +48,7 @@ import {
   //////////////////////////////////////////////
   // Setting multisig 2 of 2(m of n)
   //////////////////////////////////////////////
-  const signerPubkeys = [
+  const signerPubkey = [
     signer1.toPublicKey(),
     signer2.toPublicKey(),
     signer3.toPublicKey(),
@@ -55,7 +57,7 @@ import {
   const inst1 = await Multisig.create(
     2,
     owner.toKeypair(),
-    signerPubkeys
+    signerPubkey
   );
 
   //////////////////////////////////////////////
@@ -75,7 +77,7 @@ import {
   await (await [inst1, inst2].submit()).match(
     async (value) => {
       // [optional]if need this action. wait confirmation state
-      await Transaction.confirmedSig(value);
+      await Node.confirmedSig(value);
     },
     error => assert.fail(error)
   );
@@ -93,7 +95,7 @@ import {
   const inst3 =
     await SplToken.mint(
       publisher.toPublicKey(),  // creator account
-      multiSigners,          // signning
+      multiSigners,          // signing
       100000,                // Total number of tokens issued
       2,                     // token's decimal e.g:0.12, 20.52
       feePayer.toKeypair()   // pay transaction fee
@@ -103,13 +105,13 @@ import {
   console.log('# mint: ', mint);
 
   const inst4 = await SplToken.transfer(
-    mint.toPublicKey(),   // tokenkey
+    mint.toPublicKey(),       // tokenKey
     publisher.toPublicKey(),  // from. own token
     receipt.toPublicKey(),    // to
-    multiSigners,          // signning
-    5000,                  // transfer amount
-    2,                     // token's decimal e.g:0.12, 20.52
-    feePayer.toKeypair()   // pay transaction fee
+    multiSigners,             // sinning
+    5000,                     // transfer amount
+    2,                        // token's decimal e.g:0.12, 20.52
+    feePayer.toKeypair()      // pay transaction fee
   );
 
   // submit batch instructions

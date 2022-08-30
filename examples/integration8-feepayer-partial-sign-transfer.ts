@@ -3,36 +3,29 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import {
-  Account,
-  SolNative,
-  SplToken,
-} from '@solana-suite/core';
+import { Airdrop, KeypairStr, SolNative, SplToken } from '@solana-suite/core';
 
-import {
-  PartialSignInstruction,
-  sleep
-} from '@solana-suite/shared';
+import { PartialSignInstruction, sleep } from '@solana-suite/shared';
 
 (async () => {
-  ////////////////////////////////////////////// CREATE WALLET 
+  ////////////////////////////////////////////// CREATE WALLET
   //////////////////////////////////////////////
 
   // random create
-  const owner = Account.create();
-  const tokenowner = Account.create();
-  const dest = Account.create();
-  const feePayer = Account.create();
+  const owner = KeypairStr.create();
+  const tokenOwner = KeypairStr.create();
+  const dest = KeypairStr.create();
+  const feePayer = KeypairStr.create();
 
-  await Account.requestAirdrop(owner.toPublicKey());
+  await Airdrop.request(owner.toPublicKey());
   console.log('# owner: ', owner.pubkey);
 
   await sleep(10); // Avoid 429 error
 
-  await Account.requestAirdrop(feePayer.toPublicKey());
+  await Airdrop.request(feePayer.toPublicKey());
   console.log('# feePayer: ', feePayer.pubkey);
 
-  console.log('# tokenowner: ', tokenowner.pubkey);
+  console.log('# tokenOwner: ', tokenOwner.pubkey);
   console.log('# dest: ', dest.pubkey);
 
   // SOL version //
@@ -57,11 +50,9 @@ import {
     (err) => assert.fail(err.message)
   );
 
-
   // =============================================== //
   // == SEND HEX VALUE(Client side => Sever side) == //
   // =============================================== //
-
 
   //////////////////////////////////////////////
   // SIGN FEE PAYER AND SUBMIT (Server side)
@@ -74,30 +65,26 @@ import {
     (err) => assert.fail(err.message)
   );
 
-
   // SPL-TOKEN version //
   //////////////////////////////////////////////
   // CREATE HEX INSTRUCTION(Client side)
   //////////////////////////////////////////////
   const MINT_DECIMAL = 1;
-  const mintInst =
-    await SplToken.mint(
-      tokenowner.toPublicKey(),
-      [
-        tokenowner.toKeypair(),
-      ],
-      10000,
-      MINT_DECIMAL,
-      feePayer.toKeypair()
-    );
+  const mintInst = await SplToken.mint(
+    tokenOwner.toPublicKey(),
+    [tokenOwner.toKeypair()],
+    10000,
+    MINT_DECIMAL,
+    feePayer.toKeypair()
+  );
 
   await mintInst.submit();
 
   const inst2 = await SplToken.feePayerPartialSignTransfer(
     (mintInst.unwrap().data as string).toPublicKey(),
-    tokenowner.toPublicKey(),
+    tokenOwner.toPublicKey(),
     dest.toPublicKey(),
-    [tokenowner.toKeypair()],
+    [tokenOwner.toKeypair()],
     100,
     MINT_DECIMAL,
     feePayer.toPublicKey()
@@ -112,11 +99,9 @@ import {
     (err) => assert.fail(err.message)
   );
 
-
   // =============================================== //
   // == SEND HEX VALUE(Client side => Sever side) == //
   // =============================================== //
-
 
   //////////////////////////////////////////////
   // SIGN FEE PAYER AND SUBMIT (Server side)
