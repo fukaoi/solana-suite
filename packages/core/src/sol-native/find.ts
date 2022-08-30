@@ -1,18 +1,23 @@
-import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import {
+  LAMPORTS_PER_SOL,
+  ParsedAccountData,
+  PublicKey,
+} from '@solana/web3.js';
 import { Node, Result } from '@solana-suite/shared';
 import { SolNativeOwnerInfo } from '../types/sol-native';
+import { Internals } from '../internals/_index';
 
 export namespace SolNative {
   export const findByOwner = async (
     owner: PublicKey
   ): Promise<Result<SolNativeOwnerInfo, Error>> => {
-    const accountInfo = await Node.getConnection()
+    const res = await Node.getConnection()
       .getParsedAccountInfo(owner)
       .then(Result.ok)
       .catch(Result.err);
 
-    if (accountInfo.isErr) {
-      return Result.err(accountInfo.error);
+    if (res.isErr) {
+      return Result.err(res.error);
     }
 
     const info = {
@@ -21,9 +26,15 @@ export namespace SolNative {
       owner: owner.toString(),
     };
 
-    if (accountInfo.value.value) {
-      info.lamports = accountInfo.value.value?.lamports;
-      info.sol = accountInfo.value.value?.lamports / LAMPORTS_PER_SOL;
+    if (Internals.isParsedInstruction(res.unwrap().value?.data)) {
+      info.owner = (
+        res.value.value?.data as ParsedAccountData
+      ).parsed.info.owner;
+    }
+
+    if (res.value.value) {
+      info.lamports = res.value.value?.lamports;
+      info.sol = res.value.value?.lamports / LAMPORTS_PER_SOL;
     }
     return Result.ok(info);
   };
