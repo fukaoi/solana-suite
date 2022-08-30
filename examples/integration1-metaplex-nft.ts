@@ -3,40 +3,28 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import {
-  Account,
-  Transaction,
-  SplToken,
-  Pubkey,
-} from '@solana-suite/core';
+import { Airdrop, KeypairStr } from '@solana-suite/core';
+import { Metaplex } from '@solana-suite/nft';
+import { Node, sleep } from '@solana-suite/shared';
 
-import {
-  Metaplex,
-  MetaplexInstructure,
-  MetaplexMetaData,
-  StorageNftStorage,
-} from '@solana-suite/nft';
-
-import {RandomAsset} from '../packages/nft/test/randomAsset'
+import { RandomAsset } from '../packages/nft/test/randomAsset';
 
 (async () => {
-
   //////////////////////////////////////////////
   // CREATE WALLET
   //////////////////////////////////////////////
 
   // create nft owner wallet, receive nft receipt wallet.
-  const publisher = Account.create();
-  const receipt = Account.create();
-  const owner = Account.create();
+  const owner = KeypairStr.create();
+  const receipt = KeypairStr.create();
+  const feePayer = KeypairStr.create();
 
   // faucet 1 sol
-  await Account.requestAirdrop(owner.toPublicKey());
+  await Airdrop.request(feePayer.toPublicKey());
 
-  console.log('# publisher: ', publisher.pubkey);
+  console.log('# owner: ', owner.pubkey);
   console.log('# receipt: ', receipt.pubkey);
-  console.log('# owner(feePayer): ', owner.pubkey);
-
+  console.log('# feePayer: ', feePayer.pubkey);
 
   //////////////////////////////////////////////
   // Upload contents
@@ -44,53 +32,42 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
 
   // Only test that call this function
   // Usually set custom param
-  const asset = RandomAsset.storage();
+  const asset = RandomAsset.get();
 
   console.log(asset);
-
-  // metadata and image upload
-  const url = await StorageNftStorage.upload(asset);
-
-  if (url.isErr) {
-    assert.fail(url.error);
-  }
 
   //////////////////////////////////////////////
   // CREATE NFT, MINT NFT FROM THIS LINE
   //////////////////////////////////////////////
 
-  const data = new MetaplexInstructure.Data({
-    name: asset.name,
-    symbol: 'SAMPLE',
-    uri: url.unwrap(),
-    sellerFeeBasisPoints: 100,
-    creators: null
-  });
-
-  console.log(owner.toPublicKey());
-
   const inst1 = await Metaplex.mint(
-    data,
+    {
+      filePath: asset.filePath!,
+      name: asset.name!,
+      symbol: 'SAMPLE',
+      royalty: 100,
+      storageType: 'nftStorage',
+    },
     owner.toPublicKey(),
-    [owner.toKeypair()]
+    feePayer.toKeypair()
   );
 
   // this is NFT ID
   (await inst1.submit()).match(
-    async (value) => await Transaction.confirmedSig(value, 'finalized'),
+    async (value) => await Node.confirmedSig(value),
     (error) => assert.fail(error)
   );
 
-  const mint = (inst1.unwrap().data as Pubkey);
+  await sleep(5);
+
+  const mint = inst1.unwrap().data as string;
   console.log('# mint: ', mint);
 
   //////////////////////////////////////////////
   // Display metadata from blockchain(optional)
   //////////////////////////////////////////////
 
-  const metadata = await MetaplexMetaData.getByTokenKey(
-    mint.toPublicKey()
-  );
+  const metadata = await Metaplex.findByOwner(owner.toPublicKey());
 
   metadata.match(
     (value) => console.log('# metadata: ', value),
@@ -98,33 +75,20 @@ import {RandomAsset} from '../packages/nft/test/randomAsset'
   );
 
   //////////////////////////////////////////////
-  // TRANSFER RECEIPR USER FROM THIS LINE
+  // TRANSFER RECEIPTS USER FROM THIS LINE
   //////////////////////////////////////////////
 
   // transfer nft owner => publish
-  const inst2 = await SplToken.transferNft(
+  const inst2 = await Metaplex.transfer(
     mint.toPublicKey(),
     owner.toPublicKey(),
-    publisher.toPublicKey(),
-    [
-      owner.toKeypair()
-    ],
-  );
-
-
-  // transfer nft publish => receipt
-  const inst3 = await SplToken.transferNft(
-    mint.toPublicKey(),
-    publisher.toPublicKey(),
     receipt.toPublicKey(),
-    [
-      publisher.toKeypair(),
-    ],
-    owner.toKeypair() // feePayer
+    [owner.toKeypair()],
+    feePayer.toKeypair()
   );
 
   // submit batch instructions
-  (await [inst2, inst3].submit()).match(
+  (await inst2.submit()).match(
     (value) => console.log('# Transfer nft sig: ', value.toExplorerUrl()),
     (error) => assert.fail(error)
   );

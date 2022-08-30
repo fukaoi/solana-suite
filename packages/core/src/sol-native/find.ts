@@ -1,11 +1,11 @@
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Node, Result } from '@solana-suite/shared';
-import { OwnerInfo } from '../types/sol-native';
+import { SolNativeOwnerInfo } from '../types/sol-native';
 
 export namespace SolNative {
   export const findByOwner = async (
     owner: PublicKey
-  ): Promise<Result<OwnerInfo, Error>> => {
+  ): Promise<Result<SolNativeOwnerInfo, Error>> => {
     const accountInfo = await Node.getConnection()
       .getParsedAccountInfo(owner)
       .then(Result.ok)
