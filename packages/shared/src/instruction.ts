@@ -1,7 +1,7 @@
 import {
   sendAndConfirmTransaction,
   TransactionSignature,
-  Signer,
+  Keypair,
   TransactionInstruction,
   Transaction,
   ConfirmOptions,
@@ -13,14 +13,14 @@ export const MAX_RETRIES = 3;
 
 export class Instruction {
   instructions: TransactionInstruction[];
-  signers: Signer[];
-  feePayer?: Signer;
+  signers: Keypair[];
+  feePayer?: Keypair;
   data?: unknown;
 
   constructor(
     instructions: TransactionInstruction[],
-    signers: Signer[],
-    feePayer?: Signer,
+    signers: Keypair[],
+    feePayer?: Keypair,
     data?: unknown
   ) {
     this.instructions = instructions;
@@ -65,7 +65,7 @@ export class PartialSignInstruction {
   }
 
   submit = async (
-    feePayer: Signer
+    feePayer: Keypair
   ): Promise<Result<TransactionSignature, Error>> => {
     if (!(this instanceof PartialSignInstruction)) {
       return Result.err(

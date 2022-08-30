@@ -1,24 +1,8 @@
-import { PublicKey, Keypair, TransactionSignature } from '@solana/web3.js';
+import { PublicKey, Keypair } from '@solana/web3.js';
 import { Constants, Result, Instruction } from './';
 import { Internals_Instruction } from './internals/_instruction';
 import bs from 'bs58';
-
-declare global {
-  interface String {
-    toPublicKey(): PublicKey;
-    toKeypair(): Keypair;
-    toExplorerUrl(): string;
-    toAddressUrl(): string;
-  }
-
-  interface Array<T> {
-    submit(): Promise<Result<TransactionSignature, Error>>;
-  }
-
-  interface Console {
-    debug(data: unknown, data2?: unknown, data3?: unknown): void;
-  }
-}
+import  './types/global';
 
 // @ts-ignore
 Array.prototype.submit = async function () {
