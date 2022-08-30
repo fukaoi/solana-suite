@@ -18,3 +18,4 @@ __exportStar(require("./metaplex"), exports);
 __exportStar(require("./storage"), exports);
 __exportStar(require("./bundlr"), exports);
 __exportStar(require("./validator"), exports);
+__exportStar(require("./types"), exports);
