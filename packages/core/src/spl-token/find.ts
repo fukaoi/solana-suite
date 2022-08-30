@@ -25,6 +25,7 @@ export namespace SplToken {
           mint: d.account.data.parsed.info.mint,
           amount: d.account.data.parsed.info.tokenAmount.uiAmount,
           tokenAccount: d.pubkey.toString(),
+          mintDecimal: d.account.data.parsed.info.tokenAmount.decimals,
         });
       }
       return arr;
