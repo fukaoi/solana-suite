@@ -1,4 +1,4 @@
-import { PublicKey, Signer, ParsedInstruction } from '@solana/web3.js';
+import { PublicKey, ParsedInstruction, Keypair } from '@solana/web3.js';
 
 import {
   Node,
@@ -17,7 +17,7 @@ export namespace Internals {
   export const retryGetOrCreateAssociatedAccountInfo = async (
     mint: PublicKey,
     owner: PublicKey,
-    feePayer: Signer
+    feePayer: Keypair,
   ): Promise<Result<string, Error>> => {
     let counter = 1;
     while (counter < RETRY_OVER_LIMIT) {

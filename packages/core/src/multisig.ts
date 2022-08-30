@@ -1,6 +1,6 @@
 import { Node, Result, Instruction } from '@solana-suite/shared';
 
-import { PublicKey, Signer, Keypair } from '@solana/web3.js';
+import { PublicKey, Keypair } from '@solana/web3.js';
 
 import { LayoutObject } from '@solana/buffer-layout';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -49,7 +49,7 @@ export namespace Multisig {
 
   export const create = async (
     m: number,
-    feePayer: Signer,
+    feePayer: Keypair,
     signerPubkey: PublicKey[]
   ): Promise<Result<Instruction, Error>> => {
     if (m > signerPubkey.length)

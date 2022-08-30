@@ -1,19 +1,16 @@
 import { createMint, createMintToCheckedInstruction } from '@solana/spl-token';
-
-import { PublicKey, Signer } from '@solana/web3.js';
-
+import { Keypair, PublicKey } from '@solana/web3.js';
 import { Node, Result, Instruction } from '@solana-suite/shared';
-
 import { Internals } from '../internals/_index';
 import { Internals_SplToken } from '../internals/_spl-token';
 
 export namespace SplToken {
   export const mint = async (
     owner: PublicKey,
-    signers: Signer[],
+    signers: Keypair[],
     totalAmount: number,
     mintDecimal: number,
-    feePayer?: Signer
+    feePayer?: Keypair,
   ): Promise<Result<Instruction, Error>> => {
     !feePayer && (feePayer = signers[0]);
 

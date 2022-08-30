@@ -9,7 +9,7 @@ import {
   LAMPORTS_PER_SOL,
   PublicKey,
   SystemProgram,
-  Signer,
+  Keypair,
   Transaction,
 } from '@solana/web3.js';
 
@@ -31,9 +31,9 @@ export namespace SolNative {
   export const transferWithMultisig = async (
     owner: PublicKey,
     dest: PublicKey,
-    signers: Signer[],
+    signers: Keypair[],
     amount: number,
-    feePayer?: Signer
+    feePayer?: Keypair
   ): Promise<Result<Instruction, Error>> => {
     const connection = Node.getConnection();
     const payer = feePayer ? feePayer : signers[0];
@@ -107,9 +107,9 @@ export namespace SolNative {
   export const transfer = async (
     source: PublicKey,
     destination: PublicKey,
-    signers: Signer[],
+    signers: Keypair[],
     amount: number,
-    feePayer?: Signer
+    feePayer?: Keypair
   ): Promise<Result<Instruction, Error>> => {
     const inst = SystemProgram.transfer({
       fromPubkey: source,
@@ -123,7 +123,7 @@ export namespace SolNative {
   export const feePayerPartialSignTransfer = async (
     owner: PublicKey,
     dest: PublicKey,
-    signers: Signer[],
+    signers: Keypair[],
     amount: number,
     feePayer: PublicKey
   ): Promise<Result<PartialSignInstruction, Error>> => {

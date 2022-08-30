@@ -1,7 +1,7 @@
 import {
   PublicKey,
   TransactionInstruction,
-  Signer,
+  Keypair,
 } from '@solana/web3.js';
 
 import bs from 'bs58';
@@ -16,7 +16,7 @@ export namespace Memo {
   export const create = (
     data: string,
     owner: PublicKey,
-    signer: Signer,
+    signer: Keypair,
   )
     : Instruction => {
 

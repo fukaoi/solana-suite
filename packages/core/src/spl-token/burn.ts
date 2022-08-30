@@ -1,5 +1,5 @@
 import { createBurnCheckedInstruction } from '@solana/spl-token';
-import { PublicKey, Signer } from '@solana/web3.js';
+import { PublicKey, Keypair } from '@solana/web3.js';
 import { Result, Instruction } from '@solana-suite/shared';
 import { Internals_SplToken } from '../internals/_spl-token';
 
@@ -7,10 +7,10 @@ export namespace SplToken {
   export const burn = async (
     mint: PublicKey,
     owner: PublicKey,
-    signers: Signer[],
+    signers: Keypair[],
     burnAmount: number,
     tokenDecimals: number,
-    feePayer?: Signer
+    feePayer?: Keypair
   ) => {
     const tokenAccount = await Internals_SplToken.findAssociatedTokenAddress(
       mint,

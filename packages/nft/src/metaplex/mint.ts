@@ -1,9 +1,6 @@
 import { PublicKey, Keypair } from '@solana/web3.js';
 import { StorageNftStorage } from '../storage';
-import {
-  Instruction,
-  Result,
-} from '@solana-suite/shared';
+import { Instruction, Result } from '@solana-suite/shared';
 import { StorageArweave } from '../storage';
 import { InternalsMetaplex_Mint } from '../internals/metaplex/_mint';
 import { Validator, ValidatorError } from '../validator';
@@ -32,8 +29,8 @@ export namespace Metaplex {
    *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()
    *   maxSupply?: BigNumber         // mint copies
-   *   mintAuthority?: Signer        // mint authority
-   *   updateAuthority?: Signer      // update minted authority
+   *   mintAuthority?: Keypair       // mint authority
+   *   updateAuthority?: Keypair     // update minted authority
    *   freezeAuthority?: PublicKey   // freeze minted authority
    * }
    * @param {PublicKey} owner        // first minted owner

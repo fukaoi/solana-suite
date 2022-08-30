@@ -1,4 +1,4 @@
-import { PublicKey, Signer, TransactionInstruction } from '@solana/web3.js';
+import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
 
 import {
   Node,
@@ -97,7 +97,7 @@ export namespace Internals_SplToken {
   export const getOrCreateAssociatedTokenAccount = async (
     mint: PublicKey,
     owner: PublicKey,
-    feePayer: Signer,
+    feePayer: Keypair,
     allowOwnerOffCurve = false
   ): Promise<Result<string | Instruction, Error>> => {
     const res = await getOrCreateAssociatedTokenAccountInstruction(

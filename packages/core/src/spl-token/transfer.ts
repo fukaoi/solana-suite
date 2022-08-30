@@ -1,5 +1,5 @@
 import { createTransferCheckedInstruction } from '@solana/spl-token';
-import { PublicKey, Signer, Transaction } from '@solana/web3.js';
+import { PublicKey, Keypair, Transaction } from '@solana/web3.js';
 
 import {
   Node,
@@ -16,10 +16,10 @@ export namespace SplToken {
     mint: PublicKey,
     owner: PublicKey,
     dest: PublicKey,
-    signers: Signer[],
+    signers: Keypair[],
     amount: number,
     mintDecimal: number,
-    feePayer?: Signer
+    feePayer?: Keypair
   ): Promise<Result<Instruction, Error>> => {
     !feePayer && (feePayer = signers[0]);
 
@@ -60,7 +60,7 @@ export namespace SplToken {
     mint: PublicKey,
     owner: PublicKey,
     dest: PublicKey,
-    signers: Signer[],
+    signers: Keypair[],
     amount: number,
     mintDecimal: number,
     feePayer: PublicKey

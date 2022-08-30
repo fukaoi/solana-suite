@@ -1,4 +1,4 @@
-import { PublicKey, Signer } from '@solana/web3.js';
+import { PublicKey, Keypair } from '@solana/web3.js';
 import {
   Instruction,
   Result,
@@ -14,8 +14,8 @@ export namespace Metaplex {
     mint: PublicKey,
     owner: PublicKey,
     dest: PublicKey,
-    signers: Signer[],
-    feePayer?: Signer
+    signers: Keypair[],
+    feePayer?: Keypair
   ): Promise<Result<Instruction, Error>> => {
     return SplToken.transfer(
       mint,
@@ -32,7 +32,7 @@ export namespace Metaplex {
     mint: PublicKey,
     owner: PublicKey,
     dest: PublicKey,
-    signers: Signer[],
+    signers: Keypair[],
     feePayer: PublicKey
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return SplToken.feePayerPartialSignTransfer(
