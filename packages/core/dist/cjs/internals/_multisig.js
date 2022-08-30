@@ -32,7 +32,7 @@ var Internals_Multisig;
             newAccountPubkey: newAccount.publicKey,
             lamports: balanceNeeded,
             space: Internals_Multisig.Layout.span,
-            programId: spl_token_1.TOKEN_PROGRAM_ID
+            programId: spl_token_1.TOKEN_PROGRAM_ID,
         });
     };
     Internals_Multisig.multisig = (m, feePayer, signerPubkey) => {
@@ -40,18 +40,18 @@ var Internals_Multisig;
             {
                 pubkey: feePayer.publicKey,
                 isSigner: false,
-                isWritable: true
+                isWritable: true,
             },
             {
                 pubkey: web3_js_1.SYSVAR_RENT_PUBKEY,
                 isSigner: false,
-                isWritable: false
+                isWritable: false,
             },
         ];
-        signerPubkey.forEach(pubkey => keys.push({
+        signerPubkey.forEach((pubkey) => keys.push({
             pubkey,
             isSigner: false,
-            isWritable: false
+            isWritable: false,
         }));
         const dataLayout = (0, buffer_layout_1.struct)([
             (0, buffer_layout_1.u8)('instruction'),
@@ -60,12 +60,12 @@ var Internals_Multisig;
         const data = Buffer.alloc(dataLayout.span);
         dataLayout.encode({
             instruction: 2,
-            m
+            m,
         }, data);
         return new web3_js_1.TransactionInstruction({
             keys,
             programId: spl_token_1.TOKEN_PROGRAM_ID,
-            data
+            data,
         });
     };
 })(Internals_Multisig = exports.Internals_Multisig || (exports.Internals_Multisig = {}));

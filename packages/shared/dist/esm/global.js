@@ -11,6 +11,7 @@ import { PublicKey, Keypair } from '@solana/web3.js';
 import { Constants, Result } from './';
 import { Internals_Instruction } from './internals/_instruction';
 import bs from 'bs58';
+import './types/global';
 // @ts-ignore
 Array.prototype.submit = function () {
     return __awaiter(this, void 0, void 0, function* () {

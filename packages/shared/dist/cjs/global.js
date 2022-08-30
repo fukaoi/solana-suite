@@ -17,6 +17,7 @@ const web3_js_1 = require("@solana/web3.js");
 const _1 = require("./");
 const _instruction_1 = require("./internals/_instruction");
 const bs58_1 = __importDefault(require("bs58"));
+require("./types/global");
 // @ts-ignore
 Array.prototype.submit = function () {
     return __awaiter(this, void 0, void 0, function* () {

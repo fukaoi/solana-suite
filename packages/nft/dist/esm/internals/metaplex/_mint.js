@@ -30,8 +30,8 @@ export var InternalsMetaplex_Mint;
      *   uses?: Uses                   // Usage feature: Burn, Single, Multiple
      *   isMutable?: boolean           // enable update()
      *   maxSupply?: BigNumber         // mint copies
-     *   mintAuthority?: Signer        // mint authority
-     *   updateAuthority?: Signer      // update minted authority
+     *   mintAuthority?: Keypair       // mint authority
+     *   updateAuthority?: Keypair     // update minted authority
      *   freezeAuthority?: PublicKey   // freeze minted authority
      * }
      * @param {PublicKey} owner        // PublicKey that Owns nft

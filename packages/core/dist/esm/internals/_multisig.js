@@ -29,7 +29,7 @@ export var Internals_Multisig;
             newAccountPubkey: newAccount.publicKey,
             lamports: balanceNeeded,
             space: Internals_Multisig.Layout.span,
-            programId: TOKEN_PROGRAM_ID
+            programId: TOKEN_PROGRAM_ID,
         });
     };
     Internals_Multisig.multisig = (m, feePayer, signerPubkey) => {
@@ -37,18 +37,18 @@ export var Internals_Multisig;
             {
                 pubkey: feePayer.publicKey,
                 isSigner: false,
-                isWritable: true
+                isWritable: true,
             },
             {
                 pubkey: SYSVAR_RENT_PUBKEY,
                 isSigner: false,
-                isWritable: false
+                isWritable: false,
             },
         ];
-        signerPubkey.forEach(pubkey => keys.push({
+        signerPubkey.forEach((pubkey) => keys.push({
             pubkey,
             isSigner: false,
-            isWritable: false
+            isWritable: false,
         }));
         const dataLayout = struct([
             u8('instruction'),
@@ -57,12 +57,12 @@ export var Internals_Multisig;
         const data = Buffer.alloc(dataLayout.span);
         dataLayout.encode({
             instruction: 2,
-            m
+            m,
         }, data);
         return new TransactionInstruction({
             keys,
             programId: TOKEN_PROGRAM_ID,
-            data
+            data,
         });
     };
 })(Internals_Multisig || (Internals_Multisig = {}));

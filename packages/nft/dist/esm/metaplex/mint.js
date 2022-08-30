@@ -19,7 +19,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import { StorageNftStorage } from '../storage';
-import { Result, } from '@solana-suite/shared';
+import { Result } from '@solana-suite/shared';
 import { StorageArweave } from '../storage';
 import { InternalsMetaplex_Mint } from '../internals/metaplex/_mint';
 import { Validator } from '../validator';
@@ -44,8 +44,8 @@ export var Metaplex;
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
      *   maxSupply?: BigNumber         // mint copies
-     *   mintAuthority?: Signer        // mint authority
-     *   updateAuthority?: Signer      // update minted authority
+     *   mintAuthority?: Keypair       // mint authority
+     *   updateAuthority?: Keypair     // update minted authority
      *   freezeAuthority?: PublicKey   // freeze minted authority
      * }
      * @param {PublicKey} owner        // first minted owner
