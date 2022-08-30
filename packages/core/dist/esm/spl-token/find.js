@@ -27,6 +27,7 @@ export var SplToken;
                     owner: owner.toString(),
                     mint: d.account.data.parsed.info.mint,
                     amount: d.account.data.parsed.info.tokenAmount.uiAmount,
+                    tokenAccount: d.pubkey.toString(),
                 });
             }
             return arr;

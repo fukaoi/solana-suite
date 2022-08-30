@@ -41,4 +41,8 @@ var Internals;
         }
         return shared_1.Result.err(Error(`retry action is over limit ${RETRY_OVER_LIMIT}`));
     });
+    // type guard
+    Internals.isParsedInstruction = (arg) => {
+        return arg !== null && typeof arg === 'object' && arg.parsed;
+    };
 })(Internals = exports.Internals || (exports.Internals = {}));
