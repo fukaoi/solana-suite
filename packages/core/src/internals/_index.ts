@@ -1,4 +1,4 @@
-import { PublicKey, Signer} from '@solana/web3.js';
+import { PublicKey, Signer, ParsedInstruction } from '@solana/web3.js';
 
 import {
   Node,
@@ -8,10 +8,7 @@ import {
   debugLog,
 } from '@solana-suite/shared';
 
-import {
-  Internals_SplToken
-} from './_spl-token';
-
+import { Internals_SplToken } from './_spl-token';
 
 export namespace Internals {
   const RETRY_OVER_LIMIT = 10;
@@ -54,5 +51,10 @@ export namespace Internals {
       counter++;
     }
     return Result.err(Error(`retry action is over limit ${RETRY_OVER_LIMIT}`));
+  };
+
+  // type guard
+  export const isParsedInstruction = (arg: any): arg is ParsedInstruction => {
+    return arg !== null && typeof arg === 'object' && arg.parsed;
   };
 }
