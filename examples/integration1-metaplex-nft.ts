@@ -58,8 +58,6 @@ import { RandomAsset } from '../packages/nft/test/randomAsset';
     (error) => assert.fail(error)
   );
 
-  await sleep(5);
-
   const mint = inst1.unwrap().data as string;
   console.log('# mint: ', mint);
 
