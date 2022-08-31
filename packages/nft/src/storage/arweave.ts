@@ -13,7 +13,6 @@ import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
 
 import { NftStorageMetadata } from '../types/storage';
 import { Bundlr } from '../bundlr';
-import { MetaplexRoyalty } from '../metaplex';
 import { Validator, ValidatorError } from '../validator';
 
 export interface MetaplexFileOptions {
@@ -98,12 +97,6 @@ export namespace StorageArweave {
     const valid = Validator.checkAll(metadata);
     if (valid.isErr) {
       return valid;
-    }
-
-    if (metadata.seller_fee_basis_points) {
-      metadata.seller_fee_basis_points = MetaplexRoyalty.convertValue(
-        metadata.seller_fee_basis_points
-      );
     }
 
     return Bundlr.make(feePayer)

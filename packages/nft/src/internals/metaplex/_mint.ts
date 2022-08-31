@@ -22,7 +22,6 @@ import {
 
 import { MetaplexMetaData } from '../../types/metaplex/index';
 import { Validator, ValidatorError } from '../../validator';
-import { MetaplexRoyalty } from '../../metaplex';
 
 // @internal
 export namespace InternalsMetaplex_Mint {
@@ -58,11 +57,6 @@ export namespace InternalsMetaplex_Mint {
       return Result.err(valid.error);
     }
 
-    if (metadata.sellerFeeBasisPoints) {
-      metadata.sellerFeeBasisPoints = MetaplexRoyalty.convertValue(
-        metadata.sellerFeeBasisPoints
-      );
-    }
     const operation = createNftOperation(metadata);
     const mint = Keypair.generate();
     const tx = await createNft(operation, mint, owner, feePayer);

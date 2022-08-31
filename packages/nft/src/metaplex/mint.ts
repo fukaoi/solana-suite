@@ -8,6 +8,7 @@ import {
   InputMetaplexMetadata,
   MetaplexMetaData,
 } from '../types/metaplex/index';
+import {MetaplexRoyalty} from './royalty';
 
 export namespace Metaplex {
   /**
@@ -24,7 +25,7 @@ export namespace Metaplex {
    *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
    *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
    *   collection?: Collection                  // collections of different colors, shapes, etc.
-   *   [key: string]: unknown                   // optional param, Usually not used.
+   *   [key: string]?: unknown                   // optional param, Usually not used.
    *   creators?: Creator[]          // other creators than owner
    *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()
@@ -49,6 +50,9 @@ export namespace Metaplex {
 
     let storageRes!: any;
     const { filePath, storageType, royalty, ...reducedMetadata } = input;
+
+    const sellerFeeBasisPoints = MetaplexRoyalty.convertValue(royalty);
+
     if (storageType === 'arweave') {
       storageRes = (
         await StorageArweave.uploadContent(filePath!, feePayer)
@@ -78,6 +82,7 @@ export namespace Metaplex {
     const uri = (await storageRes).unwrap();
     const mintInput: MetaplexMetaData = {
       uri,
+      sellerFeeBasisPoints,
       ...reducedMetadata,
     };
 
