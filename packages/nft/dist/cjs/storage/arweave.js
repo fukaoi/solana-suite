@@ -18,7 +18,6 @@ const web3_js_1 = require("@solana/web3.js");
 const fs_1 = __importDefault(require("fs"));
 const shared_1 = require("@solana-suite/shared");
 const bundlr_1 = require("../bundlr");
-const metaplex_1 = require("../metaplex");
 const validator_1 = require("../validator");
 var StorageArweave;
 (function (StorageArweave) {
@@ -78,9 +77,6 @@ var StorageArweave;
         const valid = validator_1.Validator.checkAll(metadata);
         if (valid.isErr) {
             return valid;
-        }
-        if (metadata.seller_fee_basis_points) {
-            metadata.seller_fee_basis_points = metaplex_1.MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
         }
         return bundlr_1.Bundlr.make(feePayer)
             .nfts()

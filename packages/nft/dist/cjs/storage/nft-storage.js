@@ -17,7 +17,6 @@ const nft_storage_1 = require("nft.storage");
 const fs_1 = __importDefault(require("fs"));
 const shared_1 = require("@solana-suite/shared");
 const js_1 = require("@metaplex-foundation/js");
-const metaplex_1 = require("../metaplex");
 const validator_1 = require("../validator");
 var StorageNftStorage;
 (function (StorageNftStorage) {
@@ -83,9 +82,6 @@ var StorageNftStorage;
         const valid = validator_1.Validator.checkAll(metadata);
         if (valid.isErr) {
             return valid;
-        }
-        if (metadata.seller_fee_basis_points) {
-            metadata.seller_fee_basis_points = metaplex_1.MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
         }
         const blobJson = new nft_storage_1.Blob([JSON.stringify(metadata)]);
         const res = (yield connect

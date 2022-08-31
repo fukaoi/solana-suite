@@ -23,6 +23,7 @@ import { Result } from '@solana-suite/shared';
 import { StorageArweave } from '../storage';
 import { InternalsMetaplex_Mint } from '../internals/metaplex/_mint';
 import { Validator } from '../validator';
+import { MetaplexRoyalty } from './royalty';
 export var Metaplex;
 (function (Metaplex) {
     /**
@@ -39,7 +40,7 @@ export var Metaplex;
      *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
      *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
      *   collection?: Collection                  // collections of different colors, shapes, etc.
-     *   [key: string]: unknown                   // optional param, Usually not used.
+     *   [key: string]?: unknown                   // optional param, Usually not used.
      *   creators?: Creator[]          // other creators than owner
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
@@ -59,6 +60,7 @@ export var Metaplex;
         }
         let storageRes;
         const { filePath, storageType, royalty } = input, reducedMetadata = __rest(input, ["filePath", "storageType", "royalty"]);
+        const sellerFeeBasisPoints = MetaplexRoyalty.convertValue(royalty);
         if (storageType === 'arweave') {
             storageRes = (yield StorageArweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 reducedMetadata.image = ok;
@@ -78,7 +80,8 @@ export var Metaplex;
             return storageRes;
         }
         const uri = (yield storageRes).unwrap();
-        const mintInput = Object.assign({ uri }, reducedMetadata);
+        const mintInput = Object.assign({ uri,
+            sellerFeeBasisPoints }, reducedMetadata);
         return InternalsMetaplex_Mint.create(mintInput, owner, feePayer);
     });
 })(Metaplex || (Metaplex = {}));

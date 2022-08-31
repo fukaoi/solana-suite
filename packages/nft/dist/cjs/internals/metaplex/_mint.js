@@ -15,7 +15,6 @@ const js_1 = require("@metaplex-foundation/js");
 const shared_1 = require("@solana-suite/shared");
 const spl_token_1 = require("@solana/spl-token");
 const validator_1 = require("../../validator");
-const metaplex_1 = require("../../metaplex");
 // @internal
 var InternalsMetaplex_Mint;
 (function (InternalsMetaplex_Mint) {
@@ -45,9 +44,6 @@ var InternalsMetaplex_Mint;
         const valid = validator_1.Validator.checkAll(metadata);
         if (valid.isErr) {
             return shared_1.Result.err(valid.error);
-        }
-        if (metadata.sellerFeeBasisPoints) {
-            metadata.sellerFeeBasisPoints = metaplex_1.MetaplexRoyalty.convertValue(metadata.sellerFeeBasisPoints);
         }
         const operation = (0, js_1.createNftOperation)(metadata);
         const mint = web3_js_1.Keypair.generate();

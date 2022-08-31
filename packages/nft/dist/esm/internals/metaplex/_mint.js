@@ -12,7 +12,6 @@ import { createNftOperation, createNftBuilder, findMetadataPda, findMasterEditio
 import { Node, Instruction, Result, debugLog } from '@solana-suite/shared';
 import { getMinimumBalanceForRentExemptMint, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
 import { Validator } from '../../validator';
-import { MetaplexRoyalty } from '../../metaplex';
 // @internal
 export var InternalsMetaplex_Mint;
 (function (InternalsMetaplex_Mint) {
@@ -42,9 +41,6 @@ export var InternalsMetaplex_Mint;
         const valid = Validator.checkAll(metadata);
         if (valid.isErr) {
             return Result.err(valid.error);
-        }
-        if (metadata.sellerFeeBasisPoints) {
-            metadata.sellerFeeBasisPoints = MetaplexRoyalty.convertValue(metadata.sellerFeeBasisPoints);
         }
         const operation = createNftOperation(metadata);
         const mint = Keypair.generate();

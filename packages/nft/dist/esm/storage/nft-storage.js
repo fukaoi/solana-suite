@@ -11,7 +11,6 @@ import { NFTStorage, Blob } from 'nft.storage';
 import fs from 'fs';
 import { Constants, Result, isNode, isBrowser, debugLog, } from '@solana-suite/shared';
 import { useMetaplexFileFromBrowser } from '@metaplex-foundation/js';
-import { MetaplexRoyalty } from '../metaplex';
 import { Validator } from '../validator';
 export var StorageNftStorage;
 (function (StorageNftStorage) {
@@ -77,9 +76,6 @@ export var StorageNftStorage;
         const valid = Validator.checkAll(metadata);
         if (valid.isErr) {
             return valid;
-        }
-        if (metadata.seller_fee_basis_points) {
-            metadata.seller_fee_basis_points = MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
         }
         const blobJson = new Blob([JSON.stringify(metadata)]);
         const res = (yield connect

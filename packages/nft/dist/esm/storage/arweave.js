@@ -12,7 +12,6 @@ import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import fs from 'fs';
 import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
 import { Bundlr } from '../bundlr';
-import { MetaplexRoyalty } from '../metaplex';
 import { Validator } from '../validator';
 export var StorageArweave;
 (function (StorageArweave) {
@@ -72,9 +71,6 @@ export var StorageArweave;
         const valid = Validator.checkAll(metadata);
         if (valid.isErr) {
             return valid;
-        }
-        if (metadata.seller_fee_basis_points) {
-            metadata.seller_fee_basis_points = MetaplexRoyalty.convertValue(metadata.seller_fee_basis_points);
         }
         return Bundlr.make(feePayer)
             .nfts()
