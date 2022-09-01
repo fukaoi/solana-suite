@@ -5,8 +5,7 @@
 import assert from 'assert';
 import { Airdrop, KeypairStr } from '@solana-suite/core';
 import { Metaplex } from '@solana-suite/nft';
-import { Node, sleep } from '@solana-suite/shared';
-
+import { Node } from '@solana-suite/shared';
 import { RandomAsset } from '../packages/nft/test/randomAsset';
 
 (async () => {
@@ -14,7 +13,7 @@ import { RandomAsset } from '../packages/nft/test/randomAsset';
   // CREATE WALLET
   //////////////////////////////////////////////
 
-  // create nft owner wallet, receive nft receipt wallet.
+  // create nft owner wallet.
   const owner = KeypairStr.create();
   const receipt = KeypairStr.create();
   const feePayer = KeypairStr.create();
@@ -26,15 +25,10 @@ import { RandomAsset } from '../packages/nft/test/randomAsset';
   console.log('# receipt: ', receipt.pubkey);
   console.log('# feePayer: ', feePayer.pubkey);
 
-  //////////////////////////////////////////////
-  // Upload contents
-  //////////////////////////////////////////////
-
   // Only test that call this function
   // Usually set custom param
   const asset = RandomAsset.get();
-
-  console.log(asset);
+  console.log('# demo data: ', asset);
 
   //////////////////////////////////////////////
   // CREATE NFT, MINT NFT FROM THIS LINE
@@ -45,7 +39,7 @@ import { RandomAsset } from '../packages/nft/test/randomAsset';
       filePath: asset.filePath!,
       name: asset.name!,
       symbol: 'SAMPLE',
-      royalty: 100,
+      royalty: 7,
       storageType: 'nftStorage',
     },
     owner.toPublicKey(),
@@ -54,7 +48,7 @@ import { RandomAsset } from '../packages/nft/test/randomAsset';
 
   // this is NFT ID
   (await inst1.submit()).match(
-    async (value) => await Node.confirmedSig(value),
+    async (value) => await Node.confirmedSig(value, 'finalized'),
     (error) => assert.fail(error)
   );
 
@@ -76,7 +70,7 @@ import { RandomAsset } from '../packages/nft/test/randomAsset';
   // TRANSFER RECEIPTS USER FROM THIS LINE
   //////////////////////////////////////////////
 
-  // transfer nft owner => publish
+  // transfer nft owner => receipt
   const inst2 = await Metaplex.transfer(
     mint.toPublicKey(),
     owner.toPublicKey(),
@@ -85,9 +79,9 @@ import { RandomAsset } from '../packages/nft/test/randomAsset';
     feePayer.toKeypair()
   );
 
-  // submit batch instructions
+  // submit instructions
   (await inst2.submit()).match(
-    (value) => console.log('# Transfer nft sig: ', value.toExplorerUrl()),
+    (value) => console.log('# sig: ', value),
     (error) => assert.fail(error)
   );
 })();
