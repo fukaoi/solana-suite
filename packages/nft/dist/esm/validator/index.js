@@ -16,10 +16,10 @@ export var Validator;
     Validator.URL_LENGTH = 200;
     Validator.ROYALTY_MAX = 100;
     Validator.SELLER_FEE_BASIS_POINTS_MAX = 10000;
-    Validator.ROYALTY_MIN = 0;
+    Validator.ROYALTY_MIN = -1;
     Validator.isRoyalty = (royalty) => {
         const key = 'royalty';
-        if (!royalty) {
+        if (royalty !== 0 && !royalty) {
             return Result.err(createError(key, Message.EMPTY, royalty));
         }
         if (royalty < Validator.ROYALTY_MIN) {
