@@ -8,6 +8,11 @@ describe('Validator', () => {
     assert.isOk(res.isOk);
   });
 
+  it('[Success]isRoyalty: zero number', async () => {
+    const res = Validator.isRoyalty(0);
+    assert.isTrue(res.isOk);
+  });
+
   it('[Error]isRoyalty: too small number', async () => {
     const res = Validator.isRoyalty(-1);
     if (res.isErr) {
