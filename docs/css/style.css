@@ -10,6 +10,7 @@
   .container {
     min-width: 1260px;
     overflow: hidden;
+    margin-top: -50px;
   }
   .row {
     max-width: 1260px;
@@ -475,6 +476,7 @@
          background-size: auto 100%;
     background-attachment: fixed;
     position: relative;
+    
   }
   .header {
     position: fixed;
@@ -868,4 +870,15 @@
 }
 .hljs-attr {
   color: #978551;
+}
+
+.bylogo{
+  padding-top: 30px;
+}
+@media screen and (max-width: 480px) {
+
+.bylogo{
+  padding-top: 30px;
+  width: 50%;
+}
 }
