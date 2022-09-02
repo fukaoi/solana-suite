@@ -52,7 +52,7 @@ describe('Metaplex', () => {
     );
   });
 
-  it.only('[Nft Storage] one lump upload content and mint nft', async () => {
+  it('[Nft Storage] one lump upload content and mint nft', async () => {
     const asset = RandomAsset.get();
 
     const creator1 = {

@@ -23,13 +23,13 @@ export namespace Validator {
   export const URL_LENGTH = 200;
   export const ROYALTY_MAX = 100;
   export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
-  export const ROYALTY_MIN = 0;
+  export const ROYALTY_MIN = -1;
 
   export const isRoyalty = (
     royalty: number
   ): Result<string, ValidatorError> => {
     const key = 'royalty';
-    if (!royalty) {
+    if (royalty !== 0 && !royalty) {
       return Result.err(createError(key, Message.EMPTY, royalty));
     }
     if (royalty < ROYALTY_MIN) {

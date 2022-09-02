@@ -1,5 +1,4 @@
 import { NFTStorage, Blob } from 'nft.storage';
-import fs from 'fs';
 import {
   Constants,
   Result,
@@ -43,7 +42,7 @@ export namespace StorageNftStorage {
     let file!: Buffer;
     if (isNode) {
       const filepath = filePath as string;
-      file = fs.readFileSync(filepath);
+      file = (await import('fs')).readFileSync(filepath);
     } else if (isBrowser) {
       const filepath = filePath as File;
       file = (await useMetaplexFileFromBrowser(filepath)).buffer;
