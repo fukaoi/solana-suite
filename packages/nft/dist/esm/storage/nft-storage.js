@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { NFTStorage, Blob } from 'nft.storage';
-import fs from 'fs';
 import { Constants, Result, isNode, isBrowser, debugLog, } from '@solana-suite/shared';
 import { useMetaplexFileFromBrowser } from '@metaplex-foundation/js';
 import { Validator } from '../validator';
@@ -37,7 +36,7 @@ export var StorageNftStorage;
         let file;
         if (isNode) {
             const filepath = filePath;
-            file = fs.readFileSync(filepath);
+            file = (yield import('fs')).readFileSync(filepath);
         }
         else if (isBrowser) {
             const filepath = filePath;

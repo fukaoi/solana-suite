@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { useMetaplexFile, useMetaplexFileFromBrowser, } from '@metaplex-foundation/js';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
-import fs from 'fs';
 import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
 import { Bundlr } from '../bundlr';
 import { Validator } from '../validator';
@@ -19,7 +18,7 @@ export var StorageArweave;
         let buffer;
         if (isNode) {
             const filepath = filePath;
-            buffer = fs.readFileSync(filepath);
+            buffer = (yield import('fs')).readFileSync(filepath);
         }
         else if (isBrowser) {
             const filepath = filePath;
@@ -41,7 +40,7 @@ export var StorageArweave;
         let file;
         if (isNode) {
             const filepath = filePath;
-            const buffer = fs.readFileSync(filepath);
+            const buffer = (yield import('fs')).readFileSync(filepath);
             if (fileOptions) {
                 file = useMetaplexFile(buffer, filepath, fileOptions);
             }

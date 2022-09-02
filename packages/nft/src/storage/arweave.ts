@@ -6,11 +6,7 @@ import {
 } from '@metaplex-foundation/js';
 
 import { Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
-
-import fs from 'fs';
-
 import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
-
 import { NftStorageMetadata } from '../types/storage';
 import { Bundlr } from '../bundlr';
 import { Validator, ValidatorError } from '../validator';
@@ -31,7 +27,7 @@ export namespace StorageArweave {
     let buffer!: Buffer;
     if (isNode) {
       const filepath = filePath as string;
-      buffer = fs.readFileSync(filepath);
+      buffer = (await import('fs')).readFileSync(filepath);
     } else if (isBrowser) {
       const filepath = filePath as File;
       buffer = (await useMetaplexFileFromBrowser(filepath)).buffer;
@@ -63,7 +59,7 @@ export namespace StorageArweave {
     let file!: MetaplexFile;
     if (isNode) {
       const filepath = filePath as string;
-      const buffer = fs.readFileSync(filepath);
+      const buffer = (await import('fs')).readFileSync(filepath);
       if (fileOptions) {
         file = useMetaplexFile(buffer, filepath, fileOptions);
       } else {
