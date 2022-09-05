@@ -10,3 +10,11 @@ export declare type NftStorageMetadata = StorageArweaveMetadata | StorageNftStor
     symbol: string;
     seller_fee_basis_points: number;
 };
+export interface File extends Blob {
+    readonly lastModified: number;
+    readonly name: string;
+}
+export declare var File: {
+    prototype: File;
+    new (fileBits: BlobPart[], fileName: string, options?: FilePropertyBag): File;
+};

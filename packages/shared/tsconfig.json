@@ -3,7 +3,6 @@
   "compilerOptions": {
     "outDir": "./dist/cjs/"
   },
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["src/**/*.ts"],
+  "lib": ["DOM", "ESNext"]
 }

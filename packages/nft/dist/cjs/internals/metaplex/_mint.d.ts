@@ -17,9 +17,6 @@ export declare namespace InternalsMetaplex_Mint {
      *   uses?: Uses                   // Usage feature: Burn, Single, Multiple
      *   isMutable?: boolean           // enable update()
      *   maxSupply?: BigNumber         // mint copies
-     *   mintAuthority?: Keypair       // mint authority
-     *   updateAuthority?: Keypair     // update minted authority
-     *   freezeAuthority?: PublicKey   // freeze minted authority
      * }
      * @param {PublicKey} owner        // PublicKey that Owns nft
      * @param {Keypair} feePayer       // fee payer

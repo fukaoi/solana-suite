@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValidatorError = exports.Validator = void 0;
 const shared_1 = require("@solana-suite/shared");
+const util_1 = require("util");
 const metaplex_1 = require("../metaplex");
 var Validator;
 (function (Validator) {
@@ -147,7 +148,7 @@ var Validator;
         return shared_1.Result.ok(Message.SUCCESS);
     };
     const byteLength = (value) => {
-        const text = new TextEncoder();
+        const text = new util_1.TextEncoder();
         return text.encode(value).length;
     };
     const createError = (key, message, actual, limit) => {

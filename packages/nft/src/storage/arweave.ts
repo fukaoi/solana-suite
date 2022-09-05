@@ -3,11 +3,12 @@ import {
   MetaplexFile,
   useMetaplexFileFromBrowser,
   Currency,
+  MetaplexFileContent,
 } from '@metaplex-foundation/js';
 
 import { Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
-import { NftStorageMetadata } from '../types/storage';
+import { NftStorageMetadata, File } from '../types/storage';
 import { Bundlr } from '../bundlr';
 import { Validator, ValidatorError } from '../validator';
 
@@ -21,7 +22,7 @@ export interface MetaplexFileOptions {
 
 export namespace StorageArweave {
   export const getUploadPrice = async (
-    filePath: string | File,
+    filePath: MetaplexFileContent,
     feePayer: Keypair
   ): Promise<Result<{ price: number; currency: Currency }, Error>> => {
     let buffer!: Buffer;
@@ -29,7 +30,7 @@ export namespace StorageArweave {
       const filepath = filePath as string;
       buffer = (await import('fs')).readFileSync(filepath);
     } else if (isBrowser) {
-      const filepath = filePath as File;
+      const filepath = filePath as any;
       buffer = (await useMetaplexFileFromBrowser(filepath)).buffer;
     } else {
       return Result.err(
@@ -50,7 +51,7 @@ export namespace StorageArweave {
   };
 
   export const uploadContent = async (
-    filePath: string | File,
+    filePath: MetaplexFileContent,
     feePayer: Keypair,
     fileOptions?: MetaplexFileOptions // only arweave, not nft-storage
   ): Promise<Result<string, Error>> => {
@@ -66,7 +67,7 @@ export namespace StorageArweave {
         file = useMetaplexFile(buffer, filepath);
       }
     } else if (isBrowser) {
-      const filepath = filePath as File;
+      const filepath = filePath as any;
       if (fileOptions) {
         file = await useMetaplexFileFromBrowser(filepath, fileOptions);
       } else {

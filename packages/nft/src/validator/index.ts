@@ -1,4 +1,6 @@
+import { MetaplexFileContent } from '@metaplex-foundation/js';
 import { Result } from '@solana-suite/shared';
+import { TextEncoder } from 'util';
 import { MetaplexRoyalty } from '../metaplex';
 import {
   InputMetaplexMetadata,
@@ -108,7 +110,7 @@ export namespace Validator {
   };
 
   export const isFilePath = (
-    filePath: string | File
+    filePath: MetaplexFileContent
   ): Result<string, ValidatorError> => {
     const key = 'filePath';
     if (!filePath) {

@@ -1,4 +1,4 @@
-import { CreateNftInput, Nft } from '@metaplex-foundation/js';
+import { CreateNftInput, Nft, MetaplexFileContent } from '@metaplex-foundation/js';
 import { NftStorageMetadata } from '../storage/';
 
 type noNeedOptional =
@@ -18,7 +18,7 @@ export type InputMetaplexMetadata = Omit<
     name: string;
     symbol: string;
     royalty: number;
-    filePath: string | File;
+    filePath: MetaplexFileContent;
     storageType: 'arweave' | 'nftStorage';
   };
 
