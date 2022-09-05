@@ -42,7 +42,7 @@ var Validator;
     };
     Validator.isSellerFeeBasisPoints = (royalty) => {
         const key = 'sellerFeeBasisPoints/seller_fee_basis_points';
-        if (!royalty) {
+        if (royalty !== 0 && !royalty) {
             return shared_1.Result.err(createError(key, Message.EMPTY, royalty));
         }
         if (royalty < Validator.ROYALTY_MIN) {
