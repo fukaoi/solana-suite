@@ -11,6 +11,7 @@ import {
   JsonMetadata,
 } from '@metaplex-foundation/js';
 
+
 import { DataV2, Creator } from '@metaplex-foundation/mpl-token-metadata';
 
 import { Node, Instruction, Result, debugLog } from '@solana-suite/shared';
@@ -39,9 +40,6 @@ export namespace InternalsMetaplex_Mint {
    *   uses?: Uses                   // Usage feature: Burn, Single, Multiple
    *   isMutable?: boolean           // enable update()
    *   maxSupply?: BigNumber         // mint copies
-   *   mintAuthority?: Keypair       // mint authority
-   *   updateAuthority?: Keypair     // update minted authority
-   *   freezeAuthority?: PublicKey   // freeze minted authority
    * }
    * @param {PublicKey} owner        // PublicKey that Owns nft
    * @param {Keypair} feePayer       // fee payer

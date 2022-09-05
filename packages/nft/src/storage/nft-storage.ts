@@ -7,7 +7,7 @@ import {
   debugLog,
 } from '@solana-suite/shared';
 
-import { useMetaplexFileFromBrowser } from '@metaplex-foundation/js';
+import { useMetaplexFileFromBrowser, MetaplexFileContent } from '@metaplex-foundation/js';
 import { NftStorageMetadata } from '../types/storage';
 import { Validator, ValidatorError } from '../validator';
 
@@ -36,7 +36,7 @@ export namespace StorageNftStorage {
   const connect = new NFTStorage({ token: getNftStorageApiKey() });
 
   export const uploadContent = async (
-    filePath: string | File
+    filePath: MetaplexFileContent
   ): Promise<Result<string, Error>> => {
     debugLog('# upload content: ', filePath);
     let file!: Buffer;
@@ -44,7 +44,7 @@ export namespace StorageNftStorage {
       const filepath = filePath as string;
       file = (await import('fs')).readFileSync(filepath);
     } else if (isBrowser) {
-      const filepath = filePath as File;
+      const filepath = filePath as any;
       file = (await useMetaplexFileFromBrowser(filepath)).buffer;
     } else {
       return Result.err(

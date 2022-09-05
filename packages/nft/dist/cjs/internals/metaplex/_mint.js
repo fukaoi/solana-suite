@@ -32,9 +32,6 @@ var InternalsMetaplex_Mint;
      *   uses?: Uses                   // Usage feature: Burn, Single, Multiple
      *   isMutable?: boolean           // enable update()
      *   maxSupply?: BigNumber         // mint copies
-     *   mintAuthority?: Keypair       // mint authority
-     *   updateAuthority?: Keypair     // update minted authority
-     *   freezeAuthority?: PublicKey   // freeze minted authority
      * }
      * @param {PublicKey} owner        // PublicKey that Owns nft
      * @param {Keypair} feePayer       // fee payer
@@ -114,7 +111,7 @@ var InternalsMetaplex_Mint;
         const metadataPda = (0, js_1.findMetadataPda)(mint.publicKey);
         const masterEditionPda = (0, js_1.findMasterEditionV2Pda)(mint.publicKey);
         const lamports = yield (0, spl_token_1.getMinimumBalanceForRentExemptMint)(shared_1.Node.getConnection());
-        const associatedToken = (0, js_1.findAssociatedTokenAccountPda)(mint.publicKey, owner, tokenProgram, associatedTokenProgram);
+        const associatedToken = findAssociatedTokenAccountPda(mint.publicKey, owner, tokenProgram, associatedTokenProgram);
         return (0, js_1.createNftBuilder)({
             lamports,
             data,

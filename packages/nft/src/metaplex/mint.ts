@@ -30,9 +30,6 @@ export namespace Metaplex {
    *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()
    *   maxSupply?: BigNumber         // mint copies
-   *   mintAuthority?: Keypair       // mint authority
-   *   updateAuthority?: Keypair     // update minted authority
-   *   freezeAuthority?: PublicKey   // freeze minted authority
    * }
    * @param {PublicKey} owner        // first minted owner
    * @param {Keypair} feePayer       // fee payer

@@ -1,4 +1,8 @@
-import { JsonMetadata } from '@metaplex-foundation/js';
+import {
+  JsonMetadata,
+  MetaplexFile,
+  MetaplexFileContent,
+} from '@metaplex-foundation/js';
 import fs from 'fs';
 
 export namespace RandomAsset {
@@ -33,7 +37,9 @@ export namespace RandomAsset {
     return { name, description, filePath, symbol };
   };
 
-  export type RandomAssetType = JsonMetadata & { filePath?: string | File };
+  export type RandomAssetType = JsonMetadata & {
+    filePath?: MetaplexFileContent;
+  };
 
   export const get = (): RandomAssetType => {
     const storageData: RandomAssetType = {};

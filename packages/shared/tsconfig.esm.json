@@ -3,12 +3,7 @@
   "compilerOptions": {
     "outDir": "./dist/esm/",
     "module": "ESNext",
-    "lib": [
-      "DOM",
-      "ESNext"
-    ]
+    "lib": ["DOM", "ESNext"]
   },
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["src/**/*.ts"]
 }
