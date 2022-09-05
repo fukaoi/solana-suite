@@ -39,6 +39,11 @@ describe('Validator', () => {
     assert.isOk(res.isOk);
   });
 
+  it('[Success]isSellerFeeBasisPoints: zero number', async () => {
+    const res = Validator.isSellerFeeBasisPoints(0);
+    assert.isTrue(res.isOk);
+  });
+
   it('[Error]isSellerFeeBasisPoints: too small number', async () => {
     const res = Validator.isSellerFeeBasisPoints(-1);
     if (res.isErr) {
@@ -168,6 +173,7 @@ describe('Validator', () => {
     const data = {
       name: 'name',
       seller_fee_basis_points: 50,
+      royalty: 0,
       symbol: 'SYMBOL',
       image: 'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50',
     };

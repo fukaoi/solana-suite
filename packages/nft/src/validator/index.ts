@@ -56,7 +56,7 @@ export namespace Validator {
     royalty: number
   ): Result<string, ValidatorError> => {
     const key = 'sellerFeeBasisPoints/seller_fee_basis_points';
-    if (!royalty) {
+    if (royalty !== 0 && !royalty) {
       return Result.err(createError(key, Message.EMPTY, royalty));
     }
     if (royalty < ROYALTY_MIN) {
