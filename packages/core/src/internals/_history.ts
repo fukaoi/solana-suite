@@ -103,6 +103,7 @@ export namespace Internals_History {
     const mappingTokenAccount: { account: string; owner: string }[] = [];
     transactions.forEach((tx) => {
       if (tx.isErr) return tx;
+      if (!tx.value.transaction) return;
 
       const accountKeys = tx.value.transaction.message.accountKeys.map((t) =>
         t.pubkey.toBase58()

@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,12 +7,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Internals_History = void 0;
-const shared_1 = require("@solana-suite/shared");
-const history_1 = require("../types/history");
-const _index_1 = require("./_index");
-var Internals_History;
+import { Node, Result } from '@solana-suite/shared';
+import { Filter } from '../types/history';
+import { Internals } from './_index';
+export var Internals_History;
 (function (Internals_History) {
     const createHistory = (searchKey, instruction, meta, directionFilter, mappingTokenAccount, isToken, withMemos) => {
         var _a, _b;
@@ -95,7 +92,7 @@ var Internals_History;
             // set transaction with memo
             const withMemos = [];
             tx.value.transaction.message.instructions.forEach((v) => {
-                if (_index_1.Internals.isParsedInstruction(v) && v.program === 'spl-memo') {
+                if (Internals.isParsedInstruction(v) && v.program === 'spl-memo') {
                     withMemos.push({
                         sig: tx.value.transaction.signatures,
                         memo: v.parsed,
@@ -103,7 +100,7 @@ var Internals_History;
                 }
             });
             tx.value.transaction.message.instructions.forEach((instruction) => {
-                if (_index_1.Internals.isParsedInstruction(instruction)) {
+                if (Internals.isParsedInstruction(instruction)) {
                     if (isToken && instruction.program !== 'spl-token') {
                         return;
                     }
@@ -113,7 +110,7 @@ var Internals_History;
                     }
                     else {
                         // Only memo
-                        if (filterOptions.includes(history_1.Filter.OnlyMemo)) {
+                        if (filterOptions.includes(Filter.OnlyMemo)) {
                             const res = createMemoHistory(searchKey, instruction, tx.value, directionFilter);
                             res && hist.push(res);
                         }
@@ -125,36 +122,36 @@ var Internals_History;
     };
     const convertTimestampToDate = (blockTime) => new Date(blockTime * 1000);
     Internals_History.get = (signature) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield shared_1.Node.getConnection()
+        const res = yield Node.getConnection()
             .getParsedTransaction(signature)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
+            .then(Result.ok)
+            .catch(Result.err);
         if (res.isErr) {
-            return shared_1.Result.err(res.error);
+            return Result.err(res.error);
         }
         else {
             if (!res.value) {
-                return shared_1.Result.ok({});
+                return Result.ok({});
             }
-            return shared_1.Result.ok(res.value);
+            return Result.ok(res.value);
         }
     });
     // @todo: internal
     Internals_History.getForAddress = (pubkey, limit, before, until) => __awaiter(this, void 0, void 0, function* () {
-        const transactions = yield shared_1.Node.getConnection()
+        const transactions = yield Node.getConnection()
             .getSignaturesForAddress(pubkey, {
             limit,
             before,
             until,
         })
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
+            .then(Result.ok)
+            .catch(Result.err);
         if (transactions.isErr) {
-            return [shared_1.Result.err(transactions.error)];
+            return [Result.err(transactions.error)];
         }
         else {
             const signatures = transactions.value.map((tx) => Internals_History.get(tx.signature));
             return yield Promise.all(signatures);
         }
     });
-})(Internals_History = exports.Internals_History || (exports.Internals_History = {}));
+})(Internals_History || (Internals_History = {}));
