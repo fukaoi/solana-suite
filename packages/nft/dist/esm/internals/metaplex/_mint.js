@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,15 +7,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.InternalsMetaplex_Mint = void 0;
-const web3_js_1 = require("@solana/web3.js");
-const js_1 = require("@metaplex-foundation/js");
-const shared_1 = require("@solana-suite/shared");
-const spl_token_1 = require("@solana/spl-token");
-const validator_1 = require("../../validator");
+import { PublicKey, Keypair } from '@solana/web3.js';
+import { createNftOperation, createNftBuilder, findMetadataPda, findMasterEditionV2Pda, findAssociatedTokenAccountPda, } from '@metaplex-foundation/js';
+import { Node, Instruction, Result, debugLog } from '@solana-suite/shared';
+import { getMinimumBalanceForRentExemptMint, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
+import { Validator } from '../../validator';
 // @internal
-var InternalsMetaplex_Mint;
+export var InternalsMetaplex_Mint;
 (function (InternalsMetaplex_Mint) {
     /**
      * NFT mint
@@ -38,21 +35,21 @@ var InternalsMetaplex_Mint;
      * @return {Promise<Result<Instruction, Error | ValidatorError>>}
      */
     InternalsMetaplex_Mint.create = (metadata, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const valid = validator_1.Validator.checkAll(metadata);
+        const valid = Validator.checkAll(metadata);
         if (valid.isErr) {
-            return shared_1.Result.err(valid.error);
+            return Result.err(valid.error);
         }
-        const operation = (0, js_1.createNftOperation)(metadata);
-        const mint = web3_js_1.Keypair.generate();
+        const operation = createNftOperation(metadata);
+        const mint = Keypair.generate();
         const tx = yield createNft(operation, mint, owner, feePayer);
-        return shared_1.Result.ok(new shared_1.Instruction(tx, [mint], feePayer, mint.publicKey.toString()));
+        return Result.ok(new Instruction(tx, [mint], feePayer, mint.publicKey.toString()));
     });
     const resolveData = (input, metadata, updateAuthority) => {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
         const metadataCreators = (_b = (_a = metadata.properties) === null || _a === void 0 ? void 0 : _a.creators) === null || _b === void 0 ? void 0 : _b.filter((creator) => creator.address).map((creator) => {
             var _a;
             return ({
-                address: new web3_js_1.PublicKey(creator.address),
+                address: new PublicKey(creator.address),
                 share: (_a = creator.share) !== null && _a !== void 0 ? _a : 0,
                 verified: false,
             });
@@ -90,15 +87,15 @@ var InternalsMetaplex_Mint;
     const createNft = (operation, mint, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const { 
         // uri,
-        isMutable, maxSupply, payer = feePayer, mintAuthority = feePayer, updateAuthority = mintAuthority, freezeAuthority, tokenProgram = spl_token_1.TOKEN_PROGRAM_ID, associatedTokenProgram, } = operation.input;
-        (0, shared_1.debugLog)('# metadata input: ', operation.input);
-        (0, shared_1.debugLog)('# metadata feePayer: ', feePayer.publicKey.toString());
-        (0, shared_1.debugLog)('# metadata mint: ', mint.publicKey.toString());
-        (0, shared_1.debugLog)('# mintAuthority: ', mintAuthority.publicKey.toString());
-        (0, shared_1.debugLog)('# updateAuthority: ', updateAuthority.publicKey.toString());
-        (0, shared_1.debugLog)('# owner: ', owner.toString());
+        isMutable, maxSupply, payer = feePayer, mintAuthority = feePayer, updateAuthority = mintAuthority, freezeAuthority, tokenProgram = TOKEN_PROGRAM_ID, associatedTokenProgram, } = operation.input;
+        debugLog('# metadata input: ', operation.input);
+        debugLog('# metadata feePayer: ', feePayer.publicKey.toString());
+        debugLog('# metadata mint: ', mint.publicKey.toString());
+        debugLog('# mintAuthority: ', mintAuthority.publicKey.toString());
+        debugLog('# updateAuthority: ', updateAuthority.publicKey.toString());
+        debugLog('# owner: ', owner.toString());
         freezeAuthority &&
-            (0, shared_1.debugLog)('# freezeAuthority: ', freezeAuthority.toString());
+            debugLog('# freezeAuthority: ', freezeAuthority.toString());
         const metadata = {};
         // try {
         //   metadata = await Bundlr.make(feePayer).storage().downloadJson(uri);
@@ -107,12 +104,12 @@ var InternalsMetaplex_Mint;
         //   metadata = {};
         // }
         const data = resolveData(operation.input, metadata, updateAuthority.publicKey);
-        (0, shared_1.debugLog)('# resolveData: ', data);
-        const metadataPda = (0, js_1.findMetadataPda)(mint.publicKey);
-        const masterEditionPda = (0, js_1.findMasterEditionV2Pda)(mint.publicKey);
-        const lamports = yield (0, spl_token_1.getMinimumBalanceForRentExemptMint)(shared_1.Node.getConnection());
-        const associatedToken = (0, js_1.findAssociatedTokenAccountPda)(mint.publicKey, owner, tokenProgram, associatedTokenProgram);
-        return (0, js_1.createNftBuilder)({
+        debugLog('# resolveData: ', data);
+        const metadataPda = findMetadataPda(mint.publicKey);
+        const masterEditionPda = findMasterEditionV2Pda(mint.publicKey);
+        const lamports = yield getMinimumBalanceForRentExemptMint(Node.getConnection());
+        const associatedToken = findAssociatedTokenAccountPda(mint.publicKey, owner, tokenProgram, associatedTokenProgram);
+        return createNftBuilder({
             lamports,
             data,
             isMutable,
@@ -130,4 +127,4 @@ var InternalsMetaplex_Mint;
             associatedTokenProgram,
         }).getInstructions();
     });
-})(InternalsMetaplex_Mint = exports.InternalsMetaplex_Mint || (exports.InternalsMetaplex_Mint = {}));
+})(InternalsMetaplex_Mint || (InternalsMetaplex_Mint = {}));
