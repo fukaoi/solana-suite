@@ -1,14 +1,13 @@
 import {
   useMetaplexFile,
   MetaplexFile,
-  useMetaplexFileFromBrowser,
   Currency,
   MetaplexFileContent,
 } from '@metaplex-foundation/js';
 
 import { Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
-import { NftStorageMetadata, File } from '../types/storage';
+import { NftStorageMetadata } from '../types/storage';
 import { Bundlr } from '../bundlr';
 import { Validator, ValidatorError } from '../validator';
 
@@ -31,7 +30,7 @@ export namespace StorageArweave {
       buffer = (await import('fs')).readFileSync(filepath);
     } else if (isBrowser) {
       const filepath = filePath as any;
-      buffer = (await useMetaplexFileFromBrowser(filepath)).buffer;
+      buffer = useMetaplexFile(filepath, '').buffer;
     } else {
       return Result.err(
         Error('Supported environment: only Node.js and Browser js')
@@ -69,9 +68,9 @@ export namespace StorageArweave {
     } else if (isBrowser) {
       const filepath = filePath as any;
       if (fileOptions) {
-        file = await useMetaplexFileFromBrowser(filepath, fileOptions);
+        file = useMetaplexFile(filepath, '', fileOptions);
       } else {
-        file = await useMetaplexFileFromBrowser(filepath);
+        file = useMetaplexFile(filepath, '');
       }
     } else {
       return Result.err(
