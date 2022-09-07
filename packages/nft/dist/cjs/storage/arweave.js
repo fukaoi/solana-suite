@@ -48,7 +48,7 @@ var StorageArweave;
         }
         else if (shared_1.isBrowser) {
             const filepath = filePath;
-            buffer = (yield (0, js_1.useMetaplexFileFromBrowser)(filepath)).buffer;
+            buffer = (0, js_1.useMetaplexFile)(filepath, '').buffer;
         }
         else {
             return shared_1.Result.err(Error('Supported environment: only Node.js and Browser js'));
@@ -77,10 +77,10 @@ var StorageArweave;
         else if (shared_1.isBrowser) {
             const filepath = filePath;
             if (fileOptions) {
-                file = yield (0, js_1.useMetaplexFileFromBrowser)(filepath, fileOptions);
+                file = (0, js_1.useMetaplexFile)(filepath, '', fileOptions);
             }
             else {
-                file = yield (0, js_1.useMetaplexFileFromBrowser)(filepath);
+                file = (0, js_1.useMetaplexFile)(filepath, '');
             }
         }
         else {

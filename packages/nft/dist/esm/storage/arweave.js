@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { useMetaplexFile, useMetaplexFileFromBrowser, } from '@metaplex-foundation/js';
+import { useMetaplexFile, } from '@metaplex-foundation/js';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
 import { Bundlr } from '../bundlr';
@@ -22,7 +22,7 @@ export var StorageArweave;
         }
         else if (isBrowser) {
             const filepath = filePath;
-            buffer = (yield useMetaplexFileFromBrowser(filepath)).buffer;
+            buffer = useMetaplexFile(filepath, '').buffer;
         }
         else {
             return Result.err(Error('Supported environment: only Node.js and Browser js'));
@@ -51,10 +51,10 @@ export var StorageArweave;
         else if (isBrowser) {
             const filepath = filePath;
             if (fileOptions) {
-                file = yield useMetaplexFileFromBrowser(filepath, fileOptions);
+                file = useMetaplexFile(filepath, '', fileOptions);
             }
             else {
-                file = yield useMetaplexFileFromBrowser(filepath);
+                file = useMetaplexFile(filepath, '');
             }
         }
         else {

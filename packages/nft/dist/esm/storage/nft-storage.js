@@ -40,8 +40,7 @@ export var StorageNftStorage;
         }
         else if (isBrowser) {
             const filepath = filePath;
-            file = useMetaplexFile(filepath, 'test').buffer;
-            console.log('SMT=>', filepath, file);
+            file = useMetaplexFile(filepath, '').buffer;
         }
         else {
             return Result.err(Error('Supported environment: only Node.js and Browser js'));
