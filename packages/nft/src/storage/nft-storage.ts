@@ -7,7 +7,7 @@ import {
   debugLog,
 } from '@solana-suite/shared';
 
-import { useMetaplexFileFromBrowser, MetaplexFileContent } from '@metaplex-foundation/js';
+import { MetaplexFileContent, useMetaplexFile } from '@metaplex-foundation/js';
 import { NftStorageMetadata } from '../types/storage';
 import { Validator, ValidatorError } from '../validator';
 
@@ -45,7 +45,7 @@ export namespace StorageNftStorage {
       file = (await import('fs')).readFileSync(filepath);
     } else if (isBrowser) {
       const filepath = filePath as any;
-      file = (await useMetaplexFileFromBrowser(filepath)).buffer;
+      file = useMetaplexFile(filepath, '').buffer;
     } else {
       return Result.err(
         Error('Supported environment: only Node.js and Browser js')

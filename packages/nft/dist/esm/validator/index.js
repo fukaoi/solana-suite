@@ -1,5 +1,4 @@
 import { Result } from '@solana-suite/shared';
-import { TextEncoder } from 'util';
 import { MetaplexRoyalty } from '../metaplex';
 export var Validator;
 (function (Validator) {

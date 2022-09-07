@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { NFTStorage, Blob } from 'nft.storage';
 import { Constants, Result, isNode, isBrowser, debugLog, } from '@solana-suite/shared';
-import { useMetaplexFileFromBrowser } from '@metaplex-foundation/js';
+import { useMetaplexFile } from '@metaplex-foundation/js';
 import { Validator } from '../validator';
 export var StorageNftStorage;
 (function (StorageNftStorage) {
@@ -40,7 +40,8 @@ export var StorageNftStorage;
         }
         else if (isBrowser) {
             const filepath = filePath;
-            file = (yield useMetaplexFileFromBrowser(filepath)).buffer;
+            file = useMetaplexFile(filepath, 'test').buffer;
+            console.log('SMT=>', filepath, file);
         }
         else {
             return Result.err(Error('Supported environment: only Node.js and Browser js'));

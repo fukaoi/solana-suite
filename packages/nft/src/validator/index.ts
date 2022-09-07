@@ -1,6 +1,5 @@
 import { MetaplexFileContent } from '@metaplex-foundation/js';
 import { Result } from '@solana-suite/shared';
-import { TextEncoder } from 'util';
 import { MetaplexRoyalty } from '../metaplex';
 import {
   InputMetaplexMetadata,
