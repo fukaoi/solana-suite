@@ -13,7 +13,7 @@ exports.SolNative = void 0;
 const spl_token_1 = require("@solana/spl-token");
 const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
-const _index_1 = require("../internals/_index");
+const associatedAccount_1 = require("../associatedAccount");
 var SolNative;
 (function (SolNative) {
     const RADIX = 10;
@@ -36,12 +36,12 @@ var SolNative;
             return shared_1.Result.err(tokenRes.error);
         }
         const token = tokenRes.value;
-        const sourceToken = yield _index_1.Internals.retryGetOrCreateAssociatedAccountInfo(token, owner, payer);
+        const sourceToken = yield associatedAccount_1.AssociatedAccount.retryGetOrCreate(token, owner, payer);
         if (sourceToken.isErr) {
             return shared_1.Result.err(sourceToken.error);
         }
         (0, shared_1.debugLog)('# sourceToken: ', sourceToken.value);
-        const destToken = yield _index_1.Internals.retryGetOrCreateAssociatedAccountInfo(token, wrapped.value, payer);
+        const destToken = yield associatedAccount_1.AssociatedAccount.retryGetOrCreate(token, wrapped.value, payer);
         if (destToken.isErr) {
             return shared_1.Result.err(destToken.error);
         }

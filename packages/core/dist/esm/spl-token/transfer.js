@@ -10,17 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { createTransferCheckedInstruction } from '@solana/spl-token';
 import { Transaction } from '@solana/web3.js';
 import { Node, Result, Instruction, PartialSignInstruction, } from '@solana-suite/shared';
-import { Internals } from '../internals/_index';
 import { Internals_SplToken } from '../internals/_spl-token';
+import { AssociatedAccount } from '../associatedAccount';
 export var SplToken;
 (function (SplToken) {
     SplToken.transfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         !feePayer && (feePayer = signers[0]);
-        const sourceToken = yield Internals.retryGetOrCreateAssociatedAccountInfo(mint, owner, feePayer);
+        const sourceToken = yield AssociatedAccount.retryGetOrCreate(mint, owner, feePayer);
         if (sourceToken.isErr) {
             return Result.err(sourceToken.error);
         }
-        const destToken = yield Internals.retryGetOrCreateAssociatedAccountInfo(mint, dest, feePayer);
+        const destToken = yield AssociatedAccount.retryGetOrCreate(mint, dest, feePayer);
         if (destToken.isErr) {
             return Result.err(destToken.error);
         }
