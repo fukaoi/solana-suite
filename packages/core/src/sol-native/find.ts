@@ -1,5 +1,4 @@
 import {
-  LAMPORTS_PER_SOL,
   ParsedAccountData,
   PublicKey,
 } from '@solana/web3.js';
@@ -34,7 +33,7 @@ export namespace SolNative {
 
     if (res.value.value) {
       info.lamports = res.value.value?.lamports;
-      info.sol = res.value.value?.lamports / LAMPORTS_PER_SOL;
+      info.sol = res.value.value?.lamports.toSol();
     }
     return Result.ok(info);
   };

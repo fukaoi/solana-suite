@@ -6,7 +6,6 @@ import {
 } from '@solana/spl-token';
 
 import {
-  LAMPORTS_PER_SOL,
   PublicKey,
   SystemProgram,
   Keypair,
@@ -41,7 +40,7 @@ export namespace SolNative {
       connection,
       payer,
       owner,
-      parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX)
+      parseInt(`${amount.toLamports()}`, RADIX)
     )
       .then(Result.ok)
       .catch(Result.err);
@@ -114,7 +113,7 @@ export namespace SolNative {
     const inst = SystemProgram.transfer({
       fromPubkey: source,
       toPubkey: destination,
-      lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
+      lamports: parseInt(`${amount.toLamports()}`, RADIX),
     });
 
     return Result.ok(new Instruction([inst], signers, feePayer));
@@ -136,7 +135,7 @@ export namespace SolNative {
       SystemProgram.transfer({
         fromPubkey: owner,
         toPubkey: dest,
-        lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
+        lamports: parseInt(`${amount.toLamports()}`, RADIX),
       })
     );
 

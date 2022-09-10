@@ -5,7 +5,7 @@ import {
   MetaplexFileContent,
 } from '@metaplex-foundation/js';
 
-import { Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { Keypair } from '@solana/web3.js';
 import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
 import { NftStorageMetadata } from '../types/storage';
 import { Bundlr } from '../bundlr';
@@ -41,10 +41,10 @@ export namespace StorageArweave {
     debugLog(
       '# buffer length, price',
       buffer.length,
-      res.basisPoints / LAMPORTS_PER_SOL
+      parseInt(res.basisPoints).toSol()
     );
     return Result.ok({
-      price: res.basisPoints / LAMPORTS_PER_SOL,
+      price: parseInt(res.basisPoints).toSol(),
       currency: res.currency,
     });
   };
