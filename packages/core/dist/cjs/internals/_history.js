@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Internals_History = void 0;
 const shared_1 = require("@solana-suite/shared");
 const history_1 = require("../types/history");
-const _index_1 = require("./_index");
 var Internals_History;
 (function (Internals_History) {
     const createHistory = (searchKey, instruction, meta, directionFilter, mappingTokenAccount, isToken, withMemos) => {
@@ -72,6 +71,9 @@ var Internals_History;
             return v;
         }
     };
+    Internals_History.isParsedInstruction = (arg) => {
+        return arg !== null && typeof arg === 'object' && arg.parsed;
+    };
     Internals_History.filterTransactions = (searchKey, transactions, filterOptions, isToken = false, directionFilter) => {
         const hist = [];
         const mappingTokenAccount = [];
@@ -95,7 +97,7 @@ var Internals_History;
             // set transaction with memo
             const withMemos = [];
             tx.value.transaction.message.instructions.forEach((v) => {
-                if (_index_1.Internals.isParsedInstruction(v) && v.program === 'spl-memo') {
+                if (Internals_History.isParsedInstruction(v) && v.program === 'spl-memo') {
                     withMemos.push({
                         sig: tx.value.transaction.signatures,
                         memo: v.parsed,
@@ -103,7 +105,7 @@ var Internals_History;
                 }
             });
             tx.value.transaction.message.instructions.forEach((instruction) => {
-                if (_index_1.Internals.isParsedInstruction(instruction)) {
+                if (Internals_History.isParsedInstruction(instruction)) {
                     if (isToken && instruction.program !== 'spl-token') {
                         return;
                     }

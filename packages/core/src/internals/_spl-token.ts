@@ -1,12 +1,5 @@
-import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
-
-import {
-  Node,
-  Result,
-  Instruction,
-  debugLog,
-} from '@solana-suite/shared';
-
+import { PublicKey, TransactionInstruction } from '@solana/web3.js';
+import { Node, Result, debugLog } from '@solana-suite/shared';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
@@ -92,32 +85,6 @@ export namespace Internals_SplToken {
         inst,
       });
     }
-  };
-
-  export const getOrCreateAssociatedTokenAccount = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    feePayer: Keypair,
-    allowOwnerOffCurve = false
-  ): Promise<Result<string | Instruction, Error>> => {
-    const res = await getOrCreateAssociatedTokenAccountInstruction(
-      mint,
-      owner,
-      feePayer.publicKey,
-      allowOwnerOffCurve
-    );
-
-    if (res.isErr) {
-      return Result.err(res.error);
-    }
-
-    if (!res.value.inst) {
-      return Result.ok(res.value.tokenAccount);
-    }
-
-    return Result.ok(
-      new Instruction([res.value.inst], [], feePayer, res.value.tokenAccount)
-    );
   };
 
   export const calculateAmount = (

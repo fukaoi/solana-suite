@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { createWrappedNativeAccount, createMint, createTransferInstruction, createCloseAccountInstruction, } from '@solana/spl-token';
 import { SystemProgram, Transaction, } from '@solana/web3.js';
 import { Result, Node, Instruction, PartialSignInstruction, debugLog, } from '@solana-suite/shared';
-import { Internals } from '../internals/_index';
+import { AssociatedAccount } from '../associated-account';
 export var SolNative;
 (function (SolNative) {
     const RADIX = 10;
@@ -33,12 +33,12 @@ export var SolNative;
             return Result.err(tokenRes.error);
         }
         const token = tokenRes.value;
-        const sourceToken = yield Internals.retryGetOrCreateAssociatedAccountInfo(token, owner, payer);
+        const sourceToken = yield AssociatedAccount.retryGetOrCreate(token, owner, payer);
         if (sourceToken.isErr) {
             return Result.err(sourceToken.error);
         }
         debugLog('# sourceToken: ', sourceToken.value);
-        const destToken = yield Internals.retryGetOrCreateAssociatedAccountInfo(token, wrapped.value, payer);
+        const destToken = yield AssociatedAccount.retryGetOrCreate(token, wrapped.value, payer);
         if (destToken.isErr) {
             return Result.err(destToken.error);
         }

@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { PublicKey } from '@solana/web3.js';
-import { Node, Result, Instruction, debugLog, } from '@solana-suite/shared';
+import { Node, Result, debugLog } from '@solana-suite/shared';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddress, getAccount, TokenAccountNotFoundError, TokenInvalidAccountOwnerError, createAssociatedTokenAccountInstruction, } from '@solana/spl-token';
 export var Internals_SplToken;
 (function (Internals_SplToken) {
@@ -45,16 +45,6 @@ export var Internals_SplToken;
                 inst,
             });
         }
-    });
-    Internals_SplToken.getOrCreateAssociatedTokenAccount = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield Internals_SplToken.getOrCreateAssociatedTokenAccountInstruction(mint, owner, feePayer.publicKey, allowOwnerOffCurve);
-        if (res.isErr) {
-            return Result.err(res.error);
-        }
-        if (!res.value.inst) {
-            return Result.ok(res.value.tokenAccount);
-        }
-        return Result.ok(new Instruction([res.value.inst], [], feePayer, res.value.tokenAccount));
     });
     Internals_SplToken.calculateAmount = (amount, mintDecimal) => {
         return amount * Math.pow(10, mintDecimal);

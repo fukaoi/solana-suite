@@ -7,7 +7,6 @@ import {
 import { Node, Result } from '@solana-suite/shared';
 
 import { TransferHistory, DirectionFilter, Filter } from '../types/history';
-import { Internals } from './_index';
 
 export namespace Internals_History {
   const createHistory = (
@@ -92,6 +91,10 @@ export namespace Internals_History {
     }
   };
 
+  export const isParsedInstruction = (arg: any): arg is ParsedInstruction => {
+    return arg !== null && typeof arg === 'object' && arg.parsed;
+  };
+
   export const filterTransactions = (
     searchKey: PublicKey,
     transactions: Result<ParsedTransactionWithMeta>[],
@@ -122,7 +125,7 @@ export namespace Internals_History {
       // set transaction with memo
       const withMemos: { sig: string[]; memo: string }[] = [];
       tx.value.transaction.message.instructions.forEach((v) => {
-        if (Internals.isParsedInstruction(v) && v.program === 'spl-memo') {
+        if (isParsedInstruction(v) && v.program === 'spl-memo') {
           withMemos.push({
             sig: tx.value.transaction.signatures,
             memo: v.parsed,
@@ -131,7 +134,7 @@ export namespace Internals_History {
       });
 
       tx.value.transaction.message.instructions.forEach((instruction) => {
-        if (Internals.isParsedInstruction(instruction)) {
+        if (isParsedInstruction(instruction)) {
           if (isToken && instruction.program !== 'spl-token') {
             return;
           }

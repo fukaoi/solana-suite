@@ -1,33 +1,52 @@
-import { PublicKey, ParsedInstruction, Keypair } from '@solana/web3.js';
-
+import { PublicKey, Keypair } from '@solana/web3.js';
 import {
-  Node,
   Result,
   Instruction,
-  sleep,
   debugLog,
+  Node,
+  sleep,
 } from '@solana-suite/shared';
+import { Internals_SplToken } from './internals/_spl-token';
 
-import { Internals_SplToken } from './_spl-token';
-
-export namespace Internals {
+export namespace AssociatedAccount {
   const RETRY_OVER_LIMIT = 10;
   const RETRY_SLEEP_TIME = 3;
-
-  export const retryGetOrCreateAssociatedAccountInfo = async (
+  export const get = async (
     mint: PublicKey,
     owner: PublicKey,
     feePayer: Keypair,
+    allowOwnerOffCurve = false
+  ): Promise<Result<string | Instruction, Error>> => {
+    const res =
+      await Internals_SplToken.getOrCreateAssociatedTokenAccountInstruction(
+        mint,
+        owner,
+        feePayer.publicKey,
+        allowOwnerOffCurve
+      );
+
+    if (res.isErr) {
+      return Result.err(res.error);
+    }
+
+    if (!res.value.inst) {
+      return Result.ok(res.value.tokenAccount);
+    }
+
+    return Result.ok(
+      new Instruction([res.value.inst], [], feePayer, res.value.tokenAccount)
+    );
+  };
+
+  export const retryGetOrCreate = async (
+    mint: PublicKey,
+    owner: PublicKey,
+    feePayer: Keypair
   ): Promise<Result<string, Error>> => {
     let counter = 1;
     while (counter < RETRY_OVER_LIMIT) {
       try {
-        const inst = await Internals_SplToken.getOrCreateAssociatedTokenAccount(
-          mint,
-          owner,
-          feePayer,
-          true
-        );
+        const inst = await AssociatedAccount.get(mint, owner, feePayer, true);
 
         if (inst.isOk && typeof inst.value === 'string') {
           debugLog('# associatedTokenAccount: ', inst.value);
@@ -40,7 +59,7 @@ export namespace Internals {
             return (inst.unwrap() as Instruction).data as string;
           },
           (err: Error) => {
-            debugLog('# Error submit getOrCreateAssociatedTokenAccount: ', err);
+            debugLog('# Error submit retryGetOrCreate: ', err);
             throw err;
           }
         );
@@ -51,10 +70,5 @@ export namespace Internals {
       counter++;
     }
     return Result.err(Error(`retry action is over limit ${RETRY_OVER_LIMIT}`));
-  };
-
-  // type guard
-  export const isParsedInstruction = (arg: any): arg is ParsedInstruction => {
-    return arg !== null && typeof arg === 'object' && arg.parsed;
   };
 }

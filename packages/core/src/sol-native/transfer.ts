@@ -20,7 +20,7 @@ import {
   debugLog,
 } from '@solana-suite/shared';
 
-import { Internals } from '../internals/_index';
+import { AssociatedAccount } from '../associated-account';
 
 export namespace SolNative {
   const RADIX = 10;
@@ -61,7 +61,7 @@ export namespace SolNative {
 
     const token = tokenRes.value;
 
-    const sourceToken = await Internals.retryGetOrCreateAssociatedAccountInfo(
+    const sourceToken = await AssociatedAccount.retryGetOrCreate(
       token,
       owner,
       payer
@@ -73,7 +73,7 @@ export namespace SolNative {
 
     debugLog('# sourceToken: ', sourceToken.value);
 
-    const destToken = await Internals.retryGetOrCreateAssociatedAccountInfo(
+    const destToken = await AssociatedAccount.retryGetOrCreate(
       token,
       wrapped.value,
       payer

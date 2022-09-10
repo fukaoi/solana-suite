@@ -1,7 +1,7 @@
 import { createMint, createMintToCheckedInstruction } from '@solana/spl-token';
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { Node, Result, Instruction } from '@solana-suite/shared';
-import { Internals } from '../internals/_index';
+import { AssociatedAccount } from '../associated-account';
 import { Internals_SplToken } from '../internals/_spl-token';
 
 export namespace SplToken {
@@ -32,7 +32,7 @@ export namespace SplToken {
     const token = tokenRes.value;
 
     const tokenAssociated =
-      await Internals.retryGetOrCreateAssociatedAccountInfo(
+      await AssociatedAccount.retryGetOrCreate(
         token,
         owner,
         feePayer

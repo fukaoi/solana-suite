@@ -49,16 +49,6 @@ var Internals_SplToken;
             });
         }
     });
-    Internals_SplToken.getOrCreateAssociatedTokenAccount = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield Internals_SplToken.getOrCreateAssociatedTokenAccountInstruction(mint, owner, feePayer.publicKey, allowOwnerOffCurve);
-        if (res.isErr) {
-            return shared_1.Result.err(res.error);
-        }
-        if (!res.value.inst) {
-            return shared_1.Result.ok(res.value.tokenAccount);
-        }
-        return shared_1.Result.ok(new shared_1.Instruction([res.value.inst], [], feePayer, res.value.tokenAccount));
-    });
     Internals_SplToken.calculateAmount = (amount, mintDecimal) => {
         return amount * Math.pow(10, mintDecimal);
     };

@@ -4,7 +4,7 @@ import {
 } from '@solana/web3.js';
 import { Node, Result } from '@solana-suite/shared';
 import { SolNativeOwnerInfo } from '../types/sol-native';
-import { Internals } from '../internals/_index';
+import {Internals_History} from '../internals/_history';
 
 export namespace SolNative {
   export const findByOwner = async (
@@ -25,7 +25,7 @@ export namespace SolNative {
       owner: owner.toString(),
     };
 
-    if (Internals.isParsedInstruction(res.unwrap().value?.data)) {
+    if (Internals_History.isParsedInstruction(res.unwrap().value?.data)) {
       info.owner = (
         res.value.value?.data as ParsedAccountData
       ).parsed.info.owner;

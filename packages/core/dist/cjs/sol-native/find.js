@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SolNative = void 0;
 const shared_1 = require("@solana-suite/shared");
-const _index_1 = require("../internals/_index");
+const _history_1 = require("../internals/_history");
 var SolNative;
 (function (SolNative) {
     SolNative.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
@@ -28,7 +28,7 @@ var SolNative;
             lamports: 0,
             owner: owner.toString(),
         };
-        if (_index_1.Internals.isParsedInstruction((_a = res.unwrap().value) === null || _a === void 0 ? void 0 : _a.data)) {
+        if (_history_1.Internals_History.isParsedInstruction((_a = res.unwrap().value) === null || _a === void 0 ? void 0 : _a.data)) {
             info.owner = ((_b = res.value.value) === null || _b === void 0 ? void 0 : _b.data).parsed.info.owner;
         }
         if (res.value.value) {
