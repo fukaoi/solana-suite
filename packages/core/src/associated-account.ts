@@ -1,12 +1,20 @@
-import { PublicKey, Keypair } from '@solana/web3.js';
+import { PublicKey, TransactionInstruction, Keypair } from '@solana/web3.js';
 import {
-  Result,
-  Instruction,
-  debugLog,
   Node,
+  Result,
+  debugLog,
+  Instruction,
   sleep,
 } from '@solana-suite/shared';
-import { Internals_SplToken } from './internals/_spl-token';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress,
+  getAccount,
+  TokenAccountNotFoundError,
+  TokenInvalidAccountOwnerError,
+  createAssociatedTokenAccountInstruction,
+} from '@solana/spl-token';
 
 export namespace AssociatedAccount {
   const RETRY_OVER_LIMIT = 10;
@@ -17,13 +25,12 @@ export namespace AssociatedAccount {
     feePayer: Keypair,
     allowOwnerOffCurve = false
   ): Promise<Result<string | Instruction, Error>> => {
-    const res =
-      await Internals_SplToken.getOrCreateAssociatedTokenAccountInstruction(
-        mint,
-        owner,
-        feePayer.publicKey,
-        allowOwnerOffCurve
-      );
+    const res = await getOrCreateInstruction(
+      mint,
+      owner,
+      feePayer.publicKey,
+      allowOwnerOffCurve
+    );
 
     if (res.isErr) {
       return Result.err(res.error);
@@ -70,5 +77,71 @@ export namespace AssociatedAccount {
       counter++;
     }
     return Result.err(Error(`retry action is over limit ${RETRY_OVER_LIMIT}`));
+  };
+
+  export const getOrCreateInstruction = async (
+    mint: PublicKey,
+    owner: PublicKey,
+    feePayer?: PublicKey,
+    allowOwnerOffCurve = false
+  ): Promise<
+    Result<
+      { tokenAccount: string; inst: TransactionInstruction | undefined },
+      Error
+    >
+  > => {
+    const associatedToken = await getAssociatedTokenAddress(
+      mint,
+      owner,
+      allowOwnerOffCurve,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    )
+      .then(Result.ok)
+      .catch(Result.err);
+
+    if (associatedToken.isErr) {
+      return associatedToken.error;
+    }
+
+    const associatedTokenAccount = associatedToken.unwrap();
+    debugLog('# associatedTokenAccount: ', associatedTokenAccount.toString());
+
+    try {
+      // Dont use Result
+      await getAccount(
+        Node.getConnection(),
+        associatedTokenAccount,
+        Node.getConnection().commitment,
+        TOKEN_PROGRAM_ID
+      );
+      return Result.ok({
+        tokenAccount: associatedTokenAccount.toString(),
+        inst: undefined,
+      });
+    } catch (error: unknown) {
+      if (
+        !(error instanceof TokenAccountNotFoundError) &&
+        !(error instanceof TokenInvalidAccountOwnerError)
+      ) {
+        return Result.err(Error('Unexpected error'));
+      }
+
+      const payer = !feePayer ? owner : feePayer;
+
+      const inst = createAssociatedTokenAccountInstruction(
+        payer,
+        associatedTokenAccount,
+        owner,
+        mint,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+
+      return Result.ok({
+        tokenAccount: associatedTokenAccount.toString(),
+        inst,
+      });
+    }
   };
 }

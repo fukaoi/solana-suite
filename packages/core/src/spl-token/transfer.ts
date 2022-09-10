@@ -9,7 +9,7 @@ import {
 } from '@solana-suite/shared';
 
 import { Internals_SplToken } from '../internals/_spl-token';
-import {AssociatedAccount} from '../associated-account';
+import { AssociatedAccount } from '../associated-account';
 
 export namespace SplToken {
   export const transfer = async (
@@ -65,19 +65,17 @@ export namespace SplToken {
     mintDecimal: number,
     feePayer: PublicKey
   ): Promise<Result<PartialSignInstruction, Error>> => {
-    const sourceToken =
-      await Internals_SplToken.getOrCreateAssociatedTokenAccountInstruction(
-        mint,
-        owner,
-        feePayer
-      );
+    const sourceToken = await AssociatedAccount.getOrCreateInstruction(
+      mint,
+      owner,
+      feePayer
+    );
 
-    const destToken =
-      await Internals_SplToken.getOrCreateAssociatedTokenAccountInstruction(
-        mint,
-        dest,
-        feePayer
-      );
+    const destToken = await AssociatedAccount.getOrCreateInstruction(
+      mint,
+      dest,
+      feePayer
+    );
 
     if (destToken.isErr) {
       return Result.err(destToken.error);

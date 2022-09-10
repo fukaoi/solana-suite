@@ -8,43 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { PublicKey } from '@solana/web3.js';
-import { Node, Result, debugLog } from '@solana-suite/shared';
-import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddress, getAccount, TokenAccountNotFoundError, TokenInvalidAccountOwnerError, createAssociatedTokenAccountInstruction, } from '@solana/spl-token';
+import { Result } from '@solana-suite/shared';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
 export var Internals_SplToken;
 (function (Internals_SplToken) {
     Internals_SplToken.findAssociatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
         return yield PublicKey.findProgramAddress([owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()], ASSOCIATED_TOKEN_PROGRAM_ID)
             .then((v) => Result.ok(v[0]))
             .catch(Result.err);
-    });
-    Internals_SplToken.getOrCreateAssociatedTokenAccountInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        const associatedToken = yield getAssociatedTokenAddress(mint, owner, allowOwnerOffCurve, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID)
-            .then(Result.ok)
-            .catch(Result.err);
-        if (associatedToken.isErr) {
-            return associatedToken.error;
-        }
-        const associatedTokenAccount = associatedToken.unwrap();
-        debugLog('# associatedTokenAccount: ', associatedTokenAccount.toString());
-        try {
-            // Dont use Result
-            yield getAccount(Node.getConnection(), associatedTokenAccount, Node.getConnection().commitment, TOKEN_PROGRAM_ID);
-            return Result.ok({
-                tokenAccount: associatedTokenAccount.toString(),
-                inst: undefined,
-            });
-        }
-        catch (error) {
-            if (!(error instanceof TokenAccountNotFoundError) &&
-                !(error instanceof TokenInvalidAccountOwnerError)) {
-                return Result.err(Error('Unexpected error'));
-            }
-            const inst = createAssociatedTokenAccountInstruction(feePayer, associatedTokenAccount, owner, mint, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
-            return Result.ok({
-                tokenAccount: associatedTokenAccount.toString(),
-                inst,
-            });
-        }
     });
     Internals_SplToken.calculateAmount = (amount, mintDecimal) => {
         return amount * Math.pow(10, mintDecimal);

@@ -28,8 +28,8 @@ export var SplToken;
         return Result.ok(new Instruction([inst], signers, feePayer));
     });
     SplToken.feePayerPartialSignTransfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const sourceToken = yield Internals_SplToken.getOrCreateAssociatedTokenAccountInstruction(mint, owner, feePayer);
-        const destToken = yield Internals_SplToken.getOrCreateAssociatedTokenAccountInstruction(mint, dest, feePayer);
+        const sourceToken = yield AssociatedAccount.getOrCreateInstruction(mint, owner, feePayer);
+        const destToken = yield AssociatedAccount.getOrCreateInstruction(mint, dest, feePayer);
         if (destToken.isErr) {
             return Result.err(destToken.error);
         }
