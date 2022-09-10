@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SplToken = void 0;
 const spl_token_1 = require("@solana/spl-token");
 const shared_1 = require("@solana-suite/shared");
-const associatedAccount_1 = require("../associatedAccount");
+const associated_account_1 = require("../associated-account");
 const _spl_token_1 = require("../internals/_spl-token");
 var SplToken;
 (function (SplToken) {
@@ -26,7 +26,7 @@ var SplToken;
             return shared_1.Result.err(tokenRes.error);
         }
         const token = tokenRes.value;
-        const tokenAssociated = yield associatedAccount_1.AssociatedAccount.retryGetOrCreate(token, owner, feePayer);
+        const tokenAssociated = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, owner, feePayer);
         if (tokenAssociated.isErr) {
             return shared_1.Result.err(tokenAssociated.error);
         }

@@ -11,7 +11,7 @@ import { createTransferCheckedInstruction } from '@solana/spl-token';
 import { Transaction } from '@solana/web3.js';
 import { Node, Result, Instruction, PartialSignInstruction, } from '@solana-suite/shared';
 import { Internals_SplToken } from '../internals/_spl-token';
-import { AssociatedAccount } from '../associatedAccount';
+import { AssociatedAccount } from '../associated-account';
 export var SplToken;
 (function (SplToken) {
     SplToken.transfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {

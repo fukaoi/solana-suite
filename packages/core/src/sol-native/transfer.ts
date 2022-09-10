@@ -20,7 +20,7 @@ import {
   debugLog,
 } from '@solana-suite/shared';
 
-import { AssociatedAccount } from '../associatedAccount';
+import { AssociatedAccount } from '../associated-account';
 
 export namespace SolNative {
   const RADIX = 10;

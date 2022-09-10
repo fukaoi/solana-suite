@@ -14,16 +14,16 @@ const spl_token_1 = require("@solana/spl-token");
 const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
 const _spl_token_1 = require("../internals/_spl-token");
-const associatedAccount_1 = require("../associatedAccount");
+const associated_account_1 = require("../associated-account");
 var SplToken;
 (function (SplToken) {
     SplToken.transfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         !feePayer && (feePayer = signers[0]);
-        const sourceToken = yield associatedAccount_1.AssociatedAccount.retryGetOrCreate(mint, owner, feePayer);
+        const sourceToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(mint, owner, feePayer);
         if (sourceToken.isErr) {
             return shared_1.Result.err(sourceToken.error);
         }
-        const destToken = yield associatedAccount_1.AssociatedAccount.retryGetOrCreate(mint, dest, feePayer);
+        const destToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(mint, dest, feePayer);
         if (destToken.isErr) {
             return shared_1.Result.err(destToken.error);
         }

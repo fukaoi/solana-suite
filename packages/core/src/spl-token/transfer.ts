@@ -9,7 +9,7 @@ import {
 } from '@solana-suite/shared';
 
 import { Internals_SplToken } from '../internals/_spl-token';
-import {AssociatedAccount} from '../associatedAccount';
+import {AssociatedAccount} from '../associated-account';
 
 export namespace SplToken {
   export const transfer = async (

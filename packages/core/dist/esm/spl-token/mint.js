@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { createMint, createMintToCheckedInstruction } from '@solana/spl-token';
 import { Node, Result, Instruction } from '@solana-suite/shared';
-import { AssociatedAccount } from '../associatedAccount';
+import { AssociatedAccount } from '../associated-account';
 import { Internals_SplToken } from '../internals/_spl-token';
 export var SplToken;
 (function (SplToken) {
