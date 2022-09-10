@@ -1,4 +1,4 @@
-import { PublicKey, Keypair } from '@solana/web3.js';
+import { PublicKey, Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { Constants, Result, Instruction } from './';
 import { Internals_Instruction } from './internals/_instruction';
 import bs from 'bs58';
@@ -46,6 +46,14 @@ String.prototype.toExplorerUrl = function () {
   } catch (_) {
     return `https://solscan.io/tx/${this}?cluster=${cluster}`;
   }
+};
+
+Number.prototype.toSol = function () {
+  return (this as number) / LAMPORTS_PER_SOL;
+};
+
+Number.prototype.toLamports = function () {
+  return (this as number) * LAMPORTS_PER_SOL;
 };
 
 export const debugLog = (

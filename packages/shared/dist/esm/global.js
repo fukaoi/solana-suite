@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { PublicKey, Keypair } from '@solana/web3.js';
+import { PublicKey, Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { Constants, Result } from './';
 import { Internals_Instruction } from './internals/_instruction';
 import bs from 'bs58';
@@ -54,6 +54,12 @@ String.prototype.toExplorerUrl = function () {
     catch (_) {
         return `https://solscan.io/tx/${this}?cluster=${cluster}`;
     }
+};
+Number.prototype.toSol = function () {
+    return this / LAMPORTS_PER_SOL;
+};
+Number.prototype.toLamports = function () {
+    return this * LAMPORTS_PER_SOL;
 };
 export const debugLog = (data, data2 = '', data3 = '') => {
     if (Constants.isDebugging || process.env.DEBUG) {

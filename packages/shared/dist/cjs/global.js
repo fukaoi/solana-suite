@@ -61,6 +61,12 @@ String.prototype.toExplorerUrl = function () {
         return `https://solscan.io/tx/${this}?cluster=${cluster}`;
     }
 };
+Number.prototype.toSol = function () {
+    return this / web3_js_1.LAMPORTS_PER_SOL;
+};
+Number.prototype.toLamports = function () {
+    return this * web3_js_1.LAMPORTS_PER_SOL;
+};
 const debugLog = (data, data2 = '', data3 = '') => {
     if (_1.Constants.isDebugging || process.env.DEBUG) {
         console.log('[DEBUG]', data, data2, data3);
