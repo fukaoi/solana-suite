@@ -3,7 +3,7 @@ import { SolNative } from '../../src';
 import { assert } from 'chai';
 import { Filter, DirectionFilter } from '../../src/types/history';
 
-const searchTokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
+const searchTokenKey = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk';
 
 describe('SolNative', () => {
   it('Get transfer history with set optional filter', async () => {
@@ -12,6 +12,7 @@ describe('SolNative', () => {
       limit,
       actionFilter: [Filter.MintTo],
     });
+    console.log('# getHistory: ', res);
     assert.isTrue(res.isOk);
     assert.equal(res.unwrap()[0].type, Filter.MintTo);
     res.unwrap().forEach((v) => {
@@ -26,14 +27,12 @@ describe('SolNative', () => {
     });
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
-      // console.log(v.info);
       assert.isNotNull(v.date);
       assert.equal(v.info.destination, destination);
     });
   });
 
   it('Get transfer history with transfer source filter', async () => {
-    const source = '2wxMtAe3nwQu5Ai2XuMgX4gxvYhTvXtedrvo7p9jDepn';
     const res = await SolNative.getHistory(searchTokenKey.toPublicKey(), {
       directionFilter: DirectionFilter.Source,
     });
@@ -41,7 +40,7 @@ describe('SolNative', () => {
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotNull(v.date);
-      assert.equal(v.info.source, source);
+      assert.equal(v.info.source, searchTokenKey);
     });
   });
 
