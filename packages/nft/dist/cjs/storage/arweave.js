@@ -34,7 +34,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StorageArweave = void 0;
 const js_1 = require("@metaplex-foundation/js");
-const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
 const bundlr_1 = require("../bundlr");
 const validator_1 = require("../validator");
@@ -54,9 +53,9 @@ var StorageArweave;
             return shared_1.Result.err(Error('Supported environment: only Node.js and Browser js'));
         }
         const res = yield bundlr_1.Bundlr.useStorage(feePayer).getUploadPrice(buffer.length);
-        (0, shared_1.debugLog)('# buffer length, price', buffer.length, res.basisPoints / web3_js_1.LAMPORTS_PER_SOL);
+        (0, shared_1.debugLog)('# buffer length, price', buffer.length, parseInt(res.basisPoints).toSol());
         return shared_1.Result.ok({
-            price: res.basisPoints / web3_js_1.LAMPORTS_PER_SOL,
+            price: parseInt(res.basisPoints).toSol(),
             currency: res.currency,
         });
     });

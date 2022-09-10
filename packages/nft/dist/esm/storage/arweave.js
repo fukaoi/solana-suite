@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { useMetaplexFile, } from '@metaplex-foundation/js';
-import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
 import { Bundlr } from '../bundlr';
 import { Validator } from '../validator';
@@ -28,9 +27,9 @@ export var StorageArweave;
             return Result.err(Error('Supported environment: only Node.js and Browser js'));
         }
         const res = yield Bundlr.useStorage(feePayer).getUploadPrice(buffer.length);
-        debugLog('# buffer length, price', buffer.length, res.basisPoints / LAMPORTS_PER_SOL);
+        debugLog('# buffer length, price', buffer.length, parseInt(res.basisPoints).toSol());
         return Result.ok({
-            price: res.basisPoints / LAMPORTS_PER_SOL,
+            price: parseInt(res.basisPoints).toSol(),
             currency: res.currency,
         });
     });

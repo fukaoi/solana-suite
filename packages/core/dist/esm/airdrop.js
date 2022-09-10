@@ -7,18 +7,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { Node, Result, debugLog } from '@solana-suite/shared';
 export var Airdrop;
 (function (Airdrop) {
-    const DEFAULT_AIRDROP_AMOUNT = LAMPORTS_PER_SOL * 1;
-    const MAX_AIRDROP_SOL = LAMPORTS_PER_SOL * 2;
+    const DEFAULT_AIRDROP_AMOUNT = 1;
+    const MAX_AIRDROP_SOL = 2;
     Airdrop.request = (pubkey, airdropAmount) => __awaiter(this, void 0, void 0, function* () {
         debugLog('Now airdropping...please wait');
         airdropAmount = !airdropAmount
-            ? DEFAULT_AIRDROP_AMOUNT
-            : airdropAmount * LAMPORTS_PER_SOL;
-        if (airdropAmount > MAX_AIRDROP_SOL) {
+            ? DEFAULT_AIRDROP_AMOUNT.toLamports()
+            : airdropAmount.toLamports();
+        if (airdropAmount > MAX_AIRDROP_SOL.toLamports()) {
             return Result.err(Error(`Over max airdrop amount: ${airdropAmount}`));
         }
         const sig = yield Node.getConnection()

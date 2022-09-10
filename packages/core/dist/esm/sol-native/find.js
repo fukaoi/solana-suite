@@ -7,7 +7,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { LAMPORTS_PER_SOL, } from '@solana/web3.js';
 import { Node, Result } from '@solana-suite/shared';
 import { Internals } from '../internals/_index';
 export var SolNative;
@@ -31,7 +30,7 @@ export var SolNative;
         }
         if (res.value.value) {
             info.lamports = (_c = res.value.value) === null || _c === void 0 ? void 0 : _c.lamports;
-            info.sol = ((_d = res.value.value) === null || _d === void 0 ? void 0 : _d.lamports) / LAMPORTS_PER_SOL;
+            info.sol = (_d = res.value.value) === null || _d === void 0 ? void 0 : _d.lamports.toSol();
         }
         return Result.ok(info);
     });

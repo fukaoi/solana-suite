@@ -22,7 +22,7 @@ var SolNative;
     SolNative.transferWithMultisig = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const connection = shared_1.Node.getConnection();
         const payer = feePayer ? feePayer : signers[0];
-        const wrapped = yield (0, spl_token_1.createWrappedNativeAccount)(connection, payer, owner, parseInt(`${amount * web3_js_1.LAMPORTS_PER_SOL}`, RADIX))
+        const wrapped = yield (0, spl_token_1.createWrappedNativeAccount)(connection, payer, owner, parseInt(`${amount.toLamports()}`, RADIX))
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
         if (wrapped.isErr) {
@@ -55,7 +55,7 @@ var SolNative;
         const inst = web3_js_1.SystemProgram.transfer({
             fromPubkey: source,
             toPubkey: destination,
-            lamports: parseInt(`${amount * web3_js_1.LAMPORTS_PER_SOL}`, RADIX),
+            lamports: parseInt(`${amount.toLamports()}`, RADIX),
         });
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
     });
@@ -68,7 +68,7 @@ var SolNative;
         }).add(web3_js_1.SystemProgram.transfer({
             fromPubkey: owner,
             toPubkey: dest,
-            lamports: parseInt(`${amount * web3_js_1.LAMPORTS_PER_SOL}`, RADIX),
+            lamports: parseInt(`${amount.toLamports()}`, RADIX),
         }));
         signers.forEach((signer) => {
             tx.partialSign(signer);

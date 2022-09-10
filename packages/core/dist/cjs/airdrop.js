@@ -10,18 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Airdrop = void 0;
-const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
 var Airdrop;
 (function (Airdrop) {
-    const DEFAULT_AIRDROP_AMOUNT = web3_js_1.LAMPORTS_PER_SOL * 1;
-    const MAX_AIRDROP_SOL = web3_js_1.LAMPORTS_PER_SOL * 2;
+    const DEFAULT_AIRDROP_AMOUNT = 1;
+    const MAX_AIRDROP_SOL = 2;
     Airdrop.request = (pubkey, airdropAmount) => __awaiter(this, void 0, void 0, function* () {
         (0, shared_1.debugLog)('Now airdropping...please wait');
         airdropAmount = !airdropAmount
-            ? DEFAULT_AIRDROP_AMOUNT
-            : airdropAmount * web3_js_1.LAMPORTS_PER_SOL;
-        if (airdropAmount > MAX_AIRDROP_SOL) {
+            ? DEFAULT_AIRDROP_AMOUNT.toLamports()
+            : airdropAmount.toLamports();
+        if (airdropAmount > MAX_AIRDROP_SOL.toLamports()) {
             return shared_1.Result.err(Error(`Over max airdrop amount: ${airdropAmount}`));
         }
         const sig = yield shared_1.Node.getConnection()

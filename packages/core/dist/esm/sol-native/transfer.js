@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { createWrappedNativeAccount, createMint, createTransferInstruction, createCloseAccountInstruction, } from '@solana/spl-token';
-import { LAMPORTS_PER_SOL, SystemProgram, Transaction, } from '@solana/web3.js';
+import { SystemProgram, Transaction, } from '@solana/web3.js';
 import { Result, Node, Instruction, PartialSignInstruction, debugLog, } from '@solana-suite/shared';
 import { Internals } from '../internals/_index';
 export var SolNative;
@@ -19,7 +19,7 @@ export var SolNative;
     SolNative.transferWithMultisig = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const connection = Node.getConnection();
         const payer = feePayer ? feePayer : signers[0];
-        const wrapped = yield createWrappedNativeAccount(connection, payer, owner, parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX))
+        const wrapped = yield createWrappedNativeAccount(connection, payer, owner, parseInt(`${amount.toLamports()}`, RADIX))
             .then(Result.ok)
             .catch(Result.err);
         if (wrapped.isErr) {
@@ -52,7 +52,7 @@ export var SolNative;
         const inst = SystemProgram.transfer({
             fromPubkey: source,
             toPubkey: destination,
-            lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
+            lamports: parseInt(`${amount.toLamports()}`, RADIX),
         });
         return Result.ok(new Instruction([inst], signers, feePayer));
     });
@@ -65,7 +65,7 @@ export var SolNative;
         }).add(SystemProgram.transfer({
             fromPubkey: owner,
             toPubkey: dest,
-            lamports: parseInt(`${amount * LAMPORTS_PER_SOL}`, RADIX),
+            lamports: parseInt(`${amount.toLamports()}`, RADIX),
         }));
         signers.forEach((signer) => {
             tx.partialSign(signer);

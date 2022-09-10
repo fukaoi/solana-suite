@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SolNative = void 0;
-const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
 const _index_1 = require("../internals/_index");
 var SolNative;
@@ -34,7 +33,7 @@ var SolNative;
         }
         if (res.value.value) {
             info.lamports = (_c = res.value.value) === null || _c === void 0 ? void 0 : _c.lamports;
-            info.sol = ((_d = res.value.value) === null || _d === void 0 ? void 0 : _d.lamports) / web3_js_1.LAMPORTS_PER_SOL;
+            info.sol = (_d = res.value.value) === null || _d === void 0 ? void 0 : _d.lamports.toSol();
         }
         return shared_1.Result.ok(info);
     });
