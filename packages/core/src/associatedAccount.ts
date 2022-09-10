@@ -1,4 +1,4 @@
-import { PublicKey, Keypair, ParsedInstruction } from '@solana/web3.js';
+import { PublicKey, Keypair } from '@solana/web3.js';
 import {
   Result,
   Instruction,
