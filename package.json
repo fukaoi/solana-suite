@@ -17,7 +17,8 @@
   "workspaces": [
     "packages/shared",
     "packages/core",
-    "packages/nft"
+    "packages/nft",
+    "packages/phantom"
   ],
   "devDependencies": {
     "@tsconfig/node14": "^1.0.1",
