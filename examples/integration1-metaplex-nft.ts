@@ -41,6 +41,8 @@ import { RandomAsset } from '../packages/nft/test/randomAsset';
       symbol: 'SAMPLE',
       royalty: 7,
       storageType: 'nftStorage',
+      isMutable: true,
+      externalUrl: 'https://github.com/atonoy/solana-suite',
     },
     owner.toPublicKey(),
     feePayer.toKeypair()
