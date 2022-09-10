@@ -3,12 +3,14 @@ import { assert } from 'chai';
 import { Internals_History } from '../../src/internals/_history';
 
 const searchTokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
+const oldSig = '47KcZGxPayz3cJ3Vy6mKCFmz6N4kGkKm3TDnb9VVJ4krrgdu3WznRKyweh4n6KfWgXTm2LzdVqf8sPmjV1H2u6YR';
+const searchTokenKey2 = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk';
+const oldSig2 = '2fSh8kZbRtE5Xi8PVfxfQWKXXLDfzPygoeJdAN9XbW15aoqJHcdNUJVt5tF4B1nVt44cbkHmAWYLfkptbxGgYzjL';
 
 describe('Internals_Find', () => {
   it('Get transaction data', async () => {
-    const sig =
-      'WT6DcvZZuGvf4dabof8r7HSBmfbjN7ERvBJTSB4d5x15NKZwM8TDMSgNdTkZzMTCuX7NP1QfR6WPNmGyhiaFKoy';
-    const res = await Internals_History.get(sig);
+    const res = await Internals_History.get(oldSig);
+    console.log('# oldSig: ', res);
     assert.isObject(res);
   });
 
@@ -27,19 +29,18 @@ describe('Internals_Find', () => {
     }
   });
 
-  // comment out: Unable to retrieve values during the process.
-
-  // it('Get all transaction data with limit, until', async () => {
-  //   const res = await Internals_History.getForAddress(
-  //     searchTokenKey.toPublicKey(),
-  //     undefined,
-  //     undefined,
-  //     '4BpP9ugxmnJbCegPXfXXP78A25chuNcLVZzRT4Gu1vPT8nEAbZzWuX8BWeytLR45qASFLb7PzakLCn29wJLQciQ5'
-  //   );
-  //   if (res[0].isOk) {
-  //     assert.isArray(res);
-  //   } else {
-  //     assert.isFalse(res[0].isErr, res[0].isErr && res[0].error.message);
-  //   }
-  // });
+  it('Get all transaction data with limit, until', async () => {
+    const res = await Internals_History.getForAddress(
+      searchTokenKey2.toPublicKey(),
+      undefined,
+      undefined,
+      oldSig2,
+    );
+    console.log('# oldSig2: ', res);
+    if (res[0].isOk) {
+      assert.isArray(res);
+    } else {
+      assert.isFalse(res[0].isErr, res[0].isErr && res[0].error.message);
+    }
+  });
 });
