@@ -33,7 +33,7 @@ export namespace StorageNftStorage {
   const createGatewayUrl = (cid: string): string =>
     `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
 
-  const connect = new NFTStorage({ token: getNftStorageApiKey() });
+  const connect = () => new NFTStorage({ token: getNftStorageApiKey() });
 
   export const uploadContent = async (
     filePath: MetaplexFileContent
@@ -53,7 +53,7 @@ export namespace StorageNftStorage {
     }
 
     const blobImage = new Blob([file]);
-    const res = (await connect
+    const res = (await connect()
       .storeBlob(blobImage)
       .then(Result.ok)
       .catch(Result.err)) as Result<string, Error>;
@@ -93,7 +93,7 @@ export namespace StorageNftStorage {
     }
 
     const blobJson = new Blob([JSON.stringify(metadata)]);
-    const res = (await connect
+    const res = (await connect()
       .storeBlob(blobJson)
       .then(Result.ok)
       .catch(Result.err)) as Result<string, Error>;
