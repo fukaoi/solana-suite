@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { AssociatedAccount } from '../src/associatedAccount';
+import { AssociatedAccount } from '../src/associated-account';
 import { KeypairStr, SplToken } from '../src';
 import { Setup } from '@solana-suite/shared/test/testSetup';
 
