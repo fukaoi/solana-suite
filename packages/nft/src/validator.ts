@@ -1,13 +1,13 @@
 import { MetaplexFileContent } from '@metaplex-foundation/js';
 import { Result } from '@solana-suite/shared';
-import { MetaplexRoyalty } from '../metaplex';
+import { MetaplexRoyalty } from './metaplex';
 import {
   InputMetaplexMetadata,
   MetaplexMetaData,
-} from '../types/metaplex/index';
+} from './types/metaplex/index';
 
-import { NftStorageMetadata } from '../types/storage';
-import { Limit, Details } from '../types/validator';
+import { NftStorageMetadata } from './types/storage';
+import { Limit, Details } from './types/validator';
 
 export namespace Validator {
   export namespace Message {

@@ -1,8 +1,8 @@
 import { describe, it } from 'mocha';
 import { KeypairStr } from '@solana-suite/core';
-import { Setup } from '../../../shared/test/testSetup';
+import { Setup } from '../../shared/test/testSetup';
 import { assert } from 'chai';
-import { Bundlr } from '../../src/bundlr';
+import { Bundlr } from '../src/bundlr';
 import {
   BundlrStorageDriver,
   Metaplex as MetaplexFoundation,

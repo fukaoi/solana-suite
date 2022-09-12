@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { Validator } from '../../src';
+import { Validator } from '../src/validator';
 
 describe('Validator', () => {
   it('[Success]isRoyalty', async () => {
