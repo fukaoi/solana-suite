@@ -1,6 +1,5 @@
 import {
   JsonMetadata,
-  MetaplexFile,
   MetaplexFileContent,
 } from '@metaplex-foundation/js';
 import fs from 'fs';
