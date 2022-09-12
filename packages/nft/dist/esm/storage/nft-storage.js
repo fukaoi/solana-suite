@@ -30,7 +30,7 @@ export var StorageNftStorage;
         }
     };
     const createGatewayUrl = (cid) => `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
-    const connect = new NFTStorage({ token: getNftStorageApiKey() });
+    const connect = () => new NFTStorage({ token: getNftStorageApiKey() });
     StorageNftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
         debugLog('# upload content: ', filePath);
         let file;
@@ -46,7 +46,7 @@ export var StorageNftStorage;
             return Result.err(Error('Supported environment: only Node.js and Browser js'));
         }
         const blobImage = new Blob([file]);
-        const res = (yield connect
+        const res = (yield connect()
             .storeBlob(blobImage)
             .then(Result.ok)
             .catch(Result.err));
@@ -77,7 +77,7 @@ export var StorageNftStorage;
             return valid;
         }
         const blobJson = new Blob([JSON.stringify(metadata)]);
-        const res = (yield connect
+        const res = (yield connect()
             .storeBlob(blobJson)
             .then(Result.ok)
             .catch(Result.err));
