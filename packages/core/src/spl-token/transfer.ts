@@ -65,13 +65,13 @@ export namespace SplToken {
     mintDecimal: number,
     feePayer: PublicKey
   ): Promise<Result<PartialSignInstruction, Error>> => {
-    const sourceToken = await AssociatedAccount.getOrCreateInstruction(
+    const sourceToken = await AssociatedAccount.makeOrCreateInstruction(
       mint,
       owner,
       feePayer
     );
 
-    const destToken = await AssociatedAccount.getOrCreateInstruction(
+    const destToken = await AssociatedAccount.makeOrCreateInstruction(
       mint,
       dest,
       feePayer

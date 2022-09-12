@@ -17,7 +17,7 @@ var AssociatedAccount;
     const RETRY_OVER_LIMIT = 10;
     const RETRY_SLEEP_TIME = 3;
     AssociatedAccount.get = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield AssociatedAccount.getOrCreateInstruction(mint, owner, feePayer.publicKey, allowOwnerOffCurve);
+        const res = yield AssociatedAccount.makeOrCreateInstruction(mint, owner, feePayer.publicKey, allowOwnerOffCurve);
         if (res.isErr) {
             return shared_1.Result.err(res.error);
         }
@@ -51,7 +51,7 @@ var AssociatedAccount;
         }
         return shared_1.Result.err(Error(`retry action is over limit ${RETRY_OVER_LIMIT}`));
     });
-    AssociatedAccount.getOrCreateInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
+    AssociatedAccount.makeOrCreateInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
         const associatedToken = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, owner, allowOwnerOffCurve, spl_token_1.TOKEN_PROGRAM_ID, spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID)
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);

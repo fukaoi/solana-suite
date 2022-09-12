@@ -12,6 +12,7 @@ import {
   PublicKey,
   Keypair,
   Connection,
+  TransactionInstruction,
 } from '@solana/web3.js';
 
 import { Node, Result } from '@solana-suite/shared';
@@ -68,20 +69,23 @@ export namespace SplToken {
 
     const txData1 = await initMint(connection, owner, mintDecimal);
 
-    if (txData1.isErr) return Result.err(txData1.error);
+    if (txData1.isErr) {
+      return Result.err(txData1.error);
+    }
 
     const tokenKey = txData1.unwrap().tokenKey;
-
-    const txData2 = await AssociatedAccount.getOrCreateInstruction(
+    const txData2 = await AssociatedAccount.makeOrCreateInstruction(
       txData1.unwrap().tokenKey,
       owner
     );
 
-    if (txData2.isErr) return Result.err(txData2.error);
+    if (txData2.isErr) {
+      return Result.err(txData2.error);
+    }
 
     const tokenAccount = txData2.unwrap().tokenAccount.toPublicKey();
 
-    tx.add(txData2.unwrap().inst);
+    tx.add(txData2.unwrap().inst as TransactionInstruction);
 
     const transaction = tx.add(
       createMintToCheckedInstruction(
@@ -129,7 +133,7 @@ export namespace SplToken {
     const connection = Node.getConnection();
     const tx = new Transaction();
 
-    const txData1 = await AssociatedAccount.getOrCreateInstruction(
+    const txData1 = await AssociatedAccount.makeOrCreateInstruction(
       tokenKey,
       owner
     );
@@ -141,7 +145,7 @@ export namespace SplToken {
     console.log('tokenAccount: ', tokenAccount);
     console.log('tx: ', txData1.unwrap().inst);
 
-    tx.add(txData1.unwrap().inst);
+    tx.add(txData1.unwrap().inst as TransactionInstruction);
 
     const transaction = tx.add(
       createMintToCheckedInstruction(

@@ -25,7 +25,7 @@ export namespace AssociatedAccount {
     feePayer: Keypair,
     allowOwnerOffCurve = false
   ): Promise<Result<string | Instruction, Error>> => {
-    const res = await getOrCreateInstruction(
+    const res = await makeOrCreateInstruction(
       mint,
       owner,
       feePayer.publicKey,
@@ -79,7 +79,7 @@ export namespace AssociatedAccount {
     return Result.err(Error(`retry action is over limit ${RETRY_OVER_LIMIT}`));
   };
 
-  export const getOrCreateInstruction = async (
+  export const makeOrCreateInstruction = async (
     mint: PublicKey,
     owner: PublicKey,
     feePayer?: PublicKey,

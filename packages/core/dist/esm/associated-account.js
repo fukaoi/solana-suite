@@ -14,7 +14,7 @@ export var AssociatedAccount;
     const RETRY_OVER_LIMIT = 10;
     const RETRY_SLEEP_TIME = 3;
     AssociatedAccount.get = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield AssociatedAccount.getOrCreateInstruction(mint, owner, feePayer.publicKey, allowOwnerOffCurve);
+        const res = yield AssociatedAccount.makeOrCreateInstruction(mint, owner, feePayer.publicKey, allowOwnerOffCurve);
         if (res.isErr) {
             return Result.err(res.error);
         }
@@ -48,7 +48,7 @@ export var AssociatedAccount;
         }
         return Result.err(Error(`retry action is over limit ${RETRY_OVER_LIMIT}`));
     });
-    AssociatedAccount.getOrCreateInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
+    AssociatedAccount.makeOrCreateInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
         const associatedToken = yield getAssociatedTokenAddress(mint, owner, allowOwnerOffCurve, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID)
             .then(Result.ok)
             .catch(Result.err);
