@@ -108,9 +108,11 @@ describe('Metaplex', () => {
 
     res.match(
       (_) => assert.fail('Unrecognized error'),
-      (err: ValidatorError) => {
-        assert.isNotEmpty(err.message);
-        console.log(err.details);
+      (_) => {
+        (err: ValidatorError) => {
+          assert.isNotEmpty(err.message);
+          console.log(err.details);
+        };
       }
     );
   });

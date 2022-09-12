@@ -6,7 +6,6 @@ const shared_1 = require("@solana-suite/shared");
 var Bundlr;
 (function (Bundlr) {
     const BUNDLR_CONNECT_TIMEOUT = 60000;
-    // export const make = (feePayer?: Keypair | Phantom): MetaplexFoundation => {
     Bundlr.make = (feePayer) => {
         const object = js_1.Metaplex.make(shared_1.Node.getConnection()).use((0, js_1.bundlrStorage)({
             address: shared_1.Constants.BUNDLR_NETWORK_URL,
