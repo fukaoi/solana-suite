@@ -3,7 +3,7 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Airdrop, KeypairStr } from '@solana-suite/core';
+import { Airdrop, KeypairStr, Pubkey } from '@solana-suite/core';
 import { Metaplex } from '@solana-suite/nft';
 import { Node } from '@solana-suite/shared';
 import { RandomAsset } from '../packages/nft/test/randomAsset';
@@ -54,7 +54,7 @@ import { RandomAsset } from '../packages/nft/test/randomAsset';
     (error) => assert.fail(error)
   );
 
-  const mint = inst1.unwrap().data as string;
+  const mint = inst1.unwrap().data as Pubkey;
   console.log('# mint: ', mint);
 
   //////////////////////////////////////////////
