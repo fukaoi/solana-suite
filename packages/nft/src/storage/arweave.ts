@@ -1,8 +1,8 @@
 import {
-  useMetaplexFile,
   MetaplexFile,
   Currency,
   MetaplexFileContent,
+  toMetaplexFile,
 } from '@metaplex-foundation/js';
 
 import { Keypair } from '@solana/web3.js';
@@ -30,7 +30,7 @@ export namespace StorageArweave {
       buffer = (await import('fs')).readFileSync(filepath);
     } else if (isBrowser) {
       const filepath = filePath as any;
-      buffer = useMetaplexFile(filepath, '').buffer;
+      buffer = toMetaplexFile(filepath, '').buffer;
     } else {
       return Result.err(
         Error('Supported environment: only Node.js and Browser js')
@@ -61,16 +61,16 @@ export namespace StorageArweave {
       const filepath = filePath as string;
       const buffer = (await import('fs')).readFileSync(filepath);
       if (fileOptions) {
-        file = useMetaplexFile(buffer, filepath, fileOptions);
+        file = toMetaplexFile(buffer, filepath, fileOptions);
       } else {
-        file = useMetaplexFile(buffer, filepath);
+        file = toMetaplexFile(buffer, filepath);
       }
     } else if (isBrowser) {
       const filepath = filePath as any;
       if (fileOptions) {
-        file = useMetaplexFile(filepath, '', fileOptions);
+        file = toMetaplexFile(filepath, '', fileOptions);
       } else {
-        file = useMetaplexFile(filepath, '');
+        file = toMetaplexFile(filepath, '');
       }
     } else {
       return Result.err(
@@ -98,6 +98,7 @@ export namespace StorageArweave {
     return Bundlr.make(feePayer)
       .nfts()
       .uploadMetadata(metadata)
+      .run()
       .then((res) => Result.ok(res.uri))
       .catch(Result.err);
   };
