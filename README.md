@@ -22,7 +22,7 @@ By using Solana Suite allows for rapid development of blockchain products.
 :star:
 Compared to using web3.js alone, the amount of source code is , allowing you to focus on what you want to do with Solana.Web engineers with little blockchain development experience and no Solana Dapps development experience can learn quickly.
 
-<img src="https://bafybeifyd24fxkev62c4m7ydppchsymqj6ciugde642qpxppv7jpevodpm.ipfs.nftstorage.link/" width="95%" height="95%" />
+<img src="https://bafybeiaite2ara7xzn23wm2mbewvxumxmzjebaus4zoqpcsbgfczmao5nm.ipfs.nftstorage.link/" width="95%" height="95%" />
 
 (* A sample code in this image compares the source code for writing memo data to a transaction)
 
