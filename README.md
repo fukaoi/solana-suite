@@ -17,6 +17,14 @@ By using Solana Suite allows for rapid development of blockchain products.
 
 <img src="https://bafkreibolz2wpbpamryvdlcmbqfrit2wyvpx3ayyrjplth2s32ugp5uk2m.ipfs.nftstorage.link/" width="90%" height="90%" />
 
+<br />
+
+Compared to using web3.js alone, the amount of source code is more compact, allowing you to focus on what you want to do with Solana.Web engineers with little blockchain development experience and no Solana Dapps development experience can learn quickly.
+
+<img src="https://bafybeifyd24fxkev62c4m7ydppchsymqj6ciugde642qpxppv7jpevodpm.ipfs.nftstorage.link/" width="90%" height="90%" />
+
+* A sample code in this image compares the source code for writing memo data to a transaction.
+
 ## Motivation
 Solana is a flexible, versatile, and wonderful blockchain. However, it backfires and makes it difficult to quickly develop what you want to do. We aim to make it easy for engineers who are not familiar with solana to develop with less source code
 
@@ -25,8 +33,8 @@ Solana is a flexible, versatile, and wonderful blockchain. However, it backfires
 Create wallet, Transfer SOL/SPL-TOKEN, Mint SPL-TOKEN/NFT, Upload
 storage(nft.storage/arweave), Connect phantom wallet,,,,
 
-### Both Node.js and Broser does one code
-No need to change source code in Node.js and Borwser js. There is no need to be aware of
+### Both Node.js and Browser does one code
+No need to change source code in Node.js and Browser js. There is no need to be aware of
 the environment in which the calling program will run.It is useful for building most Solana
 blockchain services because it provides a variety of functions as a single library, including
 
@@ -50,5 +58,5 @@ We support multisig as much as possible, transfer, mint SPL-TOKEN, making memos
 ## Official Page
 :house: https://atonoy.github.io/solana-suite/
 ## Docs
-:books: comming soon
+:books: coming soon
 
