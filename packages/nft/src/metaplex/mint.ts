@@ -8,9 +8,87 @@ import {
   InputMetaplexMetadata,
   MetaplexMetaData,
 } from '../types/metaplex/index';
-import {MetaplexRoyalty} from './royalty';
+import { MetaplexRoyalty } from './royalty';
+import { Bundlr } from '../bundlr';
+
+import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
+
+import {
+  findMasterEditionV2Pda,
+  CreateNftBuilderParams,
+  token,
+  TransactionBuilder,
+  CreateNftBuilderContext,
+} from '@metaplex-foundation/js';
+import { NftStorageMetadata } from '../types';
 
 export namespace Metaplex {
+  export const createNftBuilder = async (
+    params: CreateNftBuilderParams,
+    feePayer: Keypair
+  ) => {
+    const metaplex = Bundlr.make(feePayer);
+    const useNewMint = Keypair.generate();
+    const payer = metaplex.identity();
+    const updateAuthority = metaplex.identity();
+    const mintAuthority = metaplex.identity();
+    const tokenOwner = metaplex.identity().publicKey;
+
+    const sftBuilder = await metaplex
+      .nfts()
+      .builders()
+      .createSft({
+        ...params,
+        payer,
+        updateAuthority,
+        mintAuthority,
+        freezeAuthority: mintAuthority.publicKey,
+        useNewMint,
+        tokenOwner,
+        tokenAmount: token(1),
+        decimals: 0,
+      });
+
+    const { mintAddress, metadataAddress, tokenAddress } =
+      sftBuilder.getContext();
+    const masterEditionAddress = findMasterEditionV2Pda(mintAddress);
+
+    const inst = TransactionBuilder.make<CreateNftBuilderContext>()
+      .setFeePayer(payer)
+      .setContext({
+        mintAddress,
+        metadataAddress,
+        masterEditionAddress,
+        tokenAddress: tokenAddress as PublicKey,
+      })
+
+      // Create the mint, the token and the metadata.
+      .add(sftBuilder)
+
+      // Create master edition account (prevents further minting).
+      .add({
+        instruction: createCreateMasterEditionV3Instruction(
+          {
+            edition: masterEditionAddress,
+            mint: mintAddress,
+            updateAuthority: updateAuthority.publicKey,
+            mintAuthority: mintAuthority.publicKey,
+            payer: payer.publicKey,
+            metadata: metadataAddress,
+          },
+          {
+            createMasterEditionArgs: {
+              maxSupply: params.maxSupply === undefined ? 0 : params.maxSupply,
+            },
+          }
+        ),
+        signers: [payer, mintAuthority, updateAuthority],
+        key: params.createMasterEditionInstructionKey ?? 'createMasterEdition',
+      })
+      .getInstructions();
+    return new Instruction(inst, [feePayer, useNewMint]);
+  };
+
   /**
    * Upload content and NFT mint
    *
@@ -20,6 +98,7 @@ export namespace Metaplex {
    *   symbol: string             // nft ticker symbol
    *   filePath: string | File    // nft ticker symbol
    *   royalty: number            // royalty percentage
+   *   storageType: 'arweave'|'nftStorage' // royalty percentage
    *   description?: string       // nft content description
    *   external_url?: string      // landing page, home page uri, related url
    *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
@@ -39,7 +118,8 @@ export namespace Metaplex {
     input: InputMetaplexMetadata,
     owner: PublicKey,
     feePayer: Keypair
-  ): Promise<Result<Instruction, Error | ValidatorError>> => {
+    // ): Promise<Result<Instruction, Error | ValidatorError>> => {
+  ) => {
     const valid = Validator.checkAll<InputMetaplexMetadata>(input);
     if (valid.isErr) {
       return Result.err(valid.error);
@@ -47,24 +127,34 @@ export namespace Metaplex {
 
     let storageRes!: any;
     const { filePath, storageType, royalty, ...reducedMetadata } = input;
-
     const sellerFeeBasisPoints = MetaplexRoyalty.convertValue(royalty);
+
+    const storageMetadata: NftStorageMetadata = {
+      name: input.name,
+      symbol: input.symbol,
+      description: input.description,
+      seller_fee_basis_points: sellerFeeBasisPoints,
+      external_url: input.external_url,
+      attributes: input.attributes,
+      properties: input.properties,
+      image: '',
+    };
 
     if (storageType === 'arweave') {
       storageRes = (
         await StorageArweave.uploadContent(filePath!, feePayer)
       ).unwrap(
         async (ok: string) => {
-          reducedMetadata.image = ok;
-          return await StorageArweave.uploadMetadata(reducedMetadata, feePayer);
+          storageMetadata.image = ok;
+          return await StorageArweave.uploadMetadata(storageMetadata, feePayer);
         },
         (err) => err
       );
     } else if (storageType === 'nftStorage') {
       storageRes = (await StorageNftStorage.uploadContent(filePath!)).unwrap(
         async (ok: string) => {
-          reducedMetadata.image = ok;
-          return await StorageNftStorage.uploadMetadata(reducedMetadata);
+          storageMetadata.image = ok;
+          return await StorageNftStorage.uploadMetadata(storageMetadata);
         },
         (err) => Result.err(err)
       );
@@ -83,6 +173,7 @@ export namespace Metaplex {
       ...reducedMetadata,
     };
 
-    return InternalsMetaplex_Mint.create(mintInput, owner, feePayer);
+    // return InternalsMetaplex_Mint.create(mintInput, owner, feePayer);
+    return Result.ok(await createNftBuilder(mintInput, feePayer));
   };
 }

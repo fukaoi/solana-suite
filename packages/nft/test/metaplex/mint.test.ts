@@ -14,7 +14,7 @@ describe('Metaplex', () => {
     source = obj.source;
   });
 
-  it('[Arweave] one lump upload content and mint nft', async () => {
+  it.only('[Arweave] one lump upload content and mint nft', async () => {
     const asset = RandomAsset.get();
 
     const creator1 = {
@@ -43,79 +43,80 @@ describe('Metaplex', () => {
       source.toKeypair()
     );
 
+    console.log(res);
     (await res.submit()).match(
-      (ok) => {
+      (ok:string) => {
         console.log('# mint:', res.unwrap().data);
         console.log('# sig:', ok);
       },
-      (ng) => assert.fail(ng.message)
+      (ng:Error) => assert.fail(ng.message)
     );
   });
 
-  it('[Nft Storage] one lump upload content and mint nft', async () => {
-    const asset = RandomAsset.get();
+  // it('[Nft Storage] one lump upload content and mint nft', async () => {
+  //   const asset = RandomAsset.get();
 
-    const creator1 = {
-      address: source.toPublicKey(),
-      share: 70,
-      verified: false,
-    };
+  //   const creator1 = {
+  //     address: source.toPublicKey(),
+  //     share: 70,
+  //     verified: false,
+  //   };
 
-    const creator2 = {
-      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk'.toPublicKey(),
-      share: 30,
-      verified: false,
-    };
+  //   const creator2 = {
+  //     address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk'.toPublicKey(),
+  //     share: 30,
+  //     verified: false,
+  //   };
 
-    const res = await Metaplex.mint(
-      {
-        filePath: asset.filePath as string,
-        storageType: 'nftStorage',
-        name: asset.name!,
-        symbol: asset.symbol!,
-        royalty: 20,
-        creators: [creator1, creator2],
-        isMutable: true,
-      },
-      source.toPublicKey(),
-      source.toKeypair()
-    );
+  //   const res = await Metaplex.mint(
+  //     {
+  //       filePath: asset.filePath as string,
+  //       storageType: 'nftStorage',
+  //       name: asset.name!,
+  //       symbol: asset.symbol!,
+  //       royalty: 20,
+  //       creators: [creator1, creator2],
+  //       isMutable: true,
+  //     },
+  //     source.toPublicKey(),
+  //     source.toKeypair()
+  //   );
 
-    (await res.submit()).match(
-      (ok) => {
-        console.log('# mint:', res.unwrap().data);
-        console.log('# sig:', ok);
-      },
-      (ng: Error) => {
-        console.log(ng);
-        assert.fail(ng.message);
-      }
-    );
-  });
+  //   (await res.submit()).match(
+  //     (ok) => {
+  //       console.log('# mint:', res.unwrap().data);
+  //       console.log('# sig:', ok);
+  //     },
+  //     (ng: Error) => {
+  //       console.log(ng);
+  //       assert.fail(ng.message);
+  //     }
+  //   );
+  // });
 
-  it('Raise validation error when upload meta data', async () => {
-    const res = await Metaplex.mint(
-      {
-        filePath: '',
-        name: '',
-        symbol: 'LONG-SYMBOL-LONG',
-        royalty: -100,
-        storageType: 'nftStorage',
-      },
-      source.toPublicKey(),
-      source.toKeypair()
-    );
+  // it('Raise validation error when upload meta data', async () => {
+  //   const res = await Metaplex.mint(
+  //     {
+  //       filePath: '',
+  //       name: '',
+  //       symbol: 'LONG-SYMBOL-LONG',
+  //       royalty: -100,
+  //       storageType: 'nftStorage',
+  //     },
+  //     source.toPublicKey(),
+  //     source.toKeypair()
+  //   );
 
-    res.match(
-      (_) => assert.fail('Unrecognized error'),
-      (_) => {
-        (err: ValidatorError) => {
-          assert.isNotEmpty(err.message);
-          console.log(err.details);
-        };
-      }
-    );
-  });
+  //   res.match(
+  //     (_) => assert.fail('Unrecognized error'),
+  //     (_) => {
+  //       (err: ValidatorError) => {
+  //         assert.isNotEmpty(err.message);
+  //         console.log(err.details);
+  //       };
+  //     }
+  //   );
+  // });
 
   // it('Mint nft and Burn nft', async () => {
   // });

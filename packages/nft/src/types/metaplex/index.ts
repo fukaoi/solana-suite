@@ -1,5 +1,14 @@
-import { CreateNftInput, Nft, MetaplexFileContent } from '@metaplex-foundation/js';
-import { NftStorageMetadata } from '../storage/';
+import {
+  CreateNftInput,
+  Nft,
+  MetaplexFileContent,
+  BigNumber,
+  Option,
+  Signer,
+  CreatorInput,
+} from '@metaplex-foundation/js';
+import { PublicKey } from '@solana/web3.js';
+import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 
 type noNeedOptional =
   | 'payer'
@@ -10,17 +19,47 @@ type noNeedOptional =
 
 export type MetaplexMetaData = Omit<CreateNftInput, noNeedOptional>;
 
-export type InputMetaplexMetadata = Omit<
-  NftStorageMetadata,
-  'seller_fee_basis_points'
-> &
-  Omit<MetaplexMetaData, 'uri' | 'sellerFeeBasisPoints'> & {
-    name: string;
-    symbol: string;
-    royalty: number;
-    filePath: MetaplexFileContent;
-    storageType: 'arweave' | 'nftStorage';
-  };
+export type JsonMetadataAttribute = {
+  trait_type?: string;
+  value?: string;
+  [key: string]: unknown;
+};
+
+export type JsonMetadataProperties = {
+  creators?: Array<{
+    address?: string;
+    share?: number;
+    [key: string]: unknown;
+  }>;
+  files?: Array<{
+    type?: string;
+    uri?: string;
+    [key: string]: unknown;
+  }>;
+  [key: string]: unknown;
+};
+
+export type InputMetaplexMetadata = {
+  name: string;
+  symbol: string;
+  royalty: number;
+  filePath: MetaplexFileContent;
+  storageType: 'arweave' | 'nftStorage';
+  description?: string;
+  external_url?: string;
+  image?: string;
+  attributes?: JsonMetadataAttribute[];
+  properties?: JsonMetadataProperties;
+  isMutable?: boolean;
+  maxSupply?: BigNumber;
+  creators?: CreatorInput[];
+  uses?: Option<Uses>;
+  isCollection?: boolean;
+  collection?: Option<PublicKey>;
+  collectionAuthority?: Option<Signer>;
+  collectionAuthorityIsDelegated?: boolean;
+  collectionIsSized?: boolean;
+};
 
 export type OutputMetaplexMetadata = Omit<
   Nft,

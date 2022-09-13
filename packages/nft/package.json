@@ -45,7 +45,7 @@
     "@solana/buffer-layout": "^4.0.0",
     "@solana/spl-token": "^0.2.0",
     "@solana/web3.js": "^1.47.3",
-    "@metaplex-foundation/js": "0.11.7",
+    "@metaplex-foundation/js": "0.15.0",
     "form-data": "^3.0.1",
     "nft.storage": "^3.3.0",
     "node-fetch": "^3.0.0",

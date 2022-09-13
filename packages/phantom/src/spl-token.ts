@@ -17,7 +17,7 @@ import {
 
 import { Node, Result } from '@solana-suite/shared';
 
-import { AssociatedAccount, Pubkey } from '@solana-suite/core';
+import { AssociatedAccount } from '@solana-suite/core';
 import { InitializeMint } from './types/spl-token';
 
 export namespace SplToken {
