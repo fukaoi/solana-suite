@@ -10,9 +10,7 @@
 ## Summary
 
 
-Solana suite is a convenience package for developing the Solana ecosystem. Using it will speed up your development.
-
-Include @solana/web3.js, @solana/spl-token, Metaplex api, Storage api(nft.storage/arweave), Phantom wallet api.
+Solana suite is a convenience package for developing the Solana ecosystem. Using it will speed up your development.Include @solana/web3.js, @solana/spl-token, Metaplex api, Storage api(nft.storage/arweave), Phantom wallet api.
 By using Solana Suite allows for rapid development of blockchain products.
 
 <img src="https://bafkreibolz2wpbpamryvdlcmbqfrit2wyvpx3ayyrjplth2s32ugp5uk2m.ipfs.nftstorage.link/" width="90%" height="90%" />
