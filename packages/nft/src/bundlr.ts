@@ -31,7 +31,7 @@ export namespace Bundlr {
     return object;
   };
 
-  export const useStorage = (feePayer: Keypair): BundlrStorageDriver => {
+  export const useStorage = (feePayer: BundlrSigner): BundlrStorageDriver => {
     return make(feePayer).storage().driver() as BundlrStorageDriver;
   };
 

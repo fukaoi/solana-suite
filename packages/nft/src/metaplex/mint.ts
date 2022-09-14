@@ -2,7 +2,6 @@ import { PublicKey, Keypair } from '@solana/web3.js';
 import { StorageNftStorage } from '../storage';
 import { Instruction, Result } from '@solana-suite/shared';
 import { StorageArweave } from '../storage';
-import { InternalsMetaplex_Mint } from '../internals/metaplex/_mint';
 import { Validator, ValidatorError } from '../validator';
 import {
   InputMetaplexMetadata,
@@ -23,16 +22,18 @@ import {
 import { NftStorageMetadata } from '../types';
 
 export namespace Metaplex {
+  // original: plugins/nftModule/operations/createNft.ts
   export const createNftBuilder = async (
     params: CreateNftBuilderParams,
+    owner: Keypair,
     feePayer: Keypair
   ) => {
-    const metaplex = Bundlr.make(feePayer);
+    const metaplex = Bundlr.make();
     const useNewMint = Keypair.generate();
-    const payer = metaplex.identity();
-    const updateAuthority = metaplex.identity();
-    const mintAuthority = metaplex.identity();
-    const tokenOwner = metaplex.identity().publicKey;
+    const payer = feePayer;
+    const updateAuthority = owner;
+    const mintAuthority = owner;
+    const tokenOwner = owner.publicKey;
 
     const sftBuilder = await metaplex
       .nfts()
@@ -86,7 +87,13 @@ export namespace Metaplex {
         key: params.createMasterEditionInstructionKey ?? 'createMasterEdition',
       })
       .getInstructions();
-    return new Instruction(inst, [feePayer, useNewMint]);
+    
+    return new Instruction(
+      inst,
+      [feePayer, useNewMint, owner],
+      undefined,
+      useNewMint.publicKey.toString()
+    );
   };
 
   /**
@@ -110,22 +117,23 @@ export namespace Metaplex {
    *   isMutable?: boolean           // enable update()
    *   maxSupply?: BigNumber         // mint copies
    * }
-   * @param {PublicKey} owner        // first minted owner
+   * @param {Keypair} owner          // first minted owner
    * @param {Keypair} feePayer       // fee payer
    * @return Promise<Result<Instruction, Error>>
    */
   export const mint = async (
     input: InputMetaplexMetadata,
-    owner: PublicKey,
-    feePayer: Keypair
-    // ): Promise<Result<Instruction, Error | ValidatorError>> => {
-  ) => {
+    owner: Keypair,
+    feePayer?: Keypair
+  ): Promise<Result<Instruction, Error | ValidatorError>> => {
     const valid = Validator.checkAll<InputMetaplexMetadata>(input);
     if (valid.isErr) {
       return Result.err(valid.error);
     }
 
-    let storageRes!: any;
+    const payer = feePayer ? feePayer : owner;
+
+    let storageRes;
     const { filePath, storageType, royalty, ...reducedMetadata } = input;
     const sellerFeeBasisPoints = MetaplexRoyalty.convertValue(royalty);
 
@@ -141,17 +149,19 @@ export namespace Metaplex {
     };
 
     if (storageType === 'arweave') {
-      storageRes = (
-        await StorageArweave.uploadContent(filePath!, feePayer)
+      storageRes = await (
+        await StorageArweave.uploadContent(filePath!, payer)
       ).unwrap(
         async (ok: string) => {
           storageMetadata.image = ok;
-          return await StorageArweave.uploadMetadata(storageMetadata, feePayer);
+          return await StorageArweave.uploadMetadata(storageMetadata, payer);
         },
-        (err) => err
+        (err) => Result.err(err)
       );
     } else if (storageType === 'nftStorage') {
-      storageRes = (await StorageNftStorage.uploadContent(filePath!)).unwrap(
+      storageRes = await (
+        await StorageNftStorage.uploadContent(filePath!)
+      ).unwrap(
         async (ok: string) => {
           storageMetadata.image = ok;
           return await StorageNftStorage.uploadMetadata(storageMetadata);
@@ -162,18 +172,17 @@ export namespace Metaplex {
       return Result.err(Error('storageType is `arweave` or `nftStorage`'));
     }
 
-    if ((await storageRes).isErr) {
-      return storageRes;
+    if (storageRes.isErr) {
+      return Result.err(storageRes.error);
     }
 
-    const uri = (await storageRes).unwrap();
+    const uri = storageRes.unwrap();
     const mintInput: MetaplexMetaData = {
       uri,
       sellerFeeBasisPoints,
       ...reducedMetadata,
     };
 
-    // return InternalsMetaplex_Mint.create(mintInput, owner, feePayer);
-    return Result.ok(await createNftBuilder(mintInput, feePayer));
+    return Result.ok(await createNftBuilder(mintInput, owner, payer));
   };
 }
