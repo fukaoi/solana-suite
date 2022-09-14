@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -18,35 +19,34 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-import { Keypair } from '@solana/web3.js';
-import { StorageNftStorage, StorageArweave } from '../storage';
-import { Instruction, Result } from '@solana-suite/shared';
-import { Validator } from '../validator';
-import { MetaplexRoyalty } from './royalty';
-import { Bundlr } from '../bundlr';
-import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
-import { findMasterEditionV2Pda, token, TransactionBuilder, } from '@metaplex-foundation/js';
-export var Metaplex;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Metaplex = void 0;
+const web3_js_1 = require("@solana/web3.js");
+const nft_1 = require("@solana-suite/nft");
+const shared_1 = require("@solana-suite/shared");
+const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
+const js_1 = require("@metaplex-foundation/js");
+var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
-    const createNftBuilder = (params, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Metaplex.createNftBuilder = (params, feePayer) => __awaiter(this, void 0, void 0, function* () {
         var _a;
-        const metaplex = Bundlr.make();
-        const useNewMint = Keypair.generate();
-        const payer = feePayer;
-        const updateAuthority = owner;
-        const mintAuthority = owner;
-        const tokenOwner = owner.publicKey;
+        const metaplex = nft_1.Bundlr.make(feePayer);
+        const useNewMint = web3_js_1.Keypair.generate();
+        const payer = metaplex.identity();
+        const updateAuthority = metaplex.identity();
+        const mintAuthority = metaplex.identity();
+        const tokenOwner = metaplex.identity().publicKey;
         const sftBuilder = yield metaplex
             .nfts()
             .builders()
             .createSft(Object.assign(Object.assign({}, params), { payer,
             updateAuthority,
             mintAuthority, freezeAuthority: mintAuthority.publicKey, useNewMint,
-            tokenOwner, tokenAmount: token(1), decimals: 0 }));
+            tokenOwner, tokenAmount: (0, js_1.token)(1), decimals: 0 }));
         const { mintAddress, metadataAddress, tokenAddress } = sftBuilder.getContext();
-        const masterEditionAddress = findMasterEditionV2Pda(mintAddress);
-        const inst = TransactionBuilder.make()
+        const masterEditionAddress = (0, js_1.findMasterEditionV2Pda)(mintAddress);
+        return (js_1.TransactionBuilder.make()
             .setFeePayer(payer)
             .setContext({
             mintAddress,
@@ -58,7 +58,7 @@ export var Metaplex;
             .add(sftBuilder)
             // Create master edition account (prevents further minting).
             .add({
-            instruction: createCreateMasterEditionV3Instruction({
+            instruction: (0, mpl_token_metadata_1.createCreateMasterEditionV3Instruction)({
                 edition: masterEditionAddress,
                 mint: mintAddress,
                 updateAuthority: updateAuthority.publicKey,
@@ -73,10 +73,9 @@ export var Metaplex;
             signers: [payer, mintAuthority, updateAuthority],
             key: (_a = params.createMasterEditionInstructionKey) !== null && _a !== void 0 ? _a : 'createMasterEdition',
         })
-            .getInstructions();
-        return new Instruction(inst, [feePayer, useNewMint, owner], undefined, useNewMint.publicKey.toString());
+            .getInstructions());
     });
-    Metaplex.initNftStorageMetadata = (input, sellerFeeBasisPoints) => {
+    const initNftStorageMetadata = (input, sellerFeeBasisPoints) => {
         return {
             name: input.name,
             symbol: input.symbol,
@@ -113,37 +112,55 @@ export var Metaplex;
      * @param {Keypair} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    Metaplex.mint = (input, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const valid = Validator.checkAll(input);
+    Metaplex.mint = (input, phantom
+    // ): Promise<Result<Instruction, Error | ValidatorError>> => {
+    ) => __awaiter(this, void 0, void 0, function* () {
+        const valid = nft_1.Validator.checkAll(input);
         if (valid.isErr) {
-            return Result.err(valid.error);
+            return shared_1.Result.err(valid.error);
         }
-        const payer = feePayer ? feePayer : owner;
         let storageRes;
         const { filePath, storageType, royalty } = input, reducedMetadata = __rest(input, ["filePath", "storageType", "royalty"]);
-        const sellerFeeBasisPoints = MetaplexRoyalty.convertValue(royalty);
-        const storageMetadata = Metaplex.initNftStorageMetadata(input, sellerFeeBasisPoints);
+        const sellerFeeBasisPoints = nft_1.MetaplexRoyalty.convertValue(royalty);
+        const storageMetadata = initNftStorageMetadata(input, sellerFeeBasisPoints);
         if (storageType === 'arweave') {
-            storageRes = yield (yield StorageArweave.uploadContent(filePath, payer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
+            storageRes = yield (yield nft_1.StorageArweave.uploadContent(filePath, phantom)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 storageMetadata.image = ok;
-                return yield StorageArweave.uploadMetadata(storageMetadata, payer);
-            }), (err) => Result.err(err));
+                return yield nft_1.StorageArweave.uploadMetadata(storageMetadata, phantom);
+            }), (err) => shared_1.Result.err(err));
         }
         else if (storageType === 'nftStorage') {
-            storageRes = yield (yield StorageNftStorage.uploadContent(filePath)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
+            storageRes = yield (yield nft_1.StorageNftStorage.uploadContent(filePath)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 storageMetadata.image = ok;
-                return yield StorageNftStorage.uploadMetadata(storageMetadata);
-            }), (err) => Result.err(err));
+                return yield nft_1.StorageNftStorage.uploadMetadata(storageMetadata);
+            }), (err) => shared_1.Result.err(err));
         }
         else {
-            return Result.err(Error('storageType is `arweave` or `nftStorage`'));
+            return shared_1.Result.err(Error('storageType is `arweave` or `nftStorage`'));
         }
         if (storageRes.isErr) {
-            return Result.err(storageRes.error);
+            return shared_1.Result.err(storageRes.error);
         }
         const uri = storageRes.unwrap();
         const mintInput = Object.assign({ uri,
             sellerFeeBasisPoints }, reducedMetadata);
-        return Result.ok(yield createNftBuilder(mintInput, owner, payer));
+        const instructions = yield Metaplex.createNftBuilder(mintInput, phantom);
+        const connection = shared_1.Node.getConnection();
+        const transaction = new web3_js_1.Transaction();
+        transaction.feePayer = phantom.publicKey;
+        instructions.forEach((inst) => transaction.add(inst));
+        const blockhashObj = yield connection.getLatestBlockhashAndContext();
+        transaction.recentBlockhash = blockhashObj.value.blockhash;
+        const signed = yield phantom.signTransaction(transaction);
+        const sig = yield connection
+            .sendRawTransaction(signed.serialize())
+            .then(shared_1.Result.ok)
+            .catch(shared_1.Result.err);
+        console.log(sig);
+        if (sig.isErr) {
+            return shared_1.Result.err(sig.error);
+        }
+        yield shared_1.Node.confirmedSig(sig.unwrap());
+        return shared_1.Result.ok(sig.unwrap());
     });
-})(Metaplex || (Metaplex = {}));
+})(Metaplex = exports.Metaplex || (exports.Metaplex = {}));

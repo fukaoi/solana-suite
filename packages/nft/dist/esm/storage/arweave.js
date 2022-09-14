@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { useMetaplexFile, } from '@metaplex-foundation/js';
+import { toMetaplexFile, } from '@metaplex-foundation/js';
 import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
 import { Bundlr } from '../bundlr';
 import { Validator } from '../validator';
@@ -21,7 +21,7 @@ export var StorageArweave;
         }
         else if (isBrowser) {
             const filepath = filePath;
-            buffer = useMetaplexFile(filepath, '').buffer;
+            buffer = toMetaplexFile(filepath, '').buffer;
         }
         else {
             return Result.err(Error('Supported environment: only Node.js and Browser js'));
@@ -41,19 +41,19 @@ export var StorageArweave;
             const filepath = filePath;
             const buffer = (yield import('fs')).readFileSync(filepath);
             if (fileOptions) {
-                file = useMetaplexFile(buffer, filepath, fileOptions);
+                file = toMetaplexFile(buffer, filepath, fileOptions);
             }
             else {
-                file = useMetaplexFile(buffer, filepath);
+                file = toMetaplexFile(buffer, filepath);
             }
         }
         else if (isBrowser) {
             const filepath = filePath;
             if (fileOptions) {
-                file = useMetaplexFile(filepath, '', fileOptions);
+                file = toMetaplexFile(filepath, '', fileOptions);
             }
             else {
-                file = useMetaplexFile(filepath, '');
+                file = toMetaplexFile(filepath, '');
             }
         }
         else {
@@ -73,6 +73,7 @@ export var StorageArweave;
         return Bundlr.make(feePayer)
             .nfts()
             .uploadMetadata(metadata)
+            .run()
             .then((res) => Result.ok(res.uri))
             .catch(Result.err);
     });

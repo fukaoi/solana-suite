@@ -39,7 +39,7 @@ describe('Metaplex', () => {
         creators: [creator1, creator2],
         isMutable: true,
       },
-      source.toKeypair(),
+      source.toKeypair()
     );
 
     (await res.submit()).match(
@@ -116,7 +116,7 @@ describe('Metaplex', () => {
         creators: [creator1, creator2],
         isMutable: true,
       },
-      source.toKeypair(),
+      source.toKeypair()
     );
 
     (await res.submit()).match(
@@ -140,7 +140,7 @@ describe('Metaplex', () => {
         royalty: -100,
         storageType: 'nftStorage',
       },
-      source.toKeypair(),
+      source.toKeypair()
     );
 
     res.match(
@@ -153,10 +153,4 @@ describe('Metaplex', () => {
       }
     );
   });
-
-  // it('Mint nft and Burn nft', async () => {
-  // });
-
-  // it('Transfer nft with fee payer', async () => {
-  // });
 });

@@ -18,25 +18,22 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-import { Keypair } from '@solana/web3.js';
-import { StorageNftStorage, StorageArweave } from '../storage';
-import { Instruction, Result } from '@solana-suite/shared';
-import { Validator } from '../validator';
-import { MetaplexRoyalty } from './royalty';
-import { Bundlr } from '../bundlr';
+import { Keypair, Transaction } from '@solana/web3.js';
+import { StorageNftStorage, StorageArweave, Validator, MetaplexRoyalty, Bundlr, } from '@solana-suite/nft';
+import { Node, Result } from '@solana-suite/shared';
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
 import { findMasterEditionV2Pda, token, TransactionBuilder, } from '@metaplex-foundation/js';
 export var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
-    const createNftBuilder = (params, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Metaplex.createNftBuilder = (params, feePayer) => __awaiter(this, void 0, void 0, function* () {
         var _a;
-        const metaplex = Bundlr.make();
+        const metaplex = Bundlr.make(feePayer);
         const useNewMint = Keypair.generate();
-        const payer = feePayer;
-        const updateAuthority = owner;
-        const mintAuthority = owner;
-        const tokenOwner = owner.publicKey;
+        const payer = metaplex.identity();
+        const updateAuthority = metaplex.identity();
+        const mintAuthority = metaplex.identity();
+        const tokenOwner = metaplex.identity().publicKey;
         const sftBuilder = yield metaplex
             .nfts()
             .builders()
@@ -46,7 +43,7 @@ export var Metaplex;
             tokenOwner, tokenAmount: token(1), decimals: 0 }));
         const { mintAddress, metadataAddress, tokenAddress } = sftBuilder.getContext();
         const masterEditionAddress = findMasterEditionV2Pda(mintAddress);
-        const inst = TransactionBuilder.make()
+        return (TransactionBuilder.make()
             .setFeePayer(payer)
             .setContext({
             mintAddress,
@@ -73,10 +70,9 @@ export var Metaplex;
             signers: [payer, mintAuthority, updateAuthority],
             key: (_a = params.createMasterEditionInstructionKey) !== null && _a !== void 0 ? _a : 'createMasterEdition',
         })
-            .getInstructions();
-        return new Instruction(inst, [feePayer, useNewMint, owner], undefined, useNewMint.publicKey.toString());
+            .getInstructions());
     });
-    Metaplex.initNftStorageMetadata = (input, sellerFeeBasisPoints) => {
+    const initNftStorageMetadata = (input, sellerFeeBasisPoints) => {
         return {
             name: input.name,
             symbol: input.symbol,
@@ -113,20 +109,21 @@ export var Metaplex;
      * @param {Keypair} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    Metaplex.mint = (input, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Metaplex.mint = (input, phantom
+    // ): Promise<Result<Instruction, Error | ValidatorError>> => {
+    ) => __awaiter(this, void 0, void 0, function* () {
         const valid = Validator.checkAll(input);
         if (valid.isErr) {
             return Result.err(valid.error);
         }
-        const payer = feePayer ? feePayer : owner;
         let storageRes;
         const { filePath, storageType, royalty } = input, reducedMetadata = __rest(input, ["filePath", "storageType", "royalty"]);
         const sellerFeeBasisPoints = MetaplexRoyalty.convertValue(royalty);
-        const storageMetadata = Metaplex.initNftStorageMetadata(input, sellerFeeBasisPoints);
+        const storageMetadata = initNftStorageMetadata(input, sellerFeeBasisPoints);
         if (storageType === 'arweave') {
-            storageRes = yield (yield StorageArweave.uploadContent(filePath, payer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
+            storageRes = yield (yield StorageArweave.uploadContent(filePath, phantom)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 storageMetadata.image = ok;
-                return yield StorageArweave.uploadMetadata(storageMetadata, payer);
+                return yield StorageArweave.uploadMetadata(storageMetadata, phantom);
             }), (err) => Result.err(err));
         }
         else if (storageType === 'nftStorage') {
@@ -144,6 +141,23 @@ export var Metaplex;
         const uri = storageRes.unwrap();
         const mintInput = Object.assign({ uri,
             sellerFeeBasisPoints }, reducedMetadata);
-        return Result.ok(yield createNftBuilder(mintInput, owner, payer));
+        const instructions = yield Metaplex.createNftBuilder(mintInput, phantom);
+        const connection = Node.getConnection();
+        const transaction = new Transaction();
+        transaction.feePayer = phantom.publicKey;
+        instructions.forEach((inst) => transaction.add(inst));
+        const blockhashObj = yield connection.getLatestBlockhashAndContext();
+        transaction.recentBlockhash = blockhashObj.value.blockhash;
+        const signed = yield phantom.signTransaction(transaction);
+        const sig = yield connection
+            .sendRawTransaction(signed.serialize())
+            .then(Result.ok)
+            .catch(Result.err);
+        console.log(sig);
+        if (sig.isErr) {
+            return Result.err(sig.error);
+        }
+        yield Node.confirmedSig(sig.unwrap());
+        return Result.ok(sig.unwrap());
     });
 })(Metaplex || (Metaplex = {}));

@@ -1,8 +1,10 @@
-import { PublicKey, Keypair } from '@solana/web3.js';
+import { Keypair } from '@solana/web3.js';
 import { Instruction, Result } from '@solana-suite/shared';
 import { ValidatorError } from '../validator';
 import { InputMetaplexMetadata } from '../types/metaplex/index';
+import { NftStorageMetadata } from '../types';
 export declare namespace Metaplex {
+    const initNftStorageMetadata: (input: InputMetaplexMetadata, sellerFeeBasisPoints: number) => NftStorageMetadata;
     /**
      * Upload content and NFT mint
      *
@@ -12,6 +14,7 @@ export declare namespace Metaplex {
      *   symbol: string             // nft ticker symbol
      *   filePath: string | File    // nft ticker symbol
      *   royalty: number            // royalty percentage
+     *   storageType: 'arweave'|'nftStorage' // royalty percentage
      *   description?: string       // nft content description
      *   external_url?: string      // landing page, home page uri, related url
      *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
@@ -23,9 +26,9 @@ export declare namespace Metaplex {
      *   isMutable?: boolean           // enable update()
      *   maxSupply?: BigNumber         // mint copies
      * }
-     * @param {PublicKey} owner        // first minted owner
+     * @param {Keypair} owner          // first minted owner
      * @param {Keypair} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    const mint: (input: InputMetaplexMetadata, owner: PublicKey, feePayer: Keypair) => Promise<Result<Instruction, Error | ValidatorError>>;
+    const mint: (input: InputMetaplexMetadata, owner: Keypair, feePayer?: Keypair) => Promise<Result<Instruction, Error | ValidatorError>>;
 }

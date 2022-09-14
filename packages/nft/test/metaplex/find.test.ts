@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { Metaplex } from '../../src/metaplex';
 
 describe('Metaplex.find', () => {
-  it('Find owner info', async () => {
+  it.skip('Find owner info', async () => {
     const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
     const res = await Metaplex.findByOwner(owner.toPublicKey());
     console.log(res);

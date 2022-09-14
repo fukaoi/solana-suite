@@ -1,10 +1,9 @@
-import { Keypair } from '@solana/web3.js';
-import { Instruction, Result } from '@solana-suite/shared';
-import { ValidatorError } from '../validator';
-import { InputMetaplexMetadata } from '../types/metaplex/index';
-import { NftStorageMetadata } from '../types';
+/// <reference types="@solana/web3.js" />
+import { InputMetaplexMetadata, Phantom } from '@solana-suite/nft';
+import { Result } from '@solana-suite/shared';
+import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 export declare namespace Metaplex {
-    const initNftStorageMetadata: (input: InputMetaplexMetadata, sellerFeeBasisPoints: number) => NftStorageMetadata;
+    const createNftBuilder: (params: CreateNftBuilderParams, feePayer: Phantom) => Promise<import("@solana/web3.js").TransactionInstruction[]>;
     /**
      * Upload content and NFT mint
      *
@@ -30,5 +29,5 @@ export declare namespace Metaplex {
      * @param {Keypair} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    const mint: (input: InputMetaplexMetadata, owner: Keypair, feePayer?: Keypair) => Promise<Result<Instruction, Error | ValidatorError>>;
+    const mint: (input: InputMetaplexMetadata, phantom: Phantom) => Promise<Result.Ok<string, Error> | Result.Err<string, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
 }

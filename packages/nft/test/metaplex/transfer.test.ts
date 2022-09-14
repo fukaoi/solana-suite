@@ -40,7 +40,6 @@ describe('Metaplex', () => {
         creators: [creator1, creator2],
         isMutable: true,
       },
-      source.toPublicKey(),
       source.toKeypair()
     );
 

@@ -1,7 +1,6 @@
 import { PublicKey, Keypair } from '@solana/web3.js';
-import { StorageNftStorage } from '../storage';
+import { StorageNftStorage, StorageArweave } from '../storage';
 import { Instruction, Result } from '@solana-suite/shared';
-import { StorageArweave } from '../storage';
 import { Validator, ValidatorError } from '../validator';
 import {
   InputMetaplexMetadata,
@@ -23,7 +22,7 @@ import { NftStorageMetadata } from '../types';
 
 export namespace Metaplex {
   // original: plugins/nftModule/operations/createNft.ts
-  export const createNftBuilder = async (
+  const createNftBuilder = async (
     params: CreateNftBuilderParams,
     owner: Keypair,
     feePayer: Keypair
@@ -87,13 +86,29 @@ export namespace Metaplex {
         key: params.createMasterEditionInstructionKey ?? 'createMasterEdition',
       })
       .getInstructions();
-    
+
     return new Instruction(
       inst,
       [feePayer, useNewMint, owner],
       undefined,
       useNewMint.publicKey.toString()
     );
+  };
+
+  export const initNftStorageMetadata = (
+    input: InputMetaplexMetadata,
+    sellerFeeBasisPoints: number
+  ): NftStorageMetadata => {
+    return {
+      name: input.name,
+      symbol: input.symbol,
+      description: input.description,
+      seller_fee_basis_points: sellerFeeBasisPoints,
+      external_url: input.external_url,
+      attributes: input.attributes,
+      properties: input.properties,
+      image: '',
+    };
   };
 
   /**
@@ -136,17 +151,7 @@ export namespace Metaplex {
     let storageRes;
     const { filePath, storageType, royalty, ...reducedMetadata } = input;
     const sellerFeeBasisPoints = MetaplexRoyalty.convertValue(royalty);
-
-    const storageMetadata: NftStorageMetadata = {
-      name: input.name,
-      symbol: input.symbol,
-      description: input.description,
-      seller_fee_basis_points: sellerFeeBasisPoints,
-      external_url: input.external_url,
-      attributes: input.attributes,
-      properties: input.properties,
-      image: '',
-    };
+    const storageMetadata = initNftStorageMetadata(input, sellerFeeBasisPoints);
 
     if (storageType === 'arweave') {
       storageRes = await (
