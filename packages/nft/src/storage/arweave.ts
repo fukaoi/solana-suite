@@ -10,6 +10,7 @@ import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
 import { NftStorageMetadata } from '../types/storage';
 import { Bundlr } from '../bundlr';
 import { Validator, ValidatorError } from '../validator';
+import {BundlrSigner} from '../types';
 
 export interface MetaplexFileOptions {
   readonly displayName: string;
@@ -22,7 +23,7 @@ export interface MetaplexFileOptions {
 export namespace StorageArweave {
   export const getUploadPrice = async (
     filePath: MetaplexFileContent,
-    feePayer: Keypair
+    feePayer: BundlrSigner
   ): Promise<Result<{ price: number; currency: Currency }, Error>> => {
     let buffer!: Buffer;
     if (isNode) {
@@ -51,7 +52,7 @@ export namespace StorageArweave {
 
   export const uploadContent = async (
     filePath: MetaplexFileContent,
-    feePayer: Keypair,
+    feePayer: BundlrSigner,
     fileOptions?: MetaplexFileOptions // only arweave, not nft-storage
   ): Promise<Result<string, Error>> => {
     debugLog('# upload content: ', filePath);
@@ -86,7 +87,7 @@ export namespace StorageArweave {
 
   export const uploadMetadata = async (
     metadata: NftStorageMetadata,
-    feePayer: Keypair
+    feePayer: BundlrSigner
   ): Promise<Result<string, Error | ValidatorError>> => {
     debugLog('# upload meta data: ', metadata);
 
