@@ -12,10 +12,12 @@ import { NftStorageMetadata } from '../types/storage';
 import { Validator, ValidatorError } from '../validator';
 
 export namespace StorageNftStorage {
+  let isDisplayWarning = false;
   const getNftStorageApiKey = (): string => {
     if (!Constants.nftStorageApiKey) {
-      console.warn(
-        `
+      if (!isDisplayWarning) {
+        console.warn(
+          `
         [Warning]
         --------------------------------------
         If will use @solana-suite/nft package
@@ -23,7 +25,9 @@ export namespace StorageNftStorage {
         can get apiKey from https://nft.storage/
         --------------------------------------
         `
-      );
+        );
+        isDisplayWarning = true;
+      }
       return Constants.NFT_STORAGE_API_KEY;
     } else {
       return Constants.nftStorageApiKey;
@@ -44,6 +48,7 @@ export namespace StorageNftStorage {
       const filepath = filePath as string;
       file = (await import('fs')).readFileSync(filepath);
     } else if (isBrowser) {
+      console.log('# nft.storage data: ', filePath);
       const filepath = filePath as any;
       file = toMetaplexFile(filepath, '').buffer;
     } else {

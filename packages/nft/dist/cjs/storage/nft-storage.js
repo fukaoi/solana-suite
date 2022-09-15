@@ -39,9 +39,11 @@ const js_1 = require("@metaplex-foundation/js");
 const validator_1 = require("../validator");
 var StorageNftStorage;
 (function (StorageNftStorage) {
+    let isDisplayWarning = false;
     const getNftStorageApiKey = () => {
         if (!shared_1.Constants.nftStorageApiKey) {
-            console.warn(`
+            if (!isDisplayWarning) {
+                console.warn(`
         [Warning]
         --------------------------------------
         If will use @solana-suite/nft package
@@ -49,6 +51,8 @@ var StorageNftStorage;
         can get apiKey from https://nft.storage/
         --------------------------------------
         `);
+                isDisplayWarning = true;
+            }
             return shared_1.Constants.NFT_STORAGE_API_KEY;
         }
         else {
@@ -65,6 +69,7 @@ var StorageNftStorage;
             file = (yield Promise.resolve().then(() => __importStar(require('fs')))).readFileSync(filepath);
         }
         else if (shared_1.isBrowser) {
+            console.log('# nft.storage data: ', filePath);
             const filepath = filePath;
             file = (0, js_1.toMetaplexFile)(filepath, '').buffer;
         }

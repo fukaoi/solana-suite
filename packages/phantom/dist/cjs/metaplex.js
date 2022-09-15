@@ -37,8 +37,6 @@ var Metaplex;
         const updateAuthority = metaplex.identity();
         const mintAuthority = metaplex.identity();
         const tokenOwner = metaplex.identity().publicKey;
-        console.log('# useNewMint: ', useNewMint.publicKey.toString());
-        console.log('# payer: ', payer.publicKey.toString());
         const sftBuilder = yield metaplex
             .nfts()
             .builders()
@@ -126,6 +124,7 @@ var Metaplex;
             return shared_1.Result.err(storageRes.error);
         }
         const uri = storageRes.unwrap();
+        console.log('# upload content url:', uri);
         const mintInput = Object.assign({ uri,
             sellerFeeBasisPoints }, reducedMetadata);
         const connection = shared_1.Node.getConnection();

@@ -19,7 +19,7 @@ import {
   Bundlr,
   NftStorageMetadata,
 } from '@solana-suite/nft';
-import { Node, Result } from '@solana-suite/shared';
+import { debugLog, Node, Result } from '@solana-suite/shared';
 import { InitializeMint, Phantom } from './types';
 
 export namespace Metaplex {
@@ -157,6 +157,7 @@ export namespace Metaplex {
     }
 
     const uri = storageRes.unwrap();
+    console.log('# upload content url:', uri);
     const mintInput: MetaplexMetaData = {
       uri,
       sellerFeeBasisPoints,
