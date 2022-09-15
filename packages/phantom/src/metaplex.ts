@@ -35,9 +35,6 @@ export namespace Metaplex {
     const mintAuthority = metaplex.identity();
     const tokenOwner = metaplex.identity().publicKey;
 
-    console.log('# useNewMint: ', useNewMint.publicKey.toString());
-    console.log('# payer: ', payer.publicKey.toString());
-
     const sftBuilder = await metaplex
       .nfts()
       .builders()
