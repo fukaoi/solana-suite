@@ -4,5 +4,5 @@ export type BundlrSigner = Keypair | Phantom | undefined;
 
 export type Phantom = {
   publicKey: PublicKey
-  //original: @solana-suite/phantom/types/phantom.ts
+  // original: @solana-suite/phantom/types/phantom.ts
 };

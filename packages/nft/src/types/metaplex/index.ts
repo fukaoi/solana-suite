@@ -26,16 +26,16 @@ export type JsonMetadataAttribute = {
 };
 
 export type JsonMetadataProperties = {
-  creators?: Array<{
+  creators?: {
     address?: string;
     share?: number;
     [key: string]: unknown;
-  }>;
-  files?: Array<{
+  }[];
+  files?: {
     type?: string;
     uri?: string;
     [key: string]: unknown;
-  }>;
+  }[];
   [key: string]: unknown;
 };
 
