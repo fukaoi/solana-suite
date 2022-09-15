@@ -1,8 +1,8 @@
 import {
-  useMetaplexFile,
   MetaplexFile,
   Currency,
   MetaplexFileContent,
+  toMetaplexFile,
 } from '@metaplex-foundation/js';
 
 import { Keypair } from '@solana/web3.js';
@@ -10,6 +10,7 @@ import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
 import { NftStorageMetadata } from '../types/storage';
 import { Bundlr } from '../bundlr';
 import { Validator, ValidatorError } from '../validator';
+import {BundlrSigner} from '../types';
 
 export interface MetaplexFileOptions {
   readonly displayName: string;
@@ -22,7 +23,7 @@ export interface MetaplexFileOptions {
 export namespace StorageArweave {
   export const getUploadPrice = async (
     filePath: MetaplexFileContent,
-    feePayer: Keypair
+    feePayer: BundlrSigner
   ): Promise<Result<{ price: number; currency: Currency }, Error>> => {
     let buffer!: Buffer;
     if (isNode) {
@@ -30,7 +31,7 @@ export namespace StorageArweave {
       buffer = (await import('fs')).readFileSync(filepath);
     } else if (isBrowser) {
       const filepath = filePath as any;
-      buffer = useMetaplexFile(filepath, '').buffer;
+      buffer = toMetaplexFile(filepath, '').buffer;
     } else {
       return Result.err(
         Error('Supported environment: only Node.js and Browser js')
@@ -51,7 +52,7 @@ export namespace StorageArweave {
 
   export const uploadContent = async (
     filePath: MetaplexFileContent,
-    feePayer: Keypair,
+    feePayer: BundlrSigner,
     fileOptions?: MetaplexFileOptions // only arweave, not nft-storage
   ): Promise<Result<string, Error>> => {
     debugLog('# upload content: ', filePath);
@@ -61,16 +62,16 @@ export namespace StorageArweave {
       const filepath = filePath as string;
       const buffer = (await import('fs')).readFileSync(filepath);
       if (fileOptions) {
-        file = useMetaplexFile(buffer, filepath, fileOptions);
+        file = toMetaplexFile(buffer, filepath, fileOptions);
       } else {
-        file = useMetaplexFile(buffer, filepath);
+        file = toMetaplexFile(buffer, filepath);
       }
     } else if (isBrowser) {
       const filepath = filePath as any;
       if (fileOptions) {
-        file = useMetaplexFile(filepath, '', fileOptions);
+        file = toMetaplexFile(filepath, '', fileOptions);
       } else {
-        file = useMetaplexFile(filepath, '');
+        file = toMetaplexFile(filepath, '');
       }
     } else {
       return Result.err(
@@ -86,7 +87,7 @@ export namespace StorageArweave {
 
   export const uploadMetadata = async (
     metadata: NftStorageMetadata,
-    feePayer: Keypair
+    feePayer: BundlrSigner
   ): Promise<Result<string, Error | ValidatorError>> => {
     debugLog('# upload meta data: ', metadata);
 
@@ -98,6 +99,7 @@ export namespace StorageArweave {
     return Bundlr.make(feePayer)
       .nfts()
       .uploadMetadata(metadata)
+      .run()
       .then((res) => Result.ok(res.uri))
       .catch(Result.err);
   };

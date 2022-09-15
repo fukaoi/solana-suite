@@ -11,22 +11,20 @@ import {
   SystemProgram,
   PublicKey,
   Keypair,
-  Connection,
+  TransactionInstruction,
 } from '@solana/web3.js';
 
-import {
-  Node,
-  Result,
-} from '@solana-suite/shared';
+import { Node, Result } from '@solana-suite/shared';
 
-import {AssociatedAccount} from '@solana-suite/core';
+import { AssociatedAccount } from '@solana-suite/core';
+import { InitializeMint, Phantom } from './types';
 
 export namespace SplToken {
-  const initMint = async (
-    connection: Connection,
+  const createTokenBuilder = async (
     owner: PublicKey,
-    mintDecimal: number,
-  ) => {
+    mintDecimal: number
+  ): Promise<InitializeMint> => {
+    const connection = Node.getConnection();
     const keypair = Keypair.generate();
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
 
@@ -49,53 +47,41 @@ export namespace SplToken {
     );
 
     transaction.feePayer = owner;
-    const blockhashObj = await connection.getRecentBlockhash();
-    // since solana v0.1.8
-    // const blockhashObj = await connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhashObj.blockhash;
-    transaction.partialSign(keypair)
+    const blockhashObj = await connection.getLatestBlockhashAndContext();
+    transaction.recentBlockhash = blockhashObj.value.blockhash;
+    transaction.partialSign(keypair);
 
-    return Result.ok({tokenKey: keypair.publicKey, tx: transaction});
-  }
+    return { mint: keypair.publicKey, tx: transaction };
+  };
 
+  // select 'new token'
   export const mint = async (
     owner: PublicKey,
     cluster: string,
     totalAmount: number,
     mintDecimal: number,
-    signTransaction: (tx: Transaction | Transaction[]) => any,
+    phantom: Phantom
   ): Promise<Result<string, Error>> => {
-    Node.changeConnection({cluster});
+    Node.changeConnection({ cluster });
     const connection = Node.getConnection();
     const tx = new Transaction();
 
-    const txData1 = await initMint(
-      connection,
-      owner,
-      mintDecimal,
+    const builder = await createTokenBuilder(owner, mintDecimal);
+    const data = await AssociatedAccount.makeOrCreateInstruction(
+      builder.mint,
+      owner
     );
-
-    if (txData1.isErr) return Result.err(txData1.error);
-
-    const tokenKey = txData1.unwrap().tokenKey;
-
-    const txData2 =
-      await AssociatedAccount.get(
-        connection,
-        txData1.unwrap().tokenKey,
-        owner,
-      );
-
-    if (txData2.isErr) return Result.err(txData2.error);
-
-    const tokenAccount = txData2.unwrap().account;
-
-    tx.add(txData2.unwrap().tx);
+    tx.add(data.unwrap().inst as TransactionInstruction);
+    const txData = {
+      tokenAccount: data.unwrap().tokenAccount.toPublicKey(),
+      mint: builder.mint,
+      tx: builder.tx,
+    };
 
     const transaction = tx.add(
       createMintToCheckedInstruction(
-        tokenKey,
-        tokenAccount,
+        txData.mint,
+        txData.tokenAccount,
         owner,
         totalAmount,
         mintDecimal,
@@ -105,76 +91,80 @@ export namespace SplToken {
     );
 
     transaction.feePayer = owner;
-    const blockhashObj = await connection.getRecentBlockhash();
-    // since solana v0.1.8
-    // const blockhashObj = await connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhashObj.blockhash;
+    const blockhashObj = await connection.getLatestBlockhashAndContext();
+    transaction.recentBlockhash = blockhashObj.value.blockhash;
 
-    const signed = await signTransaction([txData1.unwrap().tx, transaction]);
+    const signed = await phantom.signAllTransactions([txData.tx, transaction]);
 
+    // todo: refactoring
     for (let sign of signed) {
-      const sig = await connection.sendRawTransaction(sign.serialize()).then(Result.ok).catch(Result.err);
-      if (sig.isErr) return Result.err(sig.error);
-      await T.confirmedSig(sig.value)
-    };
+      const sig = await connection
+        .sendRawTransaction(sign.serialize())
+        .then(Result.ok)
+        .catch(Result.err);
+      if (sig.isErr) {
+        return Result.err(sig.error);
+      }
+      await Node.confirmedSig(sig.unwrap());
+    }
 
-    return Result.ok(tokenKey.toBase58());
-  }
+    return Result.ok(txData.mint.toString());
+  };
 
+  // select 'add token'
   export const addMinting = async (
     tokenKey: PublicKey,
     owner: PublicKey,
     cluster: string,
     totalAmount: number,
     mintDecimal: number,
-    signTransaction: (tx: Transaction | Transaction[]) => any,
+    phantom: Phantom
   ): Promise<Result<string, Error>> => {
-    Node.changeConnection({cluster});
+    Node.changeConnection({ cluster });
     const connection = Node.getConnection();
     const tx = new Transaction();
 
-    const txData1 =
-      await AssociatedAccount.get(
-        connection,
-        tokenKey,
-        owner,
-      );
-
-    if (txData1.isErr) return Result.err(txData1.error);
-
-    const tokenAccount = txData1.unwrap().account;
-
-    console.log('tokenAccount: ', tokenAccount.toBase58());
-    console.log('tx: ', txData1.unwrap().tx);
-
-    tx.add(txData1.unwrap().tx);
-
-    const transaction = tx.add(
-      createMintToCheckedInstruction(
-        tokenKey,
-        tokenAccount,
-        owner,
-        totalAmount,
-        mintDecimal,
-        [],
-        TOKEN_PROGRAM_ID
-      )
+    const transaction = (
+      await AssociatedAccount.makeOrCreateInstruction(tokenKey, owner)
+    ).unwrap(
+      (ok) => {
+        tx.add(ok.inst as TransactionInstruction);
+        return tx.add(
+          createMintToCheckedInstruction(
+            tokenKey,
+            ok.tokenAccount.toPublicKey(),
+            owner,
+            totalAmount,
+            mintDecimal,
+            [],
+            TOKEN_PROGRAM_ID
+          )
+        );
+      },
+      (err) => err
     );
 
+    if ('message' in transaction) {
+      return Result.err(transaction);
+    }
+
     transaction.feePayer = owner;
-    const blockhashObj = await connection.getRecentBlockhash();
-    // since solana v0.1.8
-    // const blockhashObj = await connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhashObj.blockhash;
+    const blockhashObj = await connection.getLatestBlockhashAndContext();
+    transaction.recentBlockhash = blockhashObj.value.blockhash;
 
-    const signed = await signTransaction([transaction]);
+    const signed = await phantom.signAllTransactions([transaction]);
 
+    // todo: refactoring
     for (let sign of signed) {
-      const sig = await connection.sendRawTransaction(sign.serialize()).then(Result.ok).catch(Result.err);
-      if (sig.isErr) return Result.err(sig.error);
-      await Node.confirmedSig(sig.value)
-    };
-
+      const sig = await connection
+        .sendRawTransaction(sign.serialize())
+        .then(Result.ok)
+        .catch(Result.err);
+      if (sig.isErr) {
+        return Result.err(sig.error);
+      }
+      await Node.confirmedSig(sig.unwrap());
+    }
     return Result.ok(tokenKey.toBase58());
-  }
+  };
 }

@@ -15,29 +15,32 @@ export var Metaplex;
         // ) => {
         const allData = yield Bundlr.make()
             .nfts()
-            .findAllByOwner(owner)
+            .findAllByOwner({ owner })
+            .run()
             .then(Result.ok)
             .catch(Result.err);
         if (allData.isErr) {
             return Result.err(allData.error);
         }
-        const res = allData.unwrap().map((d) => {
-            return {
-                mint: d.mint.toString(),
-                updateAuthority: d.updateAuthority.toString(),
-                name: d.name,
-                symbol: d.symbol,
-                uri: d.uri,
-                royalty: d.sellerFeeBasisPoints,
-                creators: d.creators,
-                isMutable: d.isMutable,
-                editionNonce: d.editionNonce,
-                tokenStandard: d.tokenStandard,
-                collection: d.collection,
-                primarySaleHappened: d.primarySaleHappened,
-                uses: d.uses,
-            };
-        });
-        return Result.ok(res);
+        console.log(allData);
+        // const res = allData.unwrap().map((d) => {
+        //   return {
+        //     mint: d.mint.toString(),
+        //     updateAuthority: d.updateAuthority.toString(),
+        //     name: d.name,
+        //     symbol: d.symbol,
+        //     uri: d.uri,
+        //     royalty: d.sellerFeeBasisPoints,
+        //     creators: d.creators,
+        //     isMutable: d.isMutable,
+        //     editionNonce: d.editionNonce,
+        //     tokenStandard: d.tokenStandard,
+        //     collection: d.collection,
+        //     primarySaleHappened: d.primarySaleHappened,
+        //     uses: d.uses,
+        //   };
+        // });
+        // return Result.ok(res);
+        return Result.ok([]);
     });
 })(Metaplex || (Metaplex = {}));

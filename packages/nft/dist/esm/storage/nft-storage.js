@@ -9,13 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { NFTStorage, Blob } from 'nft.storage';
 import { Constants, Result, isNode, isBrowser, debugLog, } from '@solana-suite/shared';
-import { useMetaplexFile } from '@metaplex-foundation/js';
+import { toMetaplexFile } from '@metaplex-foundation/js';
 import { Validator } from '../validator';
 export var StorageNftStorage;
 (function (StorageNftStorage) {
+    let isDisplayWarning = false;
     const getNftStorageApiKey = () => {
         if (!Constants.nftStorageApiKey) {
-            console.warn(`
+            if (!isDisplayWarning) {
+                console.warn(`
         [Warning]
         --------------------------------------
         If will use @solana-suite/nft package
@@ -23,6 +25,8 @@ export var StorageNftStorage;
         can get apiKey from https://nft.storage/
         --------------------------------------
         `);
+                isDisplayWarning = true;
+            }
             return Constants.NFT_STORAGE_API_KEY;
         }
         else {
@@ -39,8 +43,9 @@ export var StorageNftStorage;
             file = (yield import('fs')).readFileSync(filepath);
         }
         else if (isBrowser) {
+            console.log('# nft.storage data: ', filePath);
             const filepath = filePath;
-            file = useMetaplexFile(filepath, '').buffer;
+            file = toMetaplexFile(filepath, '').buffer;
         }
         else {
             return Result.err(Error('Supported environment: only Node.js and Browser js'));

@@ -21,14 +21,13 @@ describe('SolNative', () => {
   });
 
   it('Get transfer history with transfer destination filter', async () => {
-    const destination = '2wxMtAe3nwQu5Ai2XuMgX4gxvYhTvXtedrvo7p9jDepn';
     const res = await SolNative.getHistory(searchTokenKey.toPublicKey(), {
       directionFilter: DirectionFilter.Dest,
     });
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {
       assert.isNotNull(v.date);
-      assert.equal(v.info.destination, destination);
+      assert.equal(v.info.destination, searchTokenKey);
     });
   });
 

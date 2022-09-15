@@ -47,7 +47,7 @@ var StorageArweave;
         }
         else if (shared_1.isBrowser) {
             const filepath = filePath;
-            buffer = (0, js_1.useMetaplexFile)(filepath, '').buffer;
+            buffer = (0, js_1.toMetaplexFile)(filepath, '').buffer;
         }
         else {
             return shared_1.Result.err(Error('Supported environment: only Node.js and Browser js'));
@@ -67,19 +67,19 @@ var StorageArweave;
             const filepath = filePath;
             const buffer = (yield Promise.resolve().then(() => __importStar(require('fs')))).readFileSync(filepath);
             if (fileOptions) {
-                file = (0, js_1.useMetaplexFile)(buffer, filepath, fileOptions);
+                file = (0, js_1.toMetaplexFile)(buffer, filepath, fileOptions);
             }
             else {
-                file = (0, js_1.useMetaplexFile)(buffer, filepath);
+                file = (0, js_1.toMetaplexFile)(buffer, filepath);
             }
         }
         else if (shared_1.isBrowser) {
             const filepath = filePath;
             if (fileOptions) {
-                file = (0, js_1.useMetaplexFile)(filepath, '', fileOptions);
+                file = (0, js_1.toMetaplexFile)(filepath, '', fileOptions);
             }
             else {
-                file = (0, js_1.useMetaplexFile)(filepath, '');
+                file = (0, js_1.toMetaplexFile)(filepath, '');
             }
         }
         else {
@@ -99,6 +99,7 @@ var StorageArweave;
         return bundlr_1.Bundlr.make(feePayer)
             .nfts()
             .uploadMetadata(metadata)
+            .run()
             .then((res) => shared_1.Result.ok(res.uri))
             .catch(shared_1.Result.err);
     });
