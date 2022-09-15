@@ -6,8 +6,9 @@
 ![test:shared workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-shared.yml/badge.svg)
 ![test:nft workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-nft.yml/badge.svg)
 
+<br />
 
-## Summary
+# Summary
 
 
 :star:
@@ -27,10 +28,10 @@ Compared to using web3.js alone, the amount of source code is , allowing you to 
 (* A sample code in this image compares the source code for writing memo data to a transaction)
 
 
-## Motivation
+# Motivation
 Solana is a flexible, versatile, and wonderful blockchain. However, it backfires and makes it difficult to quickly develop what you want to do. We aim to make it easy for engineers who are not familiar with solana to develop with less source code
 
-## Features
+# Features
 ### Easy to use all in package
 >Create wallet, Transfer SOL/SPL-TOKEN, Mint SPL-TOKEN/NFT, Upload
 storage(nft.storage/arweave), Connect phantom wallet,,,,
@@ -57,8 +58,9 @@ single transaction, unnecessary access to the RPC server can be avoided.
 >We support multisig as much as possible, transfer, mint SPL-TOKEN, making memos
 
 
-## Official Page
+# Official Page
 :house: https://atonoy.github.io/solana-suite/
-## Docs
+
+# Docs
 :books: coming soon
 
