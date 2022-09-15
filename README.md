@@ -1,4 +1,6 @@
-<img src="https://bafkreibksjy2sdskvcrrlse2lwbskasub36bspidube7rlozhrd7wssg6i.ipfs.nftstorage.link/" width="70%" height="70%" />
+<img src="https://bafkreibksjy2sdskvcrrlse2lwbskasub36bspidube7rlozhrd7wssg6i.ipfs.nftstorage.link/" width="75%" height="75%" />
+
+<br />
 
 ![compile workflow](https://github.com/atonoy/solana-suite/actions/workflows/compile.yml/badge.svg)
 ![lint workflow](https://github.com/atonoy/solana-suite/actions/workflows/lint.yml/badge.svg)
