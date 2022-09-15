@@ -11,21 +11,20 @@ import {
   SystemProgram,
   PublicKey,
   Keypair,
-  Connection,
   TransactionInstruction,
 } from '@solana/web3.js';
 
 import { Node, Result } from '@solana-suite/shared';
 
 import { AssociatedAccount } from '@solana-suite/core';
-import { InitializeMint } from './types/spl-token';
+import { InitializeMint, Phantom } from './types';
 
 export namespace SplToken {
-  const initMint = async (
-    connection: Connection,
+  const createTokenBuilder = async (
     owner: PublicKey,
     mintDecimal: number
-  ): Promise<Result<InitializeMint, Error>> => {
+  ): Promise<InitializeMint> => {
+    const connection = Node.getConnection();
     const keypair = Keypair.generate();
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
 
@@ -48,13 +47,11 @@ export namespace SplToken {
     );
 
     transaction.feePayer = owner;
-    const blockhashObj = await connection.getRecentBlockhash();
-    // since solana v0.1.8
-    // const blockhashObj = await connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhashObj.blockhash;
+    const blockhashObj = await connection.getLatestBlockhashAndContext();
+    transaction.recentBlockhash = blockhashObj.value.blockhash;
     transaction.partialSign(keypair);
 
-    return Result.ok({ mint: keypair.publicKey, tx: transaction });
+    return { mint: keypair.publicKey, tx: transaction };
   };
 
   // select 'new token'
@@ -63,33 +60,23 @@ export namespace SplToken {
     cluster: string,
     totalAmount: number,
     mintDecimal: number,
-    signTransaction: (tx: Transaction | Transaction[]) => any
+    phantom: Phantom
   ): Promise<Result<string, Error>> => {
     Node.changeConnection({ cluster });
     const connection = Node.getConnection();
     const tx = new Transaction();
 
-    const txData = await (
-      await initMint(connection, owner, mintDecimal)
-    ).unwrap(
-      async (ok: InitializeMint) => {
-        const data = await AssociatedAccount.makeOrCreateInstruction(
-          ok.mint,
-          owner
-        );
-        tx.add(data.unwrap().inst as TransactionInstruction);
-        return {
-          tokenAccount: data.unwrap().tokenAccount.toPublicKey(),
-          mint: ok.mint,
-          tx: ok.tx,
-        };
-      },
-      (err) => err
+    const builder = await createTokenBuilder(owner, mintDecimal);
+    const data = await AssociatedAccount.makeOrCreateInstruction(
+      builder.mint,
+      owner
     );
-
-    if ('message' in txData) {
-      return Result.err(txData);
-    }
+    tx.add(data.unwrap().inst as TransactionInstruction);
+    const txData = {
+      tokenAccount: data.unwrap().tokenAccount.toPublicKey(),
+      mint: builder.mint,
+      tx: builder.tx,
+    };
 
     const transaction = tx.add(
       createMintToCheckedInstruction(
@@ -104,13 +91,12 @@ export namespace SplToken {
     );
 
     transaction.feePayer = owner;
-    const blockhashObj = await connection.getRecentBlockhash();
-    // since solana v0.1.8
-    // const blockhashObj = await connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhashObj.blockhash;
+    const blockhashObj = await connection.getLatestBlockhashAndContext();
+    transaction.recentBlockhash = blockhashObj.value.blockhash;
 
-    const signed = await signTransaction([txData.tx, transaction]);
+    const signed = await phantom.signAllTransactions([txData.tx, transaction]);
 
+    // todo: refactoring
     for (let sign of signed) {
       const sig = await connection
         .sendRawTransaction(sign.serialize())
@@ -132,7 +118,7 @@ export namespace SplToken {
     cluster: string,
     totalAmount: number,
     mintDecimal: number,
-    signTransaction: (tx: Transaction | Transaction[]) => any
+    phantom: Phantom
   ): Promise<Result<string, Error>> => {
     Node.changeConnection({ cluster });
     const connection = Node.getConnection();
@@ -163,13 +149,12 @@ export namespace SplToken {
     }
 
     transaction.feePayer = owner;
-    const blockhashObj = await connection.getRecentBlockhash();
-    // since solana v0.1.8
-    // const blockhashObj = await connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhashObj.blockhash;
+    const blockhashObj = await connection.getLatestBlockhashAndContext();
+    transaction.recentBlockhash = blockhashObj.value.blockhash;
 
-    const signed = await signTransaction([transaction]);
+    const signed = await phantom.signAllTransactions([transaction]);
 
+    // todo: refactoring
     for (let sign of signed) {
       const sig = await connection
         .sendRawTransaction(sign.serialize())
@@ -180,7 +165,6 @@ export namespace SplToken {
       }
       await Node.confirmedSig(sig.unwrap());
     }
-
     return Result.ok(tokenKey.toBase58());
   };
 }

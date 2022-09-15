@@ -15,7 +15,7 @@ describe('Internals_Find', () => {
   });
 
   it('Get all transaction data with limit', async () => {
-    const limit = 10;
+    const limit = 2;
     const res = await Internals_History.getForAddress(
       searchTokenKey.toPublicKey(),
       limit

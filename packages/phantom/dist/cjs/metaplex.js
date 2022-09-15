@@ -22,10 +22,10 @@ var __rest = (this && this.__rest) || function (s, e) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metaplex = void 0;
 const web3_js_1 = require("@solana/web3.js");
-const nft_1 = require("@solana-suite/nft");
-const shared_1 = require("@solana-suite/shared");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 const js_1 = require("@metaplex-foundation/js");
+const nft_1 = require("@solana-suite/nft");
+const shared_1 = require("@solana-suite/shared");
 var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
@@ -37,6 +37,8 @@ var Metaplex;
         const updateAuthority = metaplex.identity();
         const mintAuthority = metaplex.identity();
         const tokenOwner = metaplex.identity().publicKey;
+        console.log('# useNewMint: ', useNewMint.publicKey.toString());
+        console.log('# payer: ', payer.publicKey.toString());
         const sftBuilder = yield metaplex
             .nfts()
             .builders()
@@ -46,7 +48,7 @@ var Metaplex;
             tokenOwner, tokenAmount: (0, js_1.token)(1), decimals: 0 }));
         const { mintAddress, metadataAddress, tokenAddress } = sftBuilder.getContext();
         const masterEditionAddress = (0, js_1.findMasterEditionV2Pda)(mintAddress);
-        return (js_1.TransactionBuilder.make()
+        const transactions = js_1.TransactionBuilder.make()
             .setFeePayer(payer)
             .setContext({
             mintAddress,
@@ -54,9 +56,7 @@ var Metaplex;
             masterEditionAddress,
             tokenAddress: tokenAddress,
         })
-            // Create the mint, the token and the metadata.
             .add(sftBuilder)
-            // Create master edition account (prevents further minting).
             .add({
             instruction: (0, mpl_token_metadata_1.createCreateMasterEditionV3Instruction)({
                 edition: masterEditionAddress,
@@ -73,7 +73,11 @@ var Metaplex;
             signers: [payer, mintAuthority, updateAuthority],
             key: (_a = params.createMasterEditionInstructionKey) !== null && _a !== void 0 ? _a : 'createMasterEdition',
         })
-            .getInstructions());
+            .toTransaction();
+        const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhashAndContext();
+        transactions.recentBlockhash = blockhashObj.value.blockhash;
+        transactions.partialSign(useNewMint);
+        return { tx: transactions, mint: useNewMint.publicKey };
     });
     const initNftStorageMetadata = (input, sellerFeeBasisPoints) => {
         return {
@@ -91,30 +95,10 @@ var Metaplex;
      * Upload content and NFT mint
      *
      * @param {InputMetaplexMetadata}  input
-     * {
-     *   name: string               // nft content name
-     *   symbol: string             // nft ticker symbol
-     *   filePath: string | File    // nft ticker symbol
-     *   royalty: number            // royalty percentage
-     *   storageType: 'arweave'|'nftStorage' // royalty percentage
-     *   description?: string       // nft content description
-     *   external_url?: string      // landing page, home page uri, related url
-     *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
-     *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
-     *   collection?: Collection                  // collections of different colors, shapes, etc.
-     *   [key: string]?: unknown                   // optional param, Usually not used.
-     *   creators?: Creator[]          // other creators than owner
-     *   uses?: Uses                   // usage feature: burn, single, multiple
-     *   isMutable?: boolean           // enable update()
-     *   maxSupply?: BigNumber         // mint copies
-     * }
-     * @param {Keypair} owner          // first minted owner
-     * @param {Keypair} feePayer       // fee payer
+     * @param {Phantom} phantom        phantom wallet object
      * @return Promise<Result<Instruction, Error>>
      */
-    Metaplex.mint = (input, phantom
-    // ): Promise<Result<Instruction, Error | ValidatorError>> => {
-    ) => __awaiter(this, void 0, void 0, function* () {
+    Metaplex.mint = (input, phantom) => __awaiter(this, void 0, void 0, function* () {
         const valid = nft_1.Validator.checkAll(input);
         if (valid.isErr) {
             return shared_1.Result.err(valid.error);
@@ -144,23 +128,20 @@ var Metaplex;
         const uri = storageRes.unwrap();
         const mintInput = Object.assign({ uri,
             sellerFeeBasisPoints }, reducedMetadata);
-        const instructions = yield Metaplex.createNftBuilder(mintInput, phantom);
         const connection = shared_1.Node.getConnection();
-        const transaction = new web3_js_1.Transaction();
-        transaction.feePayer = phantom.publicKey;
-        instructions.forEach((inst) => transaction.add(inst));
+        const builder = yield Metaplex.createNftBuilder(mintInput, phantom);
+        builder.tx.feePayer = phantom.publicKey;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
-        transaction.recentBlockhash = blockhashObj.value.blockhash;
-        const signed = yield phantom.signTransaction(transaction);
+        builder.tx.recentBlockhash = blockhashObj.value.blockhash;
+        const signed = yield phantom.signTransaction(builder.tx);
         const sig = yield connection
             .sendRawTransaction(signed.serialize())
             .then(shared_1.Result.ok)
             .catch(shared_1.Result.err);
-        console.log(sig);
         if (sig.isErr) {
             return shared_1.Result.err(sig.error);
         }
         yield shared_1.Node.confirmedSig(sig.unwrap());
-        return shared_1.Result.ok(sig.unwrap());
+        return shared_1.Result.ok(builder.mint.toString());
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));

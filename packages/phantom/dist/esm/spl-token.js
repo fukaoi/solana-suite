@@ -13,7 +13,8 @@ import { Node, Result } from '@solana-suite/shared';
 import { AssociatedAccount } from '@solana-suite/core';
 export var SplToken;
 (function (SplToken) {
-    const initMint = (connection, owner, mintDecimal) => __awaiter(this, void 0, void 0, function* () {
+    const createTokenBuilder = (owner, mintDecimal) => __awaiter(this, void 0, void 0, function* () {
+        const connection = Node.getConnection();
         const keypair = Keypair.generate();
         const lamports = yield getMinimumBalanceForRentExemptMint(connection);
         const transaction = new Transaction().add(SystemProgram.createAccount({
@@ -24,37 +25,30 @@ export var SplToken;
             programId: TOKEN_PROGRAM_ID,
         }), createInitializeMintInstruction(keypair.publicKey, mintDecimal, owner, owner, TOKEN_PROGRAM_ID));
         transaction.feePayer = owner;
-        const blockhashObj = yield connection.getRecentBlockhash();
-        // since solana v0.1.8
-        // const blockhashObj = await connection.getLatestBlockhash();
-        transaction.recentBlockhash = blockhashObj.blockhash;
+        const blockhashObj = yield connection.getLatestBlockhashAndContext();
+        transaction.recentBlockhash = blockhashObj.value.blockhash;
         transaction.partialSign(keypair);
-        return Result.ok({ mint: keypair.publicKey, tx: transaction });
+        return { mint: keypair.publicKey, tx: transaction };
     });
     // select 'new token'
-    SplToken.mint = (owner, cluster, totalAmount, mintDecimal, signTransaction) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         Node.changeConnection({ cluster });
         const connection = Node.getConnection();
         const tx = new Transaction();
-        const txData = yield (yield initMint(connection, owner, mintDecimal)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
-            const data = yield AssociatedAccount.makeOrCreateInstruction(ok.mint, owner);
-            tx.add(data.unwrap().inst);
-            return {
-                tokenAccount: data.unwrap().tokenAccount.toPublicKey(),
-                mint: ok.mint,
-                tx: ok.tx,
-            };
-        }), (err) => err);
-        if ('message' in txData) {
-            return Result.err(txData);
-        }
+        const builder = yield createTokenBuilder(owner, mintDecimal);
+        const data = yield AssociatedAccount.makeOrCreateInstruction(builder.mint, owner);
+        tx.add(data.unwrap().inst);
+        const txData = {
+            tokenAccount: data.unwrap().tokenAccount.toPublicKey(),
+            mint: builder.mint,
+            tx: builder.tx,
+        };
         const transaction = tx.add(createMintToCheckedInstruction(txData.mint, txData.tokenAccount, owner, totalAmount, mintDecimal, [], TOKEN_PROGRAM_ID));
         transaction.feePayer = owner;
-        const blockhashObj = yield connection.getRecentBlockhash();
-        // since solana v0.1.8
-        // const blockhashObj = await connection.getLatestBlockhash();
-        transaction.recentBlockhash = blockhashObj.blockhash;
-        const signed = yield signTransaction([txData.tx, transaction]);
+        const blockhashObj = yield connection.getLatestBlockhashAndContext();
+        transaction.recentBlockhash = blockhashObj.value.blockhash;
+        const signed = yield phantom.signAllTransactions([txData.tx, transaction]);
+        // todo: refactoring
         for (let sign of signed) {
             const sig = yield connection
                 .sendRawTransaction(sign.serialize())
@@ -68,7 +62,7 @@ export var SplToken;
         return Result.ok(txData.mint.toString());
     });
     // select 'add token'
-    SplToken.addMinting = (tokenKey, owner, cluster, totalAmount, mintDecimal, signTransaction) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.addMinting = (tokenKey, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         Node.changeConnection({ cluster });
         const connection = Node.getConnection();
         const tx = new Transaction();
@@ -80,11 +74,10 @@ export var SplToken;
             return Result.err(transaction);
         }
         transaction.feePayer = owner;
-        const blockhashObj = yield connection.getRecentBlockhash();
-        // since solana v0.1.8
-        // const blockhashObj = await connection.getLatestBlockhash();
-        transaction.recentBlockhash = blockhashObj.blockhash;
-        const signed = yield signTransaction([transaction]);
+        const blockhashObj = yield connection.getLatestBlockhashAndContext();
+        transaction.recentBlockhash = blockhashObj.value.blockhash;
+        const signed = yield phantom.signAllTransactions([transaction]);
+        // todo: refactoring
         for (let sign of signed) {
             const sig = yield connection
                 .sendRawTransaction(sign.serialize())
