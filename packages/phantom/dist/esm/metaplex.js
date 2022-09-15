@@ -26,7 +26,7 @@ import { Node, Result } from '@solana-suite/shared';
 export var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
-    Metaplex.createNftBuilder = (params, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    const createNftBuilder = (params, feePayer) => __awaiter(this, void 0, void 0, function* () {
         var _a;
         const metaplex = Bundlr.make(feePayer);
         const useNewMint = Keypair.generate();
@@ -126,7 +126,7 @@ export var Metaplex;
         const mintInput = Object.assign({ uri,
             sellerFeeBasisPoints }, reducedMetadata);
         const connection = Node.getConnection();
-        const builder = yield Metaplex.createNftBuilder(mintInput, phantom);
+        const builder = yield createNftBuilder(mintInput, phantom);
         builder.tx.feePayer = phantom.publicKey;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
         builder.tx.recentBlockhash = blockhashObj.value.blockhash;

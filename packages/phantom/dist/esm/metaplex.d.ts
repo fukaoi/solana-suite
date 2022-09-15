@@ -1,9 +1,7 @@
-import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 import { ValidatorError, InputMetaplexMetadata } from '@solana-suite/nft';
 import { Result } from '@solana-suite/shared';
-import { InitializeMint, Phantom } from './types';
+import { Phantom } from './types';
 export declare namespace Metaplex {
-    const createNftBuilder: (params: CreateNftBuilderParams, feePayer: Phantom) => Promise<InitializeMint>;
     /**
      * Upload content and NFT mint
      *

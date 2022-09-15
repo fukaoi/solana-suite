@@ -3,7 +3,7 @@
   "version": "0.3.5",
   "private": true,
   "scripts": {
-    "clean": "npm run clean -ws && rm -rf packages/shared/node_modules/ && rm -rf packages/core/node_modules/ && rm -rf  packages/nft/node_modules/",
+    "clean": "npm run clean -ws && rm -rf packages/shared/node_modules/ && rm -rf packages/core/node_modules/ && rm -rf  packages/nft/node_modules/ && rm -rf  packages/phantom/node_modules/",
     "compile": "npm run compile -ws && npm run compile:esm -ws",
     "lint": "npm run lint:core && npm run lint:nft && npm run lint:shared",
     "lint:core": "npx tslint --fix --project packages/core",

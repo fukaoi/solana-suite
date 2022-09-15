@@ -24,7 +24,7 @@ import { InitializeMint, Phantom } from './types';
 
 export namespace Metaplex {
   // original: plugins/nftModule/operations/createNft.ts
-  export const createNftBuilder = async (
+  const createNftBuilder = async (
     params: CreateNftBuilderParams,
     feePayer: Phantom
   ): Promise<InitializeMint> => {

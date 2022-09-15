@@ -29,7 +29,7 @@ const shared_1 = require("@solana-suite/shared");
 var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
-    Metaplex.createNftBuilder = (params, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    const createNftBuilder = (params, feePayer) => __awaiter(this, void 0, void 0, function* () {
         var _a;
         const metaplex = nft_1.Bundlr.make(feePayer);
         const useNewMint = web3_js_1.Keypair.generate();
@@ -129,7 +129,7 @@ var Metaplex;
         const mintInput = Object.assign({ uri,
             sellerFeeBasisPoints }, reducedMetadata);
         const connection = shared_1.Node.getConnection();
-        const builder = yield Metaplex.createNftBuilder(mintInput, phantom);
+        const builder = yield createNftBuilder(mintInput, phantom);
         builder.tx.feePayer = phantom.publicKey;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
         builder.tx.recentBlockhash = blockhashObj.value.blockhash;
