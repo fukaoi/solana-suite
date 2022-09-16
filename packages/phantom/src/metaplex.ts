@@ -157,7 +157,7 @@ export namespace Metaplex {
     }
 
     const uri = storageRes.unwrap();
-    console.log('# upload content url:', uri);
+    debugLog('# upload content url:', uri);
     const mintInput: MetaplexMetaData = {
       uri,
       sellerFeeBasisPoints,
@@ -166,10 +166,14 @@ export namespace Metaplex {
     const connection = Node.getConnection();
 
     const builder = await createNftBuilder(mintInput, phantom);
+    debugLog('# mint: ', builder.mint.toString());
     builder.tx.feePayer = phantom.publicKey;
     const blockhashObj = await connection.getLatestBlockhashAndContext();
     builder.tx.recentBlockhash = blockhashObj.value.blockhash;
+
+    debugLog('# tx: ', builder.tx.signatures);
     const signed = await phantom.signTransaction(builder.tx);
+    debugLog('# signed: ', signed.signatures.map(signature => signature.publicKey.toString()));
     const sig = await connection
       .sendRawTransaction(signed.serialize())
       .then(Result.ok)
