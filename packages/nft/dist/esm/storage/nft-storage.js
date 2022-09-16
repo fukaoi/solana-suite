@@ -43,7 +43,6 @@ export var StorageNftStorage;
             file = (yield import('fs')).readFileSync(filepath);
         }
         else if (isBrowser) {
-            console.log('# nft.storage data: ', filePath);
             const filepath = filePath;
             file = toMetaplexFile(filepath, '').buffer;
         }

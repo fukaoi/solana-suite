@@ -3,10 +3,9 @@ import { assert } from 'chai';
 import { Metaplex } from '../../src/metaplex';
 
 describe('Metaplex.find', () => {
-  it.skip('Find owner info', async () => {
+  it('Find owner info', async () => {
     const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
     const res = await Metaplex.findByOwner(owner.toPublicKey());
-    console.log(res);
     res.match(
       (ok) => {
         assert.isTrue(ok.length > 0);
