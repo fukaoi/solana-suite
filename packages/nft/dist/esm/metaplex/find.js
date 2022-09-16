@@ -12,7 +12,6 @@ import { Bundlr } from '../bundlr';
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
-        // ) => {
         const allData = yield Bundlr.make()
             .nfts()
             .findAllByOwner({ owner })
@@ -22,25 +21,22 @@ export var Metaplex;
         if (allData.isErr) {
             return Result.err(allData.error);
         }
-        console.log(allData);
-        // const res = allData.unwrap().map((d) => {
-        //   return {
-        //     mint: d.mint.toString(),
-        //     updateAuthority: d.updateAuthority.toString(),
-        //     name: d.name,
-        //     symbol: d.symbol,
-        //     uri: d.uri,
-        //     royalty: d.sellerFeeBasisPoints,
-        //     creators: d.creators,
-        //     isMutable: d.isMutable,
-        //     editionNonce: d.editionNonce,
-        //     tokenStandard: d.tokenStandard,
-        //     collection: d.collection,
-        //     primarySaleHappened: d.primarySaleHappened,
-        //     uses: d.uses,
-        //   };
-        // });
-        // return Result.ok(res);
-        return Result.ok([]);
+        const res = allData.unwrap().map(d => {
+            return {
+                mint: d.mintAddress.toString(),
+                updateAuthority: d.updateAuthorityAddress.toString(),
+                royalty: d.sellerFeeBasisPoints,
+                name: d.name,
+                symbol: d.symbol,
+                uri: d.uri,
+                isMutable: d.isMutable,
+                primarySaleHappened: d.primarySaleHappened,
+                creators: d.creators,
+                editionNonce: d.editionNonce,
+                collection: d.collection,
+                uses: d.uses,
+            };
+        });
+        return Result.ok(res);
     });
 })(Metaplex || (Metaplex = {}));

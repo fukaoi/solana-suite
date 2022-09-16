@@ -1,4 +1,4 @@
-import { CreateNftInput, Nft, MetaplexFileContent, BigNumber, Option, Signer, CreatorInput } from '@metaplex-foundation/js';
+import { CreateNftInput, MetaplexFileContent, BigNumber, Option, Signer, CreatorInput, Creator } from '@metaplex-foundation/js';
 import { PublicKey } from '@solana/web3.js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 declare type noNeedOptional = 'payer' | 'owner' | 'associatedTokenProgram' | 'tokenProgram' | 'confirmOptions';
@@ -42,9 +42,21 @@ export declare type InputMetaplexMetadata = {
     collectionAuthorityIsDelegated?: boolean;
     collectionIsSized?: boolean;
 };
-export declare type OutputMetaplexMetadata = Omit<Nft, 'mint' | 'updateAuthority' | 'metadataAccount' | 'metadataTask' | 'editionAccount' | 'editionTask' | 'sellerFeeBasisPoints' | 'metadata' | 'originalEdition' | 'printEdition' | 'isOriginal' | 'isPrint' | 'equals'> & {
+export declare type OutputMetaplexMetadata = {
     mint: string;
     updateAuthority: string;
     royalty: number;
+    name: string;
+    symbol: string;
+    uri: string;
+    isMutable: boolean;
+    primarySaleHappened: boolean;
+    creators: Creator[];
+    editionNonce: Option<number>;
+    collection: Option<{
+        address: PublicKey;
+        verified: boolean;
+    }>;
+    uses: Option<Uses>;
 };
 export {};

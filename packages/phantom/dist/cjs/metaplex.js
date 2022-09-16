@@ -129,7 +129,7 @@ var Metaplex;
             sellerFeeBasisPoints }, reducedMetadata);
         const connection = shared_1.Node.getConnection();
         const builder = yield createNftBuilder(mintInput, phantom);
-        (0, shared_1.debugLog)('# mint: ', Metaplex.mint.toString());
+        (0, shared_1.debugLog)('# mint: ', builder.mint.toString());
         builder.tx.feePayer = phantom.publicKey;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
         builder.tx.recentBlockhash = blockhashObj.value.blockhash;

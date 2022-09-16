@@ -126,7 +126,7 @@ export var Metaplex;
             sellerFeeBasisPoints }, reducedMetadata);
         const connection = Node.getConnection();
         const builder = yield createNftBuilder(mintInput, phantom);
-        debugLog('# mint: ', Metaplex.mint.toString());
+        debugLog('# mint: ', builder.mint.toString());
         builder.tx.feePayer = phantom.publicKey;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
         builder.tx.recentBlockhash = blockhashObj.value.blockhash;
