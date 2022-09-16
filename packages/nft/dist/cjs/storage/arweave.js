@@ -41,11 +41,11 @@ var StorageArweave;
 (function (StorageArweave) {
     StorageArweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let buffer;
-        if (shared_1.isNode) {
+        if ((0, shared_1.isNode)()) {
             const filepath = filePath;
             buffer = (yield Promise.resolve().then(() => __importStar(require('fs')))).readFileSync(filepath);
         }
-        else if (shared_1.isBrowser) {
+        else if ((0, shared_1.isBrowser)()) {
             const filepath = filePath;
             buffer = (0, js_1.toMetaplexFile)(filepath, '').buffer;
         }
@@ -63,7 +63,7 @@ var StorageArweave;
     ) => __awaiter(this, void 0, void 0, function* () {
         (0, shared_1.debugLog)('# upload content: ', filePath);
         let file;
-        if (shared_1.isNode) {
+        if ((0, shared_1.isNode)()) {
             const filepath = filePath;
             const buffer = (yield Promise.resolve().then(() => __importStar(require('fs')))).readFileSync(filepath);
             if (fileOptions) {
@@ -73,7 +73,7 @@ var StorageArweave;
                 file = (0, js_1.toMetaplexFile)(buffer, filepath);
             }
         }
-        else if (shared_1.isBrowser) {
+        else if ((0, shared_1.isBrowser)()) {
             const filepath = filePath;
             if (fileOptions) {
                 file = (0, js_1.toMetaplexFile)(filepath, '', fileOptions);

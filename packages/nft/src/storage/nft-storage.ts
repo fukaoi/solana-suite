@@ -44,10 +44,10 @@ export namespace StorageNftStorage {
   ): Promise<Result<string, Error>> => {
     debugLog('# upload content: ', filePath);
     let file!: Buffer;
-    if (isNode) {
+    if (isNode()) {
       const filepath = filePath as string;
       file = (await import('fs')).readFileSync(filepath);
-    } else if (isBrowser) {
+    } else if (isBrowser()) {
       const filepath = filePath as any;
       file = toMetaplexFile(filepath, '').buffer;
     } else {

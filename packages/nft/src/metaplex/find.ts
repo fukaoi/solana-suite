@@ -2,7 +2,7 @@ import { PublicKey } from '@solana/web3.js';
 import { Result } from '@solana-suite/shared';
 import { Bundlr } from '../bundlr';
 import { OutputMetaplexMetadata } from '../types/metaplex/index';
-import {Metadata} from '@metaplex-foundation/js';
+import { Metadata } from '@metaplex-foundation/js';
 
 export namespace Metaplex {
   export const findByOwner = async (
@@ -10,7 +10,7 @@ export namespace Metaplex {
   ): Promise<Result<OutputMetaplexMetadata[], Error>> => {
     const allData = await Bundlr.make()
       .nfts()
-      .findAllByOwner({owner})
+      .findAllByOwner({ owner })
       .run()
       .then(Result.ok)
       .catch(Result.err);
@@ -19,7 +19,7 @@ export namespace Metaplex {
       return Result.err(allData.error);
     }
 
-    const res = allData.unwrap().map(d => {
+    const res = allData.unwrap().map((d) => {
       return {
         mint: (d as Metadata).mintAddress.toString(),
         updateAuthority: d.updateAuthorityAddress.toString(),
