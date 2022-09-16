@@ -22,7 +22,7 @@ import { Keypair } from '@solana/web3.js';
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
 import { findMasterEditionV2Pda, token, TransactionBuilder, } from '@metaplex-foundation/js';
 import { StorageNftStorage, StorageArweave, Validator, MetaplexRoyalty, Bundlr, } from '@solana-suite/nft';
-import { Node, Result } from '@solana-suite/shared';
+import { debugLog, Node, Result } from '@solana-suite/shared';
 export var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
@@ -121,15 +121,18 @@ export var Metaplex;
             return Result.err(storageRes.error);
         }
         const uri = storageRes.unwrap();
-        console.log('# upload content url:', uri);
+        debugLog('# upload content url:', uri);
         const mintInput = Object.assign({ uri,
             sellerFeeBasisPoints }, reducedMetadata);
         const connection = Node.getConnection();
         const builder = yield createNftBuilder(mintInput, phantom);
+        debugLog('# mint: ', Metaplex.mint.toString());
         builder.tx.feePayer = phantom.publicKey;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
         builder.tx.recentBlockhash = blockhashObj.value.blockhash;
+        debugLog('# tx: ', builder.tx.signatures);
         const signed = yield phantom.signTransaction(builder.tx);
+        debugLog('# signed: ', signed.signatures.map(signature => signature.publicKey.toString()));
         const sig = yield connection
             .sendRawTransaction(signed.serialize())
             .then(Result.ok)

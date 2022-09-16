@@ -124,15 +124,18 @@ var Metaplex;
             return shared_1.Result.err(storageRes.error);
         }
         const uri = storageRes.unwrap();
-        console.log('# upload content url:', uri);
+        (0, shared_1.debugLog)('# upload content url:', uri);
         const mintInput = Object.assign({ uri,
             sellerFeeBasisPoints }, reducedMetadata);
         const connection = shared_1.Node.getConnection();
         const builder = yield createNftBuilder(mintInput, phantom);
+        (0, shared_1.debugLog)('# mint: ', Metaplex.mint.toString());
         builder.tx.feePayer = phantom.publicKey;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
         builder.tx.recentBlockhash = blockhashObj.value.blockhash;
+        (0, shared_1.debugLog)('# tx: ', builder.tx.signatures);
         const signed = yield phantom.signTransaction(builder.tx);
+        (0, shared_1.debugLog)('# signed: ', signed.signatures.map(signature => signature.publicKey.toString()));
         const sig = yield connection
             .sendRawTransaction(signed.serialize())
             .then(shared_1.Result.ok)
