@@ -6,7 +6,7 @@ import {
   InputMetaplexMetadata,
   MetaplexMetaData,
 } from '../types/metaplex/index';
-import { MetaplexRoyalty } from './royalty';
+import { Internals_Royalty } from '../internals/_royalty';
 import { Bundlr } from '../bundlr';
 
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
@@ -97,9 +97,10 @@ export namespace Metaplex {
 
   export const initNftStorageMetadata = (
     input: InputMetaplexMetadata,
-    sellerFeeBasisPoints: number
+    sellerFeeBasisPoints: number,
+    options?: any 
   ): NftStorageMetadata => {
-    return {
+    const data = {
       name: input.name,
       symbol: input.symbol,
       description: input.description,
@@ -109,6 +110,7 @@ export namespace Metaplex {
       properties: input.properties,
       image: '',
     };
+    return {...data, ...options};
   };
 
   /**
@@ -149,17 +151,18 @@ export namespace Metaplex {
     const payer = feePayer ? feePayer : owner;
 
     let storageRes;
-    const { filePath, storageType, royalty, ...reducedMetadata } = input;
-    const sellerFeeBasisPoints = MetaplexRoyalty.convertValue(royalty);
-    const storageMetadata = initNftStorageMetadata(input, sellerFeeBasisPoints);
+    const { filePath, storageType, royalty, options, ...reducedMetadata } = input;
+    const sellerFeeBasisPoints = Internals_Royalty.convertValue(royalty);
+    const storageData = initNftStorageMetadata(input, sellerFeeBasisPoints, options);
+    console.log(storageData);
 
     if (storageType === 'arweave') {
       storageRes = await (
         await StorageArweave.uploadContent(filePath!, payer)
       ).unwrap(
         async (ok: string) => {
-          storageMetadata.image = ok;
-          return await StorageArweave.uploadMetadata(storageMetadata, payer);
+          storageData.image = ok;
+          return await StorageArweave.uploadMetadata(storageData, payer);
         },
         (err) => Result.err(err)
       );
@@ -168,8 +171,8 @@ export namespace Metaplex {
         await StorageNftStorage.uploadContent(filePath!)
       ).unwrap(
         async (ok: string) => {
-          storageMetadata.image = ok;
-          return await StorageNftStorage.uploadMetadata(storageMetadata);
+          storageData.image = ok;
+          return await StorageNftStorage.uploadMetadata(storageData);
         },
         (err) => Result.err(err)
       );

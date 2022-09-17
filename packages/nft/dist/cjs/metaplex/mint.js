@@ -25,7 +25,7 @@ const web3_js_1 = require("@solana/web3.js");
 const storage_1 = require("../storage");
 const shared_1 = require("@solana-suite/shared");
 const validator_1 = require("../validator");
-const royalty_1 = require("./royalty");
+const _royalty_1 = require("../internals/_royalty");
 const bundlr_1 = require("../bundlr");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 const js_1 = require("@metaplex-foundation/js");
@@ -79,8 +79,8 @@ var Metaplex;
             .getInstructions();
         return new shared_1.Instruction(inst, [feePayer, useNewMint, owner], undefined, useNewMint.publicKey.toString());
     });
-    Metaplex.initNftStorageMetadata = (input, sellerFeeBasisPoints) => {
-        return {
+    Metaplex.initNftStorageMetadata = (input, sellerFeeBasisPoints, options) => {
+        const data = {
             name: input.name,
             symbol: input.symbol,
             description: input.description,
@@ -90,6 +90,7 @@ var Metaplex;
             properties: input.properties,
             image: '',
         };
+        return Object.assign(Object.assign({}, data), options);
     };
     /**
      * Upload content and NFT mint
@@ -123,19 +124,20 @@ var Metaplex;
         }
         const payer = feePayer ? feePayer : owner;
         let storageRes;
-        const { filePath, storageType, royalty } = input, reducedMetadata = __rest(input, ["filePath", "storageType", "royalty"]);
-        const sellerFeeBasisPoints = royalty_1.MetaplexRoyalty.convertValue(royalty);
-        const storageMetadata = Metaplex.initNftStorageMetadata(input, sellerFeeBasisPoints);
+        const { filePath, storageType, royalty, options } = input, reducedMetadata = __rest(input, ["filePath", "storageType", "royalty", "options"]);
+        const sellerFeeBasisPoints = _royalty_1.Internals_Royalty.convertValue(royalty);
+        const storageData = Metaplex.initNftStorageMetadata(input, sellerFeeBasisPoints, options);
+        console.log(storageData);
         if (storageType === 'arweave') {
             storageRes = yield (yield storage_1.StorageArweave.uploadContent(filePath, payer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
-                storageMetadata.image = ok;
-                return yield storage_1.StorageArweave.uploadMetadata(storageMetadata, payer);
+                storageData.image = ok;
+                return yield storage_1.StorageArweave.uploadMetadata(storageData, payer);
             }), (err) => shared_1.Result.err(err));
         }
         else if (storageType === 'nftStorage') {
             storageRes = yield (yield storage_1.StorageNftStorage.uploadContent(filePath)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
-                storageMetadata.image = ok;
-                return yield storage_1.StorageNftStorage.uploadMetadata(storageMetadata);
+                storageData.image = ok;
+                return yield storage_1.StorageNftStorage.uploadMetadata(storageData);
             }), (err) => shared_1.Result.err(err));
         }
         else {

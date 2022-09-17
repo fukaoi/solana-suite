@@ -4,7 +4,7 @@ import { ValidatorError } from '../validator';
 import { InputMetaplexMetadata } from '../types/metaplex/index';
 import { NftStorageMetadata } from '../types';
 export declare namespace Metaplex {
-    const initNftStorageMetadata: (input: InputMetaplexMetadata, sellerFeeBasisPoints: number) => NftStorageMetadata;
+    const initNftStorageMetadata: (input: InputMetaplexMetadata, sellerFeeBasisPoints: number, options?: any) => NftStorageMetadata;
     /**
      * Upload content and NFT mint
      *

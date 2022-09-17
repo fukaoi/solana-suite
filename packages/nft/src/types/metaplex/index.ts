@@ -59,6 +59,7 @@ export type InputMetaplexMetadata = {
   collectionAuthority?: Option<Signer>;
   collectionAuthorityIsDelegated?: boolean;
   collectionIsSized?: boolean;
+  options?: {[key: string]: unknown};
 };
 
 export type OutputMetaplexMetadata = {
@@ -71,7 +72,7 @@ export type OutputMetaplexMetadata = {
   isMutable: boolean;
   primarySaleHappened: boolean;
   creators: Creator[];
-  editionNonce: Option<number>,
-  collection: Option<{address: PublicKey, verified: boolean}>;
+  editionNonce: Option<number>;
+  collection: Option<{ address: PublicKey; verified: boolean }>;
   uses: Option<Uses>;
 };
