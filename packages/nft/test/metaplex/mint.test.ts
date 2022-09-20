@@ -115,6 +115,11 @@ describe('Metaplex', () => {
         royalty: 20,
         creators: [creator1, creator2],
         isMutable: true,
+        options: {
+          createdBy: 'Solana Suite',
+          poweredBy: 'Solana',
+          creators: [creator1, creator2],
+        },
       },
       source.toKeypair()
     );

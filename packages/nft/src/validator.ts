@@ -1,6 +1,6 @@
 import { MetaplexFileContent } from '@metaplex-foundation/js';
-import { Result } from '@solana-suite/shared';
-import { MetaplexRoyalty } from './metaplex';
+import { isBrowser, Result } from '@solana-suite/shared';
+import {Internals_Royalty} from './internals/_royalty';
 import {
   InputMetaplexMetadata,
   MetaplexMetaData,
@@ -17,6 +17,7 @@ export namespace Validator {
     export const LONG_LENGTH = 'too long';
     export const EMPTY = 'invalid empty value';
     export const INVALID_URL = 'invalid url';
+    export const ONLY_NODE_JS = '`string` type is only Node.js';
   }
 
   export const NAME_LENGTH = 32;
@@ -65,7 +66,7 @@ export namespace Validator {
           condition: 'underMin',
         })
       );
-    } else if (royalty > ROYALTY_MAX * MetaplexRoyalty.THRESHOLD) {
+    } else if (royalty > ROYALTY_MAX * Internals_Royalty.THRESHOLD) {
       return Result.err(
         createError(key, Message.BIG_NUMBER, royalty, {
           threshold: SELLER_FEE_BASIS_POINTS_MAX,
@@ -114,6 +115,9 @@ export namespace Validator {
     const key = 'filePath';
     if (!filePath) {
       return Result.err(createError(key, Message.EMPTY, filePath));
+    }
+    if (isBrowser() && typeof filePath === 'string') {
+      return Result.err(createError(key, Message.ONLY_NODE_JS, filePath));
     }
     return Result.ok(Message.SUCCESS);
   };
@@ -176,7 +180,8 @@ export namespace Validator {
       }
     });
     if (results.length > 0) {
-      const message = 'Caught in the validation errors';
+      const message =
+        'Caught in the validation errors. see information e.g: err<ValidatorError>.details';
       return Result.err(new ValidatorError(message, results));
     }
     return Result.ok(Message.SUCCESS);

@@ -21,7 +21,7 @@ export var Metaplex;
         if (allData.isErr) {
             return Result.err(allData.error);
         }
-        const res = allData.unwrap().map(d => {
+        const res = allData.unwrap().map((d) => {
             return {
                 mint: d.mintAddress.toString(),
                 updateAuthority: d.updateAuthorityAddress.toString(),

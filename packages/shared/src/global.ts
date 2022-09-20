@@ -69,10 +69,10 @@ export const debugLog = (
 export const sleep = async (sec: number) =>
   new Promise((r) => setTimeout(r, sec * 1000));
 
-export const isBrowser =
-  typeof window !== 'undefined' && typeof window.document !== 'undefined';
+export const isBrowser = () =>
+    typeof window !== 'undefined' && typeof window.document !== 'undefined';
 
-export const isNode =
+export const isNode = () =>
   typeof process !== 'undefined' &&
   process.versions != null &&
   process.versions.node != null;

@@ -22,7 +22,7 @@ export class Instruction {
                 transaction.feePayer = this.feePayer.publicKey;
                 finalSigners = [this.feePayer, ...this.signers];
             }
-            this.instructions.map((inst) => transaction.add(inst));
+            this.instructions.forEach(inst => transaction.add(inst));
             const options = {
                 maxRetries: MAX_RETRIES,
             };

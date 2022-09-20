@@ -38,11 +38,11 @@ export var StorageNftStorage;
     StorageNftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
         debugLog('# upload content: ', filePath);
         let file;
-        if (isNode) {
+        if (isNode()) {
             const filepath = filePath;
             file = (yield import('fs')).readFileSync(filepath);
         }
-        else if (isBrowser) {
+        else if (isBrowser()) {
             const filepath = filePath;
             file = toMetaplexFile(filepath, '').buffer;
         }

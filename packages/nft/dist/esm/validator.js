@@ -1,5 +1,5 @@
-import { Result } from '@solana-suite/shared';
-import { MetaplexRoyalty } from './metaplex';
+import { isBrowser, Result } from '@solana-suite/shared';
+import { Internals_Royalty } from './internals/_royalty';
 export var Validator;
 (function (Validator) {
     let Message;
@@ -10,6 +10,7 @@ export var Validator;
         Message.LONG_LENGTH = 'too long';
         Message.EMPTY = 'invalid empty value';
         Message.INVALID_URL = 'invalid url';
+        Message.ONLY_NODE_JS = '`string` type is only Node.js';
     })(Message = Validator.Message || (Validator.Message = {}));
     Validator.NAME_LENGTH = 32;
     Validator.SYMBOL_LENGTH = 10;
@@ -47,7 +48,7 @@ export var Validator;
                 condition: 'underMin',
             }));
         }
-        else if (royalty > Validator.ROYALTY_MAX * MetaplexRoyalty.THRESHOLD) {
+        else if (royalty > Validator.ROYALTY_MAX * Internals_Royalty.THRESHOLD) {
             return Result.err(createError(key, Message.BIG_NUMBER, royalty, {
                 threshold: Validator.SELLER_FEE_BASIS_POINTS_MAX,
                 condition: 'overMax',
@@ -85,6 +86,9 @@ export var Validator;
         const key = 'filePath';
         if (!filePath) {
             return Result.err(createError(key, Message.EMPTY, filePath));
+        }
+        if (isBrowser() && typeof filePath === 'string') {
+            return Result.err(createError(key, Message.ONLY_NODE_JS, filePath));
         }
         return Result.ok(Message.SUCCESS);
     };
@@ -138,7 +142,7 @@ export var Validator;
             }
         });
         if (results.length > 0) {
-            const message = 'Caught in the validation errors';
+            const message = 'Caught in the validation errors. see information e.g: err<ValidatorError>.details';
             return Result.err(new ValidatorError(message, results));
         }
         return Result.ok(Message.SUCCESS);

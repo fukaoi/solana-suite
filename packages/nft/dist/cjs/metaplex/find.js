@@ -24,7 +24,7 @@ var Metaplex;
         if (allData.isErr) {
             return shared_1.Result.err(allData.error);
         }
-        const res = allData.unwrap().map(d => {
+        const res = allData.unwrap().map((d) => {
             return {
                 mint: d.mintAddress.toString(),
                 updateAuthority: d.updateAuthorityAddress.toString(),

@@ -1,10 +1,56 @@
-import { Keypair } from '@solana/web3.js';
+import { PublicKey, Keypair } from '@solana/web3.js';
 import { Instruction, Result } from '@solana-suite/shared';
 import { ValidatorError } from '../validator';
 import { InputMetaplexMetadata } from '../types/metaplex/index';
-import { NftStorageMetadata } from '../types';
+import { CreateNftBuilderParams } from '@metaplex-foundation/js';
+import { BundlrSigner, NftStorageMetadata } from '../types';
+import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 export declare namespace Metaplex {
-    const initNftStorageMetadata: (input: InputMetaplexMetadata, sellerFeeBasisPoints: number) => NftStorageMetadata;
+    const createNftBuilderInstruction: (feePayer: BundlrSigner, params: CreateNftBuilderParams, useNewMint: Keypair, updateAuthority: Keypair | IdentityClient, mintAuthority: Keypair | IdentityClient, tokenOwner: PublicKey) => Promise<import("@solana/web3.js").TransactionInstruction[]>;
+    const initNftStorageMetadata: (input: InputMetaplexMetadata, sellerFeeBasisPoints: number, options?: any) => NftStorageMetadata;
+    const uploadMetaContent: (input: InputMetaplexMetadata, feePayer: BundlrSigner) => Promise<Result.Ok<{
+        uri: string;
+        sellerFeeBasisPoints: number;
+        reducedMetadata: {
+            name: string;
+            symbol: string;
+            description?: string | undefined;
+            external_url?: string | undefined;
+            image?: string | undefined;
+            attributes?: import("../types").JsonMetadataAttribute[] | undefined;
+            properties?: import("../types").JsonMetadataProperties | undefined;
+            isMutable?: boolean | undefined;
+            maxSupply?: any;
+            creators?: import("@metaplex-foundation/js").CreatorInput[] | undefined;
+            uses?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/mpl-token-metadata").Uses> | undefined;
+            isCollection?: boolean | undefined;
+            collection?: import("@metaplex-foundation/js").Option<PublicKey> | undefined;
+            collectionAuthority?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/js").Signer> | undefined;
+            collectionAuthorityIsDelegated?: boolean | undefined;
+            collectionIsSized?: boolean | undefined;
+        };
+    }, Error> | Result.Err<{
+        uri: string;
+        sellerFeeBasisPoints: number;
+        reducedMetadata: {
+            name: string;
+            symbol: string;
+            description?: string | undefined;
+            external_url?: string | undefined;
+            image?: string | undefined;
+            attributes?: import("../types").JsonMetadataAttribute[] | undefined;
+            properties?: import("../types").JsonMetadataProperties | undefined;
+            isMutable?: boolean | undefined;
+            maxSupply?: any;
+            creators?: import("@metaplex-foundation/js").CreatorInput[] | undefined;
+            uses?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/mpl-token-metadata").Uses> | undefined;
+            isCollection?: boolean | undefined;
+            collection?: import("@metaplex-foundation/js").Option<PublicKey> | undefined;
+            collectionAuthority?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/js").Signer> | undefined;
+            collectionAuthorityIsDelegated?: boolean | undefined;
+            collectionIsSized?: boolean | undefined;
+        };
+    }, Error>>;
     /**
      * Upload content and NFT mint
      *

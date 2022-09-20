@@ -11,6 +11,7 @@ export declare namespace Validator {
         const LONG_LENGTH = "too long";
         const EMPTY = "invalid empty value";
         const INVALID_URL = "invalid url";
+        const ONLY_NODE_JS = "`string` type is only Node.js";
     }
     export const NAME_LENGTH = 32;
     export const SYMBOL_LENGTH = 10;

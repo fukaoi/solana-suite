@@ -40,7 +40,7 @@ export class Instruction {
       finalSigners = [this.feePayer, ...this.signers];
     }
 
-    this.instructions.map((inst) => transaction.add(inst));
+    this.instructions.forEach(inst => transaction.add(inst));
 
     const options: ConfirmOptions = {
       maxRetries: MAX_RETRIES,

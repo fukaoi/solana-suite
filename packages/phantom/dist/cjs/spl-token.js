@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SplToken = void 0;
+exports.SplTokenPhantom = void 0;
 const spl_token_1 = require("@solana/spl-token");
 const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
 const core_1 = require("@solana-suite/core");
-var SplToken;
-(function (SplToken) {
+var SplTokenPhantom;
+(function (SplTokenPhantom) {
     const createTokenBuilder = (owner, mintDecimal) => __awaiter(this, void 0, void 0, function* () {
         const connection = shared_1.Node.getConnection();
         const keypair = web3_js_1.Keypair.generate();
@@ -34,7 +34,7 @@ var SplToken;
         return { mint: keypair.publicKey, tx: transaction };
     });
     // select 'new token'
-    SplToken.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
+    SplTokenPhantom.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         shared_1.Node.changeConnection({ cluster });
         const connection = shared_1.Node.getConnection();
         const tx = new web3_js_1.Transaction();
@@ -65,7 +65,7 @@ var SplToken;
         return shared_1.Result.ok(txData.mint.toString());
     });
     // select 'add token'
-    SplToken.addMinting = (tokenKey, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
+    SplTokenPhantom.addMinting = (tokenKey, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         shared_1.Node.changeConnection({ cluster });
         const connection = shared_1.Node.getConnection();
         const tx = new web3_js_1.Transaction();
@@ -93,4 +93,4 @@ var SplToken;
         }
         return shared_1.Result.ok(tokenKey.toBase58());
     });
-})(SplToken = exports.SplToken || (exports.SplToken = {}));
+})(SplTokenPhantom = exports.SplTokenPhantom || (exports.SplTokenPhantom = {}));

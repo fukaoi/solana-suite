@@ -2,6 +2,7 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import '../src/global';
 import { sleep, isNode, isBrowser, debugLog } from '../src/global';
+import { JSDOM } from 'jsdom';
 
 describe('Global', () => {
   it('Convert string to PublicKey', async () => {
@@ -38,12 +39,15 @@ describe('Global', () => {
     clearInterval(id);
   });
 
-  it('is not Browser', async () => {
-    assert.isFalse(isBrowser);
+  it('is Browser', async () => {
+    const jsdom = new JSDOM('<html></html>');
+    // @ts-expect-error
+    global.window = jsdom.window;
+    assert.isTrue(isBrowser());
   });
 
   it('is Node', async () => {
-    assert.isTrue(isNode);
+    assert.isTrue(isNode());
   });
 
   it('to sol', async () => {

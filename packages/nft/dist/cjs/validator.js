@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValidatorError = exports.Validator = void 0;
 const shared_1 = require("@solana-suite/shared");
-const metaplex_1 = require("./metaplex");
+const _royalty_1 = require("./internals/_royalty");
 var Validator;
 (function (Validator) {
     let Message;
@@ -13,6 +13,7 @@ var Validator;
         Message.LONG_LENGTH = 'too long';
         Message.EMPTY = 'invalid empty value';
         Message.INVALID_URL = 'invalid url';
+        Message.ONLY_NODE_JS = '`string` type is only Node.js';
     })(Message = Validator.Message || (Validator.Message = {}));
     Validator.NAME_LENGTH = 32;
     Validator.SYMBOL_LENGTH = 10;
@@ -50,7 +51,7 @@ var Validator;
                 condition: 'underMin',
             }));
         }
-        else if (royalty > Validator.ROYALTY_MAX * metaplex_1.MetaplexRoyalty.THRESHOLD) {
+        else if (royalty > Validator.ROYALTY_MAX * _royalty_1.Internals_Royalty.THRESHOLD) {
             return shared_1.Result.err(createError(key, Message.BIG_NUMBER, royalty, {
                 threshold: Validator.SELLER_FEE_BASIS_POINTS_MAX,
                 condition: 'overMax',
@@ -88,6 +89,9 @@ var Validator;
         const key = 'filePath';
         if (!filePath) {
             return shared_1.Result.err(createError(key, Message.EMPTY, filePath));
+        }
+        if ((0, shared_1.isBrowser)() && typeof filePath === 'string') {
+            return shared_1.Result.err(createError(key, Message.ONLY_NODE_JS, filePath));
         }
         return shared_1.Result.ok(Message.SUCCESS);
     };
@@ -141,7 +145,7 @@ var Validator;
             }
         });
         if (results.length > 0) {
-            const message = 'Caught in the validation errors';
+            const message = 'Caught in the validation errors. see information e.g: err<ValidatorError>.details';
             return shared_1.Result.err(new ValidatorError(message, results));
         }
         return shared_1.Result.ok(Message.SUCCESS);

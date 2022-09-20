@@ -11,8 +11,8 @@ import { MINT_SIZE, createInitializeMintInstruction, TOKEN_PROGRAM_ID, getMinimu
 import { Transaction, SystemProgram, Keypair, } from '@solana/web3.js';
 import { Node, Result } from '@solana-suite/shared';
 import { AssociatedAccount } from '@solana-suite/core';
-export var SplToken;
-(function (SplToken) {
+export var SplTokenPhantom;
+(function (SplTokenPhantom) {
     const createTokenBuilder = (owner, mintDecimal) => __awaiter(this, void 0, void 0, function* () {
         const connection = Node.getConnection();
         const keypair = Keypair.generate();
@@ -31,7 +31,7 @@ export var SplToken;
         return { mint: keypair.publicKey, tx: transaction };
     });
     // select 'new token'
-    SplToken.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
+    SplTokenPhantom.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         Node.changeConnection({ cluster });
         const connection = Node.getConnection();
         const tx = new Transaction();
@@ -62,7 +62,7 @@ export var SplToken;
         return Result.ok(txData.mint.toString());
     });
     // select 'add token'
-    SplToken.addMinting = (tokenKey, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
+    SplTokenPhantom.addMinting = (tokenKey, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         Node.changeConnection({ cluster });
         const connection = Node.getConnection();
         const tx = new Transaction();
@@ -90,4 +90,4 @@ export var SplToken;
         }
         return Result.ok(tokenKey.toBase58());
     });
-})(SplToken || (SplToken = {}));
+})(SplTokenPhantom || (SplTokenPhantom = {}));

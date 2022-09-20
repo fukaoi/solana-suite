@@ -1,6 +1,8 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Validator } from '../src/validator';
+import { RandomAsset } from './randomAsset';
+import { JSDOM } from 'jsdom';
 
 describe('Validator', () => {
   it('[Success]isRoyalty', async () => {
@@ -93,6 +95,17 @@ describe('Validator', () => {
   it('[Error]isFilePath: empty value', async () => {
     const res = Validator.isFilePath('');
     assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
+  });
+
+  it('[Error]isFilePath: string type is only node.js', async () => {
+    // dummy browser env
+    const jsdom = new JSDOM('<html></html>');
+    // @ts-expect-error
+    global.window = jsdom.window;
+    const asset = RandomAsset.get();
+    const res = Validator.isFilePath(asset.filePath!);
+    console.log(res);
+    assert.include(res.isErr && res.error.message, Validator.Message.ONLY_NODE_JS);
   });
 
   it('[Success]isSymbol', async () => {

@@ -41,6 +41,9 @@ export declare type InputMetaplexMetadata = {
     collectionAuthority?: Option<Signer>;
     collectionAuthorityIsDelegated?: boolean;
     collectionIsSized?: boolean;
+    options?: {
+        [key: string]: unknown;
+    };
 };
 export declare type OutputMetaplexMetadata = {
     mint: string;
