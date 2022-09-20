@@ -12,7 +12,9 @@ import { Validator, Bundlr, Metaplex, } from '@solana-suite/nft';
 import { debugLog, Node, Result } from '@solana-suite/shared';
 export var MetaplexPhantom;
 (function (MetaplexPhantom) {
-    const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
+    const createNftBuilder = (params, phantom
+    // ): Promise<InitializeMint> => {
+    ) => __awaiter(this, void 0, void 0, function* () {
         const metaplex = Bundlr.make(phantom);
         const payer = metaplex.identity();
         const useNewMint = Keypair.generate();
@@ -21,14 +23,11 @@ export var MetaplexPhantom;
         const tokenOwner = metaplex.identity().publicKey;
         const instructions = yield Metaplex.createNftBuilderInstruction(payer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
         const transaction = new Transaction();
+        transaction.feePayer = payer.publicKey;
         instructions.forEach((inst) => {
-            transaction.feePayer = payer.publicKey;
             transaction.add(inst);
         });
-        const blockhashObj = yield Node.getConnection().getLatestBlockhashAndContext();
-        transaction.recentBlockhash = blockhashObj.value.blockhash;
-        transaction.partialSign(useNewMint);
-        return { tx: transaction, mint: useNewMint.publicKey };
+        return { tx: transaction, mint: useNewMint.publicKey, useNewMint: useNewMint };
     });
     /**
      * Upload content and NFT mint
@@ -58,8 +57,9 @@ export var MetaplexPhantom;
         builder.tx.feePayer = phantom.publicKey;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
         builder.tx.recentBlockhash = blockhashObj.value.blockhash;
-        debugLog('# tx: ', builder.tx.signatures);
+        builder.tx.partialSign(builder.useNewMint);
         const signed = yield phantom.signTransaction(builder.tx);
+        debugLog('# signed, signed.signatures: ', signed, signed.signatures.map((sig) => sig.publicKey.toString()));
         const sig = yield connection
             .sendRawTransaction(signed.serialize())
             .then(Result.ok)

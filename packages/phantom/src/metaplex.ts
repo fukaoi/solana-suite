@@ -1,4 +1,4 @@
-import { Keypair, Transaction } from '@solana/web3.js';
+import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 
 import {
@@ -16,7 +16,8 @@ export namespace MetaplexPhantom {
   const createNftBuilder = async (
     params: CreateNftBuilderParams,
     phantom: Phantom
-  ): Promise<InitializeMint> => {
+  // ): Promise<InitializeMint> => {
+  ) => {
     const metaplex = Bundlr.make(phantom);
     const payer = metaplex.identity();
     const useNewMint = Keypair.generate();
@@ -33,16 +34,12 @@ export namespace MetaplexPhantom {
     );
 
     const transaction = new Transaction();
-    instructions.forEach((inst) => {
-      transaction.feePayer = payer.publicKey;
+    transaction.feePayer = payer.publicKey;
+    instructions.forEach((inst: TransactionInstruction) => {
       transaction.add(inst);
     });
 
-    const blockhashObj =
-      await Node.getConnection().getLatestBlockhashAndContext();
-    transaction.recentBlockhash = blockhashObj.value.blockhash;
-    transaction.partialSign(useNewMint);
-    return { tx: transaction, mint: useNewMint.publicKey };
+    return { tx: transaction, mint: useNewMint.publicKey, useNewMint: useNewMint };
   };
 
   /**
@@ -84,9 +81,13 @@ export namespace MetaplexPhantom {
     builder.tx.feePayer = phantom.publicKey;
     const blockhashObj = await connection.getLatestBlockhashAndContext();
     builder.tx.recentBlockhash = blockhashObj.value.blockhash;
-
-    debugLog('# tx: ', builder.tx.signatures);
+    builder.tx.partialSign(builder.useNewMint);
     const signed = await phantom.signTransaction(builder.tx);
+    debugLog(
+      '# signed, signed.signatures: ',
+      signed,
+      signed.signatures.map((sig) => sig.publicKey.toString())
+    );
     const sig = await connection
       .sendRawTransaction(signed.serialize())
       .then(Result.ok)
