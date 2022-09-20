@@ -19,6 +19,7 @@ import {
   CreateNftBuilderContext,
 } from '@metaplex-foundation/js';
 import { BundlrSigner, NftStorageMetadata } from '../types';
+import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 
 export namespace Metaplex {
   // original: plugins/nftModule/operations/createNft.ts
@@ -53,8 +54,8 @@ export namespace Metaplex {
     feePayer: BundlrSigner,
     params: CreateNftBuilderParams,
     useNewMint: Keypair,
-    updateAuthority: Keypair,
-    mintAuthority: Keypair,
+    updateAuthority: Keypair | IdentityClient,
+    mintAuthority: Keypair | IdentityClient,
     tokenOwner: PublicKey
   ) => {
     debugLog('# params: ', params);

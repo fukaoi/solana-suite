@@ -12,16 +12,19 @@ import { Validator, Bundlr, Metaplex, } from '@solana-suite/nft';
 import { debugLog, Node, Result } from '@solana-suite/shared';
 export var MetaplexPhantom;
 (function (MetaplexPhantom) {
-    const createNftBuilder = (params, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const metaplex = Bundlr.make(feePayer);
-        const payer = metaplex.identity().secretKey.toString().toKeypair();
+    const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
+        const metaplex = Bundlr.make(phantom);
+        const payer = metaplex.identity();
         const useNewMint = Keypair.generate();
-        const updateAuthority = payer;
-        const mintAuthority = payer;
+        const updateAuthority = metaplex.identity();
+        const mintAuthority = metaplex.identity();
         const tokenOwner = metaplex.identity().publicKey;
-        const instructions = yield Metaplex.createNftBuilderInstruction(feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
+        const instructions = yield Metaplex.createNftBuilderInstruction(payer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
         const transaction = new Transaction();
-        instructions.forEach((inst) => transaction.add(inst));
+        instructions.forEach((inst) => {
+            transaction.feePayer = payer.publicKey;
+            transaction.add(inst);
+        });
         const blockhashObj = yield Node.getConnection().getLatestBlockhashAndContext();
         transaction.recentBlockhash = blockhashObj.value.blockhash;
         transaction.partialSign(useNewMint);
@@ -57,7 +60,6 @@ export var MetaplexPhantom;
         builder.tx.recentBlockhash = blockhashObj.value.blockhash;
         debugLog('# tx: ', builder.tx.signatures);
         const signed = yield phantom.signTransaction(builder.tx);
-        debugLog('# signed: ', signed.signatures.map((signature) => signature.publicKey.toString()));
         const sig = yield connection
             .sendRawTransaction(signed.serialize())
             .then(Result.ok)

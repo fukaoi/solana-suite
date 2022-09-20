@@ -15,17 +15,16 @@ import { InitializeMint, Phantom } from './types';
 export namespace MetaplexPhantom {
   const createNftBuilder = async (
     params: CreateNftBuilderParams,
-    feePayer: Phantom
+    phantom: Phantom
   ): Promise<InitializeMint> => {
-    const metaplex = Bundlr.make(feePayer);
-    const payer = metaplex.identity().secretKey!.toString().toKeypair();
+    const metaplex = Bundlr.make(phantom);
+    const payer = metaplex.identity();
     const useNewMint = Keypair.generate();
-    const updateAuthority = payer;
-    const mintAuthority = payer;
+    const updateAuthority = metaplex.identity();
+    const mintAuthority = metaplex.identity();
     const tokenOwner = metaplex.identity().publicKey;
-
     const instructions = await Metaplex.createNftBuilderInstruction(
-      feePayer,
+      payer,
       params,
       useNewMint,
       updateAuthority,
@@ -34,7 +33,10 @@ export namespace MetaplexPhantom {
     );
 
     const transaction = new Transaction();
-    instructions.forEach((inst) => transaction.add(inst));
+    instructions.forEach((inst) => {
+      transaction.feePayer = payer.publicKey;
+      transaction.add(inst);
+    });
 
     const blockhashObj =
       await Node.getConnection().getLatestBlockhashAndContext();
@@ -85,10 +87,6 @@ export namespace MetaplexPhantom {
 
     debugLog('# tx: ', builder.tx.signatures);
     const signed = await phantom.signTransaction(builder.tx);
-    debugLog(
-      '# signed: ',
-      signed.signatures.map((signature) => signature.publicKey.toString())
-    );
     const sig = await connection
       .sendRawTransaction(signed.serialize())
       .then(Result.ok)

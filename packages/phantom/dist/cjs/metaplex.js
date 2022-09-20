@@ -15,16 +15,19 @@ const nft_1 = require("@solana-suite/nft");
 const shared_1 = require("@solana-suite/shared");
 var MetaplexPhantom;
 (function (MetaplexPhantom) {
-    const createNftBuilder = (params, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const metaplex = nft_1.Bundlr.make(feePayer);
-        const payer = metaplex.identity().secretKey.toString().toKeypair();
+    const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
+        const metaplex = nft_1.Bundlr.make(phantom);
+        const payer = metaplex.identity();
         const useNewMint = web3_js_1.Keypair.generate();
-        const updateAuthority = payer;
-        const mintAuthority = payer;
+        const updateAuthority = metaplex.identity();
+        const mintAuthority = metaplex.identity();
         const tokenOwner = metaplex.identity().publicKey;
-        const instructions = yield nft_1.Metaplex.createNftBuilderInstruction(feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
+        const instructions = yield nft_1.Metaplex.createNftBuilderInstruction(payer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
         const transaction = new web3_js_1.Transaction();
-        instructions.forEach((inst) => transaction.add(inst));
+        instructions.forEach((inst) => {
+            transaction.feePayer = payer.publicKey;
+            transaction.add(inst);
+        });
         const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhashAndContext();
         transaction.recentBlockhash = blockhashObj.value.blockhash;
         transaction.partialSign(useNewMint);
@@ -60,7 +63,6 @@ var MetaplexPhantom;
         builder.tx.recentBlockhash = blockhashObj.value.blockhash;
         (0, shared_1.debugLog)('# tx: ', builder.tx.signatures);
         const signed = yield phantom.signTransaction(builder.tx);
-        (0, shared_1.debugLog)('# signed: ', signed.signatures.map((signature) => signature.publicKey.toString()));
         const sig = yield connection
             .sendRawTransaction(signed.serialize())
             .then(shared_1.Result.ok)

@@ -4,8 +4,9 @@ import { ValidatorError } from '../validator';
 import { InputMetaplexMetadata } from '../types/metaplex/index';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 import { BundlrSigner, NftStorageMetadata } from '../types';
+import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 export declare namespace Metaplex {
-    const createNftBuilderInstruction: (feePayer: BundlrSigner, params: CreateNftBuilderParams, useNewMint: Keypair, updateAuthority: Keypair, mintAuthority: Keypair, tokenOwner: PublicKey) => Promise<import("@solana/web3.js").TransactionInstruction[]>;
+    const createNftBuilderInstruction: (feePayer: BundlrSigner, params: CreateNftBuilderParams, useNewMint: Keypair, updateAuthority: Keypair | IdentityClient, mintAuthority: Keypair | IdentityClient, tokenOwner: PublicKey) => Promise<import("@solana/web3.js").TransactionInstruction[]>;
     const initNftStorageMetadata: (input: InputMetaplexMetadata, sellerFeeBasisPoints: number, options?: any) => NftStorageMetadata;
     const uploadMetaContent: (input: InputMetaplexMetadata, feePayer: BundlrSigner) => Promise<Result.Ok<{
         uri: string;
