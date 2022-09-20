@@ -104,7 +104,6 @@ describe('Validator', () => {
     global.window = jsdom.window;
     const asset = RandomAsset.get();
     const res = Validator.isFilePath(asset.filePath!);
-    console.log(res);
     assert.include(res.isErr && res.error.message, Validator.Message.ONLY_NODE_JS);
   });
 
