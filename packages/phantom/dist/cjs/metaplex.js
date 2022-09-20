@@ -24,7 +24,7 @@ var MetaplexPhantom;
         const tokenOwner = metaplex.identity().publicKey;
         const instructions = yield nft_1.Metaplex.createNftBuilderInstruction(payer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
         const transaction = new web3_js_1.Transaction();
-        instructions.forEach((inst) => {
+        instructions.forEach(inst => {
             transaction.feePayer = payer.publicKey;
             transaction.add(inst);
         });
