@@ -47,4 +47,7 @@ jobs:
     - run: |
         cd ./packages/shared/
         cat src/solana-suite.json
-    - run: npm run test:nft
+        
+    - run: |
+        npm run clean && npm run compile
+        npm run test:nft
