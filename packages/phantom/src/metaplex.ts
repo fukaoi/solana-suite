@@ -10,14 +10,13 @@ import {
   Metaplex,
 } from '@solana-suite/nft';
 import { debugLog, Node, Result } from '@solana-suite/shared';
-import { InitializeMint, Phantom } from './types';
+import { InitializeNftMint, Phantom } from './types';
 
 export namespace MetaplexPhantom {
   const createNftBuilder = async (
     params: CreateNftBuilderParams,
     phantom: Phantom
-  // ): Promise<InitializeMint> => {
-  ) => {
+  ): Promise<InitializeNftMint> => {
     const metaplex = Bundlr.make(phantom);
     const payer = metaplex.identity();
     const useNewMint = Keypair.generate();
@@ -39,7 +38,7 @@ export namespace MetaplexPhantom {
       transaction.add(inst);
     });
 
-    return { tx: transaction, mint: useNewMint.publicKey, useNewMint: useNewMint };
+    return { tx: transaction, useNewMint: useNewMint };
   };
 
   /**
@@ -51,12 +50,15 @@ export namespace MetaplexPhantom {
    */
   export const mint = async (
     input: InputMetaplexMetadata,
+    cluster: string,
     phantom: Phantom
   ): Promise<Result<string, Error | ValidatorError>> => {
     const valid = Validator.checkAll<InputMetaplexMetadata>(input);
     if (valid.isErr) {
       return Result.err(valid.error);
     }
+
+    Node.changeConnection({ cluster });
 
     const uploaded = await Metaplex.uploadMetaContent(input, phantom);
     if (uploaded.isErr) {
@@ -77,7 +79,7 @@ export namespace MetaplexPhantom {
     const connection = Node.getConnection();
 
     const builder = await createNftBuilder(mintInput, phantom);
-    debugLog('# mint: ', builder.mint.toString());
+    debugLog('# mint: ', builder.useNewMint.publicKey.toString());
     builder.tx.feePayer = phantom.publicKey;
     const blockhashObj = await connection.getLatestBlockhashAndContext();
     builder.tx.recentBlockhash = blockhashObj.value.blockhash;
@@ -98,6 +100,6 @@ export namespace MetaplexPhantom {
     }
 
     await Node.confirmedSig(sig.unwrap());
-    return Result.ok(builder.mint.toString());
+    return Result.ok(builder.useNewMint.publicKey.toString());
   };
 }

@@ -9,5 +9,5 @@ export declare namespace MetaplexPhantom {
      * @param {Phantom} phantom        phantom wallet object
      * @return Promise<Result<Instruction, Error>>
      */
-    const mint: (input: InputMetaplexMetadata, phantom: Phantom) => Promise<Result<string, Error | ValidatorError>>;
+    const mint: (input: InputMetaplexMetadata, cluster: string, phantom: Phantom) => Promise<Result<string, Error | ValidatorError>>;
 }

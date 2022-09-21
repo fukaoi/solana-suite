@@ -15,9 +15,7 @@ const nft_1 = require("@solana-suite/nft");
 const shared_1 = require("@solana-suite/shared");
 var MetaplexPhantom;
 (function (MetaplexPhantom) {
-    const createNftBuilder = (params, phantom
-    // ): Promise<InitializeMint> => {
-    ) => __awaiter(this, void 0, void 0, function* () {
+    const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
         const metaplex = nft_1.Bundlr.make(phantom);
         const payer = metaplex.identity();
         const useNewMint = web3_js_1.Keypair.generate();
@@ -30,7 +28,7 @@ var MetaplexPhantom;
         instructions.forEach((inst) => {
             transaction.add(inst);
         });
-        return { tx: transaction, mint: useNewMint.publicKey, useNewMint: useNewMint };
+        return { tx: transaction, useNewMint: useNewMint };
     });
     /**
      * Upload content and NFT mint
@@ -39,11 +37,12 @@ var MetaplexPhantom;
      * @param {Phantom} phantom        phantom wallet object
      * @return Promise<Result<Instruction, Error>>
      */
-    MetaplexPhantom.mint = (input, phantom) => __awaiter(this, void 0, void 0, function* () {
+    MetaplexPhantom.mint = (input, cluster, phantom) => __awaiter(this, void 0, void 0, function* () {
         const valid = nft_1.Validator.checkAll(input);
         if (valid.isErr) {
             return shared_1.Result.err(valid.error);
         }
+        shared_1.Node.changeConnection({ cluster });
         const uploaded = yield nft_1.Metaplex.uploadMetaContent(input, phantom);
         if (uploaded.isErr) {
             return shared_1.Result.err(uploaded.error);
@@ -56,7 +55,7 @@ var MetaplexPhantom;
             sellerFeeBasisPoints }, reducedMetadata);
         const connection = shared_1.Node.getConnection();
         const builder = yield createNftBuilder(mintInput, phantom);
-        (0, shared_1.debugLog)('# mint: ', builder.mint.toString());
+        (0, shared_1.debugLog)('# mint: ', builder.useNewMint.publicKey.toString());
         builder.tx.feePayer = phantom.publicKey;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
         builder.tx.recentBlockhash = blockhashObj.value.blockhash;
@@ -71,6 +70,6 @@ var MetaplexPhantom;
             return shared_1.Result.err(sig.error);
         }
         yield shared_1.Node.confirmedSig(sig.unwrap());
-        return shared_1.Result.ok(builder.mint.toString());
+        return shared_1.Result.ok(builder.useNewMint.publicKey.toString());
     });
 })(MetaplexPhantom = exports.MetaplexPhantom || (exports.MetaplexPhantom = {}));
