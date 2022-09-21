@@ -47,11 +47,7 @@ export namespace SplTokenPhantom {
     );
 
     transaction.feePayer = owner;
-    const blockhashObj = await connection.getLatestBlockhashAndContext();
-    transaction.recentBlockhash = blockhashObj.value.blockhash;
-    transaction.partialSign(keypair);
-
-    return { mint: keypair.publicKey, tx: transaction };
+    return { mint: keypair, tx: transaction };
   };
 
   // select 'new token'
@@ -68,7 +64,7 @@ export namespace SplTokenPhantom {
 
     const builder = await createTokenBuilder(owner, mintDecimal);
     const data = await AssociatedAccount.makeOrCreateInstruction(
-      builder.mint,
+      builder.mint.publicKey,
       owner
     );
     tx.add(data.unwrap().inst as TransactionInstruction);
@@ -80,7 +76,7 @@ export namespace SplTokenPhantom {
 
     const transaction = tx.add(
       createMintToCheckedInstruction(
-        txData.mint,
+        txData.mint.publicKey,
         txData.tokenAccount,
         owner,
         totalAmount,
@@ -94,6 +90,7 @@ export namespace SplTokenPhantom {
     const blockhashObj = await connection.getLatestBlockhashAndContext();
     transaction.recentBlockhash = blockhashObj.value.blockhash;
 
+    transaction.partialSign(builder.mint);
     const signed = await phantom.signAllTransactions([txData.tx, transaction]);
 
     // todo: refactoring
