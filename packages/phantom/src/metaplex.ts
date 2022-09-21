@@ -50,12 +50,15 @@ export namespace MetaplexPhantom {
    */
   export const mint = async (
     input: InputMetaplexMetadata,
+    cluster: string,
     phantom: Phantom
   ): Promise<Result<string, Error | ValidatorError>> => {
     const valid = Validator.checkAll<InputMetaplexMetadata>(input);
     if (valid.isErr) {
       return Result.err(valid.error);
     }
+
+    Node.changeConnection({ cluster });
 
     const uploaded = await Metaplex.uploadMetaContent(input, phantom);
     if (uploaded.isErr) {

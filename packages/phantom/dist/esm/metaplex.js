@@ -34,11 +34,12 @@ export var MetaplexPhantom;
      * @param {Phantom} phantom        phantom wallet object
      * @return Promise<Result<Instruction, Error>>
      */
-    MetaplexPhantom.mint = (input, phantom) => __awaiter(this, void 0, void 0, function* () {
+    MetaplexPhantom.mint = (input, cluster, phantom) => __awaiter(this, void 0, void 0, function* () {
         const valid = Validator.checkAll(input);
         if (valid.isErr) {
             return Result.err(valid.error);
         }
+        Node.changeConnection({ cluster });
         const uploaded = yield Metaplex.uploadMetaContent(input, phantom);
         if (uploaded.isErr) {
             return Result.err(uploaded.error);
