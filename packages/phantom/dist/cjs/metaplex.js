@@ -15,7 +15,9 @@ const nft_1 = require("@solana-suite/nft");
 const shared_1 = require("@solana-suite/shared");
 var MetaplexPhantom;
 (function (MetaplexPhantom) {
-    const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
+    const createNftBuilder = (params, phantom
+    // ): Promise<InitializeMint> => {
+    ) => __awaiter(this, void 0, void 0, function* () {
         const metaplex = nft_1.Bundlr.make(phantom);
         const payer = metaplex.identity();
         const useNewMint = web3_js_1.Keypair.generate();
@@ -28,7 +30,7 @@ var MetaplexPhantom;
         instructions.forEach((inst) => {
             transaction.add(inst);
         });
-        return { tx: transaction, useNewMint: useNewMint };
+        return { tx: transaction, mint: useNewMint.publicKey, useNewMint: useNewMint };
     });
     /**
      * Upload content and NFT mint
