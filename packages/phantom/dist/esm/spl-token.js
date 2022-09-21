@@ -25,10 +25,7 @@ export var SplTokenPhantom;
             programId: TOKEN_PROGRAM_ID,
         }), createInitializeMintInstruction(keypair.publicKey, mintDecimal, owner, owner, TOKEN_PROGRAM_ID));
         transaction.feePayer = owner;
-        const blockhashObj = yield connection.getLatestBlockhashAndContext();
-        transaction.recentBlockhash = blockhashObj.value.blockhash;
-        transaction.partialSign(keypair);
-        return { mint: keypair.publicKey, tx: transaction };
+        return { mint: keypair, tx: transaction };
     });
     // select 'new token'
     SplTokenPhantom.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
@@ -36,17 +33,18 @@ export var SplTokenPhantom;
         const connection = Node.getConnection();
         const tx = new Transaction();
         const builder = yield createTokenBuilder(owner, mintDecimal);
-        const data = yield AssociatedAccount.makeOrCreateInstruction(builder.mint, owner);
+        const data = yield AssociatedAccount.makeOrCreateInstruction(builder.mint.publicKey, owner);
         tx.add(data.unwrap().inst);
         const txData = {
             tokenAccount: data.unwrap().tokenAccount.toPublicKey(),
             mint: builder.mint,
             tx: builder.tx,
         };
-        const transaction = tx.add(createMintToCheckedInstruction(txData.mint, txData.tokenAccount, owner, totalAmount, mintDecimal, [], TOKEN_PROGRAM_ID));
+        const transaction = tx.add(createMintToCheckedInstruction(txData.mint.publicKey, txData.tokenAccount, owner, totalAmount, mintDecimal, [], TOKEN_PROGRAM_ID));
         transaction.feePayer = owner;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
         transaction.recentBlockhash = blockhashObj.value.blockhash;
+        transaction.partialSign(builder.mint);
         const signed = yield phantom.signAllTransactions([txData.tx, transaction]);
         // todo: refactoring
         for (let sign of signed) {

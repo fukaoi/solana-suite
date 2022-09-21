@@ -28,10 +28,7 @@ var SplTokenPhantom;
             programId: spl_token_1.TOKEN_PROGRAM_ID,
         }), (0, spl_token_1.createInitializeMintInstruction)(keypair.publicKey, mintDecimal, owner, owner, spl_token_1.TOKEN_PROGRAM_ID));
         transaction.feePayer = owner;
-        const blockhashObj = yield connection.getLatestBlockhashAndContext();
-        transaction.recentBlockhash = blockhashObj.value.blockhash;
-        transaction.partialSign(keypair);
-        return { mint: keypair.publicKey, tx: transaction };
+        return { mint: keypair, tx: transaction };
     });
     // select 'new token'
     SplTokenPhantom.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
@@ -39,17 +36,18 @@ var SplTokenPhantom;
         const connection = shared_1.Node.getConnection();
         const tx = new web3_js_1.Transaction();
         const builder = yield createTokenBuilder(owner, mintDecimal);
-        const data = yield core_1.AssociatedAccount.makeOrCreateInstruction(builder.mint, owner);
+        const data = yield core_1.AssociatedAccount.makeOrCreateInstruction(builder.mint.publicKey, owner);
         tx.add(data.unwrap().inst);
         const txData = {
             tokenAccount: data.unwrap().tokenAccount.toPublicKey(),
             mint: builder.mint,
             tx: builder.tx,
         };
-        const transaction = tx.add((0, spl_token_1.createMintToCheckedInstruction)(txData.mint, txData.tokenAccount, owner, totalAmount, mintDecimal, [], spl_token_1.TOKEN_PROGRAM_ID));
+        const transaction = tx.add((0, spl_token_1.createMintToCheckedInstruction)(txData.mint.publicKey, txData.tokenAccount, owner, totalAmount, mintDecimal, [], spl_token_1.TOKEN_PROGRAM_ID));
         transaction.feePayer = owner;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
         transaction.recentBlockhash = blockhashObj.value.blockhash;
+        transaction.partialSign(builder.mint);
         const signed = yield phantom.signAllTransactions([txData.tx, transaction]);
         // todo: refactoring
         for (let sign of signed) {

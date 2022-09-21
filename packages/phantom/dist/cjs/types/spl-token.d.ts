@@ -1,5 +1,5 @@
-import { PublicKey, Transaction } from "@solana/web3.js";
+import { Keypair, Transaction } from "@solana/web3.js";
 export declare type InitializeMint = {
-    mint: PublicKey;
+    mint: Keypair;
     tx: Transaction;
 };

@@ -24,14 +24,11 @@ var MetaplexPhantom;
         const tokenOwner = metaplex.identity().publicKey;
         const instructions = yield nft_1.Metaplex.createNftBuilderInstruction(payer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
         const transaction = new web3_js_1.Transaction();
-        instructions.forEach(inst => {
-            transaction.feePayer = payer.publicKey;
+        transaction.feePayer = payer.publicKey;
+        instructions.forEach((inst) => {
             transaction.add(inst);
         });
-        const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhashAndContext();
-        transaction.recentBlockhash = blockhashObj.value.blockhash;
-        transaction.partialSign(useNewMint);
-        return { tx: transaction, mint: useNewMint.publicKey };
+        return { tx: transaction, useNewMint: useNewMint };
     });
     /**
      * Upload content and NFT mint
@@ -57,12 +54,13 @@ var MetaplexPhantom;
             sellerFeeBasisPoints }, reducedMetadata);
         const connection = shared_1.Node.getConnection();
         const builder = yield createNftBuilder(mintInput, phantom);
-        (0, shared_1.debugLog)('# mint: ', builder.mint.toString());
+        (0, shared_1.debugLog)('# mint: ', builder.useNewMint.publicKey.toString());
         builder.tx.feePayer = phantom.publicKey;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
         builder.tx.recentBlockhash = blockhashObj.value.blockhash;
-        (0, shared_1.debugLog)('# tx: ', builder.tx.signatures);
+        builder.tx.partialSign(builder.useNewMint);
         const signed = yield phantom.signTransaction(builder.tx);
+        (0, shared_1.debugLog)('# signed, signed.signatures: ', signed, signed.signatures.map((sig) => sig.publicKey.toString()));
         const sig = yield connection
             .sendRawTransaction(signed.serialize())
             .then(shared_1.Result.ok)
@@ -71,6 +69,6 @@ var MetaplexPhantom;
             return shared_1.Result.err(sig.error);
         }
         yield shared_1.Node.confirmedSig(sig.unwrap());
-        return shared_1.Result.ok(builder.mint.toString());
+        return shared_1.Result.ok(builder.useNewMint.publicKey.toString());
     });
 })(MetaplexPhantom = exports.MetaplexPhantom || (exports.MetaplexPhantom = {}));

@@ -12,9 +12,7 @@ import { Validator, Bundlr, Metaplex, } from '@solana-suite/nft';
 import { debugLog, Node, Result } from '@solana-suite/shared';
 export var MetaplexPhantom;
 (function (MetaplexPhantom) {
-    const createNftBuilder = (params, phantom
-    // ): Promise<InitializeMint> => {
-    ) => __awaiter(this, void 0, void 0, function* () {
+    const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
         const metaplex = Bundlr.make(phantom);
         const payer = metaplex.identity();
         const useNewMint = Keypair.generate();
@@ -27,7 +25,7 @@ export var MetaplexPhantom;
         instructions.forEach((inst) => {
             transaction.add(inst);
         });
-        return { tx: transaction, mint: useNewMint.publicKey, useNewMint: useNewMint };
+        return { tx: transaction, useNewMint: useNewMint };
     });
     /**
      * Upload content and NFT mint
@@ -53,7 +51,7 @@ export var MetaplexPhantom;
             sellerFeeBasisPoints }, reducedMetadata);
         const connection = Node.getConnection();
         const builder = yield createNftBuilder(mintInput, phantom);
-        debugLog('# mint: ', builder.mint.toString());
+        debugLog('# mint: ', builder.useNewMint.publicKey.toString());
         builder.tx.feePayer = phantom.publicKey;
         const blockhashObj = yield connection.getLatestBlockhashAndContext();
         builder.tx.recentBlockhash = blockhashObj.value.blockhash;
@@ -68,6 +66,6 @@ export var MetaplexPhantom;
             return Result.err(sig.error);
         }
         yield Node.confirmedSig(sig.unwrap());
-        return Result.ok(builder.mint.toString());
+        return Result.ok(builder.useNewMint.publicKey.toString());
     });
 })(MetaplexPhantom || (MetaplexPhantom = {}));
