@@ -48,6 +48,9 @@
     "node-fetch": "^3.0.0",
     "cross-fetch": "^3.1.4"
   },
+  "overrides": {
+    "@metaplex-foundation/mpl-token-metadata": "2.2.4"
+  },
   "browser": {
     "fs": false
   },
