@@ -75,9 +75,9 @@ Number.prototype.toSol = function () {
 Number.prototype.toLamports = function () {
     return this * LAMPORTS_PER_SOL;
 };
-export const debugLog = (data, data2 = '', data3 = '') => {
+export const debugLog = (data, data2 = '', data3 = '', data4 = '') => {
     if (Constants.isDebugging || process.env.DEBUG == 'true') {
-        console.log('[DEBUG]', data, data2, data3);
+        console.log('[DEBUG]', data, data2, data3, data4);
     }
 };
 export const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise((r) => setTimeout(r, sec * 1000)); });

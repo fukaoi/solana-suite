@@ -70,10 +70,11 @@ Number.prototype.toLamports = function () {
 export const debugLog = (
   data: unknown,
   data2: unknown = '',
-  data3: unknown = ''
+  data3: unknown = '',
+  data4: unknown = ''
 ) => {
   if (Constants.isDebugging || process.env.DEBUG == 'true') {
-    console.log('[DEBUG]', data, data2, data3);
+    console.log('[DEBUG]', data, data2, data3, data4);
   }
 };
 

@@ -7,11 +7,12 @@ import {
   SignatureResult,
 } from '@solana/web3.js';
 
+let cluster = '';
+let commitment = Constants.COMMITMENT;
+let data = {test: '1'};
 export namespace Node {
-  let cluster: string;
-  let commitment: Commitment;
   export const getConnection = (): Connection => {
-    debugLog('# [Before] Node info: ', cluster, commitment);
+    debugLog('# [Before] Node info: ', cluster, commitment, data);
 
     // default setting
     if (!cluster) {
@@ -38,6 +39,7 @@ export namespace Node {
     }
 
     if (param.cluster) {
+      data.test = '2'
       cluster = ConstantsFunc.switchCluster(param.cluster);
       debugLog('# Node change cluster: ', cluster);
     }

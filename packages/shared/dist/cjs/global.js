@@ -81,9 +81,9 @@ Number.prototype.toSol = function () {
 Number.prototype.toLamports = function () {
     return this * web3_js_1.LAMPORTS_PER_SOL;
 };
-const debugLog = (data, data2 = '', data3 = '') => {
+const debugLog = (data, data2 = '', data3 = '', data4 = '') => {
     if (_1.Constants.isDebugging || process.env.DEBUG == 'true') {
-        console.log('[DEBUG]', data, data2, data3);
+        console.log('[DEBUG]', data, data2, data3, data4);
     }
 };
 exports.debugLog = debugLog;

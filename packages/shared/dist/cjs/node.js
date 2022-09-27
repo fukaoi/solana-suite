@@ -12,12 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Node = void 0;
 const _1 = require("./");
 const web3_js_1 = require("@solana/web3.js");
+let cluster = '';
+let commitment = _1.Constants.COMMITMENT;
+let data = { test: '1' };
 var Node;
 (function (Node) {
-    let cluster;
-    let commitment;
     Node.getConnection = () => {
-        (0, _1.debugLog)('# [Before] Node info: ', cluster, commitment);
+        (0, _1.debugLog)('# [Before] Node info: ', cluster, commitment, data);
         // default setting
         if (!cluster) {
             cluster = _1.ConstantsFunc.switchCluster(_1.Constants.currentCluster);
@@ -35,6 +36,7 @@ var Node;
             (0, _1.debugLog)('# Node change commitment: ', commitment);
         }
         if (param.cluster) {
+            data.test = '2';
             cluster = _1.ConstantsFunc.switchCluster(param.cluster);
             (0, _1.debugLog)('# Node change cluster: ', cluster);
         }

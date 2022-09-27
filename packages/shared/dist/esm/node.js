@@ -9,12 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { debugLog, Constants, ConstantsFunc, Result } from './';
 import { Connection, } from '@solana/web3.js';
+let cluster = '';
+let commitment = Constants.COMMITMENT;
+let data = { test: '1' };
 export var Node;
 (function (Node) {
-    let cluster;
-    let commitment;
     Node.getConnection = () => {
-        debugLog('# [Before] Node info: ', cluster, commitment);
+        debugLog('# [Before] Node info: ', cluster, commitment, data);
         // default setting
         if (!cluster) {
             cluster = ConstantsFunc.switchCluster(Constants.currentCluster);
@@ -32,6 +33,7 @@ export var Node;
             debugLog('# Node change commitment: ', commitment);
         }
         if (param.cluster) {
+            data.test = '2';
             cluster = ConstantsFunc.switchCluster(param.cluster);
             debugLog('# Node change cluster: ', cluster);
         }
