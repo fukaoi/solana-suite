@@ -7,26 +7,27 @@ import {
   SignatureResult,
 } from '@solana/web3.js';
 
-let cluster = '';
-let commitment = Constants.COMMITMENT;
-let data = {test: '1'};
 export namespace Node {
+  const options = {
+    cluster: '',
+    commitment: Constants.COMMITMENT,
+  };
   export const getConnection = (): Connection => {
-    debugLog('# [Before] Node info: ', cluster, commitment, data);
+    debugLog('# [Before] Node info: ', options.cluster, options.commitment);
 
     // default setting
-    if (!cluster) {
-      cluster = ConstantsFunc.switchCluster(Constants.currentCluster);
+    if (!options.cluster) {
+      options.cluster = ConstantsFunc.switchCluster(Constants.currentCluster);
     }
 
     // default setting
-    if (!commitment) {
-      commitment = Constants.COMMITMENT;
+    if (!options.commitment) {
+      options.commitment = Constants.COMMITMENT;
     }
 
-    debugLog('# [After] Node info: ', cluster, commitment);
+    debugLog('# [After] Node info: ', options.cluster, options.commitment);
 
-    return new Connection(cluster, commitment);
+    return new Connection(options.cluster, options.commitment);
   };
 
   export const changeConnection = (param: {
@@ -34,14 +35,13 @@ export namespace Node {
     commitment?: Commitment;
   }): void => {
     if (param.commitment) {
-      commitment = param.commitment;
-      debugLog('# Node change commitment: ', commitment);
+      options.commitment = param.commitment;
+      debugLog('# Node change commitment: ', options.commitment);
     }
 
     if (param.cluster) {
-      data.test = '2'
-      cluster = ConstantsFunc.switchCluster(param.cluster);
-      debugLog('# Node change cluster: ', cluster);
+      options.cluster = ConstantsFunc.switchCluster(param.cluster);
+      debugLog('# Node change cluster: ', options.cluster);
     }
   };
 
