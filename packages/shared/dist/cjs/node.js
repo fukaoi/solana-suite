@@ -12,33 +12,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Node = void 0;
 const _1 = require("./");
 const web3_js_1 = require("@solana/web3.js");
-let cluster = '';
-let commitment = _1.Constants.COMMITMENT;
-let data = { test: '1' };
 var Node;
 (function (Node) {
+    const options = {
+        cluster: '',
+        commitment: _1.Constants.COMMITMENT,
+    };
     Node.getConnection = () => {
-        (0, _1.debugLog)('# [Before] Node info: ', cluster, commitment, data);
+        (0, _1.debugLog)('# [Before] Node info: ', options.cluster, options.commitment);
         // default setting
-        if (!cluster) {
-            cluster = _1.ConstantsFunc.switchCluster(_1.Constants.currentCluster);
+        if (!options.cluster) {
+            options.cluster = _1.ConstantsFunc.switchCluster(_1.Constants.currentCluster);
         }
         // default setting
-        if (!commitment) {
-            commitment = _1.Constants.COMMITMENT;
+        if (!options.commitment) {
+            options.commitment = _1.Constants.COMMITMENT;
         }
-        (0, _1.debugLog)('# [After] Node info: ', cluster, commitment);
-        return new web3_js_1.Connection(cluster, commitment);
+        (0, _1.debugLog)('# [After] Node info: ', options.cluster, options.commitment);
+        return new web3_js_1.Connection(options.cluster, options.commitment);
     };
     Node.changeConnection = (param) => {
         if (param.commitment) {
-            commitment = param.commitment;
-            (0, _1.debugLog)('# Node change commitment: ', commitment);
+            options.commitment = param.commitment;
+            (0, _1.debugLog)('# Node change commitment: ', options.commitment);
         }
         if (param.cluster) {
-            data.test = '2';
-            cluster = _1.ConstantsFunc.switchCluster(param.cluster);
-            (0, _1.debugLog)('# Node change cluster: ', cluster);
+            options.cluster = _1.ConstantsFunc.switchCluster(param.cluster);
+            (0, _1.debugLog)('# Node change cluster: ', options.cluster);
         }
     };
     Node.confirmedSig = (signature, commitment = _1.Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {

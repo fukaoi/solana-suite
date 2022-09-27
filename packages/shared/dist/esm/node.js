@@ -9,33 +9,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { debugLog, Constants, ConstantsFunc, Result } from './';
 import { Connection, } from '@solana/web3.js';
-let cluster = '';
-let commitment = Constants.COMMITMENT;
-let data = { test: '1' };
 export var Node;
 (function (Node) {
+    const options = {
+        cluster: '',
+        commitment: Constants.COMMITMENT,
+    };
     Node.getConnection = () => {
-        debugLog('# [Before] Node info: ', cluster, commitment, data);
+        debugLog('# [Before] Node info: ', options.cluster, options.commitment);
         // default setting
-        if (!cluster) {
-            cluster = ConstantsFunc.switchCluster(Constants.currentCluster);
+        if (!options.cluster) {
+            options.cluster = ConstantsFunc.switchCluster(Constants.currentCluster);
         }
         // default setting
-        if (!commitment) {
-            commitment = Constants.COMMITMENT;
+        if (!options.commitment) {
+            options.commitment = Constants.COMMITMENT;
         }
-        debugLog('# [After] Node info: ', cluster, commitment);
-        return new Connection(cluster, commitment);
+        debugLog('# [After] Node info: ', options.cluster, options.commitment);
+        return new Connection(options.cluster, options.commitment);
     };
     Node.changeConnection = (param) => {
         if (param.commitment) {
-            commitment = param.commitment;
-            debugLog('# Node change commitment: ', commitment);
+            options.commitment = param.commitment;
+            debugLog('# Node change commitment: ', options.commitment);
         }
         if (param.cluster) {
-            data.test = '2';
-            cluster = ConstantsFunc.switchCluster(param.cluster);
-            debugLog('# Node change cluster: ', cluster);
+            options.cluster = ConstantsFunc.switchCluster(param.cluster);
+            debugLog('# Node change cluster: ', options.cluster);
         }
     };
     Node.confirmedSig = (signature, commitment = Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {
