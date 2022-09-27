@@ -1,6 +1,10 @@
 import { Commitment, PublicKey } from '@solana/web3.js';
 import './global';
 export declare namespace Constants {
+    const currentCluster: string;
+    const customUrl: string;
+    const isDebugging: boolean;
+    const nftStorageApiKey: string;
     enum Cluster {
         prd = "mainnet-beta",
         prd2 = "mainnet-beta-sereum",
@@ -10,10 +14,13 @@ export declare namespace Constants {
         localhost = "localhost-devnet",
         custom = "custom"
     }
-    const currentCluster: string;
-    const customUrl: string;
-    const isDebugging: boolean;
-    const nftStorageApiKey: string;
+    enum EndPointUrl {
+        prd = "https://api.mainnet-beta.solana.com",
+        prd2 = "https://solana-api.projectserum.com",
+        dev = "https://api.devnet.solana.com",
+        test = "https://api.testnet.solana.com",
+        localhost = "http://api.devnet.solana.com"
+    }
 }
 export declare namespace ConstantsFunc {
     const switchCluster: (env: string | undefined, customUrl?: string) => string;

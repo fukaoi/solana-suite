@@ -1,9 +1,4 @@
-import {
-  debugLog,
-  Constants,
-  ConstantsFunc,
-  Result,
-} from './';
+import { debugLog, Constants, ConstantsFunc, Result } from './';
 
 import {
   Connection,
@@ -13,47 +8,53 @@ import {
 } from '@solana/web3.js';
 
 export namespace Node {
-  let cluster: string;
-  let commitment: Commitment;
+  const options = {
+    cluster: '',
+    commitment: Constants.COMMITMENT,
+  };
   export const getConnection = (): Connection => {
+    debugLog('# [Before] Node info: ', options.cluster, options.commitment);
 
     // default setting
-    if (!cluster) {
-      cluster = ConstantsFunc.switchCluster(Constants.currentCluster);
+    if (!options.cluster) {
+      options.cluster = ConstantsFunc.switchCluster(Constants.currentCluster);
     }
 
     // default setting
-    if (!commitment) {
-      commitment = Constants.COMMITMENT;
+    if (!options.commitment) {
+      options.commitment = Constants.COMMITMENT;
     }
 
-    debugLog('# Node info: ', cluster, commitment);
+    debugLog('# [After] Node info: ', options.cluster, options.commitment);
 
-    return new Connection(cluster, commitment);
+    return new Connection(options.cluster, options.commitment);
   };
 
   export const changeConnection = (param: {
-    cluster?: string,
-    commitment?: Commitment,
+    cluster?: Constants.Cluster | string;
+    commitment?: Commitment;
   }): void => {
     if (param.commitment) {
-      debugLog('# Node change commitment: ', commitment);
-      commitment = param.commitment;
+      options.commitment = param.commitment;
+      debugLog('# Node change commitment: ', options.commitment);
     }
 
     if (param.cluster) {
-      debugLog('# Node change cluster: ', cluster);
-      cluster = ConstantsFunc.switchCluster(param.cluster);
+      options.cluster = ConstantsFunc.switchCluster(param.cluster);
+      debugLog('# Node change cluster: ', options.cluster);
     }
-  }
+  };
 
- export const confirmedSig = async (
+  export const confirmedSig = async (
     signature: string,
     commitment: Commitment = Constants.COMMITMENT
-  ): Promise<Result<RpcResponseAndContext<SignatureResult> | unknown, Error>> => {
+  ): Promise<
+    Result<RpcResponseAndContext<SignatureResult> | unknown, Error>
+  > => {
     /** @deprecated Instead, call `confirmTransaction` using a `TransactionConfirmationConfig` */
-    return await Node.getConnection().confirmTransaction(signature, commitment)
+    return await Node.getConnection()
+      .confirmTransaction(signature, commitment)
       .then(Result.ok)
       .catch(Result.err);
-  }
+  };
 }

@@ -1,8 +1,8 @@
-import {describe, it} from 'mocha';
-import {assert} from 'chai';
-import {Result} from '../src/index';
-import {Memo} from '../../core/src/index';
-import {Setup, KeypairStr} from './testSetup';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
+import { Result } from '../src/result';
+import { Memo } from '../../core/src/memo';
+import { Setup, KeypairStr } from './testSetup';
 
 let source: KeypairStr;
 
@@ -13,19 +13,17 @@ describe('Instruction', () => {
   });
 
   it('Submit batch instructions', async () => {
-    const inst1 =
-      Memo.create(
-        '{"title": "Submit first instruction"}',
-        source.toPublicKey(),
-        source.toKeypair(),
-      );
+    const inst1 = Memo.create(
+      '{"title": "Submit first instruction"}',
+      source.toPublicKey(),
+      source.toKeypair()
+    );
 
-    const inst2 =
-      Memo.create(
-        '{"title": "Submit first instruction"}',
-        source.toPublicKey(),
-        source.toKeypair(),
-      );
+    const inst2 = Memo.create(
+      '{"title": "Submit first instruction"}',
+      source.toPublicKey(),
+      source.toKeypair()
+    );
 
     const res = await [inst1, inst2].submit();
     assert.isTrue(res.isOk, res.unwrap());
@@ -33,12 +31,13 @@ describe('Instruction', () => {
   });
 
   it('Submit instructions, Result type', async () => {
-    const inst =
-      Result.ok(Memo.create(
+    const inst = Result.ok(
+      Memo.create(
         '{"title": "Submit first instruction"}',
         source.toPublicKey(),
-        source.toKeypair(),
-      ));
+        source.toKeypair()
+      )
+    );
 
     const res = await inst.submit();
     assert.isTrue(res.isOk, res.unwrap());
@@ -46,19 +45,21 @@ describe('Instruction', () => {
   });
 
   it('Submit batch instructions, Result type', async () => {
-    const inst1 =
-      Result.ok(Memo.create(
+    const inst1 = Result.ok(
+      Memo.create(
         '{"title": "Submit first instruction"}',
         source.toPublicKey(),
-        source.toKeypair(),
-      ));
+        source.toKeypair()
+      )
+    );
 
-    const inst2 =
-      Result.ok(Memo.create(
+    const inst2 = Result.ok(
+      Memo.create(
         '{"title": "Submit second instruction"}',
         source.toPublicKey(),
-        source.toKeypair(),
-      ));
+        source.toKeypair()
+      )
+    );
 
     const res = await [inst1, inst2].submit();
     assert.isTrue(res.isOk, res.unwrap());
@@ -66,15 +67,17 @@ describe('Instruction', () => {
   });
 
   it('Submit batch many instructions', async () => {
-    const insts = [];
+    const inst = [];
     for (let i = 0; i < 20; i++) {
-      insts.push(Memo.create(
-        `{"title": "Submit ${i} instruction"}`,
-        source.toPublicKey(),
-        source.toKeypair(),
-      ));
+      inst.push(
+        Memo.create(
+          `{"title": "Submit ${i} instruction"}`,
+          source.toPublicKey(),
+          source.toKeypair()
+        )
+      );
     }
-    const res = await insts.submit();
+    const res = await inst.submit();
     assert.isTrue(res.isOk, res.unwrap());
     console.log('# tx signature: ', res.unwrap());
   });
@@ -93,14 +96,15 @@ describe('Instruction', () => {
   });
 
   it('[Err]Submit batch instructions, Include Error in Result type', async () => {
-    const inst1 =
-      Result.ok(Memo.create(
+    const inst1 = Result.ok(
+      Memo.create(
         '{"title": "Submit first instruction"}',
         source.toPublicKey(),
-        source.toKeypair(),
-      ));
+        source.toKeypair()
+      )
+    );
 
-    const inst2 = Result.err(Error('Raise error, seconde instructure'));
+    const inst2 = Result.err(Error('Raise error, seconde instruction'));
 
     const res = await [inst1, inst2].submit();
     assert.isTrue(res.isErr);
@@ -111,4 +115,4 @@ describe('Instruction', () => {
     const res = await ['invalid type'].submit();
     assert.isTrue(res.isErr);
   });
-})
+});

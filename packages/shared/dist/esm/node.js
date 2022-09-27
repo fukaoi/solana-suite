@@ -7,13 +7,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { debugLog, Constants, ConstantsFunc, Result, } from './';
+import { debugLog, Constants, ConstantsFunc, Result } from './';
 import { Connection, } from '@solana/web3.js';
+let cluster = '';
+let commitment = Constants.COMMITMENT;
+let data = { test: '1' };
 export var Node;
 (function (Node) {
-    let cluster;
-    let commitment;
     Node.getConnection = () => {
+        debugLog('# [Before] Node info: ', cluster, commitment, data);
         // default setting
         if (!cluster) {
             cluster = ConstantsFunc.switchCluster(Constants.currentCluster);
@@ -22,22 +24,24 @@ export var Node;
         if (!commitment) {
             commitment = Constants.COMMITMENT;
         }
-        debugLog('# Node info: ', cluster, commitment);
+        debugLog('# [After] Node info: ', cluster, commitment);
         return new Connection(cluster, commitment);
     };
     Node.changeConnection = (param) => {
         if (param.commitment) {
-            debugLog('# Node change commitment: ', commitment);
             commitment = param.commitment;
+            debugLog('# Node change commitment: ', commitment);
         }
         if (param.cluster) {
-            debugLog('# Node change cluster: ', cluster);
+            data.test = '2';
             cluster = ConstantsFunc.switchCluster(param.cluster);
+            debugLog('# Node change cluster: ', cluster);
         }
     };
     Node.confirmedSig = (signature, commitment = Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {
         /** @deprecated Instead, call `confirmTransaction` using a `TransactionConfirmationConfig` */
-        return yield Node.getConnection().confirmTransaction(signature, commitment)
+        return yield Node.getConnection()
+            .confirmTransaction(signature, commitment)
             .then(Result.ok)
             .catch(Result.err);
     });
