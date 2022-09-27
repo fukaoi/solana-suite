@@ -48,9 +48,23 @@ String.prototype.toKeypair = function () {
     return web3_js_1.Keypair.fromSecretKey(decoded);
 };
 String.prototype.toExplorerUrl = function () {
-    let cluster = _1.Constants.currentCluster;
-    if (_1.Constants.currentCluster === 'localhost-devnet') {
-        cluster = 'devnet';
+    const endPointUrl = _1.Node.getConnection().rpcEndpoint;
+    (0, exports.debugLog)('# toExplorerUrl rpcEndpoint:', endPointUrl);
+    let cluster = '';
+    if (endPointUrl === _1.Constants.EndPointUrl.prd) {
+        cluster = _1.Constants.Cluster.prd;
+    }
+    else if (endPointUrl === _1.Constants.EndPointUrl.prd2) {
+        cluster = _1.Constants.Cluster.prd;
+    }
+    else if (endPointUrl === _1.Constants.EndPointUrl.test) {
+        cluster = _1.Constants.Cluster.test;
+    }
+    else if (endPointUrl === _1.Constants.EndPointUrl.dev) {
+        cluster = _1.Constants.Cluster.dev;
+    }
+    else {
+        cluster = _1.Constants.Cluster.dev;
     }
     try {
         /* tslint:disable-next-line */
@@ -68,7 +82,7 @@ Number.prototype.toLamports = function () {
     return this * web3_js_1.LAMPORTS_PER_SOL;
 };
 const debugLog = (data, data2 = '', data3 = '') => {
-    if (_1.Constants.isDebugging || process.env.DEBUG) {
+    if (_1.Constants.isDebugging || process.env.DEBUG == 'true') {
         console.log('[DEBUG]', data, data2, data3);
     }
 };

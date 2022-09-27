@@ -3,6 +3,10 @@ import Config from './solana-suite.json';
 import './global';
 export var Constants;
 (function (Constants) {
+    Constants.currentCluster = Config.cluster.type;
+    Constants.customUrl = Config.cluster.customUrl;
+    Constants.isDebugging = Config.debugging;
+    Constants.nftStorageApiKey = Config.nftstorage.apikey;
     let Cluster;
     (function (Cluster) {
         Cluster["prd"] = "mainnet-beta";
@@ -13,37 +17,41 @@ export var Constants;
         Cluster["localhost"] = "localhost-devnet";
         Cluster["custom"] = "custom";
     })(Cluster = Constants.Cluster || (Constants.Cluster = {}));
-    Constants.currentCluster = Config.cluster.type;
-    Constants.customUrl = Config.cluster.customUrl;
-    Constants.isDebugging = Config.debugging;
-    Constants.nftStorageApiKey = Config.nftstorage.apikey;
+    let EndPointUrl;
+    (function (EndPointUrl) {
+        EndPointUrl["prd"] = "https://api.mainnet-beta.solana.com";
+        EndPointUrl["prd2"] = "https://solana-api.projectserum.com";
+        EndPointUrl["dev"] = "https://api.devnet.solana.com";
+        EndPointUrl["test"] = "https://api.testnet.solana.com";
+        EndPointUrl["localhost"] = "http://api.devnet.solana.com";
+    })(EndPointUrl = Constants.EndPointUrl || (Constants.EndPointUrl = {}));
 })(Constants || (Constants = {}));
 export var ConstantsFunc;
 (function (ConstantsFunc) {
     ConstantsFunc.switchCluster = (env, customUrl = Constants.customUrl) => {
         switch (env) {
             case Constants.Cluster.prd:
-                return 'https://api.mainnet-beta.solana.com';
+                return Constants.EndPointUrl.prd;
             case Constants.Cluster.prd2:
-                return 'https://solana-api.projectserum.com';
+                return Constants.EndPointUrl.prd2;
             case Constants.Cluster.test:
-                return 'https://api.testnet.solana.com';
+                return Constants.EndPointUrl.test;
             case Constants.Cluster.dev:
-                return 'https://api.devnet.solana.com';
+                return Constants.EndPointUrl.dev;
             case Constants.Cluster.prdrr:
                 // don't require rigor, as it can be repeated alternately
                 const index = Date.now() % 4;
                 const clusters = [
-                    'https://api.mainnet-beta.solana.com',
-                    'https://solana-api.projectserum.com',
-                    'https://api.mainnet-beta.solana.com',
-                    'https://solana-api.projectserum.com',
+                    Constants.EndPointUrl.prd,
+                    Constants.EndPointUrl.prd2,
+                    Constants.EndPointUrl.prd,
+                    Constants.EndPointUrl.prd2,
                 ];
                 return clusters[index];
             case Constants.Cluster.custom:
                 return customUrl;
             default:
-                return 'http://api.devnet.solana.com';
+                return Constants.EndPointUrl.localhost;
         }
     };
     ConstantsFunc.switchBundlr = (env) => {

@@ -17,6 +17,7 @@ var Node;
     let cluster;
     let commitment;
     Node.getConnection = () => {
+        (0, _1.debugLog)('# [Before] Node info: ', cluster, commitment);
         // default setting
         if (!cluster) {
             cluster = _1.ConstantsFunc.switchCluster(_1.Constants.currentCluster);
@@ -25,22 +26,23 @@ var Node;
         if (!commitment) {
             commitment = _1.Constants.COMMITMENT;
         }
-        (0, _1.debugLog)('# Node info: ', cluster, commitment);
+        (0, _1.debugLog)('# [After] Node info: ', cluster, commitment);
         return new web3_js_1.Connection(cluster, commitment);
     };
     Node.changeConnection = (param) => {
         if (param.commitment) {
-            (0, _1.debugLog)('# Node change commitment: ', commitment);
             commitment = param.commitment;
+            (0, _1.debugLog)('# Node change commitment: ', commitment);
         }
         if (param.cluster) {
-            (0, _1.debugLog)('# Node change cluster: ', cluster);
             cluster = _1.ConstantsFunc.switchCluster(param.cluster);
+            (0, _1.debugLog)('# Node change cluster: ', cluster);
         }
     };
     Node.confirmedSig = (signature, commitment = _1.Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {
         /** @deprecated Instead, call `confirmTransaction` using a `TransactionConfirmationConfig` */
-        return yield Node.getConnection().confirmTransaction(signature, commitment)
+        return yield Node.getConnection()
+            .confirmTransaction(signature, commitment)
             .then(_1.Result.ok)
             .catch(_1.Result.err);
     });

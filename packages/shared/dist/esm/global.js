@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { PublicKey, Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { Constants, Result } from './';
+import { Constants, Result, Node } from './';
 import { Internals_Instruction } from './internals/_instruction';
 import bs from 'bs58';
 import './types/global';
@@ -42,9 +42,23 @@ String.prototype.toKeypair = function () {
     return Keypair.fromSecretKey(decoded);
 };
 String.prototype.toExplorerUrl = function () {
-    let cluster = Constants.currentCluster;
-    if (Constants.currentCluster === 'localhost-devnet') {
-        cluster = 'devnet';
+    const endPointUrl = Node.getConnection().rpcEndpoint;
+    debugLog('# toExplorerUrl rpcEndpoint:', endPointUrl);
+    let cluster = '';
+    if (endPointUrl === Constants.EndPointUrl.prd) {
+        cluster = Constants.Cluster.prd;
+    }
+    else if (endPointUrl === Constants.EndPointUrl.prd2) {
+        cluster = Constants.Cluster.prd;
+    }
+    else if (endPointUrl === Constants.EndPointUrl.test) {
+        cluster = Constants.Cluster.test;
+    }
+    else if (endPointUrl === Constants.EndPointUrl.dev) {
+        cluster = Constants.Cluster.dev;
+    }
+    else {
+        cluster = Constants.Cluster.dev;
     }
     try {
         /* tslint:disable-next-line */
@@ -62,7 +76,7 @@ Number.prototype.toLamports = function () {
     return this * LAMPORTS_PER_SOL;
 };
 export const debugLog = (data, data2 = '', data3 = '') => {
-    if (Constants.isDebugging || process.env.DEBUG) {
+    if (Constants.isDebugging || process.env.DEBUG == 'true') {
         console.log('[DEBUG]', data, data2, data3);
     }
 };

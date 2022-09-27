@@ -7,6 +7,7 @@ describe('Node', () => {
   it('Connect devnet', async () => {
     Node.changeConnection({cluster: Constants.Cluster.dev});
     const res = Node.getConnection();
+    console.log(res);
     assert.isNotEmpty(res);
     assert.propertyVal(res, '_rpcEndpoint', ConstantsFunc.switchCluster(Constants.Cluster.dev));
   });
