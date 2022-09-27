@@ -2,7 +2,7 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Internals_History } from '../../src/internals/_history';
 
-const searchTokenKey = '2UxjqYrW7tuE5VcMTBcd8Lux7NyWzvoki2FkChQtB7Y6';
+const searchTokenKey = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk';
 const oldSig = '47KcZGxPayz3cJ3Vy6mKCFmz6N4kGkKm3TDnb9VVJ4krrgdu3WznRKyweh4n6KfWgXTm2LzdVqf8sPmjV1H2u6YR';
 const searchTokenKey2 = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk';
 const oldSig2 = '2fSh8kZbRtE5Xi8PVfxfQWKXXLDfzPygoeJdAN9XbW15aoqJHcdNUJVt5tF4B1nVt44cbkHmAWYLfkptbxGgYzjL';
@@ -20,6 +20,8 @@ describe('Internals_Find', () => {
       searchTokenKey.toPublicKey(),
       limit
     );
+
+    console.log(res);
 
     if (res[0].isOk) {
       assert.equal(res.length, limit);
