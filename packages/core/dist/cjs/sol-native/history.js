@@ -36,7 +36,7 @@ var SolNative;
         }
         let hist = [];
         let before;
-        while (true) {
+        for (;;) {
             const transactions = yield _history_1.Internals_History.getForAddress(searchPubkey, bufferedLimit, before);
             (0, shared_1.debugLog)('# getTransactionHistory loop');
             const res = _history_1.Internals_History.filterTransactions(searchPubkey, transactions, actionFilter, false, options.directionFilter);

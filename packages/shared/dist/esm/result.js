@@ -12,20 +12,20 @@ class AbstractResult {
     // unified-signatures. into line 10
     // unwrap<U>(ok: (value: T) => U, err: (error: E) => U): U;
     unwrap(ok, err) {
-        const r = this._chain(value => Result.ok(ok ? ok(value) : value), error => (err ? Result.ok(err(error)) : Result.err(error)));
+        const r = this._chain((value) => Result.ok(ok ? ok(value) : value), (error) => (err ? Result.ok(err(error)) : Result.err(error)));
         if (r.isErr) {
             throw r.error;
         }
         return r.value;
     }
     map(ok, err) {
-        return this._chain(value => Result.ok(ok(value)), error => Result.err(err ? err(error) : error));
+        return this._chain((value) => Result.ok(ok(value)), (error) => Result.err(err ? err(error) : error));
     }
     chain(ok, err) {
-        return this._chain(ok, err || (error => Result.err(error)));
+        return this._chain(ok, err || ((error) => Result.err(error)));
     }
     match(ok, err) {
-        this._chain(value => Result.ok(ok(value)), error => Result.err(err(error)));
+        this._chain((value) => Result.ok(ok(value)), (error) => Result.err(err(error)));
     }
     /// submit (alias Instruction.submit) ////
     submit() {
@@ -53,6 +53,7 @@ class InternalOk extends AbstractResult {
         this.isOk = true;
         this.isErr = false;
     }
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     _chain(ok, _err) {
         return ok(this.value);
     }

@@ -18,7 +18,8 @@ const _1 = require("./");
 const _instruction_1 = require("./internals/_instruction");
 const bs58_1 = __importDefault(require("bs58"));
 require("./types/global");
-// @ts-ignore
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* @ts-ignore */
 Array.prototype.submit = function () {
     return __awaiter(this, void 0, void 0, function* () {
         const instructions = [];

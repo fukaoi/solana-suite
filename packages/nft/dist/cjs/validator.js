@@ -174,7 +174,7 @@ var Validator;
                 condition: 'overMax',
             }));
         }
-        if (!/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(imageOrUri)) {
+        if (!/https?:\/\/[-_.!~*\\()a-zA-Z0-9;?:&=+,%#]+/g.test(imageOrUri)) {
             return shared_1.Result.err(createError(key, Message.INVALID_URL, imageOrUri));
         }
         return shared_1.Result.ok(Message.SUCCESS);

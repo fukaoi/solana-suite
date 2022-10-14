@@ -7,12 +7,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { PublicKey, Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { Constants, Result, Node } from './';
+import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import { Constants, Node, Result } from './';
 import { Internals_Instruction } from './internals/_instruction';
 import bs from 'bs58';
 import './types/global';
-// @ts-ignore
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* @ts-ignore */
 Array.prototype.submit = function () {
     return __awaiter(this, void 0, void 0, function* () {
         const instructions = [];

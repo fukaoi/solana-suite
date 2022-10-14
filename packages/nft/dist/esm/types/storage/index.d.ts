@@ -14,7 +14,3 @@ export interface File extends Blob {
     readonly lastModified: number;
     readonly name: string;
 }
-export declare var File: {
-    prototype: File;
-    new (fileBits: BlobPart[], fileName: string, options?: FilePropertyBag): File;
-};

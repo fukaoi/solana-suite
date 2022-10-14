@@ -43,7 +43,7 @@ var SplToken;
         }
         let hist = [];
         let before;
-        while (true) {
+        for (;;) {
             const transactions = yield _history_1.Internals_History.getForAddress(searchKeyAccount.value, bufferedLimit, before);
             (0, shared_1.debugLog)('# getTransactionHistory loop');
             const res = _history_1.Internals_History.filterTransactions(searchPubkey, transactions, actionFilter, true, options.directionFilter);

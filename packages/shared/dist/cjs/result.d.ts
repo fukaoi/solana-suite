@@ -27,10 +27,8 @@ declare class InternalErr<T, E extends Error> extends AbstractResult<T, E> {
     protected _chain<X, U extends Error>(_ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
 }
 export declare namespace Result {
-    export interface Ok<T, E extends Error> extends InternalOk<T, E> {
-    }
-    export interface Err<T, E extends Error> extends InternalErr<T, E> {
-    }
+    export type Ok<T, E extends Error> = InternalOk<T, E>;
+    export type Err<T, E extends Error> = InternalErr<T, E>;
     export function ok<T, E extends Error>(value: T): Result<T, E>;
     export function err<E extends Error, T = never>(error?: E): Result<T, E>;
     type U = Result<unknown>;

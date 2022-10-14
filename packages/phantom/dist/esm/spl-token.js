@@ -47,7 +47,7 @@ export var SplTokenPhantom;
         transaction.partialSign(builder.mint);
         const signed = yield phantom.signAllTransactions([txData.tx, transaction]);
         // todo: refactoring
-        for (let sign of signed) {
+        for (const sign of signed) {
             const sig = yield connection
                 .sendRawTransaction(sign.serialize())
                 .then(Result.ok)
@@ -76,7 +76,7 @@ export var SplTokenPhantom;
         transaction.recentBlockhash = blockhashObj.value.blockhash;
         const signed = yield phantom.signAllTransactions([transaction]);
         // todo: refactoring
-        for (let sign of signed) {
+        for (const sign of signed) {
             const sig = yield connection
                 .sendRawTransaction(sign.serialize())
                 .then(Result.ok)
