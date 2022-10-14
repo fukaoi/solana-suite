@@ -5,14 +5,16 @@
   "scripts": {
     "clean": "npm run clean -ws && rm -rf packages/shared/node_modules/ && rm -rf packages/core/node_modules/ && rm -rf  packages/nft/node_modules/ && rm -rf  packages/phantom/node_modules/",
     "compile": "npm run compile -ws && npm run compile:esm -ws",
-    "lint": "npm run lint:core && npm run lint:nft && npm run lint:shared",
-    "lint:core": "npx tslint --fix --project packages/core",
-    "lint:nft": "npx tslint --fix --project packages/nft",
-    "lint:shared": "npx tslint --fix --project packages/shared",
-    "test:all": "npm run test:shared && npm run test:nft && npm run test:core",
+    "lint:all": "npm run lint:core && npm run lint:nft && npm run lint:shared && npm run lint:phantom",
+    "lint:core": "npx eslint --fix packages/core/src",
+    "lint:nft": "npx eslint --fix packages/nft/src",
+    "lint:shared": "npx eslint --fix packages/shared/src",
+    "lint:phantom": "npx eslint --fix packages/phantom/src",
+    "test:all": "npm run test:shared && npm run test:nft && npm run test:core && npm run test:phantom",
     "test:shared": "npm run test:all -w packages/shared",
     "test:nft": "npm run test:all -w packages/nft",
-    "test:core": "npm run test:all -w packages/core"
+    "test:core": "npm run test:all -w packages/core",
+    "test:phantom": "npm run test:all -w packages/phantom"
   },
   "workspaces": [
     "packages/shared",
