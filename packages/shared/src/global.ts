@@ -1,9 +1,11 @@
-import { PublicKey, Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { Constants, Result, Instruction, Node } from './';
-import { Internals_Instruction } from './internals/_instruction';
-import bs from 'bs58';
-import './types/global';
+import { Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { Constants, Instruction, Node, Result } from "./";
+import { Internals_Instruction } from "./internals/_instruction";
+import bs from "bs58";
+import "./types/global";
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* @ts-ignore */
 Array.prototype.submit = async function () {
   const instructions: Instruction[] = [];
   // dont use forEach
@@ -35,8 +37,8 @@ String.prototype.toKeypair = function () {
 
 String.prototype.toExplorerUrl = function () {
   const endPointUrl = Node.getConnection().rpcEndpoint;
-  debugLog('# toExplorerUrl rpcEndpoint:', endPointUrl);
-  let cluster = '';
+  debugLog("# toExplorerUrl rpcEndpoint:", endPointUrl);
+  let cluster = "";
   if (endPointUrl === Constants.EndPointUrl.prd) {
     cluster = Constants.Cluster.prd;
   } else if (endPointUrl === Constants.EndPointUrl.prd2) {
@@ -68,12 +70,12 @@ Number.prototype.toLamports = function () {
 
 export const debugLog = (
   data: unknown,
-  data2: unknown = '',
-  data3: unknown = '',
-  data4: unknown = ''
+  data2: unknown = "",
+  data3: unknown = "",
+  data4: unknown = ""
 ) => {
-  if (Constants.isDebugging || process.env.DEBUG == 'true') {
-    console.log('[DEBUG]', data, data2, data3, data4);
+  if (Constants.isDebugging || process.env.DEBUG == "true") {
+    console.log("[DEBUG]", data, data2, data3, data4);
   }
 };
 
@@ -81,9 +83,9 @@ export const sleep = async (sec: number) =>
   new Promise((r) => setTimeout(r, sec * 1000));
 
 export const isBrowser = () =>
-  typeof window !== 'undefined' && typeof window.document !== 'undefined';
+  typeof window !== "undefined" && typeof window.document !== "undefined";
 
 export const isNode = () =>
-  typeof process !== 'undefined' &&
+  typeof process !== "undefined" &&
   process.versions != null &&
   process.versions.node != null;

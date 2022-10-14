@@ -1,5 +1,5 @@
-import { PublicKey, Keypair, TransactionSignature } from '@solana/web3.js';
-import { Result } from '../result';
+import { Keypair, PublicKey, TransactionSignature } from "@solana/web3.js";
+import { Result } from "../result";
 
 declare global {
   interface String {
@@ -14,7 +14,8 @@ declare global {
     toLamports(): number;
   }
 
-  interface Array {
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  interface Array<T> {
     submit(): Promise<Result<TransactionSignature, Error>>;
   }
 

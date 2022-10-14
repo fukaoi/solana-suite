@@ -94,7 +94,7 @@ class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   protected _chain<X, U extends Error>(
     ok: (value: T) => Result<X, U>,
-    _: (error: E) => Result<X, U>
+    _err: (error: E) => Result<X, U>
   ): Result<X, U> {
     return ok(this.value);
   }
