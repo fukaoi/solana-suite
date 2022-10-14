@@ -1,7 +1,7 @@
 // forked: https://github.com/badrap/result, thank you advice  @jviide
 
-import { TransactionSignature } from "@solana/web3.js";
-import { Instruction } from "./instruction";
+import { TransactionSignature } from '@solana/web3.js';
+import { Instruction } from './instruction';
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
@@ -77,7 +77,7 @@ abstract class AbstractResult<T, E extends Error> {
       if (castedInst.instructions && castedInst.signers) {
         return await castedInst.submit();
       }
-      return Result.err(Error("Only Instruction object"));
+      return Result.err(Error('Only Instruction object'));
     } catch (err) {
       return Result.err(err as Error);
     }

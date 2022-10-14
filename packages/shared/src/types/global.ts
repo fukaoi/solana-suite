@@ -1,5 +1,5 @@
-import { Keypair, PublicKey, TransactionSignature } from "@solana/web3.js";
-import { Result } from "../result";
+import { Keypair, PublicKey, TransactionSignature } from '@solana/web3.js';
+import { Result } from '../result';
 
 declare global {
   interface String {

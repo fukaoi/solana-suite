@@ -6,8 +6,8 @@ module.exports = {
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    "ecmaVersion": 11,
-    "sourceType": "module",
+    ecmaVersion: 11,
+    sourceType: "module",
     project: ["./packages/*/tsconfig.json"],
   },
   plugins: ["@typescript-eslint"],
@@ -24,5 +24,12 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": 0,
     "@typescript-eslint/require-await": 0,
     "no-unused-vars": "off",
+    "@typescript-eslint/quotes": [
+      "error",
+      "single",
+      {
+        allowTemplateLiterals: true,
+      },
+    ],
   },
 };
