@@ -49,7 +49,7 @@ export namespace SplToken {
     let hist: TransferHistory[] = [];
     let before;
 
-    while (true) {
+    for (;;) {
       const transactions = await Internals_History.getForAddress(
         searchKeyAccount.value,
         bufferedLimit,

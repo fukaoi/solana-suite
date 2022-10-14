@@ -23,8 +23,8 @@ export class KeypairStr {
   static create = (): KeypairStr => {
     const keypair = Keypair.generate();
     return new KeypairStr(
-      keypair.publicKey.toBase58() as Pubkey,
-      bs.encode(keypair.secretKey) as Secret
+      keypair.publicKey.toBase58() ,
+      bs.encode(keypair.secretKey) 
     );
   };
 }

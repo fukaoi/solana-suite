@@ -42,7 +42,7 @@ export namespace SolNative {
     let hist: TransferHistory[] = [];
     let before;
 
-    while (true) {
+    for (;;) {
       const transactions = await Internals_History.getForAddress(
         searchPubkey,
         bufferedLimit,

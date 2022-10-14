@@ -159,7 +159,7 @@ export namespace Metaplex {
 
     if (storageType === 'arweave') {
       storageRes = await (
-        await StorageArweave.uploadContent(filePath!, feePayer)
+        await StorageArweave.uploadContent(filePath, feePayer)
       ).unwrap(
         async (ok: string) => {
           storageData.image = ok;
@@ -169,7 +169,7 @@ export namespace Metaplex {
       );
     } else if (storageType === 'nftStorage') {
       storageRes = await (
-        await StorageNftStorage.uploadContent(filePath!)
+        await StorageNftStorage.uploadContent(filePath)
       ).unwrap(
         async (ok: string) => {
           storageData.image = ok;

@@ -42,7 +42,7 @@ export namespace ConstantsFunc {
         return Constants.EndPointUrl.test;
       case Constants.Cluster.dev:
         return Constants.EndPointUrl.dev;
-      case Constants.Cluster.prdrr:
+      case Constants.Cluster.prdrr: {
         // don't require rigor, as it can be repeated alternately
         const index = Date.now() % 4;
         const clusters = [
@@ -52,6 +52,7 @@ export namespace ConstantsFunc {
           Constants.EndPointUrl.prd2,
         ];
         return clusters[index];
+      }
       case Constants.Cluster.custom:
         return customUrl;
       default:
@@ -65,13 +66,14 @@ export namespace ConstantsFunc {
       case Constants.Cluster.test:
       case Constants.Cluster.localhost:
         return 'https://devnet.bundlr.network';
-      default:
+      default: {
         const index = Date.now() % 2;
         const clusters = [
           'https://node1.bundlr.network',
           'https://node2.bundlr.network',
         ];
         return clusters[index];
+      }
     }
   };
 }

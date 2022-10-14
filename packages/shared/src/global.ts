@@ -1,10 +1,11 @@
-import { PublicKey, Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { Constants, Result, Instruction, Node } from './';
+import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import { Constants, Instruction, Node, Result } from './';
 import { Internals_Instruction } from './internals/_instruction';
 import bs from 'bs58';
 import './types/global';
 
-// @ts-ignore
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* @ts-ignore */
 Array.prototype.submit = async function () {
   const instructions: Instruction[] = [];
   // dont use forEach
