@@ -99,7 +99,7 @@ export namespace Internals_History {
     searchKey: PublicKey,
     transactions: Result<ParsedTransactionWithMeta>[],
     filterOptions: Filter[],
-    isToken: boolean = false,
+    isToken = false,
     directionFilter?: DirectionFilter
   ) => {
     const hist: TransferHistory[] = [];

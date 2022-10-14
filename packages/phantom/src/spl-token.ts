@@ -94,7 +94,7 @@ export namespace SplTokenPhantom {
     const signed = await phantom.signAllTransactions([txData.tx, transaction]);
 
     // todo: refactoring
-    for (let sign of signed) {
+    for (const sign of signed) {
       const sig = await connection
         .sendRawTransaction(sign.serialize())
         .then(Result.ok)
@@ -152,7 +152,7 @@ export namespace SplTokenPhantom {
     const signed = await phantom.signAllTransactions([transaction]);
 
     // todo: refactoring
-    for (let sign of signed) {
+    for (const sign of signed) {
       const sig = await connection
         .sendRawTransaction(sign.serialize())
         .then(Result.ok)

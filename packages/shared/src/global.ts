@@ -4,7 +4,6 @@ import { Internals_Instruction } from './internals/_instruction';
 import bs from 'bs58';
 import './types/global';
 
-// @ts-ignore
 Array.prototype.submit = async function () {
   const instructions: Instruction[] = [];
   // dont use forEach

@@ -1,7 +1,7 @@
 // forked: https://github.com/badrap/result, thank you advice  @jviide
 
-import {TransactionSignature} from '@solana/web3.js';
-import {Instruction} from './instruction';
+import { TransactionSignature } from "@solana/web3.js";
+import { Instruction } from "./instruction";
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
@@ -16,8 +16,8 @@ abstract class AbstractResult<T, E extends Error> {
   // unwrap<U>(ok: (value: T) => U, err: (error: E) => U): U;
   unwrap(ok?: (value: T) => unknown, err?: (error: E) => unknown): unknown {
     const r = this._chain(
-      value => Result.ok(ok ? ok(value) : value),
-      error => (err ? Result.ok(err(error)) : Result.err(error))
+      (value) => Result.ok(ok ? ok(value) : value),
+      (error) => (err ? Result.ok(err(error)) : Result.err(error))
     );
     if (r.isErr) {
       throw r.error;
@@ -33,18 +33,16 @@ abstract class AbstractResult<T, E extends Error> {
   ): Result<U, F>;
   map(ok: (value: T) => unknown, err?: (error: E) => Error): Result<unknown> {
     return this._chain(
-      value => Result.ok(ok(value)),
-      error => Result.err(err ? err(error) : error)
+      (value) => Result.ok(ok(value)),
+      (error) => Result.err(err ? err(error) : error)
     );
   }
 
   //// chain ////
   chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
-  chain<X>(
-    ok: (value: T) => Result<X, E>,
-    // unified-signatures. into line 37
-    // err: (error: E) => Result<X, E>
-  ): Result<X, E>;
+  chain<X>(ok: (value: T) => Result<X, E>): // unified-signatures. into line 37
+  // err: (error: E) => Result<X, E>
+  Result<X, E>;
   chain<X, U extends Error>(
     ok: (value: T) => Result<X, U>,
     err: (error: E) => Result<X, U>
@@ -53,25 +51,21 @@ abstract class AbstractResult<T, E extends Error> {
     ok: (value: T) => Result<unknown>,
     err?: (error: E) => Result<unknown>
   ): Result<unknown> {
-    return this._chain(ok, err || (error => Result.err(error)));
+    return this._chain(ok, err || ((error) => Result.err(error)));
   }
 
   //// match ////
-  match<U, F>(
-    ok: (value: T) => U,
-    err: (error: E) => F
-  ): void | Promise<void>;
+  match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
 
   match(
     ok: (value: T) => unknown,
     err: (error: E) => unknown
   ): void | Promise<void> {
-     this._chain(
-      value => Result.ok(ok(value)),
-      error => Result.err(err(error) as Error)
+    this._chain(
+      (value) => Result.ok(ok(value)),
+      (error) => Result.err(err(error) as Error)
     );
   }
-
 
   /// submit (alias Instruction.submit) ////
   async submit(): Promise<Result<TransactionSignature, Error>> {
@@ -83,7 +77,7 @@ abstract class AbstractResult<T, E extends Error> {
       if (castedInst.instructions && castedInst.signers) {
         return await castedInst.submit();
       }
-      return Result.err(Error('Only Instruction object'));
+      return Result.err(Error("Only Instruction object"));
     } catch (err) {
       return Result.err(err as Error);
     }
@@ -97,9 +91,10 @@ class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
     super();
   }
 
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   protected _chain<X, U extends Error>(
     ok: (value: T) => Result<X, U>,
-    _err: (error: E) => Result<X, U>
+    _: (error: E) => Result<X, U>
   ): Result<X, U> {
     return ok(this.value);
   }
@@ -121,13 +116,13 @@ class InternalErr<T, E extends Error> extends AbstractResult<T, E> {
 }
 
 export namespace Result {
-  export interface Ok<T, E extends Error> extends InternalOk<T, E> {}
-  export interface Err<T, E extends Error> extends InternalErr<T, E> {}
+  export type Ok<T, E extends Error> = InternalOk<T, E>;
+  export type Err<T, E extends Error> = InternalErr<T, E>;
 
   export function ok<T, E extends Error>(value: T): Result<T, E> {
     return new InternalOk(value);
   }
-  export function err<E extends Error, T = never>(error?: E): Result<T, E>
+  export function err<E extends Error, T = never>(error?: E): Result<T, E>;
   export function err<E extends Error, T = never>(error: E): Result<T, E> {
     return new InternalErr(error || Error());
   }
@@ -521,7 +516,7 @@ export namespace Result {
   export function all<T extends U[] | Record<string, U>>(
     obj: T
   ): Result<
-    {[K in keyof T]: T[K] extends Result<infer I> ? I : never},
+    { [K in keyof T]: T[K] extends Result<infer I> ? I : never },
     {
       [K in keyof T]: T[K] extends Result<unknown, infer E> ? E : never;
     }[keyof T]

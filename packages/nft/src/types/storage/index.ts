@@ -21,8 +21,8 @@ export interface File extends Blob {
     readonly name: string;
 }
 
-export declare var File: {
-    prototype: File;
-    new(fileBits: BlobPart[], fileName: string, options?: FilePropertyBag): File;
-};
+// export declare var File: {
+//     prototype: File;
+//     new(fileBits: BlobPart[], fileName: string, options?: FilePropertyBag): File;
+// };
 

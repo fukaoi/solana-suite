@@ -160,7 +160,7 @@ export namespace Validator {
           break;
         case 'sellerFeeBasisPoints':
           if (key in metadata) {
-            res = isSellerFeeBasisPoints(metadata.sellerFeeBasisPoints!);
+            res = isSellerFeeBasisPoints(metadata.sellerFeeBasisPoints);
           }
           break;
         case 'name':
@@ -235,7 +235,7 @@ export namespace Validator {
         })
       );
     }
-    if (!/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(imageOrUri)) {
+    if (!/https?:\/\/[-_.!~*\\()a-zA-Z0-9;?:&=+,%#]+/g.test(imageOrUri)) {
       return Result.err(createError(key, Message.INVALID_URL, imageOrUri));
     }
     return Result.ok(Message.SUCCESS);
