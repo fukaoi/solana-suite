@@ -91,11 +91,11 @@ describe('Metaplex', () => {
     );
   });
 
-  it('[Nft Storage] mint nft', async () => {
+  it.only('[Nft Storage] mint nft', async () => {
     const asset = RandomAsset.get();
 
     const creator1 = {
-      address: source.toPublicKey(),
+      address: 'CGDRajhcFo9ysuUjBsbwCQHKJuCHiXeEUrMKSot1eyay'.toPublicKey(),
       share: 70,
       verified: false,
     };
