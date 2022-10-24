@@ -103,13 +103,13 @@ export namespace SolNative {
     return Result.ok(new Instruction([inst1, inst2], signers, feePayer));
   };
 
-  export const transfer = async (
+  export const transfer = (
     source: PublicKey,
     destination: PublicKey,
     signers: Keypair[],
     amount: number,
     feePayer?: Keypair
-  ): Promise<Result<Instruction, Error>> => {
+  ): Result<Instruction, Error> => {
     const inst = SystemProgram.transfer({
       fromPubkey: source,
       toPubkey: destination,
