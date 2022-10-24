@@ -1,6 +1,6 @@
 import { MetaplexFileContent } from '@metaplex-foundation/js';
 import { isBrowser, Result } from '@solana-suite/shared';
-import {Internals_Royalty} from './internals/_royalty';
+import { Internals_Royalty } from './internals/_royalty';
 import {
   InputMetaplexMetadata,
   MetaplexMetaData,
@@ -144,8 +144,8 @@ export namespace Validator {
           }
           break;
         case 'image':
-          if (key in metadata) {
-            res = isImageUrl(metadata.image!);
+          if (key in metadata && metadata.image) {
+            res = isImageUrl(metadata.image);
           }
           break;
         case 'royalty':
@@ -154,8 +154,8 @@ export namespace Validator {
           }
           break;
         case 'seller_fee_basis_points':
-          if (key in metadata) {
-            res = isSellerFeeBasisPoints(metadata.seller_fee_basis_points!);
+          if (key in metadata && metadata.seller_fee_basis_points) {
+            res = isSellerFeeBasisPoints(metadata.seller_fee_basis_points);
           }
           break;
         case 'sellerFeeBasisPoints':
@@ -164,10 +164,14 @@ export namespace Validator {
           }
           break;
         case 'name':
-          res = isName(metadata.name!);
+          if (metadata.name) {
+            res = isName(metadata.name);
+          }
           break;
         case 'symbol':
-          res = isSymbol(metadata.symbol!);
+          if (metadata.symbol) {
+            res = isSymbol(metadata.symbol);
+          }
           break;
         case 'filePath':
           if (key in metadata) {

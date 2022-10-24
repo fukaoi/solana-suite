@@ -20,11 +20,11 @@ export namespace Internals_History {
   ) => {
     const v: TransferHistory = instruction.parsed;
 
-    if (isToken && instruction.program === 'spl-token') {
-      const foundSource = mappingTokenAccount!.find(
+    if (isToken && mappingTokenAccount && instruction.program === 'spl-token') {
+      const foundSource = mappingTokenAccount.find(
         (m) => m.account === v.info.source
       );
-      const foundDest = mappingTokenAccount!.find(
+      const foundDest = mappingTokenAccount.find(
         (m) => m.account === v.info.destination
       );
       v.info.source = foundSource.owner;
