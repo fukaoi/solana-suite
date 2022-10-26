@@ -12,12 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = void 0;
+exports.Try = exports.isPromise = exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const _1 = require("./");
 const _instruction_1 = require("./internals/_instruction");
 const bs58_1 = __importDefault(require("bs58"));
 require("./types/global");
+/**
+ * senTransaction() TransactionInstruction
+ *
+ * @returns Promise<Result<string, Error>>
+ */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* @ts-ignore */
 Array.prototype.submit = function () {
@@ -41,13 +46,28 @@ Array.prototype.submit = function () {
         return yield _instruction_1.Internals_Instruction.batchSubmit(instructions);
     });
 };
+/**
+ * PubKey(@solana-suite) to PublicKey(@solana/web3.js)
+ *
+ * @returns PublicKey
+ */
 String.prototype.toPublicKey = function () {
     return new web3_js_1.PublicKey(this);
 };
+/**
+ * Secret(@solana-suite) to Keypair(@solana/web3.js)
+ *
+ * @returns Keypair
+ */
 String.prototype.toKeypair = function () {
     const decoded = bs58_1.default.decode(this);
     return web3_js_1.Keypair.fromSecretKey(decoded);
 };
+/**
+ * Create explorer url for account address or signature
+ *
+ * @returns string
+ */
 String.prototype.toExplorerUrl = function () {
     const endPointUrl = _1.Node.getConnection().rpcEndpoint;
     (0, exports.debugLog)('# toExplorerUrl rpcEndpoint:', endPointUrl);
@@ -76,23 +96,94 @@ String.prototype.toExplorerUrl = function () {
         return `https://solscan.io/tx/${this}?cluster=${cluster}`;
     }
 };
+/**
+ * LAMPORTS to SOL
+ *
+ * @returns number
+ */
 Number.prototype.toSol = function () {
     return this / web3_js_1.LAMPORTS_PER_SOL;
 };
+/**
+ * SOL to LAMPORTS
+ *
+ * @returns number
+ */
 Number.prototype.toLamports = function () {
     return this * web3_js_1.LAMPORTS_PER_SOL;
 };
-const debugLog = (data, data2 = '', data3 = '', data4 = '') => {
+/**
+ * Display log for solana-suite-config.js
+ *
+ * @param {unknown} data1
+ * @param {unknown} data2
+ * @param {unknown} data3
+ * @param {unknown} data4
+ * @returns void
+ */
+const debugLog = (data1, data2 = '', data3 = '', data4 = '') => {
     if (_1.Constants.isDebugging || process.env.DEBUG == 'true') {
-        console.log('[DEBUG]', data, data2, data3, data4);
+        console.log('[DEBUG]', data1, data2, data3, data4);
     }
 };
 exports.debugLog = debugLog;
-const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () { return new Promise((r) => setTimeout(r, sec * 1000)); });
+/**
+ * sleep timer
+ *
+ * @param {number} sec
+ * @returns Promise<number>
+ */
+const sleep = (sec) => __awaiter(void 0, void 0, void 0, function* () {
+    return new Promise((r) => setTimeout(r, sec * 1000));
+});
 exports.sleep = sleep;
-const isBrowser = () => typeof window !== 'undefined' && typeof window.document !== 'undefined';
+/**
+ * Node.js or Browser js
+ *
+ * @returns boolean
+ */
+const isBrowser = () => {
+    return (typeof window !== 'undefined' && typeof window.document !== 'undefined');
+};
 exports.isBrowser = isBrowser;
-const isNode = () => typeof process !== 'undefined' &&
-    process.versions != null &&
-    process.versions.node != null;
+/**
+ * Node.js or Browser js
+ *
+ * @returns boolean
+ */
+const isNode = () => {
+    return (typeof process !== 'undefined' &&
+        process.versions != null &&
+        process.versions.node != null);
+};
 exports.isNode = isNode;
+/**
+ * argument is promise or other
+ *
+ * @param {unknown} obj
+ * @returns boolean
+ */
+const isPromise = (obj) => {
+    return (!!obj &&
+        (typeof obj === 'object' || typeof obj === 'function') &&
+        typeof obj.then === 'function');
+};
+exports.isPromise = isPromise;
+function Try(input) {
+    try {
+        const v = input();
+        if ((0, exports.isPromise)(v)) {
+            return v.then((x) => _1.Result.ok(x), (err) => _1.Result.err(err));
+        }
+        else {
+            return _1.Result.ok(v);
+        }
+    }
+    catch (e) {
+        if (e instanceof Error) {
+            return _1.Result.err(e);
+        }
+        return _1.Result.err(Error(e));
+    }
+}
+exports.Try = Try;

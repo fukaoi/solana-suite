@@ -109,7 +109,7 @@ var Validator;
                     }
                     break;
                 case 'image':
-                    if (key in metadata) {
+                    if (key in metadata && metadata.image) {
                         res = Validator.isImageUrl(metadata.image);
                     }
                     break;
@@ -119,7 +119,7 @@ var Validator;
                     }
                     break;
                 case 'seller_fee_basis_points':
-                    if (key in metadata) {
+                    if (key in metadata && metadata.seller_fee_basis_points) {
                         res = Validator.isSellerFeeBasisPoints(metadata.seller_fee_basis_points);
                     }
                     break;
@@ -129,10 +129,14 @@ var Validator;
                     }
                     break;
                 case 'name':
-                    res = Validator.isName(metadata.name);
+                    if (metadata.name) {
+                        res = Validator.isName(metadata.name);
+                    }
                     break;
                 case 'symbol':
-                    res = Validator.isSymbol(metadata.symbol);
+                    if (metadata.symbol) {
+                        res = Validator.isSymbol(metadata.symbol);
+                    }
                     break;
                 case 'filePath':
                     if (key in metadata) {

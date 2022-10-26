@@ -17,7 +17,7 @@ var Internals_History;
     const createHistory = (searchKey, instruction, meta, directionFilter, mappingTokenAccount, isToken, withMemos) => {
         var _a, _b;
         const v = instruction.parsed;
-        if (isToken && instruction.program === 'spl-token') {
+        if (isToken && mappingTokenAccount && instruction.program === 'spl-token') {
             const foundSource = mappingTokenAccount.find((m) => m.account === v.info.source);
             const foundDest = mappingTokenAccount.find((m) => m.account === v.info.destination);
             v.info.source = foundSource.owner;

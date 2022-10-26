@@ -1,5 +1,6 @@
-import {describe, it} from 'mocha';
-import {Result} from '../src/result';
+import { describe, it } from 'mocha';
+import { Result } from '../src/result';
+import { assert } from 'chai';
 
 describe('Result', () => {
   it('conditions', () => {
@@ -21,10 +22,12 @@ describe('Result', () => {
     // pattern:3
     if (res.isOk) {
       console.log(res.value);
-    } else {
-      // [tsserver 2339] [E] Property 'error' does not exist on type 'Result<string,Error>' 
+    } else if (res.isErr) {
+      // [tsserver 2339] [E] Property 'error' does not exist on type 'Result<string,Error>'
       // bug: https://github.com/microsoft/TypeScript/issues/10564
-      {/* @ts-ignore */}
+      {
+        /* @ts-ignore */
+      }
       console.log(res.error);
     }
 
@@ -50,4 +53,4 @@ describe('Result', () => {
       }
     );
   });
-})
+});

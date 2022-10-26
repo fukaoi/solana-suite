@@ -15,7 +15,6 @@ module.exports = {
   rules: {
     "@typescript-eslint/no-namespace": 0,
     "@typescript-eslint/no-explicit-any": 0,
-    "@typescript-eslint/restrict-template-expressions": 0,
     "@typescript-eslint/no-unsafe-member-access": 0,
     "@typescript-eslint/no-floating-promises": 0,
     "@typescript-eslint/no-unsafe-return": 0,

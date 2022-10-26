@@ -16,21 +16,25 @@ var Airdrop;
     const DEFAULT_AIRDROP_AMOUNT = 1;
     const MAX_AIRDROP_SOL = 2;
     Airdrop.request = (pubkey, airdropAmount) => __awaiter(this, void 0, void 0, function* () {
-        (0, shared_1.debugLog)('Now airdropping...please wait');
-        airdropAmount = !airdropAmount
-            ? DEFAULT_AIRDROP_AMOUNT.toLamports()
-            : airdropAmount.toLamports();
-        if (airdropAmount > MAX_AIRDROP_SOL.toLamports()) {
-            return shared_1.Result.err(Error(`Over max airdrop amount: ${airdropAmount}`));
-        }
-        const sig = yield shared_1.Node.getConnection()
-            .requestAirdrop(pubkey, airdropAmount)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (sig.isErr) {
-            return shared_1.Result.err(Error(`Failed airdrop. ${sig.error.message}`));
-        }
-        yield shared_1.Node.confirmedSig(sig.value);
-        return shared_1.Result.ok('success');
+        const res = yield (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            (0, shared_1.debugLog)('Now airdropping...please wait');
+            console.log('@1', airdropAmount);
+            airdropAmount = !airdropAmount
+                ? DEFAULT_AIRDROP_AMOUNT.toLamports()
+                : airdropAmount.toLamports();
+            console.log('@2', airdropAmount);
+            if (airdropAmount > MAX_AIRDROP_SOL.toLamports()) {
+                throw Error(`Over max airdrop amount: ${airdropAmount}, max: ${MAX_AIRDROP_SOL.toLamports()}`);
+            }
+            console.log('@3');
+            const sig = yield shared_1.Node.getConnection().requestAirdrop(pubkey, airdropAmount);
+            console.log('#sig', sig);
+            console.log('@4');
+            yield shared_1.Node.confirmedSig(sig);
+            console.log('@5');
+            return 'success';
+        }));
+        console.log('##################', res);
+        return res;
     });
 })(Airdrop = exports.Airdrop || (exports.Airdrop = {}));

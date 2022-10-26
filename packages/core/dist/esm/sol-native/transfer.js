@@ -48,14 +48,14 @@ export var SolNative;
         const inst2 = createCloseAccountInstruction(wrapped.value, dest, owner, signers);
         return Result.ok(new Instruction([inst1, inst2], signers, feePayer));
     });
-    SolNative.transfer = (source, destination, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    SolNative.transfer = (source, destination, signers, amount, feePayer) => {
         const inst = SystemProgram.transfer({
             fromPubkey: source,
             toPubkey: destination,
             lamports: parseInt(`${amount.toLamports()}`, RADIX),
         });
         return Result.ok(new Instruction([inst], signers, feePayer));
-    });
+    };
     SolNative.feePayerPartialSignTransfer = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const blockHashObj = yield Node.getConnection().getLatestBlockhash();
         const tx = new Transaction({
