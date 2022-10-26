@@ -18,8 +18,9 @@ Array.prototype.submit = async function (): Promise<Result<string, Error>> {
   let i = 0;
   for (const obj of this) {
     if (obj.isErr) {
+      const errorMess: string = obj.error.message;
       return Result.err(
-        Error(`[Array index of caught 'Result.err': ${i}]${obj.error.message}`)
+        Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`)
       );
     } else if (obj.isOk) {
       instructions.push(obj.value);
@@ -71,12 +72,14 @@ String.prototype.toExplorerUrl = function (): string {
     cluster = Constants.Cluster.dev;
   }
 
+  const address: string = this.toString();
+
   try {
     /* tslint:disable-next-line */
-    new PublicKey(this);
-    return `https://solscan.io/account/${this}?cluster=${cluster}`;
+    new PublicKey(address);
+    return `https://solscan.io/account/${address}?cluster=${cluster}`;
   } catch (_) {
-    return `https://solscan.io/tx/${this}?cluster=${cluster}`;
+    return `https://solscan.io/tx/${address}?cluster=${cluster}`;
   }
 };
 
@@ -173,8 +176,8 @@ export const isPromise = (obj: unknown): obj is Promise<unknown> => {
  */
 export function Try<T, E extends Error>(
   asyncblock: () => Promise<T>
-): Promise<Result<T, Error>>;
-export function Try<T, E extends Error>(block: () => T): Result<T, Error>;
+): Promise<Result<T, E>>;
+export function Try<T, E extends Error>(block: () => T): Result<T, E>;
 export function Try<T, E extends Error>(
   input: () => Promise<T>
 ): Result<T, Error> | Promise<Result<T, Error>> {
