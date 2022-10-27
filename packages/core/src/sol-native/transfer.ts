@@ -21,7 +21,7 @@ import {
   Try,
 } from '@solana-suite/shared';
 
-import { AssociatedAccount } from '../associated-account';
+import { Internals_AssociatedAccount } from '../internals/_associated-account';
 
 export namespace SolNative {
   const RADIX = 10;
@@ -49,33 +49,25 @@ export namespace SolNative {
 
       const token = await createMint(connection, payer, owner, owner, 0);
 
-      const sourceToken = await AssociatedAccount.retryGetOrCreate(
+      const sourceToken = await Internals_AssociatedAccount.retryGetOrCreate(
         token,
         owner,
         payer
       );
 
-      if (sourceToken.isErr) {
-        throw sourceToken.error;
-      }
+      debugLog('# sourceToken: ', sourceToken);
 
-      debugLog('# sourceToken: ', sourceToken.value);
-
-      const destToken = await AssociatedAccount.retryGetOrCreate(
+      const destToken = await Internals_AssociatedAccount.retryGetOrCreate(
         token,
         wrapped,
         payer
       );
 
-      if (destToken.isErr) {
-        throw destToken.error;
-      }
-
-      debugLog('# destToken: ', destToken.value);
+      debugLog('# destToken: ', destToken);
 
       const inst1 = createTransferInstruction(
-        sourceToken.value.toPublicKey(),
-        destToken.value.toPublicKey(),
+        sourceToken.toPublicKey(),
+        destToken.toPublicKey(),
         owner,
         parseInt(`${amount}`, RADIX), // No lamports, its sol
         signers
@@ -92,14 +84,14 @@ export namespace SolNative {
     });
   };
 
-  export const transfer = async (
+  export const transfer = (
     source: PublicKey,
     destination: PublicKey,
     signers: Keypair[],
     amount: number,
     feePayer?: Keypair
-  ): Promise<Result<Instruction, Error>> => {
-    return Try(async () => {
+  ): Result<Instruction, Error> => {
+    return Try(() => {
       const inst = SystemProgram.transfer({
         fromPubkey: source,
         toPubkey: destination,

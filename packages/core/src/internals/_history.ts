@@ -4,7 +4,7 @@ import {
   ParsedInstruction,
 } from '@solana/web3.js';
 
-import { Node, Result } from '@solana-suite/shared';
+import { Node } from '@solana-suite/shared';
 import { TransferHistory, DirectionFilter, Filter } from '../types/history';
 
 //@internal

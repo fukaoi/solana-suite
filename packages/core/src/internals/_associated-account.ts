@@ -68,7 +68,7 @@ export namespace Internals_AssociatedAccount {
           (await [inst].submit()).map(
             (ok) => {
               Node.confirmedSig(ok);
-              return (inst as Instruction).data as string;
+              return (inst ).data as string;
             },
             (err) => {
               debugLog('# Error submit retryGetOrCreate: ', err);

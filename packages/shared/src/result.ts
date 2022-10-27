@@ -526,7 +526,7 @@ export namespace Result {
       const resArr = [];
       for (const item of obj) {
         if (item.isErr) {
-          return item;
+          return item as unknown;
         }
         resArr.push(item.value);
       }
