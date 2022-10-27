@@ -6,10 +6,11 @@ import {
   Result,
   Instruction,
   PartialSignInstruction,
+  Try,
 } from '@solana-suite/shared';
 
 import { Internals_SplToken } from '../internals/_spl-token';
-import { AssociatedAccount } from '../associated-account';
+import { Internals_AssociatedAccount } from '../internals/_associated-account';
 
 export namespace SplToken {
   export const transfer = async (
@@ -21,39 +22,33 @@ export namespace SplToken {
     mintDecimal: number,
     feePayer?: Keypair
   ): Promise<Result<Instruction, Error>> => {
-    !feePayer && (feePayer = signers[0]);
+    return Try(async () => {
+      !feePayer && (feePayer = signers[0]);
 
-    const sourceToken = await AssociatedAccount.retryGetOrCreate(
-      mint,
-      owner,
-      feePayer
-    );
+      const sourceToken = await Internals_AssociatedAccount.retryGetOrCreate(
+        mint,
+        owner,
+        feePayer
+      );
 
-    if (sourceToken.isErr) {
-      return Result.err(sourceToken.error);
-    }
+      const destToken = await Internals_AssociatedAccount.retryGetOrCreate(
+        mint,
+        dest,
+        feePayer
+      );
 
-    const destToken = await AssociatedAccount.retryGetOrCreate(
-      mint,
-      dest,
-      feePayer
-    );
+      const inst = createTransferCheckedInstruction(
+        sourceToken.toPublicKey(),
+        mint,
+        destToken.toPublicKey(),
+        owner,
+        Internals_SplToken.calculateAmount(amount, mintDecimal),
+        mintDecimal,
+        signers
+      );
 
-    if (destToken.isErr) {
-      return Result.err(destToken.error);
-    }
-
-    const inst = createTransferCheckedInstruction(
-      sourceToken.value.toPublicKey(),
-      mint,
-      destToken.value.toPublicKey(),
-      owner,
-      Internals_SplToken.calculateAmount(amount, mintDecimal),
-      mintDecimal,
-      signers
-    );
-
-    return Result.ok(new Instruction([inst], signers, feePayer));
+      return new Instruction([inst], signers, feePayer);
+    });
   };
 
   export const feePayerPartialSignTransfer = async (
@@ -65,70 +60,66 @@ export namespace SplToken {
     mintDecimal: number,
     feePayer: PublicKey
   ): Promise<Result<PartialSignInstruction, Error>> => {
-    const sourceToken = await AssociatedAccount.makeOrCreateInstruction(
-      mint,
-      owner,
-      feePayer
-    );
+    return Try(async () => {
+      const sourceToken =
+        await Internals_AssociatedAccount.makeOrCreateInstruction(
+          mint,
+          owner,
+          feePayer
+        );
 
-    const destToken = await AssociatedAccount.makeOrCreateInstruction(
-      mint,
-      dest,
-      feePayer
-    );
+      const destToken =
+        await Internals_AssociatedAccount.makeOrCreateInstruction(
+          mint,
+          dest,
+          feePayer
+        );
 
-    if (destToken.isErr) {
-      return Result.err(destToken.error);
-    }
+      let inst2;
+      const blockhashObj = await Node.getConnection().getLatestBlockhash();
 
-    let inst2;
-    const blockhashObj = await Node.getConnection().getLatestBlockhash();
+      const tx = new Transaction({
+        lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
+        blockhash: blockhashObj.blockhash,
+        feePayer,
+      });
 
-    const tx = new Transaction({
-      lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
-      blockhash: blockhashObj.blockhash,
-      feePayer,
-    });
+      // return associated token account
+      if (!destToken.inst) {
+        inst2 = createTransferCheckedInstruction(
+          sourceToken.tokenAccount.toPublicKey(),
+          mint,
+          destToken.tokenAccount.toPublicKey(),
+          owner,
+          Internals_SplToken.calculateAmount(amount, mintDecimal),
+          mintDecimal,
+          signers
+        );
+        tx.add(inst2);
+      } else {
+        // return instruction and undecided associated token account
+        inst2 = createTransferCheckedInstruction(
+          sourceToken.tokenAccount.toPublicKey(),
+          mint,
+          destToken.tokenAccount.toPublicKey(),
+          owner,
+          Internals_SplToken.calculateAmount(amount, mintDecimal),
+          mintDecimal,
+          signers
+        );
+        tx.add(destToken.inst).add(inst2);
+      }
 
-    // return associated token account
-    if (!destToken.value.inst) {
-      inst2 = createTransferCheckedInstruction(
-        sourceToken.unwrap().tokenAccount.toPublicKey(),
-        mint,
-        destToken.value.tokenAccount.toPublicKey(),
-        owner,
-        Internals_SplToken.calculateAmount(amount, mintDecimal),
-        mintDecimal,
-        signers
-      );
-      tx.add(inst2);
-    } else {
-      // return instruction and undecided associated token account
-      inst2 = createTransferCheckedInstruction(
-        sourceToken.unwrap().tokenAccount.toPublicKey(),
-        mint,
-        destToken.value.tokenAccount.toPublicKey(),
-        owner,
-        Internals_SplToken.calculateAmount(amount, mintDecimal),
-        mintDecimal,
-        signers
-      );
-      tx.add(destToken.value.inst).add(inst2);
-    }
+      tx.recentBlockhash = blockhashObj.blockhash;
+      signers.forEach((signer) => {
+        tx.partialSign(signer);
+      });
 
-    tx.recentBlockhash = blockhashObj.blockhash;
-    signers.forEach((signer) => {
-      tx.partialSign(signer);
-    });
-
-    try {
       const serializedTx = tx.serialize({
         requireAllSignatures: false,
       });
       const hex = serializedTx.toString('hex');
-      return Result.ok(new PartialSignInstruction(hex));
-    } catch (ex) {
-      return Result.err(ex as Error);
-    }
+      return new PartialSignInstruction(hex);
+    });
   };
 }

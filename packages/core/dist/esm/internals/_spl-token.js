@@ -8,14 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { PublicKey } from '@solana/web3.js';
-import { Result } from '@solana-suite/shared';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
+//@internal
 export var Internals_SplToken;
 (function (Internals_SplToken) {
     Internals_SplToken.findAssociatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
-        return yield PublicKey.findProgramAddress([owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()], ASSOCIATED_TOKEN_PROGRAM_ID)
-            .then((v) => Result.ok(v[0]))
-            .catch(Result.err);
+        const address = yield PublicKey.findProgramAddress([owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()], ASSOCIATED_TOKEN_PROGRAM_ID);
+        return address[0];
     });
     Internals_SplToken.calculateAmount = (amount, mintDecimal) => {
         return amount * Math.pow(10, mintDecimal);

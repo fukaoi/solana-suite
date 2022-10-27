@@ -12,8 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Internals_History = void 0;
 const shared_1 = require("@solana-suite/shared");
 const history_1 = require("../types/history");
+//@internal
 var Internals_History;
 (function (Internals_History) {
+    const convertTimestampToDate = (blockTime) => {
+        return new Date(blockTime * 1000);
+    };
     const createHistory = (searchKey, instruction, meta, directionFilter, mappingTokenAccount, isToken, withMemos) => {
         var _a, _b;
         const v = instruction.parsed;
@@ -71,21 +75,27 @@ var Internals_History;
             return v;
         }
     };
+    const get = (signature) => __awaiter(this, void 0, void 0, function* () {
+        const res = yield shared_1.Node.getConnection().getParsedTransaction(signature);
+        if (!res) {
+            return {};
+        }
+        return res;
+    });
+    // Parsed transaction instruction, Type Guard
     Internals_History.isParsedInstruction = (arg) => {
-        return arg !== null && typeof arg === 'object' && arg.parsed;
+        return arg !== null && typeof arg === 'object' && 'parsed' in arg;
     };
     Internals_History.filterTransactions = (searchKey, transactions, filterOptions, isToken = false, directionFilter) => {
         const hist = [];
         const mappingTokenAccount = [];
         transactions.forEach((tx) => {
             var _a, _b;
-            if (tx.isErr)
-                return tx;
-            if (!tx.value.transaction)
+            if (!tx.transaction)
                 return;
-            const accountKeys = tx.value.transaction.message.accountKeys.map((t) => t.pubkey.toBase58());
+            const accountKeys = tx.transaction.message.accountKeys.map((t) => t.pubkey.toBase58());
             // set  mapping list
-            (_b = (_a = tx.value.meta) === null || _a === void 0 ? void 0 : _a.postTokenBalances) === null || _b === void 0 ? void 0 : _b.forEach((t) => {
+            (_b = (_a = tx.meta) === null || _a === void 0 ? void 0 : _a.postTokenBalances) === null || _b === void 0 ? void 0 : _b.forEach((t) => {
                 if (accountKeys[t.accountIndex] && t.owner) {
                     const v = {
                         account: accountKeys[t.accountIndex],
@@ -96,27 +106,27 @@ var Internals_History;
             });
             // set transaction with memo
             const withMemos = [];
-            tx.value.transaction.message.instructions.forEach((v) => {
+            tx.transaction.message.instructions.forEach((v) => {
                 if (Internals_History.isParsedInstruction(v) && v.program === 'spl-memo') {
                     withMemos.push({
-                        sig: tx.value.transaction.signatures,
+                        sig: tx.transaction.signatures,
                         memo: v.parsed,
                     });
                 }
             });
-            tx.value.transaction.message.instructions.forEach((instruction) => {
+            tx.transaction.message.instructions.forEach((instruction) => {
                 if (Internals_History.isParsedInstruction(instruction)) {
                     if (isToken && instruction.program !== 'spl-token') {
                         return;
                     }
                     if (filterOptions.includes(instruction.parsed.type)) {
-                        const res = createHistory(searchKey, instruction, tx.value, directionFilter, mappingTokenAccount, isToken, withMemos);
+                        const res = createHistory(searchKey, instruction, tx, directionFilter, mappingTokenAccount, isToken, withMemos);
                         res && hist.push(res);
                     }
                     else {
                         // Only memo
                         if (filterOptions.includes(history_1.Filter.OnlyMemo)) {
-                            const res = createMemoHistory(searchKey, instruction, tx.value, directionFilter);
+                            const res = createMemoHistory(searchKey, instruction, tx, directionFilter);
                             res && hist.push(res);
                         }
                     }
@@ -125,38 +135,14 @@ var Internals_History;
         });
         return hist;
     };
-    const convertTimestampToDate = (blockTime) => new Date(blockTime * 1000);
-    Internals_History.get = (signature) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield shared_1.Node.getConnection()
-            .getParsedTransaction(signature)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (res.isErr) {
-            return shared_1.Result.err(res.error);
-        }
-        else {
-            if (!res.value) {
-                return shared_1.Result.ok({});
-            }
-            return shared_1.Result.ok(res.value);
-        }
-    });
     // @todo: internal
     Internals_History.getForAddress = (pubkey, limit, before, until) => __awaiter(this, void 0, void 0, function* () {
-        const transactions = yield shared_1.Node.getConnection()
-            .getSignaturesForAddress(pubkey, {
+        const transactions = yield shared_1.Node.getConnection().getSignaturesForAddress(pubkey, {
             limit,
             before,
             until,
-        })
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (transactions.isErr) {
-            return [shared_1.Result.err(transactions.error)];
-        }
-        else {
-            const signatures = transactions.value.map((tx) => Internals_History.get(tx.signature));
-            return yield Promise.all(signatures);
-        }
+        });
+        const signatures = transactions.map((tx) => get(tx.signature));
+        return yield Promise.all(signatures);
     });
 })(Internals_History = exports.Internals_History || (exports.Internals_History = {}));

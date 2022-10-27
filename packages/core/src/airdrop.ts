@@ -9,7 +9,7 @@ export namespace Airdrop {
     pubkey: PublicKey,
     airdropAmount?: number
   ): Promise<Result<string, Error>> => {
-    return await Try(async () => {
+    return Try(async () => {
       debugLog('Now airdropping...please wait');
 
       airdropAmount = !airdropAmount

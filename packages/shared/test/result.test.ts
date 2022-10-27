@@ -1,6 +1,5 @@
 import { describe, it } from 'mocha';
 import { Result } from '../src/result';
-import { assert } from 'chai';
 
 describe('Result', () => {
   it('conditions', () => {

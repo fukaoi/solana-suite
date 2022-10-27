@@ -8,8 +8,8 @@ describe('Internals_SplToken', () => {
       'D7dKBiFxWKiSSew4fzinML1so4vEaSPmtiKV6qWMDUJJ'.toPublicKey(),
       '5hj62erLKeKSM29C5oZR8TGei7RrMG79voFkiCotRZmS'.toPublicKey()
     );
-    assert.isTrue(res.isOk);
-    assert.isNotNull(res.unwrap());
+    assert.isNotEmpty(res);
+    assert.isNotNull(res);
   });
 
   it('Calculate token amount', async () => {

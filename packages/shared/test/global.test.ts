@@ -134,6 +134,20 @@ describe('Global', () => {
     res.isOk && assert.equal(res.value, mess);
   });
 
+  it.only('Call function that return Result type in try()', () => {
+    const fn = () => {
+      return Try(() => {
+        throw Error('return Result');
+      });
+    };
+
+    const res2 = Try(() => {
+      const res = fn();
+      console.log('res: ', res);
+    });
+    console.log(res2);
+  });
+
   it('Catch error in Try()', async () => {
     const errorMess = 'Dummy error';
     const res = await Try(() => {

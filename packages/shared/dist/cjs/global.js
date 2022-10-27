@@ -33,7 +33,8 @@ Array.prototype.submit = function () {
         let i = 0;
         for (const obj of this) {
             if (obj.isErr) {
-                return _1.Result.err(Error(`[Array index of caught 'Result.err': ${i}]${obj.error.message}`));
+                const errorMess = obj.error.message;
+                return _1.Result.err(Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`));
             }
             else if (obj.isOk) {
                 instructions.push(obj.value);
@@ -87,13 +88,14 @@ String.prototype.toExplorerUrl = function () {
     else {
         cluster = _1.Constants.Cluster.dev;
     }
+    const address = this.toString();
     try {
         /* tslint:disable-next-line */
-        new web3_js_1.PublicKey(this);
-        return `https://solscan.io/account/${this}?cluster=${cluster}`;
+        new web3_js_1.PublicKey(address);
+        return `https://solscan.io/account/${address}?cluster=${cluster}`;
     }
     catch (_) {
-        return `https://solscan.io/tx/${this}?cluster=${cluster}`;
+        return `https://solscan.io/tx/${address}?cluster=${cluster}`;
     }
 };
 /**

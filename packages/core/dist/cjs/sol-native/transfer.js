@@ -20,45 +20,36 @@ var SolNative;
     // NOTICE: There is a lamports fluctuation when transfer under 0.001 sol
     // for multiSig only function
     SolNative.transferWithMultisig = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const connection = shared_1.Node.getConnection();
-        const payer = feePayer ? feePayer : signers[0];
-        const wrapped = yield (0, spl_token_1.createWrappedNativeAccount)(connection, payer, owner, parseInt(`${amount.toLamports()}`, RADIX))
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (wrapped.isErr) {
-            return wrapped.error;
-        }
-        (0, shared_1.debugLog)('# wrapped sol: ', wrapped.value.toBase58());
-        const tokenRes = yield (0, spl_token_1.createMint)(connection, payer, owner, owner, 0)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (tokenRes.isErr) {
-            return shared_1.Result.err(tokenRes.error);
-        }
-        const token = tokenRes.value;
-        const sourceToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, owner, payer);
-        if (sourceToken.isErr) {
-            return shared_1.Result.err(sourceToken.error);
-        }
-        (0, shared_1.debugLog)('# sourceToken: ', sourceToken.value);
-        const destToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, wrapped.value, payer);
-        if (destToken.isErr) {
-            return shared_1.Result.err(destToken.error);
-        }
-        (0, shared_1.debugLog)('# destToken: ', destToken.value);
-        const inst1 = (0, spl_token_1.createTransferInstruction)(sourceToken.value.toPublicKey(), destToken.value.toPublicKey(), owner, parseInt(`${amount}`, RADIX), // No lamports, its sol
-        signers);
-        const inst2 = (0, spl_token_1.createCloseAccountInstruction)(wrapped.value, dest, owner, signers);
-        return shared_1.Result.ok(new shared_1.Instruction([inst1, inst2], signers, feePayer));
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            const connection = shared_1.Node.getConnection();
+            const payer = feePayer ? feePayer : signers[0];
+            const wrapped = yield (0, spl_token_1.createWrappedNativeAccount)(connection, payer, owner, parseInt(`${amount.toLamports()}`, RADIX));
+            (0, shared_1.debugLog)('# wrapped sol: ', wrapped.toBase58());
+            const token = yield (0, spl_token_1.createMint)(connection, payer, owner, owner, 0);
+            const sourceToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, owner, payer);
+            if (sourceToken.isErr) {
+                throw sourceToken.error;
+            }
+            (0, shared_1.debugLog)('# sourceToken: ', sourceToken.value);
+            const destToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, wrapped, payer);
+            if (destToken.isErr) {
+                throw destToken.error;
+            }
+            (0, shared_1.debugLog)('# destToken: ', destToken.value);
+            const inst1 = (0, spl_token_1.createTransferInstruction)(sourceToken.value.toPublicKey(), destToken.value.toPublicKey(), owner, parseInt(`${amount}`, RADIX), // No lamports, its sol
+            signers);
+            const inst2 = (0, spl_token_1.createCloseAccountInstruction)(wrapped, dest, owner, signers);
+            return new shared_1.Instruction([inst1, inst2], signers, feePayer);
+        }));
     });
-    SolNative.transfer = (source, destination, signers, amount, feePayer) => {
+    SolNative.transfer = (source, destination, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const inst = web3_js_1.SystemProgram.transfer({
             fromPubkey: source,
             toPubkey: destination,
             lamports: parseInt(`${amount.toLamports()}`, RADIX),
         });
         return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
-    };
+    });
     SolNative.feePayerPartialSignTransfer = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const blockHashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
         const tx = new web3_js_1.Transaction({

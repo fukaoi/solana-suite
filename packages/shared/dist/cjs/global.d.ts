@@ -41,5 +41,5 @@ export declare const isPromise: (obj: unknown) => obj is Promise<unknown>;
  *
  * @returns Promise<Result<T, E>>
  */
-export declare function Try<T, E extends Error>(asyncblock: () => Promise<T>): Promise<Result<T, Error>>;
-export declare function Try<T, E extends Error>(block: () => T): Result<T, Error>;
+export declare function Try<T, E extends Error>(asyncblock: () => Promise<T>): Promise<Result<T, E>>;
+export declare function Try<T, E extends Error>(block: () => T): Result<T, E>;
