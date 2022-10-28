@@ -1,9 +1,9 @@
 <img src="https://bafkreibksjy2sdskvcrrlse2lwbskasub36bspidube7rlozhrd7wssg6i.ipfs.nftstorage.link/" width="75%" height="75%" />
 
 <br />
+
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![npm version](https://badge.fury.io/js/@solana-suite%2Fcore.svg)
-
 ![compile workflow](https://github.com/atonoy/solana-suite/actions/workflows/compile.yml/badge.svg)
 ![lint workflow](https://github.com/atonoy/solana-suite/actions/workflows/lint.yml/badge.svg)
 ![test:core workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-core.yml/badge.svg)
