@@ -16,22 +16,22 @@ exports.MAX_RETRIES = 3;
 class Instruction {
     constructor(instructions, signers, feePayer, data) {
         this.submit = () => __awaiter(this, void 0, void 0, function* () {
-            if (!(this instanceof Instruction)) {
-                return _1.Result.err(Error('only Instruction object that can use this'));
-            }
-            const transaction = new web3_js_1.Transaction();
-            let finalSigners = this.signers;
-            if (this.feePayer) {
-                transaction.feePayer = this.feePayer.publicKey;
-                finalSigners = [this.feePayer, ...this.signers];
-            }
-            this.instructions.forEach(inst => transaction.add(inst));
-            const options = {
-                maxRetries: exports.MAX_RETRIES,
-            };
-            return yield (0, web3_js_1.sendAndConfirmTransaction)(_1.Node.getConnection(), transaction, finalSigners, options)
-                .then(_1.Result.ok)
-                .catch(_1.Result.err);
+            return (0, _1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+                if (!(this instanceof Instruction)) {
+                    throw Error('only Instruction object that can use this');
+                }
+                const transaction = new web3_js_1.Transaction();
+                let finalSigners = this.signers;
+                if (this.feePayer) {
+                    transaction.feePayer = this.feePayer.publicKey;
+                    finalSigners = [this.feePayer, ...this.signers];
+                }
+                this.instructions.forEach((inst) => transaction.add(inst));
+                const options = {
+                    maxRetries: exports.MAX_RETRIES,
+                };
+                return yield (0, web3_js_1.sendAndConfirmTransaction)(_1.Node.getConnection(), transaction, finalSigners, options);
+            }));
         });
         this.instructions = instructions;
         this.signers = signers;
@@ -43,20 +43,19 @@ exports.Instruction = Instruction;
 class PartialSignInstruction {
     constructor(instructions) {
         this.submit = (feePayer) => __awaiter(this, void 0, void 0, function* () {
-            if (!(this instanceof PartialSignInstruction)) {
-                return _1.Result.err(Error('only PartialSignInstruction object that can use this'));
-            }
-            const decode = Buffer.from(this.hexInstruction, 'hex');
-            const transactionFromJson = web3_js_1.Transaction.from(decode);
-            transactionFromJson.partialSign(feePayer);
-            const options = {
-                maxRetries: exports.MAX_RETRIES,
-            };
-            const wireTransaction = transactionFromJson.serialize();
-            return yield _1.Node.getConnection()
-                .sendRawTransaction(wireTransaction, options)
-                .then(_1.Result.ok)
-                .catch(_1.Result.err);
+            return (0, _1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+                if (!(this instanceof PartialSignInstruction)) {
+                    throw Error('only PartialSignInstruction object that can use this');
+                }
+                const decode = Buffer.from(this.hexInstruction, 'hex');
+                const transactionFromJson = web3_js_1.Transaction.from(decode);
+                transactionFromJson.partialSign(feePayer);
+                const options = {
+                    maxRetries: exports.MAX_RETRIES,
+                };
+                const wireTransaction = transactionFromJson.serialize();
+                return yield _1.Node.getConnection().sendRawTransaction(wireTransaction, options);
+            }));
         });
         this.hexInstruction = instructions;
     }

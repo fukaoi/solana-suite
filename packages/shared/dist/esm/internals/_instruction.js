@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var _a;
 import { sendAndConfirmTransaction, Transaction, } from '@solana/web3.js';
-import { Node, Result } from '../';
+import { Node, } from '../';
 import { MAX_RETRIES } from '../instruction';
 // @internal
 export class Internals_Instruction {
@@ -19,8 +19,8 @@ Internals_Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, f
     let i = 0;
     for (const a of arr) {
         if (!a.instructions && !a.signers) {
-            return Result.err(Error(`only Instruction object that can use batchSubmit().
-            Index: ${i}, Set value: ${JSON.stringify(a)}`));
+            throw Error(`only Instruction object that can use batchSubmit().
+            Index: ${i}, Set value: ${JSON.stringify(a)}`);
         }
         i++;
     }
@@ -41,7 +41,5 @@ Internals_Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, f
     const options = {
         maxRetries: MAX_RETRIES,
     };
-    return yield sendAndConfirmTransaction(Node.getConnection(), transaction, finalSigners, options)
-        .then(Result.ok)
-        .catch(Result.err);
+    return yield sendAndConfirmTransaction(Node.getConnection(), transaction, finalSigners, options);
 });

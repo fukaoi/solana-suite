@@ -5,22 +5,20 @@ import {
   ConfirmOptions,
 } from '@solana/web3.js';
 
-import { Node, Result } from '../';
+import { Node, } from '../';
 import { Instruction, MAX_RETRIES } from '../instruction';
 
 // @internal
 export class Internals_Instruction {
   static batchSubmit = async (
     arr: Instruction[]
-  ): Promise<Result<TransactionSignature, Error>> => {
+  ): Promise<TransactionSignature> => {
     let i = 0;
     for (const a of arr) {
       if (!a.instructions && !a.signers) {
-        return Result.err(
-          Error(
-            `only Instruction object that can use batchSubmit().
+        throw Error(
+          `only Instruction object that can use batchSubmit().
             Index: ${i}, Set value: ${JSON.stringify(a)}`
-          )
         );
       }
       i++;
@@ -51,8 +49,6 @@ export class Internals_Instruction {
       transaction,
       finalSigners,
       options
-    )
-      .then(Result.ok)
-      .catch(Result.err);
+    );
   };
 }

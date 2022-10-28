@@ -23,8 +23,8 @@ Internals_Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, f
     let i = 0;
     for (const a of arr) {
         if (!a.instructions && !a.signers) {
-            return __1.Result.err(Error(`only Instruction object that can use batchSubmit().
-            Index: ${i}, Set value: ${JSON.stringify(a)}`));
+            throw Error(`only Instruction object that can use batchSubmit().
+            Index: ${i}, Set value: ${JSON.stringify(a)}`);
         }
         i++;
     }
@@ -45,7 +45,5 @@ Internals_Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, f
     const options = {
         maxRetries: instruction_1.MAX_RETRIES,
     };
-    return yield (0, web3_js_1.sendAndConfirmTransaction)(__1.Node.getConnection(), transaction, finalSigners, options)
-        .then(__1.Result.ok)
-        .catch(__1.Result.err);
+    return yield (0, web3_js_1.sendAndConfirmTransaction)(__1.Node.getConnection(), transaction, finalSigners, options);
 });

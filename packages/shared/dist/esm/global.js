@@ -37,7 +37,13 @@ Array.prototype.submit = function () {
             }
             i++;
         }
-        return yield Internals_Instruction.batchSubmit(instructions);
+        try {
+            const res = yield Internals_Instruction.batchSubmit(instructions);
+            return Result.ok(res);
+        }
+        catch (err) {
+            return Result.err(err);
+        }
     });
 };
 /**

@@ -29,7 +29,12 @@ Array.prototype.submit = async function (): Promise<Result<string, Error>> {
     }
     i++;
   }
-  return await Internals_Instruction.batchSubmit(instructions);
+  try {
+    const res = await Internals_Instruction.batchSubmit(instructions);
+    return Result.ok(res);
+  } catch (err) {
+    return Result.err(err as Error);
+  }
 };
 
 /**

@@ -7,7 +7,7 @@ import {
   ConfirmOptions,
 } from '@solana/web3.js';
 
-import { Node, Result } from './';
+import { Node, Result, Try } from './';
 
 export const MAX_RETRIES = 3;
 
@@ -30,30 +30,30 @@ export class Instruction {
   }
 
   submit = async (): Promise<Result<TransactionSignature, Error>> => {
-    if (!(this instanceof Instruction)) {
-      return Result.err(Error('only Instruction object that can use this'));
-    }
-    const transaction = new Transaction();
-    let finalSigners = this.signers;
-    if (this.feePayer) {
-      transaction.feePayer = this.feePayer.publicKey;
-      finalSigners = [this.feePayer, ...this.signers];
-    }
+    return Try(async () => {
+      if (!(this instanceof Instruction)) {
+        throw Error('only Instruction object that can use this');
+      }
+      const transaction = new Transaction();
+      let finalSigners = this.signers;
+      if (this.feePayer) {
+        transaction.feePayer = this.feePayer.publicKey;
+        finalSigners = [this.feePayer, ...this.signers];
+      }
 
-    this.instructions.forEach(inst => transaction.add(inst));
+      this.instructions.forEach((inst) => transaction.add(inst));
 
-    const options: ConfirmOptions = {
-      maxRetries: MAX_RETRIES,
-    };
+      const options: ConfirmOptions = {
+        maxRetries: MAX_RETRIES,
+      };
 
-    return await sendAndConfirmTransaction(
-      Node.getConnection(),
-      transaction,
-      finalSigners,
-      options
-    )
-      .then(Result.ok)
-      .catch(Result.err);
+      return await sendAndConfirmTransaction(
+        Node.getConnection(),
+        transaction,
+        finalSigners,
+        options
+      );
+    });
   };
 }
 
@@ -67,23 +67,23 @@ export class PartialSignInstruction {
   submit = async (
     feePayer: Keypair
   ): Promise<Result<TransactionSignature, Error>> => {
-    if (!(this instanceof PartialSignInstruction)) {
-      return Result.err(
-        Error('only PartialSignInstruction object that can use this')
+    return Try(async () => {
+      if (!(this instanceof PartialSignInstruction)) {
+        throw Error('only PartialSignInstruction object that can use this');
+      }
+
+      const decode = Buffer.from(this.hexInstruction, 'hex');
+      const transactionFromJson = Transaction.from(decode);
+      transactionFromJson.partialSign(feePayer);
+
+      const options: ConfirmOptions = {
+        maxRetries: MAX_RETRIES,
+      };
+      const wireTransaction = transactionFromJson.serialize();
+      return await Node.getConnection().sendRawTransaction(
+        wireTransaction,
+        options
       );
-    }
-
-    const decode = Buffer.from(this.hexInstruction, 'hex');
-    const transactionFromJson = Transaction.from(decode);
-    transactionFromJson.partialSign(feePayer);
-
-    const options: ConfirmOptions = {
-      maxRetries: MAX_RETRIES,
-    };
-    const wireTransaction = transactionFromJson.serialize();
-    return await Node.getConnection()
-      .sendRawTransaction(wireTransaction, options)
-      .then(Result.ok)
-      .catch(Result.err);
+    });
   };
 }
