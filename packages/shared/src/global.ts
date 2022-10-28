@@ -11,7 +11,7 @@ import './types/global';
  */
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-Array.prototype.submit = async function (): Promise<Result<string, Error>> {
+Array.prototype.submit = function (): Promise<Result<string, Error>> {
   const instructions: Instruction[] = [];
   // dont use forEach
   // It is not possible to stop the process by RETURN in the middle of the process.
