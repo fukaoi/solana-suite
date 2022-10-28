@@ -128,7 +128,7 @@ export namespace Metaplex {
   export const initNftStorageMetadata = (
     input: InputMetaplexMetadata,
     sellerFeeBasisPoints: number,
-    options?: any
+    options?: { [key: string]: unknown }
   ): NftStorageMetadata => {
     const data = {
       name: input.name,
