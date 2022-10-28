@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Node } from '@solana-suite/shared';
-import { Filter } from '../types/history';
+import { Filter, } from '../types/history';
 //@internal
 export var Internals_History;
 (function (Internals_History) {
@@ -21,14 +21,15 @@ export var Internals_History;
         if (isToken && mappingTokenAccount && instruction.program === 'spl-token') {
             const foundSource = mappingTokenAccount.find((m) => m.account === v.info.source);
             const foundDest = mappingTokenAccount.find((m) => m.account === v.info.destination);
-            v.info.source = foundSource.owner;
-            v.info.destination = foundDest.owner;
+            foundSource && (v.info.source = foundSource.owner);
+            foundDest && (v.info.destination = foundDest.owner);
         }
         v.date = convertTimestampToDate(meta.blockTime);
         v.sig = meta.transaction.signatures[0];
         v.innerInstruction = false;
         if (withMemos && withMemos.length > 0) {
-            v.memo = withMemos.find((obj) => obj.sig === meta.transaction.signatures).memo;
+            const finded = withMemos.find((obj) => obj.sig === meta.transaction.signatures);
+            finded && (v.memo = finded.memo);
         }
         // inner instructions
         if (((_a = meta.meta) === null || _a === void 0 ? void 0 : _a.innerInstructions) &&

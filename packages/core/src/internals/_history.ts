@@ -45,10 +45,11 @@ export namespace Internals_History {
     v.date = convertTimestampToDate(meta.blockTime as number);
     v.sig = meta.transaction.signatures[0];
     v.innerInstruction = false;
-    if (withMemos && withMemos !== undefined && withMemos.length > 0) {
-      v.memo = withMemos.find(
+    if (withMemos && withMemos.length > 0) {
+       const finded = withMemos.find(
         (obj) => obj.sig === meta.transaction.signatures
-      ).memo;
+      );
+      finded && (v.memo = finded.memo);
     }
 
     // inner instructions

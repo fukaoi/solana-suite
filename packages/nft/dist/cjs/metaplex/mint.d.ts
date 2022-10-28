@@ -5,6 +5,28 @@ import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 import { BundlrSigner } from '../types';
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 export declare namespace Metaplex {
+    const uploadMetaContent: (input: InputMetaplexMetadata, feePayer: BundlrSigner) => Promise<{
+        uri: string;
+        sellerFeeBasisPoints: number;
+        reducedMetadata: {
+            name: string;
+            symbol: string;
+            description?: string | undefined;
+            external_url?: string | undefined;
+            image?: string | undefined;
+            attributes?: import("../types").JsonMetadataAttribute[] | undefined;
+            properties?: import("../types").JsonMetadataProperties | undefined;
+            isMutable?: boolean | undefined;
+            maxSupply?: any;
+            creators?: import("@metaplex-foundation/js").CreatorInput[] | undefined;
+            uses?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/mpl-token-metadata").Uses> | undefined;
+            isCollection?: boolean | undefined;
+            collection?: import("@metaplex-foundation/js").Option<PublicKey> | undefined;
+            collectionAuthority?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/js").Signer> | undefined;
+            collectionAuthorityIsDelegated?: boolean | undefined;
+            collectionIsSized?: boolean | undefined;
+        };
+    }>;
     const createNftBuilderInstruction: (feePayer: BundlrSigner, params: CreateNftBuilderParams, useNewMint: Keypair, updateAuthority: Keypair | IdentityClient, mintAuthority: Keypair | IdentityClient, tokenOwner: PublicKey) => Promise<TransactionInstruction[]>;
     /**
      * Upload content and NFT mint

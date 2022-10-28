@@ -53,7 +53,7 @@ var Metaplex;
         };
         return Object.assign(Object.assign({}, data), options);
     };
-    const uploadMetaContent = (input, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Metaplex.uploadMetaContent = (input, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let storage;
         const { filePath, storageType, royalty, options } = input, reducedMetadata = __rest(input, ["filePath", "storageType", "royalty", "options"]);
         const sellerFeeBasisPoints = _royalty_1.Internals_Royalty.convertValue(royalty);
@@ -165,7 +165,7 @@ var Metaplex;
                 throw valid.error;
             }
             const payer = feePayer ? feePayer : owner;
-            const uploaded = yield uploadMetaContent(input, payer);
+            const uploaded = yield Metaplex.uploadMetaContent(input, payer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);

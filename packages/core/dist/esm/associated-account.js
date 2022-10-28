@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Node, Result, debugLog, Instruction, sleep, Try, } from '@solana-suite/shared';
+import { Node, debugLog, Instruction, sleep } from '@solana-suite/shared';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddress, getAccount, TokenAccountNotFoundError, TokenInvalidAccountOwnerError, createAssociatedTokenAccountInstruction, } from '@solana/spl-token';
 /**
  * Get Associated token Account.
@@ -17,23 +17,18 @@ import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddres
  * @param {PublicKey} owner
  * @param {PublicKey} feePayer
  * @param {boolean} allowOwnerOffCurve
- * @returns Promise<Result<string | Instruction, Error>>
+ * @returns Promise<string | Instruction>
  */
 export var AssociatedAccount;
 (function (AssociatedAccount) {
     const RETRY_OVER_LIMIT = 10;
     const RETRY_SLEEP_TIME = 3;
-    AssociatedAccount.get = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        return Try(() => __awaiter(this, void 0, void 0, function* () {
-            const res = yield AssociatedAccount.makeOrCreateInstruction(mint, owner, feePayer.publicKey, allowOwnerOffCurve);
-            if (res.isErr) {
-                throw res.error;
-            }
-            if (!res.value.inst) {
-                return res.value.tokenAccount;
-            }
-            return new Instruction([res.value.inst], [], feePayer, res.value.tokenAccount);
-        }));
+    const get = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
+        const res = yield AssociatedAccount.makeOrCreateInstruction(mint, owner, feePayer.publicKey, allowOwnerOffCurve);
+        if (!res.inst) {
+            return res.tokenAccount;
+        }
+        return new Instruction([res.inst], [], feePayer, res.tokenAccount);
     });
     /**
      * Retry function if create new token accouint
@@ -41,24 +36,26 @@ export var AssociatedAccount;
      * @param {PublicKey} mint
      * @param {PublicKey} owner
      * @param {PublicKey} feePayer
-     * @returns Promise<Result<string, Error>>
+     * @returns Promise<string>
      */
     AssociatedAccount.retryGetOrCreate = (mint, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let counter = 1;
         while (counter < RETRY_OVER_LIMIT) {
             try {
-                const inst = yield AssociatedAccount.get(mint, owner, feePayer, true);
-                if (inst.isOk && typeof inst.value === 'string') {
-                    debugLog('# associatedTokenAccount: ', inst.value);
-                    return Result.ok(inst.value);
+                const inst = yield get(mint, owner, feePayer, true);
+                if (inst && typeof inst === 'string') {
+                    debugLog('# associatedTokenAccount: ', inst);
+                    return inst;
                 }
-                return (yield inst.submit()).map((ok) => {
-                    Node.confirmedSig(ok);
-                    return inst.unwrap().data;
-                }, (err) => {
-                    debugLog('# Error submit retryGetOrCreate: ', err);
-                    throw err;
-                });
+                else if (inst instanceof Instruction) {
+                    (yield [inst].submit()).map((ok) => __awaiter(this, void 0, void 0, function* () {
+                        yield Node.confirmedSig(ok);
+                        return inst.data;
+                    }), (err) => {
+                        debugLog('# Error submit retryGetOrCreate: ', err);
+                        throw err;
+                    });
+                }
             }
             catch (e) {
                 debugLog(`# retry: ${counter} create token account: `, e);
@@ -66,7 +63,7 @@ export var AssociatedAccount;
             yield sleep(RETRY_SLEEP_TIME);
             counter++;
         }
-        return Result.err(Error(`retry action is over limit ${RETRY_OVER_LIMIT}`));
+        throw Error(`retry action is over limit ${RETRY_OVER_LIMIT}`);
     });
     /**
      * [Main logic]Get Associated token Account.
@@ -75,32 +72,30 @@ export var AssociatedAccount;
      * @param {PublicKey} mint
      * @param {PublicKey} owner
      * @param {PublicKey} feePayer
-     * @returns Promise<Result<string, Error>>
+     * @returns Promise<string>
      */
     AssociatedAccount.makeOrCreateInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        return Try(() => __awaiter(this, void 0, void 0, function* () {
-            const associatedTokenAccount = yield getAssociatedTokenAddress(mint, owner, allowOwnerOffCurve, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
-            debugLog('# associatedTokenAccount: ', associatedTokenAccount.toString());
-            try {
-                // Dont use Result
-                yield getAccount(Node.getConnection(), associatedTokenAccount, Node.getConnection().commitment, TOKEN_PROGRAM_ID);
-                return {
-                    tokenAccount: associatedTokenAccount.toString(),
-                    inst: undefined,
-                };
+        const associatedTokenAccount = yield getAssociatedTokenAddress(mint, owner, allowOwnerOffCurve, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+        debugLog('# associatedTokenAccount: ', associatedTokenAccount.toString());
+        try {
+            // Dont use Result
+            yield getAccount(Node.getConnection(), associatedTokenAccount, Node.getConnection().commitment, TOKEN_PROGRAM_ID);
+            return {
+                tokenAccount: associatedTokenAccount.toString(),
+                inst: undefined,
+            };
+        }
+        catch (error) {
+            if (!(error instanceof TokenAccountNotFoundError) &&
+                !(error instanceof TokenInvalidAccountOwnerError)) {
+                throw Error('Unexpected error');
             }
-            catch (error) {
-                if (!(error instanceof TokenAccountNotFoundError) &&
-                    !(error instanceof TokenInvalidAccountOwnerError)) {
-                    throw Error('Unexpected error');
-                }
-                const payer = !feePayer ? owner : feePayer;
-                const inst = createAssociatedTokenAccountInstruction(payer, associatedTokenAccount, owner, mint, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
-                return {
-                    tokenAccount: associatedTokenAccount.toString(),
-                    inst,
-                };
-            }
-        }));
+            const payer = !feePayer ? owner : feePayer;
+            const inst = createAssociatedTokenAccountInstruction(payer, associatedTokenAccount, owner, mint, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+            return {
+                tokenAccount: associatedTokenAccount.toString(),
+                inst,
+            };
+        }
     });
 })(AssociatedAccount || (AssociatedAccount = {}));

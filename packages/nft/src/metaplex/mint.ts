@@ -66,7 +66,7 @@ export namespace Metaplex {
     return { ...data, ...options };
   };
 
-  const uploadMetaContent = async (
+  export const uploadMetaContent = async (
     input: InputMetaplexMetadata,
     feePayer: BundlrSigner
   ) => {

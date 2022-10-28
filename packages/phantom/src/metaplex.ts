@@ -63,7 +63,7 @@ export namespace MetaplexPhantom {
 
       const uploaded = await Metaplex.uploadMetaContent(input, phantom);
 
-      const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded.unwrap();
+      const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
       debugLog('# upload content url: ', uri);
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);

@@ -45,7 +45,7 @@ var MetaplexPhantom;
             }
             shared_1.Node.changeConnection({ cluster });
             const uploaded = yield nft_1.Metaplex.uploadMetaContent(input, phantom);
-            const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded.unwrap();
+            const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             (0, shared_1.debugLog)('# reducedMetadata: ', reducedMetadata);

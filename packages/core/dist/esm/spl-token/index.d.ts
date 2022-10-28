@@ -9,5 +9,5 @@ export declare const SplToken: {
         actionFilter?: import("..").Filter[] | undefined;
         directionFilter?: import("..").DirectionFilter | undefined;
     } | undefined) => Promise<import("@solana-suite/shared").Result<import("..").TransferHistory[], Error>>;
-    burn: (mint: import("@solana/web3.js").PublicKey, owner: import("@solana/web3.js").PublicKey, signers: import("@solana/web3.js").Keypair[], burnAmount: number, tokenDecimals: number, feePayer?: import("@solana/web3.js").Keypair | undefined) => Promise<void>;
+    burn: (mint: import("@solana/web3.js").PublicKey, owner: import("@solana/web3.js").PublicKey, signers: import("@solana/web3.js").Keypair[], burnAmount: number, tokenDecimals: number, feePayer?: import("@solana/web3.js").Keypair | undefined) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").Instruction, Error>>;
 };

@@ -68,9 +68,9 @@ export namespace SplTokenPhantom {
         builder.mint.publicKey,
         owner
       );
-      tx.add(data.unwrap().inst as TransactionInstruction);
+      tx.add(data.inst as TransactionInstruction);
       const txData = {
-        tokenAccount: data.unwrap().tokenAccount.toPublicKey(),
+        tokenAccount: data.tokenAccount.toPublicKey(),
         mint: builder.mint,
         tx: builder.tx,
       };
@@ -118,28 +118,23 @@ export namespace SplTokenPhantom {
     return Try(async () => {
       Node.changeConnection({ cluster });
       const connection = Node.getConnection();
-      const tx = new Transaction();
+      const transaction = new Transaction();
 
-      const transaction = (
-        await AssociatedAccount.makeOrCreateInstruction(tokenKey, owner)
-      ).unwrap(
-        (ok) => {
-          tx.add(ok.inst as TransactionInstruction);
-          return tx.add(
-            createMintToCheckedInstruction(
-              tokenKey,
-              ok.tokenAccount.toPublicKey(),
-              owner,
-              totalAmount,
-              mintDecimal,
-              [],
-              TOKEN_PROGRAM_ID
-            )
-          );
-        },
-        (err) => {
-          throw err;
-        }
+      const makeInstruction = await AssociatedAccount.makeOrCreateInstruction(
+        tokenKey,
+        owner
+      );
+      transaction.add(makeInstruction.inst as TransactionInstruction);
+      transaction.add(
+        createMintToCheckedInstruction(
+          tokenKey,
+          makeInstruction.tokenAccount.toPublicKey(),
+          owner,
+          totalAmount,
+          mintDecimal,
+          [],
+          TOKEN_PROGRAM_ID
+        )
       );
 
       transaction.feePayer = owner;

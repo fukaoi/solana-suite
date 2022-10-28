@@ -38,9 +38,9 @@ var SplTokenPhantom;
             const tx = new web3_js_1.Transaction();
             const builder = yield createTokenBuilder(owner, mintDecimal);
             const data = yield core_1.AssociatedAccount.makeOrCreateInstruction(builder.mint.publicKey, owner);
-            tx.add(data.unwrap().inst);
+            tx.add(data.inst);
             const txData = {
-                tokenAccount: data.unwrap().tokenAccount.toPublicKey(),
+                tokenAccount: data.tokenAccount.toPublicKey(),
                 mint: builder.mint,
                 tx: builder.tx,
             };
@@ -66,13 +66,10 @@ var SplTokenPhantom;
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             shared_1.Node.changeConnection({ cluster });
             const connection = shared_1.Node.getConnection();
-            const tx = new web3_js_1.Transaction();
-            const transaction = (yield core_1.AssociatedAccount.makeOrCreateInstruction(tokenKey, owner)).unwrap((ok) => {
-                tx.add(ok.inst);
-                return tx.add((0, spl_token_1.createMintToCheckedInstruction)(tokenKey, ok.tokenAccount.toPublicKey(), owner, totalAmount, mintDecimal, [], spl_token_1.TOKEN_PROGRAM_ID));
-            }, (err) => {
-                throw err;
-            });
+            const transaction = new web3_js_1.Transaction();
+            const makeInstruction = yield core_1.AssociatedAccount.makeOrCreateInstruction(tokenKey, owner);
+            transaction.add(makeInstruction.inst);
+            transaction.add((0, spl_token_1.createMintToCheckedInstruction)(tokenKey, makeInstruction.tokenAccount.toPublicKey(), owner, totalAmount, mintDecimal, [], spl_token_1.TOKEN_PROGRAM_ID));
             transaction.feePayer = owner;
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             transaction.recentBlockhash = blockhashObj.value.blockhash;

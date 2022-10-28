@@ -7,31 +7,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Node, Result } from '@solana-suite/shared';
+import { Node, Try } from '@solana-suite/shared';
 import { Internals_History } from '../internals/_history';
 export var SolNative;
 (function (SolNative) {
     SolNative.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
-        var _a, _b, _c, _d;
-        const res = yield Node.getConnection()
-            .getParsedAccountInfo(owner)
-            .then(Result.ok)
-            .catch(Result.err);
-        if (res.isErr) {
-            return Result.err(res.error);
-        }
-        const info = {
-            sol: 0,
-            lamports: 0,
-            owner: owner.toString(),
-        };
-        if (Internals_History.isParsedInstruction((_a = res.unwrap().value) === null || _a === void 0 ? void 0 : _a.data)) {
-            info.owner = ((_b = res.value.value) === null || _b === void 0 ? void 0 : _b.data).parsed.info.owner;
-        }
-        if (res.value.value) {
-            info.lamports = (_c = res.value.value) === null || _c === void 0 ? void 0 : _c.lamports;
-            info.sol = (_d = res.value.value) === null || _d === void 0 ? void 0 : _d.lamports.toSol();
-        }
-        return Result.ok(info);
+        return Try(() => __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d, _e, _f;
+            const res = yield Node.getConnection().getParsedAccountInfo(owner);
+            const info = {
+                sol: 0,
+                lamports: 0,
+                owner: owner.toString(),
+            };
+            if (Internals_History.isParsedInstruction((_a = res.value) === null || _a === void 0 ? void 0 : _a.data)) {
+                const parsedAccountData = (_b = res.value) === null || _b === void 0 ? void 0 : _b.data;
+                info.owner = (_d = (_c = parsedAccountData.parsed) === null || _c === void 0 ? void 0 : _c.info) === null || _d === void 0 ? void 0 : _d.owner;
+            }
+            if (res.value) {
+                info.lamports = (_e = res.value) === null || _e === void 0 ? void 0 : _e.lamports;
+                info.sol = (_f = res.value) === null || _f === void 0 ? void 0 : _f.lamports.toSol();
+            }
+            return info;
+        }));
     });
 })(SolNative || (SolNative = {}));

@@ -31,7 +31,8 @@ var Internals_History;
         v.sig = meta.transaction.signatures[0];
         v.innerInstruction = false;
         if (withMemos && withMemos.length > 0) {
-            v.memo = withMemos.find((obj) => obj.sig === meta.transaction.signatures).memo;
+            const finded = withMemos.find((obj) => obj.sig === meta.transaction.signatures);
+            finded && (v.memo = finded.memo);
         }
         // inner instructions
         if (((_a = meta.meta) === null || _a === void 0 ? void 0 : _a.innerInstructions) &&

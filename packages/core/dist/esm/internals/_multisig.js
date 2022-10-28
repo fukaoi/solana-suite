@@ -4,9 +4,11 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 // @internal
 export var Internals_Multisig;
 (function (Internals_Multisig) {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const createLayoutPubKey = (property) => {
         return blob(32, property);
     };
+    /* eslint-disable @typescript-eslint/no-unsafe-argument */
     Internals_Multisig.Layout = struct([
         u8('m'),
         u8('n'),
