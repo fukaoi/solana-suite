@@ -19,10 +19,11 @@ export namespace SplToken {
         if (d.account.data.parsed.info.tokenAmount.uiAmount > 0) {
           arr.push({
             owner: owner.toString(),
-            mint: d.account.data.parsed.info.mint,
-            amount: d.account.data.parsed.info.tokenAmount.uiAmount,
+            mint: d.account.data.parsed.info.mint as string,
+            amount: d.account.data.parsed.info.tokenAmount.uiAmount as number,
             tokenAccount: d.pubkey.toString(),
-            mintDecimal: d.account.data.parsed.info.tokenAmount.decimals,
+            mintDecimal: d.account.data.parsed.info.tokenAmount
+              .decimals as number,
           });
         }
         return arr;

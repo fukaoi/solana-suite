@@ -14,7 +14,7 @@ export namespace Metaplex {
         .findAllByOwner({ owner })
         .run();
 
-      const res = allData.map((d) => {
+      const res = allData.map(d => {
         return {
           mint: (d as Metadata).mintAddress.toString(),
           updateAuthority: d.updateAuthorityAddress.toString(),

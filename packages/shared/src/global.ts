@@ -18,7 +18,7 @@ Array.prototype.submit = async function (): Promise<Result<string, Error>> {
   let i = 0;
   for (const obj of this) {
     if (obj.isErr) {
-      const errorMess: string = obj.error.message;
+      const errorMess: string = obj.error.message as string;
       return Result.err(
         Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`)
       );

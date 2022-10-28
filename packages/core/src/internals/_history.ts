@@ -5,7 +5,13 @@ import {
 } from '@solana/web3.js';
 
 import { Node } from '@solana-suite/shared';
-import { TransferHistory, DirectionFilter, Filter } from '../types/history';
+import {
+  TransferHistory,
+  DirectionFilter,
+  Filter,
+  WithMemo,
+  MappingTokenAccount,
+} from '../types/history';
 
 //@internal
 export namespace Internals_History {
@@ -18,11 +24,11 @@ export namespace Internals_History {
     instruction: ParsedInstruction,
     meta: ParsedTransactionWithMeta,
     directionFilter?: DirectionFilter,
-    mappingTokenAccount?: any[],
+    mappingTokenAccount?: MappingTokenAccount[],
     isToken?: boolean,
-    withMemos?: any[]
+    withMemos?: WithMemo[]
   ) => {
-    const v: TransferHistory = instruction.parsed;
+    const v: TransferHistory = instruction.parsed as TransferHistory;
 
     if (isToken && mappingTokenAccount && instruction.program === 'spl-token') {
       const foundSource = mappingTokenAccount.find(
@@ -31,8 +37,9 @@ export namespace Internals_History {
       const foundDest = mappingTokenAccount.find(
         (m) => m.account === v.info.destination
       );
-      v.info.source = foundSource.owner;
-      v.info.destination = foundDest.owner;
+
+      foundSource && (v.info.source = foundSource.owner);
+      foundDest && (v.info.destination = foundDest.owner);
     }
 
     v.date = convertTimestampToDate(meta.blockTime as number);
@@ -74,7 +81,7 @@ export namespace Internals_History {
       date: new Date(),
       innerInstruction: false,
     };
-    v.memo = instruction.parsed;
+    v.memo = instruction.parsed as string;
     v.type = instruction.program;
     v.date = convertTimestampToDate(value.blockTime as number);
     v.sig = value.transaction.signatures[0];
@@ -118,7 +125,7 @@ export namespace Internals_History {
     directionFilter?: DirectionFilter
   ) => {
     const hist: TransferHistory[] = [];
-    const mappingTokenAccount: { account: string; owner: string }[] = [];
+    const mappingTokenAccount: MappingTokenAccount[] = [];
     transactions.forEach((tx) => {
       if (!tx.transaction) return;
 
@@ -137,12 +144,12 @@ export namespace Internals_History {
       });
 
       // set transaction with memo
-      const withMemos: { sig: string[]; memo: string }[] = [];
+      const withMemos: WithMemo[] = [];
       tx.transaction.message.instructions.forEach((v) => {
         if (isParsedInstruction(v) && v.program === 'spl-memo') {
           withMemos.push({
             sig: tx.transaction.signatures,
-            memo: v.parsed,
+            memo: v.parsed as string,
           });
         }
       });

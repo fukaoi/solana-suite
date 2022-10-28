@@ -111,7 +111,9 @@ export namespace Metaplex {
             {
               createMasterEditionArgs: {
                 maxSupply:
-                  params.maxSupply === undefined ? 0 : params.maxSupply,
+                  params.maxSupply === undefined
+                    ? 0
+                    : params.maxSupply as number,
               },
             }
           ),

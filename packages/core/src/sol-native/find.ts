@@ -17,7 +17,8 @@ export namespace SolNative {
       };
 
       if (Internals_History.isParsedInstruction(res.value?.data)) {
-        info.owner = (res.value?.data as ParsedAccountData).parsed.info.owner;
+        const parsedAccountData = res.value?.data as ParsedAccountData;
+        info.owner = parsedAccountData.parsed?.info?.owner as string;
       }
 
       if (res.value) {

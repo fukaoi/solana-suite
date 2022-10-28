@@ -17,8 +17,6 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/no-unsafe-member-access": 0,
     "@typescript-eslint/no-floating-promises": 0,
-    "@typescript-eslint/no-unsafe-assignment": 0,
-    // "@typescript-eslint/no-unsafe-argument": 0,
     "@typescript-eslint/quotes": [
       "error",
       "single",

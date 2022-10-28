@@ -1,4 +1,4 @@
-export interface TransferHistory {
+export type TransferHistory = {
   info: {
     destination?: string;
     source?: string;
@@ -14,7 +14,7 @@ export interface TransferHistory {
   innerInstruction: boolean;
   sig: string;
   memo?: string;
-}
+};
 
 export enum Filter {
   Transfer = 'transfer',
@@ -28,3 +28,12 @@ export enum DirectionFilter {
   Dest = 'destination',
   Source = 'source',
 }
+
+export type MappingTokenAccount = {
+  account: string;
+  owner: string;
+};
+
+export type WithMemo = { 
+  sig: string[]; memo: string 
+};
