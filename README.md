@@ -9,7 +9,6 @@
 ![test:core workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-core.yml/badge.svg)
 ![test:shared workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-shared.yml/badge.svg)
 ![test:nft workflow](https://github.com/atonoy/solana-suite/actions/workflows/test-nft.yml/badge.svg)
-![npm version](https://badge.fury.io/js/@solana-suite%2Fcore.svg)
 <br />
 
 # Summary
