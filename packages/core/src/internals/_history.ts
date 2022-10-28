@@ -153,7 +153,7 @@ export namespace Internals_History {
             return;
           }
 
-          if (filterOptions.includes(instruction.parsed.type)) {
+          if (filterOptions.includes(instruction.parsed.type as Filter)) {
             const res = createHistory(
               searchKey,
               instruction,

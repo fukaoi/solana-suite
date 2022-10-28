@@ -50,7 +50,7 @@ export namespace StorageNftStorage {
         const filepath = filePath as string;
         file = (await import('fs')).readFileSync(filepath);
       } else if (isBrowser()) {
-        const filepath = filePath as any;
+        const filepath = filePath ;
         file = toMetaplexFile(filepath, '').buffer;
       } else {
         throw Error('Supported environment: only Node.js and Browser js');

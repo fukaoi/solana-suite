@@ -30,7 +30,7 @@ export namespace StorageArweave {
         const filepath = filePath as string;
         buffer = (await import('fs')).readFileSync(filepath);
       } else if (isBrowser()) {
-        const filepath = filePath as any;
+        const filepath = filePath ;
         buffer = toMetaplexFile(filepath, '').buffer;
       } else {
         throw Error('Supported environment: only Node.js and Browser js');
@@ -39,13 +39,15 @@ export namespace StorageArweave {
       const res = await Bundlr.useStorage(feePayer).getUploadPrice(
         buffer.length
       );
+
+      const basisPoints: string = res.basisPoints;
       debugLog(
         '# buffer length, price',
         buffer.length,
-        parseInt(res.basisPoints).toSol()
+        parseInt(basisPoints).toSol()
       );
       return {
-        price: parseInt(res.basisPoints).toSol(),
+        price: parseInt(basisPoints).toSol(),
         currency: res.currency,
       };
     });
@@ -68,7 +70,7 @@ export namespace StorageArweave {
           file = toMetaplexFile(buffer, filepath);
         }
       } else if (isBrowser()) {
-        const filepath = filePath as any;
+        const filepath = filePath ;
         if (fileOptions) {
           file = toMetaplexFile(filepath, '', fileOptions);
         } else {

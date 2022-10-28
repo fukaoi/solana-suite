@@ -9,8 +9,8 @@ import './types/global';
  *
  * @returns Promise<Result<string, Error>>
  */
+
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* @ts-ignore */
 Array.prototype.submit = async function (): Promise<Result<string, Error>> {
   const instructions: Instruction[] = [];
   // dont use forEach
@@ -23,9 +23,9 @@ Array.prototype.submit = async function (): Promise<Result<string, Error>> {
         Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`)
       );
     } else if (obj.isOk) {
-      instructions.push(obj.value);
+      instructions.push(obj.value as Instruction);
     } else {
-      instructions.push(obj);
+      instructions.push(obj as Instruction);
     }
     i++;
   }

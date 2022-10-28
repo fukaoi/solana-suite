@@ -15,6 +15,7 @@ export namespace Internals_Multisig {
     return blob(32, property);
   };
 
+  /* eslint-disable @typescript-eslint/no-unsafe-argument */
   export const Layout = struct<{
     m: number;
     n: number;
