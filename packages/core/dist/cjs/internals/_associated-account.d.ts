@@ -9,7 +9,7 @@ import { PublicKey, TransactionInstruction, Keypair } from '@solana/web3.js';
  * @param {boolean} allowOwnerOffCurve
  * @returns Promise<string | Instruction>
  */
-export declare namespace AssociatedAccount {
+export declare namespace Internals_AssociatedAccount {
     /**
      * Retry function if create new token accouint
      *

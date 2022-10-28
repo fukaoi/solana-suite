@@ -1,21 +1,20 @@
 import { PublicKey } from '@solana/web3.js';
-import { Result } from '@solana-suite/shared';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
+//@internal
 export namespace Internals_SplToken {
   export const findAssociatedTokenAddress = async (
     mint: PublicKey,
     owner: PublicKey
-  ): Promise<Result<PublicKey, Error>> => {
-    return await PublicKey.findProgramAddress(
+  ): Promise<PublicKey> => {
+    const address = await PublicKey.findProgramAddress(
       [owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
       ASSOCIATED_TOKEN_PROGRAM_ID
-    )
-      .then((v) => Result.ok(v[0]))
-      .catch(Result.err);
+    );
+    return address[0];
   };
 
   export const calculateAmount = (

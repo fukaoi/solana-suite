@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { createWrappedNativeAccount, createMint, createTransferInstruction, createCloseAccountInstruction, } from '@solana/spl-token';
 import { SystemProgram, Transaction, } from '@solana/web3.js';
-import { Result, Node, Instruction, PartialSignInstruction, debugLog, } from '@solana-suite/shared';
+import { Result, Node, Instruction, PartialSignInstruction, debugLog, Try, } from '@solana-suite/shared';
 import { AssociatedAccount } from '../associated-account';
 export var SolNative;
 (function (SolNative) {
@@ -17,36 +17,27 @@ export var SolNative;
     // NOTICE: There is a lamports fluctuation when transfer under 0.001 sol
     // for multiSig only function
     SolNative.transferWithMultisig = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const connection = Node.getConnection();
-        const payer = feePayer ? feePayer : signers[0];
-        const wrapped = yield createWrappedNativeAccount(connection, payer, owner, parseInt(`${amount.toLamports()}`, RADIX))
-            .then(Result.ok)
-            .catch(Result.err);
-        if (wrapped.isErr) {
-            return wrapped.error;
-        }
-        debugLog('# wrapped sol: ', wrapped.value.toBase58());
-        const tokenRes = yield createMint(connection, payer, owner, owner, 0)
-            .then(Result.ok)
-            .catch(Result.err);
-        if (tokenRes.isErr) {
-            return Result.err(tokenRes.error);
-        }
-        const token = tokenRes.value;
-        const sourceToken = yield AssociatedAccount.retryGetOrCreate(token, owner, payer);
-        if (sourceToken.isErr) {
-            return Result.err(sourceToken.error);
-        }
-        debugLog('# sourceToken: ', sourceToken.value);
-        const destToken = yield AssociatedAccount.retryGetOrCreate(token, wrapped.value, payer);
-        if (destToken.isErr) {
-            return Result.err(destToken.error);
-        }
-        debugLog('# destToken: ', destToken.value);
-        const inst1 = createTransferInstruction(sourceToken.value.toPublicKey(), destToken.value.toPublicKey(), owner, parseInt(`${amount}`, RADIX), // No lamports, its sol
-        signers);
-        const inst2 = createCloseAccountInstruction(wrapped.value, dest, owner, signers);
-        return Result.ok(new Instruction([inst1, inst2], signers, feePayer));
+        return Try(() => __awaiter(this, void 0, void 0, function* () {
+            const connection = Node.getConnection();
+            const payer = feePayer ? feePayer : signers[0];
+            const wrapped = yield createWrappedNativeAccount(connection, payer, owner, parseInt(`${amount.toLamports()}`, RADIX));
+            debugLog('# wrapped sol: ', wrapped.toBase58());
+            const token = yield createMint(connection, payer, owner, owner, 0);
+            const sourceToken = yield AssociatedAccount.retryGetOrCreate(token, owner, payer);
+            if (sourceToken.isErr) {
+                throw sourceToken.error;
+            }
+            debugLog('# sourceToken: ', sourceToken.value);
+            const destToken = yield AssociatedAccount.retryGetOrCreate(token, wrapped, payer);
+            if (destToken.isErr) {
+                throw destToken.error;
+            }
+            debugLog('# destToken: ', destToken.value);
+            const inst1 = createTransferInstruction(sourceToken.value.toPublicKey(), destToken.value.toPublicKey(), owner, parseInt(`${amount}`, RADIX), // No lamports, its sol
+            signers);
+            const inst2 = createCloseAccountInstruction(wrapped, dest, owner, signers);
+            return new Instruction([inst1, inst2], signers, feePayer);
+        }));
     });
     SolNative.transfer = (source, destination, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const inst = SystemProgram.transfer({

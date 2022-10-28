@@ -32,7 +32,7 @@ Internals_Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, f
     const signers = arr.flatMap((a) => a.signers);
     const feePayers = arr.filter((a) => a.feePayer !== undefined);
     let feePayer = signers[0];
-    if (feePayers.length > 0) {
+    if (feePayers.length > 0 && feePayers[0].feePayer) {
         feePayer = feePayers[0].feePayer;
     }
     const transaction = new web3_js_1.Transaction();

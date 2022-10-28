@@ -17,43 +17,43 @@ const _history_1 = require("../internals/_history");
 var SplToken;
 (function (SplToken) {
     SplToken.getHistory = (mint, searchPubkey, options) => __awaiter(this, void 0, void 0, function* () {
-        if (options === undefined || !Object.keys(options).length) {
-            options = {
-                limit: 0,
-                actionFilter: [],
-                directionFilter: undefined,
-            };
-        }
-        const actionFilter = (options === null || options === void 0 ? void 0 : options.actionFilter) !== undefined && options.actionFilter.length > 0
-            ? options.actionFilter
-            : [history_1.Filter.Transfer, history_1.Filter.TransferChecked];
-        const searchKeyAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, searchPubkey, true)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (searchKeyAccount.isErr) {
-            return shared_1.Result.err(searchKeyAccount.error);
-        }
-        let bufferedLimit = 0;
-        if (options.limit && options.limit < 50) {
-            bufferedLimit = options.limit * 1.5; // To get more data, threshold
-        }
-        else {
-            bufferedLimit = 10;
-            options.limit = 10;
-        }
-        let hist = [];
-        let before;
-        for (;;) {
-            const transactions = yield _history_1.Internals_History.getForAddress(searchKeyAccount.value, bufferedLimit, before);
-            (0, shared_1.debugLog)('# getTransactionHistory loop');
-            const res = _history_1.Internals_History.filterTransactions(searchPubkey, transactions, actionFilter, true, options.directionFilter);
-            hist = hist.concat(res);
-            if (hist.length >= options.limit || res.length === 0) {
-                hist = hist.slice(0, options.limit);
-                break;
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            if (options === undefined || !Object.keys(options).length) {
+                options = {
+                    limit: 0,
+                    actionFilter: [],
+                    directionFilter: undefined,
+                };
             }
-            before = hist[hist.length - 1].sig;
-        }
-        return shared_1.Result.ok(hist);
+            const actionFilter = (options === null || options === void 0 ? void 0 : options.actionFilter) !== undefined && options.actionFilter.length > 0
+                ? options.actionFilter
+                : [history_1.Filter.Transfer, history_1.Filter.TransferChecked];
+            const searchKeyAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, searchPubkey, true);
+            let bufferedLimit = 0;
+            if (options.limit && options.limit < 50) {
+                bufferedLimit = options.limit * 1.5; // To get more data, threshold
+            }
+            else {
+                bufferedLimit = 10;
+                options.limit = 10;
+            }
+            let hist = [];
+            let before;
+            (0, shared_1.debugLog)('# searchKeyAccount: ', searchKeyAccount.toString());
+            (0, shared_1.debugLog)('# bufferedLimit: ', bufferedLimit);
+            (0, shared_1.debugLog)('# before: ', before);
+            for (;;) {
+                const transactions = yield _history_1.Internals_History.getForAddress(searchKeyAccount, bufferedLimit, before);
+                (0, shared_1.debugLog)('# getTransactionHistory loop transactions count:', transactions.length);
+                const res = _history_1.Internals_History.filterTransactions(searchPubkey, transactions, actionFilter, true, options.directionFilter);
+                hist = hist.concat(res);
+                if (hist.length >= options.limit || res.length === 0) {
+                    hist = hist.slice(0, options.limit);
+                    break;
+                }
+                before = hist[hist.length - 1].sig;
+            }
+            return hist;
+        }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));

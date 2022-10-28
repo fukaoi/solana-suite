@@ -30,8 +30,8 @@ export class Internals_Instruction {
     const signers = arr.flatMap((a) => a.signers);
     const feePayers = arr.filter((a) => a.feePayer !== undefined);
     let feePayer = signers[0];
-    if (feePayers.length > 0) {
-      feePayer = feePayers[0].feePayer!;
+    if (feePayers.length > 0 && feePayers[0].feePayer) {
+      feePayer = feePayers[0].feePayer;
     }
 
     const transaction = new Transaction();

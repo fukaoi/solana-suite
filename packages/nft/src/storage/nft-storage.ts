@@ -5,6 +5,7 @@ import {
   isNode,
   isBrowser,
   debugLog,
+  Try,
 } from '@solana-suite/shared';
 
 import { MetaplexFileContent, toMetaplexFile } from '@metaplex-foundation/js';
@@ -42,30 +43,23 @@ export namespace StorageNftStorage {
   export const uploadContent = async (
     filePath: MetaplexFileContent
   ): Promise<Result<string, Error>> => {
-    debugLog('# upload content: ', filePath);
-    let file!: Buffer;
-    if (isNode()) {
-      const filepath = filePath as string;
-      file = (await import('fs')).readFileSync(filepath);
-    } else if (isBrowser()) {
-      const filepath = filePath as any;
-      file = toMetaplexFile(filepath, '').buffer;
-    } else {
-      return Result.err(
-        Error('Supported environment: only Node.js and Browser js')
-      );
-    }
+    return Try(async () => {
+      debugLog('# upload content: ', filePath);
+      let file!: Buffer;
+      if (isNode()) {
+        const filepath = filePath as string;
+        file = (await import('fs')).readFileSync(filepath);
+      } else if (isBrowser()) {
+        const filepath = filePath ;
+        file = toMetaplexFile(filepath, '').buffer;
+      } else {
+        throw Error('Supported environment: only Node.js and Browser js');
+      }
 
-    const blobImage = new Blob([file]);
-    const res = (await connect()
-      .storeBlob(blobImage)
-      .then(Result.ok)
-      .catch(Result.err)) as Result<string, Error>;
-
-    return res.map(
-      (ok) => createGatewayUrl(ok),
-      (err) => err
-    );
+      const blobImage = new Blob([file]);
+      const res = await connect().storeBlob(blobImage);
+      return createGatewayUrl(res);
+    });
   };
 
   /**
@@ -89,22 +83,17 @@ export namespace StorageNftStorage {
   export const uploadMetadata = async (
     metadata: NftStorageMetadata
   ): Promise<Result<string, Error | ValidatorError>> => {
-    debugLog('# upload metadata: ', metadata);
+    return Try(async () => {
+      debugLog('# upload metadata: ', metadata);
 
-    const valid = Validator.checkAll(metadata);
-    if (valid.isErr) {
-      return valid;
-    }
+      const valid = Validator.checkAll(metadata);
+      if (valid.isErr) {
+        throw valid.error;
+      }
 
-    const blobJson = new Blob([JSON.stringify(metadata)]);
-    const res = (await connect()
-      .storeBlob(blobJson)
-      .then(Result.ok)
-      .catch(Result.err)) as Result<string, Error>;
-
-    return res.map(
-      (ok) => createGatewayUrl(ok),
-      (err) => err
-    );
+      const blobJson = new Blob([JSON.stringify(metadata)]);
+      const res = await connect().storeBlob(blobJson);
+      return createGatewayUrl(res);
+    });
   };
 }

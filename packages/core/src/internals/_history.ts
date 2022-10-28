@@ -4,37 +4,48 @@ import {
   ParsedInstruction,
 } from '@solana/web3.js';
 
-import { Node, Result } from '@solana-suite/shared';
+import { Node } from '@solana-suite/shared';
+import {
+  TransferHistory,
+  DirectionFilter,
+  Filter,
+  WithMemo,
+  MappingTokenAccount,
+} from '../types/history';
 
-import { TransferHistory, DirectionFilter, Filter } from '../types/history';
-
+//@internal
 export namespace Internals_History {
+  const convertTimestampToDate = (blockTime: number): Date => {
+    return new Date(blockTime * 1000);
+  };
+
   const createHistory = (
     searchKey: PublicKey,
     instruction: ParsedInstruction,
     meta: ParsedTransactionWithMeta,
     directionFilter?: DirectionFilter,
-    mappingTokenAccount?: any[],
+    mappingTokenAccount?: MappingTokenAccount[],
     isToken?: boolean,
-    withMemos?: any[]
+    withMemos?: WithMemo[]
   ) => {
-    const v: TransferHistory = instruction.parsed;
+    const v: TransferHistory = instruction.parsed as TransferHistory;
 
-    if (isToken && instruction.program === 'spl-token') {
-      const foundSource = mappingTokenAccount!.find(
+    if (isToken && mappingTokenAccount && instruction.program === 'spl-token') {
+      const foundSource = mappingTokenAccount.find(
         (m) => m.account === v.info.source
       );
-      const foundDest = mappingTokenAccount!.find(
+      const foundDest = mappingTokenAccount.find(
         (m) => m.account === v.info.destination
       );
-      v.info.source = foundSource.owner;
-      v.info.destination = foundDest.owner;
+
+      foundSource && (v.info.source = foundSource.owner);
+      foundDest && (v.info.destination = foundDest.owner);
     }
 
     v.date = convertTimestampToDate(meta.blockTime as number);
     v.sig = meta.transaction.signatures[0];
     v.innerInstruction = false;
-    if (withMemos && withMemos.length > 0) {
+    if (withMemos && withMemos !== undefined && withMemos.length > 0) {
       v.memo = withMemos.find(
         (obj) => obj.sig === meta.transaction.signatures
       ).memo;
@@ -70,7 +81,7 @@ export namespace Internals_History {
       date: new Date(),
       innerInstruction: false,
     };
-    v.memo = instruction.parsed;
+    v.memo = instruction.parsed as string;
     v.type = instruction.program;
     v.date = convertTimestampToDate(value.blockTime as number);
     v.sig = value.transaction.signatures[0];
@@ -91,28 +102,38 @@ export namespace Internals_History {
     }
   };
 
-  export const isParsedInstruction = (arg: any): arg is ParsedInstruction => {
-    return arg !== null && typeof arg === 'object' && arg.parsed;
+  const get = async (signature: string): Promise<ParsedTransactionWithMeta> => {
+    const res = await Node.getConnection().getParsedTransaction(signature);
+    if (!res) {
+      return {} as ParsedTransactionWithMeta;
+    }
+    return res;
+  };
+
+  // Parsed transaction instruction, Type Guard
+  export const isParsedInstruction = (
+    arg: unknown
+  ): arg is ParsedInstruction => {
+    return arg !== null && typeof arg === 'object' && 'parsed' in arg;
   };
 
   export const filterTransactions = (
     searchKey: PublicKey,
-    transactions: Result<ParsedTransactionWithMeta>[],
+    transactions: ParsedTransactionWithMeta[],
     filterOptions: Filter[],
     isToken = false,
     directionFilter?: DirectionFilter
   ) => {
     const hist: TransferHistory[] = [];
-    const mappingTokenAccount: { account: string; owner: string }[] = [];
+    const mappingTokenAccount: MappingTokenAccount[] = [];
     transactions.forEach((tx) => {
-      if (tx.isErr) return tx;
-      if (!tx.value.transaction) return;
+      if (!tx.transaction) return;
 
-      const accountKeys = tx.value.transaction.message.accountKeys.map((t) =>
+      const accountKeys = tx.transaction.message.accountKeys.map((t) =>
         t.pubkey.toBase58()
       );
       // set  mapping list
-      tx.value.meta?.postTokenBalances?.forEach((t) => {
+      tx.meta?.postTokenBalances?.forEach((t) => {
         if (accountKeys[t.accountIndex] && t.owner) {
           const v = {
             account: accountKeys[t.accountIndex],
@@ -123,27 +144,27 @@ export namespace Internals_History {
       });
 
       // set transaction with memo
-      const withMemos: { sig: string[]; memo: string }[] = [];
-      tx.value.transaction.message.instructions.forEach((v) => {
+      const withMemos: WithMemo[] = [];
+      tx.transaction.message.instructions.forEach((v) => {
         if (isParsedInstruction(v) && v.program === 'spl-memo') {
           withMemos.push({
-            sig: tx.value.transaction.signatures,
-            memo: v.parsed,
+            sig: tx.transaction.signatures,
+            memo: v.parsed as string,
           });
         }
       });
 
-      tx.value.transaction.message.instructions.forEach((instruction) => {
+      tx.transaction.message.instructions.forEach((instruction) => {
         if (isParsedInstruction(instruction)) {
           if (isToken && instruction.program !== 'spl-token') {
             return;
           }
 
-          if (filterOptions.includes(instruction.parsed.type)) {
+          if (filterOptions.includes(instruction.parsed.type as Filter)) {
             const res = createHistory(
               searchKey,
               instruction,
-              tx.value,
+              tx,
               directionFilter,
               mappingTokenAccount,
               isToken,
@@ -156,7 +177,7 @@ export namespace Internals_History {
               const res = createMemoHistory(
                 searchKey,
                 instruction,
-                tx.value,
+                tx,
                 directionFilter
               );
               res && hist.push(res);
@@ -168,47 +189,23 @@ export namespace Internals_History {
     return hist;
   };
 
-  const convertTimestampToDate = (blockTime: number): Date =>
-    new Date(blockTime * 1000);
-
-  export const get = async (
-    signature: string
-  ): Promise<Result<ParsedTransactionWithMeta, Error>> => {
-    const res = await Node.getConnection()
-      .getParsedTransaction(signature)
-      .then(Result.ok)
-      .catch(Result.err);
-    if (res.isErr) {
-      return Result.err(res.error);
-    } else {
-      if (!res.value) {
-        return Result.ok({} as ParsedTransactionWithMeta);
-      }
-      return Result.ok(res.value);
-    }
-  };
-
   // @todo: internal
   export const getForAddress = async (
     pubkey: PublicKey,
     limit?: number | undefined,
     before?: string | undefined,
     until?: string | undefined
-  ): Promise<Result<ParsedTransactionWithMeta, Error>[]> => {
-    const transactions = await Node.getConnection()
-      .getSignaturesForAddress(pubkey, {
+  ): Promise<ParsedTransactionWithMeta[]> => {
+    const transactions = await Node.getConnection().getSignaturesForAddress(
+      pubkey,
+      {
         limit,
         before,
         until,
-      })
-      .then(Result.ok)
-      .catch(Result.err);
+      }
+    );
 
-    if (transactions.isErr) {
-      return [Result.err(transactions.error)];
-    } else {
-      const signatures = transactions.value.map((tx) => get(tx.signature));
-      return await Promise.all(signatures);
-    }
+    const signatures = transactions.map((tx) => get(tx.signature));
+    return await Promise.all(signatures);
   };
 }

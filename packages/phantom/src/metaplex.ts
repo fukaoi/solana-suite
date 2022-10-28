@@ -9,7 +9,7 @@ import {
   Bundlr,
   Metaplex,
 } from '@solana-suite/nft';
-import { debugLog, Node, Result } from '@solana-suite/shared';
+import { debugLog, Node, Result, Try } from '@solana-suite/shared';
 import { InitializeNftMint, Phantom } from './types';
 
 export namespace MetaplexPhantom {
@@ -53,53 +53,43 @@ export namespace MetaplexPhantom {
     cluster: string,
     phantom: Phantom
   ): Promise<Result<string, Error | ValidatorError>> => {
-    const valid = Validator.checkAll<InputMetaplexMetadata>(input);
-    if (valid.isErr) {
-      return Result.err(valid.error);
-    }
+    return Try(async () => {
+      const valid = Validator.checkAll<InputMetaplexMetadata>(input);
+      if (valid.isErr) {
+        throw valid.error;
+      }
 
-    Node.changeConnection({ cluster });
+      Node.changeConnection({ cluster });
 
-    const uploaded = await Metaplex.uploadMetaContent(input, phantom);
-    if (uploaded.isErr) {
-      return Result.err(uploaded.error);
-    }
+      const uploaded = await Metaplex.uploadMetaContent(input, phantom);
 
-    const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded.value;
+      const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded.unwrap();
+      debugLog('# upload content url: ', uri);
+      debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
+      debugLog('# reducedMetadata: ', reducedMetadata);
 
-    debugLog('# upload content url: ', uri);
-    debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-    debugLog('# reducedMetadata: ', reducedMetadata);
+      const mintInput: MetaplexMetaData = {
+        uri,
+        sellerFeeBasisPoints,
+        ...reducedMetadata,
+      };
+      const connection = Node.getConnection();
 
-    const mintInput: MetaplexMetaData = {
-      uri,
-      sellerFeeBasisPoints,
-      ...reducedMetadata,
-    };
-    const connection = Node.getConnection();
-
-    const builder = await createNftBuilder(mintInput, phantom);
-    debugLog('# mint: ', builder.useNewMint.publicKey.toString());
-    builder.tx.feePayer = phantom.publicKey;
-    const blockhashObj = await connection.getLatestBlockhashAndContext();
-    builder.tx.recentBlockhash = blockhashObj.value.blockhash;
-    builder.tx.partialSign(builder.useNewMint);
-    const signed = await phantom.signTransaction(builder.tx);
-    debugLog(
-      '# signed, signed.signatures: ',
-      signed,
-      signed.signatures.map((sig) => sig.publicKey.toString())
-    );
-    const sig = await connection
-      .sendRawTransaction(signed.serialize())
-      .then(Result.ok)
-      .catch(Result.err);
-
-    if (sig.isErr) {
-      return Result.err(sig.error);
-    }
-
-    await Node.confirmedSig(sig.unwrap());
-    return Result.ok(builder.useNewMint.publicKey.toString());
+      const builder = await createNftBuilder(mintInput, phantom);
+      debugLog('# mint: ', builder.useNewMint.publicKey.toString());
+      builder.tx.feePayer = phantom.publicKey;
+      const blockhashObj = await connection.getLatestBlockhashAndContext();
+      builder.tx.recentBlockhash = blockhashObj.value.blockhash;
+      builder.tx.partialSign(builder.useNewMint);
+      const signed = await phantom.signTransaction(builder.tx);
+      debugLog(
+        '# signed, signed.signatures: ',
+        signed,
+        signed.signatures.map((sig) => sig.publicKey.toString())
+      );
+      const sig = await connection.sendRawTransaction(signed.serialize());
+      await Node.confirmedSig(sig);
+      return builder.useNewMint.publicKey.toString();
+    });
   };
 }

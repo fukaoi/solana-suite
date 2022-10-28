@@ -1,11 +1,5 @@
 import { PublicKey, TransactionInstruction, Keypair } from '@solana/web3.js';
-import {
-  Node,
-  Result,
-  debugLog,
-  Instruction,
-  sleep,
-} from '@solana-suite/shared';
+import { Node, debugLog, Instruction, sleep } from '@solana-suite/shared';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
@@ -16,15 +10,25 @@ import {
   createAssociatedTokenAccountInstruction,
 } from '@solana/spl-token';
 
+/**
+ * Get Associated token Account.
+ * if not created, create new token accouint
+ *
+ * @param {PublicKey} mint
+ * @param {PublicKey} owner
+ * @param {PublicKey} feePayer
+ * @param {boolean} allowOwnerOffCurve
+ * @returns Promise<string | Instruction>
+ */
 export namespace AssociatedAccount {
   const RETRY_OVER_LIMIT = 10;
   const RETRY_SLEEP_TIME = 3;
-  export const get = async (
+  const get = async (
     mint: PublicKey,
     owner: PublicKey,
     feePayer: Keypair,
     allowOwnerOffCurve = false
-  ): Promise<Result<string | Instruction, Error>> => {
+  ): Promise<string | Instruction> => {
     const res = await makeOrCreateInstruction(
       mint,
       owner,
@@ -32,79 +36,81 @@ export namespace AssociatedAccount {
       allowOwnerOffCurve
     );
 
-    if (res.isErr) {
-      return Result.err(res.error);
+    if (!res.inst) {
+      return res.tokenAccount;
     }
 
-    if (!res.value.inst) {
-      return Result.ok(res.value.tokenAccount);
-    }
-
-    return Result.ok(
-      new Instruction([res.value.inst], [], feePayer, res.value.tokenAccount)
-    );
+    return new Instruction([res.inst], [], feePayer, res.tokenAccount);
   };
 
+  /**
+   * Retry function if create new token accouint
+   *
+   * @param {PublicKey} mint
+   * @param {PublicKey} owner
+   * @param {PublicKey} feePayer
+   * @returns Promise<string>
+   */
   export const retryGetOrCreate = async (
     mint: PublicKey,
     owner: PublicKey,
     feePayer: Keypair
-  ): Promise<Result<string, Error>> => {
+  ): Promise<string> => {
     let counter = 1;
     while (counter < RETRY_OVER_LIMIT) {
       try {
-        const inst = await AssociatedAccount.get(mint, owner, feePayer, true);
+        const inst = await get(mint, owner, feePayer, true);
 
-        if (inst.isOk && typeof inst.value === 'string') {
-          debugLog('# associatedTokenAccount: ', inst.value);
-          return Result.ok(inst.value);
+        if (inst && typeof inst === 'string') {
+          debugLog('# associatedTokenAccount: ', inst);
+          return inst;
+        } else if (inst instanceof Instruction) {
+          (await [inst].submit()).map(
+            async (ok) => {
+              await Node.confirmedSig(ok);
+              return inst.data as string;
+            },
+            (err) => {
+              debugLog('# Error submit retryGetOrCreate: ', err);
+              throw err;
+            }
+          );
         }
-
-        return (await inst.submit()).map(
-          (ok: string) => {
-            Node.confirmedSig(ok);
-            return (inst.unwrap() as Instruction).data as string;
-          },
-          (err: Error) => {
-            debugLog('# Error submit retryGetOrCreate: ', err);
-            throw err;
-          }
-        );
       } catch (e) {
         debugLog(`# retry: ${counter} create token account: `, e);
       }
       await sleep(RETRY_SLEEP_TIME);
       counter++;
     }
-    return Result.err(Error(`retry action is over limit ${RETRY_OVER_LIMIT}`));
+    throw Error(`retry action is over limit ${RETRY_OVER_LIMIT}`);
   };
 
+  /**
+   * [Main logic]Get Associated token Account.
+   * if not created, create new token accouint
+   *
+   * @param {PublicKey} mint
+   * @param {PublicKey} owner
+   * @param {PublicKey} feePayer
+   * @returns Promise<string>
+   */
   export const makeOrCreateInstruction = async (
     mint: PublicKey,
     owner: PublicKey,
     feePayer?: PublicKey,
     allowOwnerOffCurve = false
-  ): Promise<
-    Result<
-      { tokenAccount: string; inst: TransactionInstruction | undefined },
-      Error
-    >
-  > => {
-    const associatedToken = await getAssociatedTokenAddress(
+  ): Promise<{
+    tokenAccount: string;
+    inst: TransactionInstruction | undefined;
+  }> => {
+    const associatedTokenAccount = await getAssociatedTokenAddress(
       mint,
       owner,
       allowOwnerOffCurve,
       TOKEN_PROGRAM_ID,
       ASSOCIATED_TOKEN_PROGRAM_ID
-    )
-      .then(Result.ok)
-      .catch(Result.err);
+    );
 
-    if (associatedToken.isErr) {
-      return associatedToken.error;
-    }
-
-    const associatedTokenAccount = associatedToken.unwrap();
     debugLog('# associatedTokenAccount: ', associatedTokenAccount.toString());
 
     try {
@@ -115,16 +121,16 @@ export namespace AssociatedAccount {
         Node.getConnection().commitment,
         TOKEN_PROGRAM_ID
       );
-      return Result.ok({
+      return {
         tokenAccount: associatedTokenAccount.toString(),
         inst: undefined,
-      });
+      };
     } catch (error: unknown) {
       if (
         !(error instanceof TokenAccountNotFoundError) &&
         !(error instanceof TokenInvalidAccountOwnerError)
       ) {
-        return Result.err(Error('Unexpected error'));
+        throw Error('Unexpected error');
       }
 
       const payer = !feePayer ? owner : feePayer;
@@ -138,10 +144,10 @@ export namespace AssociatedAccount {
         ASSOCIATED_TOKEN_PROGRAM_ID
       );
 
-      return Result.ok({
+      return {
         tokenAccount: associatedTokenAccount.toString(),
         inst,
-      });
+      };
     }
   };
 }

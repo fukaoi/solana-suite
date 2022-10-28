@@ -95,7 +95,7 @@ describe('Metaplex', () => {
     const asset = RandomAsset.get();
 
     const creator1 = {
-      address: source.toPublicKey(),
+      address: 'CGDRajhcFo9ysuUjBsbwCQHKJuCHiXeEUrMKSot1eyay'.toPublicKey(),
       share: 70,
       verified: false,
     };

@@ -11,14 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Internals_SplToken = void 0;
 const web3_js_1 = require("@solana/web3.js");
-const shared_1 = require("@solana-suite/shared");
 const spl_token_1 = require("@solana/spl-token");
+//@internal
 var Internals_SplToken;
 (function (Internals_SplToken) {
     Internals_SplToken.findAssociatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
-        return yield web3_js_1.PublicKey.findProgramAddress([owner.toBuffer(), spl_token_1.TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()], spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID)
-            .then((v) => shared_1.Result.ok(v[0]))
-            .catch(shared_1.Result.err);
+        const address = yield web3_js_1.PublicKey.findProgramAddress([owner.toBuffer(), spl_token_1.TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()], spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID);
+        return address[0];
     });
     Internals_SplToken.calculateAmount = (amount, mintDecimal) => {
         return amount * Math.pow(10, mintDecimal);

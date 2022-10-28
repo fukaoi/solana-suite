@@ -1,56 +1,11 @@
-import { PublicKey, Keypair } from '@solana/web3.js';
+import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
 import { Instruction, Result } from '@solana-suite/shared';
-import { ValidatorError } from '../validator';
 import { InputMetaplexMetadata } from '../types/metaplex/index';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
-import { BundlrSigner, NftStorageMetadata } from '../types';
+import { BundlrSigner } from '../types';
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 export declare namespace Metaplex {
-    const createNftBuilderInstruction: (feePayer: BundlrSigner, params: CreateNftBuilderParams, useNewMint: Keypair, updateAuthority: Keypair | IdentityClient, mintAuthority: Keypair | IdentityClient, tokenOwner: PublicKey) => Promise<import("@solana/web3.js").TransactionInstruction[]>;
-    const initNftStorageMetadata: (input: InputMetaplexMetadata, sellerFeeBasisPoints: number, options?: any) => NftStorageMetadata;
-    const uploadMetaContent: (input: InputMetaplexMetadata, feePayer: BundlrSigner) => Promise<Result.Ok<{
-        uri: string;
-        sellerFeeBasisPoints: number;
-        reducedMetadata: {
-            name: string;
-            symbol: string;
-            description?: string | undefined;
-            external_url?: string | undefined;
-            image?: string | undefined;
-            attributes?: import("../types").JsonMetadataAttribute[] | undefined;
-            properties?: import("../types").JsonMetadataProperties | undefined;
-            isMutable?: boolean | undefined;
-            maxSupply?: any;
-            creators?: import("@metaplex-foundation/js").CreatorInput[] | undefined;
-            uses?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/mpl-token-metadata").Uses> | undefined;
-            isCollection?: boolean | undefined;
-            collection?: import("@metaplex-foundation/js").Option<PublicKey> | undefined;
-            collectionAuthority?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/js").Signer> | undefined;
-            collectionAuthorityIsDelegated?: boolean | undefined;
-            collectionIsSized?: boolean | undefined;
-        };
-    }, Error> | Result.Err<{
-        uri: string;
-        sellerFeeBasisPoints: number;
-        reducedMetadata: {
-            name: string;
-            symbol: string;
-            description?: string | undefined;
-            external_url?: string | undefined;
-            image?: string | undefined;
-            attributes?: import("../types").JsonMetadataAttribute[] | undefined;
-            properties?: import("../types").JsonMetadataProperties | undefined;
-            isMutable?: boolean | undefined;
-            maxSupply?: any;
-            creators?: import("@metaplex-foundation/js").CreatorInput[] | undefined;
-            uses?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/mpl-token-metadata").Uses> | undefined;
-            isCollection?: boolean | undefined;
-            collection?: import("@metaplex-foundation/js").Option<PublicKey> | undefined;
-            collectionAuthority?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/js").Signer> | undefined;
-            collectionAuthorityIsDelegated?: boolean | undefined;
-            collectionIsSized?: boolean | undefined;
-        };
-    }, Error>>;
+    const createNftBuilderInstruction: (feePayer: BundlrSigner, params: CreateNftBuilderParams, useNewMint: Keypair, updateAuthority: Keypair | IdentityClient, mintAuthority: Keypair | IdentityClient, tokenOwner: PublicKey) => Promise<TransactionInstruction[]>;
     /**
      * Upload content and NFT mint
      *
@@ -76,5 +31,5 @@ export declare namespace Metaplex {
      * @param {Keypair} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    const mint: (input: InputMetaplexMetadata, owner: Keypair, feePayer?: Keypair) => Promise<Result<Instruction, Error | ValidatorError>>;
+    const mint: (input: InputMetaplexMetadata, owner: Keypair, feePayer?: Keypair) => Promise<Result<Instruction, Error>>;
 }

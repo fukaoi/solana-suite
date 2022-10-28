@@ -1,5 +1,5 @@
-export interface SolNativeOwnerInfo {
-  sol: number,
-  lamports: number,
-  owner: string,
-}
+export type SolNativeOwnerInfo = {
+  sol: number;
+  lamports: number;
+  owner: string;
+};
