@@ -20,7 +20,7 @@ import {
  * @param {boolean} allowOwnerOffCurve
  * @returns Promise<string | Instruction>
  */
-export namespace Internals_AssociatedAccount {
+export namespace AssociatedAccount {
   const RETRY_OVER_LIMIT = 10;
   const RETRY_SLEEP_TIME = 3;
   const get = async (

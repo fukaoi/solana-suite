@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AssociatedAccount = void 0;
+exports.Internals_AssociatedAccount = void 0;
 const shared_1 = require("@solana-suite/shared");
 const spl_token_1 = require("@solana/spl-token");
 /**
@@ -22,12 +22,12 @@ const spl_token_1 = require("@solana/spl-token");
  * @param {boolean} allowOwnerOffCurve
  * @returns Promise<string | Instruction>
  */
-var AssociatedAccount;
-(function (AssociatedAccount) {
+var Internals_AssociatedAccount;
+(function (Internals_AssociatedAccount) {
     const RETRY_OVER_LIMIT = 10;
     const RETRY_SLEEP_TIME = 3;
     const get = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield AssociatedAccount.makeOrCreateInstruction(mint, owner, feePayer.publicKey, allowOwnerOffCurve);
+        const res = yield Internals_AssociatedAccount.makeOrCreateInstruction(mint, owner, feePayer.publicKey, allowOwnerOffCurve);
         if (!res.inst) {
             return res.tokenAccount;
         }
@@ -41,7 +41,7 @@ var AssociatedAccount;
      * @param {PublicKey} feePayer
      * @returns Promise<string>
      */
-    AssociatedAccount.retryGetOrCreate = (mint, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Internals_AssociatedAccount.retryGetOrCreate = (mint, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let counter = 1;
         while (counter < RETRY_OVER_LIMIT) {
             try {
@@ -77,7 +77,7 @@ var AssociatedAccount;
      * @param {PublicKey} feePayer
      * @returns Promise<string>
      */
-    AssociatedAccount.makeOrCreateInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
+    Internals_AssociatedAccount.makeOrCreateInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
         const associatedTokenAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, owner, allowOwnerOffCurve, spl_token_1.TOKEN_PROGRAM_ID, spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID);
         (0, shared_1.debugLog)('# associatedTokenAccount: ', associatedTokenAccount.toString());
         try {
@@ -101,4 +101,4 @@ var AssociatedAccount;
             };
         }
     });
-})(AssociatedAccount = exports.AssociatedAccount || (exports.AssociatedAccount = {}));
+})(Internals_AssociatedAccount = exports.Internals_AssociatedAccount || (exports.Internals_AssociatedAccount = {}));

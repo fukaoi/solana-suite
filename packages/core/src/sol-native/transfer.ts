@@ -21,7 +21,7 @@ import {
   Try,
 } from '@solana-suite/shared';
 
-import { Internals_AssociatedAccount } from '../internals/_associated-account';
+import { AssociatedAccount } from '../associated-account';
 
 export namespace SolNative {
   const RADIX = 10;
@@ -49,7 +49,7 @@ export namespace SolNative {
 
       const token = await createMint(connection, payer, owner, owner, 0);
 
-      const sourceToken = await Internals_AssociatedAccount.retryGetOrCreate(
+      const sourceToken = await AssociatedAccount.retryGetOrCreate(
         token,
         owner,
         payer
@@ -57,7 +57,7 @@ export namespace SolNative {
 
       debugLog('# sourceToken: ', sourceToken);
 
-      const destToken = await Internals_AssociatedAccount.retryGetOrCreate(
+      const destToken = await AssociatedAccount.retryGetOrCreate(
         token,
         wrapped,
         payer

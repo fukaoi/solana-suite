@@ -24,8 +24,8 @@ var Internals_History;
         if (isToken && mappingTokenAccount && instruction.program === 'spl-token') {
             const foundSource = mappingTokenAccount.find((m) => m.account === v.info.source);
             const foundDest = mappingTokenAccount.find((m) => m.account === v.info.destination);
-            v.info.source = foundSource.owner;
-            v.info.destination = foundDest.owner;
+            foundSource && (v.info.source = foundSource.owner);
+            foundDest && (v.info.destination = foundDest.owner);
         }
         v.date = convertTimestampToDate(meta.blockTime);
         v.sig = meta.transaction.signatures[0];

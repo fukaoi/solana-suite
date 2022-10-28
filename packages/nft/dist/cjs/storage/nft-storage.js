@@ -62,25 +62,24 @@ var StorageNftStorage;
     const createGatewayUrl = (cid) => `${shared_1.Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
     const connect = () => new nft_storage_1.NFTStorage({ token: getNftStorageApiKey() });
     StorageNftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
-        (0, shared_1.debugLog)('# upload content: ', filePath);
-        let file;
-        if ((0, shared_1.isNode)()) {
-            const filepath = filePath;
-            file = (yield Promise.resolve().then(() => __importStar(require('fs')))).readFileSync(filepath);
-        }
-        else if ((0, shared_1.isBrowser)()) {
-            const filepath = filePath;
-            file = (0, js_1.toMetaplexFile)(filepath, '').buffer;
-        }
-        else {
-            return shared_1.Result.err(Error('Supported environment: only Node.js and Browser js'));
-        }
-        const blobImage = new nft_storage_1.Blob([file]);
-        const res = (yield connect()
-            .storeBlob(blobImage)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err));
-        return res.map((ok) => createGatewayUrl(ok), (err) => err);
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            (0, shared_1.debugLog)('# upload content: ', filePath);
+            let file;
+            if ((0, shared_1.isNode)()) {
+                const filepath = filePath;
+                file = (yield Promise.resolve().then(() => __importStar(require('fs')))).readFileSync(filepath);
+            }
+            else if ((0, shared_1.isBrowser)()) {
+                const filepath = filePath;
+                file = (0, js_1.toMetaplexFile)(filepath, '').buffer;
+            }
+            else {
+                throw Error('Supported environment: only Node.js and Browser js');
+            }
+            const blobImage = new nft_storage_1.Blob([file]);
+            const res = yield connect().storeBlob(blobImage);
+            return createGatewayUrl(res);
+        }));
     });
     /**
      * Upload content
@@ -101,16 +100,15 @@ var StorageNftStorage;
      * @return Promise<Result<string, Error>>
      */
     StorageNftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
-        (0, shared_1.debugLog)('# upload metadata: ', metadata);
-        const valid = validator_1.Validator.checkAll(metadata);
-        if (valid.isErr) {
-            return valid;
-        }
-        const blobJson = new nft_storage_1.Blob([JSON.stringify(metadata)]);
-        const res = (yield connect()
-            .storeBlob(blobJson)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err));
-        return res.map((ok) => createGatewayUrl(ok), (err) => err);
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            (0, shared_1.debugLog)('# upload metadata: ', metadata);
+            const valid = validator_1.Validator.checkAll(metadata);
+            if (valid.isErr) {
+                throw valid.error;
+            }
+            const blobJson = new nft_storage_1.Blob([JSON.stringify(metadata)]);
+            const res = yield connect().storeBlob(blobJson);
+            return createGatewayUrl(res);
+        }));
     });
 })(StorageNftStorage = exports.StorageNftStorage || (exports.StorageNftStorage = {}));

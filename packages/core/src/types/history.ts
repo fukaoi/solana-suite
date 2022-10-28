@@ -7,7 +7,7 @@ export type TransferHistory = {
     signers?: string[];
     amount?: string;
     mint?: string;
-    tokenAmount?: any[];
+    tokenAmount?: number[];
   };
   type: string;
   date: Date;

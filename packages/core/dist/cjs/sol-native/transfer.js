@@ -27,52 +27,45 @@ var SolNative;
             (0, shared_1.debugLog)('# wrapped sol: ', wrapped.toBase58());
             const token = yield (0, spl_token_1.createMint)(connection, payer, owner, owner, 0);
             const sourceToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, owner, payer);
-            if (sourceToken.isErr) {
-                throw sourceToken.error;
-            }
-            (0, shared_1.debugLog)('# sourceToken: ', sourceToken.value);
+            (0, shared_1.debugLog)('# sourceToken: ', sourceToken);
             const destToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, wrapped, payer);
-            if (destToken.isErr) {
-                throw destToken.error;
-            }
-            (0, shared_1.debugLog)('# destToken: ', destToken.value);
-            const inst1 = (0, spl_token_1.createTransferInstruction)(sourceToken.value.toPublicKey(), destToken.value.toPublicKey(), owner, parseInt(`${amount}`, RADIX), // No lamports, its sol
+            (0, shared_1.debugLog)('# destToken: ', destToken);
+            const inst1 = (0, spl_token_1.createTransferInstruction)(sourceToken.toPublicKey(), destToken.toPublicKey(), owner, parseInt(`${amount}`, RADIX), // No lamports, its sol
             signers);
             const inst2 = (0, spl_token_1.createCloseAccountInstruction)(wrapped, dest, owner, signers);
             return new shared_1.Instruction([inst1, inst2], signers, feePayer);
         }));
     });
-    SolNative.transfer = (source, destination, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const inst = web3_js_1.SystemProgram.transfer({
-            fromPubkey: source,
-            toPubkey: destination,
-            lamports: parseInt(`${amount.toLamports()}`, RADIX),
+    SolNative.transfer = (source, destination, signers, amount, feePayer) => {
+        return (0, shared_1.Try)(() => {
+            const inst = web3_js_1.SystemProgram.transfer({
+                fromPubkey: source,
+                toPubkey: destination,
+                lamports: parseInt(`${amount.toLamports()}`, RADIX),
+            });
+            return new shared_1.Instruction([inst], signers, feePayer);
         });
-        return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
-    });
+    };
     SolNative.feePayerPartialSignTransfer = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const blockHashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
-        const tx = new web3_js_1.Transaction({
-            blockhash: blockHashObj.blockhash,
-            lastValidBlockHeight: blockHashObj.lastValidBlockHeight,
-            feePayer,
-        }).add(web3_js_1.SystemProgram.transfer({
-            fromPubkey: owner,
-            toPubkey: dest,
-            lamports: parseInt(`${amount.toLamports()}`, RADIX),
-        }));
-        signers.forEach((signer) => {
-            tx.partialSign(signer);
-        });
-        try {
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            const blockHashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
+            const tx = new web3_js_1.Transaction({
+                blockhash: blockHashObj.blockhash,
+                lastValidBlockHeight: blockHashObj.lastValidBlockHeight,
+                feePayer,
+            }).add(web3_js_1.SystemProgram.transfer({
+                fromPubkey: owner,
+                toPubkey: dest,
+                lamports: parseInt(`${amount.toLamports()}`, RADIX),
+            }));
+            signers.forEach((signer) => {
+                tx.partialSign(signer);
+            });
             const serializedTx = tx.serialize({
                 requireAllSignatures: false,
             });
             const hex = serializedTx.toString('hex');
-            return shared_1.Result.ok(new shared_1.PartialSignInstruction(hex));
-        }
-        catch (ex) {
-            return shared_1.Result.err(ex);
-        }
+            return new shared_1.PartialSignInstruction(hex);
+        }));
     });
 })(SolNative = exports.SolNative || (exports.SolNative = {}));

@@ -18,54 +18,44 @@ const associated_account_1 = require("../associated-account");
 var SplToken;
 (function (SplToken) {
     SplToken.transfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        !feePayer && (feePayer = signers[0]);
-        const sourceToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(mint, owner, feePayer);
-        if (sourceToken.isErr) {
-            return shared_1.Result.err(sourceToken.error);
-        }
-        const destToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(mint, dest, feePayer);
-        if (destToken.isErr) {
-            return shared_1.Result.err(destToken.error);
-        }
-        const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.value.toPublicKey(), mint, destToken.value.toPublicKey(), owner, _spl_token_1.Internals_SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
-        return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer));
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            !feePayer && (feePayer = signers[0]);
+            const sourceToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(mint, owner, feePayer);
+            const destToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(mint, dest, feePayer);
+            const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.toPublicKey(), mint, destToken.toPublicKey(), owner, _spl_token_1.Internals_SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+            return new shared_1.Instruction([inst], signers, feePayer);
+        }));
     });
     SplToken.feePayerPartialSignTransfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const sourceToken = yield associated_account_1.AssociatedAccount.makeOrCreateInstruction(mint, owner, feePayer);
-        const destToken = yield associated_account_1.AssociatedAccount.makeOrCreateInstruction(mint, dest, feePayer);
-        if (destToken.isErr) {
-            return shared_1.Result.err(destToken.error);
-        }
-        let inst2;
-        const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
-        const tx = new web3_js_1.Transaction({
-            lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
-            blockhash: blockhashObj.blockhash,
-            feePayer,
-        });
-        // return associated token account
-        if (!destToken.value.inst) {
-            inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.unwrap().tokenAccount.toPublicKey(), mint, destToken.value.tokenAccount.toPublicKey(), owner, _spl_token_1.Internals_SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
-            tx.add(inst2);
-        }
-        else {
-            // return instruction and undecided associated token account
-            inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.unwrap().tokenAccount.toPublicKey(), mint, destToken.value.tokenAccount.toPublicKey(), owner, _spl_token_1.Internals_SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
-            tx.add(destToken.value.inst).add(inst2);
-        }
-        tx.recentBlockhash = blockhashObj.blockhash;
-        signers.forEach((signer) => {
-            tx.partialSign(signer);
-        });
-        try {
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            const sourceToken = yield associated_account_1.AssociatedAccount.makeOrCreateInstruction(mint, owner, feePayer);
+            const destToken = yield associated_account_1.AssociatedAccount.makeOrCreateInstruction(mint, dest, feePayer);
+            let inst2;
+            const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
+            const tx = new web3_js_1.Transaction({
+                lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
+                blockhash: blockhashObj.blockhash,
+                feePayer,
+            });
+            // return associated token account
+            if (!destToken.inst) {
+                inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, _spl_token_1.Internals_SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+                tx.add(inst2);
+            }
+            else {
+                // return instruction and undecided associated token account
+                inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, _spl_token_1.Internals_SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+                tx.add(destToken.inst).add(inst2);
+            }
+            tx.recentBlockhash = blockhashObj.blockhash;
+            signers.forEach((signer) => {
+                tx.partialSign(signer);
+            });
             const serializedTx = tx.serialize({
                 requireAllSignatures: false,
             });
             const hex = serializedTx.toString('hex');
-            return shared_1.Result.ok(new shared_1.PartialSignInstruction(hex));
-        }
-        catch (ex) {
-            return shared_1.Result.err(ex);
-        }
+            return new shared_1.PartialSignInstruction(hex);
+        }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));

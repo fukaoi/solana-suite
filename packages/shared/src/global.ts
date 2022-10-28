@@ -161,6 +161,8 @@ export const isNode = (): boolean => {
  * @param {unknown} obj
  * @returns boolean
  */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const isPromise = (obj: unknown): obj is Promise<unknown> => {
   return (
     !!obj &&

@@ -7,9 +7,11 @@ const spl_token_1 = require("@solana/spl-token");
 // @internal
 var Internals_Multisig;
 (function (Internals_Multisig) {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const createLayoutPubKey = (property) => {
         return (0, buffer_layout_1.blob)(32, property);
     };
+    /* eslint-disable @typescript-eslint/no-unsafe-argument */
     Internals_Multisig.Layout = (0, buffer_layout_1.struct)([
         (0, buffer_layout_1.u8)('m'),
         (0, buffer_layout_1.u8)('n'),

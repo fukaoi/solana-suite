@@ -32,63 +32,57 @@ var SplTokenPhantom;
     });
     // select 'new token'
     SplTokenPhantom.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
-        shared_1.Node.changeConnection({ cluster });
-        const connection = shared_1.Node.getConnection();
-        const tx = new web3_js_1.Transaction();
-        const builder = yield createTokenBuilder(owner, mintDecimal);
-        const data = yield core_1.AssociatedAccount.makeOrCreateInstruction(builder.mint.publicKey, owner);
-        tx.add(data.unwrap().inst);
-        const txData = {
-            tokenAccount: data.unwrap().tokenAccount.toPublicKey(),
-            mint: builder.mint,
-            tx: builder.tx,
-        };
-        const transaction = tx.add((0, spl_token_1.createMintToCheckedInstruction)(txData.mint.publicKey, txData.tokenAccount, owner, totalAmount, mintDecimal, [], spl_token_1.TOKEN_PROGRAM_ID));
-        transaction.feePayer = owner;
-        const blockhashObj = yield connection.getLatestBlockhashAndContext();
-        transaction.recentBlockhash = blockhashObj.value.blockhash;
-        transaction.partialSign(builder.mint);
-        const signed = yield phantom.signAllTransactions([txData.tx, transaction]);
-        // todo: refactoring
-        for (const sign of signed) {
-            const sig = yield connection
-                .sendRawTransaction(sign.serialize())
-                .then(shared_1.Result.ok)
-                .catch(shared_1.Result.err);
-            if (sig.isErr) {
-                return shared_1.Result.err(sig.error);
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            shared_1.Node.changeConnection({ cluster });
+            const connection = shared_1.Node.getConnection();
+            const tx = new web3_js_1.Transaction();
+            const builder = yield createTokenBuilder(owner, mintDecimal);
+            const data = yield core_1.AssociatedAccount.makeOrCreateInstruction(builder.mint.publicKey, owner);
+            tx.add(data.unwrap().inst);
+            const txData = {
+                tokenAccount: data.unwrap().tokenAccount.toPublicKey(),
+                mint: builder.mint,
+                tx: builder.tx,
+            };
+            const transaction = tx.add((0, spl_token_1.createMintToCheckedInstruction)(txData.mint.publicKey, txData.tokenAccount, owner, totalAmount, mintDecimal, [], spl_token_1.TOKEN_PROGRAM_ID));
+            transaction.feePayer = owner;
+            const blockhashObj = yield connection.getLatestBlockhashAndContext();
+            transaction.recentBlockhash = blockhashObj.value.blockhash;
+            transaction.partialSign(builder.mint);
+            const signed = yield phantom.signAllTransactions([
+                txData.tx,
+                transaction,
+            ]);
+            // todo: refactoring
+            for (const sign of signed) {
+                const sig = yield connection.sendRawTransaction(sign.serialize());
+                yield shared_1.Node.confirmedSig(sig);
             }
-            yield shared_1.Node.confirmedSig(sig.unwrap());
-        }
-        return shared_1.Result.ok(txData.mint.toString());
+            return txData.mint.toString();
+        }));
     });
     // select 'add token'
     SplTokenPhantom.addMinting = (tokenKey, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
-        shared_1.Node.changeConnection({ cluster });
-        const connection = shared_1.Node.getConnection();
-        const tx = new web3_js_1.Transaction();
-        const transaction = (yield core_1.AssociatedAccount.makeOrCreateInstruction(tokenKey, owner)).unwrap((ok) => {
-            tx.add(ok.inst);
-            return tx.add((0, spl_token_1.createMintToCheckedInstruction)(tokenKey, ok.tokenAccount.toPublicKey(), owner, totalAmount, mintDecimal, [], spl_token_1.TOKEN_PROGRAM_ID));
-        }, (err) => err);
-        if ('message' in transaction) {
-            return shared_1.Result.err(transaction);
-        }
-        transaction.feePayer = owner;
-        const blockhashObj = yield connection.getLatestBlockhashAndContext();
-        transaction.recentBlockhash = blockhashObj.value.blockhash;
-        const signed = yield phantom.signAllTransactions([transaction]);
-        // todo: refactoring
-        for (const sign of signed) {
-            const sig = yield connection
-                .sendRawTransaction(sign.serialize())
-                .then(shared_1.Result.ok)
-                .catch(shared_1.Result.err);
-            if (sig.isErr) {
-                return shared_1.Result.err(sig.error);
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            shared_1.Node.changeConnection({ cluster });
+            const connection = shared_1.Node.getConnection();
+            const tx = new web3_js_1.Transaction();
+            const transaction = (yield core_1.AssociatedAccount.makeOrCreateInstruction(tokenKey, owner)).unwrap((ok) => {
+                tx.add(ok.inst);
+                return tx.add((0, spl_token_1.createMintToCheckedInstruction)(tokenKey, ok.tokenAccount.toPublicKey(), owner, totalAmount, mintDecimal, [], spl_token_1.TOKEN_PROGRAM_ID));
+            }, (err) => {
+                throw err;
+            });
+            transaction.feePayer = owner;
+            const blockhashObj = yield connection.getLatestBlockhashAndContext();
+            transaction.recentBlockhash = blockhashObj.value.blockhash;
+            const signed = yield phantom.signAllTransactions([transaction]);
+            // todo: refactoring
+            for (const sign of signed) {
+                const sig = yield connection.sendRawTransaction(sign.serialize());
+                yield shared_1.Node.confirmedSig(sig);
             }
-            yield shared_1.Node.confirmedSig(sig.unwrap());
-        }
-        return shared_1.Result.ok(tokenKey.toBase58());
+            return tokenKey.toBase58();
+        }));
     });
 })(SplTokenPhantom = exports.SplTokenPhantom || (exports.SplTokenPhantom = {}));

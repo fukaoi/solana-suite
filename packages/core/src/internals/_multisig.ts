@@ -11,6 +11,7 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 
 // @internal
 export namespace Internals_Multisig {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   const createLayoutPubKey = (property: string): any => {
     return blob(32, property);
   };

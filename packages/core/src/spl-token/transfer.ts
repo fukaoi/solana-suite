@@ -10,7 +10,7 @@ import {
 } from '@solana-suite/shared';
 
 import { Internals_SplToken } from '../internals/_spl-token';
-import { Internals_AssociatedAccount } from '../internals/_associated-account';
+import { AssociatedAccount } from '../associated-account';
 
 export namespace SplToken {
   export const transfer = async (
@@ -25,13 +25,13 @@ export namespace SplToken {
     return Try(async () => {
       !feePayer && (feePayer = signers[0]);
 
-      const sourceToken = await Internals_AssociatedAccount.retryGetOrCreate(
+      const sourceToken = await AssociatedAccount.retryGetOrCreate(
         mint,
         owner,
         feePayer
       );
 
-      const destToken = await Internals_AssociatedAccount.retryGetOrCreate(
+      const destToken = await AssociatedAccount.retryGetOrCreate(
         mint,
         dest,
         feePayer
@@ -62,14 +62,14 @@ export namespace SplToken {
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
       const sourceToken =
-        await Internals_AssociatedAccount.makeOrCreateInstruction(
+        await AssociatedAccount.makeOrCreateInstruction(
           mint,
           owner,
           feePayer
         );
 
       const destToken =
-        await Internals_AssociatedAccount.makeOrCreateInstruction(
+        await AssociatedAccount.makeOrCreateInstruction(
           mint,
           dest,
           feePayer

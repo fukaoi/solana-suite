@@ -1,7 +1,7 @@
 import { createMint, createMintToCheckedInstruction } from '@solana/spl-token';
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { Node, Result, Instruction, Try } from '@solana-suite/shared';
-import { Internals_AssociatedAccount } from '../internals/_associated-account';
+import { AssociatedAccount } from '../associated-account';
 import { Internals_SplToken } from '../internals/_spl-token';
 
 export namespace SplToken {
@@ -22,9 +22,9 @@ export namespace SplToken {
         owner,
         owner,
         mintDecimal
-      )
+      );
 
-      const tokenAssociated = await Internals_AssociatedAccount.retryGetOrCreate(
+      const tokenAssociated = await AssociatedAccount.retryGetOrCreate(
         token,
         owner,
         feePayer

@@ -24,7 +24,6 @@ require("./types/global");
  * @returns Promise<Result<string, Error>>
  */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* @ts-ignore */
 Array.prototype.submit = function () {
     return __awaiter(this, void 0, void 0, function* () {
         const instructions = [];
@@ -165,6 +164,7 @@ exports.isNode = isNode;
  * @param {unknown} obj
  * @returns boolean
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const isPromise = (obj) => {
     return (!!obj &&
         (typeof obj === 'object' || typeof obj === 'function') &&
