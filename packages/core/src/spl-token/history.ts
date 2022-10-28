@@ -44,13 +44,20 @@ export namespace SplToken {
       let hist: TransferHistory[] = [];
       let before;
 
+      debugLog('# searchKeyAccount: ', searchKeyAccount.toString());
+      debugLog('# bufferedLimit: ', bufferedLimit);
+      debugLog('# before: ', before);
+
       for (;;) {
         const transactions = await Internals_History.getForAddress(
           searchKeyAccount,
           bufferedLimit,
           before
         );
-        debugLog('# getTransactionHistory loop');
+        debugLog(
+          '# getTransactionHistory loop transactions count:',
+          transactions.length
+        );
         const res = Internals_History.filterTransactions(
           searchPubkey,
           transactions,

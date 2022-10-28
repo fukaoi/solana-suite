@@ -10,12 +10,6 @@ const oldSig2 =
   '2fSh8kZbRtE5Xi8PVfxfQWKXXLDfzPygoeJdAN9XbW15aoqJHcdNUJVt5tF4B1nVt44cbkHmAWYLfkptbxGgYzjL';
 
 describe('Internals_Find', () => {
-  it('Get transaction data', async () => {
-    const res = await Internals_History.get(oldSig);
-    console.log('# oldSig: ', res);
-    assert.isObject(res);
-  });
-
   it('Get all transaction data with limit', async () => {
     const limit = 2;
     const res = await Internals_History.getForAddress(
