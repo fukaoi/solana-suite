@@ -1,16 +1,13 @@
-import { PublicKey, Keypair } from '@solana/web3.js';
+import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
 import { StorageNftStorage, StorageArweave } from '../storage';
-import { Instruction, Result, debugLog } from '@solana-suite/shared';
-import { Validator, ValidatorError } from '../validator';
+import { Instruction, Result, debugLog, Try } from '@solana-suite/shared';
+import { Validator } from '../validator';
 import {
   InputMetaplexMetadata,
   MetaplexMetaData,
 } from '../types/metaplex/index';
 import { Internals_Royalty } from '../internals/_royalty';
 import { Bundlr } from '../bundlr';
-
-import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
-
 import {
   findMasterEditionV2Pda,
   CreateNftBuilderParams,
@@ -20,6 +17,7 @@ import {
 } from '@metaplex-foundation/js';
 import { BundlrSigner, NftStorageMetadata } from '../types';
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
+import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
 
 export namespace Metaplex {
   // original: plugins/nftModule/operations/createNft.ts
@@ -50,14 +48,14 @@ export namespace Metaplex {
     );
   };
 
-  export const createNftBuilderInstruction = async (
+  const createNftBuilderInstruction = async (
     feePayer: BundlrSigner,
     params: CreateNftBuilderParams,
     useNewMint: Keypair,
     updateAuthority: Keypair | IdentityClient,
     mintAuthority: Keypair | IdentityClient,
     tokenOwner: PublicKey
-  ) => {
+  ): Promise<TransactionInstruction[]> => {
     debugLog('# params: ', params);
     debugLog('# feePayer: ', feePayer?.publicKey.toString());
     debugLog('# useNewMint: ', useNewMint.publicKey.toString());
@@ -125,7 +123,7 @@ export namespace Metaplex {
     );
   };
 
-  export const initNftStorageMetadata = (
+  const initNftStorageMetadata = (
     input: InputMetaplexMetadata,
     sellerFeeBasisPoints: number,
     options?: { [key: string]: unknown }
@@ -143,11 +141,11 @@ export namespace Metaplex {
     return { ...data, ...options };
   };
 
-  export const uploadMetaContent = async (
+  const uploadMetaContent = async (
     input: InputMetaplexMetadata,
     feePayer: BundlrSigner
   ) => {
-    let storageRes;
+    let storage;
     const { filePath, storageType, royalty, options, ...reducedMetadata } =
       input;
     const sellerFeeBasisPoints = Internals_Royalty.convertValue(royalty);
@@ -158,34 +156,40 @@ export namespace Metaplex {
     );
 
     if (storageType === 'arweave') {
-      storageRes = await (
+      storage = await (
         await StorageArweave.uploadContent(filePath, feePayer)
       ).unwrap(
         async (ok: string) => {
           storageData.image = ok;
           return await StorageArweave.uploadMetadata(storageData, feePayer);
         },
-        (err) => Result.err(err)
+        (err: Error) => {
+          throw err;
+        }
       );
     } else if (storageType === 'nftStorage') {
-      storageRes = await (
+      storage = await (
         await StorageNftStorage.uploadContent(filePath)
       ).unwrap(
         async (ok: string) => {
           storageData.image = ok;
           return await StorageNftStorage.uploadMetadata(storageData);
         },
-        (err) => Result.err(err)
+        (err: Error) => {
+          throw err;
+        }
       );
-    } else {
-      return Result.err(Error('storageType is `arweave` or `nftStorage`'));
     }
 
-    return Result.ok({
-      uri: storageRes.unwrap(),
+    if (!storage) {
+      throw Error('Empty storage object');
+    }
+
+    return {
+      uri: storage.unwrap(),
       sellerFeeBasisPoints,
       reducedMetadata,
-    });
+    };
   };
 
   /**
@@ -217,30 +221,28 @@ export namespace Metaplex {
     input: InputMetaplexMetadata,
     owner: Keypair,
     feePayer?: Keypair
-  ): Promise<Result<Instruction, Error | ValidatorError>> => {
-    const valid = Validator.checkAll<InputMetaplexMetadata>(input);
-    if (valid.isErr) {
-      return Result.err(valid.error);
-    }
+  ): Promise<Result<Instruction, Error>> => {
+    return Try(async () => {
+      const valid = Validator.checkAll<InputMetaplexMetadata>(input);
+      if (valid.isErr) {
+        throw valid.error;
+      }
 
-    const payer = feePayer ? feePayer : owner;
-    const uploaded = await uploadMetaContent(input, payer);
-    if (uploaded.isErr) {
-      return Result.err(uploaded.error);
-    }
+      const payer = feePayer ? feePayer : owner;
+      const uploaded = await uploadMetaContent(input, payer);
+      const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 
-    const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded.value;
+      debugLog('# upload content url: ', uri);
+      debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
+      debugLog('# reducedMetadata: ', reducedMetadata);
 
-    debugLog('# upload content url: ', uri);
-    debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-    debugLog('# reducedMetadata: ', reducedMetadata);
+      const mintInput: MetaplexMetaData = {
+        uri,
+        sellerFeeBasisPoints,
+        ...reducedMetadata,
+      };
 
-    const mintInput: MetaplexMetaData = {
-      uri,
-      sellerFeeBasisPoints,
-      ...reducedMetadata,
-    };
-
-    return Result.ok(await createNftBuilder(mintInput, owner, payer));
+      return await createNftBuilder(mintInput, owner, payer);
+    });
   };
 }
