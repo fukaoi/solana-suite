@@ -5,13 +5,11 @@ import {
   ConfirmOptions,
 } from '@solana/web3.js';
 
-import { Node } from './';
-import { Instruction, MAX_RETRIES } from './instruction';
+import { Node } from '../';
+import { Instruction, MAX_RETRIES } from './index';
 
 export class InstructionBatch {
-  static submit = async (
-    arr: Instruction[]
-  ): Promise<TransactionSignature> => {
+  static submit = async (arr: Instruction[]): Promise<TransactionSignature> => {
     let i = 0;
     for (const a of arr) {
       if (!a.instructions && !a.signers) {

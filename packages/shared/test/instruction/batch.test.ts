@@ -1,8 +1,8 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { Result } from '../src/result';
-import { Memo } from '../../core/src/memo';
-import { Setup, KeypairStr } from './testSetup';
+import { Result } from '../../src/result';
+import { Memo } from '../../../core/src/memo';
+import { Setup, KeypairStr } from '../testSetup';
 
 let source: KeypairStr;
 

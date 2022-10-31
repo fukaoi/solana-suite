@@ -1,6 +1,6 @@
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Constants, Instruction, Node, Result } from './';
-import { InstructionBatch } from './instruction-batch';
+import { InstructionBatch } from './instruction/batch';
 import bs from 'bs58';
 import './types/global';
 
