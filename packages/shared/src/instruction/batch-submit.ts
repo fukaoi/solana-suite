@@ -6,10 +6,14 @@ import {
 } from '@solana/web3.js';
 
 import { Node } from '../';
-import { Instruction, MAX_RETRIES } from './index';
+import { MAX_RETRIES } from './define';
+import { Instruction as InstructionSubmit } from './submit';
 
-export class InstructionBatch {
-  static submit = async (arr: Instruction[]): Promise<TransactionSignature> => {
+//@internals
+export class Instruction {
+  static batchSubmit = async (
+    arr: InstructionSubmit[]
+  ): Promise<TransactionSignature> => {
     let i = 0;
     for (const a of arr) {
       if (!a.instructions && !a.signers) {

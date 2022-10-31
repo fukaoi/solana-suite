@@ -6,20 +6,20 @@ import {
 } from '@solana/web3.js';
 
 import { Node, Result, Try } from '../';
-import { MAX_RETRIES } from './index';
+import { MAX_RETRIES } from './define';
 
-export class InstructionPartialSign {
+export class Instruction {
   hexInstruction: string;
 
   constructor(instructions: string) {
     this.hexInstruction = instructions;
   }
 
-  submit = async (
+  partialSignSubmit = async (
     feePayer: Keypair
   ): Promise<Result<TransactionSignature, Error>> => {
     return Try(async () => {
-      if (!(this instanceof InstructionPartialSign)) {
+      if (!(this instanceof Instruction)) {
         throw Error('only PartialSignInstruction object that can use this');
       }
 
