@@ -1,57 +1,56 @@
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Constants, Instruction, Node, Result } from './';
-import { Internals_Instruction } from './internals/_instruction';
+import { InstructionBatch } from './instruction-batch';
 import bs from 'bs58';
 import './types/global';
 
 /**
  * senTransaction() TransactionInstruction
  *
+ * @see {@link types/global.ts}
  * @returns Promise<Result<string, Error>>
  */
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-Array.prototype.submit = function (): Promise<Result<string, Error>> {
+/* @ts-ignore */
+Array.prototype.submit = async function () {
   const instructions: Instruction[] = [];
   // dont use forEach
   // It is not possible to stop the process by RETURN in the middle of the process.
-  let i = 0;
-  for (const obj of this) {
-    if (obj.isErr) {
-      const errorMess: string = obj.error.message as string;
-      return Result.err(
-        Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`)
-      );
-    } else if (obj.isOk) {
-      instructions.push(obj.value as Instruction);
-    } else {
-      instructions.push(obj as Instruction);
+  return Try(async () => {
+    let i = 0;
+    for (const obj of this) {
+      if (obj.isErr) {
+        const errorMess: string = obj.error.message as string;
+        throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
+      } else if (obj.isOk) {
+        instructions.push(obj.value as Instruction);
+      } else {
+        instructions.push(obj as Instruction);
+      }
+      i++;
     }
-    i++;
-  }
-  try {
-    const res = await Internals_Instruction.batchSubmit(instructions);
-    return Result.ok(res);
-  } catch (err) {
-    return Result.err(err as Error);
-  }
+    return InstructionBatch.submit(instructions);
+  });
 };
 
 /**
  * PubKey(@solana-suite) to PublicKey(@solana/web3.js)
  *
+ * @see {@link types/global.ts}
  * @returns PublicKey
  */
-String.prototype.toPublicKey = function (): PublicKey {
+String.prototype.toPublicKey = function () {
   return new PublicKey(this);
 };
 
 /**
  * Secret(@solana-suite) to Keypair(@solana/web3.js)
  *
+ * @see {@link types/global.ts}
  * @returns Keypair
  */
-String.prototype.toKeypair = function (): Keypair {
+String.prototype.toKeypair = function () {
   const decoded = bs.decode(this as string);
   return Keypair.fromSecretKey(decoded);
 };
@@ -59,9 +58,10 @@ String.prototype.toKeypair = function (): Keypair {
 /**
  * Create explorer url for account address or signature
  *
+ * @see {@link types/global.ts}
  * @returns string
  */
-String.prototype.toExplorerUrl = function (): string {
+String.prototype.toExplorerUrl = function () {
   const endPointUrl = Node.getConnection().rpcEndpoint;
   debugLog('# toExplorerUrl rpcEndpoint:', endPointUrl);
   let cluster = '';
@@ -91,18 +91,20 @@ String.prototype.toExplorerUrl = function (): string {
 /**
  * LAMPORTS to SOL
  *
+ * @see {@link types/global.ts}
  * @returns number
  */
-Number.prototype.toSol = function (): number {
+Number.prototype.toSol = function () {
   return (this as number) / LAMPORTS_PER_SOL;
 };
 
 /**
  * SOL to LAMPORTS
  *
+ * @see {@link types/global.ts}
  * @returns number
  */
-Number.prototype.toLamports = function (): number {
+Number.prototype.toLamports = function () {
   return (this as number) * LAMPORTS_PER_SOL;
 };
 

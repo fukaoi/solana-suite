@@ -15,46 +15,45 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Try = exports.isPromise = exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const _1 = require("./");
-const _instruction_1 = require("./internals/_instruction");
+const instruction_batch_1 = require("./instruction-batch");
 const bs58_1 = __importDefault(require("bs58"));
 require("./types/global");
 /**
  * senTransaction() TransactionInstruction
  *
+ * @see {@link types/global.ts}
  * @returns Promise<Result<string, Error>>
  */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+/* @ts-ignore */
 Array.prototype.submit = function () {
     return __awaiter(this, void 0, void 0, function* () {
         const instructions = [];
         // dont use forEach
         // It is not possible to stop the process by RETURN in the middle of the process.
-        let i = 0;
-        for (const obj of this) {
-            if (obj.isErr) {
-                const errorMess = obj.error.message;
-                return _1.Result.err(Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`));
+        return Try(() => __awaiter(this, void 0, void 0, function* () {
+            let i = 0;
+            for (const obj of this) {
+                if (obj.isErr) {
+                    const errorMess = obj.error.message;
+                    throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
+                }
+                else if (obj.isOk) {
+                    instructions.push(obj.value);
+                }
+                else {
+                    instructions.push(obj);
+                }
+                i++;
             }
-            else if (obj.isOk) {
-                instructions.push(obj.value);
-            }
-            else {
-                instructions.push(obj);
-            }
-            i++;
-        }
-        try {
-            const res = yield _instruction_1.Internals_Instruction.batchSubmit(instructions);
-            return _1.Result.ok(res);
-        }
-        catch (err) {
-            return _1.Result.err(err);
-        }
+            return instruction_batch_1.InstructionBatch.submit(instructions);
+        }));
     });
 };
 /**
  * PubKey(@solana-suite) to PublicKey(@solana/web3.js)
  *
+ * @see {@link types/global.ts}
  * @returns PublicKey
  */
 String.prototype.toPublicKey = function () {
@@ -63,6 +62,7 @@ String.prototype.toPublicKey = function () {
 /**
  * Secret(@solana-suite) to Keypair(@solana/web3.js)
  *
+ * @see {@link types/global.ts}
  * @returns Keypair
  */
 String.prototype.toKeypair = function () {
@@ -72,6 +72,7 @@ String.prototype.toKeypair = function () {
 /**
  * Create explorer url for account address or signature
  *
+ * @see {@link types/global.ts}
  * @returns string
  */
 String.prototype.toExplorerUrl = function () {
@@ -106,6 +107,7 @@ String.prototype.toExplorerUrl = function () {
 /**
  * LAMPORTS to SOL
  *
+ * @see {@link types/global.ts}
  * @returns number
  */
 Number.prototype.toSol = function () {
@@ -114,6 +116,7 @@ Number.prototype.toSol = function () {
 /**
  * SOL to LAMPORTS
  *
+ * @see {@link types/global.ts}
  * @returns number
  */
 Number.prototype.toLamports = function () {

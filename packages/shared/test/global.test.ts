@@ -134,7 +134,7 @@ describe('Global', () => {
     res.isOk && assert.equal(res.value, mess);
   });
 
-  it.only('Call function that return Result type in try()', () => {
+  it('Call function that return Result type in try()', () => {
     const fn = () => {
       return Try(() => {
         throw Error('return Result');

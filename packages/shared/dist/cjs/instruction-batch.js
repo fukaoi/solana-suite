@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,14 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var _a;
-import { sendAndConfirmTransaction, Transaction, } from '@solana/web3.js';
-import { Node, } from '../';
-import { MAX_RETRIES } from '../instruction';
-// @internal
-export class Internals_Instruction {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.InstructionBatch = void 0;
+const web3_js_1 = require("@solana/web3.js");
+const _1 = require("./");
+const instruction_1 = require("./instruction");
+class InstructionBatch {
 }
-_a = Internals_Instruction;
-Internals_Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, function* () {
+exports.InstructionBatch = InstructionBatch;
+_a = InstructionBatch;
+InstructionBatch.submit = (arr) => __awaiter(void 0, void 0, void 0, function* () {
     let i = 0;
     for (const a of arr) {
         if (!a.instructions && !a.signers) {
@@ -31,7 +34,7 @@ Internals_Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, f
     if (feePayers.length > 0 && feePayers[0].feePayer) {
         feePayer = feePayers[0].feePayer;
     }
-    const transaction = new Transaction();
+    const transaction = new web3_js_1.Transaction();
     let finalSigners = signers;
     if (feePayer) {
         transaction.feePayer = feePayer.publicKey;
@@ -39,7 +42,7 @@ Internals_Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, f
     }
     instructions.map((inst) => transaction.add(inst));
     const options = {
-        maxRetries: MAX_RETRIES,
+        maxRetries: instruction_1.MAX_RETRIES,
     };
-    return yield sendAndConfirmTransaction(Node.getConnection(), transaction, finalSigners, options);
+    return yield (0, web3_js_1.sendAndConfirmTransaction)(_1.Node.getConnection(), transaction, finalSigners, options);
 });
