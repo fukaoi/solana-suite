@@ -62,5 +62,5 @@ single transaction, unnecessary access to the RPC server can be avoided.
 :house: https://atonoy.github.io/solana-suite/
 
 # Docs
-:books: coming soon
+:books: https://solana-suite.gitbook.io/solana-suite-develpoment-guide/
 
