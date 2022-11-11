@@ -7,7 +7,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { debugLog, Constants, ConstantsFunc, Result } from './';
+import { debugLog } from './global';
+import { Result } from './result';
+import { ConstantsFunc } from './constants-func';
+import { Constants } from './constants';
 import { Connection, } from '@solana/web3.js';
 export var Node;
 (function (Node) {

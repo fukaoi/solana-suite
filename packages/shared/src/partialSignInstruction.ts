@@ -5,17 +5,20 @@ import {
   ConfirmOptions,
 } from '@solana/web3.js';
 
-import { Node, Result, Try } from '../';
-import { MAX_RETRIES } from './define';
+import { Node } from './node';
+import { Result } from './result';
+import { Try } from './global';
+import { MAX_RETRIES } from './instruction/define';
+import { Instruction } from './index';
 
-export class Instruction {
+export class PartialSignInstruction {
   hexInstruction: string;
 
   constructor(instructions: string) {
     this.hexInstruction = instructions;
   }
 
-  partialSignSubmit = async (
+  submit = async (
     feePayer: Keypair
   ): Promise<Result<TransactionSignature, Error>> => {
     return Try(async () => {

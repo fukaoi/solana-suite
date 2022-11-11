@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9,16 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var _a;
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.InstructionBatch = void 0;
-const web3_js_1 = require("@solana/web3.js");
-const _1 = require("./");
-const instruction_1 = require("./instruction");
-class InstructionBatch {
+import { sendAndConfirmTransaction, Transaction, } from '@solana/web3.js';
+import { Node } from '../';
+import { MAX_RETRIES } from './define';
+//@internals
+export class Instruction {
 }
-exports.InstructionBatch = InstructionBatch;
-_a = InstructionBatch;
-InstructionBatch.submit = (arr) => __awaiter(void 0, void 0, void 0, function* () {
+_a = Instruction;
+Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, function* () {
     let i = 0;
     for (const a of arr) {
         if (!a.instructions && !a.signers) {
@@ -34,7 +31,7 @@ InstructionBatch.submit = (arr) => __awaiter(void 0, void 0, void 0, function* (
     if (feePayers.length > 0 && feePayers[0].feePayer) {
         feePayer = feePayers[0].feePayer;
     }
-    const transaction = new web3_js_1.Transaction();
+    const transaction = new Transaction();
     let finalSigners = signers;
     if (feePayer) {
         transaction.feePayer = feePayer.publicKey;
@@ -42,7 +39,7 @@ InstructionBatch.submit = (arr) => __awaiter(void 0, void 0, void 0, function* (
     }
     instructions.map((inst) => transaction.add(inst));
     const options = {
-        maxRetries: instruction_1.MAX_RETRIES,
+        maxRetries: MAX_RETRIES,
     };
-    return yield (0, web3_js_1.sendAndConfirmTransaction)(_1.Node.getConnection(), transaction, finalSigners, options);
+    return yield sendAndConfirmTransaction(Node.getConnection(), transaction, finalSigners, options);
 });

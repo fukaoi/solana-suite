@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,17 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { sendAndConfirmTransaction, Transaction, } from '@solana/web3.js';
-import { Node, Try } from './';
-export const MAX_RETRIES = 3;
-export class Instruction {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Instruction = void 0;
+const web3_js_1 = require("@solana/web3.js");
+const __1 = require("../");
+const define_1 = require("./define");
+class Instruction {
     constructor(instructions, signers, feePayer, data) {
         this.submit = () => __awaiter(this, void 0, void 0, function* () {
-            return Try(() => __awaiter(this, void 0, void 0, function* () {
+            return (0, __1.Try)(() => __awaiter(this, void 0, void 0, function* () {
                 if (!(this instanceof Instruction)) {
                     throw Error('only Instruction object that can use this');
                 }
-                const transaction = new Transaction();
+                const transaction = new web3_js_1.Transaction();
                 let finalSigners = this.signers;
                 if (this.feePayer) {
                     transaction.feePayer = this.feePayer.publicKey;
@@ -25,9 +28,9 @@ export class Instruction {
                 }
                 this.instructions.forEach((inst) => transaction.add(inst));
                 const options = {
-                    maxRetries: MAX_RETRIES,
+                    maxRetries: define_1.MAX_RETRIES,
                 };
-                return yield sendAndConfirmTransaction(Node.getConnection(), transaction, finalSigners, options);
+                return yield (0, web3_js_1.sendAndConfirmTransaction)(__1.Node.getConnection(), transaction, finalSigners, options);
             }));
         });
         this.instructions = instructions;
@@ -36,23 +39,4 @@ export class Instruction {
         this.data = data;
     }
 }
-export class PartialSignInstruction {
-    constructor(instructions) {
-        this.submit = (feePayer) => __awaiter(this, void 0, void 0, function* () {
-            return Try(() => __awaiter(this, void 0, void 0, function* () {
-                if (!(this instanceof PartialSignInstruction)) {
-                    throw Error('only PartialSignInstruction object that can use this');
-                }
-                const decode = Buffer.from(this.hexInstruction, 'hex');
-                const transactionFromJson = Transaction.from(decode);
-                transactionFromJson.partialSign(feePayer);
-                const options = {
-                    maxRetries: MAX_RETRIES,
-                };
-                const wireTransaction = transactionFromJson.serialize();
-                return yield Node.getConnection().sendRawTransaction(wireTransaction, options);
-            }));
-        });
-        this.hexInstruction = instructions;
-    }
-}
+exports.Instruction = Instruction;

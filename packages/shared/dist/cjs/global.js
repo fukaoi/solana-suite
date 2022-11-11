@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Try = exports.isPromise = exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const _1 = require("./");
-const instruction_batch_1 = require("./instruction-batch");
+const batch_submit_1 = require("./instruction/batch-submit");
 const bs58_1 = __importDefault(require("bs58"));
 require("./types/global");
 /**
@@ -46,7 +46,7 @@ Array.prototype.submit = function () {
                 }
                 i++;
             }
-            return instruction_batch_1.InstructionBatch.submit(instructions);
+            return batch_submit_1.Instruction.batchSubmit(instructions);
         }));
     });
 };

@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,13 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var _a;
-import { sendAndConfirmTransaction, Transaction, } from '@solana/web3.js';
-import { Node } from './';
-import { MAX_RETRIES } from './instruction';
-export class InstructionBatch {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Instruction = void 0;
+const web3_js_1 = require("@solana/web3.js");
+const __1 = require("../");
+const define_1 = require("./define");
+//@internals
+class Instruction {
 }
-_a = InstructionBatch;
-InstructionBatch.submit = (arr) => __awaiter(void 0, void 0, void 0, function* () {
+exports.Instruction = Instruction;
+_a = Instruction;
+Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, function* () {
     let i = 0;
     for (const a of arr) {
         if (!a.instructions && !a.signers) {
@@ -30,7 +35,7 @@ InstructionBatch.submit = (arr) => __awaiter(void 0, void 0, void 0, function* (
     if (feePayers.length > 0 && feePayers[0].feePayer) {
         feePayer = feePayers[0].feePayer;
     }
-    const transaction = new Transaction();
+    const transaction = new web3_js_1.Transaction();
     let finalSigners = signers;
     if (feePayer) {
         transaction.feePayer = feePayer.publicKey;
@@ -38,7 +43,7 @@ InstructionBatch.submit = (arr) => __awaiter(void 0, void 0, void 0, function* (
     }
     instructions.map((inst) => transaction.add(inst));
     const options = {
-        maxRetries: MAX_RETRIES,
+        maxRetries: define_1.MAX_RETRIES,
     };
-    return yield sendAndConfirmTransaction(Node.getConnection(), transaction, finalSigners, options);
+    return yield (0, web3_js_1.sendAndConfirmTransaction)(__1.Node.getConnection(), transaction, finalSigners, options);
 });

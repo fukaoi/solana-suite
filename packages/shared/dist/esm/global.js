@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Constants, Node, Result } from './';
-import { InstructionBatch } from './instruction-batch';
+import { Instruction as InstructionBatch } from './instruction/batch-submit';
 import bs from 'bs58';
 import './types/global';
 /**
@@ -40,7 +40,7 @@ Array.prototype.submit = function () {
                 }
                 i++;
             }
-            return InstructionBatch.submit(instructions);
+            return InstructionBatch.batchSubmit(instructions);
         }));
     });
 };

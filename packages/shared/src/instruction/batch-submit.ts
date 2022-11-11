@@ -7,7 +7,7 @@ import {
 
 import { Node } from '../';
 import { MAX_RETRIES } from './define';
-import { Instruction as InstructionSubmit } from './submit';
+import { Instruction as InstructionSubmit } from './index';
 
 //@internals
 export class Instruction {

@@ -1,4 +1,7 @@
-import { debugLog, Constants, ConstantsFunc, Result } from './';
+import { debugLog } from './global';
+import { Result } from './result';
+import { ConstantsFunc } from './constants-func';
+import { Constants } from './constants';
 
 import {
   Connection,
@@ -6,6 +9,8 @@ import {
   RpcResponseAndContext,
   SignatureResult,
 } from '@solana/web3.js';
+
+console.log(Constants);
 
 export namespace Node {
   const options = {
@@ -31,7 +36,7 @@ export namespace Node {
   };
 
   export const changeConnection = (param: {
-    cluster?: Constants.Cluster | string;
+    cluster?: string;
     commitment?: Commitment;
   }): void => {
     if (param.commitment) {
