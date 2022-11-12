@@ -11,12 +11,11 @@ import { Transaction, } from '@solana/web3.js';
 import { Node } from './node';
 import { Try } from './global';
 import { MAX_RETRIES } from './instruction/define';
-import { Instruction } from './index';
 export class PartialSignInstruction {
     constructor(instructions) {
         this.submit = (feePayer) => __awaiter(this, void 0, void 0, function* () {
             return Try(() => __awaiter(this, void 0, void 0, function* () {
-                if (!(this instanceof Instruction)) {
+                if (!(this instanceof PartialSignInstruction)) {
                     throw Error('only PartialSignInstruction object that can use this');
                 }
                 const decode = Buffer.from(this.hexInstruction, 'hex');

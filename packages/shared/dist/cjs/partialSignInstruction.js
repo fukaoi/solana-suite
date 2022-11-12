@@ -14,12 +14,11 @@ const web3_js_1 = require("@solana/web3.js");
 const node_1 = require("./node");
 const global_1 = require("./global");
 const define_1 = require("./instruction/define");
-const index_1 = require("./index");
 class PartialSignInstruction {
     constructor(instructions) {
         this.submit = (feePayer) => __awaiter(this, void 0, void 0, function* () {
             return (0, global_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-                if (!(this instanceof index_1.Instruction)) {
+                if (!(this instanceof PartialSignInstruction)) {
                     throw Error('only PartialSignInstruction object that can use this');
                 }
                 const decode = Buffer.from(this.hexInstruction, 'hex');

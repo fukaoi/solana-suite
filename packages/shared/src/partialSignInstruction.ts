@@ -9,7 +9,6 @@ import { Node } from './node';
 import { Result } from './result';
 import { Try } from './global';
 import { MAX_RETRIES } from './instruction/define';
-import { Instruction } from './index';
 
 export class PartialSignInstruction {
   hexInstruction: string;
@@ -22,7 +21,7 @@ export class PartialSignInstruction {
     feePayer: Keypair
   ): Promise<Result<TransactionSignature, Error>> => {
     return Try(async () => {
-      if (!(this instanceof Instruction)) {
+      if (!(this instanceof PartialSignInstruction)) {
         throw Error('only PartialSignInstruction object that can use this');
       }
 
