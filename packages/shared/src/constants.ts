@@ -1,8 +1,7 @@
 import { Commitment, PublicKey } from '@solana/web3.js';
-
 import Config from './solana-suite.json';
-import './global';
 
+// WARNING: Not to be a circular reference
 export namespace Constants {
   export const currentCluster = Config.cluster.type;
   export const customUrl = Config.cluster.customUrl;
@@ -26,9 +25,7 @@ export namespace Constants {
     test = 'https://api.testnet.solana.com',
     localhost = 'http://api.devnet.solana.com',
   }
-}
 
-export namespace ConstantsFunc {
   export const switchCluster = (
     env: string | undefined,
     customUrl = Constants.customUrl
@@ -76,23 +73,19 @@ export namespace ConstantsFunc {
       }
     }
   };
-}
 
-export namespace Constants {
-  String.prototype.toPublicKey = function () {
-    return new PublicKey(this);
-  };
-  export const WRAPPED_TOKEN_PROGRAM_ID =
-    'So11111111111111111111111111111111111111112'.toPublicKey();
-  export const MEMO_PROGRAM_ID =
-    'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo'.toPublicKey();
-  export const METAPLEX_PROGRAM_ID =
-    'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'.toPublicKey();
+  export const WRAPPED_TOKEN_PROGRAM_ID = new PublicKey(
+    'So11111111111111111111111111111111111111112'
+  );
+  export const MEMO_PROGRAM_ID = new PublicKey(
+    'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo'
+  );
+  export const METAPLEX_PROGRAM_ID = new PublicKey(
+    'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'
+  );
   export const COMMITMENT: Commitment = 'confirmed';
   export const NFT_STORAGE_API_KEY =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE';
   export const NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
-  export const BUNDLR_NETWORK_URL = ConstantsFunc.switchBundlr(
-    Config.cluster.type
-  );
+  export const BUNDLR_NETWORK_URL = switchBundlr(Config.cluster.type);
 }

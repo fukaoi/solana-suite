@@ -1,4 +1,4 @@
-import { Constants } from '../constants/enum';
+import { Constants } from '../constants';
 export var ConstantsFunc;
 (function (ConstantsFunc) {
     ConstantsFunc.switchBundlr = (env) => {

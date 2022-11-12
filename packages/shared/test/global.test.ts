@@ -1,6 +1,5 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import '../src/global';
 import {
   sleep,
   isNode,
@@ -26,13 +25,11 @@ describe('Global', () => {
   it('Create explorer url by address', async () => {
     const res = dummyPubkey.toExplorerUrl();
     assert.isNotEmpty(res);
-    console.log(res);
   });
 
-  it('[Mainnet-Beta]Create explorer url', async () => {
+  it.only('[Mainnet-Beta]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.prd });
     const url = dummySig.toExplorerUrl();
-    console.log(url);
     const res = /mainnet-beta/.test(url);
     assert.isTrue(res);
   });
@@ -40,7 +37,6 @@ describe('Global', () => {
   it('[Mainnet-Beta, serum]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.prd2 });
     const url = dummySig.toExplorerUrl();
-    console.log(url);
     const res = /mainnet-beta/.test(url);
     assert.isTrue(res);
   });
@@ -48,7 +44,6 @@ describe('Global', () => {
   it('[Testnet]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.test });
     const url = dummySig.toExplorerUrl();
-    console.log(url);
     const res = /testnet/.test(url);
     assert.isTrue(res);
   });

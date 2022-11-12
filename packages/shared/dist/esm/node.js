@@ -12,6 +12,7 @@ import { Result } from './result';
 import { ConstantsFunc } from './constants-func';
 import { Constants } from './constants';
 import { Connection, } from '@solana/web3.js';
+console.log(Constants);
 export var Node;
 (function (Node) {
     const options = {

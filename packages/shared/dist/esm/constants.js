@@ -1,6 +1,7 @@
 import { PublicKey } from '@solana/web3.js';
-import Config from './solana-suite.json';
+import { ConstantsFunc } from './constants-func/switch-bundlr';
 import './global';
+import Config from './solana-suite.json';
 export var Constants;
 (function (Constants) {
     Constants.currentCluster = Config.cluster.type;
@@ -25,54 +26,6 @@ export var Constants;
         EndPointUrl["test"] = "https://api.testnet.solana.com";
         EndPointUrl["localhost"] = "http://api.devnet.solana.com";
     })(EndPointUrl = Constants.EndPointUrl || (Constants.EndPointUrl = {}));
-})(Constants || (Constants = {}));
-export var ConstantsFunc;
-(function (ConstantsFunc) {
-    ConstantsFunc.switchCluster = (env, customUrl = Constants.customUrl) => {
-        switch (env) {
-            case Constants.Cluster.prd:
-                return Constants.EndPointUrl.prd;
-            case Constants.Cluster.prd2:
-                return Constants.EndPointUrl.prd2;
-            case Constants.Cluster.test:
-                return Constants.EndPointUrl.test;
-            case Constants.Cluster.dev:
-                return Constants.EndPointUrl.dev;
-            case Constants.Cluster.prdrr: {
-                // don't require rigor, as it can be repeated alternately
-                const index = Date.now() % 4;
-                const clusters = [
-                    Constants.EndPointUrl.prd,
-                    Constants.EndPointUrl.prd2,
-                    Constants.EndPointUrl.prd,
-                    Constants.EndPointUrl.prd2,
-                ];
-                return clusters[index];
-            }
-            case Constants.Cluster.custom:
-                return customUrl;
-            default:
-                return Constants.EndPointUrl.localhost;
-        }
-    };
-    ConstantsFunc.switchBundlr = (env) => {
-        switch (env) {
-            case Constants.Cluster.dev:
-            case Constants.Cluster.test:
-            case Constants.Cluster.localhost:
-                return 'https://devnet.bundlr.network';
-            default: {
-                const index = Date.now() % 2;
-                const clusters = [
-                    'https://node1.bundlr.network',
-                    'https://node2.bundlr.network',
-                ];
-                return clusters[index];
-            }
-        }
-    };
-})(ConstantsFunc || (ConstantsFunc = {}));
-(function (Constants) {
     String.prototype.toPublicKey = function () {
         return new PublicKey(this);
     };

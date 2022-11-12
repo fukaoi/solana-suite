@@ -1,6 +1,5 @@
 import { debugLog } from './global';
 import { Result } from './result';
-import { ConstantsFunc } from './constants-func';
 import { Constants } from './constants';
 
 import {
@@ -9,8 +8,6 @@ import {
   RpcResponseAndContext,
   SignatureResult,
 } from '@solana/web3.js';
-
-console.log(Constants);
 
 export namespace Node {
   const options = {
@@ -22,7 +19,7 @@ export namespace Node {
 
     // default setting
     if (!options.cluster) {
-      options.cluster = ConstantsFunc.switchCluster(Constants.currentCluster);
+      options.cluster = Constants.switchCluster(Constants.currentCluster);
     }
 
     // default setting
@@ -45,7 +42,7 @@ export namespace Node {
     }
 
     if (param.cluster) {
-      options.cluster = ConstantsFunc.switchCluster(param.cluster);
+      options.cluster = Constants.switchCluster(param.cluster);
       debugLog('# Node change cluster: ', options.cluster);
     }
   };

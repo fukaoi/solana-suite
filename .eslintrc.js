@@ -1,24 +1,24 @@
 module.exports = {
   extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
   ],
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 11,
-    sourceType: "module",
-    project: ["./packages/*/tsconfig.json"],
+    sourceType: 'module',
+    project: ['./packages/*/tsconfig.json'],
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ['@typescript-eslint'],
   root: true,
   rules: {
-    "@typescript-eslint/no-namespace": 0,
+    '@typescript-eslint/no-namespace': 0,
     // "@typescript-eslint/no-explicit-any": 0,
-    "@typescript-eslint/no-unsafe-member-access": 0,
-    "@typescript-eslint/quotes": [
-      "error",
-      "single",
+    '@typescript-eslint/no-unsafe-member-access': 0,
+    '@typescript-eslint/quotes': [
+      'error',
+      'single',
       {
         allowTemplateLiterals: true,
       },

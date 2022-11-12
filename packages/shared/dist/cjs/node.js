@@ -15,6 +15,7 @@ const result_1 = require("./result");
 const constants_func_1 = require("./constants-func");
 const constants_1 = require("./constants");
 const web3_js_1 = require("@solana/web3.js");
+console.log(constants_1.Constants);
 var Node;
 (function (Node) {
     const options = {

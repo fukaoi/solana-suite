@@ -2,7 +2,6 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Node } from '../src/node';
 import { Constants } from '../src/constants';
-import { ConstantsFunc } from '../src/constants-func';
 
 describe('Node', () => {
   it('Connect devnet', async () => {
@@ -12,7 +11,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      ConstantsFunc.switchCluster(Constants.Cluster.dev)
+      Constants.switchCluster(Constants.Cluster.dev)
     );
   });
 
@@ -23,7 +22,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      ConstantsFunc.switchCluster(Constants.Cluster.test)
+      Constants.switchCluster(Constants.Cluster.test)
     );
   });
 
@@ -34,7 +33,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      ConstantsFunc.switchCluster(Constants.Cluster.prd)
+      Constants.switchCluster(Constants.Cluster.prd)
     );
   });
 
@@ -45,7 +44,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      ConstantsFunc.switchCluster(Constants.Cluster.prd2)
+      Constants.switchCluster(Constants.Cluster.prd2)
     );
   });
 
@@ -63,7 +62,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      ConstantsFunc.switchCluster(Constants.Cluster.localhost)
+      Constants.switchCluster(Constants.Cluster.localhost)
     );
   });
 
@@ -73,7 +72,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      ConstantsFunc.switchCluster(Constants.Cluster.localhost)
+      Constants.switchCluster(Constants.Cluster.localhost)
     );
   });
 
@@ -88,7 +87,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      ConstantsFunc.switchCluster(Constants.Cluster.dev)
+      Constants.switchCluster(Constants.Cluster.dev)
     );
   });
 
