@@ -89,7 +89,7 @@ describe('Multisig', () => {
     ]);
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     await inst.submit();
-    const res = await Multisig.getMultisigInfo(
+    const res = await Multisig.getInfo(
       (inst.unwrap().data as string).toPublicKey()
     );
     assert.equal(res.unwrap().signer1.toString(), signer1.pubkey);
