@@ -1,5 +1,5 @@
 import { isBrowser, Try } from '@solana-suite/shared';
-import { Internals_Royalty } from './internals/_royalty';
+import { Metaplex } from './metaplex/royalty';
 export var Validator;
 (function (Validator) {
     let Message;
@@ -51,7 +51,7 @@ export var Validator;
                     condition: 'underMin',
                 });
             }
-            else if (royalty > Validator.ROYALTY_MAX * Internals_Royalty.THRESHOLD) {
+            else if (royalty > Validator.ROYALTY_MAX * Metaplex.THRESHOLD) {
                 throw createError(key, Message.BIG_NUMBER, royalty, {
                     threshold: Validator.SELLER_FEE_BASIS_POINTS_MAX,
                     condition: 'overMax',

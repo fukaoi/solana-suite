@@ -25,7 +25,7 @@ const web3_js_1 = require("@solana/web3.js");
 const storage_1 = require("../storage");
 const shared_1 = require("@solana-suite/shared");
 const validator_1 = require("../validator");
-const _royalty_1 = require("../internals/_royalty");
+const royalty_1 = require("./royalty");
 const bundlr_1 = require("../bundlr");
 const js_1 = require("@metaplex-foundation/js");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
@@ -56,7 +56,7 @@ var Metaplex;
     Metaplex.uploadMetaContent = (input, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let storage;
         const { filePath, storageType, royalty, options } = input, reducedMetadata = __rest(input, ["filePath", "storageType", "royalty", "options"]);
-        const sellerFeeBasisPoints = _royalty_1.Internals_Royalty.convertValue(royalty);
+        const sellerFeeBasisPoints = royalty_1.Metaplex.convertRoyalty(royalty);
         const storageData = initNftStorageMetadata(input, sellerFeeBasisPoints, options);
         if (storageType === 'arweave') {
             storage = yield (yield storage_1.StorageArweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {

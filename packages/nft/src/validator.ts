@@ -1,6 +1,6 @@
 import { MetaplexFileContent } from '@metaplex-foundation/js';
 import { isBrowser, Result, Try } from '@solana-suite/shared';
-import { Internals_Royalty } from './internals/_royalty';
+import { Metaplex } from './metaplex/royalty';
 import {
   InputMetaplexMetadata,
   MetaplexMetaData,
@@ -63,7 +63,7 @@ export namespace Validator {
           threshold: ROYALTY_MIN,
           condition: 'underMin',
         });
-      } else if (royalty > ROYALTY_MAX * Internals_Royalty.THRESHOLD) {
+      } else if (royalty > ROYALTY_MAX * Metaplex.THRESHOLD) {
         throw createError(key, Message.BIG_NUMBER, royalty, {
           threshold: SELLER_FEE_BASIS_POINTS_MAX,
           condition: 'overMax',

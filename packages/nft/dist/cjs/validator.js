@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValidatorError = exports.Validator = void 0;
 const shared_1 = require("@solana-suite/shared");
-const _royalty_1 = require("./internals/_royalty");
+const royalty_1 = require("./metaplex/royalty");
 var Validator;
 (function (Validator) {
     let Message;
@@ -54,7 +54,7 @@ var Validator;
                     condition: 'underMin',
                 });
             }
-            else if (royalty > Validator.ROYALTY_MAX * _royalty_1.Internals_Royalty.THRESHOLD) {
+            else if (royalty > Validator.ROYALTY_MAX * royalty_1.Metaplex.THRESHOLD) {
                 throw createError(key, Message.BIG_NUMBER, royalty, {
                     threshold: Validator.SELLER_FEE_BASIS_POINTS_MAX,
                     condition: 'overMax',
