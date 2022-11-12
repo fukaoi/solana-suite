@@ -6,11 +6,10 @@ import {
   isBrowser,
   debugLog,
   Try,
+  Node,
+  Constants,
   isPromise,
-} from '../src/global';
-import { Constants } from '../src/constants';
-// import { Node } from '../src/node';
-import { Node } from '../dist/cjs/node';
+} from '../src';
 import { JSDOM } from 'jsdom';
 
 const dummyPubkey = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
