@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { SplToken } from '../../src/';
 import { DirectionFilter } from '../../src/types/history';
 
-describe('SplToken', () => {
+describe.skip('SplToken', () => {
   it('Get token transfer history by owner address', async () => {
     const mint = '6yiSjqsmmW48zJ6bM2Fb6jHHebHRfDzXoYRV1f1nt3JX'.toPublicKey();
     const searchAddress =
