@@ -10,12 +10,15 @@ import {
 } from '@solana/web3.js';
 
 export namespace Node {
-  const options = {
+  export const options = {
     cluster: '',
     commitment: Constants.COMMITMENT,
   };
+
   export const getConnection = (): Connection => {
-    debugLog('# [Before] Node info: ', options.cluster, options.commitment);
+    debugLog(
+      `# [Before] cluster:${options.cluster}, commitment:${options.commitment}`
+    );
 
     // default setting
     if (!options.cluster) {
@@ -27,7 +30,9 @@ export namespace Node {
       options.commitment = Constants.COMMITMENT;
     }
 
-    debugLog('# [After] Node info: ', options.cluster, options.commitment);
+    debugLog(
+      `# [After] cluster:${options.cluster}, commitment:${options.commitment}`
+    );
 
     return new Connection(options.cluster, options.commitment);
   };

@@ -9,7 +9,8 @@ import {
   isPromise,
 } from '../src/global';
 import { Constants } from '../src/constants';
-import { Node } from '../src/node';
+// import { Node } from '../src/node';
+import { Node } from '../dist/cjs/node';
 import { JSDOM } from 'jsdom';
 
 const dummyPubkey = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
@@ -27,7 +28,7 @@ describe('Global', () => {
     assert.isNotEmpty(res);
   });
 
-  it.only('[Mainnet-Beta]Create explorer url', async () => {
+  it('[Mainnet-Beta]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.prd });
     const url = dummySig.toExplorerUrl();
     const res = /mainnet-beta/.test(url);

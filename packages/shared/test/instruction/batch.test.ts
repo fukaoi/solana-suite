@@ -3,6 +3,8 @@ import { assert } from 'chai';
 import { Result } from '../../src/result';
 import { Memo } from '../../../core/src/memo';
 import { Setup, KeypairStr } from '../testSetup';
+import '../../src/global';
+import { Node } from '../../src/node';
 
 let source: KeypairStr;
 
@@ -13,6 +15,7 @@ describe('Instruction', () => {
   });
 
   it('Submit batch instructions', async () => {
+    console.log('node status', Node.getConnection());
     const inst1 = Memo.create(
       '{"title": "Submit first instruction"}',
       source.toPublicKey(),

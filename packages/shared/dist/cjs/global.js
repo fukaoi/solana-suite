@@ -14,9 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Try = exports.isPromise = exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = void 0;
 const web3_js_1 = require("@solana/web3.js");
-const _1 = require("./");
-const batch_submit_1 = require("./instruction/batch-submit");
 const bs58_1 = __importDefault(require("bs58"));
+const constants_1 = require("./constants");
+const node_1 = require("./node");
+const result_1 = require("./result");
+const batch_submit_1 = require("./instruction/batch-submit");
 require("./types/global");
 /**
  * senTransaction() TransactionInstruction
@@ -76,23 +78,23 @@ String.prototype.toKeypair = function () {
  * @returns string
  */
 String.prototype.toExplorerUrl = function () {
-    const endPointUrl = _1.Node.getConnection().rpcEndpoint;
+    const endPointUrl = node_1.Node.getConnection().rpcEndpoint;
     (0, exports.debugLog)('# toExplorerUrl rpcEndpoint:', endPointUrl);
     let cluster = '';
-    if (endPointUrl === _1.Constants.EndPointUrl.prd) {
-        cluster = _1.Constants.Cluster.prd;
+    if (endPointUrl === constants_1.Constants.EndPointUrl.prd) {
+        cluster = constants_1.Constants.Cluster.prd;
     }
-    else if (endPointUrl === _1.Constants.EndPointUrl.prd2) {
-        cluster = _1.Constants.Cluster.prd;
+    else if (endPointUrl === constants_1.Constants.EndPointUrl.prd2) {
+        cluster = constants_1.Constants.Cluster.prd;
     }
-    else if (endPointUrl === _1.Constants.EndPointUrl.test) {
-        cluster = _1.Constants.Cluster.test;
+    else if (endPointUrl === constants_1.Constants.EndPointUrl.test) {
+        cluster = constants_1.Constants.Cluster.test;
     }
-    else if (endPointUrl === _1.Constants.EndPointUrl.dev) {
-        cluster = _1.Constants.Cluster.dev;
+    else if (endPointUrl === constants_1.Constants.EndPointUrl.dev) {
+        cluster = constants_1.Constants.Cluster.dev;
     }
     else {
-        cluster = _1.Constants.Cluster.dev;
+        cluster = constants_1.Constants.Cluster.dev;
     }
     const address = this.toString();
     try {
@@ -132,7 +134,7 @@ Number.prototype.toLamports = function () {
  * @returns void
  */
 const debugLog = (data1, data2 = '', data3 = '', data4 = '') => {
-    if (_1.Constants.isDebugging || process.env.DEBUG == 'true') {
+    if (constants_1.Constants.isDebugging || process.env.DEBUG == 'true') {
         console.log('[DEBUG]', data1, data2, data3, data4);
     }
 };
@@ -184,17 +186,17 @@ function Try(input) {
     try {
         const v = input();
         if ((0, exports.isPromise)(v)) {
-            return v.then((x) => _1.Result.ok(x), (err) => _1.Result.err(err));
+            return v.then((x) => result_1.Result.ok(x), (err) => result_1.Result.err(err));
         }
         else {
-            return _1.Result.ok(v);
+            return result_1.Result.ok(v);
         }
     }
     catch (e) {
         if (e instanceof Error) {
-            return _1.Result.err(e);
+            return result_1.Result.err(e);
         }
-        return _1.Result.err(Error(e));
+        return result_1.Result.err(Error(e));
     }
 }
 exports.Try = Try;

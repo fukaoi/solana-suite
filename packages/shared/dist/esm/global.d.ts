@@ -1,4 +1,4 @@
-import { Result } from './';
+import { Result } from './result';
 import './types/global';
 /**
  * Display log for solana-suite-config.js

@@ -8,9 +8,9 @@ import {
 
 import { Keypair } from '@solana/web3.js';
 
-import { Node, Constants, ConstantsFunc } from '@solana-suite/shared';
+import { Node, Constants } from '@solana-suite/shared';
 
-import { BundlrSigner, Phantom} from './types/bundlr';
+import { BundlrSigner, Phantom } from './types/bundlr';
 
 export namespace Bundlr {
   const BUNDLR_CONNECT_TIMEOUT = 60000;
@@ -19,7 +19,7 @@ export namespace Bundlr {
     const object = MetaplexFoundation.make(Node.getConnection()).use(
       bundlrStorage({
         address: Constants.BUNDLR_NETWORK_URL,
-        providerUrl: ConstantsFunc.switchCluster(Constants.currentCluster),
+        providerUrl: Constants.switchCluster(Constants.currentCluster),
         timeout: BUNDLR_CONNECT_TIMEOUT,
       })
     );

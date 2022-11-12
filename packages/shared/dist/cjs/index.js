@@ -15,7 +15,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./constants"), exports);
-__exportStar(require("./constants-func"), exports);
 __exportStar(require("./instruction"), exports);
 __exportStar(require("./global"), exports);
 __exportStar(require("./node"), exports);

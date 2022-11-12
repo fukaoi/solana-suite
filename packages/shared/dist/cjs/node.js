@@ -12,37 +12,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Node = void 0;
 const global_1 = require("./global");
 const result_1 = require("./result");
-const constants_func_1 = require("./constants-func");
 const constants_1 = require("./constants");
 const web3_js_1 = require("@solana/web3.js");
-console.log(constants_1.Constants);
 var Node;
 (function (Node) {
-    const options = {
+    Node.options = {
         cluster: '',
         commitment: constants_1.Constants.COMMITMENT,
     };
     Node.getConnection = () => {
-        (0, global_1.debugLog)('# [Before] Node info: ', options.cluster, options.commitment);
+        (0, global_1.debugLog)(`# [Before] cluster:${Node.options.cluster}, commitment:${Node.options.commitment}`);
         // default setting
-        if (!options.cluster) {
-            options.cluster = constants_func_1.ConstantsFunc.switchCluster(constants_1.Constants.currentCluster);
+        if (!Node.options.cluster) {
+            Node.options.cluster = constants_1.Constants.switchCluster(constants_1.Constants.currentCluster);
         }
         // default setting
-        if (!options.commitment) {
-            options.commitment = constants_1.Constants.COMMITMENT;
+        if (!Node.options.commitment) {
+            Node.options.commitment = constants_1.Constants.COMMITMENT;
         }
-        (0, global_1.debugLog)('# [After] Node info: ', options.cluster, options.commitment);
-        return new web3_js_1.Connection(options.cluster, options.commitment);
+        (0, global_1.debugLog)(`# [After] cluster:${Node.options.cluster}, commitment:${Node.options.commitment}`);
+        return new web3_js_1.Connection(Node.options.cluster, Node.options.commitment);
     };
     Node.changeConnection = (param) => {
         if (param.commitment) {
-            options.commitment = param.commitment;
-            (0, global_1.debugLog)('# Node change commitment: ', options.commitment);
+            Node.options.commitment = param.commitment;
+            (0, global_1.debugLog)('# Node change commitment: ', Node.options.commitment);
         }
         if (param.cluster) {
-            options.cluster = constants_func_1.ConstantsFunc.switchCluster(param.cluster);
-            (0, global_1.debugLog)('# Node change cluster: ', options.cluster);
+            Node.options.cluster = constants_1.Constants.switchCluster(param.cluster);
+            (0, global_1.debugLog)('# Node change cluster: ', Node.options.cluster);
         }
     };
     Node.confirmedSig = (signature, commitment = constants_1.Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {
