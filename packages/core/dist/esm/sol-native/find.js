@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Node, Try } from '@solana-suite/shared';
-import { Internals_History } from '../internals/_history';
+import { SolNative as Internals_SolNative } from './is-parsed-instruction';
 export var SolNative;
 (function (SolNative) {
     SolNative.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
@@ -20,7 +20,7 @@ export var SolNative;
                 lamports: 0,
                 owner: owner.toString(),
             };
-            if (Internals_History.isParsedInstruction((_a = res.value) === null || _a === void 0 ? void 0 : _a.data)) {
+            if (Internals_SolNative.isParsedInstruction((_a = res.value) === null || _a === void 0 ? void 0 : _a.data)) {
                 const parsedAccountData = (_b = res.value) === null || _b === void 0 ? void 0 : _b.data;
                 info.owner = (_d = (_c = parsedAccountData.parsed) === null || _c === void 0 ? void 0 : _c.info) === null || _d === void 0 ? void 0 : _d.owner;
             }

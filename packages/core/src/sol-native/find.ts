@@ -1,7 +1,7 @@
 import { ParsedAccountData, PublicKey } from '@solana/web3.js';
 import { Node, Result, Try } from '@solana-suite/shared';
 import { SolNativeOwnerInfo } from '../types/sol-native';
-import { Internals_History } from '../internals/_history';
+import { SolNative as Internals_SolNative } from './is-parsed-instruction';
 
 export namespace SolNative {
   export const findByOwner = async (
@@ -16,7 +16,7 @@ export namespace SolNative {
         owner: owner.toString(),
       };
 
-      if (Internals_History.isParsedInstruction(res.value?.data)) {
+      if (Internals_SolNative.isParsedInstruction(res.value?.data)) {
         const parsedAccountData = res.value?.data as ParsedAccountData;
         info.owner = parsedAccountData.parsed?.info?.owner as string;
       }

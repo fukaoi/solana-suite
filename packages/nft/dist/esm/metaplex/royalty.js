@@ -1,3 +1,4 @@
+//@internal
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.THRESHOLD = 100;

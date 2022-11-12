@@ -1,17 +1,8 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-import { Node } from '@solana-suite/shared';
 import { Filter, } from '../types/history';
+import { SolNative as Internals_SolNative } from './is-parsed-instruction';
 //@internal
-export var Internals_History;
-(function (Internals_History) {
+export var SolNative;
+(function (SolNative) {
     const convertTimestampToDate = (blockTime) => {
         return new Date(blockTime * 1000);
     };
@@ -73,18 +64,7 @@ export var Internals_History;
             return v;
         }
     };
-    const get = (signature) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield Node.getConnection().getParsedTransaction(signature);
-        if (!res) {
-            return {};
-        }
-        return res;
-    });
-    // Parsed transaction instruction, Type Guard
-    Internals_History.isParsedInstruction = (arg) => {
-        return arg !== null && typeof arg === 'object' && 'parsed' in arg;
-    };
-    Internals_History.filterTransactions = (searchKey, transactions, filterOptions, isToken = false, directionFilter) => {
+    SolNative.filterTransactions = (searchKey, transactions, filterOptions, isToken = false, directionFilter) => {
         const hist = [];
         const mappingTokenAccount = [];
         transactions.forEach((tx) => {
@@ -105,7 +85,8 @@ export var Internals_History;
             // set transaction with memo
             const withMemos = [];
             tx.transaction.message.instructions.forEach((v) => {
-                if (Internals_History.isParsedInstruction(v) && v.program === 'spl-memo') {
+                if (Internals_SolNative.isParsedInstruction(v) &&
+                    v.program === 'spl-memo') {
                     withMemos.push({
                         sig: tx.transaction.signatures,
                         memo: v.parsed,
@@ -113,7 +94,7 @@ export var Internals_History;
                 }
             });
             tx.transaction.message.instructions.forEach((instruction) => {
-                if (Internals_History.isParsedInstruction(instruction)) {
+                if (Internals_SolNative.isParsedInstruction(instruction)) {
                     if (isToken && instruction.program !== 'spl-token') {
                         return;
                     }
@@ -133,14 +114,4 @@ export var Internals_History;
         });
         return hist;
     };
-    // @todo: internal
-    Internals_History.getForAddress = (pubkey, limit, before, until) => __awaiter(this, void 0, void 0, function* () {
-        const transactions = yield Node.getConnection().getSignaturesForAddress(pubkey, {
-            limit,
-            before,
-            until,
-        });
-        const signatures = transactions.map((tx) => get(tx.signature));
-        return yield Promise.all(signatures);
-    });
-})(Internals_History || (Internals_History = {}));
+})(SolNative || (SolNative = {}));

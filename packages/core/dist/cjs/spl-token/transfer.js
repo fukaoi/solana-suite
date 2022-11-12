@@ -13,7 +13,7 @@ exports.SplToken = void 0;
 const spl_token_1 = require("@solana/spl-token");
 const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
-const _spl_token_1 = require("../internals/_spl-token");
+const calculate_amount_1 = require("./calculate-amount");
 const associated_account_1 = require("../associated-account");
 var SplToken;
 (function (SplToken) {
@@ -22,7 +22,7 @@ var SplToken;
             !feePayer && (feePayer = signers[0]);
             const sourceToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(mint, owner, feePayer);
             const destToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(mint, dest, feePayer);
-            const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.toPublicKey(), mint, destToken.toPublicKey(), owner, _spl_token_1.Internals_SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+            const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.toPublicKey(), mint, destToken.toPublicKey(), owner, calculate_amount_1.SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
             return new shared_1.Instruction([inst], signers, feePayer);
         }));
     });
@@ -39,12 +39,12 @@ var SplToken;
             });
             // return associated token account
             if (!destToken.inst) {
-                inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, _spl_token_1.Internals_SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+                inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, calculate_amount_1.SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
                 tx.add(inst2);
             }
             else {
                 // return instruction and undecided associated token account
-                inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, _spl_token_1.Internals_SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+                inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, calculate_amount_1.SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
                 tx.add(destToken.inst).add(inst2);
             }
             tx.recentBlockhash = blockhashObj.blockhash;

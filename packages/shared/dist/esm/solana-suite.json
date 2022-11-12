@@ -1,1 +1,10 @@
-{"cluster":{"type":"custom","customUrl":"https://sparkling-ancient-snow.solana-devnet.quiknode.pro/caf0ca64ee225f376da0d05ef893c57a2b6644a7/"},"debugging":false,"nftstorage":{"apikey":""}}
+{
+    "cluster": {
+        "type": "localhost-devnet",
+        "customUrl": ""
+    },
+    "debugging": false,
+    "nftstorage": {
+        "apikey": ""
+    }
+}

@@ -1,18 +1,21 @@
-import { TransactionInstruction, SYSVAR_RENT_PUBKEY, SystemProgram, } from '@solana/web3.js';
-import { struct, u8, blob } from '@solana/buffer-layout';
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Multisig = void 0;
+const web3_js_1 = require("@solana/web3.js");
+const buffer_layout_1 = require("@solana/buffer-layout");
+const spl_token_1 = require("@solana/spl-token");
 // @internal
-export var Internals_Multisig;
-(function (Internals_Multisig) {
+var Multisig;
+(function (Multisig) {
     /* eslint-disable @typescript-eslint/no-explicit-any */
     const createLayoutPubKey = (property) => {
-        return blob(32, property);
+        return (0, buffer_layout_1.blob)(32, property);
     };
     /* eslint-disable @typescript-eslint/no-unsafe-argument */
-    Internals_Multisig.Layout = struct([
-        u8('m'),
-        u8('n'),
-        u8('is_initialized'),
+    Multisig.Layout = (0, buffer_layout_1.struct)([
+        (0, buffer_layout_1.u8)('m'),
+        (0, buffer_layout_1.u8)('n'),
+        (0, buffer_layout_1.u8)('is_initialized'),
         createLayoutPubKey('signer1'),
         createLayoutPubKey('signer2'),
         createLayoutPubKey('signer3'),
@@ -25,16 +28,16 @@ export var Internals_Multisig;
         createLayoutPubKey('signer10'),
         createLayoutPubKey('signer11'),
     ]);
-    Internals_Multisig.account = (newAccount, feePayer, balanceNeeded) => {
-        return SystemProgram.createAccount({
+    Multisig.account = (newAccount, feePayer, balanceNeeded) => {
+        return web3_js_1.SystemProgram.createAccount({
             fromPubkey: feePayer.publicKey,
             newAccountPubkey: newAccount.publicKey,
             lamports: balanceNeeded,
-            space: Internals_Multisig.Layout.span,
-            programId: TOKEN_PROGRAM_ID,
+            space: Multisig.Layout.span,
+            programId: spl_token_1.TOKEN_PROGRAM_ID,
         });
     };
-    Internals_Multisig.multisig = (m, feePayer, signerPubkey) => {
+    Multisig.multisig = (m, feePayer, signerPubkey) => {
         const keys = [
             {
                 pubkey: feePayer.publicKey,
@@ -42,7 +45,7 @@ export var Internals_Multisig;
                 isWritable: true,
             },
             {
-                pubkey: SYSVAR_RENT_PUBKEY,
+                pubkey: web3_js_1.SYSVAR_RENT_PUBKEY,
                 isSigner: false,
                 isWritable: false,
             },
@@ -52,19 +55,19 @@ export var Internals_Multisig;
             isSigner: false,
             isWritable: false,
         }));
-        const dataLayout = struct([
-            u8('instruction'),
-            u8('m'),
+        const dataLayout = (0, buffer_layout_1.struct)([
+            (0, buffer_layout_1.u8)('instruction'),
+            (0, buffer_layout_1.u8)('m'),
         ]);
         const data = Buffer.alloc(dataLayout.span);
         dataLayout.encode({
             instruction: 2,
             m,
         }, data);
-        return new TransactionInstruction({
+        return new web3_js_1.TransactionInstruction({
             keys,
-            programId: TOKEN_PROGRAM_ID,
+            programId: spl_token_1.TOKEN_PROGRAM_ID,
             data,
         });
     };
-})(Internals_Multisig || (Internals_Multisig = {}));
+})(Multisig = exports.Multisig || (exports.Multisig = {}));

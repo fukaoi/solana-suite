@@ -50,7 +50,7 @@ describe('Memo', () => {
       source.toKeypair()
     );
 
-    const inst2 = await SolNative.transfer(
+    const inst2 = SolNative.transfer(
       source.toPublicKey(),
       dest.toPublicKey(),
       [source.toKeypair()],

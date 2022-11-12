@@ -2,7 +2,8 @@ import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { PublicKey } from '@solana/web3.js';
 import { Result, debugLog, Try } from '@solana-suite/shared';
 import { TransferHistory, Filter, DirectionFilter } from '../types/history';
-import { Internals_History } from '../internals/_history';
+import { SolNative as Internals_SolNativeGetByAddress } from '../sol-native/get-by-address';
+import { SolNative as Internals_SolNativeFilterTransaction } from '../sol-native/filter-transaction';
 
 export namespace SplToken {
   export const getHistory = async (
@@ -49,7 +50,7 @@ export namespace SplToken {
       debugLog('# before: ', before);
 
       for (;;) {
-        const transactions = await Internals_History.getForAddress(
+        const transactions = await Internals_SolNativeGetByAddress.getByAddress(
           searchKeyAccount,
           bufferedLimit,
           before
@@ -58,7 +59,7 @@ export namespace SplToken {
           '# getTransactionHistory loop transactions count:',
           transactions.length
         );
-        const res = Internals_History.filterTransactions(
+        const res = Internals_SolNativeFilterTransaction.filterTransactions(
           searchPubkey,
           transactions,
           actionFilter,

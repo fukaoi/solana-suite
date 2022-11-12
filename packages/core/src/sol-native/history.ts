@@ -1,7 +1,8 @@
 import { PublicKey } from '@solana/web3.js';
 import { Result, debugLog, Try } from '@solana-suite/shared';
 import { TransferHistory, Filter, DirectionFilter } from '../types/history';
-import { Internals_History } from '../internals/_history';
+import { SolNative as Internals_SolNativeFilter } from './filter-transaction';
+import { SolNative as Internals_SolNativeGetByAddress } from './get-by-address';
 
 export namespace SolNative {
   export const getHistory = async (
@@ -37,13 +38,13 @@ export namespace SolNative {
       let before;
 
       for (;;) {
-        const transactions = await Internals_History.getForAddress(
+        const transactions = await Internals_SolNativeGetByAddress.getByAddress(
           searchPubkey,
           bufferedLimit,
           before
         );
         debugLog('# getTransactionHistory loop');
-        const res = Internals_History.filterTransactions(
+        const res = Internals_SolNativeFilter.filterTransactions(
           searchPubkey,
           transactions,
           actionFilter,

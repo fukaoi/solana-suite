@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { debugLog, Try } from '@solana-suite/shared';
 import { Filter } from '../types/history';
-import { Internals_History } from '../internals/_history';
+import { SolNative as Internals_SolNativeFilter } from './filter-transaction';
+import { SolNative as Internals_SolNativeGetByAddress } from './get-by-address';
 export var SolNative;
 (function (SolNative) {
     SolNative.getHistory = (searchPubkey, options) => __awaiter(this, void 0, void 0, function* () {
@@ -35,9 +36,9 @@ export var SolNative;
             let hist = [];
             let before;
             for (;;) {
-                const transactions = yield Internals_History.getForAddress(searchPubkey, bufferedLimit, before);
+                const transactions = yield Internals_SolNativeGetByAddress.getByAddress(searchPubkey, bufferedLimit, before);
                 debugLog('# getTransactionHistory loop');
-                const res = Internals_History.filterTransactions(searchPubkey, transactions, actionFilter, false, options.directionFilter);
+                const res = Internals_SolNativeFilter.filterTransactions(searchPubkey, transactions, actionFilter, false, options.directionFilter);
                 hist = hist.concat(res);
                 if (hist.length >= options.limit || res.length === 0) {
                     hist = hist.slice(0, options.limit);

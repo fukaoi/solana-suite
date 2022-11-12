@@ -13,7 +13,8 @@ exports.SplToken = void 0;
 const spl_token_1 = require("@solana/spl-token");
 const shared_1 = require("@solana-suite/shared");
 const history_1 = require("../types/history");
-const _history_1 = require("../internals/_history");
+const get_by_address_1 = require("../sol-native/get-by-address");
+const filter_transaction_1 = require("../sol-native/filter-transaction");
 var SplToken;
 (function (SplToken) {
     SplToken.getHistory = (mint, searchPubkey, options) => __awaiter(this, void 0, void 0, function* () {
@@ -43,9 +44,9 @@ var SplToken;
             (0, shared_1.debugLog)('# bufferedLimit: ', bufferedLimit);
             (0, shared_1.debugLog)('# before: ', before);
             for (;;) {
-                const transactions = yield _history_1.Internals_History.getForAddress(searchKeyAccount, bufferedLimit, before);
+                const transactions = yield get_by_address_1.SolNative.getByAddress(searchKeyAccount, bufferedLimit, before);
                 (0, shared_1.debugLog)('# getTransactionHistory loop transactions count:', transactions.length);
-                const res = _history_1.Internals_History.filterTransactions(searchPubkey, transactions, actionFilter, true, options.directionFilter);
+                const res = filter_transaction_1.SolNative.filterTransactions(searchPubkey, transactions, actionFilter, true, options.directionFilter);
                 hist = hist.concat(res);
                 if (hist.length >= options.limit || res.length === 0) {
                     hist = hist.slice(0, options.limit);

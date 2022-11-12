@@ -9,7 +9,7 @@ import {
   Try,
 } from '@solana-suite/shared';
 
-import { Internals_SplToken } from '../internals/_spl-token';
+import { SplToken as Calculator } from './calculate-amount';
 import { AssociatedAccount } from '../associated-account';
 
 export namespace SplToken {
@@ -42,7 +42,7 @@ export namespace SplToken {
         mint,
         destToken.toPublicKey(),
         owner,
-        Internals_SplToken.calculateAmount(amount, mintDecimal),
+        Calculator.calculateAmount(amount, mintDecimal),
         mintDecimal,
         signers
       );
@@ -61,19 +61,17 @@ export namespace SplToken {
     feePayer: PublicKey
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
-      const sourceToken =
-        await AssociatedAccount.makeOrCreateInstruction(
-          mint,
-          owner,
-          feePayer
-        );
+      const sourceToken = await AssociatedAccount.makeOrCreateInstruction(
+        mint,
+        owner,
+        feePayer
+      );
 
-      const destToken =
-        await AssociatedAccount.makeOrCreateInstruction(
-          mint,
-          dest,
-          feePayer
-        );
+      const destToken = await AssociatedAccount.makeOrCreateInstruction(
+        mint,
+        dest,
+        feePayer
+      );
 
       let inst2;
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
@@ -91,7 +89,7 @@ export namespace SplToken {
           mint,
           destToken.tokenAccount.toPublicKey(),
           owner,
-          Internals_SplToken.calculateAmount(amount, mintDecimal),
+          Calculator.calculateAmount(amount, mintDecimal),
           mintDecimal,
           signers
         );
@@ -103,7 +101,7 @@ export namespace SplToken {
           mint,
           destToken.tokenAccount.toPublicKey(),
           owner,
-          Internals_SplToken.calculateAmount(amount, mintDecimal),
+          Calculator.calculateAmount(amount, mintDecimal),
           mintDecimal,
           signers
         );

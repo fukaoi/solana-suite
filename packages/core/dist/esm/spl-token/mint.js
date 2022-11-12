@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { createMint, createMintToCheckedInstruction } from '@solana/spl-token';
 import { Node, Instruction, Try } from '@solana-suite/shared';
 import { AssociatedAccount } from '../associated-account';
-import { Internals_SplToken } from '../internals/_spl-token';
+import { SplToken as Internals_SplToken } from './calculate-amount';
 export var SplToken;
 (function (SplToken) {
     SplToken.mint = (owner, signers, totalAmount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {

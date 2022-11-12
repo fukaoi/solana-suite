@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metaplex = void 0;
+//@internal
 var Metaplex;
 (function (Metaplex) {
     Metaplex.THRESHOLD = 100;

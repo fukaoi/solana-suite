@@ -13,7 +13,7 @@ exports.SplToken = void 0;
 const spl_token_1 = require("@solana/spl-token");
 const shared_1 = require("@solana-suite/shared");
 const associated_account_1 = require("../associated-account");
-const _spl_token_1 = require("../internals/_spl-token");
+const calculate_amount_1 = require("./calculate-amount");
 var SplToken;
 (function (SplToken) {
     SplToken.mint = (owner, signers, totalAmount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
@@ -22,7 +22,7 @@ var SplToken;
             const connection = shared_1.Node.getConnection();
             const token = yield (0, spl_token_1.createMint)(connection, feePayer, owner, owner, mintDecimal);
             const tokenAssociated = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, owner, feePayer);
-            const inst = (0, spl_token_1.createMintToCheckedInstruction)(token, tokenAssociated.toPublicKey(), owner, _spl_token_1.Internals_SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
+            const inst = (0, spl_token_1.createMintToCheckedInstruction)(token, tokenAssociated.toPublicKey(), owner, calculate_amount_1.SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
             return new shared_1.Instruction([inst], signers, feePayer, token.toBase58());
         }));
     });

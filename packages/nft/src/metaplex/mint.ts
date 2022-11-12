@@ -6,7 +6,7 @@ import {
   InputMetaplexMetadata,
   MetaplexMetaData,
 } from '../types/metaplex/index';
-import { Metaplex as MetaplexRoyalty } from './royalty';
+import { Metaplex as Internals_Royalty } from './royalty';
 import { Bundlr } from '../bundlr';
 import {
   findMasterEditionV2Pda,
@@ -73,7 +73,7 @@ export namespace Metaplex {
     let storage;
     const { filePath, storageType, royalty, options, ...reducedMetadata } =
       input;
-    const sellerFeeBasisPoints = MetaplexRoyalty.convertRoyalty(royalty);
+    const sellerFeeBasisPoints = Internals_Royalty.convertRoyalty(royalty);
     const storageData = initNftStorageMetadata(
       input,
       sellerFeeBasisPoints,

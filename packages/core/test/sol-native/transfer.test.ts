@@ -15,7 +15,7 @@ describe('SolNative', () => {
 
   it('transfer transaction', async () => {
     const solAmount = 0.01;
-    const inst = await SolNative.transfer(
+    const inst = SolNative.transfer(
       source.toPublicKey(),
       dest.toPublicKey(),
       [source.toKeypair()],
@@ -59,7 +59,7 @@ describe('SolNative', () => {
 
     console.log(before);
 
-    const inst = await SolNative.transfer(
+    const inst = SolNative.transfer(
       owner.toPublicKey(),
       dest.toPublicKey(),
       [owner.toKeypair()],

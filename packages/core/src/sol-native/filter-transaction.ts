@@ -4,7 +4,6 @@ import {
   ParsedInstruction,
 } from '@solana/web3.js';
 
-import { Node } from '@solana-suite/shared';
 import {
   TransferHistory,
   DirectionFilter,
@@ -13,8 +12,10 @@ import {
   MappingTokenAccount,
 } from '../types/history';
 
+import { SolNative as Internals_SolNative } from './is-parsed-instruction';
+
 //@internal
-export namespace Internals_History {
+export namespace SolNative {
   const convertTimestampToDate = (blockTime: number): Date => {
     return new Date(blockTime * 1000);
   };
@@ -46,7 +47,7 @@ export namespace Internals_History {
     v.sig = meta.transaction.signatures[0];
     v.innerInstruction = false;
     if (withMemos && withMemos.length > 0) {
-       const finded = withMemos.find(
+      const finded = withMemos.find(
         (obj) => obj.sig === meta.transaction.signatures
       );
       finded && (v.memo = finded.memo);
@@ -103,21 +104,6 @@ export namespace Internals_History {
     }
   };
 
-  const get = async (signature: string): Promise<ParsedTransactionWithMeta> => {
-    const res = await Node.getConnection().getParsedTransaction(signature);
-    if (!res) {
-      return {} as ParsedTransactionWithMeta;
-    }
-    return res;
-  };
-
-  // Parsed transaction instruction, Type Guard
-  export const isParsedInstruction = (
-    arg: unknown
-  ): arg is ParsedInstruction => {
-    return arg !== null && typeof arg === 'object' && 'parsed' in arg;
-  };
-
   export const filterTransactions = (
     searchKey: PublicKey,
     transactions: ParsedTransactionWithMeta[],
@@ -147,7 +133,10 @@ export namespace Internals_History {
       // set transaction with memo
       const withMemos: WithMemo[] = [];
       tx.transaction.message.instructions.forEach((v) => {
-        if (isParsedInstruction(v) && v.program === 'spl-memo') {
+        if (
+          Internals_SolNative.isParsedInstruction(v) &&
+          v.program === 'spl-memo'
+        ) {
           withMemos.push({
             sig: tx.transaction.signatures,
             memo: v.parsed as string,
@@ -156,7 +145,7 @@ export namespace Internals_History {
       });
 
       tx.transaction.message.instructions.forEach((instruction) => {
-        if (isParsedInstruction(instruction)) {
+        if (Internals_SolNative.isParsedInstruction(instruction)) {
           if (isToken && instruction.program !== 'spl-token') {
             return;
           }
@@ -188,25 +177,5 @@ export namespace Internals_History {
       });
     });
     return hist;
-  };
-
-  // @todo: internal
-  export const getForAddress = async (
-    pubkey: PublicKey,
-    limit?: number | undefined,
-    before?: string | undefined,
-    until?: string | undefined
-  ): Promise<ParsedTransactionWithMeta[]> => {
-    const transactions = await Node.getConnection().getSignaturesForAddress(
-      pubkey,
-      {
-        limit,
-        before,
-        until,
-      }
-    );
-
-    const signatures = transactions.map((tx) => get(tx.signature));
-    return await Promise.all(signatures);
   };
 }

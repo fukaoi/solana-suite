@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,16 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { PublicKey } from '@solana/web3.js';
-import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
-//@internal
-export var Internals_SplToken;
-(function (Internals_SplToken) {
-    Internals_SplToken.findAssociatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
-        const address = yield PublicKey.findProgramAddress([owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()], ASSOCIATED_TOKEN_PROGRAM_ID);
-        return address[0];
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Multisig = void 0;
+const shared_1 = require("@solana-suite/shared");
+const index_1 = require("./index");
+var Multisig;
+(function (Multisig) {
+    Multisig.isAddress = (multisig) => __awaiter(this, void 0, void 0, function* () {
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            const info = yield index_1.Multisig.getInfo(multisig);
+            if (info.isErr) {
+                return false;
+            }
+            return true;
+        }));
     });
-    Internals_SplToken.calculateAmount = (amount, mintDecimal) => {
-        return amount * Math.pow(10, mintDecimal);
-    };
-})(Internals_SplToken || (Internals_SplToken = {}));
+})(Multisig = exports.Multisig || (exports.Multisig = {}));

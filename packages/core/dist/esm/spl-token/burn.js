@@ -8,13 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { createBurnCheckedInstruction } from '@solana/spl-token';
+import { PublicKey } from '@solana/web3.js';
 import { Instruction, Try } from '@solana-suite/shared';
-import { Internals_SplToken } from '../internals/_spl-token';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
+import { SplToken as Internals_SplToken } from './calculate-amount';
 export var SplToken;
 (function (SplToken) {
+    const findAssociatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
+        const address = yield PublicKey.findProgramAddress([owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()], ASSOCIATED_TOKEN_PROGRAM_ID);
+        return address[0];
+    });
     SplToken.burn = (mint, owner, signers, burnAmount, tokenDecimals, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            const tokenAccount = yield Internals_SplToken.findAssociatedTokenAddress(mint, owner);
+            const tokenAccount = yield findAssociatedTokenAddress(mint, owner);
             const inst = createBurnCheckedInstruction(tokenAccount, mint, owner, Internals_SplToken.calculateAmount(burnAmount, tokenDecimals), tokenDecimals, signers);
             return new Instruction([inst], signers, feePayer);
         }));

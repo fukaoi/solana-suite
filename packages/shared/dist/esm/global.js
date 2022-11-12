@@ -12,7 +12,7 @@ import bs from 'bs58';
 import { Constants } from './constants';
 import { Node } from './node';
 import { Result } from './result';
-import { Instruction as InstructionBatch } from './instruction/batch-submit';
+import { Instruction as Internals_InstructionBatch } from './instruction/batch-submit';
 import './types/global';
 /**
  * senTransaction() TransactionInstruction
@@ -42,7 +42,7 @@ Array.prototype.submit = function () {
                 }
                 i++;
             }
-            return InstructionBatch.batchSubmit(instructions);
+            return Internals_InstructionBatch.batchSubmit(instructions);
         }));
     });
 };

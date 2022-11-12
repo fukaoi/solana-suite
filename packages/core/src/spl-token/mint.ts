@@ -2,7 +2,7 @@ import { createMint, createMintToCheckedInstruction } from '@solana/spl-token';
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { Node, Result, Instruction, Try } from '@solana-suite/shared';
 import { AssociatedAccount } from '../associated-account';
-import { Internals_SplToken } from '../internals/_spl-token';
+import { SplToken as Internals_SplToken } from './calculate-amount';
 
 export namespace SplToken {
   export const mint = async (

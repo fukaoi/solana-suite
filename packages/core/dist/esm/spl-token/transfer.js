@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { createTransferCheckedInstruction } from '@solana/spl-token';
 import { Transaction } from '@solana/web3.js';
 import { Node, Instruction, PartialSignInstruction, Try, } from '@solana-suite/shared';
-import { Internals_SplToken } from '../internals/_spl-token';
+import { SplToken as Calculator } from './calculate-amount';
 import { AssociatedAccount } from '../associated-account';
 export var SplToken;
 (function (SplToken) {
@@ -19,7 +19,7 @@ export var SplToken;
             !feePayer && (feePayer = signers[0]);
             const sourceToken = yield AssociatedAccount.retryGetOrCreate(mint, owner, feePayer);
             const destToken = yield AssociatedAccount.retryGetOrCreate(mint, dest, feePayer);
-            const inst = createTransferCheckedInstruction(sourceToken.toPublicKey(), mint, destToken.toPublicKey(), owner, Internals_SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+            const inst = createTransferCheckedInstruction(sourceToken.toPublicKey(), mint, destToken.toPublicKey(), owner, Calculator.calculateAmount(amount, mintDecimal), mintDecimal, signers);
             return new Instruction([inst], signers, feePayer);
         }));
     });
@@ -36,12 +36,12 @@ export var SplToken;
             });
             // return associated token account
             if (!destToken.inst) {
-                inst2 = createTransferCheckedInstruction(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, Internals_SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+                inst2 = createTransferCheckedInstruction(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, Calculator.calculateAmount(amount, mintDecimal), mintDecimal, signers);
                 tx.add(inst2);
             }
             else {
                 // return instruction and undecided associated token account
-                inst2 = createTransferCheckedInstruction(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, Internals_SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+                inst2 = createTransferCheckedInstruction(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, Calculator.calculateAmount(amount, mintDecimal), mintDecimal, signers);
                 tx.add(destToken.inst).add(inst2);
             }
             tx.recentBlockhash = blockhashObj.blockhash;
