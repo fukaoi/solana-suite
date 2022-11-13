@@ -10,7 +10,8 @@
     "test:shared": "npm run test:all -w packages/shared",
     "test:nft": "npm run test:all -w packages/nft",
     "test:core": "npm run test:all -w packages/core",
-    "test:phantom": "npm run test:all -w packages/phantom"
+    "test:phantom": "npm run test:all -w packages/phantom",
+    "postinstall": "npm dedupe"
   },
   "workspaces": [
     "packages/shared",

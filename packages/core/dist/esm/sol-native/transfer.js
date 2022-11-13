@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { createWrappedNativeAccount, createMint, createTransferInstruction, createCloseAccountInstruction, } from '@solana/spl-token';
-import { SystemProgram, Transaction, } from '@solana/web3.js';
-import { Node, Instruction, PartialSignInstruction, debugLog, Try, } from '@solana-suite/shared';
+import { SystemProgram, } from '@solana/web3.js';
+import { Node, Instruction, debugLog, Try, } from '@solana-suite/shared';
 import { AssociatedAccount } from '../associated-account';
 export var SolNative;
 (function (SolNative) {
@@ -43,26 +43,4 @@ export var SolNative;
             return new Instruction([inst], signers, feePayer);
         });
     };
-    SolNative.feePayerPartialSignTransfer = (owner, dest, signers, amount, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        return Try(() => __awaiter(this, void 0, void 0, function* () {
-            const blockHashObj = yield Node.getConnection().getLatestBlockhash();
-            const tx = new Transaction({
-                blockhash: blockHashObj.blockhash,
-                lastValidBlockHeight: blockHashObj.lastValidBlockHeight,
-                feePayer,
-            }).add(SystemProgram.transfer({
-                fromPubkey: owner,
-                toPubkey: dest,
-                lamports: parseInt(`${amount.toLamports()}`, RADIX),
-            }));
-            signers.forEach((signer) => {
-                tx.partialSign(signer);
-            });
-            const serializedTx = tx.serialize({
-                requireAllSignatures: false,
-            });
-            const hex = serializedTx.toString('hex');
-            return new PartialSignInstruction(hex);
-        }));
-    });
 })(SolNative || (SolNative = {}));

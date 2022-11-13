@@ -27,7 +27,7 @@ describe('Global', () => {
     assert.isNotEmpty(res);
   });
 
-  it.only('[Mainnet-Beta]Create explorer url', async () => {
+  it('[Mainnet-Beta]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.prd });
     const url = dummySig.toExplorerUrl();
     const res = /mainnet-beta/.test(url);
