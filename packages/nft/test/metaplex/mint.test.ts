@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { Airdrop, KeypairStr } from '@solana-suite/core';
+import { KeypairStr } from '@solana-suite/core';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../randomAsset';
@@ -40,46 +40,6 @@ describe('Metaplex', () => {
         isMutable: true,
       },
       source.toKeypair()
-    );
-
-    (await res.submit()).match(
-      (ok: string) => {
-        console.log('# mint:', res.unwrap().data);
-        console.log('# sig:', ok);
-      },
-      (ng: Error) => assert.fail(ng.message)
-    );
-  });
-
-  it('[Arweave] mint nft with feePayer', async () => {
-    const feePayer = KeypairStr.create();
-    await Airdrop.request(feePayer.toPublicKey());
-    const asset = RandomAsset.get();
-
-    const creator1 = {
-      address: source.toPublicKey(),
-      share: 70,
-      verified: false,
-    };
-
-    const creator2 = {
-      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk'.toPublicKey(),
-      share: 30,
-      verified: false,
-    };
-
-    const res = await Metaplex.mint(
-      {
-        filePath: asset.filePath as string,
-        storageType: 'arweave',
-        name: asset.name!,
-        symbol: asset.symbol!,
-        royalty: 50,
-        creators: [creator1, creator2],
-        isMutable: true,
-      },
-      source.toKeypair(),
-      feePayer.toKeypair()
     );
 
     (await res.submit()).match(
