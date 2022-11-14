@@ -12,7 +12,7 @@ import {
   MappingTokenAccount,
 } from '../types/history';
 
-import { SolNative as Internals_SolNative } from './is-parsed-instruction';
+import { SolNative as _Is } from './is-parsed-instruction';
 
 //@internal
 export namespace SolNative {
@@ -133,10 +133,7 @@ export namespace SolNative {
       // set transaction with memo
       const withMemos: WithMemo[] = [];
       tx.transaction.message.instructions.forEach((v) => {
-        if (
-          Internals_SolNative.isParsedInstruction(v) &&
-          v.program === 'spl-memo'
-        ) {
+        if (_Is.isParsedInstruction(v) && v.program === 'spl-memo') {
           withMemos.push({
             sig: tx.transaction.signatures,
             memo: v.parsed as string,
@@ -145,7 +142,7 @@ export namespace SolNative {
       });
 
       tx.transaction.message.instructions.forEach((instruction) => {
-        if (Internals_SolNative.isParsedInstruction(instruction)) {
+        if (_Is.isParsedInstruction(instruction)) {
           if (isToken && instruction.program !== 'spl-token') {
             return;
           }

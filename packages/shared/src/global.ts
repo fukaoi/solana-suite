@@ -4,8 +4,8 @@ import bs from 'bs58';
 import { Constants } from './constants';
 import { Node } from './node';
 import { Result } from './result';
-import { Instruction as Internals_Instruction } from './instruction';
-import { Instruction as Internals_InstructionBatch } from './instruction/batch-submit';
+import { Instruction as _Instruction } from './instruction';
+import { Instruction as _Batch } from './instruction/batch-submit';
 import './types/global';
 
 /**
@@ -18,7 +18,7 @@ import './types/global';
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* @ts-ignore */
 Array.prototype.submit = async function () {
-  const instructions: Internals_Instruction[] = [];
+  const instructions: _Instruction[] = [];
   // dont use forEach
   // It is not possible to stop the process by RETURN in the middle of the process.
   return Try(async () => {
@@ -28,13 +28,13 @@ Array.prototype.submit = async function () {
         const errorMess: string = obj.error.message as string;
         throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
       } else if (obj.isOk) {
-        instructions.push(obj.value as Internals_Instruction);
+        instructions.push(obj.value as _Instruction);
       } else {
-        instructions.push(obj as Internals_Instruction);
+        instructions.push(obj as _Instruction);
       }
       i++;
     }
-    return Internals_InstructionBatch.batchSubmit(instructions);
+    return _Batch.batchSubmit(instructions);
   });
 };
 

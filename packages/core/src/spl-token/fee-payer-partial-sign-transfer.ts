@@ -8,7 +8,7 @@ import {
   Try,
 } from '@solana-suite/shared';
 
-import { SplToken as Calculator } from './calculate-amount';
+import { SplToken as _Calculator } from './calculate-amount';
 import { AssociatedAccount } from '../associated-account';
 
 export namespace SplToken {
@@ -50,7 +50,7 @@ export namespace SplToken {
           mint,
           destToken.tokenAccount.toPublicKey(),
           owner,
-          Calculator.calculateAmount(amount, mintDecimal),
+          _Calculator.calculateAmount(amount, mintDecimal),
           mintDecimal,
           signers
         );
@@ -62,7 +62,7 @@ export namespace SplToken {
           mint,
           destToken.tokenAccount.toPublicKey(),
           owner,
-          Calculator.calculateAmount(amount, mintDecimal),
+          _Calculator.calculateAmount(amount, mintDecimal),
           mintDecimal,
           signers
         );

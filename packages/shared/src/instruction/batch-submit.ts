@@ -7,13 +7,11 @@ import {
 
 import { Node } from '../';
 import { MAX_RETRIES } from './define';
-import { Instruction as InstructionSubmit } from './index';
+import { Instruction as _Index } from './index';
 
 //@internals
 export class Instruction {
-  static batchSubmit = async (
-    arr: InstructionSubmit[]
-  ): Promise<TransactionSignature> => {
+  static batchSubmit = async (arr: _Index[]): Promise<TransactionSignature> => {
     let i = 0;
     for (const a of arr) {
       if (!a.instructions && !a.signers) {

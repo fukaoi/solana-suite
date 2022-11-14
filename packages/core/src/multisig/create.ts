@@ -1,6 +1,6 @@
 import { Node, Result, Instruction, Try } from '@solana-suite/shared';
 import { PublicKey, Keypair } from '@solana/web3.js';
-import { Multisig as MultisigInstruction } from './instruction';
+import { Multisig as _Instruction } from './instruction';
 
 export namespace Multisig {
   export const create = async (
@@ -16,16 +16,16 @@ export namespace Multisig {
       const account = Keypair.generate();
       const connection = Node.getConnection();
       const balanceNeeded = await connection.getMinimumBalanceForRentExemption(
-        MultisigInstruction.Layout.span
+        _Instruction.Layout.span
       );
 
-      const inst1 = MultisigInstruction.account(
+      const inst1 = _Instruction.account(
         account,
         feePayer,
         balanceNeeded
       );
 
-      const inst2 = MultisigInstruction.multisig(m, account, signerPubkey);
+      const inst2 = _Instruction.multisig(m, account, signerPubkey);
 
       return new Instruction(
         [inst1, inst2],

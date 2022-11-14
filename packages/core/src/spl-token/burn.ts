@@ -5,7 +5,7 @@ import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { SplToken as Internals_SplToken} from './calculate-amount';
+import { SplToken as _Calculate} from './calculate-amount';
 
 export namespace SplToken {
   const findAssociatedTokenAddress = async (
@@ -37,7 +37,7 @@ export namespace SplToken {
         tokenAccount,
         mint,
         owner,
-        Internals_SplToken.calculateAmount(burnAmount, tokenDecimals),
+        _Calculate.calculateAmount(burnAmount, tokenDecimals),
         tokenDecimals,
         signers
       );
