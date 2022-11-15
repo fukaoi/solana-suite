@@ -1,9 +1,15 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import '../src/global';
-import { sleep, isNode, isBrowser, debugLog,} from '../src/global';
-import { Constants } from '../src/constants';
-import { Node } from '../src/node';
+import {
+  sleep,
+  isNode,
+  isBrowser,
+  debugLog,
+  Try,
+  Node,
+  Constants,
+  isPromise,
+} from '../src';
 import { JSDOM } from 'jsdom';
 
 const dummyPubkey = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
@@ -19,42 +25,38 @@ describe('Global', () => {
   it('Create explorer url by address', async () => {
     const res = dummyPubkey.toExplorerUrl();
     assert.isNotEmpty(res);
-    console.log(res);
   });
 
   it('[Mainnet-Beta]Create explorer url', async () => {
-    Node.changeConnection({cluster: Constants.Cluster.prd});
+    Node.changeConnection({ cluster: Constants.Cluster.prd });
     const url = dummySig.toExplorerUrl();
-    console.log(url);
     const res = /mainnet-beta/.test(url);
     assert.isTrue(res);
   });
 
   it('[Mainnet-Beta, serum]Create explorer url', async () => {
-    Node.changeConnection({cluster: Constants.Cluster.prd2});
+    Node.changeConnection({ cluster: Constants.Cluster.prd2 });
     const url = dummySig.toExplorerUrl();
-    console.log(url);
     const res = /mainnet-beta/.test(url);
     assert.isTrue(res);
   });
 
   it('[Testnet]Create explorer url', async () => {
-    Node.changeConnection({cluster: Constants.Cluster.test});
+    Node.changeConnection({ cluster: Constants.Cluster.test });
     const url = dummySig.toExplorerUrl();
-    console.log(url);
     const res = /testnet/.test(url);
     assert.isTrue(res);
   });
 
   it('[Devnet]Create explorer url', async () => {
-    Node.changeConnection({cluster: Constants.Cluster.dev});
+    Node.changeConnection({ cluster: Constants.Cluster.dev });
     const url = dummySig.toExplorerUrl();
     const res = /devnet/.test(url);
     assert.isTrue(res);
   });
 
   it('[Devnet, localhost]Create explorer url', async () => {
-    Node.changeConnection({cluster: Constants.Cluster.localhost});
+    Node.changeConnection({ cluster: Constants.Cluster.localhost });
     const url = dummySig.toExplorerUrl();
     const res = /devnet/.test(url);
     assert.isTrue(res);
@@ -93,5 +95,81 @@ describe('Global', () => {
     const sol = 0.0001;
     const res = sol.toLamports();
     assert.equal(res, 100000);
+  });
+
+  it('promise isPromise()', () => {
+    const mess = 'called promise';
+    const promise = () =>
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(mess);
+        }, 2000);
+      });
+    const res = isPromise(promise());
+    assert.isTrue(res);
+  });
+
+  it('object isPromise()', () => {
+    const res = isPromise({ test: 10 });
+    assert.isFalse(res);
+  });
+
+  it('throw isPromise()', () => {
+    const res = isPromise(() => {
+      throw Error('throw');
+    });
+    assert.isFalse(res);
+  });
+
+  it('Result in try()', () => {
+    const mess = 'result';
+    const res = Try(() => {
+      return mess;
+    });
+    res.isOk && assert.equal(res.value, mess);
+  });
+
+  it('Call function that return Result type in try()', () => {
+    const fn = () => {
+      return Try(() => {
+        throw Error('return Result');
+      });
+    };
+
+    const res2 = Try(() => {
+      const res = fn();
+      console.log('res: ', res);
+    });
+    console.log(res2);
+  });
+
+  it('Catch error in Try()', async () => {
+    const errorMess = 'Dummy error';
+    const res = await Try(() => {
+      throw Error(errorMess);
+    });
+    res.isErr && assert.equal(res.error.message, errorMess);
+  });
+
+  it('Catch string in Try()', async () => {
+    const errorMess2 = 'Dummy error2';
+    const res2 = await Try(() => {
+      throw errorMess2;
+    });
+    res2.isErr && assert.equal(res2.error.message, errorMess2);
+  });
+
+  it('Promise Try()', async () => {
+    const mess = 'called promise';
+    const promise = () =>
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(mess);
+        }, 2000);
+      });
+    const res = await Try(async () => {
+      return await promise();
+    });
+    res.isOk && assert.equal(res.value, mess);
   });
 });

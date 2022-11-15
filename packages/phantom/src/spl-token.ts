@@ -14,7 +14,7 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 
-import { Node, Result } from '@solana-suite/shared';
+import { Node, Result, Try } from '@solana-suite/shared';
 
 import { AssociatedAccount } from '@solana-suite/core';
 import { InitializeMint, Phantom } from './types';
@@ -58,54 +58,52 @@ export namespace SplTokenPhantom {
     mintDecimal: number,
     phantom: Phantom
   ): Promise<Result<string, Error>> => {
-    Node.changeConnection({ cluster });
-    const connection = Node.getConnection();
-    const tx = new Transaction();
+    return Try(async () => {
+      Node.changeConnection({ cluster });
+      const connection = Node.getConnection();
+      const tx = new Transaction();
 
-    const builder = await createTokenBuilder(owner, mintDecimal);
-    const data = await AssociatedAccount.makeOrCreateInstruction(
-      builder.mint.publicKey,
-      owner
-    );
-    tx.add(data.unwrap().inst as TransactionInstruction);
-    const txData = {
-      tokenAccount: data.unwrap().tokenAccount.toPublicKey(),
-      mint: builder.mint,
-      tx: builder.tx,
-    };
+      const builder = await createTokenBuilder(owner, mintDecimal);
+      const data = await AssociatedAccount.makeOrCreateInstruction(
+        builder.mint.publicKey,
+        owner
+      );
+      tx.add(data.inst as TransactionInstruction);
+      const txData = {
+        tokenAccount: data.tokenAccount.toPublicKey(),
+        mint: builder.mint,
+        tx: builder.tx,
+      };
 
-    const transaction = tx.add(
-      createMintToCheckedInstruction(
-        txData.mint.publicKey,
-        txData.tokenAccount,
-        owner,
-        totalAmount,
-        mintDecimal,
-        [],
-        TOKEN_PROGRAM_ID
-      )
-    );
+      const transaction = tx.add(
+        createMintToCheckedInstruction(
+          txData.mint.publicKey,
+          txData.tokenAccount,
+          owner,
+          totalAmount,
+          mintDecimal,
+          [],
+          TOKEN_PROGRAM_ID
+        )
+      );
 
-    transaction.feePayer = owner;
-    const blockhashObj = await connection.getLatestBlockhashAndContext();
-    transaction.recentBlockhash = blockhashObj.value.blockhash;
+      transaction.feePayer = owner;
+      const blockhashObj = await connection.getLatestBlockhashAndContext();
+      transaction.recentBlockhash = blockhashObj.value.blockhash;
 
-    transaction.partialSign(builder.mint);
-    const signed = await phantom.signAllTransactions([txData.tx, transaction]);
+      transaction.partialSign(builder.mint);
+      const signed = await phantom.signAllTransactions([
+        txData.tx,
+        transaction,
+      ]);
 
-    // todo: refactoring
-    for (const sign of signed) {
-      const sig = await connection
-        .sendRawTransaction(sign.serialize())
-        .then(Result.ok)
-        .catch(Result.err);
-      if (sig.isErr) {
-        return Result.err(sig.error);
+      // todo: refactoring
+      for (const sign of signed) {
+        const sig = await connection.sendRawTransaction(sign.serialize());
+        await Node.confirmedSig(sig);
       }
-      await Node.confirmedSig(sig.unwrap());
-    }
-
-    return Result.ok(txData.mint.toString());
+      return txData.mint.toString();
+    });
   };
 
   // select 'add token'
@@ -117,51 +115,40 @@ export namespace SplTokenPhantom {
     mintDecimal: number,
     phantom: Phantom
   ): Promise<Result<string, Error>> => {
-    Node.changeConnection({ cluster });
-    const connection = Node.getConnection();
-    const tx = new Transaction();
+    return Try(async () => {
+      Node.changeConnection({ cluster });
+      const connection = Node.getConnection();
+      const transaction = new Transaction();
 
-    const transaction = (
-      await AssociatedAccount.makeOrCreateInstruction(tokenKey, owner)
-    ).unwrap(
-      (ok) => {
-        tx.add(ok.inst as TransactionInstruction);
-        return tx.add(
-          createMintToCheckedInstruction(
-            tokenKey,
-            ok.tokenAccount.toPublicKey(),
-            owner,
-            totalAmount,
-            mintDecimal,
-            [],
-            TOKEN_PROGRAM_ID
-          )
-        );
-      },
-      (err) => err
-    );
+      const makeInstruction = await AssociatedAccount.makeOrCreateInstruction(
+        tokenKey,
+        owner
+      );
+      transaction.add(makeInstruction.inst as TransactionInstruction);
+      transaction.add(
+        createMintToCheckedInstruction(
+          tokenKey,
+          makeInstruction.tokenAccount.toPublicKey(),
+          owner,
+          totalAmount,
+          mintDecimal,
+          [],
+          TOKEN_PROGRAM_ID
+        )
+      );
 
-    if ('message' in transaction) {
-      return Result.err(transaction);
-    }
+      transaction.feePayer = owner;
+      const blockhashObj = await connection.getLatestBlockhashAndContext();
+      transaction.recentBlockhash = blockhashObj.value.blockhash;
 
-    transaction.feePayer = owner;
-    const blockhashObj = await connection.getLatestBlockhashAndContext();
-    transaction.recentBlockhash = blockhashObj.value.blockhash;
+      const signed = await phantom.signAllTransactions([transaction]);
 
-    const signed = await phantom.signAllTransactions([transaction]);
-
-    // todo: refactoring
-    for (const sign of signed) {
-      const sig = await connection
-        .sendRawTransaction(sign.serialize())
-        .then(Result.ok)
-        .catch(Result.err);
-      if (sig.isErr) {
-        return Result.err(sig.error);
+      // todo: refactoring
+      for (const sign of signed) {
+        const sig = await connection.sendRawTransaction(sign.serialize());
+        await Node.confirmedSig(sig);
       }
-      await Node.confirmedSig(sig.unwrap());
-    }
-    return Result.ok(tokenKey.toBase58());
+      return tokenKey.toBase58();
+    });
   };
 }

@@ -1,5 +1,4 @@
 import { Commitment, PublicKey } from '@solana/web3.js';
-import './global';
 export declare namespace Constants {
     const currentCluster: string;
     const customUrl: string;
@@ -21,12 +20,8 @@ export declare namespace Constants {
         test = "https://api.testnet.solana.com",
         localhost = "http://api.devnet.solana.com"
     }
-}
-export declare namespace ConstantsFunc {
     const switchCluster: (env: string | undefined, customUrl?: string) => string;
     const switchBundlr: (env: string) => string;
-}
-export declare namespace Constants {
     const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;
     const MEMO_PROGRAM_ID: PublicKey;
     const METAPLEX_PROGRAM_ID: PublicKey;

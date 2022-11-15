@@ -5,16 +5,13 @@
   "scripts": {
     "clean": "npm run clean -ws && rm -rf packages/shared/node_modules/ && rm -rf packages/core/node_modules/ && rm -rf  packages/nft/node_modules/ && rm -rf  packages/phantom/node_modules/",
     "compile": "npm run compile -ws && npm run compile:esm -ws",
-    "lint:all": "npm run lint:core && npm run lint:nft && npm run lint:shared && npm run lint:phantom",
-    "lint:core": "npx eslint --fix packages/core/src",
-    "lint:nft": "npx eslint --fix packages/nft/src",
-    "lint:shared": "npx eslint --fix packages/shared/src",
-    "lint:phantom": "npx eslint --fix packages/phantom/src",
+    "lint": "npx eslint --fix packages/core/src && npx eslint --fix packages/shared/src && npx eslint --fix packages/nft/src && npx eslint --fix packages/phantom/src",
     "test:all": "npm run test:shared && npm run test:nft && npm run test:core && npm run test:phantom",
     "test:shared": "npm run test:all -w packages/shared",
     "test:nft": "npm run test:all -w packages/nft",
     "test:core": "npm run test:all -w packages/core",
-    "test:phantom": "npm run test:all -w packages/phantom"
+    "test:phantom": "npm run test:all -w packages/phantom",
+    "postinstall": "npm dedupe"
   },
   "workspaces": [
     "packages/shared",

@@ -6,7 +6,7 @@ import { KeypairStr, SolNative } from '../src/';
 
 let source: KeypairStr;
 
-describe('Airdrop', () => {
+describe.skip('Airdrop', () => {
   before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;

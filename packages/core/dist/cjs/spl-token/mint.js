@@ -13,24 +13,17 @@ exports.SplToken = void 0;
 const spl_token_1 = require("@solana/spl-token");
 const shared_1 = require("@solana-suite/shared");
 const associated_account_1 = require("../associated-account");
-const _spl_token_1 = require("../internals/_spl-token");
+const calculate_amount_1 = require("./calculate-amount");
 var SplToken;
 (function (SplToken) {
     SplToken.mint = (owner, signers, totalAmount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        !feePayer && (feePayer = signers[0]);
-        const connection = shared_1.Node.getConnection();
-        const tokenRes = yield (0, spl_token_1.createMint)(connection, feePayer, owner, owner, mintDecimal)
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (tokenRes.isErr) {
-            return shared_1.Result.err(tokenRes.error);
-        }
-        const token = tokenRes.value;
-        const tokenAssociated = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, owner, feePayer);
-        if (tokenAssociated.isErr) {
-            return shared_1.Result.err(tokenAssociated.error);
-        }
-        const inst = (0, spl_token_1.createMintToCheckedInstruction)(token, tokenAssociated.value.toPublicKey(), owner, _spl_token_1.Internals_SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
-        return shared_1.Result.ok(new shared_1.Instruction([inst], signers, feePayer, token.toBase58()));
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            !feePayer && (feePayer = signers[0]);
+            const connection = shared_1.Node.getConnection();
+            const token = yield (0, spl_token_1.createMint)(connection, feePayer, owner, owner, mintDecimal);
+            const tokenAssociated = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, owner, feePayer);
+            const inst = (0, spl_token_1.createMintToCheckedInstruction)(token, tokenAssociated.toPublicKey(), owner, calculate_amount_1.SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
+            return new shared_1.Instruction([inst], signers, feePayer, token.toBase58());
+        }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));

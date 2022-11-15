@@ -1,4 +1,7 @@
 import { Transaction, TransactionSignature, SendOptions, PublicKey } from '@solana/web3.js';
+export declare type connectOption = {
+    onlyIfTrusted: false;
+};
 export declare type Phantom = {
     isPhantom?: boolean;
     publicKey: PublicKey;
@@ -9,7 +12,9 @@ export declare type Phantom = {
         signature: TransactionSignature;
     }>;
     signMessage(message: Uint8Array): Promise<Uint8Array>;
-    connect(): Promise<void>;
+    connect(arg0: connectOption): Promise<{
+        publicKey: Uint16Array;
+    }>;
     disconnect(): Promise<void>;
     _handleDisconnect(...args: unknown[]): unknown;
 };

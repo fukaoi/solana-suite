@@ -1,7 +1,6 @@
 import { Currency, MetaplexFileContent } from '@metaplex-foundation/js';
 import { Result } from '@solana-suite/shared';
 import { NftStorageMetadata } from '../types/storage';
-import { ValidatorError } from '../validator';
 import { BundlrSigner } from '../types';
 export interface MetaplexFileOptions {
     readonly displayName: string;
@@ -19,5 +18,5 @@ export declare namespace StorageArweave {
         currency: Currency;
     }, Error>>;
     const uploadContent: (filePath: MetaplexFileContent, feePayer: BundlrSigner, fileOptions?: MetaplexFileOptions) => Promise<Result<string, Error>>;
-    const uploadMetadata: (metadata: NftStorageMetadata, feePayer: BundlrSigner) => Promise<Result<string, Error | ValidatorError>>;
+    const uploadMetadata: (metadata: NftStorageMetadata, feePayer: BundlrSigner) => Promise<Result<string, Error>>;
 }

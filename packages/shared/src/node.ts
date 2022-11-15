@@ -1,4 +1,6 @@
-import { debugLog, Constants, ConstantsFunc, Result } from './';
+import { debugLog } from './global';
+import { Result } from './result';
+import { Constants } from './constants';
 
 import {
   Connection,
@@ -8,16 +10,19 @@ import {
 } from '@solana/web3.js';
 
 export namespace Node {
-  const options = {
+  export const options = {
     cluster: '',
     commitment: Constants.COMMITMENT,
   };
+
   export const getConnection = (): Connection => {
-    debugLog('# [Before] Node info: ', options.cluster, options.commitment);
+    debugLog(
+      `# [Before] cluster:${options.cluster}, commitment:${options.commitment}`
+    );
 
     // default setting
     if (!options.cluster) {
-      options.cluster = ConstantsFunc.switchCluster(Constants.currentCluster);
+      options.cluster = Constants.switchCluster(Constants.currentCluster);
     }
 
     // default setting
@@ -25,13 +30,15 @@ export namespace Node {
       options.commitment = Constants.COMMITMENT;
     }
 
-    debugLog('# [After] Node info: ', options.cluster, options.commitment);
+    debugLog(
+      `# [After] cluster:${options.cluster}, commitment:${options.commitment}`
+    );
 
     return new Connection(options.cluster, options.commitment);
   };
 
   export const changeConnection = (param: {
-    cluster?: Constants.Cluster | string;
+    cluster?: string;
     commitment?: Commitment;
   }): void => {
     if (param.commitment) {
@@ -40,7 +47,7 @@ export namespace Node {
     }
 
     if (param.cluster) {
-      options.cluster = ConstantsFunc.switchCluster(param.cluster);
+      options.cluster = Constants.switchCluster(param.cluster);
       debugLog('# Node change cluster: ', options.cluster);
     }
   };

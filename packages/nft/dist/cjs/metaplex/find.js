@@ -15,31 +15,28 @@ const bundlr_1 = require("../bundlr");
 var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
-        const allData = yield bundlr_1.Bundlr.make()
-            .nfts()
-            .findAllByOwner({ owner })
-            .run()
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (allData.isErr) {
-            return shared_1.Result.err(allData.error);
-        }
-        const res = allData.unwrap().map((d) => {
-            return {
-                mint: d.mintAddress.toString(),
-                updateAuthority: d.updateAuthorityAddress.toString(),
-                royalty: d.sellerFeeBasisPoints,
-                name: d.name,
-                symbol: d.symbol,
-                uri: d.uri,
-                isMutable: d.isMutable,
-                primarySaleHappened: d.primarySaleHappened,
-                creators: d.creators,
-                editionNonce: d.editionNonce,
-                collection: d.collection,
-                uses: d.uses,
-            };
-        });
-        return shared_1.Result.ok(res);
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            const allData = yield bundlr_1.Bundlr.make()
+                .nfts()
+                .findAllByOwner({ owner })
+                .run();
+            const res = allData.map(d => {
+                return {
+                    mint: d.mintAddress.toString(),
+                    updateAuthority: d.updateAuthorityAddress.toString(),
+                    royalty: d.sellerFeeBasisPoints,
+                    name: d.name,
+                    symbol: d.symbol,
+                    uri: d.uri,
+                    isMutable: d.isMutable,
+                    primarySaleHappened: d.primarySaleHappened,
+                    creators: d.creators,
+                    editionNonce: d.editionNonce,
+                    collection: d.collection,
+                    uses: d.uses,
+                };
+            });
+            return res;
+        }));
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));

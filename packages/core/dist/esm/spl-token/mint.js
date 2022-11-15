@@ -8,26 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { createMint, createMintToCheckedInstruction } from '@solana/spl-token';
-import { Node, Result, Instruction } from '@solana-suite/shared';
+import { Node, Instruction, Try } from '@solana-suite/shared';
 import { AssociatedAccount } from '../associated-account';
-import { Internals_SplToken } from '../internals/_spl-token';
+import { SplToken as Internals_SplToken } from './calculate-amount';
 export var SplToken;
 (function (SplToken) {
     SplToken.mint = (owner, signers, totalAmount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        !feePayer && (feePayer = signers[0]);
-        const connection = Node.getConnection();
-        const tokenRes = yield createMint(connection, feePayer, owner, owner, mintDecimal)
-            .then(Result.ok)
-            .catch(Result.err);
-        if (tokenRes.isErr) {
-            return Result.err(tokenRes.error);
-        }
-        const token = tokenRes.value;
-        const tokenAssociated = yield AssociatedAccount.retryGetOrCreate(token, owner, feePayer);
-        if (tokenAssociated.isErr) {
-            return Result.err(tokenAssociated.error);
-        }
-        const inst = createMintToCheckedInstruction(token, tokenAssociated.value.toPublicKey(), owner, Internals_SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
-        return Result.ok(new Instruction([inst], signers, feePayer, token.toBase58()));
+        return Try(() => __awaiter(this, void 0, void 0, function* () {
+            !feePayer && (feePayer = signers[0]);
+            const connection = Node.getConnection();
+            const token = yield createMint(connection, feePayer, owner, owner, mintDecimal);
+            const tokenAssociated = yield AssociatedAccount.retryGetOrCreate(token, owner, feePayer);
+            const inst = createMintToCheckedInstruction(token, tokenAssociated.toPublicKey(), owner, Internals_SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
+            return new Instruction([inst], signers, feePayer, token.toBase58());
+        }));
     });
 })(SplToken || (SplToken = {}));

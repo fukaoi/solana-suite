@@ -8,73 +8,76 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { toMetaplexFile, } from '@metaplex-foundation/js';
-import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
+import { isNode, isBrowser, debugLog, Try } from '@solana-suite/shared';
 import { Bundlr } from '../bundlr';
 import { Validator } from '../validator';
 export var StorageArweave;
 (function (StorageArweave) {
     StorageArweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        let buffer;
-        if (isNode()) {
-            const filepath = filePath;
-            buffer = (yield import('fs')).readFileSync(filepath);
-        }
-        else if (isBrowser()) {
-            const filepath = filePath;
-            buffer = toMetaplexFile(filepath, '').buffer;
-        }
-        else {
-            return Result.err(Error('Supported environment: only Node.js and Browser js'));
-        }
-        const res = yield Bundlr.useStorage(feePayer).getUploadPrice(buffer.length);
-        debugLog('# buffer length, price', buffer.length, parseInt(res.basisPoints).toSol());
-        return Result.ok({
-            price: parseInt(res.basisPoints).toSol(),
-            currency: res.currency,
-        });
+        return Try(() => __awaiter(this, void 0, void 0, function* () {
+            let buffer;
+            if (isNode()) {
+                const filepath = filePath;
+                buffer = (yield import('fs')).readFileSync(filepath);
+            }
+            else if (isBrowser()) {
+                const filepath = filePath;
+                buffer = toMetaplexFile(filepath, '').buffer;
+            }
+            else {
+                throw Error('Supported environment: only Node.js and Browser js');
+            }
+            const res = yield Bundlr.useStorage(feePayer).getUploadPrice(buffer.length);
+            const basisPoints = res.basisPoints;
+            debugLog('# buffer length, price', buffer.length, parseInt(basisPoints).toSol());
+            return {
+                price: parseInt(basisPoints).toSol(),
+                currency: res.currency,
+            };
+        }));
     });
     StorageArweave.uploadContent = (filePath, feePayer, fileOptions // only arweave, not nft-storage
     ) => __awaiter(this, void 0, void 0, function* () {
-        debugLog('# upload content: ', filePath);
-        let file;
-        if (isNode()) {
-            const filepath = filePath;
-            const buffer = (yield import('fs')).readFileSync(filepath);
-            if (fileOptions) {
-                file = toMetaplexFile(buffer, filepath, fileOptions);
+        return Try(() => __awaiter(this, void 0, void 0, function* () {
+            debugLog('# upload content: ', filePath);
+            let file;
+            if (isNode()) {
+                const filepath = filePath;
+                const buffer = (yield import('fs')).readFileSync(filepath);
+                if (fileOptions) {
+                    file = toMetaplexFile(buffer, filepath, fileOptions);
+                }
+                else {
+                    file = toMetaplexFile(buffer, filepath);
+                }
+            }
+            else if (isBrowser()) {
+                const filepath = filePath;
+                if (fileOptions) {
+                    file = toMetaplexFile(filepath, '', fileOptions);
+                }
+                else {
+                    file = toMetaplexFile(filepath, '');
+                }
             }
             else {
-                file = toMetaplexFile(buffer, filepath);
+                throw Error('Supported environment: only Node.js and Browser js');
             }
-        }
-        else if (isBrowser()) {
-            const filepath = filePath;
-            if (fileOptions) {
-                file = toMetaplexFile(filepath, '', fileOptions);
-            }
-            else {
-                file = toMetaplexFile(filepath, '');
-            }
-        }
-        else {
-            return Result.err(Error('Supported environment: only Node.js and Browser js'));
-        }
-        return Bundlr.useStorage(feePayer)
-            .upload(file)
-            .then(Result.ok)
-            .catch(Result.err);
+            return Bundlr.useStorage(feePayer).upload(file);
+        }));
     });
     StorageArweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        debugLog('# upload meta data: ', metadata);
-        const valid = Validator.checkAll(metadata);
-        if (valid.isErr) {
-            return valid;
-        }
-        return Bundlr.make(feePayer)
-            .nfts()
-            .uploadMetadata(metadata)
-            .run()
-            .then((res) => Result.ok(res.uri))
-            .catch(Result.err);
+        return Try(() => __awaiter(this, void 0, void 0, function* () {
+            debugLog('# upload meta data: ', metadata);
+            const valid = Validator.checkAll(metadata);
+            if (valid.isErr) {
+                throw valid.error;
+            }
+            const uploaded = yield Bundlr.make(feePayer)
+                .nfts()
+                .uploadMetadata(metadata)
+                .run();
+            return uploaded.uri;
+        }));
     });
 })(StorageArweave || (StorageArweave = {}));

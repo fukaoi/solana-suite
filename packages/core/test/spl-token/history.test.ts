@@ -3,12 +3,13 @@ import { assert } from 'chai';
 import { SplToken } from '../../src/';
 import { DirectionFilter } from '../../src/types/history';
 
-describe('SplToken', () => {
+describe.skip('SplToken', () => {
   it('Get token transfer history by owner address', async () => {
-    const mint = '9v7HRkw3Fdt3Ee45z4Y9Mn9jzakHBQmSRZudPJGjbruY'.toPublicKey();
+    const mint = '6yiSjqsmmW48zJ6bM2Fb6jHHebHRfDzXoYRV1f1nt3JX'.toPublicKey();
     const searchAddress =
-      'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPublicKey();
+      '8g66KBwriunG4PsKePYZaxd88dW3WKaryqtfpLqrijcV'.toPublicKey();
     const res = await SplToken.getHistory(mint, searchAddress);
+    console.log(res);
     assert.isTrue(res.isOk);
     assert.isTrue(res.unwrap().length > 0);
     res.unwrap().forEach((v) => {
@@ -20,9 +21,9 @@ describe('SplToken', () => {
   });
 
   it('Get token transfer history with transfer source filter', async () => {
-    const mint = '9v7HRkw3Fdt3Ee45z4Y9Mn9jzakHBQmSRZudPJGjbruY'.toPublicKey();
+    const mint = '6yiSjqsmmW48zJ6bM2Fb6jHHebHRfDzXoYRV1f1nt3JX'.toPublicKey();
     const searchAddress =
-      'Gd5ThBjFzEbjfbJFGqwmBjDXR9grpAdqzb2L51viTqYV'.toPublicKey();
+      '8g66KBwriunG4PsKePYZaxd88dW3WKaryqtfpLqrijcV'.toPublicKey();
     const res = await SplToken.getHistory(mint, searchAddress);
     assert.isTrue(res.isOk);
     assert.isTrue(res.unwrap().length > 0);

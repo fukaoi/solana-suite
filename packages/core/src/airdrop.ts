@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
-import { Node, Result, debugLog } from '@solana-suite/shared';
+import { Node, Result, debugLog, Try } from '@solana-suite/shared';
 
 export namespace Airdrop {
   const DEFAULT_AIRDROP_AMOUNT = 1;
@@ -9,25 +9,25 @@ export namespace Airdrop {
     pubkey: PublicKey,
     airdropAmount?: number
   ): Promise<Result<string, Error>> => {
-    debugLog('Now airdropping...please wait');
+    return Try(async () => {
+      debugLog('Now airdropping...please wait');
 
-    airdropAmount = !airdropAmount
-      ? DEFAULT_AIRDROP_AMOUNT.toLamports()
-      : airdropAmount.toLamports();
+      airdropAmount = !airdropAmount
+        ? DEFAULT_AIRDROP_AMOUNT.toLamports()
+        : airdropAmount.toLamports();
 
-    if (airdropAmount > MAX_AIRDROP_SOL.toLamports()) {
-      return Result.err(Error(`Over max airdrop amount: ${airdropAmount}`));
-    }
+      if (airdropAmount > MAX_AIRDROP_SOL.toLamports()) {
+        throw Error(
+          `Over max airdrop amount: ${airdropAmount}, max: ${MAX_AIRDROP_SOL.toLamports()}`
+        );
+      }
 
-    const sig = await Node.getConnection()
-      .requestAirdrop(pubkey, airdropAmount)
-      .then(Result.ok)
-      .catch(Result.err);
-
-    if (sig.isErr) {
-      return Result.err(Error(`Failed airdrop. ${sig.error.message}`));
-    }
-    await Node.confirmedSig(sig.value);
-    return Result.ok('success');
+      const sig = await Node.getConnection().requestAirdrop(
+        pubkey,
+        airdropAmount
+      );
+      await Node.confirmedSig(sig);
+      return 'success';
+    });
   };
 }

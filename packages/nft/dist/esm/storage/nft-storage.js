@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { NFTStorage, Blob } from 'nft.storage';
-import { Constants, Result, isNode, isBrowser, debugLog, } from '@solana-suite/shared';
+import { Constants, isNode, isBrowser, debugLog, Try, } from '@solana-suite/shared';
 import { toMetaplexFile } from '@metaplex-foundation/js';
 import { Validator } from '../validator';
 export var StorageNftStorage;
@@ -36,25 +36,24 @@ export var StorageNftStorage;
     const createGatewayUrl = (cid) => `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
     const connect = () => new NFTStorage({ token: getNftStorageApiKey() });
     StorageNftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
-        debugLog('# upload content: ', filePath);
-        let file;
-        if (isNode()) {
-            const filepath = filePath;
-            file = (yield import('fs')).readFileSync(filepath);
-        }
-        else if (isBrowser()) {
-            const filepath = filePath;
-            file = toMetaplexFile(filepath, '').buffer;
-        }
-        else {
-            return Result.err(Error('Supported environment: only Node.js and Browser js'));
-        }
-        const blobImage = new Blob([file]);
-        const res = (yield connect()
-            .storeBlob(blobImage)
-            .then(Result.ok)
-            .catch(Result.err));
-        return res.map((ok) => createGatewayUrl(ok), (err) => err);
+        return Try(() => __awaiter(this, void 0, void 0, function* () {
+            debugLog('# upload content: ', filePath);
+            let file;
+            if (isNode()) {
+                const filepath = filePath;
+                file = (yield import('fs')).readFileSync(filepath);
+            }
+            else if (isBrowser()) {
+                const filepath = filePath;
+                file = toMetaplexFile(filepath, '').buffer;
+            }
+            else {
+                throw Error('Supported environment: only Node.js and Browser js');
+            }
+            const blobImage = new Blob([file]);
+            const res = yield connect().storeBlob(blobImage);
+            return createGatewayUrl(res);
+        }));
     });
     /**
      * Upload content
@@ -75,16 +74,15 @@ export var StorageNftStorage;
      * @return Promise<Result<string, Error>>
      */
     StorageNftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
-        debugLog('# upload metadata: ', metadata);
-        const valid = Validator.checkAll(metadata);
-        if (valid.isErr) {
-            return valid;
-        }
-        const blobJson = new Blob([JSON.stringify(metadata)]);
-        const res = (yield connect()
-            .storeBlob(blobJson)
-            .then(Result.ok)
-            .catch(Result.err));
-        return res.map((ok) => createGatewayUrl(ok), (err) => err);
+        return Try(() => __awaiter(this, void 0, void 0, function* () {
+            debugLog('# upload metadata: ', metadata);
+            const valid = Validator.checkAll(metadata);
+            if (valid.isErr) {
+                throw valid.error;
+            }
+            const blobJson = new Blob([JSON.stringify(metadata)]);
+            const res = yield connect().storeBlob(blobJson);
+            return createGatewayUrl(res);
+        }));
     });
 })(StorageNftStorage || (StorageNftStorage = {}));

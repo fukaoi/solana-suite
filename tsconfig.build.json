@@ -19,7 +19,8 @@
       "@acme-crp/*": [
         "./packages/*/"
       ]
-    }
+    },
+    "stripInternal": true
   },
   "exclude": [
     "**/*.test.ts",

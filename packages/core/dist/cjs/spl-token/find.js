@@ -15,27 +15,24 @@ const shared_1 = require("@solana-suite/shared");
 var SplToken;
 (function (SplToken) {
     SplToken.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield shared_1.Node.getConnection()
-            .getParsedTokenAccountsByOwner(owner, {
-            programId: spl_token_1.TOKEN_PROGRAM_ID,
-        })
-            .then(shared_1.Result.ok)
-            .catch(shared_1.Result.err);
-        if (res.isErr) {
-            return shared_1.Result.err(Error(res.error));
-        }
-        const info = res.unwrap().value.reduce((arr, d) => {
-            if (d.account.data.parsed.info.tokenAmount.uiAmount > 0) {
-                arr.push({
-                    owner: owner.toString(),
-                    mint: d.account.data.parsed.info.mint,
-                    amount: d.account.data.parsed.info.tokenAmount.uiAmount,
-                    tokenAccount: d.pubkey.toString(),
-                    mintDecimal: d.account.data.parsed.info.tokenAmount.decimals,
-                });
-            }
-            return arr;
-        }, []);
-        return shared_1.Result.ok(info);
+        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            const accounts = yield shared_1.Node.getConnection().getParsedTokenAccountsByOwner(owner, {
+                programId: spl_token_1.TOKEN_PROGRAM_ID,
+            });
+            const info = accounts.value.reduce((arr, d) => {
+                if (d.account.data.parsed.info.tokenAmount.uiAmount > 0) {
+                    arr.push({
+                        owner: owner.toString(),
+                        mint: d.account.data.parsed.info.mint,
+                        amount: d.account.data.parsed.info.tokenAmount.uiAmount,
+                        tokenAccount: d.pubkey.toString(),
+                        mintDecimal: d.account.data.parsed.info.tokenAmount
+                            .decimals,
+                    });
+                }
+                return arr;
+            }, []);
+            return info;
+        }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));

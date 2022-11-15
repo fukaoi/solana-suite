@@ -37,4 +37,6 @@ jobs:
         cd ./packages/shared/
         NODE_ENV=standalone ./solana-suite-config.js -d true
         NODE_ENV=standalone ./solana-suite-config.js -cc ${{secrets.SOLANA_CUSTOM_URL}}
-    - run: npm run test:core
+    - run: |  
+        npm run clean && npm run compile
+        npm run test:core

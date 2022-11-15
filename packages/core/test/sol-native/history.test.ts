@@ -5,7 +5,7 @@ import { Filter, DirectionFilter } from '../../src/types/history';
 
 const searchTokenKey = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk';
 
-describe('SolNative', () => {
+describe.skip('SolNative', () => {
   it('Get transfer history with set optional filter', async () => {
     const limit = 20;
     const res = await SolNative.getHistory(searchTokenKey.toPublicKey(), {

@@ -1,9 +1,24 @@
 import { createBurnCheckedInstruction } from '@solana/spl-token';
 import { PublicKey, Keypair } from '@solana/web3.js';
-import { Result, Instruction } from '@solana-suite/shared';
-import { Internals_SplToken } from '../internals/_spl-token';
+import { Instruction, Try, Result } from '@solana-suite/shared';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+} from '@solana/spl-token';
+import { SplToken as _Calculate} from './calculate-amount';
 
 export namespace SplToken {
+  const findAssociatedTokenAddress = async (
+    mint: PublicKey,
+    owner: PublicKey
+  ): Promise<PublicKey> => {
+    const address = await PublicKey.findProgramAddress(
+      [owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+    return address[0];
+  };
+
   export const burn = async (
     mint: PublicKey,
     owner: PublicKey,
@@ -11,25 +26,23 @@ export namespace SplToken {
     burnAmount: number,
     tokenDecimals: number,
     feePayer?: Keypair
-  ) => {
-    const tokenAccount = await Internals_SplToken.findAssociatedTokenAddress(
-      mint,
-      owner
-    );
+  ): Promise<Result<Instruction, Error>> => {
+    return Try(async () => {
+      const tokenAccount = await findAssociatedTokenAddress(
+        mint,
+        owner
+      );
 
-    if (tokenAccount.isErr) {
-      return Result.err(tokenAccount.error);
-    }
+      const inst = createBurnCheckedInstruction(
+        tokenAccount,
+        mint,
+        owner,
+        _Calculate.calculateAmount(burnAmount, tokenDecimals),
+        tokenDecimals,
+        signers
+      );
 
-    const inst = createBurnCheckedInstruction(
-      tokenAccount.unwrap(),
-      mint,
-      owner,
-      Internals_SplToken.calculateAmount(burnAmount, tokenDecimals),
-      tokenDecimals,
-      signers
-    );
-
-    return Result.ok(new Instruction([inst], signers, feePayer));
+      return new Instruction([inst], signers, feePayer);
+    });
   };
 }

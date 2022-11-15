@@ -5,11 +5,11 @@ import {
   toMetaplexFile,
 } from '@metaplex-foundation/js';
 
-import { Result, isNode, isBrowser, debugLog } from '@solana-suite/shared';
+import { Result, isNode, isBrowser, debugLog, Try } from '@solana-suite/shared';
 import { NftStorageMetadata } from '../types/storage';
 import { Bundlr } from '../bundlr';
-import { Validator, ValidatorError } from '../validator';
-import {BundlrSigner} from '../types';
+import { Validator } from '../validator';
+import { BundlrSigner } from '../types';
 
 export interface MetaplexFileOptions {
   readonly displayName: string;
@@ -24,28 +24,32 @@ export namespace StorageArweave {
     filePath: MetaplexFileContent,
     feePayer: BundlrSigner
   ): Promise<Result<{ price: number; currency: Currency }, Error>> => {
-    let buffer!: Buffer;
-    if (isNode()) {
-      const filepath = filePath as string;
-      buffer = (await import('fs')).readFileSync(filepath);
-    } else if (isBrowser()) {
-      const filepath = filePath as any;
-      buffer = toMetaplexFile(filepath, '').buffer;
-    } else {
-      return Result.err(
-        Error('Supported environment: only Node.js and Browser js')
-      );
-    }
+    return Try(async () => {
+      let buffer!: Buffer;
+      if (isNode()) {
+        const filepath = filePath as string;
+        buffer = (await import('fs')).readFileSync(filepath);
+      } else if (isBrowser()) {
+        const filepath = filePath;
+        buffer = toMetaplexFile(filepath, '').buffer;
+      } else {
+        throw Error('Supported environment: only Node.js and Browser js');
+      }
 
-    const res = await Bundlr.useStorage(feePayer).getUploadPrice(buffer.length);
-    debugLog(
-      '# buffer length, price',
-      buffer.length,
-      parseInt(res.basisPoints).toSol()
-    );
-    return Result.ok({
-      price: parseInt(res.basisPoints).toSol(),
-      currency: res.currency,
+      const res = await Bundlr.useStorage(feePayer).getUploadPrice(
+        buffer.length
+      );
+
+      const basisPoints: string = res.basisPoints as string;
+      debugLog(
+        '# buffer length, price',
+        buffer.length,
+        parseInt(basisPoints).toSol()
+      );
+      return {
+        price: parseInt(basisPoints).toSol(),
+        currency: res.currency,
+      };
     });
   };
 
@@ -54,52 +58,49 @@ export namespace StorageArweave {
     feePayer: BundlrSigner,
     fileOptions?: MetaplexFileOptions // only arweave, not nft-storage
   ): Promise<Result<string, Error>> => {
-    debugLog('# upload content: ', filePath);
-
-    let file!: MetaplexFile;
-    if (isNode()) {
-      const filepath = filePath as string;
-      const buffer = (await import('fs')).readFileSync(filepath);
-      if (fileOptions) {
-        file = toMetaplexFile(buffer, filepath, fileOptions);
+    return Try(async () => {
+      debugLog('# upload content: ', filePath);
+      let file!: MetaplexFile;
+      if (isNode()) {
+        const filepath = filePath as string;
+        const buffer = (await import('fs')).readFileSync(filepath);
+        if (fileOptions) {
+          file = toMetaplexFile(buffer, filepath, fileOptions);
+        } else {
+          file = toMetaplexFile(buffer, filepath);
+        }
+      } else if (isBrowser()) {
+        const filepath = filePath;
+        if (fileOptions) {
+          file = toMetaplexFile(filepath, '', fileOptions);
+        } else {
+          file = toMetaplexFile(filepath, '');
+        }
       } else {
-        file = toMetaplexFile(buffer, filepath);
+        throw Error('Supported environment: only Node.js and Browser js');
       }
-    } else if (isBrowser()) {
-      const filepath = filePath as any;
-      if (fileOptions) {
-        file = toMetaplexFile(filepath, '', fileOptions);
-      } else {
-        file = toMetaplexFile(filepath, '');
-      }
-    } else {
-      return Result.err(
-        Error('Supported environment: only Node.js and Browser js')
-      );
-    }
 
-    return Bundlr.useStorage(feePayer)
-      .upload(file)
-      .then(Result.ok)
-      .catch(Result.err);
+      return Bundlr.useStorage(feePayer).upload(file);
+    });
   };
 
   export const uploadMetadata = async (
     metadata: NftStorageMetadata,
     feePayer: BundlrSigner
-  ): Promise<Result<string, Error | ValidatorError>> => {
-    debugLog('# upload meta data: ', metadata);
+  ): Promise<Result<string, Error>> => {
+    return Try(async () => {
+      debugLog('# upload meta data: ', metadata);
 
-    const valid = Validator.checkAll(metadata);
-    if (valid.isErr) {
-      return valid;
-    }
+      const valid = Validator.checkAll(metadata);
+      if (valid.isErr) {
+        throw valid.error;
+      }
 
-    return Bundlr.make(feePayer)
-      .nfts()
-      .uploadMetadata(metadata)
-      .run()
-      .then((res) => Result.ok(res.uri))
-      .catch(Result.err);
+      const uploaded = await Bundlr.make(feePayer)
+        .nfts()
+        .uploadMetadata(metadata)
+        .run();
+      return uploaded.uri;
+    });
   };
 }
