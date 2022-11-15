@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { debugLog, Try } from '@solana-suite/shared';
 import { Filter } from '../types/history';
-import { SolNative as Internals_SolNativeGetByAddress } from '../sol-native/get-by-address';
-import { SolNative as Internals_SolNativeFilterTransaction } from '../sol-native/filter-transaction';
+import { SolNative as _Get } from '../sol-native/get-by-address';
+import { SolNative as _Filter } from '../sol-native/filter-transaction';
 export var SplToken;
 (function (SplToken) {
     SplToken.getHistory = (mint, searchPubkey, options) => __awaiter(this, void 0, void 0, function* () {
@@ -41,9 +41,9 @@ export var SplToken;
             debugLog('# bufferedLimit: ', bufferedLimit);
             debugLog('# before: ', before);
             for (;;) {
-                const transactions = yield Internals_SolNativeGetByAddress.getByAddress(searchKeyAccount, bufferedLimit, before);
+                const transactions = yield _Get.getByAddress(searchKeyAccount, bufferedLimit, before);
                 debugLog('# getTransactionHistory loop transactions count:', transactions.length);
-                const res = Internals_SolNativeFilterTransaction.filterTransactions(searchPubkey, transactions, actionFilter, true, options.directionFilter);
+                const res = _Filter.filterTransactions(searchPubkey, transactions, actionFilter, true, options.directionFilter);
                 hist = hist.concat(res);
                 if (hist.length >= options.limit || res.length === 0) {
                     hist = hist.slice(0, options.limit);

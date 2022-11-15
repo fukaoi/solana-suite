@@ -11,12 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Multisig = void 0;
 const shared_1 = require("@solana-suite/shared");
-const index_1 = require("./index");
+const get_info_1 = require("./get-info");
 var Multisig;
 (function (Multisig) {
     Multisig.isAddress = (multisig) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            const info = yield index_1.Multisig.getInfo(multisig);
+            const info = yield get_info_1.Multisig.getInfo(multisig);
             if (info.isErr) {
                 return false;
             }

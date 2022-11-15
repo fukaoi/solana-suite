@@ -88,8 +88,7 @@ var SolNative;
             // set transaction with memo
             const withMemos = [];
             tx.transaction.message.instructions.forEach((v) => {
-                if (is_parsed_instruction_1.SolNative.isParsedInstruction(v) &&
-                    v.program === 'spl-memo') {
+                if (is_parsed_instruction_1.SolNative.isParsedInstruction(v) && v.program === 'spl-memo') {
                     withMemos.push({
                         sig: tx.transaction.signatures,
                         memo: v.parsed,

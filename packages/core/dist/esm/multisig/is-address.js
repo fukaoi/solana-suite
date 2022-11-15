@@ -8,12 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Try } from '@solana-suite/shared';
-import { Multisig as GetInfo } from './index';
+import { Multisig as _Get } from './get-info';
 export var Multisig;
 (function (Multisig) {
     Multisig.isAddress = (multisig) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            const info = yield GetInfo.getInfo(multisig);
+            const info = yield _Get.getInfo(multisig);
             if (info.isErr) {
                 return false;
             }

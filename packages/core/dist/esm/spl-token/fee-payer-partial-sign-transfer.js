@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { createTransferCheckedInstruction } from '@solana/spl-token';
 import { Transaction } from '@solana/web3.js';
 import { Node, PartialSignInstruction, Try, } from '@solana-suite/shared';
-import { SplToken as Calculator } from './calculate-amount';
+import { SplToken as _Calculator } from './calculate-amount';
 import { AssociatedAccount } from '../associated-account';
 export var SplToken;
 (function (SplToken) {
@@ -27,12 +27,12 @@ export var SplToken;
             });
             // return associated token account
             if (!destToken.inst) {
-                inst2 = createTransferCheckedInstruction(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, Calculator.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+                inst2 = createTransferCheckedInstruction(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, _Calculator.calculateAmount(amount, mintDecimal), mintDecimal, signers);
                 tx.add(inst2);
             }
             else {
                 // return instruction and undecided associated token account
-                inst2 = createTransferCheckedInstruction(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, Calculator.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+                inst2 = createTransferCheckedInstruction(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, _Calculator.calculateAmount(amount, mintDecimal), mintDecimal, signers);
                 tx.add(destToken.inst).add(inst2);
             }
             tx.recentBlockhash = blockhashObj.blockhash;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Node, Instruction, Try } from '@solana-suite/shared';
 import { Keypair } from '@solana/web3.js';
-import { Multisig as MultisigInstruction } from './instruction';
+import { Multisig as _Instruction } from './instruction';
 export var Multisig;
 (function (Multisig) {
     Multisig.create = (m, feePayer, signerPubkey) => __awaiter(this, void 0, void 0, function* () {
@@ -19,9 +19,9 @@ export var Multisig;
             }
             const account = Keypair.generate();
             const connection = Node.getConnection();
-            const balanceNeeded = yield connection.getMinimumBalanceForRentExemption(MultisigInstruction.Layout.span);
-            const inst1 = MultisigInstruction.account(account, feePayer, balanceNeeded);
-            const inst2 = MultisigInstruction.multisig(m, account, signerPubkey);
+            const balanceNeeded = yield connection.getMinimumBalanceForRentExemption(_Instruction.Layout.span);
+            const inst1 = _Instruction.account(account, feePayer, balanceNeeded);
+            const inst2 = _Instruction.multisig(m, account, signerPubkey);
             return new Instruction([inst1, inst2], [account], feePayer, account.publicKey.toBase58());
         }));
     });

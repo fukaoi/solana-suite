@@ -22,7 +22,7 @@ import { Keypair } from '@solana/web3.js';
 import { StorageNftStorage, StorageArweave } from '../storage';
 import { Instruction, debugLog, Try } from '@solana-suite/shared';
 import { Validator } from '../validator';
-import { Metaplex as Internals_Royalty } from './royalty';
+import { Metaplex as _Royalty } from './royalty';
 import { Bundlr } from '../bundlr';
 import { findMasterEditionV2Pda, token, TransactionBuilder, } from '@metaplex-foundation/js';
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
@@ -53,7 +53,7 @@ export var Metaplex;
     Metaplex.uploadMetaContent = (input, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let storage;
         const { filePath, storageType, royalty, options } = input, reducedMetadata = __rest(input, ["filePath", "storageType", "royalty", "options"]);
-        const sellerFeeBasisPoints = Internals_Royalty.convertRoyalty(royalty);
+        const sellerFeeBasisPoints = _Royalty.convertRoyalty(royalty);
         const storageData = initNftStorageMetadata(input, sellerFeeBasisPoints, options);
         if (storageType === 'arweave') {
             storage = yield (yield StorageArweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {

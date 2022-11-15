@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { createMint, createMintToCheckedInstruction } from '@solana/spl-token';
 import { Node, Instruction, Try } from '@solana-suite/shared';
 import { AssociatedAccount } from '../associated-account';
-import { SplToken as Internals_SplToken } from './calculate-amount';
+import { SplToken as _Calculate } from './calculate-amount';
 export var SplToken;
 (function (SplToken) {
     SplToken.mint = (owner, signers, totalAmount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
@@ -19,7 +19,7 @@ export var SplToken;
             const connection = Node.getConnection();
             const token = yield createMint(connection, feePayer, owner, owner, mintDecimal);
             const tokenAssociated = yield AssociatedAccount.retryGetOrCreate(token, owner, feePayer);
-            const inst = createMintToCheckedInstruction(token, tokenAssociated.toPublicKey(), owner, Internals_SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
+            const inst = createMintToCheckedInstruction(token, tokenAssociated.toPublicKey(), owner, _Calculate.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
             return new Instruction([inst], signers, feePayer, token.toBase58());
         }));
     });

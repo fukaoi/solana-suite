@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Node, Try } from '@solana-suite/shared';
 import { PublicKey } from '@solana/web3.js';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Multisig as MultisigInstruction } from './instruction';
+import { Multisig as _Instruction } from './instruction';
 export var Multisig;
 (function (Multisig) {
     Multisig.getInfo = (multisig) => __awaiter(this, void 0, void 0, function* () {
@@ -22,11 +22,11 @@ export var Multisig;
             if (!info.owner.equals(TOKEN_PROGRAM_ID)) {
                 throw Error('Invalid multisig owner');
             }
-            if (info.data.length !== MultisigInstruction.Layout.span) {
+            if (info.data.length !== _Instruction.Layout.span) {
                 throw Error('Invalid multisig size');
             }
             const data = Buffer.from(info.data);
-            const multisigInfo = MultisigInstruction.Layout.decode(data);
+            const multisigInfo = _Instruction.Layout.decode(data);
             multisigInfo.signer1 = new PublicKey(multisigInfo.signer1);
             multisigInfo.signer2 = new PublicKey(multisigInfo.signer2);
             multisigInfo.signer3 = new PublicKey(multisigInfo.signer3);
