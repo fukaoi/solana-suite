@@ -1,2 +1,2 @@
-export declare type Pubkey = string;
-export declare type Secret = string;
+export type Pubkey = string;
+export type Secret = string;

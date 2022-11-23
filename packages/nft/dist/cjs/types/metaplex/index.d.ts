@@ -1,14 +1,14 @@
 import { CreateNftInput, MetaplexFileContent, BigNumber, Option, Signer, CreatorInput, Creator } from '@metaplex-foundation/js';
 import { PublicKey } from '@solana/web3.js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
-declare type noNeedOptional = 'payer' | 'owner' | 'associatedTokenProgram' | 'tokenProgram' | 'confirmOptions';
-export declare type MetaplexMetaData = Omit<CreateNftInput, noNeedOptional>;
-export declare type JsonMetadataAttribute = {
+type noNeedOptional = 'payer' | 'owner' | 'associatedTokenProgram' | 'tokenProgram' | 'confirmOptions';
+export type MetaplexMetaData = Omit<CreateNftInput, noNeedOptional>;
+export type JsonMetadataAttribute = {
     trait_type?: string;
     value?: string;
     [key: string]: unknown;
 };
-export declare type JsonMetadataProperties = {
+export type JsonMetadataProperties = {
     creators?: {
         address?: string;
         share?: number;
@@ -21,7 +21,7 @@ export declare type JsonMetadataProperties = {
     }[];
     [key: string]: unknown;
 };
-export declare type InputMetaplexMetadata = {
+export type InputMetaplexMetadata = {
     name: string;
     symbol: string;
     royalty: number;
@@ -45,7 +45,7 @@ export declare type InputMetaplexMetadata = {
         [key: string]: unknown;
     };
 };
-export declare type OutputMetaplexMetadata = {
+export type OutputMetaplexMetadata = {
     mint: string;
     updateAuthority: string;
     royalty: number;

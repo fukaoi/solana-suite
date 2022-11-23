@@ -1,5 +1,5 @@
 import { Keypair, Transaction } from '@solana/web3.js';
-export declare type InitializeNftMint = {
+export type InitializeNftMint = {
     useNewMint: Keypair;
     tx: Transaction;
 };

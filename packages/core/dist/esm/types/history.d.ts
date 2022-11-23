@@ -1,4 +1,4 @@
-export declare type TransferHistory = {
+export type TransferHistory = {
     info: {
         destination?: string;
         source?: string;
@@ -26,11 +26,11 @@ export declare enum DirectionFilter {
     Dest = "destination",
     Source = "source"
 }
-export declare type MappingTokenAccount = {
+export type MappingTokenAccount = {
     account: string;
     owner: string;
 };
-export declare type WithMemo = {
+export type WithMemo = {
     sig: string[];
     memo: string;
 };

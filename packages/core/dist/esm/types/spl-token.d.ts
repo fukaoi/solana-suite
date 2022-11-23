@@ -1,4 +1,4 @@
-export declare type SplTokenOwnerInfo = {
+export type SplTokenOwnerInfo = {
     owner: string;
     mint: string;
     mintDecimal: number;

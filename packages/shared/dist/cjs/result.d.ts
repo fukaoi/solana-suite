@@ -198,7 +198,7 @@ export declare namespace Result {
     }[keyof T]>;
     export {};
 }
-export declare type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
-declare type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
-declare type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
+export type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
+type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
+type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 export {};

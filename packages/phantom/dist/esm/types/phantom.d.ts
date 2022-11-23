@@ -1,8 +1,8 @@
 import { Transaction, TransactionSignature, SendOptions, PublicKey } from '@solana/web3.js';
-export declare type connectOption = {
+export type connectOption = {
     onlyIfTrusted: false;
 };
-export declare type Phantom = {
+export type Phantom = {
     isPhantom?: boolean;
     publicKey: PublicKey;
     isConnected: boolean;
