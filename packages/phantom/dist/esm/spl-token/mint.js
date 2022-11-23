@@ -58,25 +58,4 @@ export var SplTokenPhantom;
             return txData.mint.toString();
         }));
     });
-    // select 'add token'
-    SplTokenPhantom.addMinting = (tokenKey, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
-        return Try(() => __awaiter(this, void 0, void 0, function* () {
-            Node.changeConnection({ cluster });
-            const connection = Node.getConnection();
-            const transaction = new Transaction();
-            const makeInstruction = yield AssociatedAccount.makeOrCreateInstruction(tokenKey, owner);
-            transaction.add(makeInstruction.inst);
-            transaction.add(createMintToCheckedInstruction(tokenKey, makeInstruction.tokenAccount.toPublicKey(), owner, totalAmount, mintDecimal, [], TOKEN_PROGRAM_ID));
-            transaction.feePayer = owner;
-            const blockhashObj = yield connection.getLatestBlockhashAndContext();
-            transaction.recentBlockhash = blockhashObj.value.blockhash;
-            const signed = yield phantom.signAllTransactions([transaction]);
-            // todo: refactoring
-            for (const sign of signed) {
-                const sig = yield connection.sendRawTransaction(sign.serialize());
-                yield Node.confirmedSig(sig);
-            }
-            return tokenKey.toBase58();
-        }));
-    });
 })(SplTokenPhantom || (SplTokenPhantom = {}));
