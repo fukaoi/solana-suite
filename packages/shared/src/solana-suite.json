@@ -1,1 +1,1 @@
-{"cluster":{"type":"mainnet-beta","customUrl":""},"debugging":"true","nftstorage":{"apikey":""}}
+{"cluster":{"type":"localhost-devnet","customUrl":""},"debugging":"false","nftstorage":{"apikey":""}}

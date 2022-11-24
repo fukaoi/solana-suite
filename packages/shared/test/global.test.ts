@@ -34,13 +34,6 @@ describe('Global', () => {
     assert.isTrue(res);
   });
 
-  it('[Mainnet-Beta, serum]Create explorer url', async () => {
-    Node.changeConnection({ cluster: Constants.Cluster.prd2 });
-    const url = dummySig.toExplorerUrl();
-    const res = /mainnet-beta/.test(url);
-    assert.isTrue(res);
-  });
-
   it('[Testnet]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.test });
     const url = dummySig.toExplorerUrl();

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
-const {Command} = require('commander');
+const { Command } = require('commander');
 const program = new Command();
 
 let cjs;
@@ -41,7 +41,7 @@ const updateConfigFile = (key, value) => {
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
   successMessage();
-}
+};
 
 const updateClusterConfigFile = (key, value, customUrl = '') => {
   const parsed = JSON.parse(cjs);
@@ -50,7 +50,7 @@ const updateClusterConfigFile = (key, value, customUrl = '') => {
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
   successMessage();
-}
+};
 
 const updateNftStorageConfigFile = (key, value) => {
   const parsed = JSON.parse(cjs);
@@ -58,14 +58,14 @@ const updateNftStorageConfigFile = (key, value) => {
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
   successMessage();
-}
+};
 
 const showCurrentConfigFile = () => {
   const cjs = fs.readFileSync(CJS_JSON);
   const esm = fs.readFileSync(ESM_JSON);
   showMessage(`# Current cjs\n${cjs.toString()}\n`);
   showMessage(`# Current esm\n${esm.toString()}\n`);
-}
+};
 
 ////////////////////////////////////////////////////////////////
 // options
@@ -78,7 +78,7 @@ program
 program
   .option(
     '-c --cluster <cluster type>',
-    'connect to cluster type. `prd`, `prd2`, `prdrr`, `dev`, `test`, `localhost`'
+    'connect to cluster type. `prd`, `dev`, `test`, `localhost`'
   )
   .option(
     '-cc --custom-cluster <cluster url>',
@@ -92,10 +92,7 @@ program
     '-n --nftstorage <apikey>',
     'Set apikey of nft.storage. `eyJhbGciO...`'
   )
-  .option(
-    '-s --show',
-    'Show value current solana-suite.json'
-  );
+  .option('-s --show', 'Show value current solana-suite.json');
 
 program.parse();
 
@@ -108,12 +105,6 @@ const execCluser = (type) => {
     case 'prd':
       value = 'mainnet-beta';
       break;
-    case 'prd2':
-      value = 'mainnet-beta-serum';
-      break;
-    case 'prdrr':
-      value = 'mainnet-beta-round-robin';
-      break;
     case 'dev':
       value = 'devnet';
       break;
@@ -124,11 +115,13 @@ const execCluser = (type) => {
       value = 'localhost-devnet';
       break;
     default:
-      warnMessage(`No match parameter: need parameter is\n"prd", "prd2", "prdrr", "dev", "test", "localhost", "custom". any one of them`);
+      warnMessage(
+        `No match parameter: need parameter is\n"prd", "dev", "test", "localhost", "custom". any one of them`
+      );
       return;
   }
   updateClusterConfigFile('cluster', value);
-}
+};
 
 const execCustomCluster = (url) => {
   if (!url || !/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(url)) {
@@ -136,15 +129,17 @@ const execCustomCluster = (url) => {
     return;
   }
   updateClusterConfigFile('cluster', 'custom', url);
-}
+};
 
 const execDebug = (bool) => {
   if (bool != 'true' && bool != 'false') {
-    warnMessage(`No match parameter: need parameter is "on", "off". any one of them`);
+    warnMessage(
+      `No match parameter: need parameter is "on", "off". any one of them`
+    );
     return;
   }
   updateConfigFile('debugging', bool);
-}
+};
 
 const execNftstorage = (arg) => {
   if (arg.length < 230) {
@@ -152,11 +147,11 @@ const execNftstorage = (arg) => {
     return;
   }
   updateNftStorageConfigFile('apikey', arg);
-}
+};
 
 const execShow = () => {
   showCurrentConfigFile();
-}
+};
 
 ////////////////////////////////////////////////////////////////
 // Parse options
@@ -173,5 +168,5 @@ if (options.cluster) {
 } else if (options.show) {
   execShow();
 } else {
-  warnMessage(`No match parameter: need parameter is\n"prd", "prd2", "prdrr", "dev", "test", "localhost", "custom". any one of them`);
+  warnMessage(`No match parameter`);
 }

@@ -31,18 +31,6 @@ describe('Constants', () => {
     assert.equal(cluster, Constants.EndPointUrl.prd);
   });
 
-  it('Constants use prd2', () => {
-    const cluster = Constants.switchCluster(Constants.Cluster.prd2);
-    assert.equal(cluster, Constants.EndPointUrl.prd2);
-  });
-
-  it('Constants use round robin function in mainnet-beta', () => {
-    for (let i = 0; i < 30; i++) {
-      const cluster = Constants.switchCluster(Constants.Cluster.prdrr);
-      console.log('# cluster url: ', cluster);
-      assert.isNotEmpty(cluster);
-    }
-  });
   it('Constants use custom and customUrl', () => {
     const dummyUrl = 'https://hoge.hoge';
     const cluster = Constants.switchCluster(Constants.Cluster.custom, dummyUrl);
