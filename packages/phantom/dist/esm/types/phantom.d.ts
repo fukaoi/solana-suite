@@ -12,7 +12,7 @@ export type Phantom = {
         signature: TransactionSignature;
     }>;
     signMessage(message: Uint8Array): Promise<Uint8Array>;
-    connect(arg0: connectOption): Promise<{
+    connect(): Promise<{
         publicKey: Uint16Array;
     }>;
     disconnect(): Promise<void>;
