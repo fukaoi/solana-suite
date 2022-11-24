@@ -84,9 +84,6 @@ String.prototype.toExplorerUrl = function () {
     if (endPointUrl === constants_1.Constants.EndPointUrl.prd) {
         cluster = constants_1.Constants.Cluster.prd;
     }
-    else if (endPointUrl === constants_1.Constants.EndPointUrl.prd2) {
-        cluster = constants_1.Constants.Cluster.prd;
-    }
     else if (endPointUrl === constants_1.Constants.EndPointUrl.test) {
         cluster = constants_1.Constants.Cluster.test;
     }

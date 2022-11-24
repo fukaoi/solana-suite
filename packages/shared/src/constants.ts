@@ -10,8 +10,6 @@ export namespace Constants {
 
   export enum Cluster {
     prd = 'mainnet-beta',
-    prd2 = 'mainnet-beta-sereum',
-    prdrr = 'mainnet-beta-round-robin',
     dev = 'devnet',
     test = 'testnet',
     localhost = 'localhost-devnet',
@@ -20,7 +18,6 @@ export namespace Constants {
 
   export enum EndPointUrl {
     prd = 'https://api.mainnet-beta.solana.com',
-    prd2 = 'https://solana-api.projectserum.com',
     dev = 'https://api.devnet.solana.com',
     test = 'https://api.testnet.solana.com',
     localhost = 'http://api.devnet.solana.com',
@@ -33,23 +30,10 @@ export namespace Constants {
     switch (env) {
       case Constants.Cluster.prd:
         return Constants.EndPointUrl.prd;
-      case Constants.Cluster.prd2:
-        return Constants.EndPointUrl.prd2;
       case Constants.Cluster.test:
         return Constants.EndPointUrl.test;
       case Constants.Cluster.dev:
         return Constants.EndPointUrl.dev;
-      case Constants.Cluster.prdrr: {
-        // don't require rigor, as it can be repeated alternately
-        const index = Date.now() % 4;
-        const clusters = [
-          Constants.EndPointUrl.prd,
-          Constants.EndPointUrl.prd2,
-          Constants.EndPointUrl.prd,
-          Constants.EndPointUrl.prd2,
-        ];
-        return clusters[index];
-      }
       case Constants.Cluster.custom:
         return customUrl;
       default:

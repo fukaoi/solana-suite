@@ -16,8 +16,6 @@ var Constants;
     let Cluster;
     (function (Cluster) {
         Cluster["prd"] = "mainnet-beta";
-        Cluster["prd2"] = "mainnet-beta-sereum";
-        Cluster["prdrr"] = "mainnet-beta-round-robin";
         Cluster["dev"] = "devnet";
         Cluster["test"] = "testnet";
         Cluster["localhost"] = "localhost-devnet";
@@ -26,7 +24,6 @@ var Constants;
     let EndPointUrl;
     (function (EndPointUrl) {
         EndPointUrl["prd"] = "https://api.mainnet-beta.solana.com";
-        EndPointUrl["prd2"] = "https://solana-api.projectserum.com";
         EndPointUrl["dev"] = "https://api.devnet.solana.com";
         EndPointUrl["test"] = "https://api.testnet.solana.com";
         EndPointUrl["localhost"] = "http://api.devnet.solana.com";
@@ -35,23 +32,10 @@ var Constants;
         switch (env) {
             case Constants.Cluster.prd:
                 return Constants.EndPointUrl.prd;
-            case Constants.Cluster.prd2:
-                return Constants.EndPointUrl.prd2;
             case Constants.Cluster.test:
                 return Constants.EndPointUrl.test;
             case Constants.Cluster.dev:
                 return Constants.EndPointUrl.dev;
-            case Constants.Cluster.prdrr: {
-                // don't require rigor, as it can be repeated alternately
-                const index = Date.now() % 4;
-                const clusters = [
-                    Constants.EndPointUrl.prd,
-                    Constants.EndPointUrl.prd2,
-                    Constants.EndPointUrl.prd,
-                    Constants.EndPointUrl.prd2,
-                ];
-                return clusters[index];
-            }
             case Constants.Cluster.custom:
                 return customUrl;
             default:
