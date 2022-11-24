@@ -42,9 +42,9 @@ import { RandomAsset } from '../packages/nft/test/randomAsset';
       royalty: 7,
       storageType: 'nftStorage',
       isMutable: true,
-      externalUrl: 'https://github.com/atonoy/solana-suite',
+      external_url: 'https://github.com/atonoy/solana-suite',
     },
-    owner.toPublicKey(),
+    owner.toKeypair(),
     feePayer.toKeypair()
   );
 
@@ -72,7 +72,7 @@ import { RandomAsset } from '../packages/nft/test/randomAsset';
   // TRANSFER RECEIPTS USER FROM THIS LINE
   //////////////////////////////////////////////
 
-  // transfer nft owner => receipt
+  //transfer nft owner => receipt
   const inst2 = await Metaplex.transfer(
     mint.toPublicKey(),
     owner.toPublicKey(),
