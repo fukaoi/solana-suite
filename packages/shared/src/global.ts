@@ -125,7 +125,7 @@ export const debugLog = (
   data3: unknown = '',
   data4: unknown = ''
 ): void => {
-  if (Constants.isDebugging || process.env.DEBUG == 'true') {
+  if (Constants.isDebugging === 'true' || process.env.DEBUG === 'true') {
     console.log('[DEBUG]', data1, data2, data3, data4);
   }
 };
