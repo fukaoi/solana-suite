@@ -18,6 +18,7 @@ __exportStar(require("./constants"), exports);
 __exportStar(require("./instruction"), exports);
 __exportStar(require("./global"), exports);
 __exportStar(require("./node"), exports);
-__exportStar(require("./partialSignInstruction"), exports);
+__exportStar(require("./mint-instruction"), exports);
+__exportStar(require("./partial-signInstruction"), exports);
 __exportStar(require("./result"), exports);
 __exportStar(require("./types"), exports);

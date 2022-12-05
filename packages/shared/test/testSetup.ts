@@ -28,7 +28,7 @@ export class KeypairStr {
 }
 
 export namespace Setup {
-  const TEMP_KEYPAIR_FILE = `/tmp/solana-${Constants.currentCluster}-keypair`;
+  const TEMP_KEYPAIR_FILE = `../../solana-${Constants.currentCluster}-keypair`;
 
   export const generateKeyPair = async (): Promise<{
     source: KeypairStr;

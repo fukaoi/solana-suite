@@ -125,7 +125,7 @@ export const debugLog = (
   data3: unknown = '',
   data4: unknown = ''
 ): void => {
-  if (Constants.isDebugging || process.env.DEBUG == 'true') {
+  if (Constants.isDebugging === 'true' || process.env.DEBUG === 'true') {
     console.log('[DEBUG]', data1, data2, data3, data4);
   }
 };
@@ -186,11 +186,13 @@ export const isPromise = (obj: unknown): obj is Promise<unknown> => {
  * @returns Promise<Result<T, E>>
  */
 export function Try<T, E extends Error>(
-  asyncblock: () => Promise<T>
+  asyncblock: () => Promise<T>,
+  finallyInput?: () => void
 ): Promise<Result<T, E>>;
 export function Try<T, E extends Error>(block: () => T): Result<T, E>;
 export function Try<T, E extends Error>(
-  input: () => Promise<T>
+  input: () => Promise<T>,
+  finallyInput?: () => void
 ): Result<T, Error> | Promise<Result<T, Error>> {
   try {
     const v = input();
@@ -207,5 +209,10 @@ export function Try<T, E extends Error>(
       return Result.err(e);
     }
     return Result.err(Error(e as string));
+  } finally {
+    if (finallyInput) {
+      debugLog('# finally input:', finallyInput);
+      finallyInput();
+    }
   }
 }

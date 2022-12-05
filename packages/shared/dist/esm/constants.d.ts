@@ -6,6 +6,7 @@ export declare namespace Constants {
     const nftStorageApiKey: string;
     enum Cluster {
         prd = "mainnet-beta",
+        prdMetaplex = "mainnet-beta-metaplex",
         dev = "devnet",
         test = "testnet",
         localhost = "localhost-devnet",
@@ -13,6 +14,7 @@ export declare namespace Constants {
     }
     enum EndPointUrl {
         prd = "https://api.mainnet-beta.solana.com",
+        prdMetaplex = "https://api.metaplex.solana.com",
         dev = "https://api.devnet.solana.com",
         test = "https://api.testnet.solana.com",
         localhost = "http://api.devnet.solana.com"

@@ -10,6 +10,7 @@ export var Constants;
     let Cluster;
     (function (Cluster) {
         Cluster["prd"] = "mainnet-beta";
+        Cluster["prdMetaplex"] = "mainnet-beta-metaplex";
         Cluster["dev"] = "devnet";
         Cluster["test"] = "testnet";
         Cluster["localhost"] = "localhost-devnet";
@@ -18,6 +19,7 @@ export var Constants;
     let EndPointUrl;
     (function (EndPointUrl) {
         EndPointUrl["prd"] = "https://api.mainnet-beta.solana.com";
+        EndPointUrl["prdMetaplex"] = "https://api.metaplex.solana.com";
         EndPointUrl["dev"] = "https://api.devnet.solana.com";
         EndPointUrl["test"] = "https://api.testnet.solana.com";
         EndPointUrl["localhost"] = "http://api.devnet.solana.com";
@@ -26,6 +28,8 @@ export var Constants;
         switch (env) {
             case Constants.Cluster.prd:
                 return Constants.EndPointUrl.prd;
+            case Constants.Cluster.prdMetaplex:
+                return Constants.EndPointUrl.prdMetaplex;
             case Constants.Cluster.test:
                 return Constants.EndPointUrl.test;
             case Constants.Cluster.dev:

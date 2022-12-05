@@ -168,7 +168,7 @@ export const isPromise = (obj) => {
         (typeof obj === 'object' || typeof obj === 'function') &&
         typeof obj.then === 'function');
 };
-export function Try(input) {
+export function Try(input, finallyInput) {
     try {
         const v = input();
         if (isPromise(v)) {
@@ -183,5 +183,11 @@ export function Try(input) {
             return Result.err(e);
         }
         return Result.err(Error(e));
+    }
+    finally {
+        if (finallyInput) {
+            debugLog('# finally input:', finallyInput);
+            finallyInput();
+        }
     }
 }
