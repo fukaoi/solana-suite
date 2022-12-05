@@ -38,5 +38,5 @@ jobs:
       with:
         path: /tmp/solana-localhost-devnet-keypair
         key: ${{ runner.os }}-cache
-    - run: npm ci && npm run compile
+    # - run: npm ci && npm run compile
     - run: npm run test:shared
