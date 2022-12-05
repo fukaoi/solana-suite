@@ -20,7 +20,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 import { Keypair } from '@solana/web3.js';
 import { StorageNftStorage, StorageArweave } from '../storage';
-import { debugLog, Try, MintInstruction, } from '@solana-suite/shared';
+import { debugLog, Try, MintInstruction } from '@solana-suite/shared';
 import { Validator } from '../validator';
 import { Metaplex as _Royalty } from './royalty';
 import { Bundlr } from '../bundlr';
