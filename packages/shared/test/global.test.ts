@@ -165,4 +165,21 @@ describe('Global', () => {
     });
     res.isOk && assert.equal(res.value, mess);
   });
+
+  it('Promise Try() with finally', async () => {
+    const mess = 'called promise';
+    const promise = () =>
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(mess);
+        }, 2000);
+      });
+    const res = await Try(
+      async () => {
+        return await promise();
+      },
+      () => console.log('Step into finllaly logic')
+    );
+    res.isOk && assert.equal(res.value, mess);
+  });
 });
