@@ -131,7 +131,7 @@ Number.prototype.toLamports = function () {
  * @returns void
  */
 const debugLog = (data1, data2 = '', data3 = '', data4 = '') => {
-    if (constants_1.Constants.isDebugging || process.env.DEBUG == 'true') {
+    if (constants_1.Constants.isDebugging === 'true' || process.env.DEBUG === 'true') {
         console.log('[DEBUG]', data1, data2, data3, data4);
     }
 };
