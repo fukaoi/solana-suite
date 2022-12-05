@@ -38,7 +38,7 @@ var Metaplex;
         const mintAuthority = owner;
         const tokenOwner = owner.publicKey;
         const inst = yield Metaplex.createNftBuilderInstruction(feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
-        return new shared_1.Instruction(inst, [feePayer, useNewMint, owner], undefined, useNewMint.publicKey.toString());
+        return new shared_1.MintInstruction(inst, [feePayer, useNewMint, owner], undefined, useNewMint.publicKey.toString());
     });
     const initNftStorageMetadata = (input, sellerFeeBasisPoints, options) => {
         const data = {

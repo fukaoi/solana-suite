@@ -1,6 +1,14 @@
 import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
 import { StorageNftStorage, StorageArweave } from '../storage';
-import { Instruction, Result, debugLog, Try } from '@solana-suite/shared';
+import {
+  Instruction,
+  Result,
+  debugLog,
+  Try,
+  Node,
+  Constants,
+  MintInstruction,
+} from '@solana-suite/shared';
 import { Validator } from '../validator';
 import {
   InputMetaplexMetadata,
@@ -25,7 +33,7 @@ export namespace Metaplex {
     params: CreateNftBuilderParams,
     owner: Keypair,
     feePayer: Keypair
-  ) => {
+  ): Promise<MintInstruction> => {
     const useNewMint = Keypair.generate();
     const updateAuthority = owner;
     const mintAuthority = owner;
@@ -40,7 +48,7 @@ export namespace Metaplex {
       tokenOwner
     );
 
-    return new Instruction(
+    return new MintInstruction(
       inst,
       [feePayer, useNewMint, owner],
       undefined,
@@ -223,7 +231,7 @@ export namespace Metaplex {
     input: InputMetaplexMetadata,
     owner: Keypair,
     feePayer?: Keypair
-  ): Promise<Result<Instruction, Error>> => {
+  ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputMetaplexMetadata>(input);
       if (valid.isErr) {
@@ -243,7 +251,6 @@ export namespace Metaplex {
         sellerFeeBasisPoints,
         ...reducedMetadata,
       };
-
       return await createNftBuilder(mintInput, owner, payer);
     });
   };

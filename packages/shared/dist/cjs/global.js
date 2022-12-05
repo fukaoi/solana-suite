@@ -179,7 +179,7 @@ const isPromise = (obj) => {
         typeof obj.then === 'function');
 };
 exports.isPromise = isPromise;
-function Try(input) {
+function Try(input, finallyInput) {
     try {
         const v = input();
         if ((0, exports.isPromise)(v)) {
@@ -194,6 +194,12 @@ function Try(input) {
             return result_1.Result.err(e);
         }
         return result_1.Result.err(Error(e));
+    }
+    finally {
+        if (finallyInput) {
+            (0, exports.debugLog)('# finally input:', finallyInput);
+            finallyInput();
+        }
     }
 }
 exports.Try = Try;

@@ -20,7 +20,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 import { Keypair } from '@solana/web3.js';
 import { StorageNftStorage, StorageArweave } from '../storage';
-import { Instruction, debugLog, Try } from '@solana-suite/shared';
+import { debugLog, Try, MintInstruction, } from '@solana-suite/shared';
 import { Validator } from '../validator';
 import { Metaplex as _Royalty } from './royalty';
 import { Bundlr } from '../bundlr';
@@ -35,7 +35,7 @@ export var Metaplex;
         const mintAuthority = owner;
         const tokenOwner = owner.publicKey;
         const inst = yield Metaplex.createNftBuilderInstruction(feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
-        return new Instruction(inst, [feePayer, useNewMint, owner], undefined, useNewMint.publicKey.toString());
+        return new MintInstruction(inst, [feePayer, useNewMint, owner], undefined, useNewMint.publicKey.toString());
     });
     const initNftStorageMetadata = (input, sellerFeeBasisPoints, options) => {
         const data = {

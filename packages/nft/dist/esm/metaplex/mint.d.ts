@@ -1,5 +1,5 @@
 import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
-import { Instruction, Result } from '@solana-suite/shared';
+import { Result, MintInstruction } from '@solana-suite/shared';
 import { InputMetaplexMetadata } from '../types/metaplex/index';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 import { BundlrSigner } from '../types';
@@ -53,5 +53,5 @@ export declare namespace Metaplex {
      * @param {Keypair} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    const mint: (input: InputMetaplexMetadata, owner: Keypair, feePayer?: Keypair) => Promise<Result<Instruction, Error>>;
+    const mint: (input: InputMetaplexMetadata, owner: Keypair, feePayer?: Keypair) => Promise<Result<MintInstruction, Error>>;
 }
