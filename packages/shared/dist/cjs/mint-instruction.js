@@ -31,7 +31,7 @@ class MintInstruction extends _1.Instruction {
                 const options = {
                     maxRetries: define_1.MAX_RETRIES,
                 };
-                if (_1.Constants.currentCluster === _1.Constants.Cluster.prd) {
+                if (_1.Node.getConnection().rpcEndpoint === _1.Constants.EndPointUrl.prd) {
                     (0, _1.debugLog)('# Change metaplex cluster on mainnet-beta');
                     _1.Node.changeConnection({ cluster: _1.Constants.Cluster.prdMetaplex });
                 }
