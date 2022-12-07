@@ -37,7 +37,7 @@ export class MintInstruction extends Instruction {
         maxRetries: MAX_RETRIES,
       };
 
-      if (Constants.currentCluster === Constants.Cluster.prd) {
+      if (Node.getConnection().rpcEndpoint === Constants.EndPointUrl.prd) {
         debugLog('# Change metaplex cluster on mainnet-beta');
         Node.changeConnection({ cluster: Constants.Cluster.prdMetaplex });
       }
