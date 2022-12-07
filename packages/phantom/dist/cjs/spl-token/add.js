@@ -9,14 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SplTokenPhantom = void 0;
+exports.PhantomSplToken = void 0;
 const spl_token_1 = require("@solana/spl-token");
 const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
 const core_1 = require("@solana-suite/core");
-var SplTokenPhantom;
-(function (SplTokenPhantom) {
-    SplTokenPhantom.add = (tokenKey, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
+var PhantomSplToken;
+(function (PhantomSplToken) {
+    PhantomSplToken.add = (tokenKey, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             shared_1.Node.changeConnection({ cluster });
             const connection = shared_1.Node.getConnection();
@@ -36,4 +36,4 @@ var SplTokenPhantom;
             return tokenKey.toBase58();
         }));
     });
-})(SplTokenPhantom = exports.SplTokenPhantom || (exports.SplTokenPhantom = {}));
+})(PhantomSplToken = exports.PhantomSplToken || (exports.PhantomSplToken = {}));

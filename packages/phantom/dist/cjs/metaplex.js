@@ -9,12 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MetaplexPhantom = void 0;
+exports.PhantomMetaplex = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const nft_1 = require("@solana-suite/nft");
 const shared_1 = require("@solana-suite/shared");
-var MetaplexPhantom;
-(function (MetaplexPhantom) {
+var PhantomMetaplex;
+(function (PhantomMetaplex) {
     const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
         const metaplex = nft_1.Bundlr.make(phantom);
         const payer = metaplex.identity();
@@ -37,7 +37,7 @@ var MetaplexPhantom;
      * @param {Phantom} phantom        phantom wallet object
      * @return Promise<Result<Instruction, Error>>
      */
-    MetaplexPhantom.mint = (input, cluster, phantom) => __awaiter(this, void 0, void 0, function* () {
+    PhantomMetaplex.mint = (input, cluster, phantom) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             const valid = nft_1.Validator.checkAll(input);
             if (valid.isErr) {
@@ -65,4 +65,4 @@ var MetaplexPhantom;
             return builder.useNewMint.publicKey.toString();
         }));
     });
-})(MetaplexPhantom = exports.MetaplexPhantom || (exports.MetaplexPhantom = {}));
+})(PhantomMetaplex = exports.PhantomMetaplex || (exports.PhantomMetaplex = {}));

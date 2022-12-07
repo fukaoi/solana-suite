@@ -11,8 +11,8 @@ import { MINT_SIZE, createInitializeMintInstruction, TOKEN_PROGRAM_ID, getMinimu
 import { Transaction, SystemProgram, Keypair, } from '@solana/web3.js';
 import { Node, Try } from '@solana-suite/shared';
 import { AssociatedAccount } from '@solana-suite/core';
-export var SplTokenPhantom;
-(function (SplTokenPhantom) {
+export var PhantomSplToken;
+(function (PhantomSplToken) {
     const createTokenBuilder = (owner, mintDecimal) => __awaiter(this, void 0, void 0, function* () {
         const connection = Node.getConnection();
         const keypair = Keypair.generate();
@@ -28,7 +28,7 @@ export var SplTokenPhantom;
         return { mint: keypair, tx: transaction };
     });
     // select 'new token'
-    SplTokenPhantom.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
+    PhantomSplToken.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             Node.changeConnection({ cluster });
             const connection = Node.getConnection();
@@ -58,4 +58,4 @@ export var SplTokenPhantom;
             return txData.mint.toString();
         }));
     });
-})(SplTokenPhantom || (SplTokenPhantom = {}));
+})(PhantomSplToken || (PhantomSplToken = {}));

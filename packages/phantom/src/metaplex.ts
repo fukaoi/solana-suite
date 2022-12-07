@@ -12,7 +12,7 @@ import {
 import { debugLog, Node, Result, Try } from '@solana-suite/shared';
 import { InitializeNftMint, Phantom } from './types';
 
-export namespace MetaplexPhantom {
+export namespace PhantomMetaplex {
   const createNftBuilder = async (
     params: CreateNftBuilderParams,
     phantom: Phantom
