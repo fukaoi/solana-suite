@@ -22,7 +22,7 @@ import { InitializeMint, Phantom } from '../types';
 export namespace PhantomSplToken {
   const createTokenBuilder = async (
     owner: PublicKey,
-    mintDecimal: number,
+    mintDecimal: number
   ): Promise<InitializeMint> => {
     const connection = Node.getConnection();
     const keypair = Keypair.generate();
