@@ -14,7 +14,7 @@ import { Node, Result, Try } from '@solana-suite/shared';
 import { AssociatedAccount } from '@solana-suite/core';
 import { Phantom } from '../types';
 
-export namespace SplTokenPhantom {
+export namespace PhantomSplToken {
   export const add = async (
     tokenKey: PublicKey,
     owner: PublicKey,

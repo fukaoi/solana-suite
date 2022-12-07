@@ -19,7 +19,7 @@ import { Node, Result, Try } from '@solana-suite/shared';
 import { AssociatedAccount } from '@solana-suite/core';
 import { InitializeMint, Phantom } from '../types';
 
-export namespace SplTokenPhantom {
+export namespace PhantomSplToken {
   const createTokenBuilder = async (
     owner: PublicKey,
     mintDecimal: number

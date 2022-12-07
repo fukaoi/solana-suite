@@ -1,7 +1,7 @@
-import { SplTokenPhantom as Add } from './add';
-import { SplTokenPhantom as Mint } from './mint';
+import { PhantomSplToken as Add } from './add';
+import { PhantomSplToken as Mint } from './mint';
 
-export const SplToken = {
+export const PhantomSplToken = {
   ...Add,
   ...Mint,
 };

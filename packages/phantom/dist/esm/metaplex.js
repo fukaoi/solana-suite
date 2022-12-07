@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Keypair, Transaction } from '@solana/web3.js';
 import { Validator, Bundlr, Metaplex, } from '@solana-suite/nft';
 import { debugLog, Node, Try } from '@solana-suite/shared';
-export var MetaplexPhantom;
-(function (MetaplexPhantom) {
+export var PhantomMetaplex;
+(function (PhantomMetaplex) {
     const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
         const metaplex = Bundlr.make(phantom);
         const payer = metaplex.identity();
@@ -34,7 +34,7 @@ export var MetaplexPhantom;
      * @param {Phantom} phantom        phantom wallet object
      * @return Promise<Result<Instruction, Error>>
      */
-    MetaplexPhantom.mint = (input, cluster, phantom) => __awaiter(this, void 0, void 0, function* () {
+    PhantomMetaplex.mint = (input, cluster, phantom) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             const valid = Validator.checkAll(input);
             if (valid.isErr) {
@@ -62,4 +62,4 @@ export var MetaplexPhantom;
             return builder.useNewMint.publicKey.toString();
         }));
     });
-})(MetaplexPhantom || (MetaplexPhantom = {}));
+})(PhantomMetaplex || (PhantomMetaplex = {}));

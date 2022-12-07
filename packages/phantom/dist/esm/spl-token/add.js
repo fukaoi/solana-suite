@@ -11,9 +11,9 @@ import { TOKEN_PROGRAM_ID, createMintToCheckedInstruction, } from '@solana/spl-t
 import { Transaction, } from '@solana/web3.js';
 import { Node, Try } from '@solana-suite/shared';
 import { AssociatedAccount } from '@solana-suite/core';
-export var SplTokenPhantom;
-(function (SplTokenPhantom) {
-    SplTokenPhantom.add = (tokenKey, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
+export var PhantomSplToken;
+(function (PhantomSplToken) {
+    PhantomSplToken.add = (tokenKey, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             Node.changeConnection({ cluster });
             const connection = Node.getConnection();
@@ -33,4 +33,4 @@ export var SplTokenPhantom;
             return tokenKey.toBase58();
         }));
     });
-})(SplTokenPhantom || (SplTokenPhantom = {}));
+})(PhantomSplToken || (PhantomSplToken = {}));
