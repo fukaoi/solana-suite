@@ -47,6 +47,9 @@ export namespace PhantomSplToken {
     );
 
     transaction.feePayer = owner;
+    const blockhashObj = await connection.getLatestBlockhashAndContext();
+    transaction.recentBlockhash = blockhashObj.value.blockhash;
+    transaction.partialSign(keypair);
     return { mint: keypair, tx: transaction };
   };
 
@@ -69,16 +72,11 @@ export namespace PhantomSplToken {
         owner
       );
       tx.add(data.inst as TransactionInstruction);
-      const txData = {
-        tokenAccount: data.tokenAccount.toPublicKey(),
-        mint: builder.mint,
-        tx: builder.tx,
-      };
 
       const transaction = tx.add(
         createMintToCheckedInstruction(
-          txData.mint.publicKey,
-          txData.tokenAccount,
+          builder.mint.publicKey,
+          data.tokenAccount.toPublicKey(),
           owner,
           totalAmount,
           mintDecimal,
@@ -88,12 +86,12 @@ export namespace PhantomSplToken {
       );
 
       transaction.feePayer = owner;
+
       const blockhashObj = await connection.getLatestBlockhashAndContext();
       transaction.recentBlockhash = blockhashObj.value.blockhash;
 
-      transaction.partialSign(builder.mint);
       const signed = await phantom.signAllTransactions([
-        txData.tx,
+        builder.tx,
         transaction,
       ]);
 
@@ -102,7 +100,7 @@ export namespace PhantomSplToken {
         const sig = await connection.sendRawTransaction(sign.serialize());
         await Node.confirmedSig(sig);
       }
-      return txData.mint.toString();
+      return builder.mint.publicKey.toString();
     });
   };
 }

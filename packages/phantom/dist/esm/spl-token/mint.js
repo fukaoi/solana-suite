@@ -25,6 +25,9 @@ export var PhantomSplToken;
             programId: TOKEN_PROGRAM_ID,
         }), createInitializeMintInstruction(keypair.publicKey, mintDecimal, owner, owner, TOKEN_PROGRAM_ID));
         transaction.feePayer = owner;
+        const blockhashObj = yield connection.getLatestBlockhashAndContext();
+        transaction.recentBlockhash = blockhashObj.value.blockhash;
+        transaction.partialSign(keypair);
         return { mint: keypair, tx: transaction };
     });
     // select 'new token'
@@ -36,18 +39,12 @@ export var PhantomSplToken;
             const builder = yield createTokenBuilder(owner, mintDecimal);
             const data = yield AssociatedAccount.makeOrCreateInstruction(builder.mint.publicKey, owner);
             tx.add(data.inst);
-            const txData = {
-                tokenAccount: data.tokenAccount.toPublicKey(),
-                mint: builder.mint,
-                tx: builder.tx,
-            };
-            const transaction = tx.add(createMintToCheckedInstruction(txData.mint.publicKey, txData.tokenAccount, owner, totalAmount, mintDecimal, [], TOKEN_PROGRAM_ID));
+            const transaction = tx.add(createMintToCheckedInstruction(builder.mint.publicKey, data.tokenAccount.toPublicKey(), owner, totalAmount, mintDecimal, [], TOKEN_PROGRAM_ID));
             transaction.feePayer = owner;
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             transaction.recentBlockhash = blockhashObj.value.blockhash;
-            transaction.partialSign(builder.mint);
             const signed = yield phantom.signAllTransactions([
-                txData.tx,
+                builder.tx,
                 transaction,
             ]);
             // todo: refactoring
@@ -55,7 +52,7 @@ export var PhantomSplToken;
                 const sig = yield connection.sendRawTransaction(sign.serialize());
                 yield Node.confirmedSig(sig);
             }
-            return txData.mint.toString();
+            return builder.mint.publicKey.toString();
         }));
     });
 })(PhantomSplToken || (PhantomSplToken = {}));

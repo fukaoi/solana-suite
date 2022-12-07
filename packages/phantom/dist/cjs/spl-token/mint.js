@@ -28,6 +28,9 @@ var PhantomSplToken;
             programId: spl_token_1.TOKEN_PROGRAM_ID,
         }), (0, spl_token_1.createInitializeMintInstruction)(keypair.publicKey, mintDecimal, owner, owner, spl_token_1.TOKEN_PROGRAM_ID));
         transaction.feePayer = owner;
+        const blockhashObj = yield connection.getLatestBlockhashAndContext();
+        transaction.recentBlockhash = blockhashObj.value.blockhash;
+        transaction.partialSign(keypair);
         return { mint: keypair, tx: transaction };
     });
     // select 'new token'
@@ -39,18 +42,12 @@ var PhantomSplToken;
             const builder = yield createTokenBuilder(owner, mintDecimal);
             const data = yield core_1.AssociatedAccount.makeOrCreateInstruction(builder.mint.publicKey, owner);
             tx.add(data.inst);
-            const txData = {
-                tokenAccount: data.tokenAccount.toPublicKey(),
-                mint: builder.mint,
-                tx: builder.tx,
-            };
-            const transaction = tx.add((0, spl_token_1.createMintToCheckedInstruction)(txData.mint.publicKey, txData.tokenAccount, owner, totalAmount, mintDecimal, [], spl_token_1.TOKEN_PROGRAM_ID));
+            const transaction = tx.add((0, spl_token_1.createMintToCheckedInstruction)(builder.mint.publicKey, data.tokenAccount.toPublicKey(), owner, totalAmount, mintDecimal, [], spl_token_1.TOKEN_PROGRAM_ID));
             transaction.feePayer = owner;
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             transaction.recentBlockhash = blockhashObj.value.blockhash;
-            transaction.partialSign(builder.mint);
             const signed = yield phantom.signAllTransactions([
-                txData.tx,
+                builder.tx,
                 transaction,
             ]);
             // todo: refactoring
@@ -58,7 +55,7 @@ var PhantomSplToken;
                 const sig = yield connection.sendRawTransaction(sign.serialize());
                 yield shared_1.Node.confirmedSig(sig);
             }
-            return txData.mint.toString();
+            return builder.mint.publicKey.toString();
         }));
     });
 })(PhantomSplToken = exports.PhantomSplToken || (exports.PhantomSplToken = {}));
