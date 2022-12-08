@@ -54,6 +54,14 @@ describe('Global', () => {
     const res = /devnet/.test(url);
     assert.isTrue(res);
   });
+  
+  it.only('[Devnet, custom]Create explorer url', async () => {
+    Node.changeConnection({ cluster: Constants.Cluster.custom });
+    console.log(Node.getConnection());
+    const url = dummySig.toExplorerUrl();
+    const res = /devnet/.test(url);
+    assert.isTrue(res);
+  });
 
   it('debugLog', async () => {
     debugLog('debug test', { title: 'test' }, () => {

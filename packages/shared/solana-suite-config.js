@@ -10,6 +10,7 @@ let ESM_JSON = './dist/esm/solana-suite.json';
 
 ////////////////////////////////////////////////////////////////
 // for debug
+////////////////////////////////////////////////////////////////
 
 if (process.env.NODE_ENV === 'standalone') {
   CJS_JSON = './src/solana-suite.json';
@@ -18,6 +19,7 @@ if (process.env.NODE_ENV === 'standalone') {
 
 ////////////////////////////////////////////////////////////////
 // local functions
+////////////////////////////////////////////////////////////////
 
 (() => {
   try {
@@ -41,6 +43,7 @@ const updateConfigFile = (key, value) => {
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
   successMessage();
+  clearCache();
 };
 
 const updateClusterConfigFile = (key, value, customUrl = '') => {
@@ -50,6 +53,7 @@ const updateClusterConfigFile = (key, value, customUrl = '') => {
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
   successMessage();
+  clearCache();
 };
 
 const updateNftStorageConfigFile = (key, value) => {
@@ -58,6 +62,7 @@ const updateNftStorageConfigFile = (key, value) => {
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
   successMessage();
+  clearCache();
 };
 
 const showCurrentConfigFile = () => {
@@ -67,9 +72,17 @@ const showCurrentConfigFile = () => {
   showMessage(`# Current esm\n${esm.toString()}\n`);
 };
 
+const clearCache = () => {
+  const dir = '../../node_modules/.cache';
+  if (fs.existsSync(dir)) {
+    fs.rmdir(dir);
+    showMessage(`# clear cache`);
+  }
+};
+
 ////////////////////////////////////////////////////////////////
 // options
-
+////////////////////////////////////////////////////////////////
 program
   .name('solana-suite-config')
   .description('Setup solana-suite.json')
@@ -98,6 +111,7 @@ program.parse();
 
 ////////////////////////////////////////////////////////////////
 // actions
+////////////////////////////////////////////////////////////////
 
 const execCluser = (type) => {
   let value;
@@ -155,6 +169,7 @@ const execShow = () => {
 
 ////////////////////////////////////////////////////////////////
 // Parse options
+////////////////////////////////////////////////////////////////
 
 const options = program.opts();
 if (options.cluster) {
