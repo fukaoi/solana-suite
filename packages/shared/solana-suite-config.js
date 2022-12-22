@@ -46,9 +46,8 @@ const updateConfigFile = (key, value) => {
   clearCache();
 };
 
-const updateClusterConfigFile = (key, value, customUrl = '') => {
+const updateClusterConfigFile = (customUrl) => {
   const parsed = JSON.parse(cjs);
-  parsed[key].type = value;
   parsed[key].customUrl = customUrl;
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
@@ -130,7 +129,7 @@ const execCluser = (type) => {
       break;
     default:
       warnMessage(
-        `No match parameter: need parameter is\n"prd", "dev", "test", "localhost", "custom". any one of them`
+        `No match parameter: need parameter is\n"prd", "dev", "test", "localhost", any one of them`
       );
       return;
   }
@@ -142,7 +141,7 @@ const execCustomCluster = (url) => {
     warnMessage('Not found custom cluster url. e.g: custom `https://....`');
     return;
   }
-  updateClusterConfigFile('cluster', 'custom', url);
+  updateClusterConfigFile(url);
 };
 
 const execDebug = (bool) => {

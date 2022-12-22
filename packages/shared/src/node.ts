@@ -49,19 +49,13 @@ export namespace Node {
     }
 
     if (param.cluster) {
-      if (Constants.Cluster.custom === param.cluster) {
-        if (!param.customUrls || param.customUrls?.length < 1) {
-          throw Error('if set cluster: custom, please set customUrls');
-        }
-        options.cluster = Constants.switchCluster(
-          param.cluster,
-          param.customUrls
-        );
-        debugLog('# Node change cluster: ', options.cluster);
-      } else {
-        options.cluster = Constants.switchCluster(param.cluster);
-        debugLog('# Node change cluster: ', options.cluster);
-      }
+      options.cluster = Constants.switchCluster(param.cluster);
+      debugLog('# Node change cluster: ', options.cluster);
+    }
+
+    if (param.cluster && param.customUrls) {
+      options.cluster = Constants.switchCluster(param.cluster, param.cluster);
+      debugLog('# Node change cluster: ', options.cluster);
     }
   };
 

@@ -54,9 +54,12 @@ describe('Global', () => {
     const res = /devnet/.test(url);
     assert.isTrue(res);
   });
-  
+
   it.only('[Devnet, custom]Create explorer url', async () => {
-    Node.changeConnection({ cluster: Constants.Cluster.custom });
+    Node.changeConnection({
+      cluster: Constants.Cluster.custom,
+      customUrls: 'https://solana-mainnet.g.alchemy.com/v2/_GO1JjdOJ2EfyLj0r4f3YupwsquBmTeH',
+    });
     console.log(Node.getConnection());
     const url = dummySig.toExplorerUrl();
     const res = /devnet/.test(url);

@@ -14,7 +14,6 @@ export namespace Constants {
     dev = 'devnet',
     test = 'testnet',
     localhost = 'localhost-devnet',
-    custom = 'custom',
   }
 
   export enum EndPointUrl {
@@ -29,20 +28,20 @@ export namespace Constants {
     env: string | undefined,
     customUrl = Constants.customUrl
   ): string => {
+    let url = '';
     switch (env) {
       case Constants.Cluster.prd:
-        return Constants.EndPointUrl.prd;
+        url = Constants.EndPointUrl.prd;
       case Constants.Cluster.prdMetaplex:
-        return Constants.EndPointUrl.prdMetaplex;
+        url = Constants.EndPointUrl.prdMetaplex;
       case Constants.Cluster.test:
-        return Constants.EndPointUrl.test;
+        url = Constants.EndPointUrl.test;
       case Constants.Cluster.dev:
-        return Constants.EndPointUrl.dev;
-      case Constants.Cluster.custom:
-        return customUrl;
+        url = Constants.EndPointUrl.dev;
       default:
-        return Constants.EndPointUrl.localhost;
+        url = Constants.EndPointUrl.localhost;
     }
+    return customUrl || url;
   };
 
   export const switchBundlr = (env: string): string => {
