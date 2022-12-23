@@ -46,9 +46,18 @@ const updateConfigFile = (key, value) => {
   clearCache();
 };
 
-const updateClusterConfigFile = (customUrl) => {
+const updateClusterConfigFile = (type) => {
   const parsed = JSON.parse(cjs);
-  parsed[key].customUrl = customUrl;
+  parsed['cluster'].type = type;
+  fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
+  fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
+  successMessage();
+  clearCache();
+};
+
+const updateClusterUrlConfigFile = (customUrl) => {
+  const parsed = JSON.parse(cjs);
+  parsed['cluster'].customUrl = customUrl;
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
   successMessage();
@@ -93,7 +102,7 @@ program
     'connect to cluster type. `prd`, `dev`, `test`, `localhost`'
   )
   .option(
-    '-cc --custom-cluster <cluster url>',
+    '-cc --custom-cluster <cluster url...>',
     'connect to cluster url. `https://...`'
   )
   .option(
@@ -113,35 +122,43 @@ program.parse();
 ////////////////////////////////////////////////////////////////
 
 const execCluser = (type) => {
-  let value;
+  let convertedType;
   switch (type) {
     case 'prd':
-      value = 'mainnet-beta';
+      convertedType = 'mainnet-beta';
       break;
     case 'dev':
-      value = 'devnet';
+      convertedType = 'devnet';
       break;
     case 'test':
-      value = 'testnet';
+      convertedType = 'testnet';
       break;
     case 'localhost':
-      value = 'localhost-devnet';
+      convertedType = 'localhost-devnet';
       break;
     default:
       warnMessage(
         `No match parameter: need parameter is\n"prd", "dev", "test", "localhost", any one of them`
       );
-      return;
   }
-  updateClusterConfigFile('cluster', value);
+  updateClusterConfigFile(convertedType);
 };
 
 const execCustomCluster = (url) => {
-  if (!url || !/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(url)) {
-    warnMessage('Not found custom cluster url. e.g: custom `https://....`');
-    return;
-  }
-  updateClusterConfigFile(url);
+  const validation = (u) => {
+    return /https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(u);
+  };
+
+  url.forEach((element) => {
+    if (!validation(element)) {
+      warnMessage(
+        `Not found custom cluster url: ${element}. e.g: custom https://...`
+      );
+      process.exit(0);
+    }
+  });
+
+  updateClusterUrlConfigFile(url);
 };
 
 const execDebug = (bool) => {
@@ -149,7 +166,7 @@ const execDebug = (bool) => {
     warnMessage(
       `No match parameter: need parameter is "on", "off". any one of them`
     );
-    return;
+    process.exit(0);
   }
   updateConfigFile('debugging', bool);
 };
@@ -157,7 +174,7 @@ const execDebug = (bool) => {
 const execNftstorage = (arg) => {
   if (arg.length < 230) {
     warnMessage('Not found api key');
-    return;
+    process.exit(0);
   }
   updateNftStorageConfigFile('apikey', arg);
 };
