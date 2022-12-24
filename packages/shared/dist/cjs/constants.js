@@ -47,7 +47,7 @@ var Constants;
             case Constants.Cluster.prdMetaplex:
                 return Constants.EndPointUrl.prdMetaplex;
             case Constants.Cluster.test:
-                return EndPointUrl.test;
+                return Constants.EndPointUrl.test;
             case Constants.Cluster.dev:
                 return Constants.EndPointUrl.dev;
             default:
