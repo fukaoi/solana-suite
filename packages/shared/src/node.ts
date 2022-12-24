@@ -2,12 +2,7 @@ import { debugLog } from './global';
 import { Result } from './result';
 import { Constants } from './constants';
 
-import {
-  Connection,
-  Commitment,
-  RpcResponseAndContext,
-  SignatureResult,
-} from '@solana/web3.js';
+import { Connection, Commitment } from '@solana/web3.js';
 
 export namespace Node {
   export const options = {
@@ -40,8 +35,7 @@ export namespace Node {
   export const changeConnection = (param: {
     cluster?: string;
     commitment?: Commitment;
-    // customUrls?: string[];
-    customUrls?: string;
+    customUrls?: string[];
   }): void => {
     if (param.commitment) {
       options.commitment = param.commitment;
@@ -54,20 +48,29 @@ export namespace Node {
     }
 
     if (param.cluster && param.customUrls) {
-      options.cluster = Constants.switchCluster(param.cluster, param.cluster);
-      debugLog('# Node change cluster: ', options.cluster);
+      options.cluster = Constants.switchCluster(
+        param.cluster,
+        param.customUrls
+      );
+      debugLog('# Node change cluster, custom cluster url: ', options.cluster);
     }
   };
 
   export const confirmedSig = async (
     signature: string,
     commitment: Commitment = Constants.COMMITMENT
-  ): Promise<
-    Result<RpcResponseAndContext<SignatureResult> | unknown, Error>
-  > => {
-    /** @deprecated Instead, call `confirmTransaction` using a `TransactionConfirmationConfig` */
-    return await Node.getConnection()
-      .confirmTransaction(signature, commitment)
+  ) => {
+    const connection = Node.getConnection();
+    const latestBlockhash = await connection.getLatestBlockhash();
+    return await connection
+      .confirmTransaction(
+        {
+          blockhash: latestBlockhash.blockhash,
+          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+          signature,
+        },
+        commitment
+      )
       .then(Result.ok)
       .catch(Result.err);
   };
