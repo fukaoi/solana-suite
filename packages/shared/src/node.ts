@@ -6,18 +6,18 @@ import { Connection, Commitment } from '@solana/web3.js';
 
 export namespace Node {
   export const options = {
-    cluster: '',
+    clusterUrl: '',
     commitment: Constants.COMMITMENT,
   };
 
   export const getConnection = (): Connection => {
     debugLog(
-      `# [Before] cluster:${options.cluster}, commitment:${options.commitment}`
+      `# [Before] cluster:${options.clusterUrl}, commitment:${options.commitment}`
     );
 
     // default setting
-    if (!options.cluster) {
-      options.cluster = Constants.switchCluster(Constants.currentCluster);
+    if (!options.clusterUrl) {
+      options.clusterUrl = Constants.switchCluster({cluster: Constants.currentCluster});
     }
 
     // default setting
@@ -26,10 +26,10 @@ export namespace Node {
     }
 
     debugLog(
-      `# [After] cluster:${options.cluster}, commitment:${options.commitment}`
+      `# [After] cluster:${options.clusterUrl}, commitment:${options.commitment}`
     );
 
-    return new Connection(options.cluster, options.commitment);
+    return new Connection(options.clusterUrl, options.commitment);
   };
 
   export const changeConnection = (param: {
@@ -37,23 +37,21 @@ export namespace Node {
     commitment?: Commitment;
     customClusterUrl?: string[];
   }): void => {
-    if (param.commitment) {
-      options.commitment = param.commitment;
+    let { cluster, commitment, customClusterUrl } = param;
+    if (commitment) {
+      options.commitment = commitment;
       debugLog('# Node change commitment: ', options.commitment);
     }
 
-    if (param.cluster) {
-      options.cluster = Constants.switchCluster(param.cluster);
-      debugLog('# Node change cluster: ', options.cluster);
+    if (cluster) {
+      options.clusterUrl = Constants.switchCluster({ cluster: cluster });
+      debugLog('# Node change cluster: ', options.clusterUrl);
     }
 
-    if (param.customClusterUrl) {
-      debugLog('# customClusterUrl: ', param.customClusterUrl);
-      options.cluster = Constants.switchCluster(
-        undefined,
-        param.customClusterUrl
-      );
-      debugLog('# Node change cluster, custom cluster url: ', options.cluster);
+    if (customClusterUrl) {
+      debugLog('# customClusterUrl: ', customClusterUrl);
+      options.clusterUrl = Constants.switchCluster({ customClusterUrl });
+      debugLog('# Node change cluster, custom cluster url: ', options.clusterUrl);
     }
   };
 

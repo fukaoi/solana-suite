@@ -1,7 +1,7 @@
 import { Commitment, PublicKey } from '@solana/web3.js';
 export declare namespace Constants {
     const currentCluster: string;
-    const customUrl: string;
+    const customClusterUrl: never[];
     const isDebugging: string;
     const nftStorageApiKey: string;
     enum Cluster {
@@ -9,8 +9,7 @@ export declare namespace Constants {
         prdMetaplex = "mainnet-beta-metaplex",
         dev = "devnet",
         test = "testnet",
-        localhost = "localhost-devnet",
-        custom = "custom"
+        localhost = "localhost-devnet"
     }
     enum EndPointUrl {
         prd = "https://api.mainnet-beta.solana.com",
@@ -19,7 +18,10 @@ export declare namespace Constants {
         test = "https://api.testnet.solana.com",
         localhost = "http://api.devnet.solana.com"
     }
-    const switchCluster: (env: string | undefined, customUrl?: string) => string;
+    const switchCluster: (param: {
+        cluster?: string;
+        customClusterUrl?: string[];
+    }) => string;
     const switchBundlr: (env: string) => string;
     const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;
     const MEMO_PROGRAM_ID: PublicKey;

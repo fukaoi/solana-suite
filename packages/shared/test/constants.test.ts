@@ -12,29 +12,33 @@ describe('Constants', () => {
   });
 
   it('Constants use test', () => {
-    const cluster = Constants.switchCluster('testnet');
+    const cluster = Constants.switchCluster({
+      cluster: Constants.Cluster.test,
+    });
     assert.equal(cluster, Constants.EndPointUrl.test);
   });
 
   it('Constants use dev', () => {
-    const cluster = Constants.switchCluster(Constants.Cluster.dev);
+    const cluster = Constants.switchCluster({ cluster: Constants.Cluster.dev });
     assert.equal(cluster, Constants.EndPointUrl.dev);
   });
 
   it('Constants use localhost', () => {
-    const cluster = Constants.switchCluster(Constants.Cluster.localhost);
+    const cluster = Constants.switchCluster({
+      cluster: Constants.Cluster.localhost,
+    });
     assert.equal(cluster, Constants.EndPointUrl.localhost);
   });
 
   it('Constants use prd', () => {
-    const cluster = Constants.switchCluster(Constants.Cluster.prd);
+    const cluster = Constants.switchCluster({ cluster: Constants.Cluster.prd });
     assert.equal(cluster, Constants.EndPointUrl.prd);
   });
 
-  it('Constants use custom and customUrl', () => {
-    const dummyUrl = 'https://hoge.hoge';
-    const cluster = Constants.switchCluster(Constants.Cluster.custom, dummyUrl);
+  it('Constants use customUrl', () => {
+    const customClusterUrl = ['https://hoge.hoge'];
+    const cluster = Constants.switchCluster({ customClusterUrl });
     console.log('# cluster url: ', cluster);
-    assert.equal(cluster, dummyUrl);
+    assert.equal(cluster, customClusterUrl[0]);
   });
 });

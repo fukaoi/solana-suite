@@ -10,7 +10,7 @@ const solana_suite_json_1 = __importDefault(require("./solana-suite.json"));
 var Constants;
 (function (Constants) {
     Constants.currentCluster = solana_suite_json_1.default.cluster.type;
-    Constants.customUrl = solana_suite_json_1.default.cluster.customUrl;
+    Constants.customClusterUrl = solana_suite_json_1.default.cluster.customClusterUrl;
     Constants.isDebugging = solana_suite_json_1.default.debugging;
     Constants.nftStorageApiKey = solana_suite_json_1.default.nftstorage.apikey;
     let Cluster;
@@ -20,7 +20,6 @@ var Constants;
         Cluster["dev"] = "devnet";
         Cluster["test"] = "testnet";
         Cluster["localhost"] = "localhost-devnet";
-        Cluster["custom"] = "custom";
     })(Cluster = Constants.Cluster || (Constants.Cluster = {}));
     let EndPointUrl;
     (function (EndPointUrl) {
@@ -30,18 +29,27 @@ var Constants;
         EndPointUrl["test"] = "https://api.testnet.solana.com";
         EndPointUrl["localhost"] = "http://api.devnet.solana.com";
     })(EndPointUrl = Constants.EndPointUrl || (Constants.EndPointUrl = {}));
-    Constants.switchCluster = (env, customUrl = Constants.customUrl) => {
+    Constants.switchCluster = (param) => {
+        // if setted custom url, most priority
+        let { cluster: env, customClusterUrl } = param;
+        if (customClusterUrl && customClusterUrl.length > 0) {
+            const index = Date.now() % customClusterUrl.length;
+            return customClusterUrl[index];
+        }
+        // if setted custom url in solana-suite.json
+        if (Constants.customClusterUrl.length > 0) {
+            const index = Date.now() % Constants.customClusterUrl.length;
+            return Constants.customClusterUrl[index];
+        }
         switch (env) {
             case Constants.Cluster.prd:
                 return Constants.EndPointUrl.prd;
             case Constants.Cluster.prdMetaplex:
                 return Constants.EndPointUrl.prdMetaplex;
             case Constants.Cluster.test:
-                return Constants.EndPointUrl.test;
+                return EndPointUrl.test;
             case Constants.Cluster.dev:
                 return Constants.EndPointUrl.dev;
-            case Constants.Cluster.custom:
-                return customUrl;
             default:
                 return Constants.EndPointUrl.localhost;
         }

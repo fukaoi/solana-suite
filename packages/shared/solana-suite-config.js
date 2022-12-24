@@ -55,9 +55,9 @@ const updateClusterConfigFile = (type) => {
   clearCache();
 };
 
-const updateClusterUrlConfigFile = (customUrl) => {
+const updateClusterUrlConfigFile = (customClusterUrl) => {
   const parsed = JSON.parse(cjs);
-  parsed['cluster'].customUrl = customUrl;
+  parsed['cluster'].customClusterUrl = customClusterUrl;
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
   successMessage();

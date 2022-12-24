@@ -11,7 +11,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      Constants.switchCluster(Constants.Cluster.dev)
+      Constants.switchCluster({ cluster: Constants.Cluster.dev })
     );
   });
 
@@ -22,7 +22,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      Constants.switchCluster(Constants.Cluster.test)
+      Constants.switchCluster({ cluster: Constants.Cluster.test })
     );
   });
 
@@ -33,7 +33,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      Constants.switchCluster(Constants.Cluster.prd)
+      Constants.switchCluster({ cluster: Constants.Cluster.prd })
     );
   });
 
@@ -44,7 +44,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      Constants.switchCluster(Constants.Cluster.localhost)
+      Constants.switchCluster({ cluster: Constants.Cluster.localhost })
     );
   });
 
@@ -54,7 +54,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      Constants.switchCluster(Constants.Cluster.localhost)
+      Constants.switchCluster({ cluster: Constants.Cluster.localhost })
     );
   });
 
@@ -69,7 +69,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      Constants.switchCluster(Constants.Cluster.dev)
+      Constants.switchCluster({ cluster: Constants.Cluster.dev })
     );
   });
 
