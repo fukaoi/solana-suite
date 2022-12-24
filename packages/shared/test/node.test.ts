@@ -82,6 +82,34 @@ describe('Node', () => {
     assert.equal(res2nd, res3rd);
   });
 
+  it('Change custom cluster url', async () => {
+    const customClusterUrl = ['https://dummy-solana-devnet.url'];
+    const before = Node.getConnection().rpcEndpoint;
+    console.log('# default clsuter url: ', before);
+    Node.changeConnection({
+      customClusterUrl,
+    });
+    const after = Node.getConnection().rpcEndpoint;
+    console.log('# default clsuter url: ', after);
+    assert.equal(after, customClusterUrl[0]);
+  });
+
+  it('Change custom cluster urls', async () => {
+    const customClusterUrl = [
+      'https://dummy-solana-devnet.url',
+      'https://dummy2-solana-devnet.url',
+      'https://dummy3-solana-devnet.url',
+    ];
+    const before = Node.getConnection().rpcEndpoint;
+    console.log('# default clsuter url: ', before);
+    Node.changeConnection({
+      customClusterUrl,
+    });
+    const after = Node.getConnection().rpcEndpoint;
+    console.log('# default clsuter url: ', after);
+    assert.include(customClusterUrl.join(''), after);
+  });
+
   it('Change commitment, check singleton object', async () => {
     const res = Node.getConnection().commitment;
     Node.changeConnection({

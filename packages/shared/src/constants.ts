@@ -26,22 +26,26 @@ export namespace Constants {
 
   export const switchCluster = (
     env: string | undefined,
-    customUrl = Constants.customUrl
+    customClusterUrl: string[] = Constants.customUrl
   ): string => {
-    let url = '';
+    // if setted custom url, most priority
+    if (customClusterUrl.length > 0) {
+      const index = Date.now() % customClusterUrl.length;
+      return customClusterUrl[index];
+    }
+
     switch (env) {
       case Constants.Cluster.prd:
-        url = Constants.EndPointUrl.prd;
+        return Constants.EndPointUrl.prd;
       case Constants.Cluster.prdMetaplex:
-        url = Constants.EndPointUrl.prdMetaplex;
+        return Constants.EndPointUrl.prdMetaplex;
       case Constants.Cluster.test:
-        url = Constants.EndPointUrl.test;
+        return EndPointUrl.test;
       case Constants.Cluster.dev:
-        url = Constants.EndPointUrl.dev;
+        return Constants.EndPointUrl.dev;
       default:
-        url = Constants.EndPointUrl.localhost;
+        return Constants.EndPointUrl.localhost;
     }
-    return customUrl || url;
   };
 
   export const switchBundlr = (env: string): string => {

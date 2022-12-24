@@ -35,7 +35,7 @@ export namespace Node {
   export const changeConnection = (param: {
     cluster?: string;
     commitment?: Commitment;
-    customUrls?: string[];
+    customClusterUrl?: string[];
   }): void => {
     if (param.commitment) {
       options.commitment = param.commitment;
@@ -47,10 +47,11 @@ export namespace Node {
       debugLog('# Node change cluster: ', options.cluster);
     }
 
-    if (param.cluster && param.customUrls) {
+    if (param.customClusterUrl) {
+      debugLog('# customClusterUrl: ', param.customClusterUrl);
       options.cluster = Constants.switchCluster(
-        param.cluster,
-        param.customUrls
+        undefined,
+        param.customClusterUrl
       );
       debugLog('# Node change cluster, custom cluster url: ', options.cluster);
     }

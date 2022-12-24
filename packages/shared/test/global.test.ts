@@ -55,12 +55,13 @@ describe('Global', () => {
     assert.isTrue(res);
   });
 
-  it.only('[Devnet, custom]Create explorer url', async () => {
+  it('[Devnet, custom]Create explorer url', async () => {
+    console.log('# default clsuter url: ', Node.getConnection().rpcEndpoint);
     Node.changeConnection({
-      cluster: Constants.Cluster.custom,
-      customUrls: 'https://solana-mainnet.g.alchemy.com/v2/_GO1JjdOJ2EfyLj0r4f3YupwsquBmTeH',
+      cluster: Constants.Cluster.dev,
+      customClusterUrl: ['https://dummy-solana-devnet.url'],
     });
-    console.log(Node.getConnection());
+    console.log('# update clsuter url: ', Node.getConnection().rpcEndpoint);
     const url = dummySig.toExplorerUrl();
     const res = /devnet/.test(url);
     assert.isTrue(res);
