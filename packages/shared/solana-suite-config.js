@@ -94,24 +94,24 @@ const clearCache = () => {
 program
   .name('solana-suite-config')
   .description('Setup solana-suite.json')
-  .version('0.3');
+  .version('0.4');
 
 program
   .option(
     '-c --cluster <cluster type>',
-    'connect to cluster type. `prd`, `dev`, `test`, `localhost`'
+    'connect to cluster type. "prd", "dev", "test", "localhost"'
   )
   .option(
     '-cc --custom-cluster <cluster url...>',
-    'connect to cluster url. `https://...`'
+    'connect to cluster url. "https://...", if you set more than one url, please separate them with a space'
   )
   .option(
     '-d --debug <true or false>',
-    'display debug log on terminal. defalut `false` '
+    'display debug log on terminal. defalut "false" '
   )
   .option(
     '-n --nftstorage <apikey>',
-    'Set apikey of nft.storage. `eyJhbGciO...`'
+    'Set apikey of nft.storage. "eyJhbGciO..."'
   )
   .option('-s --show', 'Show value current solana-suite.json');
 
