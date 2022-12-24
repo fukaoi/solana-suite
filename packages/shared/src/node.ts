@@ -2,27 +2,22 @@ import { debugLog } from './global';
 import { Result } from './result';
 import { Constants } from './constants';
 
-import {
-  Connection,
-  Commitment,
-  RpcResponseAndContext,
-  SignatureResult,
-} from '@solana/web3.js';
+import { Connection, Commitment } from '@solana/web3.js';
 
 export namespace Node {
   export const options = {
-    cluster: '',
+    clusterUrl: '',
     commitment: Constants.COMMITMENT,
   };
 
   export const getConnection = (): Connection => {
     debugLog(
-      `# [Before] cluster:${options.cluster}, commitment:${options.commitment}`
+      `# [Before] cluster:${options.clusterUrl}, commitment:${options.commitment}`
     );
 
     // default setting
-    if (!options.cluster) {
-      options.cluster = Constants.switchCluster(Constants.currentCluster);
+    if (!options.clusterUrl) {
+      options.clusterUrl = Constants.switchCluster({cluster: Constants.currentCluster});
     }
 
     // default setting
@@ -31,36 +26,50 @@ export namespace Node {
     }
 
     debugLog(
-      `# [After] cluster:${options.cluster}, commitment:${options.commitment}`
+      `# [After] cluster:${options.clusterUrl}, commitment:${options.commitment}`
     );
 
-    return new Connection(options.cluster, options.commitment);
+    return new Connection(options.clusterUrl, options.commitment);
   };
 
   export const changeConnection = (param: {
     cluster?: string;
     commitment?: Commitment;
+    customClusterUrl?: string[];
   }): void => {
-    if (param.commitment) {
-      options.commitment = param.commitment;
+    let { cluster, commitment, customClusterUrl } = param;
+    if (commitment) {
+      options.commitment = commitment;
       debugLog('# Node change commitment: ', options.commitment);
     }
 
-    if (param.cluster) {
-      options.cluster = Constants.switchCluster(param.cluster);
-      debugLog('# Node change cluster: ', options.cluster);
+    if (cluster) {
+      options.clusterUrl = Constants.switchCluster({ cluster: cluster });
+      debugLog('# Node change cluster: ', options.clusterUrl);
+    }
+
+    if (customClusterUrl) {
+      debugLog('# customClusterUrl: ', customClusterUrl);
+      options.clusterUrl = Constants.switchCluster({ customClusterUrl });
+      debugLog('# Node change cluster, custom cluster url: ', options.clusterUrl);
     }
   };
 
   export const confirmedSig = async (
     signature: string,
     commitment: Commitment = Constants.COMMITMENT
-  ): Promise<
-    Result<RpcResponseAndContext<SignatureResult> | unknown, Error>
-  > => {
-    /** @deprecated Instead, call `confirmTransaction` using a `TransactionConfirmationConfig` */
-    return await Node.getConnection()
-      .confirmTransaction(signature, commitment)
+  ) => {
+    const connection = Node.getConnection();
+    const latestBlockhash = await connection.getLatestBlockhash();
+    return await connection
+      .confirmTransaction(
+        {
+          blockhash: latestBlockhash.blockhash,
+          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+          signature,
+        },
+        commitment
+      )
       .then(Result.ok)
       .catch(Result.err);
   };

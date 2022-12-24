@@ -11,7 +11,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      Constants.switchCluster(Constants.Cluster.dev)
+      Constants.switchCluster({ cluster: Constants.Cluster.dev })
     );
   });
 
@@ -22,7 +22,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      Constants.switchCluster(Constants.Cluster.test)
+      Constants.switchCluster({ cluster: Constants.Cluster.test })
     );
   });
 
@@ -33,7 +33,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      Constants.switchCluster(Constants.Cluster.prd)
+      Constants.switchCluster({ cluster: Constants.Cluster.prd })
     );
   });
 
@@ -44,7 +44,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      Constants.switchCluster(Constants.Cluster.localhost)
+      Constants.switchCluster({ cluster: Constants.Cluster.localhost })
     );
   });
 
@@ -54,7 +54,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      Constants.switchCluster(Constants.Cluster.localhost)
+      Constants.switchCluster({ cluster: Constants.Cluster.localhost })
     );
   });
 
@@ -69,7 +69,7 @@ describe('Node', () => {
     assert.propertyVal(
       res,
       '_rpcEndpoint',
-      Constants.switchCluster(Constants.Cluster.dev)
+      Constants.switchCluster({ cluster: Constants.Cluster.dev })
     );
   });
 
@@ -80,6 +80,34 @@ describe('Node', () => {
     assert.notEqual(res, res2nd);
     const res3rd = Node.getConnection().rpcEndpoint;
     assert.equal(res2nd, res3rd);
+  });
+
+  it('Change custom cluster url', async () => {
+    const customClusterUrl = ['https://dummy-solana-devnet.url'];
+    const before = Node.getConnection().rpcEndpoint;
+    console.log('# default clsuter url: ', before);
+    Node.changeConnection({
+      customClusterUrl,
+    });
+    const after = Node.getConnection().rpcEndpoint;
+    console.log('# default clsuter url: ', after);
+    assert.equal(after, customClusterUrl[0]);
+  });
+
+  it('Change custom cluster urls', async () => {
+    const customClusterUrl = [
+      'https://dummy-solana-devnet.url',
+      'https://dummy2-solana-devnet.url',
+      'https://dummy3-solana-devnet.url',
+    ];
+    const before = Node.getConnection().rpcEndpoint;
+    console.log('# default clsuter url: ', before);
+    Node.changeConnection({
+      customClusterUrl,
+    });
+    const after = Node.getConnection().rpcEndpoint;
+    console.log('# default clsuter url: ', after);
+    assert.include(customClusterUrl.join(''), after);
   });
 
   it('Change commitment, check singleton object', async () => {

@@ -9,7 +9,9 @@ var Bundlr;
     Bundlr.make = (feePayer) => {
         const object = js_1.Metaplex.make(shared_1.Node.getConnection()).use((0, js_1.bundlrStorage)({
             address: shared_1.Constants.BUNDLR_NETWORK_URL,
-            providerUrl: shared_1.Constants.switchCluster(shared_1.Constants.currentCluster),
+            providerUrl: shared_1.Constants.switchCluster({
+                cluster: shared_1.Constants.currentCluster,
+            }),
             timeout: BUNDLR_CONNECT_TIMEOUT,
         }));
         if (isKeypair(feePayer)) {

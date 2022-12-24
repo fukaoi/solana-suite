@@ -55,6 +55,18 @@ describe('Global', () => {
     assert.isTrue(res);
   });
 
+  it('[Devnet, custom]Create explorer url', async () => {
+    console.log('# default clsuter url: ', Node.getConnection().rpcEndpoint);
+    Node.changeConnection({
+      cluster: Constants.Cluster.dev,
+      customClusterUrl: ['https://dummy-solana-devnet.url'],
+    });
+    console.log('# update clsuter url: ', Node.getConnection().rpcEndpoint);
+    const url = dummySig.toExplorerUrl();
+    const res = /devnet/.test(url);
+    assert.isTrue(res);
+  });
+
   it('debugLog', async () => {
     debugLog('debug test', { title: 'test' }, () => {
       return;

@@ -17,36 +17,47 @@ const web3_js_1 = require("@solana/web3.js");
 var Node;
 (function (Node) {
     Node.options = {
-        cluster: '',
+        clusterUrl: '',
         commitment: constants_1.Constants.COMMITMENT,
     };
     Node.getConnection = () => {
-        (0, global_1.debugLog)(`# [Before] cluster:${Node.options.cluster}, commitment:${Node.options.commitment}`);
+        (0, global_1.debugLog)(`# [Before] cluster:${Node.options.clusterUrl}, commitment:${Node.options.commitment}`);
         // default setting
-        if (!Node.options.cluster) {
-            Node.options.cluster = constants_1.Constants.switchCluster(constants_1.Constants.currentCluster);
+        if (!Node.options.clusterUrl) {
+            Node.options.clusterUrl = constants_1.Constants.switchCluster({ cluster: constants_1.Constants.currentCluster });
         }
         // default setting
         if (!Node.options.commitment) {
             Node.options.commitment = constants_1.Constants.COMMITMENT;
         }
-        (0, global_1.debugLog)(`# [After] cluster:${Node.options.cluster}, commitment:${Node.options.commitment}`);
-        return new web3_js_1.Connection(Node.options.cluster, Node.options.commitment);
+        (0, global_1.debugLog)(`# [After] cluster:${Node.options.clusterUrl}, commitment:${Node.options.commitment}`);
+        return new web3_js_1.Connection(Node.options.clusterUrl, Node.options.commitment);
     };
     Node.changeConnection = (param) => {
-        if (param.commitment) {
-            Node.options.commitment = param.commitment;
+        let { cluster, commitment, customClusterUrl } = param;
+        if (commitment) {
+            Node.options.commitment = commitment;
             (0, global_1.debugLog)('# Node change commitment: ', Node.options.commitment);
         }
-        if (param.cluster) {
-            Node.options.cluster = constants_1.Constants.switchCluster(param.cluster);
-            (0, global_1.debugLog)('# Node change cluster: ', Node.options.cluster);
+        if (cluster) {
+            Node.options.clusterUrl = constants_1.Constants.switchCluster({ cluster: cluster });
+            (0, global_1.debugLog)('# Node change cluster: ', Node.options.clusterUrl);
+        }
+        if (customClusterUrl) {
+            (0, global_1.debugLog)('# customClusterUrl: ', customClusterUrl);
+            Node.options.clusterUrl = constants_1.Constants.switchCluster({ customClusterUrl });
+            (0, global_1.debugLog)('# Node change cluster, custom cluster url: ', Node.options.clusterUrl);
         }
     };
     Node.confirmedSig = (signature, commitment = constants_1.Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {
-        /** @deprecated Instead, call `confirmTransaction` using a `TransactionConfirmationConfig` */
-        return yield Node.getConnection()
-            .confirmTransaction(signature, commitment)
+        const connection = Node.getConnection();
+        const latestBlockhash = yield connection.getLatestBlockhash();
+        return yield connection
+            .confirmTransaction({
+            blockhash: latestBlockhash.blockhash,
+            lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+            signature,
+        }, commitment)
             .then(result_1.Result.ok)
             .catch(result_1.Result.err);
     });

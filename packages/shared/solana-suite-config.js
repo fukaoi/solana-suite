@@ -10,6 +10,7 @@ let ESM_JSON = './dist/esm/solana-suite.json';
 
 ////////////////////////////////////////////////////////////////
 // for debug
+////////////////////////////////////////////////////////////////
 
 if (process.env.NODE_ENV === 'standalone') {
   CJS_JSON = './src/solana-suite.json';
@@ -18,6 +19,7 @@ if (process.env.NODE_ENV === 'standalone') {
 
 ////////////////////////////////////////////////////////////////
 // local functions
+////////////////////////////////////////////////////////////////
 
 (() => {
   try {
@@ -41,15 +43,25 @@ const updateConfigFile = (key, value) => {
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
   successMessage();
+  clearCache();
 };
 
-const updateClusterConfigFile = (key, value, customUrl = '') => {
+const updateClusterConfigFile = (type) => {
   const parsed = JSON.parse(cjs);
-  parsed[key].type = value;
-  parsed[key].customUrl = customUrl;
+  parsed['cluster'].type = type;
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
   successMessage();
+  clearCache();
+};
+
+const updateClusterUrlConfigFile = (customClusterUrl) => {
+  const parsed = JSON.parse(cjs);
+  parsed['cluster'].customClusterUrl = customClusterUrl;
+  fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
+  fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
+  successMessage();
+  clearCache();
 };
 
 const updateNftStorageConfigFile = (key, value) => {
@@ -58,6 +70,7 @@ const updateNftStorageConfigFile = (key, value) => {
   fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
   fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
   successMessage();
+  clearCache();
 };
 
 const showCurrentConfigFile = () => {
@@ -67,30 +80,38 @@ const showCurrentConfigFile = () => {
   showMessage(`# Current esm\n${esm.toString()}\n`);
 };
 
+const clearCache = () => {
+  const dir = '../../node_modules/.cache';
+  if (fs.existsSync(dir)) {
+    fs.rmdir(dir);
+    showMessage(`# clear cache`);
+  }
+};
+
 ////////////////////////////////////////////////////////////////
 // options
-
+////////////////////////////////////////////////////////////////
 program
   .name('solana-suite-config')
   .description('Setup solana-suite.json')
-  .version('0.3');
+  .version('0.4');
 
 program
   .option(
     '-c --cluster <cluster type>',
-    'connect to cluster type. `prd`, `dev`, `test`, `localhost`'
+    'connect to cluster type. "prd", "dev", "test", "localhost"'
   )
   .option(
-    '-cc --custom-cluster <cluster url>',
-    'connect to cluster url. `https://...`'
+    '-cc --custom-cluster <cluster url...>',
+    'connect to cluster url. "https://...", if you set more than one url, please separate them with a space'
   )
   .option(
     '-d --debug <true or false>',
-    'display debug log on terminal. defalut `false` '
+    'display debug log on terminal. defalut "false" '
   )
   .option(
     '-n --nftstorage <apikey>',
-    'Set apikey of nft.storage. `eyJhbGciO...`'
+    'Set apikey of nft.storage. "eyJhbGciO..."'
   )
   .option('-s --show', 'Show value current solana-suite.json');
 
@@ -98,37 +119,46 @@ program.parse();
 
 ////////////////////////////////////////////////////////////////
 // actions
+////////////////////////////////////////////////////////////////
 
 const execCluser = (type) => {
-  let value;
+  let convertedType;
   switch (type) {
     case 'prd':
-      value = 'mainnet-beta';
+      convertedType = 'mainnet-beta';
       break;
     case 'dev':
-      value = 'devnet';
+      convertedType = 'devnet';
       break;
     case 'test':
-      value = 'testnet';
+      convertedType = 'testnet';
       break;
     case 'localhost':
-      value = 'localhost-devnet';
+      convertedType = 'localhost-devnet';
       break;
     default:
       warnMessage(
-        `No match parameter: need parameter is\n"prd", "dev", "test", "localhost", "custom". any one of them`
+        `No match parameter: need parameter is\n"prd", "dev", "test", "localhost", any one of them`
       );
-      return;
   }
-  updateClusterConfigFile('cluster', value);
+  updateClusterConfigFile(convertedType);
 };
 
 const execCustomCluster = (url) => {
-  if (!url || !/https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(url)) {
-    warnMessage('Not found custom cluster url. e.g: custom `https://....`');
-    return;
-  }
-  updateClusterConfigFile('cluster', 'custom', url);
+  const validation = (u) => {
+    return /https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(u);
+  };
+
+  url.forEach((element) => {
+    if (!validation(element)) {
+      warnMessage(
+        `Not found custom cluster url: ${element}. e.g: custom https://...`
+      );
+      process.exit(0);
+    }
+  });
+
+  updateClusterUrlConfigFile(url);
 };
 
 const execDebug = (bool) => {
@@ -136,7 +166,7 @@ const execDebug = (bool) => {
     warnMessage(
       `No match parameter: need parameter is "on", "off". any one of them`
     );
-    return;
+    process.exit(0);
   }
   updateConfigFile('debugging', bool);
 };
@@ -144,7 +174,7 @@ const execDebug = (bool) => {
 const execNftstorage = (arg) => {
   if (arg.length < 230) {
     warnMessage('Not found api key');
-    return;
+    process.exit(0);
   }
   updateNftStorageConfigFile('apikey', arg);
 };
@@ -155,6 +185,7 @@ const execShow = () => {
 
 ////////////////////////////////////////////////////////////////
 // Parse options
+////////////////////////////////////////////////////////////////
 
 const options = program.opts();
 if (options.cluster) {

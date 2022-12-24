@@ -6,7 +6,9 @@ export var Bundlr;
     Bundlr.make = (feePayer) => {
         const object = MetaplexFoundation.make(Node.getConnection()).use(bundlrStorage({
             address: Constants.BUNDLR_NETWORK_URL,
-            providerUrl: Constants.switchCluster(Constants.currentCluster),
+            providerUrl: Constants.switchCluster({
+                cluster: Constants.currentCluster,
+            }),
             timeout: BUNDLR_CONNECT_TIMEOUT,
         }));
         if (isKeypair(feePayer)) {

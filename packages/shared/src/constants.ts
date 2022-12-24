@@ -4,7 +4,7 @@ import Config from './solana-suite.json';
 // WARNING: Not to be a circular reference
 export namespace Constants {
   export const currentCluster = Config.cluster.type;
-  export const customUrl = Config.cluster.customUrl;
+  export const customClusterUrl = Config.cluster.customClusterUrl;
   export const isDebugging = Config.debugging;
   export const nftStorageApiKey = Config.nftstorage.apikey;
 
@@ -14,7 +14,6 @@ export namespace Constants {
     dev = 'devnet',
     test = 'testnet',
     localhost = 'localhost-devnet',
-    custom = 'custom',
   }
 
   export enum EndPointUrl {
@@ -25,10 +24,23 @@ export namespace Constants {
     localhost = 'http://api.devnet.solana.com',
   }
 
-  export const switchCluster = (
-    env: string | undefined,
-    customUrl = Constants.customUrl
-  ): string => {
+  export const switchCluster = (param: {
+    cluster?: string;
+    customClusterUrl?: string[];
+  }): string => {
+    // if setted custom url, most priority
+    let { cluster: env, customClusterUrl } = param;
+    if (customClusterUrl && customClusterUrl.length > 0) {
+      const index = Date.now() % customClusterUrl.length;
+      return customClusterUrl[index];
+    }
+
+    // if setted custom url in solana-suite.json
+    if (Constants.customClusterUrl.length > 0) {
+      const index = Date.now() % Constants.customClusterUrl.length;
+      return Constants.customClusterUrl[index];
+    }
+
     switch (env) {
       case Constants.Cluster.prd:
         return Constants.EndPointUrl.prd;
@@ -38,8 +50,6 @@ export namespace Constants {
         return Constants.EndPointUrl.test;
       case Constants.Cluster.dev:
         return Constants.EndPointUrl.dev;
-      case Constants.Cluster.custom:
-        return customUrl;
       default:
         return Constants.EndPointUrl.localhost;
     }
