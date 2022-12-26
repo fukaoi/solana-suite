@@ -56,7 +56,7 @@ export namespace SplToken {
         );
         tx.add(inst2);
       } else {
-        // return instruction and undecided associated token account
+        // return instruction and undefided associated token account
         inst2 = createTransferCheckedInstruction(
           sourceToken.tokenAccount.toPublicKey(),
           mint,

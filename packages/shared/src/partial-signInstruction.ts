@@ -12,9 +12,11 @@ import { MAX_RETRIES } from './instruction/define';
 
 export class PartialSignInstruction {
   hexInstruction: string;
+  data?: unknown;
 
-  constructor(instructions: string) {
+  constructor(instructions: string, data?: unknown) {
     this.hexInstruction = instructions;
+    this.data = data;
   }
 
   submit = async (
