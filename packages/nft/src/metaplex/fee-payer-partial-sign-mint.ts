@@ -235,7 +235,7 @@ export namespace Metaplex {
     input: InputMetaplexMetadata,
     owner: Keypair,
     feePayer: PublicKey
-    ): Promise<Result<PartialSignInstruction, Error>> => {
+  ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputMetaplexMetadata>(input);
       if (valid.isErr) {
@@ -263,18 +263,16 @@ export namespace Metaplex {
       });
 
       const insts = await createNftBuilder(mintInput, owner);
-      insts.instructions.forEach((inst) => {
+      insts.instructions.forEach((inst: TransactionInstruction) => {
         tx.add(inst);
       });
       tx.recentBlockhash = blockhashObj.blockhash;
-      insts.signers.forEach(signer => tx.partialSign(signer));
-      // tx.partialSign(insts.signers[0]);
-      // tx.partialSign(insts.signers[1]);
+      insts.signers.forEach((signer: Keypair) => tx.partialSign(signer));
       const serializedTx = tx.serialize({
         requireAllSignatures: false,
       });
       const hex = serializedTx.toString('hex');
-      return new PartialSignInstruction(hex);
+      return new PartialSignInstruction(hex, insts.data);
     });
   };
 }

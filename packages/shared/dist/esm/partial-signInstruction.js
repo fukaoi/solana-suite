@@ -12,7 +12,7 @@ import { Node } from './node';
 import { Try } from './global';
 import { MAX_RETRIES } from './instruction/define';
 export class PartialSignInstruction {
-    constructor(instructions) {
+    constructor(instructions, data) {
         this.submit = (feePayer) => __awaiter(this, void 0, void 0, function* () {
             return Try(() => __awaiter(this, void 0, void 0, function* () {
                 if (!(this instanceof PartialSignInstruction)) {
@@ -29,5 +29,6 @@ export class PartialSignInstruction {
             }));
         });
         this.hexInstruction = instructions;
+        this.data = data;
     }
 }

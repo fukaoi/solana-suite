@@ -34,7 +34,7 @@ var SplToken;
                 tx.add(inst2);
             }
             else {
-                // return instruction and undecided associated token account
+                // return instruction and undefided associated token account
                 inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, calculate_amount_1.SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
                 tx.add(destToken.inst).add(inst2);
             }

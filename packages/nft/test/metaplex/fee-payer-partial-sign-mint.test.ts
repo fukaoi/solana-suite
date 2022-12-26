@@ -44,14 +44,14 @@ describe('Metaplex', () => {
         },
       },
       source.toKeypair(),
-      source.toPublicKey(),
+      source.toPublicKey()
     );
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
     if (serialized.isOk) {
       const res = await serialized.value.submit(source.toKeypair());
       assert.isTrue(res.isOk, `${res.unwrap()}`);
       console.log('# tx signature: ', res.unwrap());
-      console.log('# mint: ', serialized.value);
+      console.log('# mint: ', serialized.value.data);
     }
   });
 });
