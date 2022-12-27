@@ -21,7 +21,6 @@ import {
 import { Metaplex as _Royalty } from './royalty';
 import { Bundlr } from '../bundlr';
 import {
-  findMasterEditionV2Pda,
   CreateNftBuilderParams,
   token,
   TransactionBuilder,
@@ -145,13 +144,11 @@ export namespace Metaplex {
 
     const metaplex = Bundlr.make(owner);
     // need IdentityClient type
-    const payer = metaplex.identity();
     const sftBuilder = await metaplex
       .nfts()
       .builders()
       .createSft({
         ...params,
-        payer,
         updateAuthority,
         mintAuthority,
         freezeAuthority: mintAuthority.publicKey,
@@ -163,11 +160,14 @@ export namespace Metaplex {
 
     const { mintAddress, metadataAddress, tokenAddress } =
       sftBuilder.getContext();
-    const masterEditionAddress = findMasterEditionV2Pda(mintAddress);
+
+    const masterEditionAddress = metaplex
+      .nfts()
+      .pdas()
+      .masterEdition({ mint: mintAddress });
 
     return (
       TransactionBuilder.make<CreateNftBuilderContext>()
-        .setFeePayer(payer)
         .setContext({
           mintAddress,
           metadataAddress,
@@ -186,19 +186,18 @@ export namespace Metaplex {
               mint: mintAddress,
               updateAuthority: updateAuthority.publicKey,
               mintAuthority: mintAuthority.publicKey,
-              payer: payer.publicKey,
+              payer:
+                'BAWTL3RSxNe2mN7uS6MUvyWmBDBXUDQRNQftrS1R6baS'.toPublicKey(),
               metadata: metadataAddress,
             },
             {
               createMasterEditionArgs: {
                 maxSupply:
-                  params.maxSupply === undefined
-                    ? 0
-                    : (params.maxSupply as number),
+                  params.maxSupply === undefined ? 0 : params.maxSupply,
               },
             }
           ),
-          signers: [payer, mintAuthority, updateAuthority],
+          signers: [mintAuthority, updateAuthority],
           key:
             params.createMasterEditionInstructionKey ?? 'createMasterEdition',
         })

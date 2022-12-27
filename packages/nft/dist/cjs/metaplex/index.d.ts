@@ -16,7 +16,7 @@ export declare const Metaplex: {
             attributes?: import("..").JsonMetadataAttribute[] | undefined;
             properties?: import("..").JsonMetadataProperties | undefined;
             isMutable?: boolean | undefined;
-            maxSupply?: any;
+            maxSupply?: import("@metaplex-foundation/js").BigNumber | undefined;
             creators?: import("@metaplex-foundation/js").CreatorInput[] | undefined;
             uses?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/mpl-token-metadata").Uses> | undefined;
             isCollection?: boolean | undefined;
@@ -26,7 +26,7 @@ export declare const Metaplex: {
             collectionIsSized?: boolean | undefined;
         };
     }>;
-    createNftBuilderInstruction: (owner: import("..").BundlrSigner, params: import("@metaplex-foundation/js").CreateNftBuilderParams, useNewMint: import("@solana/web3.js").Keypair, updateAuthority: import("@solana/web3.js").Keypair | import("@metaplex-foundation/js/dist/types/plugins/identityModule").IdentityClient, mintAuthority: import("@solana/web3.js").Keypair | import("@metaplex-foundation/js/dist/types/plugins/identityModule").IdentityClient, tokenOwner: import("@solana/web3.js").PublicKey) => Promise<import("@solana/web3.js").TransactionInstruction[]>;
+    createNftBuilderInstruction: (owner: import("..").BundlrSigner, params: import("@metaplex-foundation/js").CreateNftBuilderParams, useNewMint: import("@solana/web3.js").Keypair, updateAuthority: import("@solana/web3.js").Keypair | import("@metaplex-foundation/js").IdentityClient, mintAuthority: import("@solana/web3.js").Keypair | import("@metaplex-foundation/js").IdentityClient, tokenOwner: import("@solana/web3.js").PublicKey) => Promise<import("@solana/web3.js").TransactionInstruction[]>;
     feePayerPartialSignMint: (input: import("..").InputMetaplexMetadata, owner: import("@solana/web3.js").Keypair, feePayer: import("@solana/web3.js").PublicKey) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").PartialSignInstruction, Error>>;
     findByOwner: (owner: import("@solana/web3.js").PublicKey) => Promise<import("@solana-suite/shared").Result<import("..").OutputMetaplexMetadata[], Error>>;
     mint: (input: import("..").InputMetaplexMetadata, owner: import("@solana/web3.js").Keypair, feePayer?: import("@solana/web3.js").Keypair | undefined) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").MintInstruction, Error>>;

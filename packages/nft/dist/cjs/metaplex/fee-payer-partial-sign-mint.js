@@ -183,14 +183,12 @@ var Metaplex;
                 tx.add(inst);
             });
             tx.recentBlockhash = blockhashObj.blockhash;
-            insts.signers.forEach(signer => tx.partialSign(signer));
-            // tx.partialSign(insts.signers[0]);
-            // tx.partialSign(insts.signers[1]);
+            insts.signers.forEach((signer) => tx.partialSign(signer));
             const serializedTx = tx.serialize({
                 requireAllSignatures: false,
             });
             const hex = serializedTx.toString('hex');
-            return new shared_1.PartialSignInstruction(hex);
+            return new shared_1.PartialSignInstruction(hex, insts.data);
         }));
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));

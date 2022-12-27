@@ -13,7 +13,7 @@ describe('Metaplex', () => {
     source = obj.source;
   });
 
-  it('[nftStorage]mint nft', async () => {
+  it.only('[nftStorage]mint nft', async () => {
     const owner = KeypairStr.create();
     const asset = RandomAsset.get();
 
@@ -47,7 +47,6 @@ describe('Metaplex', () => {
       owner.toKeypair(),
       source.toPublicKey()
     );
-    console.log(serialized);
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
     if (serialized.isOk) {
       const res = await serialized.value.submit(source.toKeypair());

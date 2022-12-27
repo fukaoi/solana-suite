@@ -101,7 +101,10 @@ var Metaplex;
             mintAuthority, freezeAuthority: mintAuthority.publicKey, useNewMint,
             tokenOwner, tokenAmount: (0, js_1.token)(1), decimals: 0 }));
         const { mintAddress, metadataAddress, tokenAddress } = sftBuilder.getContext();
-        const masterEditionAddress = (0, js_1.findMasterEditionV2Pda)(mintAddress);
+        const masterEditionAddress = metaplex
+            .nfts()
+            .pdas()
+            .masterEdition({ mint: mintAddress });
         return (js_1.TransactionBuilder.make()
             .setFeePayer(payer)
             .setContext({
@@ -125,7 +128,7 @@ var Metaplex;
                 createMasterEditionArgs: {
                     maxSupply: params.maxSupply === undefined
                         ? 0
-                        : params.maxSupply,
+                        : (params.maxSupply),
                 },
             }),
             signers: [payer, mintAuthority, updateAuthority],

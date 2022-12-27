@@ -42,7 +42,7 @@
   "dependencies": {
     "@solana-suite/core": "latest",
     "@solana-suite/shared": "latest",
-    "@metaplex-foundation/js": "0.15.0",
+    "@metaplex-foundation/js": "^0.17",
     "form-data": "^3.0.1",
     "nft.storage": "^3.3.0",
     "node-fetch": "^3.0.0",

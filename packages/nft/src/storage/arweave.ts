@@ -40,7 +40,7 @@ export namespace StorageArweave {
         buffer.length
       );
 
-      const basisPoints: string = res.basisPoints as string;
+      const basisPoints: string = res.basisPoints.toString();
       debugLog(
         '# buffer length, price',
         buffer.length,
@@ -98,8 +98,7 @@ export namespace StorageArweave {
 
       const uploaded = await Bundlr.make(feePayer)
         .nfts()
-        .uploadMetadata(metadata)
-        .run();
+        .uploadMetadata(metadata);
       return uploaded.uri;
     });
   };
