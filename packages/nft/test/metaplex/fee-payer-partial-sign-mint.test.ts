@@ -44,7 +44,7 @@ describe('Metaplex', () => {
           creators: [creator1, creator2],
         },
       },
-      owner.toKeypair(),
+      source.toKeypair(),
       source.toPublicKey()
     );
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);

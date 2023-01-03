@@ -93,18 +93,18 @@ var Metaplex;
         (0, shared_1.debugLog)('# tokenOwner: ', tokenOwner.toString());
         const metaplex = bundlr_1.Bundlr.make(owner);
         // need IdentityClient type
-        const payer = metaplex.identity();
         const sftBuilder = yield metaplex
             .nfts()
             .builders()
-            .createSft(Object.assign(Object.assign({}, params), { payer,
-            updateAuthority,
+            .createSft(Object.assign(Object.assign({}, params), { updateAuthority,
             mintAuthority, freezeAuthority: mintAuthority.publicKey, useNewMint,
             tokenOwner, tokenAmount: (0, js_1.token)(1), decimals: 0 }));
         const { mintAddress, metadataAddress, tokenAddress } = sftBuilder.getContext();
-        const masterEditionAddress = (0, js_1.findMasterEditionV2Pda)(mintAddress);
+        const masterEditionAddress = metaplex
+            .nfts()
+            .pdas()
+            .masterEdition({ mint: mintAddress });
         return (js_1.TransactionBuilder.make()
-            .setFeePayer(payer)
             .setContext({
             mintAddress,
             metadataAddress,
@@ -120,16 +120,14 @@ var Metaplex;
                 mint: mintAddress,
                 updateAuthority: updateAuthority.publicKey,
                 mintAuthority: mintAuthority.publicKey,
-                payer: payer.publicKey,
+                payer: 'BAWTL3RSxNe2mN7uS6MUvyWmBDBXUDQRNQftrS1R6baS'.toPublicKey(),
                 metadata: metadataAddress,
             }, {
                 createMasterEditionArgs: {
-                    maxSupply: params.maxSupply === undefined
-                        ? 0
-                        : params.maxSupply,
+                    maxSupply: params.maxSupply === undefined ? 0 : params.maxSupply,
                 },
             }),
-            signers: [payer, mintAuthority, updateAuthority],
+            signers: [mintAuthority, updateAuthority],
             key: (_a = params.createMasterEditionInstructionKey) !== null && _a !== void 0 ? _a : 'createMasterEdition',
         })
             .getInstructions());
@@ -181,6 +179,7 @@ var Metaplex;
             const insts = yield createNftBuilder(mintInput, owner);
             insts.instructions.forEach((inst) => {
                 tx.add(inst);
+                tx.feePayer = feePayer;
             });
             tx.recentBlockhash = blockhashObj.blockhash;
             insts.signers.forEach((signer) => tx.partialSign(signer));

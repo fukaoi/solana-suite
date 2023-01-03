@@ -96,15 +96,12 @@ var Metaplex;
         const sftBuilder = yield metaplex
             .nfts()
             .builders()
-            .createSft(Object.assign(Object.assign({}, params), { payer,
-            updateAuthority,
+            .createSft(Object.assign(Object.assign({}, params), { updateAuthority,
             mintAuthority, freezeAuthority: mintAuthority.publicKey, useNewMint,
             tokenOwner, tokenAmount: (0, js_1.token)(1), decimals: 0 }));
         const { mintAddress, metadataAddress, tokenAddress } = sftBuilder.getContext();
-        const masterEditionAddress = metaplex
-            .nfts()
-            .pdas()
-            .masterEdition({ mint: mintAddress });
+        const masterEditionAddress = metaplex.nfts().pdas().masterEdition({ mint: mintAddress });
+        // const masterEditionAddress = findMasterEditionV2Pda(mintAddress);
         return (js_1.TransactionBuilder.make()
             .setFeePayer(payer)
             .setContext({

@@ -260,6 +260,8 @@ export namespace Metaplex {
         blockhash: blockhashObj.blockhash,
         feePayer,
       });
+      
+      tx.feePayer = feePayer;
 
       const insts = await createNftBuilder(mintInput, owner);
       insts.instructions.forEach((inst: TransactionInstruction) => {
