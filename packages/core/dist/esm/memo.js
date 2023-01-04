@@ -21,3 +21,4 @@ export var Memo;
         return new Instruction([instruction], [signer], signer);
     };
 })(Memo || (Memo = {}));
+//# sourceMappingURL=memo.js.map

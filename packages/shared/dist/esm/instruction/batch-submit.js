@@ -43,3 +43,4 @@ Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, function* (
     };
     return yield sendAndConfirmTransaction(Node.getConnection(), transaction, finalSigners, options);
 });
+//# sourceMappingURL=batch-submit.js.map

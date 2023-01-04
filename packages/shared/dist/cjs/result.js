@@ -106,3 +106,4 @@ var Result;
     }
     Result.all = all;
 })(Result = exports.Result || (exports.Result = {}));
+//# sourceMappingURL=result.js.map

@@ -35,3 +35,4 @@ export var SolNative;
         }));
     });
 })(SolNative || (SolNative = {}));
+//# sourceMappingURL=fee-payer-partial-sign-transfer.js.map

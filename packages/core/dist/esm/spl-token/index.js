@@ -6,3 +6,4 @@ import { SplToken as History } from './history';
 import { SplToken as Mint } from './mint';
 import { SplToken as Transfer } from './transfer';
 export const SplToken = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, Add), Burn), History), Find), FeePayer), Mint), Transfer);
+//# sourceMappingURL=index.js.map

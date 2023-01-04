@@ -40,3 +40,4 @@ class Instruction {
     }
 }
 exports.Instruction = Instruction;
+//# sourceMappingURL=index.js.map

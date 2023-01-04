@@ -1,0 +1,1 @@
+{"version":3,"file":"calculate-amount.js","sourceRoot":"","sources":["../../../src/spl-token/calculate-amount.ts"],"names":[],"mappings":";;;AAAA,WAAW;AACX,IAAiB,QAAQ,CAOxB;AAPD,WAAiB,QAAQ;IACV,wBAAe,GAAG,CAC7B,MAAc,EACd,WAAmB,EACX,EAAE;QACV,OAAO,MAAM,GAAG,SAAA,EAAE,EAAI,WAAW,CAAA,CAAC;IACpC,CAAC,CAAC;AACJ,CAAC,EAPgB,QAAQ,GAAR,gBAAQ,KAAR,gBAAQ,QAOxB"}

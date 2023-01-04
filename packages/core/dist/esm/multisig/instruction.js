@@ -68,3 +68,4 @@ export var Multisig;
         });
     };
 })(Multisig || (Multisig = {}));
+//# sourceMappingURL=instruction.js.map

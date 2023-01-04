@@ -66,9 +66,8 @@ describe('Node', () => {
     const res = Node.getConnection();
     assert.isNotEmpty(res);
     assert.propertyVal(res, '_commitment', 'processed');
-    assert.propertyVal(
-      res,
-      '_rpcEndpoint',
+    assert.equal(
+      res.rpcEndpoint,
       Constants.switchCluster({ cluster: Constants.Cluster.dev })
     );
   });

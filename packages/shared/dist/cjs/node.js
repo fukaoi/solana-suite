@@ -16,37 +16,55 @@ const constants_1 = require("./constants");
 const web3_js_1 = require("@solana/web3.js");
 var Node;
 (function (Node) {
-    Node.options = {
+    const setted = {
         clusterUrl: '',
         commitment: constants_1.Constants.COMMITMENT,
+        customClusterUrl: [''],
     };
     Node.getConnection = () => {
-        (0, global_1.debugLog)(`# [Before] cluster:${Node.options.clusterUrl}, commitment:${Node.options.commitment}`);
-        // default setting
-        if (!Node.options.clusterUrl) {
-            Node.options.clusterUrl = constants_1.Constants.switchCluster({ cluster: constants_1.Constants.currentCluster });
+        (0, global_1.debugLog)('# [Before] setted:', setted);
+        (0, global_1.debugLog)('# [Before] Constants.customClusterUrl:', constants_1.Constants.customClusterUrl);
+        if (setted.customClusterUrl.join().length > 1) {
+            // custom cluster
+            setted.clusterUrl = constants_1.Constants.switchCluster({
+                customClusterUrl: setted.customClusterUrl,
+            });
         }
-        // default setting
-        if (!Node.options.commitment) {
-            Node.options.commitment = constants_1.Constants.COMMITMENT;
+        else if (constants_1.Constants.customClusterUrl.join().length > 1) {
+            // custom cluster by json config
+            setted.clusterUrl = constants_1.Constants.switchCluster({
+                customClusterUrl: constants_1.Constants.customClusterUrl,
+            });
         }
-        (0, global_1.debugLog)(`# [After] cluster:${Node.options.clusterUrl}, commitment:${Node.options.commitment}`);
-        return new web3_js_1.Connection(Node.options.clusterUrl, Node.options.commitment);
+        else if (!setted.clusterUrl) {
+            // default cluster
+            setted.clusterUrl = constants_1.Constants.switchCluster({
+                cluster: constants_1.Constants.currentCluster,
+            });
+        }
+        if (!setted.commitment) {
+            setted.commitment = constants_1.Constants.COMMITMENT;
+        }
+        (0, global_1.debugLog)('# [After] setted:', setted);
+        return new web3_js_1.Connection(setted.clusterUrl, setted.commitment);
     };
     Node.changeConnection = (param) => {
+        setted.clusterUrl = '';
+        setted.customClusterUrl = [''];
         let { cluster, commitment, customClusterUrl } = param;
         if (commitment) {
-            Node.options.commitment = commitment;
-            (0, global_1.debugLog)('# Node change commitment: ', Node.options.commitment);
+            setted.commitment = commitment;
+            (0, global_1.debugLog)('# Node change commitment: ', setted.commitment);
         }
         if (cluster) {
-            Node.options.clusterUrl = constants_1.Constants.switchCluster({ cluster: cluster });
-            (0, global_1.debugLog)('# Node change cluster: ', Node.options.clusterUrl);
+            setted.clusterUrl = constants_1.Constants.switchCluster({ cluster: cluster });
+            (0, global_1.debugLog)('# Node change clusterUrl: ', setted.clusterUrl);
         }
         if (customClusterUrl) {
             (0, global_1.debugLog)('# customClusterUrl: ', customClusterUrl);
-            Node.options.clusterUrl = constants_1.Constants.switchCluster({ customClusterUrl });
-            (0, global_1.debugLog)('# Node change cluster, custom cluster url: ', Node.options.clusterUrl);
+            setted.clusterUrl = constants_1.Constants.switchCluster({ customClusterUrl });
+            setted.customClusterUrl = customClusterUrl;
+            (0, global_1.debugLog)('# Node change cluster, custom cluster url: ', setted.clusterUrl);
         }
     };
     Node.confirmedSig = (signature, commitment = constants_1.Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {
@@ -62,3 +80,4 @@ var Node;
             .catch(result_1.Result.err);
     });
 })(Node = exports.Node || (exports.Node = {}));
+//# sourceMappingURL=node.js.map

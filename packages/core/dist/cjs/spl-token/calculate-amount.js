@@ -8,3 +8,4 @@ var SplToken;
         return amount * Math.pow(10, mintDecimal);
     };
 })(SplToken = exports.SplToken || (exports.SplToken = {}));
+//# sourceMappingURL=calculate-amount.js.map

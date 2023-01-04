@@ -35,3 +35,4 @@ class PartialSignInstruction {
     }
 }
 exports.PartialSignInstruction = PartialSignInstruction;
+//# sourceMappingURL=partial-signInstruction.js.map

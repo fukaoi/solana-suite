@@ -47,3 +47,4 @@ export var SplToken;
         }));
     });
 })(SplToken || (SplToken = {}));
+//# sourceMappingURL=fee-payer-partial-sign-transfer.js.map

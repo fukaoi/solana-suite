@@ -103,3 +103,4 @@ export var Result;
     }
     Result.all = all;
 })(Result || (Result = {}));
+//# sourceMappingURL=result.js.map

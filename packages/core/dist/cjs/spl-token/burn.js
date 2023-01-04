@@ -29,3 +29,4 @@ var SplToken;
         }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));
+//# sourceMappingURL=burn.js.map

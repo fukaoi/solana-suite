@@ -12,7 +12,7 @@
     "target": "ES6",
     "allowJs": true,
     "declaration": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "paths": {

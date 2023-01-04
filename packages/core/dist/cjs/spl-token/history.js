@@ -58,3 +58,4 @@ var SplToken;
         }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));
+//# sourceMappingURL=history.js.map

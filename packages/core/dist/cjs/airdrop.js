@@ -30,3 +30,4 @@ var Airdrop;
         }));
     });
 })(Airdrop = exports.Airdrop || (exports.Airdrop = {}));
+//# sourceMappingURL=airdrop.js.map

@@ -38,3 +38,4 @@ var Bundlr;
         return 'connect' in payer;
     };
 })(Bundlr = exports.Bundlr || (exports.Bundlr = {}));
+//# sourceMappingURL=bundlr.js.map

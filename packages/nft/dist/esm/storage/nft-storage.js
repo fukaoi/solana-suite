@@ -86,3 +86,4 @@ export var StorageNftStorage;
         }));
     });
 })(StorageNftStorage || (StorageNftStorage = {}));
+//# sourceMappingURL=nft-storage.js.map

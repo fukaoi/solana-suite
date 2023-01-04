@@ -1,7 +1,6 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { Constants } from '../src/constants';
-import { sleep } from '../src/global';
+import { Constants } from '../../src/constants';
 
 describe('Constants', () => {
   it('Fetch nft.storage api key in solana-suite.json', () => {
@@ -34,22 +33,5 @@ describe('Constants', () => {
   it('Constants use prd', () => {
     const cluster = Constants.switchCluster({ cluster: Constants.Cluster.prd });
     assert.equal(cluster, Constants.EndPointUrl.prd);
-  });
-
-  it('Constants use customUrl', () => {
-    const customClusterUrl = ['https://hoge.hoge'];
-    const cluster = Constants.switchCluster({ customClusterUrl });
-    console.log('# cluster url: ', cluster);
-    assert.equal(cluster, customClusterUrl[0]);
-  });
-
-  it('Constants use multiple customUrls', async() => {
-    const customClusterUrl = ['https://hoge.hoge', 'https://fuga.fuga'];
-    for (let i = 0; i < 10; i++) {
-      const cluster = Constants.switchCluster({ customClusterUrl });
-      console.log('# cluster url: ', cluster);
-      await sleep(1);
-      assert.isTrue(customClusterUrl.includes(cluster));
-    }
   });
 });

@@ -24,16 +24,11 @@ export var Constants;
         EndPointUrl["localhost"] = "http://api.devnet.solana.com";
     })(EndPointUrl = Constants.EndPointUrl || (Constants.EndPointUrl = {}));
     Constants.switchCluster = (param) => {
-        // if setted custom url, most priority
         let { cluster: env, customClusterUrl } = param;
+        // if setted custom url, most priority
         if (customClusterUrl && customClusterUrl.length > 0) {
             const index = Date.now() % customClusterUrl.length;
             return customClusterUrl[index];
-        }
-        // if setted custom url in solana-suite.json
-        if (Constants.customClusterUrl.length > 0) {
-            const index = Date.now() % Constants.customClusterUrl.length;
-            return Constants.customClusterUrl[index];
         }
         switch (env) {
             case Constants.Cluster.prd:
@@ -72,3 +67,4 @@ export var Constants;
     Constants.NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
     Constants.BUNDLR_NETWORK_URL = Constants.switchBundlr(Config.cluster.type);
 })(Constants || (Constants = {}));
+//# sourceMappingURL=constants.js.map

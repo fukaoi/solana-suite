@@ -17,3 +17,4 @@ var SolNative;
         });
     };
 })(SolNative = exports.SolNative || (exports.SolNative = {}));
+//# sourceMappingURL=transfer.js.map

@@ -26,3 +26,4 @@ export var SplToken;
         }));
     });
 })(SplToken || (SplToken = {}));
+//# sourceMappingURL=burn.js.map

@@ -14,3 +14,4 @@ export var SolNative;
         });
     };
 })(SolNative || (SolNative = {}));
+//# sourceMappingURL=transfer.js.map

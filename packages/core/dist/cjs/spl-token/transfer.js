@@ -26,3 +26,4 @@ var SplToken;
         }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));
+//# sourceMappingURL=transfer.js.map
