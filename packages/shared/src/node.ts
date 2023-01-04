@@ -16,7 +16,7 @@ export namespace Node {
     );
 
     // default setting
-    if (!options.clusterUrl) {
+    if (!options.clusterUrl || Constants.isCustomCluster) {
       options.clusterUrl = Constants.switchCluster({cluster: Constants.currentCluster});
     }
 

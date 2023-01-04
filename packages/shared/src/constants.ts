@@ -7,6 +7,7 @@ export namespace Constants {
   export const customClusterUrl = Config.cluster.customClusterUrl;
   export const isDebugging = Config.debugging;
   export const nftStorageApiKey = Config.nftstorage.apikey;
+  export let isCustomCluster = false;
 
   export enum Cluster {
     prd = 'mainnet-beta',
@@ -32,12 +33,14 @@ export namespace Constants {
     let { cluster: env, customClusterUrl } = param;
     if (customClusterUrl && customClusterUrl.length > 0) {
       const index = Date.now() % customClusterUrl.length;
+      isCustomCluster = true;
       return customClusterUrl[index];
     }
 
     // if setted custom url in solana-suite.json
     if (Constants.customClusterUrl.length > 0) {
       const index = Date.now() % Constants.customClusterUrl.length;
+      isCustomCluster = true;
       return Constants.customClusterUrl[index];
     }
 
