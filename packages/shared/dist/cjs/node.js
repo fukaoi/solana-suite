@@ -24,13 +24,13 @@ var Node;
     Node.getConnection = () => {
         (0, global_1.debugLog)('# [Before] setted:', setted);
         (0, global_1.debugLog)('# [Before] Constants.customClusterUrl:', constants_1.Constants.customClusterUrl);
-        if (setted.customClusterUrl.join().length > 1) {
+        if (setted.customClusterUrl.values.length > 1) {
             // custom cluster
             setted.clusterUrl = constants_1.Constants.switchCluster({
                 customClusterUrl: setted.customClusterUrl,
             });
         }
-        else if (constants_1.Constants.customClusterUrl.join().length > 1) {
+        else if (constants_1.Constants.customClusterUrl.values.length > 1) {
             // custom cluster by json config
             setted.clusterUrl = constants_1.Constants.switchCluster({
                 customClusterUrl: constants_1.Constants.customClusterUrl,
@@ -49,8 +49,10 @@ var Node;
         return new web3_js_1.Connection(setted.clusterUrl, setted.commitment);
     };
     Node.changeConnection = (param) => {
+        // initialize
         setted.clusterUrl = '';
         setted.customClusterUrl = [''];
+        setted.commitment = constants_1.Constants.COMMITMENT;
         let { cluster, commitment, customClusterUrl } = param;
         if (commitment) {
             setted.commitment = commitment;
