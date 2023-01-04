@@ -16,18 +16,18 @@ export var Node;
     const setted = {
         clusterUrl: '',
         commitment: Constants.COMMITMENT,
-        customClusterUrl: [''],
+        customClusterUrl: [],
     };
     Node.getConnection = () => {
         debugLog('# [Before] setted:', setted);
         debugLog('# [Before] Constants.customClusterUrl:', Constants.customClusterUrl);
-        if (setted.customClusterUrl.values.length > 1) {
+        if (setted.customClusterUrl.length > 0) {
             // custom cluster
             setted.clusterUrl = Constants.switchCluster({
                 customClusterUrl: setted.customClusterUrl,
             });
         }
-        else if (Constants.customClusterUrl.values.length > 1) {
+        else if (Constants.customClusterUrl.length > 0) {
             // custom cluster by json config
             setted.clusterUrl = Constants.switchCluster({
                 customClusterUrl: Constants.customClusterUrl,
@@ -48,7 +48,7 @@ export var Node;
     Node.changeConnection = (param) => {
         // initialize
         setted.clusterUrl = '';
-        setted.customClusterUrl = [''];
+        setted.customClusterUrl = [];
         setted.commitment = Constants.COMMITMENT;
         let { cluster, commitment, customClusterUrl } = param;
         if (commitment) {
