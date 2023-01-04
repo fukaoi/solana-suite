@@ -1,6 +1,7 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Constants } from '../src/constants';
+import { sleep } from '../src/global';
 
 describe('Constants', () => {
   it('Fetch nft.storage api key in solana-suite.json', () => {
@@ -40,5 +41,15 @@ describe('Constants', () => {
     const cluster = Constants.switchCluster({ customClusterUrl });
     console.log('# cluster url: ', cluster);
     assert.equal(cluster, customClusterUrl[0]);
+  });
+
+  it('Constants use multiple customUrls', async() => {
+    const customClusterUrl = ['https://hoge.hoge', 'https://fuga.fuga'];
+    for (let i = 0; i < 10; i++) {
+      const cluster = Constants.switchCluster({ customClusterUrl });
+      console.log('# cluster url: ', cluster);
+      await sleep(1);
+      assert.isTrue(customClusterUrl.includes(cluster));
+    }
   });
 });
