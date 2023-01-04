@@ -35,3 +35,4 @@ export var Bundlr;
         return 'connect' in payer;
     };
 })(Bundlr || (Bundlr = {}));
+//# sourceMappingURL=bundlr.js.map

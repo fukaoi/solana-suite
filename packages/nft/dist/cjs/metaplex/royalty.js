@@ -9,3 +9,4 @@ var Metaplex;
         return percentage * Metaplex.THRESHOLD;
     };
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));
+//# sourceMappingURL=royalty.js.map

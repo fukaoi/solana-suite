@@ -55,3 +55,4 @@ export var SplToken;
         }));
     });
 })(SplToken || (SplToken = {}));
+//# sourceMappingURL=history.js.map

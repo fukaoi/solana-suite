@@ -24,3 +24,4 @@ var Multisig;
         }));
     });
 })(Multisig = exports.Multisig || (exports.Multisig = {}));
+//# sourceMappingURL=is-address.js.map

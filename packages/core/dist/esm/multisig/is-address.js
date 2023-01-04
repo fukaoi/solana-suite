@@ -21,3 +21,4 @@ export var Multisig;
         }));
     });
 })(Multisig || (Multisig = {}));
+//# sourceMappingURL=is-address.js.map

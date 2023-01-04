@@ -27,3 +27,4 @@ export var Airdrop;
         }));
     });
 })(Airdrop || (Airdrop = {}));
+//# sourceMappingURL=airdrop.js.map

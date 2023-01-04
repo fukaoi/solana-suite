@@ -9,3 +9,4 @@ const history_1 = require("./history");
 const mint_1 = require("./mint");
 const transfer_1 = require("./transfer");
 exports.SplToken = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, add_1.SplToken), burn_1.SplToken), history_1.SplToken), find_1.SplToken), fee_payer_partial_sign_transfer_1.SplToken), mint_1.SplToken), transfer_1.SplToken);
+//# sourceMappingURL=index.js.map

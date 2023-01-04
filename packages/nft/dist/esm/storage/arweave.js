@@ -81,3 +81,4 @@ export var StorageArweave;
         }));
     });
 })(StorageArweave || (StorageArweave = {}));
+//# sourceMappingURL=arweave.js.map

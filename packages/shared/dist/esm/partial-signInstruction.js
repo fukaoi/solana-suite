@@ -31,3 +31,4 @@ export class PartialSignInstruction {
         this.hexInstruction = instructions;
     }
 }
+//# sourceMappingURL=partial-signInstruction.js.map

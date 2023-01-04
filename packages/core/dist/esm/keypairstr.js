@@ -17,3 +17,4 @@ KeypairStr.create = () => {
     const keypair = Keypair.generate();
     return new KeypairStr(keypair.publicKey.toBase58(), bs.encode(keypair.secretKey));
 };
+//# sourceMappingURL=keypairstr.js.map

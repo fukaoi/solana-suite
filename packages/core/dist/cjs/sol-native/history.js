@@ -53,3 +53,4 @@ var SolNative;
         }));
     });
 })(SolNative = exports.SolNative || (exports.SolNative = {}));
+//# sourceMappingURL=history.js.map

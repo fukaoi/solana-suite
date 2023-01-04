@@ -23,3 +23,4 @@ export var SplToken;
         }));
     });
 })(SplToken || (SplToken = {}));
+//# sourceMappingURL=transfer.js.map

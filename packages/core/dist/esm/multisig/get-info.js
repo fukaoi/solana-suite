@@ -42,3 +42,4 @@ export var Multisig;
         }));
     });
 })(Multisig || (Multisig = {}));
+//# sourceMappingURL=get-info.js.map

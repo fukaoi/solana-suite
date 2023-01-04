@@ -50,3 +50,4 @@ export var SolNative;
         }));
     });
 })(SolNative || (SolNative = {}));
+//# sourceMappingURL=history.js.map

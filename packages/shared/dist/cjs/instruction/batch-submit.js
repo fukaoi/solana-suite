@@ -47,3 +47,4 @@ Instruction.batchSubmit = (arr) => __awaiter(void 0, void 0, void 0, function* (
     };
     return yield (0, web3_js_1.sendAndConfirmTransaction)(__1.Node.getConnection(), transaction, finalSigners, options);
 });
+//# sourceMappingURL=batch-submit.js.map

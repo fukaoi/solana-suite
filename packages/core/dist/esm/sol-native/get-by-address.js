@@ -28,3 +28,4 @@ export var SolNative;
         return yield Promise.all(signatures);
     });
 })(SolNative || (SolNative = {}));
+//# sourceMappingURL=get-by-address.js.map

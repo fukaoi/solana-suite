@@ -22,3 +22,4 @@ var Metaplex;
         return core_1.SplToken.feePayerPartialSignTransfer(mint, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));
+//# sourceMappingURL=transfer.js.map

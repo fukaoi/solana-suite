@@ -36,3 +36,4 @@ export class Instruction {
         this.data = data;
     }
 }
+//# sourceMappingURL=index.js.map

@@ -45,3 +45,4 @@ var Multisig;
         }));
     });
 })(Multisig = exports.Multisig || (exports.Multisig = {}));
+//# sourceMappingURL=get-info.js.map

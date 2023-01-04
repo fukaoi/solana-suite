@@ -107,3 +107,4 @@ var StorageArweave;
         }));
     });
 })(StorageArweave = exports.StorageArweave || (exports.StorageArweave = {}));
+//# sourceMappingURL=arweave.js.map

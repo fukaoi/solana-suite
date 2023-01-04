@@ -33,3 +33,4 @@ export var SolNative;
         }));
     });
 })(SolNative || (SolNative = {}));
+//# sourceMappingURL=transfer-with-multisig.js.map

@@ -6,3 +6,4 @@ export var Metaplex;
         return percentage * Metaplex.THRESHOLD;
     };
 })(Metaplex || (Metaplex = {}));
+//# sourceMappingURL=royalty.js.map
