@@ -30,7 +30,7 @@ var Constants;
         EndPointUrl["localhost"] = "http://api.devnet.solana.com";
     })(EndPointUrl = Constants.EndPointUrl || (Constants.EndPointUrl = {}));
     Constants.switchCluster = (param) => {
-        let { cluster: env, customClusterUrl } = param;
+        const { cluster: env, customClusterUrl } = param;
         // if setted custom url, most priority
         if (customClusterUrl && customClusterUrl.length > 0) {
             const index = Date.now() % customClusterUrl.length;

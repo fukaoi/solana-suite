@@ -53,7 +53,7 @@ var Node;
         setted.clusterUrl = '';
         setted.customClusterUrl = [];
         setted.commitment = constants_1.Constants.COMMITMENT;
-        let { cluster, commitment, customClusterUrl } = param;
+        const { cluster, commitment, customClusterUrl } = param;
         if (commitment) {
             setted.commitment = commitment;
             (0, global_1.debugLog)('# Node change commitment: ', setted.commitment);
