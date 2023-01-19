@@ -28,7 +28,7 @@ export namespace Constants {
     cluster?: string;
     customClusterUrl?: string[];
   }): string => {
-    let { cluster: env, customClusterUrl } = param;
+    const { cluster: env, customClusterUrl } = param;
     
     // if setted custom url, most priority
     if (customClusterUrl && customClusterUrl.length > 0) {
