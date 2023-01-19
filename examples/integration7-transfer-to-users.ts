@@ -3,15 +3,22 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { KeypairStr, Airdrop, Pubkey, SplToken } from '@solana-suite/core';
+import {
+  KeypairStr,
+  Airdrop,
+  Pubkey,
+  SplToken,
+  Secret,
+} from '@solana-suite/core';
 
 import {
-  Node,
+  // Node,
   // Constants,
   sleep,
 } from '@solana-suite/shared';
+import { requestTransferByKeypair } from './requestTransferByKeypair';
 
-const USERS_COUNT = 50;
+const USERS_COUNT = 10;
 const SLEEP_TIME_WAIT = 0;
 
 (async () => {
@@ -24,7 +31,7 @@ const SLEEP_TIME_WAIT = 0;
   // CREATE WALLET
   //////////////////////////////////////////////
 
-  let users = [];
+  let users: { pubkey: Pubkey; secret: Secret }[] = [];
   for (let i = 0; i < USERS_COUNT; i++) {
     users.push(KeypairStr.create());
   }
@@ -37,7 +44,14 @@ const SLEEP_TIME_WAIT = 0;
 
   // random create
   const owner = KeypairStr.create();
-  await Airdrop.request(owner.toPublicKey());
+
+  // faucet
+  if (process.env.AIR_DROP) {
+    await Airdrop.request(owner.toPublicKey());
+  } else {
+    await requestTransferByKeypair(owner.toPublicKey());
+  }
+
   console.log('# owner: ', owner.pubkey);
 
   //////////////////////////////////////////////
@@ -72,7 +86,7 @@ const SLEEP_TIME_WAIT = 0;
     const inst2 = await SplToken.transfer(
       mint.toPublicKey(),
       owner.toPublicKey(),
-      user.toPublicKey(),
+      user.pubkey.toPublicKey(),
       [owner.toKeypair()],
       10,
       decimals
