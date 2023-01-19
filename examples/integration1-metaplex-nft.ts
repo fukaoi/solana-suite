@@ -7,6 +7,7 @@ import { Airdrop, KeypairStr, Pubkey } from '@solana-suite/core';
 import { Metaplex } from '@solana-suite/nft';
 import { Node } from '@solana-suite/shared';
 import { RandomAsset } from '../packages/nft/test/randomAsset';
+import { requestTransferByKeypair } from './requestTransferByKeypair';
 
 (async () => {
   //////////////////////////////////////////////
@@ -18,8 +19,12 @@ import { RandomAsset } from '../packages/nft/test/randomAsset';
   const receipt = KeypairStr.create();
   const feePayer = KeypairStr.create();
 
-  // faucet 1 sol
-  await Airdrop.request(feePayer.toPublicKey());
+  // faucet 
+  if (process.env.AIR_DROP) {
+    await Airdrop.request(feePayer.toPublicKey());
+  } else {
+    await requestTransferByKeypair(feePayer.toPublicKey());
+  }
 
   console.log('# owner: ', owner.pubkey);
   console.log('# receipt: ', receipt.pubkey);

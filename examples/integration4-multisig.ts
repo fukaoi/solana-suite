@@ -12,10 +12,10 @@ import {
   Airdrop,
 } from '@solana-suite/core';
 
-import {Node} from '@solana-suite/shared';
+import { Node } from '@solana-suite/shared';
+import { requestTransferByKeypair } from './requestTransferByKeypair';
 
 (async () => {
-
   //////////////////////////////////////////////
   // CREATE WALLET
   //////////////////////////////////////////////
@@ -35,8 +35,12 @@ import {Node} from '@solana-suite/shared';
   const signer2 = KeypairStr.create();
   const signer3 = KeypairStr.create();
 
-  // faucet 1 sol
-  await Airdrop.request(owner.toPublicKey());
+  // faucet
+  if (process.env.AIR_DROP) {
+    await Airdrop.request(owner.toPublicKey());
+  } else {
+    await requestTransferByKeypair(owner.toPublicKey(), 0.6);
+  }
 
   console.log('# owner: ', owner.pubkey);
   console.log('# feePayer: ', receipt.pubkey);
@@ -54,69 +58,65 @@ import {Node} from '@solana-suite/shared';
     signer3.toPublicKey(),
   ];
 
-  const inst1 = await Multisig.create(
-    2,
-    owner.toKeypair(),
-    signerPubkey
-  );
+  const inst1 = await Multisig.create(2, owner.toKeypair(), signerPubkey);
 
   //////////////////////////////////////////////
   // TRANSFER FROM OWNER TO PUBLISHER
   //////////////////////////////////////////////
   const inst2 = await SolNative.transfer(
-    owner.toPublicKey(),        // from
-    feePayer.toPublicKey(),     // to
-    [owner.toKeypair()],     // signing
-    0.5,                     // 0.5 SOL
+    owner.toPublicKey(), // from
+    feePayer.toPublicKey(), // to
+    [owner.toKeypair()], // signing
+    0.5 // 0.5 SOL
   );
 
   const publisher = inst1.unwrap().data as Pubkey;
   console.log('# multisig address: ', publisher);
 
   // submit batch instructions
-  await (await [inst1, inst2].submit()).match(
+  await (
+    await [inst1, inst2].submit()
+  ).match(
     async (value) => {
       // [optional]if need this action. wait confirmation state
       await Node.confirmedSig(value);
     },
-    error => assert.fail(error)
+    (error) => assert.fail(error)
   );
 
   //////////////////////////////////////////////
   // CREATE SPL TOKEN
   //////////////////////////////////////////////
 
-  const multiSigners = [
-    signer1.toKeypair(),
-    signer2.toKeypair(),
-  ];
+  const multiSigners = [signer1.toKeypair(), signer2.toKeypair()];
 
   // created by publisher account
-  const inst3 =
-    await SplToken.mint(
-      publisher.toPublicKey(),  // creator account
-      multiSigners,          // signing
-      100000,                // Total number of tokens issued
-      2,                     // token's decimal e.g:0.12, 20.52
-      feePayer.toKeypair()   // pay transaction fee
-    );
+  const inst3 = await SplToken.mint(
+    publisher.toPublicKey(), // creator account
+    multiSigners, // signing
+    100000, // Total number of tokens issued
+    2, // token's decimal e.g:0.12, 20.52
+    feePayer.toKeypair() // pay transaction fee
+  );
 
-  const mint = (inst3.unwrap().data as Pubkey);
+  const mint = inst3.unwrap().data as Pubkey;
   console.log('# mint: ', mint);
 
   const inst4 = await SplToken.transfer(
-    mint.toPublicKey(),       // tokenKey
-    publisher.toPublicKey(),  // from. own token
-    receipt.toPublicKey(),    // to
-    multiSigners,             // sinning
-    5000,                     // transfer amount
-    2,                        // token's decimal e.g:0.12, 20.52
-    feePayer.toKeypair()      // pay transaction fee
+    mint.toPublicKey(), // tokenKey
+    publisher.toPublicKey(), // from. own token
+    receipt.toPublicKey(), // to
+    multiSigners, // sinning
+    5000, // transfer amount
+    2, // token's decimal e.g:0.12, 20.52
+    feePayer.toKeypair() // pay transaction fee
   );
 
   // submit batch instructions
-  await (await [inst3, inst4].submit()).match(
-    value => console.log('# sig url: ', value.toExplorerUrl()),
-    error => assert.fail(error.message)
+  await (
+    await [inst3, inst4].submit()
+  ).match(
+    (value) => console.log('# sig url: ', value.toExplorerUrl()),
+    (error) => assert.fail(error.message)
   );
 })();

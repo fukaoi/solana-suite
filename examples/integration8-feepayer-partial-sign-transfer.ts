@@ -6,6 +6,7 @@ import assert from 'assert';
 import { Airdrop, KeypairStr, SolNative, SplToken } from '@solana-suite/core';
 
 import { PartialSignInstruction, sleep } from '@solana-suite/shared';
+import { requestTransferByKeypair } from './requestTransferByKeypair';
 
 (async () => {
   ////////////////////////////////////////////// CREATE WALLET
@@ -17,7 +18,15 @@ import { PartialSignInstruction, sleep } from '@solana-suite/shared';
   const dest = KeypairStr.create();
   const feePayer = KeypairStr.create();
 
-  await Airdrop.request(owner.toPublicKey());
+  // faucet
+  if (process.env.AIR_DROP) {
+    await Airdrop.request(owner.toPublicKey());
+    await Airdrop.request(feePayer.toPublicKey());
+  } else {
+    await requestTransferByKeypair(owner.toPublicKey());
+    await requestTransferByKeypair(feePayer.toPublicKey());
+  }
+
   console.log('# owner: ', owner.pubkey);
 
   await sleep(10); // Avoid 429 error
@@ -37,7 +46,7 @@ import { PartialSignInstruction, sleep } from '@solana-suite/shared';
     owner.toPublicKey(),
     dest.toPublicKey(),
     [owner.toKeypair()],
-    1,
+    0.001,
     feePayer.toPublicKey()
   );
 

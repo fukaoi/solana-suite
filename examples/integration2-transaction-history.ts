@@ -14,6 +14,7 @@ import {
 import {
   Node
 } from '@solana-suite/shared';
+import { requestTransferByKeypair } from './requestTransferByKeypair';
 
 
 (async () => {
@@ -26,8 +27,12 @@ import {
   const owner = KeypairStr.create();
   const receipt = KeypairStr.create();
 
-  // faucet 1 sol
-  await Airdrop.request(owner.toPublicKey());
+  // faucet
+  if (process.env.AIR_DROP) {
+    await Airdrop.request(owner.toPublicKey());
+  } else {
+    await requestTransferByKeypair(owner.toPublicKey());
+  }
 
   console.log('# owner: ', owner);
   console.log('# receipt: ', receipt);
