@@ -9,7 +9,6 @@ import {
 import { Metaplex as _Royalty } from './royalty';
 import { Bundlr } from '../bundlr';
 import {
-  findMasterEditionV2Pda,
   CreateNftBuilderParams,
   token,
   TransactionBuilder,
@@ -139,7 +138,6 @@ export namespace Metaplex {
       .builders()
       .createSft({
         ...params,
-        payer,
         updateAuthority,
         mintAuthority,
         freezeAuthority: mintAuthority.publicKey,
@@ -151,7 +149,10 @@ export namespace Metaplex {
 
     const { mintAddress, metadataAddress, tokenAddress } =
       sftBuilder.getContext();
-    const masterEditionAddress = findMasterEditionV2Pda(mintAddress);
+    const masterEditionAddress = metaplex
+      .nfts()
+      .pdas()
+      .masterEdition({ mint: mintAddress });
 
     return (
       TransactionBuilder.make<CreateNftBuilderContext>()
@@ -180,9 +181,7 @@ export namespace Metaplex {
             {
               createMasterEditionArgs: {
                 maxSupply:
-                  params.maxSupply === undefined
-                    ? 0
-                    : (params.maxSupply as number),
+                  params.maxSupply === undefined ? 0 : params.maxSupply,
               },
             }
           ),

@@ -17,7 +17,7 @@ export declare namespace Metaplex {
             attributes?: import("../types").JsonMetadataAttribute[] | undefined;
             properties?: import("../types").JsonMetadataProperties | undefined;
             isMutable?: boolean | undefined;
-            maxSupply?: any;
+            maxSupply?: import("@metaplex-foundation/js").BigNumber | undefined;
             creators?: import("@metaplex-foundation/js").CreatorInput[] | undefined;
             uses?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/mpl-token-metadata").Uses> | undefined;
             isCollection?: boolean | undefined;

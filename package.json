@@ -19,9 +19,6 @@
     "packages/nft",
     "packages/phantom"
   ],
-  "overrides": {
-    "@metaplex-foundation/mpl-token-metadata": "2.2.4"
-  },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",
     "@tsconfig/node18": "^1.0.1",

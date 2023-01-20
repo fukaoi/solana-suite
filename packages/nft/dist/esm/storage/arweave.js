@@ -28,7 +28,7 @@ export var StorageArweave;
                 throw Error('Supported environment: only Node.js and Browser js');
             }
             const res = yield Bundlr.useStorage(feePayer).getUploadPrice(buffer.length);
-            const basisPoints = res.basisPoints;
+            const basisPoints = res.basisPoints.toString();
             debugLog('# buffer length, price', buffer.length, parseInt(basisPoints).toSol());
             return {
                 price: parseInt(basisPoints).toSol(),
@@ -75,8 +75,7 @@ export var StorageArweave;
             }
             const uploaded = yield Bundlr.make(feePayer)
                 .nfts()
-                .uploadMetadata(metadata)
-                .run();
+                .uploadMetadata(metadata);
             return uploaded.uri;
         }));
     });

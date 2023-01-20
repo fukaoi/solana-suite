@@ -24,7 +24,7 @@ import { debugLog, Try, MintInstruction } from '@solana-suite/shared';
 import { Validator } from '../validator';
 import { Metaplex as _Royalty } from './royalty';
 import { Bundlr } from '../bundlr';
-import { findMasterEditionV2Pda, token, TransactionBuilder, } from '@metaplex-foundation/js';
+import { token, TransactionBuilder, } from '@metaplex-foundation/js';
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
 export var Metaplex;
 (function (Metaplex) {
@@ -93,12 +93,14 @@ export var Metaplex;
         const sftBuilder = yield metaplex
             .nfts()
             .builders()
-            .createSft(Object.assign(Object.assign({}, params), { payer,
-            updateAuthority,
+            .createSft(Object.assign(Object.assign({}, params), { updateAuthority,
             mintAuthority, freezeAuthority: mintAuthority.publicKey, useNewMint,
             tokenOwner, tokenAmount: token(1), decimals: 0 }));
         const { mintAddress, metadataAddress, tokenAddress } = sftBuilder.getContext();
-        const masterEditionAddress = findMasterEditionV2Pda(mintAddress);
+        const masterEditionAddress = metaplex
+            .nfts()
+            .pdas()
+            .masterEdition({ mint: mintAddress });
         return (TransactionBuilder.make()
             .setFeePayer(payer)
             .setContext({
@@ -120,9 +122,7 @@ export var Metaplex;
                 metadata: metadataAddress,
             }, {
                 createMasterEditionArgs: {
-                    maxSupply: params.maxSupply === undefined
-                        ? 0
-                        : params.maxSupply,
+                    maxSupply: params.maxSupply === undefined ? 0 : params.maxSupply,
                 },
             }),
             signers: [payer, mintAuthority, updateAuthority],

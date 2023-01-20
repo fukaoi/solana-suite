@@ -9,10 +9,10 @@ export namespace Metaplex {
     owner: PublicKey
   ): Promise<Result<OutputMetaplexMetadata[], Error>> => {
     return Try(async () => {
+      
       const allData = await Bundlr.make()
         .nfts()
-        .findAllByOwner({ owner })
-        .run();
+        .findAllByOwner({ owner });
 
       const res = allData.map(d => {
         return {
