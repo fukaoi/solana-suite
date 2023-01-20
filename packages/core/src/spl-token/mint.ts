@@ -1,17 +1,12 @@
-import {
-  Keypair,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-} from '@solana/web3.js';
+import { Keypair, PublicKey, SystemProgram } from '@solana/web3.js';
 import {
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
   createInitializeMintInstruction,
   getMinimumBalanceForRentExemptMint,
-  getAssociatedTokenAddress,
   createAssociatedTokenAccountInstruction,
   createMintToInstruction,
+  getAssociatedTokenAddress,
 } from '@solana/spl-token';
 import {
   DataV2,
@@ -38,12 +33,18 @@ export namespace SplToken {
       const lamports = await getMinimumBalanceForRentExemptMint(connection);
 
       const mint = Keypair.generate();
+      signers.push(mint);
       const metadataPda = await findMetadataPda(mint.publicKey);
-      const tokenAssociated = await AssociatedAccount.retryGetOrCreate(
+      // const tokenAssociated = await AssociatedAccount.retryGetOrCreate(
+      const tokenAssociated = await getAssociatedTokenAddress(
         mint.publicKey,
-        owner,
-        feePayer
+        owner
       );
+      // const tokenAssociated = await AssociatedAccount.retryGetOrCreate(
+      //   mint.publicKey,
+      //   owner,
+      //   feePayer
+      // );
 
       const tokenMetadata = {
         name: 'test',
@@ -73,14 +74,16 @@ export namespace SplToken {
 
       const inst3 = createAssociatedTokenAccountInstruction(
         owner,
-        tokenAssociated.toPublicKey(),
+        // tokenAssociated.toPublicKey(),
+        tokenAssociated,
         owner,
         mint.publicKey
       );
 
       const inst4 = createMintToInstruction(
         mint.publicKey,
-        tokenAssociated.toPublicKey(),
+        // tokenAssociated.toPublicKey(),
+        tokenAssociated,
         owner,
         totalAmount
       );

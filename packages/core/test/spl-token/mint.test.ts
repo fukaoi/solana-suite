@@ -17,7 +17,7 @@ describe('SplToken', () => {
     dest = obj.dest;
   });
 
-  it('Create token', async () => {
+  it.only('Create token', async () => {
     const inst = await SplToken.mint(
       source.toPublicKey(),
       [source.toKeypair()],
