@@ -9,6 +9,12 @@ let mintStr: string;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
+const TOKEN_METADATA = {
+  name: 'solana-suite-test',
+  symbol: 'SST',
+  image: 'https://atonoy.github.io/solana-suite/img/logo.png',
+  description: 'solana suite test',
+};
 
 describe('SplToken', () => {
   before(async () => {
@@ -22,7 +28,8 @@ describe('SplToken', () => {
       source.toPublicKey(),
       [source.toKeypair()],
       TOKEN_TOTAL_AMOUNT,
-      MINT_DECIMAL
+      MINT_DECIMAL,
+      TOKEN_METADATA
     );
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
@@ -52,6 +59,7 @@ describe('SplToken', () => {
       [signer1.toKeypair(), signer2.toKeypair()],
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
+      TOKEN_METADATA,
       source.toKeypair()
     );
 
@@ -75,7 +83,8 @@ describe('SplToken', () => {
       (multisig.unwrap().data as string).toPublicKey(),
       [source.toKeypair(), signer1.toKeypair()],
       TOKEN_TOTAL_AMOUNT,
-      MINT_DECIMAL
+      MINT_DECIMAL,
+      TOKEN_METADATA
     );
     const res = await [multisig, mint].submit();
     assert.isFalse(res.isOk);
@@ -86,7 +95,8 @@ describe('SplToken', () => {
       source.toPublicKey(),
       [source.toKeypair()],
       TOKEN_TOTAL_AMOUNT,
-      MINT_DECIMAL
+      MINT_DECIMAL,
+      TOKEN_METADATA
     );
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);

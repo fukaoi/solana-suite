@@ -38,5 +38,8 @@
     "ts-node": "^10.7.0",
     "tslib": "^1.14.1",
     "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@metaplex-foundation/js": "^0.17.12"
   }
 }

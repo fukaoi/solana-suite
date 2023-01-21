@@ -8,15 +8,11 @@ import {
   createMintToInstruction,
   getAssociatedTokenAddress,
 } from '@solana/spl-token';
-import {
-  DataV2,
-  createCreateMetadataAccountV2Instruction,
-} from '@metaplex-foundation/mpl-token-metadata';
+import { createCreateMetadataAccountV2Instruction } from '@metaplex-foundation/mpl-token-metadata';
 import { findMetadataPda } from '@metaplex-foundation/js';
 import { Node, Result, Instruction, Try } from '@solana-suite/shared';
-
-import { AssociatedAccount } from '../associated-account';
 import { SplToken as _Calculate } from './calculate-amount';
+import { TokenMetadata } from '../types';
 
 export namespace SplToken {
   export const mint = async (
@@ -24,6 +20,7 @@ export namespace SplToken {
     signers: Keypair[],
     totalAmount: number,
     mintDecimal: number,
+    tokenMetadata: TokenMetadata,
     feePayer?: Keypair
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
@@ -35,26 +32,10 @@ export namespace SplToken {
       const mint = Keypair.generate();
       signers.push(mint);
       const metadataPda = await findMetadataPda(mint.publicKey);
-      // const tokenAssociated = await AssociatedAccount.retryGetOrCreate(
       const tokenAssociated = await getAssociatedTokenAddress(
         mint.publicKey,
         owner
       );
-      // const tokenAssociated = await AssociatedAccount.retryGetOrCreate(
-      //   mint.publicKey,
-      //   owner,
-      //   feePayer
-      // );
-
-      const tokenMetadata = {
-        name: 'test',
-        symbol: 'TEST',
-        uri: 'https://example.com',
-        sellerFeeBasisPoints: 0,
-        creators: null,
-        collection: null,
-        uses: null,
-      } as DataV2;
 
       const inst = SystemProgram.createAccount({
         fromPubkey: owner,

@@ -1,7 +1,8 @@
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { PublicKey } from '@solana/web3.js';
 import { Node, Result, Try } from '@solana-suite/shared';
-import { SplTokenOwnerInfo } from '../types/spl-token';
+import { SplTokenOwnerInfo } from
+'../types/spl-token';
 
 export namespace SplToken {
   export const findByOwner = async (
