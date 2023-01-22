@@ -1,5 +1,5 @@
 import { isBrowser, Try } from '@solana-suite/shared';
-import { Metaplex } from './metaplex/royalty';
+import { Metaplex } from './royalty';
 export var Validator;
 (function (Validator) {
     let Message;
