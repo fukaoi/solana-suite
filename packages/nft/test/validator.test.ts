@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Validator } from '../src/validator';
-import { RandomAsset } from './randomAsset';
+import { RandomAsset } from '../../storage/test/randomAsset';
 import { JSDOM } from 'jsdom';
 
 describe('Validator', () => {
