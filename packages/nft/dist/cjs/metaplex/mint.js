@@ -58,17 +58,17 @@ var Metaplex;
         const sellerFeeBasisPoints = royalty_1.Metaplex.convertRoyalty(royalty);
         const storageData = initNftStorageMetadata(input, sellerFeeBasisPoints, options);
         if (storageType === 'arweave') {
-            storage = yield (yield storage_1.StorageArweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
+            storage = yield (yield storage_1.Arweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 storageData.image = ok;
-                return yield storage_1.StorageArweave.uploadMetadata(storageData, feePayer);
+                return yield storage_1.Arweave.uploadMetadata(storageData, feePayer);
             }), (err) => {
                 throw err;
             });
         }
         else if (storageType === 'nftStorage') {
-            storage = yield (yield storage_1.StorageNftStorage.uploadContent(filePath)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
+            storage = yield (yield storage_1.NftStorage.uploadContent(filePath)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 storageData.image = ok;
-                return yield storage_1.StorageNftStorage.uploadMetadata(storageData);
+                return yield storage_1.NftStorage.uploadMetadata(storageData);
             }), (err) => {
                 throw err;
             });

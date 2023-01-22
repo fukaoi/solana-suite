@@ -32,12 +32,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StorageNftStorage = void 0;
+exports.NftStorage = void 0;
 const nft_storage_1 = require("nft.storage");
 const shared_1 = require("@solana-suite/shared");
 const js_1 = require("@metaplex-foundation/js");
-var StorageNftStorage;
-(function (StorageNftStorage) {
+var NftStorage;
+(function (NftStorage) {
     let isDisplayWarning = false;
     const getNftStorageApiKey = () => {
         if (!shared_1.Constants.nftStorageApiKey) {
@@ -60,7 +60,7 @@ var StorageNftStorage;
     };
     const createGatewayUrl = (cid) => `${shared_1.Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
     const connect = () => new nft_storage_1.NFTStorage({ token: getNftStorageApiKey() });
-    StorageNftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
+    NftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             (0, shared_1.debugLog)('# upload content: ', filePath);
             let file;
@@ -98,7 +98,7 @@ var StorageNftStorage;
      * }
      * @return Promise<Result<string, Error>>
      */
-    StorageNftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
+    NftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             (0, shared_1.debugLog)('# upload metadata: ', metadata);
             const blobJson = new nft_storage_1.Blob([JSON.stringify(metadata)]);
@@ -106,5 +106,5 @@ var StorageNftStorage;
             return createGatewayUrl(res);
         }));
     });
-})(StorageNftStorage = exports.StorageNftStorage || (exports.StorageNftStorage = {}));
+})(NftStorage = exports.NftStorage || (exports.NftStorage = {}));
 //# sourceMappingURL=nft-storage.js.map

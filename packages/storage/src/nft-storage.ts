@@ -11,7 +11,7 @@ import {
 import { MetaplexFileContent, toMetaplexFile } from '@metaplex-foundation/js';
 import { NftStorageMetadata } from './types';
 
-export namespace StorageNftStorage {
+export namespace NftStorage {
   let isDisplayWarning = false;
   const getNftStorageApiKey = (): string => {
     if (!Constants.nftStorageApiKey) {

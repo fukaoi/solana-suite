@@ -32,12 +32,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StorageArweave = void 0;
+exports.Arweave = void 0;
 const js_1 = require("@metaplex-foundation/js");
 const shared_1 = require("@solana-suite/shared");
-var StorageArweave;
-(function (StorageArweave) {
-    StorageArweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
+var Arweave;
+(function (Arweave) {
+    Arweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             let buffer;
             if ((0, shared_1.isNode)()) {
@@ -60,7 +60,7 @@ var StorageArweave;
             };
         }));
     });
-    StorageArweave.uploadContent = (filePath, feePayer, fileOptions // only arweave, not nft-storage
+    Arweave.uploadContent = (filePath, feePayer, fileOptions // only arweave, not nft-storage
     ) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             (0, shared_1.debugLog)('# upload content: ', filePath);
@@ -90,7 +90,7 @@ var StorageArweave;
             return shared_1.Bundlr.useStorage(feePayer).upload(file);
         }));
     });
-    StorageArweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Arweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             (0, shared_1.debugLog)('# upload meta data: ', metadata);
             const uploaded = yield shared_1.Bundlr.make(feePayer)
@@ -99,5 +99,5 @@ var StorageArweave;
             return uploaded.uri;
         }));
     });
-})(StorageArweave = exports.StorageArweave || (exports.StorageArweave = {}));
+})(Arweave = exports.Arweave || (exports.Arweave = {}));
 //# sourceMappingURL=arweave.js.map

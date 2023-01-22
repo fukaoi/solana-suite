@@ -1,12 +1,12 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { RandomAsset } from './randomAsset';
-import { StorageNftStorage } from '../src/nft-storage';
+import { NftStorage } from '../src/nft-storage';
 
 describe('StorageNftStorage', () => {
   it('Upload content data', async () => {
     const asset = RandomAsset.get();
-    const res = await StorageNftStorage.uploadContent(asset.filePath!);
+    const res = await NftStorage.uploadContent(asset.filePath!);
 
     res.match(
       (ok) => console.log('# nft.storage content url: ', ok),
@@ -16,10 +16,10 @@ describe('StorageNftStorage', () => {
 
   it('Upload metadata json', async () => {
     const asset = RandomAsset.get();
-    const image = await StorageNftStorage.uploadContent(asset.filePath!);
+    const image = await NftStorage.uploadContent(asset.filePath!);
     asset.image = image.unwrap();
     delete asset.filePath;
-    const res = await StorageNftStorage.uploadMetadata(asset);
+    const res = await NftStorage.uploadMetadata(asset);
 
     res.match(
       (ok) => console.log('# nft.storage metadata url: ', ok),

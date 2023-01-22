@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { toMetaplexFile, } from '@metaplex-foundation/js';
 import { isNode, isBrowser, debugLog, Try, Bundlr, } from '@solana-suite/shared';
-export var StorageArweave;
-(function (StorageArweave) {
-    StorageArweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
+export var Arweave;
+(function (Arweave) {
+    Arweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             let buffer;
             if (isNode()) {
@@ -34,7 +34,7 @@ export var StorageArweave;
             };
         }));
     });
-    StorageArweave.uploadContent = (filePath, feePayer, fileOptions // only arweave, not nft-storage
+    Arweave.uploadContent = (filePath, feePayer, fileOptions // only arweave, not nft-storage
     ) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             debugLog('# upload content: ', filePath);
@@ -64,7 +64,7 @@ export var StorageArweave;
             return Bundlr.useStorage(feePayer).upload(file);
         }));
     });
-    StorageArweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Arweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             debugLog('# upload meta data: ', metadata);
             const uploaded = yield Bundlr.make(feePayer)
@@ -73,5 +73,5 @@ export var StorageArweave;
             return uploaded.uri;
         }));
     });
-})(StorageArweave || (StorageArweave = {}));
+})(Arweave || (Arweave = {}));
 //# sourceMappingURL=arweave.js.map

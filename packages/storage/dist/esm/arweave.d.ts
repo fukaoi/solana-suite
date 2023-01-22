@@ -11,7 +11,7 @@ export interface MetaplexFileOptions {
         value: string;
     }[];
 }
-export declare namespace StorageArweave {
+export declare namespace Arweave {
     const getUploadPrice: (filePath: MetaplexFileContent, feePayer: BundlrSigner) => Promise<Result<{
         price: number;
         currency: Currency;

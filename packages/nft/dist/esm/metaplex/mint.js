@@ -19,7 +19,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import { Keypair } from '@solana/web3.js';
-import { StorageNftStorage, StorageArweave, } from '@solana-suite/storage';
+import { NftStorage, Arweave, } from '@solana-suite/storage';
 import { debugLog, Try, MintInstruction, Bundlr, } from '@solana-suite/shared';
 import { Validator } from '../validator';
 import { Metaplex as _Royalty } from './royalty';
@@ -55,17 +55,17 @@ export var Metaplex;
         const sellerFeeBasisPoints = _Royalty.convertRoyalty(royalty);
         const storageData = initNftStorageMetadata(input, sellerFeeBasisPoints, options);
         if (storageType === 'arweave') {
-            storage = yield (yield StorageArweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
+            storage = yield (yield Arweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 storageData.image = ok;
-                return yield StorageArweave.uploadMetadata(storageData, feePayer);
+                return yield Arweave.uploadMetadata(storageData, feePayer);
             }), (err) => {
                 throw err;
             });
         }
         else if (storageType === 'nftStorage') {
-            storage = yield (yield StorageNftStorage.uploadContent(filePath)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
+            storage = yield (yield NftStorage.uploadContent(filePath)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 storageData.image = ok;
-                return yield StorageNftStorage.uploadMetadata(storageData);
+                return yield NftStorage.uploadMetadata(storageData);
             }), (err) => {
                 throw err;
             });

@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { NFTStorage, Blob } from 'nft.storage';
 import { Constants, isNode, isBrowser, debugLog, Try, } from '@solana-suite/shared';
 import { toMetaplexFile } from '@metaplex-foundation/js';
-export var StorageNftStorage;
-(function (StorageNftStorage) {
+export var NftStorage;
+(function (NftStorage) {
     let isDisplayWarning = false;
     const getNftStorageApiKey = () => {
         if (!Constants.nftStorageApiKey) {
@@ -34,7 +34,7 @@ export var StorageNftStorage;
     };
     const createGatewayUrl = (cid) => `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
     const connect = () => new NFTStorage({ token: getNftStorageApiKey() });
-    StorageNftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
+    NftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             debugLog('# upload content: ', filePath);
             let file;
@@ -72,7 +72,7 @@ export var StorageNftStorage;
      * }
      * @return Promise<Result<string, Error>>
      */
-    StorageNftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
+    NftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             debugLog('# upload metadata: ', metadata);
             const blobJson = new Blob([JSON.stringify(metadata)]);
@@ -80,5 +80,5 @@ export var StorageNftStorage;
             return createGatewayUrl(res);
         }));
     });
-})(StorageNftStorage || (StorageNftStorage = {}));
+})(NftStorage || (NftStorage = {}));
 //# sourceMappingURL=nft-storage.js.map

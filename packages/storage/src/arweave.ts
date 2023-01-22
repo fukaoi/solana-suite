@@ -24,7 +24,7 @@ export interface MetaplexFileOptions {
   readonly tags: { name: string; value: string }[];
 }
 
-export namespace StorageArweave {
+export namespace Arweave {
   export const getUploadPrice = async (
     filePath: MetaplexFileContent,
     feePayer: BundlrSigner

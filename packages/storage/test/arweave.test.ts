@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { KeypairStr } from '../../core';
 import { Setup } from '../../shared/test/testSetup';
 import { RandomAsset } from './randomAsset';
-import { StorageArweave } from '../src/arweave';
+import { Arweave } from '../src/arweave';
 
 let source: KeypairStr;
 
@@ -15,7 +15,7 @@ describe('StorageArweave', () => {
 
   it('Upload content data', async () => {
     const asset = RandomAsset.get();
-    const res = await StorageArweave.uploadContent(
+    const res = await Arweave.uploadContent(
       asset.filePath!,
       source.toKeypair()
     );
@@ -27,7 +27,7 @@ describe('StorageArweave', () => {
 
   it('Upload content data  with options', async () => {
     const asset = RandomAsset.get();
-    const res = await StorageArweave.uploadContent(
+    const res = await Arweave.uploadContent(
       asset.filePath!,
       source.toKeypair(),
       {
@@ -46,7 +46,7 @@ describe('StorageArweave', () => {
 
   it('Upload meta data', async () => {
     const asset = RandomAsset.get();
-    const res = await StorageArweave.uploadMetadata(
+    const res = await Arweave.uploadMetadata(
       {
         name: asset.name,
         symbol: asset.symbol,
@@ -69,7 +69,7 @@ describe('StorageArweave', () => {
 
   it('Get file upload price', async () => {
     const asset = RandomAsset.get();
-    const res = await StorageArweave.getUploadPrice(
+    const res = await Arweave.getUploadPrice(
       asset.filePath!,
       source.toKeypair()
     );

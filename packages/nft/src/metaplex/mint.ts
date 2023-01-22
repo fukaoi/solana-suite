@@ -1,7 +1,7 @@
 import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
 import {
-  StorageNftStorage,
-  StorageArweave,
+  NftStorage,
+  Arweave,
   NftStorageMetadata,
 } from '@solana-suite/storage';
 import {
@@ -90,11 +90,11 @@ export namespace Metaplex {
 
     if (storageType === 'arweave') {
       storage = await (
-        await StorageArweave.uploadContent(filePath, feePayer)
+        await Arweave.uploadContent(filePath, feePayer)
       ).unwrap(
         async (ok: string) => {
           storageData.image = ok;
-          return await StorageArweave.uploadMetadata(storageData, feePayer);
+          return await Arweave.uploadMetadata(storageData, feePayer);
         },
         (err: Error) => {
           throw err;
@@ -102,11 +102,11 @@ export namespace Metaplex {
       );
     } else if (storageType === 'nftStorage') {
       storage = await (
-        await StorageNftStorage.uploadContent(filePath)
+        await NftStorage.uploadContent(filePath)
       ).unwrap(
         async (ok: string) => {
           storageData.image = ok;
-          return await StorageNftStorage.uploadMetadata(storageData);
+          return await NftStorage.uploadMetadata(storageData);
         },
         (err: Error) => {
           throw err;
