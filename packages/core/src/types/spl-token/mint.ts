@@ -7,8 +7,13 @@ export type JsonMetadataAttribute = {
 export type TokenMetadata = {
   name: string;
   symbol: string;
-  image: string;
-  description: string;
+  // image: string;
+  uri: string;
+  // description: string;
+  sellerFeeBasisPoints?: number;
+  creators?: null;
+  collection?: null;
+  uses?: null;
   animation_url?: string;
   external_url?: string;
   attributes?: JsonMetadataAttribute[];

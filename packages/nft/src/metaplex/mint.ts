@@ -1,20 +1,29 @@
 import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
-import { StorageNftStorage, StorageArweave } from '../storage';
-import { Result, debugLog, Try, MintInstruction } from '@solana-suite/shared';
+import {
+  StorageNftStorage,
+  StorageArweave,
+  NftStorageMetadata,
+} from '@solana-suite/storage';
+import {
+  Result,
+  debugLog,
+  Try,
+  MintInstruction,
+  Bundlr,
+  BundlrSigner,
+} from '@solana-suite/shared';
 import { Validator } from '../validator';
 import {
   InputMetaplexMetadata,
   MetaplexMetaData,
 } from '../types/metaplex/index';
 import { Metaplex as _Royalty } from './royalty';
-import { Bundlr } from '../bundlr';
 import {
   CreateNftBuilderParams,
   token,
   TransactionBuilder,
   CreateNftBuilderContext,
 } from '@metaplex-foundation/js';
-import { BundlrSigner, NftStorageMetadata } from '../types';
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
 

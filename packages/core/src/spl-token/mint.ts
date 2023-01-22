@@ -8,7 +8,7 @@ import {
   createMintToInstruction,
   getAssociatedTokenAddress,
 } from '@solana/spl-token';
-import { createCreateMetadataAccountV2Instruction } from '@metaplex-foundation/mpl-token-metadata';
+import { createCreateMetadataAccountV2Instruction, DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import { findMetadataPda } from '@metaplex-foundation/js';
 import { Node, Result, Instruction, Try } from '@solana-suite/shared';
 import { SplToken as _Calculate } from './calculate-amount';
@@ -79,7 +79,7 @@ export namespace SplToken {
         },
         {
           createMetadataAccountArgsV2: {
-            data: tokenMetadata,
+            data: tokenMetadata as DataV2,
             isMutable: true,
           },
         }

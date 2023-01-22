@@ -5,7 +5,7 @@ export declare const Metaplex: {
     THRESHOLD: 100;
     convertRoyalty: (percentage: number) => number;
     findByOwner: (owner: import("@solana/web3.js").PublicKey) => Promise<import("@solana-suite/shared").Result<import("..").OutputMetaplexMetadata[], Error>>;
-    uploadMetaContent: (input: import("..").InputMetaplexMetadata, feePayer: import("..").BundlrSigner) => Promise<{
+    uploadMetaContent: (input: import("..").InputMetaplexMetadata, feePayer: import("@solana-suite/shared").BundlrSigner) => Promise<{
         uri: string;
         sellerFeeBasisPoints: number;
         reducedMetadata: {
@@ -27,6 +27,6 @@ export declare const Metaplex: {
             collectionIsSized?: boolean | undefined;
         };
     }>;
-    createNftBuilderInstruction: (feePayer: import("..").BundlrSigner, params: import("@metaplex-foundation/js").CreateNftBuilderParams, useNewMint: import("@solana/web3.js").Keypair, updateAuthority: import("@solana/web3.js").Keypair | import("@metaplex-foundation/js").IdentityClient, mintAuthority: import("@solana/web3.js").Keypair | import("@metaplex-foundation/js").IdentityClient, tokenOwner: import("@solana/web3.js").PublicKey) => Promise<import("@solana/web3.js").TransactionInstruction[]>;
+    createNftBuilderInstruction: (feePayer: import("@solana-suite/shared").BundlrSigner, params: import("@metaplex-foundation/js").CreateNftBuilderParams, useNewMint: import("@solana/web3.js").Keypair, updateAuthority: import("@solana/web3.js").Keypair | import("@metaplex-foundation/js").IdentityClient, mintAuthority: import("@solana/web3.js").Keypair | import("@metaplex-foundation/js").IdentityClient, tokenOwner: import("@solana/web3.js").PublicKey) => Promise<import("@solana/web3.js").TransactionInstruction[]>;
     mint: (input: import("..").InputMetaplexMetadata, owner: import("@solana/web3.js").Keypair, feePayer?: import("@solana/web3.js").Keypair | undefined) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").MintInstruction, Error>>;
 };

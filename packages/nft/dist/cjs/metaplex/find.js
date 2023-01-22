@@ -11,12 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metaplex = void 0;
 const shared_1 = require("@solana-suite/shared");
-const bundlr_1 = require("../bundlr");
 var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            const allData = yield bundlr_1.Bundlr.make()
+            const allData = yield shared_1.Bundlr.make()
                 .nfts()
                 .findAllByOwner({ owner });
             const res = allData.map(d => {

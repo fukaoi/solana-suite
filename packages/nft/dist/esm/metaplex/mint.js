@@ -19,11 +19,10 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import { Keypair } from '@solana/web3.js';
-import { StorageNftStorage, StorageArweave } from '../storage';
-import { debugLog, Try, MintInstruction } from '@solana-suite/shared';
+import { StorageNftStorage, StorageArweave, } from '@solana-suite/storage';
+import { debugLog, Try, MintInstruction, Bundlr, } from '@solana-suite/shared';
 import { Validator } from '../validator';
 import { Metaplex as _Royalty } from './royalty';
-import { Bundlr } from '../bundlr';
 import { token, TransactionBuilder, } from '@metaplex-foundation/js';
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
 export var Metaplex;

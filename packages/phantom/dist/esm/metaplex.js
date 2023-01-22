@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Keypair, Transaction } from '@solana/web3.js';
-import { Validator, Bundlr, Metaplex, } from '@solana-suite/nft';
-import { debugLog, Node, Try } from '@solana-suite/shared';
+import { Validator, Metaplex, } from '@solana-suite/nft';
+import { debugLog, Node, Try, Bundlr } from '@solana-suite/shared';
 export var PhantomMetaplex;
 (function (PhantomMetaplex) {
     const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {

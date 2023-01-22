@@ -7,8 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Try } from '@solana-suite/shared';
-import { Bundlr } from '../bundlr';
+import { Try, Bundlr } from '@solana-suite/shared';
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {

@@ -1,7 +1,7 @@
 import { MetaplexFileContent } from '@metaplex-foundation/js';
 import { Result } from '@solana-suite/shared';
+import { NftStorageMetadata } from '@solana-suite/storage';
 import { InputMetaplexMetadata, MetaplexMetaData } from './types/metaplex/index';
-import { NftStorageMetadata } from './types/storage';
 import { Details } from './types/validator';
 export declare namespace Validator {
     export namespace Message {

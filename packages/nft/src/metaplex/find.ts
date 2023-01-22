@@ -1,6 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
-import { Result, Try } from '@solana-suite/shared';
-import { Bundlr } from '../bundlr';
+import { Result, Try, Bundlr } from '@solana-suite/shared';
 import { OutputMetaplexMetadata } from '../types/metaplex/index';
 import { Metadata } from '@metaplex-foundation/js';
 

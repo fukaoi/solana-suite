@@ -1,12 +1,12 @@
 import { MetaplexFileContent } from '@metaplex-foundation/js';
 import { isBrowser, Result, Try } from '@solana-suite/shared';
+import { NftStorageMetadata } from '@solana-suite/storage';
 import { Metaplex } from './metaplex/royalty';
 import {
   InputMetaplexMetadata,
   MetaplexMetaData,
 } from './types/metaplex/index';
 
-import { NftStorageMetadata } from './types/storage';
 import { Limit, Details } from './types/validator';
 
 export namespace Validator {

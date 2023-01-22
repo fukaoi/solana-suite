@@ -1,8 +1,7 @@
 import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
-import { Result, MintInstruction } from '@solana-suite/shared';
+import { Result, MintInstruction, BundlrSigner } from '@solana-suite/shared';
 import { InputMetaplexMetadata } from '../types/metaplex/index';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
-import { BundlrSigner } from '../types';
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 export declare namespace Metaplex {
     const uploadMetaContent: (input: InputMetaplexMetadata, feePayer: BundlrSigner) => Promise<{
@@ -14,8 +13,8 @@ export declare namespace Metaplex {
             description?: string | undefined;
             external_url?: string | undefined;
             image?: string | undefined;
-            attributes?: import("../types").JsonMetadataAttribute[] | undefined;
-            properties?: import("../types").JsonMetadataProperties | undefined;
+            attributes?: import("../types/metaplex/index").JsonMetadataAttribute[] | undefined;
+            properties?: import("../types/metaplex/index").JsonMetadataProperties | undefined;
             isMutable?: boolean | undefined;
             maxSupply?: import("@metaplex-foundation/js").BigNumber | undefined;
             creators?: import("@metaplex-foundation/js").CreatorInput[] | undefined;

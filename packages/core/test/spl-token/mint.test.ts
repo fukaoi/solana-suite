@@ -12,8 +12,8 @@ const MINT_DECIMAL = 2;
 const TOKEN_METADATA = {
   name: 'solana-suite-test',
   symbol: 'SST',
-  image: 'https://atonoy.github.io/solana-suite/img/logo.png',
-  description: 'solana suite test',
+  uri: 'https://atonoy.github.io/solana-suite/img/logo.png',
+  // description: 'solana suite test',
 };
 
 describe('SplToken', () => {
