@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValidatorError = exports.Validator = void 0;
 const shared_1 = require("@solana-suite/shared");
-const royalty_1 = require("./royalty");
+const royalty_1 = require("./metaplex/royalty");
 var Validator;
 (function (Validator) {
     let Message;

@@ -1,11 +1,11 @@
 import { MetaplexFileContent } from '@metaplex-foundation/js';
 import { isBrowser, Result, Try } from '@solana-suite/shared';
 import { NftStorageMetadata } from '@solana-suite/storage';
-import { Metaplex } from './royalty';
+import { Metaplex } from './metaplex/royalty';
 import {
   InputMetaplexMetadata,
   MetaplexMetaData,
-} from './types/mint';
+} from './types/metaplex/';
 
 import { Limit, Details } from './types/validator';
 

@@ -14,12 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Metaplex = void 0;
-const mint_1 = require("./mint");
-const find_1 = require("./find");
-const royalty_1 = require("./royalty");
-const transfer_1 = require("./transfer");
+__exportStar(require("./metaplex"), exports);
 __exportStar(require("./validator"), exports);
 __exportStar(require("./types"), exports);
-exports.Metaplex = Object.assign(Object.assign(Object.assign(Object.assign({}, mint_1.Metaplex), find_1.Metaplex), royalty_1.Metaplex), transfer_1.Metaplex);
 //# sourceMappingURL=index.js.map
