@@ -8,11 +8,13 @@ import {
   createMintToInstruction,
   getAssociatedTokenAddress,
 } from '@solana/spl-token';
-import { createCreateMetadataAccountV2Instruction, DataV2 } from '@metaplex-foundation/mpl-token-metadata';
-import { findMetadataPda } from '@metaplex-foundation/js';
-import { Node, Result, Instruction, Try } from '@solana-suite/shared';
+import {
+  createCreateMetadataAccountV2Instruction,
+  DataV2,
+} from '@metaplex-foundation/mpl-token-metadata';
+import { Node, Result, Instruction, Try, Bundlr } from '@solana-suite/shared';
 import { SplToken as _Calculate } from './calculate-amount';
-import { TokenMetadata } from '../types';
+import { InputTokenMetadata } from '../types';
 
 export namespace SplToken {
   export const mint = async (
@@ -20,7 +22,7 @@ export namespace SplToken {
     signers: Keypair[],
     totalAmount: number,
     mintDecimal: number,
-    tokenMetadata: TokenMetadata,
+    tokenMetadata: InputTokenMetadata,
     feePayer?: Keypair
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
@@ -31,7 +33,11 @@ export namespace SplToken {
 
       const mint = Keypair.generate();
       signers.push(mint);
-      const metadataPda = await findMetadataPda(mint.publicKey);
+      const metadataPda = Bundlr.make()
+        .nfts()
+        .pdas()
+        .metadata({ mint: mint.publicKey });
+
       const tokenAssociated = await getAssociatedTokenAddress(
         mint.publicKey,
         owner
@@ -55,7 +61,6 @@ export namespace SplToken {
 
       const inst3 = createAssociatedTokenAccountInstruction(
         owner,
-        // tokenAssociated.toPublicKey(),
         tokenAssociated,
         owner,
         mint.publicKey
@@ -63,7 +68,6 @@ export namespace SplToken {
 
       const inst4 = createMintToInstruction(
         mint.publicKey,
-        // tokenAssociated.toPublicKey(),
         tokenAssociated,
         owner,
         totalAmount

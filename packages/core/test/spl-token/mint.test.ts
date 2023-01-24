@@ -13,6 +13,7 @@ const TOKEN_METADATA = {
   name: 'solana-suite-test',
   symbol: 'SST',
   uri: 'https://atonoy.github.io/solana-suite/img/logo.png',
+  sellerFeeBasisPoints: 0,
   // description: 'solana suite test',
 };
 

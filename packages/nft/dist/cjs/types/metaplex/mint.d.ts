@@ -2,7 +2,7 @@ import { CreateNftInput, MetaplexFileContent, BigNumber, Option, Signer, Creator
 import { PublicKey } from '@solana/web3.js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 type noNeedOptional = 'payer' | 'owner' | 'associatedTokenProgram' | 'tokenProgram' | 'confirmOptions';
-export type MetaplexMetaData = Omit<CreateNftInput, noNeedOptional>;
+export type MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
 export type JsonMetadataAttribute = {
     trait_type?: string;
     value?: string;
@@ -21,7 +21,7 @@ export type JsonMetadataProperties = {
     }[];
     [key: string]: unknown;
 };
-export type InputMetaplexMetadata = {
+export type InputNftMetadata = {
     name: string;
     symbol: string;
     royalty: number;
@@ -29,7 +29,6 @@ export type InputMetaplexMetadata = {
     storageType: 'arweave' | 'nftStorage';
     description?: string;
     external_url?: string;
-    image?: string;
     attributes?: JsonMetadataAttribute[];
     properties?: JsonMetadataProperties;
     isMutable?: boolean;

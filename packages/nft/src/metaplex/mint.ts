@@ -12,10 +12,9 @@ import {
   Bundlr,
   BundlrSigner,
 } from '@solana-suite/shared';
-import { Validator } from '../validator';
 import {
-  InputMetaplexMetadata,
-  MetaplexMetaData,
+  InputNftMetadata,
+  MetaplexNftMetaData,
 } from '../types/metaplex/mint';
 import { Metaplex as _Royalty } from './royalty';
 import {
@@ -26,6 +25,7 @@ import {
 } from '@metaplex-foundation/js';
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
+import { Validator } from '../validator';
 
 export namespace Metaplex {
   // original: plugins/nftModule/operations/createNft.ts
@@ -57,7 +57,7 @@ export namespace Metaplex {
   };
 
   const initNftStorageMetadata = (
-    input: InputMetaplexMetadata,
+    input: InputNftMetadata,
     sellerFeeBasisPoints: number,
     options?: { [key: string]: unknown }
   ): NftStorageMetadata => {
@@ -75,7 +75,7 @@ export namespace Metaplex {
   };
 
   export const uploadMetaContent = async (
-    input: InputMetaplexMetadata,
+    input: InputNftMetadata,
     feePayer: BundlrSigner
   ) => {
     let storage;
@@ -205,7 +205,7 @@ export namespace Metaplex {
   /**
    * Upload content and NFT mint
    *
-   * @param {InputMetaplexMetadata}  input
+   * @param {NftMetadata}  input
    * {
    *   name: string               // nft content name
    *   symbol: string             // nft ticker symbol
@@ -228,12 +228,12 @@ export namespace Metaplex {
    * @return Promise<Result<Instruction, Error>>
    */
   export const mint = async (
-    input: InputMetaplexMetadata,
+    input: InputNftMetadata,
     owner: Keypair,
     feePayer?: Keypair
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<InputMetaplexMetadata>(input);
+      const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -246,7 +246,7 @@ export namespace Metaplex {
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);
 
-      const mintInput: MetaplexMetaData = {
+      const mintInput: MetaplexNftMetaData = {
         uri,
         sellerFeeBasisPoints,
         ...reducedMetadata,

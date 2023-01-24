@@ -1,10 +1,10 @@
 import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
 import { Result, MintInstruction, BundlrSigner } from '@solana-suite/shared';
-import { InputMetaplexMetadata } from '../types/metaplex/mint';
+import { InputNftMetadata } from '../types/metaplex/mint';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 export declare namespace Metaplex {
-    const uploadMetaContent: (input: InputMetaplexMetadata, feePayer: BundlrSigner) => Promise<{
+    const uploadMetaContent: (input: InputNftMetadata, feePayer: BundlrSigner) => Promise<{
         uri: string;
         sellerFeeBasisPoints: number;
         reducedMetadata: {
@@ -12,7 +12,6 @@ export declare namespace Metaplex {
             symbol: string;
             description?: string | undefined;
             external_url?: string | undefined;
-            image?: string | undefined;
             attributes?: import("../types/metaplex/mint").JsonMetadataAttribute[] | undefined;
             properties?: import("../types/metaplex/mint").JsonMetadataProperties | undefined;
             isMutable?: boolean | undefined;
@@ -30,7 +29,7 @@ export declare namespace Metaplex {
     /**
      * Upload content and NFT mint
      *
-     * @param {InputMetaplexMetadata}  input
+     * @param {NftMetadata}  input
      * {
      *   name: string               // nft content name
      *   symbol: string             // nft ticker symbol
@@ -52,5 +51,5 @@ export declare namespace Metaplex {
      * @param {Keypair} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    const mint: (input: InputMetaplexMetadata, owner: Keypair, feePayer?: Keypair) => Promise<Result<MintInstruction, Error>>;
+    const mint: (input: InputNftMetadata, owner: Keypair, feePayer?: Keypair) => Promise<Result<MintInstruction, Error>>;
 }

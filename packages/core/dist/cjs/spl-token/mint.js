@@ -13,7 +13,6 @@ exports.SplToken = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const spl_token_1 = require("@solana/spl-token");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
-const js_1 = require("@metaplex-foundation/js");
 const shared_1 = require("@solana-suite/shared");
 var SplToken;
 (function (SplToken) {
@@ -24,7 +23,10 @@ var SplToken;
             const lamports = yield (0, spl_token_1.getMinimumBalanceForRentExemptMint)(connection);
             const mint = web3_js_1.Keypair.generate();
             signers.push(mint);
-            const metadataPda = yield (0, js_1.findMetadataPda)(mint.publicKey);
+            const metadataPda = shared_1.Bundlr.make()
+                .nfts()
+                .pdas()
+                .metadata({ mint: mint.publicKey });
             const tokenAssociated = yield (0, spl_token_1.getAssociatedTokenAddress)(mint.publicKey, owner);
             const inst = web3_js_1.SystemProgram.createAccount({
                 fromPubkey: owner,
@@ -34,12 +36,8 @@ var SplToken;
                 programId: spl_token_1.TOKEN_PROGRAM_ID,
             });
             const inst2 = (0, spl_token_1.createInitializeMintInstruction)(mint.publicKey, mintDecimal, owner, owner, spl_token_1.TOKEN_PROGRAM_ID);
-            const inst3 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(owner, 
-            // tokenAssociated.toPublicKey(),
-            tokenAssociated, owner, mint.publicKey);
-            const inst4 = (0, spl_token_1.createMintToInstruction)(mint.publicKey, 
-            // tokenAssociated.toPublicKey(),
-            tokenAssociated, owner, totalAmount);
+            const inst3 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(owner, tokenAssociated, owner, mint.publicKey);
+            const inst4 = (0, spl_token_1.createMintToInstruction)(mint.publicKey, tokenAssociated, owner, totalAmount);
             const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV2Instruction)({
                 metadata: metadataPda,
                 mint: mint.publicKey,

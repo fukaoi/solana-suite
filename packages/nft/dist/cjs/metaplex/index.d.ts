@@ -4,8 +4,8 @@ export declare const Metaplex: {
     feePayerPartialSignTransferNft: (mint: import("@solana/web3.js").PublicKey, owner: import("@solana/web3.js").PublicKey, dest: import("@solana/web3.js").PublicKey, signers: import("@solana/web3.js").Keypair[], feePayer: import("@solana/web3.js").PublicKey) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").PartialSignInstruction, Error>>;
     THRESHOLD: 100;
     convertRoyalty: (percentage: number) => number;
-    findByOwner: (owner: import("@solana/web3.js").PublicKey) => Promise<import("@solana-suite/shared").Result<import("..").OutputMetaplexMetadata[], Error>>;
-    uploadMetaContent: (input: import("..").InputMetaplexMetadata, feePayer: import("@solana-suite/shared").BundlrSigner) => Promise<{
+    findByOwner: (owner: import("@solana/web3.js").PublicKey) => Promise<import("@solana-suite/shared").Result<import("..").OutputNftMetadata[], Error>>;
+    uploadMetaContent: (input: import("..").InputNftMetadata, feePayer: import("@solana-suite/shared").BundlrSigner) => Promise<{
         uri: string;
         sellerFeeBasisPoints: number;
         reducedMetadata: {
@@ -13,7 +13,6 @@ export declare const Metaplex: {
             symbol: string;
             description?: string | undefined;
             external_url?: string | undefined;
-            image?: string | undefined;
             attributes?: import("..").JsonMetadataAttribute[] | undefined;
             properties?: import("..").JsonMetadataProperties | undefined;
             isMutable?: boolean | undefined;
@@ -28,5 +27,5 @@ export declare const Metaplex: {
         };
     }>;
     createNftBuilderInstruction: (feePayer: import("@solana-suite/shared").BundlrSigner, params: import("@metaplex-foundation/js").CreateNftBuilderParams, useNewMint: import("@solana/web3.js").Keypair, updateAuthority: import("@solana/web3.js").Keypair | import("@metaplex-foundation/js").IdentityClient, mintAuthority: import("@solana/web3.js").Keypair | import("@metaplex-foundation/js").IdentityClient, tokenOwner: import("@solana/web3.js").PublicKey) => Promise<import("@solana/web3.js").TransactionInstruction[]>;
-    mint: (input: import("..").InputMetaplexMetadata, owner: import("@solana/web3.js").Keypair, feePayer?: import("@solana/web3.js").Keypair | undefined) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").MintInstruction, Error>>;
+    mint: (input: import("..").InputNftMetadata, owner: import("@solana/web3.js").Keypair, feePayer?: import("@solana/web3.js").Keypair | undefined) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").MintInstruction, Error>>;
 };

@@ -2,11 +2,11 @@ import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 
 import {
+  InputNftMetadata,
+  MetaplexNftMetaData,
+  Metaplex,
   Validator,
   ValidatorError,
-  InputMetaplexMetadata,
-  MetaplexMetaData,
-  Metaplex,
 } from '@solana-suite/nft';
 import { debugLog, Node, Result, Try, Bundlr } from '@solana-suite/shared';
 import { InitializeNftMint, Phantom } from './types';
@@ -43,17 +43,17 @@ export namespace PhantomMetaplex {
   /**
    * Upload content and NFT mint
    *
-   * @param {InputMetaplexMetadata}  input
+   * @param {InputNftMetadata}  input
    * @param {Phantom} phantom        phantom wallet object
    * @return Promise<Result<Instruction, Error>>
    */
   export const mint = async (
-    input: InputMetaplexMetadata,
+    input: InputNftMetadata,
     cluster: string,
     phantom: Phantom
   ): Promise<Result<string, Error | ValidatorError>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<InputMetaplexMetadata>(input);
+      const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -67,7 +67,7 @@ export namespace PhantomMetaplex {
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);
 
-      const mintInput: MetaplexMetaData = {
+      const mintInput: MetaplexNftMetaData = {
         uri,
         sellerFeeBasisPoints,
         ...reducedMetadata,

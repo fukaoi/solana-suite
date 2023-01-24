@@ -33,7 +33,7 @@ var PhantomMetaplex;
     /**
      * Upload content and NFT mint
      *
-     * @param {InputMetaplexMetadata}  input
+     * @param {InputNftMetadata}  input
      * @param {Phantom} phantom        phantom wallet object
      * @return Promise<Result<Instruction, Error>>
      */

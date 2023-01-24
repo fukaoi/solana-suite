@@ -1,7 +1,7 @@
 import { MetaplexFileContent } from '@metaplex-foundation/js';
 import { Result } from '@solana-suite/shared';
 import { NftStorageMetadata } from '@solana-suite/storage';
-import { InputMetaplexMetadata, MetaplexMetaData } from './types/metaplex/';
+import { InputNftMetadata, MetaplexNftMetaData } from './types/metaplex/';
 import { Details } from './types/validator';
 export declare namespace Validator {
     export namespace Message {
@@ -28,8 +28,8 @@ export declare namespace Validator {
     export const isImageUrl: (image: string) => Result<string, ValidatorError>;
     export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
     type PickNftStorage = Pick<NftStorageMetadata, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
-    type PickNftStorageMetaplex = Pick<InputMetaplexMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<MetaplexMetaData, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
+    type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
+    type PickMetaplex = Pick<MetaplexNftMetaData, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
     export {};
 }
 export declare class ValidatorError extends Error {

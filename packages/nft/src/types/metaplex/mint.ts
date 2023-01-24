@@ -17,7 +17,7 @@ type noNeedOptional =
   | 'tokenProgram'
   | 'confirmOptions';
 
-export type MetaplexMetaData = Omit<CreateNftInput, noNeedOptional>;
+export type MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
 
 export type JsonMetadataAttribute = {
   trait_type?: string;
@@ -39,7 +39,7 @@ export type JsonMetadataProperties = {
   [key: string]: unknown;
 };
 
-export type InputMetaplexMetadata = {
+export type InputNftMetadata = {
   name: string;
   symbol: string;
   royalty: number;
@@ -47,7 +47,6 @@ export type InputMetaplexMetadata = {
   storageType: 'arweave' | 'nftStorage';
   description?: string;
   external_url?: string;
-  image?: string;
   attributes?: JsonMetadataAttribute[];
   properties?: JsonMetadataProperties;
   isMutable?: boolean;

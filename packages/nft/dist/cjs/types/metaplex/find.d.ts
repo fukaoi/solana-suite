@@ -1,7 +1,7 @@
 import { Option, Creator } from '@metaplex-foundation/js';
 import { PublicKey } from '@solana/web3.js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
-export type OutputMetaplexMetadata = {
+export type OutputNftMetadata = {
     mint: string;
     updateAuthority: string;
     royalty: number;

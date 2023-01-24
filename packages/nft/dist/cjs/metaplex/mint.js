@@ -24,10 +24,10 @@ exports.Metaplex = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const storage_1 = require("@solana-suite/storage");
 const shared_1 = require("@solana-suite/shared");
-const validator_1 = require("../validator");
 const royalty_1 = require("./royalty");
 const js_1 = require("@metaplex-foundation/js");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
+const validator_1 = require("../validator");
 var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
@@ -135,7 +135,7 @@ var Metaplex;
     /**
      * Upload content and NFT mint
      *
-     * @param {InputMetaplexMetadata}  input
+     * @param {NftMetadata}  input
      * {
      *   name: string               // nft content name
      *   symbol: string             // nft ticker symbol
