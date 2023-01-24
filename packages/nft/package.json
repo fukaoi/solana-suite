@@ -43,11 +43,7 @@
     "@metaplex-foundation/js": "0.17.0",
     "@solana-suite/core": "latest",
     "@solana-suite/shared": "latest",
-    "@solana-suite/shared-metaplex": "latest",
-    "cross-fetch": "^3.1.4",
-    "form-data": "^3.0.1",
-    "nft.storage": "^3.3.0",
-    "node-fetch": "^3.0.0"
+    "@solana-suite/shared-metaplex": "latest"
   },
   "browser": {
     "fs": false
