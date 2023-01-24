@@ -1,5 +1,6 @@
 import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
-import { Result, MintInstruction, BundlrSigner } from '@solana-suite/shared';
+import { Result, MintInstruction } from '@solana-suite/shared';
+import { BundlrSigner } from '@solana-suite/shared-metaplex';
 import { InputNftMetadata } from '../types/metaplex/mint';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';

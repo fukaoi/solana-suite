@@ -7,10 +7,7 @@ import {
 } from '@metaplex-foundation/js';
 
 import { Keypair } from '@solana/web3.js';
-
-import { Node } from './node';
-import { Constants } from './constants';
-
+import { Node, Constants } from '@solana-suite/shared';
 import { BundlrSigner, Phantom } from './types/bundlr';
 
 export namespace Bundlr {

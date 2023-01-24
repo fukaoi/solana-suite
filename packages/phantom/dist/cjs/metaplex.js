@@ -13,10 +13,11 @@ exports.PhantomMetaplex = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const nft_1 = require("@solana-suite/nft");
 const shared_1 = require("@solana-suite/shared");
+const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 var PhantomMetaplex;
 (function (PhantomMetaplex) {
     const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
-        const metaplex = shared_1.Bundlr.make(phantom);
+        const metaplex = shared_metaplex_1.Bundlr.make(phantom);
         const payer = metaplex.identity();
         const useNewMint = web3_js_1.Keypair.generate();
         const updateAuthority = metaplex.identity();

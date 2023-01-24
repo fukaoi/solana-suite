@@ -5,7 +5,6 @@ import {
   Option,
   Signer,
   CreatorInput,
-  Creator,
 } from '@metaplex-foundation/js';
 import { PublicKey } from '@solana/web3.js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';

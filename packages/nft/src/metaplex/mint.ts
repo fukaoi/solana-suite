@@ -1,21 +1,10 @@
 import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
-import {
-  NftStorage,
-  Arweave,
-  NftStorageMetadata,
-} from '@solana-suite/storage';
-import {
-  Result,
-  debugLog,
-  Try,
-  MintInstruction,
-  Bundlr,
-  BundlrSigner,
-} from '@solana-suite/shared';
-import {
-  InputNftMetadata,
-  MetaplexNftMetaData,
-} from '../types/metaplex/mint';
+import { NftStorage, Arweave, NftStorageMetadata } from '@solana-suite/storage';
+import { Result, debugLog, Try, MintInstruction } from '@solana-suite/shared';
+
+import { Bundlr, BundlrSigner } from '@solana-suite/shared-metaplex';
+
+import { InputNftMetadata, MetaplexNftMetaData } from '../types/metaplex/mint';
 import { Metaplex as _Royalty } from './royalty';
 import {
   CreateNftBuilderParams,

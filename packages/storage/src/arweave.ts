@@ -5,15 +5,9 @@ import {
   toMetaplexFile,
 } from '@metaplex-foundation/js';
 
-import {
-  Result,
-  isNode,
-  isBrowser,
-  debugLog,
-  Try,
-  Bundlr,
-  BundlrSigner,
-} from '@solana-suite/shared';
+import { Result, isNode, isBrowser, debugLog, Try } from '@solana-suite/shared';
+import { Bundlr, BundlrSigner } from '@solana-suite/shared-metaplex';
+
 import { NftStorageMetadata } from './types';
 
 export interface MetaplexFileOptions {

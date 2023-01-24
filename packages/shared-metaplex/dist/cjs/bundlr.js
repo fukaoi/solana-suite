@@ -2,16 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Bundlr = void 0;
 const js_1 = require("@metaplex-foundation/js");
-const node_1 = require("./node");
-const constants_1 = require("./constants");
+const shared_1 = require("@solana-suite/shared");
 var Bundlr;
 (function (Bundlr) {
     const BUNDLR_CONNECT_TIMEOUT = 60000;
     Bundlr.make = (feePayer) => {
-        const object = js_1.Metaplex.make(node_1.Node.getConnection()).use((0, js_1.bundlrStorage)({
-            address: constants_1.Constants.BUNDLR_NETWORK_URL,
-            providerUrl: constants_1.Constants.switchCluster({
-                cluster: constants_1.Constants.currentCluster,
+        const object = js_1.Metaplex.make(shared_1.Node.getConnection()).use((0, js_1.bundlrStorage)({
+            address: shared_1.Constants.BUNDLR_NETWORK_URL,
+            providerUrl: shared_1.Constants.switchCluster({
+                cluster: shared_1.Constants.currentCluster,
             }),
             timeout: BUNDLR_CONNECT_TIMEOUT,
         }));

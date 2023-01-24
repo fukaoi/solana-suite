@@ -8,7 +8,8 @@ import {
   Validator,
   ValidatorError,
 } from '@solana-suite/nft';
-import { debugLog, Node, Result, Try, Bundlr } from '@solana-suite/shared';
+import { debugLog, Node, Result, Try } from '@solana-suite/shared';
+import { Bundlr } from '@solana-suite/shared-metaplex';
 import { InitializeNftMint, Phantom } from './types';
 
 export namespace PhantomMetaplex {

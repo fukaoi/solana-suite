@@ -1,5 +1,6 @@
 import { Currency, MetaplexFileContent } from '@metaplex-foundation/js';
-import { Result, BundlrSigner } from '@solana-suite/shared';
+import { Result } from '@solana-suite/shared';
+import { BundlrSigner } from '@solana-suite/shared-metaplex';
 import { NftStorageMetadata } from './types';
 export interface MetaplexFileOptions {
     readonly displayName: string;

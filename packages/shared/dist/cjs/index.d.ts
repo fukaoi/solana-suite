@@ -1,4 +1,3 @@
-export * from './bundlr';
 export * from './constants';
 export * from './instruction';
 export * from './global';

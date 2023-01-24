@@ -1,7 +1,7 @@
 {
-  "name": "@solana-suite/nft",
+  "name": "@solana-suite/shared-metaplex",
   "version": "0.4.8",
-  "description": "nft module for solana-suite",
+  "description": "shared metaplex module for solana-suite",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/cjs/index.d.ts",
@@ -17,7 +17,8 @@
     "node": ">=16.*"
   },
   "files": [
-    "dist"
+    "dist",
+    "package.json"
   ],
   "license": "MIT",
   "author": "Akira Takachi <a.takachi@atonoy.co>",
@@ -32,27 +33,15 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "@metaplex-foundation/js": "0.17.0",
+    "@solana-suite/shared": "latest"
+  },
   "scripts": {
     "clean": "rm -rf dist/",
     "compile": "tsc -p tsconfig.json",
     "compile:esm": "tsc -p tsconfig.esm.json",
     "test": "mocha -t 300000 --require ts-node/register -- ",
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
-  },
-  "dependencies": {
-    "@metaplex-foundation/js": "0.17.0",
-    "@solana-suite/core": "latest",
-    "@solana-suite/shared": "latest",
-    "@solana-suite/shared-metaplex": "latest",
-    "cross-fetch": "^3.1.4",
-    "form-data": "^3.0.1",
-    "nft.storage": "^3.3.0",
-    "node-fetch": "^3.0.0"
-  },
-  "browser": {
-    "fs": false
-  },
-  "node": {
-    "File": false
   }
 }

@@ -14,6 +14,7 @@ const web3_js_1 = require("@solana/web3.js");
 const spl_token_1 = require("@solana/spl-token");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 const shared_1 = require("@solana-suite/shared");
+const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 var SplToken;
 (function (SplToken) {
     SplToken.mint = (owner, signers, totalAmount, mintDecimal, tokenMetadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
@@ -23,7 +24,7 @@ var SplToken;
             const lamports = yield (0, spl_token_1.getMinimumBalanceForRentExemptMint)(connection);
             const mint = web3_js_1.Keypair.generate();
             signers.push(mint);
-            const metadataPda = shared_1.Bundlr.make()
+            const metadataPda = shared_metaplex_1.Bundlr.make()
                 .nfts()
                 .pdas()
                 .metadata({ mint: mint.publicKey });

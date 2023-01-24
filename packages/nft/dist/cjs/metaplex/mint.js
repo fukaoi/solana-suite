@@ -24,6 +24,7 @@ exports.Metaplex = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const storage_1 = require("@solana-suite/storage");
 const shared_1 = require("@solana-suite/shared");
+const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 const royalty_1 = require("./royalty");
 const js_1 = require("@metaplex-foundation/js");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
@@ -90,7 +91,7 @@ var Metaplex;
         (0, shared_1.debugLog)('# updateAuthority: ', updateAuthority.publicKey.toString());
         (0, shared_1.debugLog)('# mintAuthority: ', mintAuthority.publicKey.toString());
         (0, shared_1.debugLog)('# tokenOwner: ', tokenOwner.toString());
-        const metaplex = shared_1.Bundlr.make(feePayer);
+        const metaplex = shared_metaplex_1.Bundlr.make(feePayer);
         const payer = metaplex.identity();
         const sftBuilder = yield metaplex
             .nfts()
