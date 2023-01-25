@@ -1,1 +1,1 @@
-{"cluster":{"type":"localhost-devnet","customClusterUrl":["https://hoge.hoge","https://fuga.fuga"]},"debugging":"false","nftstorage":{"apikey":""}}
+{"cluster":{"type":"localhost-devnet","customClusterUrl":[]},"debugging":"false","nftstorage":{"apikey":""}}
