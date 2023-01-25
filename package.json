@@ -3,15 +3,9 @@
   "version": "0.4.8",
   "private": true,
   "scripts": {
-    "clean": "npm run clean -ws && rm -rf packages/shared/node_modules/ && rm -rf packages/core/node_modules/ && rm -rf  packages/nft/node_modules/ && rm -rf  packages/phantom/node_modules/ && rm -rf  packages/storage/node_modules/",
+    "clean": "npm run clean -ws",
     "compile": "npm run compile -ws && npm run compile:esm -ws",
-    "lint": "npx eslint --fix packages/core/src && npx eslint --fix packages/shared/src && npx eslint --fix packages/nft/src && npx eslint --fix packages/phantom/src && npx eslint --fix packages/storage/src",
-    "test:all": "npm run test:shared && npm run test:nft && npm run test:core && npm run test:phantom && npm run test:storage",
-    "test:shared": "npm run test:all -w packages/shared",
-    "test:storage": "npm run test:all -w packages/storage",
-    "test:nft": "npm run test:all -w packages/nft",
-    "test:core": "npm run test:all -w packages/core",
-    "test:phantom": "npm run test:all -w packages/phantom",
+    "lint": "npx eslint --fix packages/*/src",
     "postinstall": "npm dedupe"
   },
   "workspaces": [

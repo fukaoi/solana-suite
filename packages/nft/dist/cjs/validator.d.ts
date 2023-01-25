@@ -5,13 +5,13 @@ import { InputNftMetadata, MetaplexNftMetaData } from './types/metaplex/';
 import { Details } from './types/validator';
 export declare namespace Validator {
     export namespace Message {
-        const SUCCESS = "success";
-        const SMALL_NUMBER = "too small";
-        const BIG_NUMBER = "too big";
-        const LONG_LENGTH = "too long";
-        const EMPTY = "invalid empty value";
-        const INVALID_URL = "invalid url";
-        const ONLY_NODE_JS = "`string` type is only Node.js";
+        const SUCCESS = 'success';
+        const SMALL_NUMBER = 'too small';
+        const BIG_NUMBER = 'too big';
+        const LONG_LENGTH = 'too long';
+        const EMPTY = 'invalid empty value';
+        const INVALID_URL = 'invalid url';
+        const ONLY_NODE_JS = '`string` type is only Node.js';
     }
     export const NAME_LENGTH = 32;
     export const SYMBOL_LENGTH = 10;

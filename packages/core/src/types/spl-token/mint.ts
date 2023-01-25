@@ -1,4 +1,4 @@
-import { MetaplexFileContent } from "@metaplex-foundation/js";
+import { MetaplexFileContent } from '@metaplex-foundation/js';
 
 export type JsonMetadataAttribute = {
   trait_type?: string;

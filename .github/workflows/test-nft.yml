@@ -50,4 +50,5 @@ jobs:
         
     - run: |
         npm run clean && npm run compile
+        npm run test:all -w packages/nft
         npm run test:nft

@@ -34,7 +34,7 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf dist/",
+    "clean": "rm -rf dist/ node_modules/",
     "compile": "tsc -p tsconfig.json",
     "compile:esm": "tsc -p tsconfig.esm.json",
     "test": "mocha -t 300000 --require ts-node/register -- ",

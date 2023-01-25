@@ -16,15 +16,15 @@ export type TransferHistory = {
     memo?: string;
 };
 export declare enum Filter {
-    Transfer = "transfer",
-    TransferChecked = "transferChecked",
-    OnlyMemo = "spl-memo",
-    MintTo = "mintTo",
-    Create = "create"
+    Transfer = 'transfer',
+    TransferChecked = 'transferChecked',
+    OnlyMemo = 'spl-memo',
+    MintTo = 'mintTo',
+    Create = 'create'
 }
 export declare enum DirectionFilter {
-    Dest = "destination",
-    Source = "source"
+    Dest = 'destination',
+    Source = 'source'
 }
 export type MappingTokenAccount = {
     account: string;
