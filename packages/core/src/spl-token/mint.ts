@@ -71,7 +71,7 @@ export namespace SplToken {
         mint.publicKey,
         tokenAssociated,
         owner,
-        totalAmount
+        _Calculate.calculateAmount(totalAmount, mintDecimal)
       );
 
       const inst5 = createCreateMetadataAccountV2Instruction(

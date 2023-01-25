@@ -1,11 +1,17 @@
 import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
-import { NftStorage, Arweave, NftStorageMetadata } from '@solana-suite/storage';
+import { NftStorage, Arweave } from '@solana-suite/storage';
 import { Result, debugLog, Try, MintInstruction } from '@solana-suite/shared';
 
-import { Bundlr, BundlrSigner } from '@solana-suite/shared-metaplex';
+import {
+  Bundlr,
+  BundlrSigner,
+  Validator,
+  InputNftMetadata,
+  MetaplexNftMetaData,
+  Royalty,
+  NftStorageMetadata,
+} from '@solana-suite/shared-metaplex';
 
-import { InputNftMetadata, MetaplexNftMetaData } from '../types/metaplex/mint';
-import { Metaplex as _Royalty } from './royalty';
 import {
   CreateNftBuilderParams,
   token,
@@ -14,7 +20,6 @@ import {
 } from '@metaplex-foundation/js';
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
-import { Validator } from '../validator';
 
 export namespace Metaplex {
   // original: plugins/nftModule/operations/createNft.ts
@@ -70,7 +75,7 @@ export namespace Metaplex {
     let storage;
     const { filePath, storageType, royalty, options, ...reducedMetadata } =
       input;
-    const sellerFeeBasisPoints = _Royalty.convertRoyalty(royalty);
+    const sellerFeeBasisPoints = Royalty.convert(royalty);
     const storageData = initNftStorageMetadata(
       input,
       sellerFeeBasisPoints,

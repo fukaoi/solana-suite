@@ -1,1 +1,0 @@
-{ "cluster": { "type": "localhost-devnet", "customClusterUrl": ["https://hoge.hoge", "https://fuga.fuga"] }, "debugging": "false", "nftstorage": { "apikey": "" } }

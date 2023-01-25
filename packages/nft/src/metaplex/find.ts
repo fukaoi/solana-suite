@@ -1,7 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
 import { Result, Try } from '@solana-suite/shared';
-import { Bundlr } from '@solana-suite/shared-metaplex';
-import { OutputNftMetadata } from '../types/metaplex/find';
+import { Bundlr, OutputNftMetadata  } from '@solana-suite/shared-metaplex';
 import { Metadata } from '@metaplex-foundation/js';
 
 export namespace Metaplex {

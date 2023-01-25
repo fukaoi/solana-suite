@@ -1,15 +1,15 @@
 import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 
+import { Metaplex } from '@solana-suite/nft';
+import { debugLog, Node, Result, Try } from '@solana-suite/shared';
 import {
-  InputNftMetadata,
-  MetaplexNftMetaData,
-  Metaplex,
+  Bundlr,
   Validator,
   ValidatorError,
-} from '@solana-suite/nft';
-import { debugLog, Node, Result, Try } from '@solana-suite/shared';
-import { Bundlr } from '@solana-suite/shared-metaplex';
+  InputNftMetadata,
+  MetaplexNftMetaData,
+} from '@solana-suite/shared-metaplex';
 import { InitializeNftMint, Phantom } from './types';
 
 export namespace PhantomMetaplex {

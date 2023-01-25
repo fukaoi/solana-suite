@@ -1,12 +1,11 @@
 import { MetaplexFileContent } from '@metaplex-foundation/js';
 import { isBrowser, Result, Try } from '@solana-suite/shared';
-import { NftStorageMetadata } from '@solana-suite/storage';
-import { Metaplex } from './metaplex/royalty';
+import { Royalty } from './royalty';
 import {
   InputNftMetadata,
   MetaplexNftMetaData,
-} from './types/metaplex/';
-
+  NftStorageMetadata,
+} from './types/';
 import { Limit, Details } from './types/validator';
 
 export namespace Validator {
@@ -63,7 +62,7 @@ export namespace Validator {
           threshold: ROYALTY_MIN,
           condition: 'underMin',
         });
-      } else if (royalty > ROYALTY_MAX * Metaplex.THRESHOLD) {
+      } else if (royalty > ROYALTY_MAX * Royalty.THRESHOLD) {
         throw createError(key, Message.BIG_NUMBER, royalty, {
           threshold: SELLER_FEE_BASIS_POINTS_MAX,
           condition: 'overMax',

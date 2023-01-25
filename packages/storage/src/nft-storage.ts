@@ -9,7 +9,7 @@ import {
 } from '@solana-suite/shared';
 
 import { MetaplexFileContent, toMetaplexFile } from '@metaplex-foundation/js';
-import { NftStorageMetadata } from './types';
+import { NftStorageMetadata } from '@solana-suite/shared-metaplex';
 
 export namespace NftStorage {
   let isDisplayWarning = false;
