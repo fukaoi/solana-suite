@@ -5,19 +5,18 @@ name: Test:shared
 on:
   push:
     paths-ignore:
-      - "examples/**"
-      - "README.md"
-      - ".github/workflows/*.yml"
-      - "packages/*/package.json"
-      - "package.json"
-      - "package-lock.json"
-    branches: [ main ]
+      - 'examples/**'
+      - 'README.md'
+      - '.github/workflows/*.yml'
+      - 'packages/*/package.json'
+      - 'package.json'
+      - 'package-lock.json'
+    branches: [main]
 
   workflow_dispatch:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -26,17 +25,17 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Cache solana-localhost-devnet-keypair 
-      id: cache-keypair
-      uses: actions/cache@v3
-      with:
-        path: /tmp/solana-localhost-devnet-keypair
-        key: ${{ runner.os }}-cache
-    - run: npm ci
-    - run: npm run test:all -w packages/shared
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Cache solana-localhost-devnet-keypair
+        id: cache-keypair
+        uses: actions/cache@v3
+        with:
+          path: /tmp/solana-localhost-devnet-keypair
+          key: ${{ runner.os }}-cache
+      - run: yarn install --frozen-lockfile
+      - run: npm run test:all -w packages/shared

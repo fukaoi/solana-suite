@@ -5,19 +5,18 @@ name: Test:core
 on:
   push:
     paths-ignore:
-      - "examples/**"
-      - "README.md"
-      - ".github/workflows/*.yml"
-      - "packages/*/package.json"
-      - "package.json"
-      - "package-lock.json"
-    branches: [ main ]
-  
+      - 'examples/**'
+      - 'README.md'
+      - '.github/workflows/*.yml'
+      - 'packages/*/package.json'
+      - 'package.json'
+      - 'package-lock.json'
+    branches: [main]
+
   workflow_dispatch:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -26,17 +25,17 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: |
-        cd ./packages/shared/
-        NODE_ENV=standalone ./solana-suite-config.js -d true
-        NODE_ENV=standalone ./solana-suite-config.js -cc ${{secrets.SOLANA_CUSTOM_URL}}
-    - run: |  
-        npm run clean && npm run compile
-        npm run test:all -w packages/core
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: yarn install --frozen-lockfile
+      - run: |
+          cd ./packages/shared/
+          NODE_ENV=standalone ./solana-suite-config.js -d true
+          NODE_ENV=standalone ./solana-suite-config.js -cc ${{secrets.SOLANA_CUSTOM_URL}}
+      - run: |
+          npm run clean && npm run compile
+          npm run test:all -w packages/core
