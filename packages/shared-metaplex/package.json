@@ -34,7 +34,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@metaplex-foundation/js": "0.17.0",
+    "@metaplex-foundation/js": "latest",
     "@solana-suite/shared": "latest"
   },
   "scripts": {
