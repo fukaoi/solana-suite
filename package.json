@@ -8,12 +8,7 @@
     "lint": "npx eslint --fix packages/*/src"
   },
   "workspaces": [
-    "packages/shared",
-    "packages/shared-metaplex",
-    "packages/storage",
-    "packages/core",
-    "packages/nft",
-    "packages/phantom"
+    "packages/*"
   ],
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",
