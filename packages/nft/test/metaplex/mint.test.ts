@@ -4,7 +4,7 @@ import { KeypairStr } from '@solana-suite/core';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
-import { ValidatorError } from '../../src';
+import { ValidatorError } from '../../../shared-metaplex/';
 
 let source: KeypairStr;
 
