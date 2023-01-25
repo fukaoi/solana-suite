@@ -42,7 +42,8 @@
   "dependencies": {
     "@metaplex-foundation/js": "0.17.0",
     "@solana-suite/core": "latest",
-    "@solana-suite/shared": "latest"
+    "@solana-suite/shared": "latest",
+    "@solana-suite/shared-metaplex": "0.4.8"
   },
   "browser": {
     "fs": false

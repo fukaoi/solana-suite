@@ -9,10 +9,11 @@
   },
   "workspaces": [
     "packages/shared",
+    "packages/shared-metaplex",
     "packages/storage",
     "packages/core",
     "packages/nft",
-    "packages/phantom" 
+    "packages/phantom"
   ],
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",
@@ -33,5 +34,9 @@
     "ts-node": "^10.7.0",
     "tslib": "^1.14.1",
     "typescript": "^4.8.4"
-  }
+  },
+  "main": "index.js",
+  "repository": "git@github.com:atonoy/solana-suite.git",
+  "author": "fukaoi <usapyon2022@gmail.com>",
+  "license": "MIT"
 }

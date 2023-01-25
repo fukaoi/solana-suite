@@ -44,6 +44,7 @@
     "@solana-suite/core": "latest",
     "@solana-suite/nft": "latest",
     "@solana-suite/shared": "latest",
+    "@solana-suite/shared-metaplex": "0.4.8",
     "@metaplex-foundation/js": "0.17.0"
   }
 }

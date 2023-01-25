@@ -33,10 +33,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "@metaplex-foundation/js": "latest",
-    "@solana-suite/shared": "latest"
-  },
   "scripts": {
     "clean": "rm -rf dist/ node_modules/",
     "compile": "tsc -p tsconfig.json",
