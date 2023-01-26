@@ -17,5 +17,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./bundlr"), exports);
 __exportStar(require("./nft-metadata"), exports);
 __exportStar(require("./nft-storage-metadata"), exports);
+__exportStar(require("./token-metadata"), exports);
 __exportStar(require("./validator"), exports);
 //# sourceMappingURL=index.js.map

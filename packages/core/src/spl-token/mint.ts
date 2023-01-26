@@ -13,9 +13,8 @@ import {
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 import { Node, Result, Instruction, Try } from '@solana-suite/shared';
-import { Bundlr } from '@solana-suite/shared-metaplex';
+import { Bundlr, InputTokenMetadata } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
-import { InputTokenMetadata } from '../types';
 
 export namespace SplToken {
   export const mint = async (
