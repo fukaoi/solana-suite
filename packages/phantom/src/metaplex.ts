@@ -2,6 +2,7 @@ import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 
 import { Metaplex } from '@solana-suite/nft';
+import { Storage } from '@solana-suite/storage';
 import { debugLog, Node, Result, Try } from '@solana-suite/shared';
 import {
   Bundlr,
@@ -61,7 +62,7 @@ export namespace PhantomMetaplex {
 
       Node.changeConnection({ cluster });
 
-      const uploaded = await Metaplex.uploadMetaContent(input, phantom);
+      const uploaded = await Storage.uploadMetaContent(input, phantom);
 
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
       debugLog('# upload content url: ', uri);

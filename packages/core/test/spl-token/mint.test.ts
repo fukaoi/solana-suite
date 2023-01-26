@@ -2,6 +2,8 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { SplToken, KeypairStr, Multisig } from '../../src/';
+import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
+import { StorageType } from '@solana-suite/shared-metaplex';
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -10,11 +12,13 @@ let mintStr: string;
 const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
 const TOKEN_METADATA = {
-  name: 'solana-suite-test',
+  name: 'solana-suite-token',
   symbol: 'SST',
-  uri: 'https://atonoy.github.io/solana-suite/img/logo.png',
   sellerFeeBasisPoints: 0,
-  // description: 'solana suite test',
+  royalty: 0,
+  filePath: RandomAsset.get().filePath as string,
+  storageType: 'nftStorage' as StorageType,
+  description: 'solana suite test',
 };
 
 describe('SplToken', () => {

@@ -16,11 +16,27 @@ const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 const shared_1 = require("@solana-suite/shared");
 const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 const calculate_amount_1 = require("./calculate-amount");
+const storage_1 = require("@solana-suite/storage");
 var SplToken;
 (function (SplToken) {
-    SplToken.mint = (owner, signers, totalAmount, mintDecimal, tokenMetadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.mint = (owner, signers, totalAmount, mintDecimal, input, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            const valid = shared_metaplex_1.Validator.checkAll(input);
+            if (valid.isErr) {
+                throw valid.error;
+            }
             !feePayer && (feePayer = signers[0]);
+            const uploaded = yield storage_1.Storage.uploadMetaContent(input, feePayer);
+            const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+            const tokenMetadata = {
+                name: reducedMetadata.name,
+                symbol: reducedMetadata.symbol,
+                uri,
+                sellerFeeBasisPoints,
+                creators: reducedMetadata.creators,
+                collection: reducedMetadata.collection,
+                uses: reducedMetadata.uses,
+            };
             const connection = shared_1.Node.getConnection();
             const lamports = yield (0, spl_token_1.getMinimumBalanceForRentExemptMint)(connection);
             const mint = web3_js_1.Keypair.generate();

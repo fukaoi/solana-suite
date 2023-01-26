@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PhantomMetaplex = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const nft_1 = require("@solana-suite/nft");
+const storage_1 = require("@solana-suite/storage");
 const shared_1 = require("@solana-suite/shared");
 const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 var PhantomMetaplex;
@@ -45,7 +46,7 @@ var PhantomMetaplex;
                 throw valid.error;
             }
             shared_1.Node.changeConnection({ cluster });
-            const uploaded = yield nft_1.Metaplex.uploadMetaContent(input, phantom);
+            const uploaded = yield storage_1.Storage.uploadMetaContent(input, phantom);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);

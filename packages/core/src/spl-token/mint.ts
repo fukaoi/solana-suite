@@ -8,13 +8,19 @@ import {
   createMintToInstruction,
   getAssociatedTokenAddress,
 } from '@solana/spl-token';
+
 import {
   createCreateMetadataAccountV2Instruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 import { Node, Result, Instruction, Try } from '@solana-suite/shared';
-import { Bundlr, InputTokenMetadata } from '@solana-suite/shared-metaplex';
+import {
+  Bundlr,
+  InputTokenMetadata,
+  Validator,
+} from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
+import { Storage } from '@solana-suite/storage';
 
 export namespace SplToken {
   export const mint = async (
@@ -22,11 +28,27 @@ export namespace SplToken {
     signers: Keypair[],
     totalAmount: number,
     mintDecimal: number,
-    tokenMetadata: InputTokenMetadata,
+    input: InputTokenMetadata,
     feePayer?: Keypair
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
+      const valid = Validator.checkAll<InputTokenMetadata>(input);
+      if (valid.isErr) {
+        throw valid.error;
+      }
+
       !feePayer && (feePayer = signers[0]);
+      const uploaded = await Storage.uploadMetaContent(input, feePayer);
+      const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+      const tokenMetadata = {
+        name: reducedMetadata.name,
+        symbol: reducedMetadata.symbol,
+        uri,
+        sellerFeeBasisPoints,
+        creators: reducedMetadata.creators,
+        collection: reducedMetadata.collection,
+        uses: reducedMetadata.uses,
+      };
 
       const connection = Node.getConnection();
       const lamports = await getMinimumBalanceForRentExemptMint(connection);

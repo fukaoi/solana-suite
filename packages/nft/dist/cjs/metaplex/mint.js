@@ -8,22 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metaplex = void 0;
 const web3_js_1 = require("@solana/web3.js");
-const storage_1 = require("@solana-suite/storage");
 const shared_1 = require("@solana-suite/shared");
+const storage_1 = require("@solana-suite/storage");
 const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 const js_1 = require("@metaplex-foundation/js");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
@@ -37,49 +26,6 @@ var Metaplex;
         const tokenOwner = owner.publicKey;
         const inst = yield Metaplex.createNftBuilderInstruction(feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
         return new shared_1.MintInstruction(inst, [feePayer, useNewMint, owner], undefined, useNewMint.publicKey.toString());
-    });
-    const initNftStorageMetadata = (input, sellerFeeBasisPoints, options) => {
-        const data = {
-            name: input.name,
-            symbol: input.symbol,
-            description: input.description,
-            seller_fee_basis_points: sellerFeeBasisPoints,
-            external_url: input.external_url,
-            attributes: input.attributes,
-            properties: input.properties,
-            image: '',
-        };
-        return Object.assign(Object.assign({}, data), options);
-    };
-    Metaplex.uploadMetaContent = (input, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        let storage;
-        const { filePath, storageType, royalty, options } = input, reducedMetadata = __rest(input, ["filePath", "storageType", "royalty", "options"]);
-        const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(royalty);
-        const storageData = initNftStorageMetadata(input, sellerFeeBasisPoints, options);
-        if (storageType === 'arweave') {
-            storage = yield (yield storage_1.Arweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
-                storageData.image = ok;
-                return yield storage_1.Arweave.uploadMetadata(storageData, feePayer);
-            }), (err) => {
-                throw err;
-            });
-        }
-        else if (storageType === 'nftStorage') {
-            storage = yield (yield storage_1.NftStorage.uploadContent(filePath)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
-                storageData.image = ok;
-                return yield storage_1.NftStorage.uploadMetadata(storageData);
-            }), (err) => {
-                throw err;
-            });
-        }
-        if (!storage) {
-            throw Error('Empty storage object');
-        }
-        return {
-            uri: storage.unwrap(),
-            sellerFeeBasisPoints,
-            reducedMetadata,
-        };
     });
     Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {
         var _a;
@@ -163,7 +109,7 @@ var Metaplex;
                 throw valid.error;
             }
             const payer = feePayer ? feePayer : owner;
-            const uploaded = yield Metaplex.uploadMetaContent(input, payer);
+            const uploaded = yield storage_1.Storage.uploadMetaContent(input, payer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
