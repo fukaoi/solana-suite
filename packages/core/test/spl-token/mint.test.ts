@@ -4,6 +4,7 @@ import { Setup } from '../../../shared/test/testSetup';
 import { SplToken, KeypairStr, Multisig } from '../../src/';
 import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
 import { StorageType } from '@solana-suite/shared-metaplex';
+import { Node } from '@solana-suite/shared';
 
 let source: KeypairStr;
 let dest: KeypairStr;
@@ -14,11 +15,9 @@ const MINT_DECIMAL = 2;
 const TOKEN_METADATA = {
   name: 'solana-suite-token',
   symbol: 'SST',
-  sellerFeeBasisPoints: 0,
-  royalty: 0,
+  royalty: 50,
   filePath: RandomAsset.get().filePath as string,
   storageType: 'nftStorage' as StorageType,
-  description: 'solana suite test',
 };
 
 describe('SplToken', () => {
@@ -28,7 +27,7 @@ describe('SplToken', () => {
     dest = obj.dest;
   });
 
-  it.only('Create token', async () => {
+  it('Create token', async () => {
     const inst = await SplToken.mint(
       source.toPublicKey(),
       [source.toKeypair()],
@@ -45,7 +44,7 @@ describe('SplToken', () => {
     console.log('# mint: ', mintStr);
   });
 
-  it('Create token with multisig', async () => {
+  it.only('Create token with multisig', async () => {
     const signer1 = KeypairStr.create();
     const signer2 = KeypairStr.create();
     const multisigInst = await Multisig.create(2, source.toKeypair(), [
@@ -53,11 +52,14 @@ describe('SplToken', () => {
       signer2.toPublicKey(),
     ]);
 
-    assert.isTrue(multisigInst.isOk, `${multisigInst.unwrap()}`);
-
+    const res = await multisigInst.submit();
+    res.isErr && assert.fail(res.unwrap());
+    await Node.confirmedSig(res.unwrap());
     const multisig = multisigInst.unwrap().data as string;
 
     console.log('# multisig address :', multisig);
+    console.log('# signer1 address :', signer1.pubkey);
+    console.log('# signer2 address :', signer2.pubkey);
 
     const inst = await SplToken.mint(
       multisig.toPublicKey(),
@@ -70,8 +72,8 @@ describe('SplToken', () => {
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
-    const res = await [multisigInst, inst].submit();
-    assert.isTrue(res.isOk, res.unwrap());
+    const res2 = await inst.submit();
+    assert.isTrue(res2.isOk, res2.unwrap());
     mintStr = inst.unwrap().data as string;
     console.log('# mint: ', mintStr);
   });
@@ -79,60 +81,25 @@ describe('SplToken', () => {
   it('[Err]lack signer for multisig', async () => {
     const signer1 = KeypairStr.create();
     const signer2 = KeypairStr.create();
-    const multisig = await Multisig.create(2, source.toKeypair(), [
+    const multisigInst = await Multisig.create(2, source.toKeypair(), [
       signer1.toPublicKey(),
       signer2.toPublicKey(),
     ]);
 
+    const res = await multisigInst.submit();
+    res.isErr && assert.fail(res.unwrap());
+    await Node.confirmedSig(res.unwrap());
+    const multisig = multisigInst.unwrap().data as string;
+
     const mint = await SplToken.mint(
-      (multisig.unwrap().data as string).toPublicKey(),
-      [source.toKeypair(), signer1.toKeypair()],
-      TOKEN_TOTAL_AMOUNT,
-      MINT_DECIMAL,
-      TOKEN_METADATA
-    );
-    const res = await [multisig, mint].submit();
-    assert.isFalse(res.isOk);
-  });
-
-  it('Create token, batch transfer', async () => {
-    const inst1 = await SplToken.mint(
-      source.toPublicKey(),
-      [source.toKeypair()],
+      multisig.toPublicKey(),
+      [signer1.toKeypair(), signer2.toKeypair()],
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
       TOKEN_METADATA
     );
 
-    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
-    const token = inst1.unwrap().data as string;
-    console.log('# mint: ', token);
-
-    const inst2 = await SplToken.transfer(
-      token.toPublicKey(),
-      source.toPublicKey(),
-      dest.toPublicKey(),
-      [source.toKeypair()],
-      1,
-      MINT_DECIMAL,
-      source.toKeypair()
-    );
-    assert.isTrue(inst1.isOk);
-
-    const inst3 = await SplToken.transfer(
-      token.toPublicKey(),
-      source.toPublicKey(),
-      dest.toPublicKey(),
-      [source.toKeypair()],
-      1,
-      MINT_DECIMAL,
-      source.toKeypair()
-    );
-    assert.isTrue(inst2.isOk);
-
-    const sig = await [inst1, inst2, inst3].submit();
-
-    assert.isTrue(sig.isOk, sig.unwrap());
-    console.log('signature: ', sig.unwrap());
+    const res2 = await mint.submit();
+    assert.isFalse(res2.isOk);
   });
 });

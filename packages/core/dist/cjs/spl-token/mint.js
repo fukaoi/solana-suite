@@ -47,15 +47,15 @@ var SplToken;
                 .metadata({ mint: mint.publicKey });
             const tokenAssociated = yield (0, spl_token_1.getAssociatedTokenAddress)(mint.publicKey, owner);
             const inst = web3_js_1.SystemProgram.createAccount({
-                fromPubkey: owner,
+                fromPubkey: feePayer.publicKey,
                 newAccountPubkey: mint.publicKey,
                 space: spl_token_1.MINT_SIZE,
                 lamports: lamports,
                 programId: spl_token_1.TOKEN_PROGRAM_ID,
             });
             const inst2 = (0, spl_token_1.createInitializeMintInstruction)(mint.publicKey, mintDecimal, owner, owner, spl_token_1.TOKEN_PROGRAM_ID);
-            const inst3 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(owner, tokenAssociated, owner, mint.publicKey);
-            const inst4 = (0, spl_token_1.createMintToInstruction)(mint.publicKey, tokenAssociated, owner, calculate_amount_1.SplToken.calculateAmount(totalAmount, mintDecimal));
+            const inst3 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(feePayer.publicKey, tokenAssociated, owner, mint.publicKey);
+            const inst4 = (0, spl_token_1.createMintToInstruction)(mint.publicKey, tokenAssociated, owner, calculate_amount_1.SplToken.calculateAmount(totalAmount, mintDecimal), signers);
             const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV2Instruction)({
                 metadata: metadataPda,
                 mint: mint.publicKey,
@@ -68,7 +68,17 @@ var SplToken;
                     isMutable: true,
                 },
             });
-            return new shared_1.Instruction([inst, inst2, inst3, inst4, inst5], signers, feePayer, mint.publicKey.toBase58());
+            let insts;
+            if (signers.length > 1) {
+                // multiple signer
+                const res = yield new shared_1.Instruction([inst, inst2, inst3], [mint], feePayer).submit();
+                console.log(res);
+                insts = [inst4, inst5];
+            }
+            else {
+                insts = [inst, inst2, inst3, inst4, inst5];
+            }
+            return new shared_1.Instruction(insts, signers, feePayer, mint.publicKey.toBase58());
         }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));

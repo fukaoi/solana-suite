@@ -63,7 +63,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
   // TRANSFER FROM OWNER TO PUBLISHER
   //////////////////////////////////////////////
-  const inst2 = await SolNative.transfer(
+  const inst2 = SolNative.transfer(
     owner.toPublicKey(), // from
     feePayer.toPublicKey(), // to
     [owner.toKeypair()], // signing

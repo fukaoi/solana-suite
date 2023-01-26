@@ -9,11 +9,8 @@ export type InputTokenMetadata = {
     royalty: number;
     filePath: MetaplexFileContent;
     storageType: StorageType;
-    description?: string;
-    external_url?: string;
     attributes?: JsonMetadataAttribute[];
     creators?: CreatorInput[];
     collection?: Option<PublicKey>;
     uses?: Option<Uses>;
-    animation_url?: string;
 };
