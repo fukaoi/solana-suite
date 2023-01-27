@@ -112,7 +112,7 @@ export namespace SplToken {
 
   export const mint = async (
     owner: PublicKey,
-    signers: Keypair[],
+    signer: Keypair,
     totalAmount: number,
     mintDecimal: number,
     input: InputTokenMetadata,
@@ -124,7 +124,7 @@ export namespace SplToken {
         throw valid.error;
       }
 
-      !feePayer && (feePayer = signers[0]);
+      !feePayer && (feePayer = signer);
       const uploaded = await Storage.uploadMetaContent(input, feePayer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 
@@ -147,7 +147,7 @@ export namespace SplToken {
       return await createMintInstruction(
         connection,
         owner,
-        signers,
+        [signer],
         totalAmount,
         mintDecimal,
         tokenMetadata as DataV2,

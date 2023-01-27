@@ -73,7 +73,7 @@ const SLEEP_TIME_WAIT = 0;
 
   const inst1 = await SplToken.mint(
     owner.toPublicKey(),
-    [owner.toKeypair()],
+    owner.toKeypair(),
     totalAmount,
     decimals,
     tokenMetadata

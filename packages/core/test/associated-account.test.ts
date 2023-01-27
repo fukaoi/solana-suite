@@ -24,7 +24,7 @@ describe('AssociatedAccount', () => {
   it('Retry getOrCreate', async () => {
     const mintInst = await SplToken.mint(
       source.toPublicKey(),
-      [source.toKeypair()],
+      source.toKeypair(),
       10000,
       1,
       TOKEN_METADATA

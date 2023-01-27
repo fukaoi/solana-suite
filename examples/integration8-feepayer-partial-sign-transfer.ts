@@ -92,7 +92,7 @@ import { StorageType } from '@solana-suite/shared-metaplex';
 
   const mintInst = await SplToken.mint(
     tokenOwner.toPublicKey(),
-    [tokenOwner.toKeypair()],
+    tokenOwner.toKeypair(),
     10000,
     decimals,
     tokenMetadata,

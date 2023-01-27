@@ -31,7 +31,7 @@ describe('SplToken', () => {
 
     const inst1 = await SplToken.mint(
       tokenOwner.toPublicKey(),
-      [tokenOwner.toKeypair()],
+      tokenOwner.toKeypair(),
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
       TOKEN_METADATA,

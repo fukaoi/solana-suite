@@ -28,7 +28,7 @@ describe('SplToken', () => {
   it('Create token', async () => {
     const inst = await SplToken.mint(
       source.toPublicKey(),
-      [source.toKeypair()],
+      source.toKeypair(),
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
       TOKEN_METADATA
