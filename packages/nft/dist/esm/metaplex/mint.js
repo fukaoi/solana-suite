@@ -16,12 +16,12 @@ import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl
 export var Metaplex;
 (function (Metaplex) {
     const createNftBuilder = (params, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const useNewMint = Keypair.generate();
+        const mint = Keypair.generate();
         const updateAuthority = owner;
         const mintAuthority = owner;
         const tokenOwner = owner.publicKey;
-        const inst = yield Metaplex.createNftBuilderInstruction(feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
-        return new MintInstruction(inst, [feePayer, useNewMint, owner], undefined, useNewMint.publicKey.toString());
+        const inst = yield Metaplex.createNftBuilderInstruction(feePayer, params, mint, updateAuthority, mintAuthority, tokenOwner);
+        return new MintInstruction(inst, [feePayer, mint, owner], undefined, mint.publicKey.toString());
     });
     Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {
         var _a;
