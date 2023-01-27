@@ -19,12 +19,12 @@ const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 var Metaplex;
 (function (Metaplex) {
     const createNftBuilder = (params, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const useNewMint = web3_js_1.Keypair.generate();
+        const mint = web3_js_1.Keypair.generate();
         const updateAuthority = owner;
         const mintAuthority = owner;
         const tokenOwner = owner.publicKey;
-        const inst = yield Metaplex.createNftBuilderInstruction(feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
-        return new shared_1.MintInstruction(inst, [feePayer, useNewMint, owner], undefined, useNewMint.publicKey.toString());
+        const inst = yield Metaplex.createNftBuilderInstruction(feePayer, params, mint, updateAuthority, mintAuthority, tokenOwner);
+        return new shared_1.MintInstruction(inst, [feePayer, mint, owner], undefined, mint.publicKey.toString());
     });
     Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {
         var _a;
