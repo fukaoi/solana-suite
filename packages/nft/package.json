@@ -44,6 +44,6 @@
     "@solana-suite/core": "latest",
     "@solana-suite/shared": "latest",
     "@solana-suite/storage": "latest",
-    "@solana-suite/shared-metaplex": "0.4.8"
+    "@solana-suite/shared-metaplex": "latest"
   }
 }
