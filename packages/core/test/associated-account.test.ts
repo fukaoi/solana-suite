@@ -3,8 +3,17 @@ import { assert } from 'chai';
 import { AssociatedAccount } from '../src/associated-account';
 import { KeypairStr, SplToken } from '../src';
 import { Setup } from '@solana-suite/shared/test/testSetup';
+import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
+import { StorageType } from '@solana-suite/shared-metaplex';
 
 let source: KeypairStr;
+const TOKEN_METADATA = {
+  name: 'solana-suite-token',
+  symbol: 'SST',
+  royalty: 50,
+  filePath: RandomAsset.get().filePath as string,
+  storageType: 'nftStorage' as StorageType,
+};
 
 describe('AssociatedAccount', () => {
   before(async () => {
@@ -17,7 +26,8 @@ describe('AssociatedAccount', () => {
       source.toPublicKey(),
       [source.toKeypair()],
       10000,
-      1
+      1,
+      TOKEN_METADATA
     );
 
     await mintInst.submit();
