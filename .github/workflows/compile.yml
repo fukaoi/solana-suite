@@ -5,16 +5,15 @@ name: Compile
 on:
   push:
     paths-ignore:
-      - "examples/**"
-      - "README.md"
-      - ".github/workflows/*.yml"
-    branches: [ main ]
-    
+      - 'examples/**'
+      - 'README.md'
+      - '.github/workflows/*.yml'
+    branches: [main]
+
   workflow_dispatch:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -23,16 +22,16 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run clean
-    - run: npm run compile
-    - name: Auto commit
-      uses: stefanzweifel/git-auto-commit-action@v4.12.0
-      with:
-        commit_message: Exec auto commit
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: yarn install --frozen-lockfile
+      - run: npm run clean
+      - run: npm run compile
+      - name: Auto commit
+        uses: stefanzweifel/git-auto-commit-action@v4.12.0
+        with:
+          commit_message: Exec auto commit

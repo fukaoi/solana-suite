@@ -1,15 +1,16 @@
 import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 
+import { Metaplex } from '@solana-suite/nft';
+import { Storage } from '@solana-suite/storage';
+import { debugLog, Node, Result, Try } from '@solana-suite/shared';
 import {
+  Bundlr,
   Validator,
   ValidatorError,
-  InputMetaplexMetadata,
-  MetaplexMetaData,
-  Bundlr,
-  Metaplex,
-} from '@solana-suite/nft';
-import { debugLog, Node, Result, Try } from '@solana-suite/shared';
+  InputNftMetadata,
+  MetaplexNftMetaData,
+} from '@solana-suite/shared-metaplex';
 import { InitializeNftMint, Phantom } from './types';
 
 export namespace PhantomMetaplex {
@@ -44,31 +45,31 @@ export namespace PhantomMetaplex {
   /**
    * Upload content and NFT mint
    *
-   * @param {InputMetaplexMetadata}  input
+   * @param {InputNftMetadata}  input
    * @param {Phantom} phantom        phantom wallet object
    * @return Promise<Result<Instruction, Error>>
    */
   export const mint = async (
-    input: InputMetaplexMetadata,
+    input: InputNftMetadata,
     cluster: string,
     phantom: Phantom
   ): Promise<Result<string, Error | ValidatorError>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<InputMetaplexMetadata>(input);
+      const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
 
       Node.changeConnection({ cluster });
 
-      const uploaded = await Metaplex.uploadMetaContent(input, phantom);
+      const uploaded = await Storage.uploadMetaContent(input, phantom);
 
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
       debugLog('# upload content url: ', uri);
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);
 
-      const mintInput: MetaplexMetaData = {
+      const mintInput: MetaplexNftMetaData = {
         uri,
         sellerFeeBasisPoints,
         ...reducedMetadata,

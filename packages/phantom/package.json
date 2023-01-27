@@ -34,7 +34,7 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf dist/",
+    "clean": "rm -rf dist/ node_modules/",
     "compile": "tsc -p tsconfig.json",
     "compile:esm": "tsc -p tsconfig.esm.json",
     "test": "mocha -t 300000 --require ts-node/register -- ",
@@ -44,6 +44,7 @@
     "@solana-suite/core": "latest",
     "@solana-suite/nft": "latest",
     "@solana-suite/shared": "latest",
-    "@metaplex-foundation/js": "0.15.0"
+    "@solana-suite/shared-metaplex": "0.4.8",
+    "@metaplex-foundation/js": "0.17.0"
   }
 }

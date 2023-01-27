@@ -33,14 +33,17 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf dist/",
+    "clean": "rm -rf dist/ node_modules/",
     "compile": "tsc -p tsconfig.json",
     "compile:esm": "tsc -p tsconfig.esm.json",
     "test": "mocha -t 300000 --require ts-node/register -- ",
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
   "dependencies": {
+    "@solana-suite/storage": "latest",
     "@solana-suite/shared": "latest",
+    "@solana-suite/shared-metaplex": "0.4.8",
+    "@metaplex-foundation/js": "0.17.0",
     "@solana/spl-token": "^0.2.0",
     "@solana/web3.js": "^1.62.1"
   }

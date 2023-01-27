@@ -3,8 +3,8 @@ import { assert } from 'chai';
 import { KeypairStr } from '@solana-suite/core';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
-import { RandomAsset } from '../randomAsset';
-import { ValidatorError } from '../../src';
+import { RandomAsset } from '../../../storage/test/randomAsset';
+import { ValidatorError } from '../../../shared-metaplex/';
 
 let source: KeypairStr;
 

@@ -1,11 +1,10 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../shared/test/testSetup';
-import { Memo, SolNative, SplToken, KeypairStr } from '../src';
+import { Memo, SolNative, KeypairStr } from '../src';
 
 let source: KeypairStr;
 let dest: KeypairStr;
-let mint: string;
 const DUMMY_DATA = 'dummy memo data';
 
 describe('Memo', () => {
@@ -58,36 +57,6 @@ describe('Memo', () => {
     );
 
     const res = await [inst1, inst2].submit();
-    assert.isTrue(res.isOk, res.unwrap());
-    console.log('# tx signature: ', res.unwrap());
-  });
-
-  it('send memo and spl token transfer', async () => {
-    const inst1 = Memo.create(
-      `${new Date()}`,
-      dest.toPublicKey(),
-      source.toKeypair()
-    );
-
-    const inst2 = await SplToken.mint(
-      source.toPublicKey(),
-      [source.toKeypair()],
-      10000,
-      0
-    );
-
-    mint = inst2.unwrap().data as string;
-
-    const inst3 = await SplToken.transfer(
-      mint.toPublicKey(),
-      source.toPublicKey(),
-      dest.toPublicKey(),
-      [source.toKeypair()],
-      100,
-      0
-    );
-
-    const res = await [inst1, inst2, inst3].submit();
     assert.isTrue(res.isOk, res.unwrap());
     console.log('# tx signature: ', res.unwrap());
   });

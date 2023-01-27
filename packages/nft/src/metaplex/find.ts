@@ -1,18 +1,17 @@
 import { PublicKey } from '@solana/web3.js';
 import { Result, Try } from '@solana-suite/shared';
-import { Bundlr } from '../bundlr';
-import { OutputMetaplexMetadata } from '../types/metaplex/index';
+import { Bundlr, OutputNftMetadata  } from '@solana-suite/shared-metaplex';
 import { Metadata } from '@metaplex-foundation/js';
 
 export namespace Metaplex {
   export const findByOwner = async (
     owner: PublicKey
-  ): Promise<Result<OutputMetaplexMetadata[], Error>> => {
+  ): Promise<Result<OutputNftMetadata[], Error>> => {
     return Try(async () => {
+      
       const allData = await Bundlr.make()
         .nfts()
-        .findAllByOwner({ owner })
-        .run();
+        .findAllByOwner({ owner });
 
       const res = allData.map(d => {
         return {

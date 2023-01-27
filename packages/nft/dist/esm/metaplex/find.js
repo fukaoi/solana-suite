@@ -8,15 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Try } from '@solana-suite/shared';
-import { Bundlr } from '../bundlr';
+import { Bundlr } from '@solana-suite/shared-metaplex';
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             const allData = yield Bundlr.make()
                 .nfts()
-                .findAllByOwner({ owner })
-                .run();
+                .findAllByOwner({ owner });
             const res = allData.map(d => {
                 return {
                     mint: d.mintAddress.toString(),

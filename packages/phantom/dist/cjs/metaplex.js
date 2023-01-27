@@ -12,11 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PhantomMetaplex = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const nft_1 = require("@solana-suite/nft");
+const storage_1 = require("@solana-suite/storage");
 const shared_1 = require("@solana-suite/shared");
+const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 var PhantomMetaplex;
 (function (PhantomMetaplex) {
     const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
-        const metaplex = nft_1.Bundlr.make(phantom);
+        const metaplex = shared_metaplex_1.Bundlr.make(phantom);
         const payer = metaplex.identity();
         const useNewMint = web3_js_1.Keypair.generate();
         const updateAuthority = metaplex.identity();
@@ -33,18 +35,18 @@ var PhantomMetaplex;
     /**
      * Upload content and NFT mint
      *
-     * @param {InputMetaplexMetadata}  input
+     * @param {InputNftMetadata}  input
      * @param {Phantom} phantom        phantom wallet object
      * @return Promise<Result<Instruction, Error>>
      */
     PhantomMetaplex.mint = (input, cluster, phantom) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            const valid = nft_1.Validator.checkAll(input);
+            const valid = shared_metaplex_1.Validator.checkAll(input);
             if (valid.isErr) {
                 throw valid.error;
             }
             shared_1.Node.changeConnection({ cluster });
-            const uploaded = yield nft_1.Metaplex.uploadMetaContent(input, phantom);
+            const uploaded = yield storage_1.Storage.uploadMetaContent(input, phantom);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);

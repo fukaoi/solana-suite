@@ -5,14 +5,14 @@ name: Test:nft
 on:
   push:
     paths-ignore:
-      - "examples/**"
-      - "README.md"
-      - ".github/workflows/*.yml"
-      - "packages/*/package.json"
-      - "package.json"
-      - "package-lock.json"
-    branches: [ main ]
-    
+      - 'examples/**'
+      - 'README.md'
+      - '.github/workflows/*.yml'
+      - 'packages/*/package.json'
+      - 'package.json'
+      - 'package-lock.json'
+    branches: [main]
+
   workflow_dispatch:
 
 jobs:
@@ -25,29 +25,30 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Cache solana-localhost-devnet-keypair 
-      id: cache-keypair
-      uses: actions/cache@v3
-      with:
-        path: /tmp/solana-localhost-devnet-keypair
-        key: ${{ runner.os }}-cache
-    - run: npm ci
-    - run: |
-        cd ./packages/shared/
-        NODE_ENV=standalone ./solana-suite-config.js -d true
-        NODE_ENV=standalone ./solana-suite-config.js -cc $SOLANA_CUSTOM_URL
-      env: 
-        SOLANA_CUSTOM_URL: ${{secrets.SOLANA_CUSTOM_URL}}
-    - run: |
-        cd ./packages/shared/
-        cat src/solana-suite.json
-        
-    - run: |
-        npm run clean && npm run compile
-        npm run test:nft
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Cache solana-localhost-devnet-keypair
+        id: cache-keypair
+        uses: actions/cache@v3
+        with:
+          path: /tmp/solana-localhost-devnet-keypair
+          key: ${{ runner.os }}-cache
+      - run: npm install yarn
+      - run: yarn install --frozen-lockfile
+      - run: |
+          cd ./packages/shared/
+          NODE_ENV=standalone ./solana-suite-config.js -d true
+          NODE_ENV=standalone ./solana-suite-config.js -cc $SOLANA_CUSTOM_URL
+        env:
+          SOLANA_CUSTOM_URL: ${{secrets.SOLANA_CUSTOM_URL}}
+      - run: |
+          cd ./packages/shared/
+          cat src/solana-suite.json
+
+      - run: |
+          npm run clean && npm run compile
+          npm run test:all -w packages/nft

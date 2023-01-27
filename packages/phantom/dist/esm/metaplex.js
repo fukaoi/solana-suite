@@ -8,8 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Keypair, Transaction } from '@solana/web3.js';
-import { Validator, Bundlr, Metaplex, } from '@solana-suite/nft';
+import { Metaplex } from '@solana-suite/nft';
+import { Storage } from '@solana-suite/storage';
 import { debugLog, Node, Try } from '@solana-suite/shared';
+import { Bundlr, Validator, } from '@solana-suite/shared-metaplex';
 export var PhantomMetaplex;
 (function (PhantomMetaplex) {
     const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
@@ -30,7 +32,7 @@ export var PhantomMetaplex;
     /**
      * Upload content and NFT mint
      *
-     * @param {InputMetaplexMetadata}  input
+     * @param {InputNftMetadata}  input
      * @param {Phantom} phantom        phantom wallet object
      * @return Promise<Result<Instruction, Error>>
      */
@@ -41,7 +43,7 @@ export var PhantomMetaplex;
                 throw valid.error;
             }
             Node.changeConnection({ cluster });
-            const uploaded = yield Metaplex.uploadMetaContent(input, phantom);
+            const uploaded = yield Storage.uploadMetaContent(input, phantom);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             debugLog('# upload content url: ', uri);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);

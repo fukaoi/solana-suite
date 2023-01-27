@@ -3,25 +3,13 @@
   "version": "0.4.8",
   "private": true,
   "scripts": {
-    "clean": "npm run clean -ws && rm -rf packages/shared/node_modules/ && rm -rf packages/core/node_modules/ && rm -rf  packages/nft/node_modules/ && rm -rf  packages/phantom/node_modules/",
+    "clean": "npm run clean -ws",
     "compile": "npm run compile -ws && npm run compile:esm -ws",
-    "lint": "npx eslint --fix packages/core/src && npx eslint --fix packages/shared/src && npx eslint --fix packages/nft/src && npx eslint --fix packages/phantom/src",
-    "test:all": "npm run test:shared && npm run test:nft && npm run test:core && npm run test:phantom",
-    "test:shared": "npm run test:all -w packages/shared",
-    "test:nft": "npm run test:all -w packages/nft",
-    "test:core": "npm run test:all -w packages/core",
-    "test:phantom": "npm run test:all -w packages/phantom",
-    "postinstall": "npm dedupe"
+    "lint": "npx eslint --fix packages/*/src"
   },
   "workspaces": [
-    "packages/shared",
-    "packages/core",
-    "packages/nft",
-    "packages/phantom"
+    "packages/*"
   ],
-  "overrides": {
-    "@metaplex-foundation/mpl-token-metadata": "2.2.4"
-  },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",
     "@tsconfig/node18": "^1.0.1",
@@ -41,5 +29,9 @@
     "ts-node": "^10.7.0",
     "tslib": "^1.14.1",
     "typescript": "^4.8.4"
-  }
+  },
+  "main": "index.js",
+  "repository": "git@github.com:atonoy/solana-suite.git",
+  "author": "fukaoi <usapyon2022@gmail.com>",
+  "license": "MIT"
 }
