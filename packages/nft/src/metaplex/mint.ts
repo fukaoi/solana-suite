@@ -25,7 +25,7 @@ export namespace Metaplex { // original: plugins/nftModule/operations/createNft.
     owner: Keypair,
     feePayer: Keypair
   ): Promise<MintInstruction> => {
-    const useNewMint = Keypair.generate();
+    const mint = Keypair.generate();
     const updateAuthority = owner;
     const mintAuthority = owner;
     const tokenOwner = owner.publicKey;
@@ -33,7 +33,7 @@ export namespace Metaplex { // original: plugins/nftModule/operations/createNft.
     const inst = await createNftBuilderInstruction(
       feePayer,
       params,
-      useNewMint,
+      mint,
       updateAuthority,
       mintAuthority,
       tokenOwner
@@ -41,9 +41,9 @@ export namespace Metaplex { // original: plugins/nftModule/operations/createNft.
 
     return new MintInstruction(
       inst,
-      [feePayer, useNewMint, owner],
+      [feePayer, mint, owner],
       undefined,
-      useNewMint.publicKey.toString()
+      mint.publicKey.toString()
     );
   };
 
