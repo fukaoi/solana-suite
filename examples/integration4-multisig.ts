@@ -14,6 +14,8 @@ import {
 
 import { Node } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
+import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
+import { StorageType } from '@solana-suite/shared-metaplex';
 
 (async () => {
   //////////////////////////////////////////////
@@ -89,6 +91,14 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
 
   const multiSigners = [signer1.toKeypair(), signer2.toKeypair()];
+  const tokenMetadata = {
+    name: 'solana-suite-token',
+    symbol: 'SST',
+    royalty: 50,
+    filePath: RandomAsset.get().filePath as string,
+    storageType: 'nftStorage' as StorageType,
+    isMutable: false,
+  };
 
   // created by publisher account
   const inst3 = await SplToken.mint(
@@ -96,6 +106,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     multiSigners, // signing
     100000, // Total number of tokens issued
     2, // token's decimal e.g:0.12, 20.52
+    tokenMetadata, // token standard metadata
     feePayer.toKeypair() // pay transaction fee
   );
 

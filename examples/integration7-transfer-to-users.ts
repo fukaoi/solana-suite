@@ -17,6 +17,8 @@ import {
   sleep,
 } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
+import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
+import { StorageType } from '@solana-suite/shared-metaplex';
 
 const USERS_COUNT = 10;
 const SLEEP_TIME_WAIT = 0;
@@ -60,11 +62,21 @@ const SLEEP_TIME_WAIT = 0;
 
   const totalAmount = 100000;
   const decimals = 1;
+  const tokenMetadata = {
+    name: 'solana-suite-token',
+    symbol: 'SST',
+    royalty: 50,
+    filePath: RandomAsset.get().filePath as string,
+    storageType: 'nftStorage' as StorageType,
+    isMutable: false,
+  };
+
   const inst1 = await SplToken.mint(
     owner.toPublicKey(),
     [owner.toKeypair()],
     totalAmount,
-    decimals
+    decimals,
+    tokenMetadata
   );
 
   // submit instructions

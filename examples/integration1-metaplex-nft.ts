@@ -6,7 +6,7 @@ import assert from 'assert';
 import { Airdrop, KeypairStr, Pubkey } from '@solana-suite/core';
 import { Metaplex } from '@solana-suite/nft';
 import { Node } from '@solana-suite/shared';
-import { RandomAsset } from '../packages/nft/test/randomAsset';
+import { RandomAsset } from '../packages/storage/test/randomAsset';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 
 (async () => {

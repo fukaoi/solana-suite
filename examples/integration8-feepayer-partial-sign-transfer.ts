@@ -7,6 +7,8 @@ import { Airdrop, KeypairStr, SolNative, SplToken } from '@solana-suite/core';
 
 import { PartialSignInstruction, sleep } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
+import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
+import { StorageType } from '@solana-suite/shared-metaplex';
 
 (async () => {
   ////////////////////////////////////////////// CREATE WALLET
@@ -78,12 +80,22 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
   // CREATE HEX INSTRUCTION(Client side)
   //////////////////////////////////////////////
-  const MINT_DECIMAL = 1;
+  const decimals = 1;
+  const tokenMetadata = {
+    name: 'solana-suite-token',
+    symbol: 'SST',
+    royalty: 50,
+    filePath: RandomAsset.get().filePath as string,
+    storageType: 'nftStorage' as StorageType,
+    isMutable: false,
+  };
+
   const mintInst = await SplToken.mint(
     tokenOwner.toPublicKey(),
     [tokenOwner.toKeypair()],
     10000,
-    MINT_DECIMAL,
+    decimals,
+    tokenMetadata,
     feePayer.toKeypair()
   );
 
@@ -95,7 +107,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     dest.toPublicKey(),
     [tokenOwner.toKeypair()],
     100,
-    MINT_DECIMAL,
+    decimals,
     feePayer.toPublicKey()
   );
 
