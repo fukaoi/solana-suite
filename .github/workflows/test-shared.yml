@@ -37,5 +37,6 @@ jobs:
         with:
           path: /tmp/solana-localhost-devnet-keypair
           key: ${{ runner.os }}-cache
+      - run: npm install yarn
       - run: yarn install --frozen-lockfile
       - run: npm run test:all -w packages/shared
