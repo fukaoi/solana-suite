@@ -13,7 +13,13 @@ import {
   createCreateMetadataAccountV2Instruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
-import { Node, Result, Instruction, Try, debugLog } from '@solana-suite/shared';
+import {
+  Node,
+  Result,
+  MintInstruction,
+  Try,
+  debugLog,
+} from '@solana-suite/shared';
 
 import {
   Bundlr,
@@ -96,7 +102,7 @@ export namespace SplToken {
     );
 
     signers.push(mint);
-    return new Instruction(
+    return new MintInstruction(
       [inst, inst2, inst3, inst4, inst5],
       signers,
       feePayer,
@@ -111,7 +117,7 @@ export namespace SplToken {
     mintDecimal: number,
     input: InputTokenMetadata,
     feePayer?: Keypair
-  ): Promise<Result<Instruction, Error>> => {
+  ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputTokenMetadata>(input);
       if (valid.isErr) {
