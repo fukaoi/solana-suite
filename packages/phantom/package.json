@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/phantom",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Library spl-token/nft mint for phantom wallet",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -44,7 +44,7 @@
     "@solana-suite/core": "latest",
     "@solana-suite/nft": "latest",
     "@solana-suite/shared": "latest",
-    "@solana-suite/shared-metaplex": "0.4.8",
+    "@solana-suite/shared-metaplex": "latest",
     "@metaplex-foundation/js": "0.17.0"
   }
 }

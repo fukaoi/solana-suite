@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/storage",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "storage module for solana-suite",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@solana-suite/shared": "latest",
-    "@solana-suite/shared-metaplex": "0.4.8",
+    "@solana-suite/shared-metaplex": "latest",
     "@metaplex-foundation/js": "latest",
     "form-data": "^3.0.1",
     "nft.storage": "^3.3.0",
