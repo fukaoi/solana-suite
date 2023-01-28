@@ -40,9 +40,7 @@
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
   "dependencies": {
-    "@metaplex-foundation/js": "0.17.0",
     "@solana-suite/core": "latest",
-    "@solana-suite/shared": "latest",
     "@solana-suite/storage": "latest",
     "@solana-suite/shared-metaplex": "latest"
   }

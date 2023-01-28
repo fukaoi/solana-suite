@@ -41,10 +41,6 @@
   },
   "dependencies": {
     "@solana-suite/storage": "latest",
-    "@solana-suite/shared": "latest",
-    "@solana-suite/shared-metaplex": "latest",
-    "@metaplex-foundation/js": "0.17.0",
-    "@solana/spl-token": "^0.2.0",
-    "@solana/web3.js": "^1.62.1"
+    "@solana-suite/shared-metaplex": "latest"
   }
 }

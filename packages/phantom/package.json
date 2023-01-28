@@ -43,8 +43,6 @@
   "dependencies": {
     "@solana-suite/core": "latest",
     "@solana-suite/nft": "latest",
-    "@solana-suite/shared": "latest",
-    "@solana-suite/shared-metaplex": "latest",
-    "@metaplex-foundation/js": "0.17.0"
+    "@solana-suite/shared-metaplex": "latest"
   }
 }

@@ -571,9 +571,9 @@
     node-fetch "^2.6.7"
 
 "@metaplex-foundation/js@latest":
-  version "0.17.12"
-  resolved "https://registry.yarnpkg.com/@metaplex-foundation/js/-/js-0.17.12.tgz#20b40d84308aa5b83f66e1ae45705f9559432cfc"
-  integrity sha512-PVGAQSGYGIermfCaRS+7W64YdyHf987Juc1QfQNmnuaolYiyYOibrOmnPIfK45MIbDSQzuREi2r8qwe+D4MDMA==
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/js/-/js-0.18.0.tgz#50db695055af624730c374c2a3f21231f87e57aa"
+  integrity sha512-P6cXemiuiicOv6Nz2DJ+CeSx5j2bqYqigq9KWIIs+WrSlG3owF11CnLlM2Mr++7+GsmqydhHE67OdWUhpcIDtg==
   dependencies:
     "@bundlr-network/client" "^0.8.8"
     "@metaplex-foundation/beet" "0.7.1"
@@ -581,7 +581,7 @@
     "@metaplex-foundation/mpl-candy-guard" "^0.3.0"
     "@metaplex-foundation/mpl-candy-machine" "^5.0.0"
     "@metaplex-foundation/mpl-candy-machine-core" "^0.1.2"
-    "@metaplex-foundation/mpl-token-metadata" "^2.3.3"
+    "@metaplex-foundation/mpl-token-metadata" "^2.7.0"
     "@noble/ed25519" "^1.7.1"
     "@noble/hashes" "^1.1.3"
     "@solana/spl-token" "^0.3.5"
@@ -673,7 +673,7 @@
     "@solana/web3.js" "^1.35.1"
     bs58 "^4.0.1"
 
-"@metaplex-foundation/mpl-token-metadata@^2.3.2", "@metaplex-foundation/mpl-token-metadata@^2.3.3":
+"@metaplex-foundation/mpl-token-metadata@^2.3.2", "@metaplex-foundation/mpl-token-metadata@^2.7.0":
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-token-metadata/-/mpl-token-metadata-2.7.0.tgz#3d404d27fb65c638263bff115e10115c30f94c96"
   integrity sha512-dF20BAD5Kvd/qNOa8xmANO5//xvsmleCsD98HHeqBiz20HwC01y6VMkfwjXgVmrg8WSLpzojlQgMYO6jKhuZtg==
