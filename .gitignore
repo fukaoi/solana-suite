@@ -2,3 +2,4 @@
 node_modules
 tsconfig.tsbuildinfo
 solana-localhost-devnet-keypair
+yarn-error.log
