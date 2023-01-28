@@ -42,6 +42,6 @@
   },
   "dependencies": {
     "@metaplex-foundation/js": "0.17.0",
-    "@solana-suite/shared": "latest",
+    "@solana-suite/shared": "latest"
   }
 }
