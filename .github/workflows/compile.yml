@@ -27,9 +27,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: yarn install --frozen-lockfile
-      - run: npm run clean
+          cache: 'yarn'
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install  --frozen-lockfile # will run `yarn install` command
       - run: npm run compile
       - name: Auto commit
         uses: stefanzweifel/git-auto-commit-action@v4.12.0
