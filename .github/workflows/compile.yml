@@ -22,16 +22,16 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-      - name: Run install
+      - name: Run yarn install
         uses: borales/actions-yarn@v4
         with:
-          cmd: install    # will run `yarn install` command
+          cmd: install --frozen-lockfile
       - run: npm run compile
       - name: Auto commit
         uses: stefanzweifel/git-auto-commit-action@v4.12.0
