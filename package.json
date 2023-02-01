@@ -9,7 +9,12 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/shared",
+      "packages/shared-metaplex",
+      "packages/storage",
+      "packages/core",
+      "packages/nft",
+      "packages/phantom"
     ]
   },
   "devDependencies": {
