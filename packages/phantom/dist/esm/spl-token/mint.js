@@ -30,7 +30,6 @@ export var PhantomSplToken;
         transaction.partialSign(keypair);
         return { mint: keypair, tx: transaction };
     });
-    // select 'new token'
     PhantomSplToken.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             Node.changeConnection({ cluster });

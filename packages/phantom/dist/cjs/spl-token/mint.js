@@ -33,16 +33,21 @@ var PhantomSplToken;
         transaction.partialSign(keypair);
         return { mint: keypair, tx: transaction };
     });
-    // select 'new token'
     PhantomSplToken.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             shared_1.Node.changeConnection({ cluster });
             const connection = shared_1.Node.getConnection();
             const tx = new web3_js_1.Transaction();
-            const builder = yield createTokenBuilder(owner, mintDecimal);
-            const data = yield core_1.AssociatedAccount.makeOrCreateInstruction(builder.mint.publicKey, owner);
-            tx.add(data.inst);
-            const transaction = tx.add((0, spl_token_1.createMintToCheckedInstruction)(builder.mint.publicKey, data.tokenAccount.toPublicKey(), owner, totalAmount, mintDecimal, [], spl_token_1.TOKEN_PROGRAM_ID));
+            const mint = web3_js_1.Keypair.generate();
+            const TOKEN_METADATA = {
+                name: 'solana-suite-token',
+                symbol: 'SST',
+                royalty: 50,
+                filePath: 'filePath',
+                storageType: 'nftStorage',
+                isMutable: false,
+            };
+            core_1.SplToken.createMintInstruction(connection, mint.publicKey, owner, totalAmount, mintDecimal, TOKEN_METADATA, owner, true);
             transaction.feePayer = owner;
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             transaction.recentBlockhash = blockhashObj.value.blockhash;

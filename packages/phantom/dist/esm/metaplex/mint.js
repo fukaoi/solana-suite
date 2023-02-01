@@ -65,4 +65,4 @@ export var PhantomMetaplex;
         }));
     });
 })(PhantomMetaplex || (PhantomMetaplex = {}));
-//# sourceMappingURL=metaplex.js.map
+//# sourceMappingURL=mint.js.map

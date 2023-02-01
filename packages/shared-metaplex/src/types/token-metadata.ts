@@ -19,3 +19,14 @@ export type InputTokenMetadata = {
   collection?: Option<PublicKey>;
   uses?: Option<Uses>;
 };
+
+export type TokenMetadata = {
+  name: string;
+  symbol: string;
+  uri: string;
+  sellerFeeBasisPoints: number;
+  attributes?: JsonMetadataAttribute[];
+  creators?: CreatorInput[];
+  collection?: Option<PublicKey>;
+  uses?: Option<Uses>;
+};

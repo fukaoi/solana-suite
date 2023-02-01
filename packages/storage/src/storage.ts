@@ -28,7 +28,7 @@ export namespace Storage {
 
   export const uploadMetaContent = async (
     input: InputNftMetadata,
-    feePayer: BundlrSigner
+    feePayer?: BundlrSigner
   ) => {
     let storage;
     const { filePath, storageType, royalty, options, ...reducedMetadata } =
@@ -41,6 +41,9 @@ export namespace Storage {
     );
 
     if (storageType === 'arweave') {
+      if (!feePayer) {
+        throw Error('Arweave needs to have feepayer');
+      }
       storage = await (
         await Arweave.uploadContent(filePath, feePayer)
       ).unwrap(

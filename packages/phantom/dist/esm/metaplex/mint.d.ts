@@ -1,6 +1,6 @@
 import { Result } from '@solana-suite/shared';
 import { ValidatorError, InputNftMetadata } from '@solana-suite/shared-metaplex';
-import { Phantom } from './types';
+import { Phantom } from '../types';
 export declare namespace PhantomMetaplex {
     /**
      * Upload content and NFT mint
