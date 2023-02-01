@@ -7,9 +7,11 @@
     "compile": "npm run compile -ws && npm run compile:esm -ws",
     "lint": "npx eslint --fix packages/*/src"
   },
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",
     "@tsconfig/node18": "^1.0.1",
