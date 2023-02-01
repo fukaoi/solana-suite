@@ -41,7 +41,7 @@
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
   "dependencies": {
-    "@metaplex-foundation/js": "0.17.0",
+    "@metaplex-foundation/js": "0.18.0",
     "@solana-suite/shared": "workspace:^"
   }
 }

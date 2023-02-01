@@ -570,7 +570,7 @@
     mime "^3.0.0"
     node-fetch "^2.6.7"
 
-"@metaplex-foundation/js@latest":
+"@metaplex-foundation/js@0.18.0", "@metaplex-foundation/js@latest":
   version "0.18.0"
   resolved "https://registry.yarnpkg.com/@metaplex-foundation/js/-/js-0.18.0.tgz#50db695055af624730c374c2a3f21231f87e57aa"
   integrity sha512-P6cXemiuiicOv6Nz2DJ+CeSx5j2bqYqigq9KWIIs+WrSlG3owF11CnLlM2Mr++7+GsmqydhHE67OdWUhpcIDtg==
