@@ -1,6 +1,6 @@
-import { Transaction, PublicKey, Keypair } from '@solana/web3.js';
+import { Transaction, TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
 
-import { Node, Result, Try } from '@solana-suite/shared';
+import { Node, Result, Try, debugLog } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { SplToken } from '@solana-suite/core';
 import { Phantom } from '../types';
@@ -28,6 +28,8 @@ export namespace PhantomSplToken {
         storageType: 'nftStorage' as StorageType,
         isMutable: false,
       };
+      
+      debugLog('# input: ', input); 
 
       const uploaded = await Storage.uploadMetaContent(input);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
@@ -44,7 +46,7 @@ export namespace PhantomSplToken {
 
       const isMutable = !reducedMetadata.isMutable ? false : true;
 
-      SplToken.createMintInstruction(
+      const insturctions = await SplToken.createMintInstruction(
         connection,
         mint.publicKey,
         owner,
@@ -55,14 +57,15 @@ export namespace PhantomSplToken {
         isMutable
       );
 
+      insturctions.forEach((inst: TransactionInstruction) => transaction.add(inst)); 
       transaction.feePayer = owner;
-
       const blockhashObj = await connection.getLatestBlockhashAndContext();
       transaction.recentBlockhash = blockhashObj.value.blockhash;
-
+      transaction.partialSign(mint);
       const signed = await phantom.signAllTransactions([transaction]);
 
       // todo: refactoring
+      console.log('signed', signed);
       (async () => {
         for (const sign of signed) {
           const sig = await connection.sendRawTransaction(sign.serialize());

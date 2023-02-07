@@ -30,6 +30,7 @@ var PhantomSplToken;
                 storageType: 'nftStorage',
                 isMutable: false,
             };
+            (0, shared_1.debugLog)('# input: ', input);
             const uploaded = yield storage_1.Storage.uploadMetaContent(input);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             const tokenMetadata = {
@@ -42,12 +43,15 @@ var PhantomSplToken;
                 uses: reducedMetadata.uses,
             };
             const isMutable = !reducedMetadata.isMutable ? false : true;
-            core_1.SplToken.createMintInstruction(connection, mint.publicKey, owner, totalAmount, mintDecimal, tokenMetadata, owner, isMutable);
+            const insturctions = yield core_1.SplToken.createMintInstruction(connection, mint.publicKey, owner, totalAmount, mintDecimal, tokenMetadata, owner, isMutable);
+            insturctions.forEach((inst) => transaction.add(inst));
             transaction.feePayer = owner;
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             transaction.recentBlockhash = blockhashObj.value.blockhash;
+            transaction.partialSign(mint);
             const signed = yield phantom.signAllTransactions([transaction]);
             // todo: refactoring
+            console.log('signed', signed);
             (() => __awaiter(this, void 0, void 0, function* () {
                 for (const sign of signed) {
                     const sig = yield connection.sendRawTransaction(sign.serialize());

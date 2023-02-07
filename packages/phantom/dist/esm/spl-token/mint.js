@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Transaction, Keypair } from '@solana/web3.js';
-import { Node, Try } from '@solana-suite/shared';
+import { Node, Try, debugLog } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { SplToken } from '@solana-suite/core';
 export var PhantomSplToken;
@@ -27,6 +27,7 @@ export var PhantomSplToken;
                 storageType: 'nftStorage',
                 isMutable: false,
             };
+            debugLog('# input: ', input);
             const uploaded = yield Storage.uploadMetaContent(input);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             const tokenMetadata = {
@@ -39,12 +40,15 @@ export var PhantomSplToken;
                 uses: reducedMetadata.uses,
             };
             const isMutable = !reducedMetadata.isMutable ? false : true;
-            SplToken.createMintInstruction(connection, mint.publicKey, owner, totalAmount, mintDecimal, tokenMetadata, owner, isMutable);
+            const insturctions = yield SplToken.createMintInstruction(connection, mint.publicKey, owner, totalAmount, mintDecimal, tokenMetadata, owner, isMutable);
+            insturctions.forEach((inst) => transaction.add(inst));
             transaction.feePayer = owner;
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             transaction.recentBlockhash = blockhashObj.value.blockhash;
+            transaction.partialSign(mint);
             const signed = yield phantom.signAllTransactions([transaction]);
             // todo: refactoring
+            console.log('signed', signed);
             (() => __awaiter(this, void 0, void 0, function* () {
                 for (const sign of signed) {
                     const sig = yield connection.sendRawTransaction(sign.serialize());
