@@ -24,7 +24,7 @@ export namespace PhantomSplToken {
         name: 'solana-suite-token',
         symbol: 'SST',
         royalty: 50,
-        filePath: 'filePath',
+        filePath: '../../../storage/test/assets/DOG.JPEG',
         storageType: 'nftStorage' as StorageType,
         isMutable: false,
       };
@@ -63,10 +63,13 @@ export namespace PhantomSplToken {
       const signed = await phantom.signAllTransactions([transaction]);
 
       // todo: refactoring
-      for (const sign of signed) {
-        const sig = await connection.sendRawTransaction(sign.serialize());
-        await Node.confirmedSig(sig);
-      }
+      (async () => {
+        for (const sign of signed) {
+          const sig = await connection.sendRawTransaction(sign.serialize());
+          console.log(sig);
+          await Node.confirmedSig(sig);
+        }
+      })();
       return mint.publicKey.toString();
     });
   };

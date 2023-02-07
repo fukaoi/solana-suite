@@ -26,7 +26,7 @@ var PhantomSplToken;
                 name: 'solana-suite-token',
                 symbol: 'SST',
                 royalty: 50,
-                filePath: 'filePath',
+                filePath: '../../../storage/test/assets/DOG.JPEG',
                 storageType: 'nftStorage',
                 isMutable: false,
             };
@@ -48,10 +48,13 @@ var PhantomSplToken;
             transaction.recentBlockhash = blockhashObj.value.blockhash;
             const signed = yield phantom.signAllTransactions([transaction]);
             // todo: refactoring
-            for (const sign of signed) {
-                const sig = yield connection.sendRawTransaction(sign.serialize());
-                yield shared_1.Node.confirmedSig(sig);
-            }
+            (() => __awaiter(this, void 0, void 0, function* () {
+                for (const sign of signed) {
+                    const sig = yield connection.sendRawTransaction(sign.serialize());
+                    console.log(sig);
+                    yield shared_1.Node.confirmedSig(sig);
+                }
+            }))();
             return mint.publicKey.toString();
         }));
     });
