@@ -11,7 +11,7 @@ import {
   InputNftMetadata,
   MetaplexNftMetaData,
 } from '@solana-suite/shared-metaplex';
-import { InitializeNftMint, Phantom } from './types';
+import { InitializeNftMint, Phantom } from '../types';
 
 export namespace PhantomMetaplex {
   const createNftBuilder = async (

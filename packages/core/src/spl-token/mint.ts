@@ -24,6 +24,7 @@ import {
 import {
   Bundlr,
   InputTokenMetadata,
+  TokenMetadata,
   Validator,
 } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
@@ -32,37 +33,31 @@ import { Storage } from '@solana-suite/storage';
 export namespace SplToken {
   export const createMintInstruction = async (
     connection: Connection,
+    mint: PublicKey,
     owner: PublicKey,
-    signers: Keypair[],
     totalAmount: number,
     mintDecimal: number,
-    tokenMetadata: DataV2,
-    feePayer: Keypair,
-    isMutable: boolean
+    tokenMetadata: TokenMetadata,
+    feePayer: PublicKey,
+    isMutable: boolean,
+    signers?: Keypair[]
   ) => {
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
 
-    const mint = Keypair.generate();
-    const metadataPda = Bundlr.make()
-      .nfts()
-      .pdas()
-      .metadata({ mint: mint.publicKey });
+    const metadataPda = Bundlr.make().nfts().pdas().metadata({ mint: mint });
 
-    const tokenAssociated = await getAssociatedTokenAddress(
-      mint.publicKey,
-      owner
-    );
+    const tokenAssociated = await getAssociatedTokenAddress(mint, owner);
 
     const inst = SystemProgram.createAccount({
-      fromPubkey: feePayer.publicKey,
-      newAccountPubkey: mint.publicKey,
+      fromPubkey: feePayer,
+      newAccountPubkey: mint,
       space: MINT_SIZE,
       lamports: lamports,
       programId: TOKEN_PROGRAM_ID,
     });
 
     const inst2 = createInitializeMintInstruction(
-      mint.publicKey,
+      mint,
       mintDecimal,
       owner,
       owner,
@@ -70,14 +65,14 @@ export namespace SplToken {
     );
 
     const inst3 = createAssociatedTokenAccountInstruction(
-      feePayer.publicKey,
+      feePayer,
       tokenAssociated,
       owner,
-      mint.publicKey
+      mint
     );
 
     const inst4 = createMintToCheckedInstruction(
-      mint.publicKey,
+      mint,
       tokenAssociated,
       owner,
       _Calculate.calculateAmount(totalAmount, mintDecimal),
@@ -88,26 +83,19 @@ export namespace SplToken {
     const inst5 = createCreateMetadataAccountV2Instruction(
       {
         metadata: metadataPda,
-        mint: mint.publicKey,
+        mint,
         mintAuthority: owner,
-        payer: feePayer.publicKey,
+        payer: feePayer,
         updateAuthority: owner,
       },
       {
         createMetadataAccountArgsV2: {
-          data: tokenMetadata,
+          data: tokenMetadata as DataV2,
           isMutable,
         },
       }
     );
-
-    signers.push(mint);
-    return new MintInstruction(
-      [inst, inst2, inst3, inst4, inst5],
-      signers,
-      feePayer,
-      mint.publicKey.toString()
-    );
+    return [inst, inst2, inst3, inst4, inst5];
   };
 
   export const mint = async (
@@ -132,7 +120,7 @@ export namespace SplToken {
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);
 
-      const tokenMetadata = {
+      const tokenMetadata: TokenMetadata = {
         name: reducedMetadata.name,
         symbol: reducedMetadata.symbol,
         uri,
@@ -144,15 +132,22 @@ export namespace SplToken {
       const isMutable = !reducedMetadata.isMutable ? false : true;
 
       const connection = Node.getConnection();
-      return await createMintInstruction(
+      const mint = Keypair.generate();
+      const insts = await createMintInstruction(
         connection,
+        mint.publicKey,
         owner,
-        [signer],
         totalAmount,
         mintDecimal,
-        tokenMetadata as DataV2,
-        feePayer,
+        tokenMetadata,
+        feePayer.publicKey,
         isMutable
+      );
+      return new MintInstruction(
+        insts,
+        [signer, mint],
+        feePayer,
+        mint.publicKey.toString()
       );
     });
   };

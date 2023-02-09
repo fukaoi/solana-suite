@@ -45,6 +45,9 @@ var Storage;
         const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(royalty);
         const storageData = initNftStorageMetadata(input, sellerFeeBasisPoints, options);
         if (storageType === 'arweave') {
+            if (!feePayer) {
+                throw Error('Arweave needs to have feepayer');
+            }
             storage = yield (yield arweave_1.Arweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 storageData.image = ok;
                 return yield arweave_1.Arweave.uploadMetadata(storageData, feePayer);

@@ -1,9 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [
-      "DOM",
-      "ESNext"
-    ],
+    "lib": ["DOM", "ESNext"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -16,15 +13,9 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "paths": {
-      "@acme-crp/*": [
-        "./packages/*/"
-      ]
+      "@acme-crp/*": ["./packages/*/"]
     },
     "stripInternal": true
   },
-  "exclude": [
-    "**/*.test.ts",
-    "node_modules",
-    "dist"
-  ]
+  "exclude": ["**/*.test.ts", "node_modules", "dist"]
 }
