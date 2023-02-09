@@ -45,6 +45,7 @@ var PhantomMetaplex;
             if (valid.isErr) {
                 throw valid.error;
             }
+            (0, shared_1.debugLog)('# input: ', input);
             shared_1.Node.changeConnection({ cluster });
             const uploaded = yield storage_1.Storage.uploadMetaContent(input, phantom);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;

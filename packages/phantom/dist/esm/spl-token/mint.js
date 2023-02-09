@@ -7,29 +7,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Transaction, Keypair } from '@solana/web3.js';
+import { Transaction, Keypair, } from '@solana/web3.js';
 import { Node, Try, debugLog } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { SplToken } from '@solana-suite/core';
 export var PhantomSplToken;
 (function (PhantomSplToken) {
-    PhantomSplToken.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
+    PhantomSplToken.mint = (input, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             Node.changeConnection({ cluster });
             const connection = Node.getConnection();
             const transaction = new Transaction();
             const mint = Keypair.generate();
-            const input = {
-                name: 'solana-suite-token',
-                symbol: 'SST',
-                royalty: 50,
-                filePath: '../../../storage/test/assets/DOG.JPEG',
-                storageType: 'nftStorage',
-                isMutable: false,
-            };
             debugLog('# input: ', input);
             const uploaded = yield Storage.uploadMetaContent(input);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+            debugLog('# upload content url: ', uri);
+            debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
+            debugLog('# reducedMetadata: ', reducedMetadata);
             const tokenMetadata = {
                 name: reducedMetadata.name,
                 symbol: reducedMetadata.symbol,
@@ -46,16 +41,10 @@ export var PhantomSplToken;
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             transaction.recentBlockhash = blockhashObj.value.blockhash;
             transaction.partialSign(mint);
-            const signed = yield phantom.signAllTransactions([transaction]);
-            // todo: refactoring
-            console.log('signed', signed);
-            (() => __awaiter(this, void 0, void 0, function* () {
-                for (const sign of signed) {
-                    const sig = yield connection.sendRawTransaction(sign.serialize());
-                    console.log(sig);
-                    yield Node.confirmedSig(sig);
-                }
-            }))();
+            const signed = yield phantom.signTransaction(transaction);
+            debugLog('# signed, signed.signatures: ', signed, signed.signatures.map((sig) => sig.publicKey.toString()));
+            const sig = yield connection.sendRawTransaction(signed.serialize());
+            yield Node.confirmedSig(sig);
             return mint.publicKey.toString();
         }));
     });

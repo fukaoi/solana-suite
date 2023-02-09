@@ -1,13 +1,19 @@
-import { Transaction, TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
+import {
+  Transaction,
+  TransactionInstruction,
+  PublicKey,
+  Keypair,
+} from '@solana/web3.js';
 
 import { Node, Result, Try, debugLog } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { SplToken } from '@solana-suite/core';
 import { Phantom } from '../types';
-import { StorageType } from '@solana-suite/shared-metaplex';
+import { InputTokenMetadata } from '@solana-suite/shared-metaplex';
 
 export namespace PhantomSplToken {
   export const mint = async (
+    input: InputTokenMetadata,
     owner: PublicKey,
     cluster: string,
     totalAmount: number,
@@ -20,19 +26,14 @@ export namespace PhantomSplToken {
       const transaction = new Transaction();
       const mint = Keypair.generate();
 
-      const input = {
-        name: 'solana-suite-token',
-        symbol: 'SST',
-        royalty: 50,
-        filePath: '../../../storage/test/assets/DOG.JPEG',
-        storageType: 'nftStorage' as StorageType,
-        isMutable: false,
-      };
-      
-      debugLog('# input: ', input); 
+      debugLog('# input: ', input);
 
       const uploaded = await Storage.uploadMetaContent(input);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+
+      debugLog('# upload content url: ', uri);
+      debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
+      debugLog('# reducedMetadata: ', reducedMetadata);
 
       const tokenMetadata = {
         name: reducedMetadata.name,
@@ -57,22 +58,21 @@ export namespace PhantomSplToken {
         isMutable
       );
 
-      insturctions.forEach((inst: TransactionInstruction) => transaction.add(inst)); 
+      insturctions.forEach((inst: TransactionInstruction) =>
+        transaction.add(inst)
+      );
       transaction.feePayer = owner;
       const blockhashObj = await connection.getLatestBlockhashAndContext();
       transaction.recentBlockhash = blockhashObj.value.blockhash;
       transaction.partialSign(mint);
-      const signed = await phantom.signAllTransactions([transaction]);
-
-      // todo: refactoring
-      console.log('signed', signed);
-      (async () => {
-        for (const sign of signed) {
-          const sig = await connection.sendRawTransaction(sign.serialize());
-          console.log(sig);
-          await Node.confirmedSig(sig);
-        }
-      })();
+      const signed = await phantom.signTransaction(transaction);
+      debugLog(
+        '# signed, signed.signatures: ',
+        signed,
+        signed.signatures.map((sig) => sig.publicKey.toString())
+      );
+      const sig = await connection.sendRawTransaction(signed.serialize());
+      await Node.confirmedSig(sig);
       return mint.publicKey.toString();
     });
   };

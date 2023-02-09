@@ -42,6 +42,7 @@ export var PhantomMetaplex;
             if (valid.isErr) {
                 throw valid.error;
             }
+            debugLog('# input: ', input);
             Node.changeConnection({ cluster });
             const uploaded = yield Storage.uploadMetaContent(input, phantom);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
