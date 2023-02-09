@@ -16,23 +16,18 @@ const storage_1 = require("@solana-suite/storage");
 const core_1 = require("@solana-suite/core");
 var PhantomSplToken;
 (function (PhantomSplToken) {
-    PhantomSplToken.mint = (owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
+    PhantomSplToken.mint = (input, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             shared_1.Node.changeConnection({ cluster });
             const connection = shared_1.Node.getConnection();
             const transaction = new web3_js_1.Transaction();
             const mint = web3_js_1.Keypair.generate();
-            const input = {
-                name: 'solana-suite-token',
-                symbol: 'SST',
-                royalty: 50,
-                filePath: '../../../storage/test/assets/DOG.JPEG',
-                storageType: 'nftStorage',
-                isMutable: false,
-            };
             (0, shared_1.debugLog)('# input: ', input);
             const uploaded = yield storage_1.Storage.uploadMetaContent(input);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+            (0, shared_1.debugLog)('# upload content url: ', uri);
+            (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
+            (0, shared_1.debugLog)('# reducedMetadata: ', reducedMetadata);
             const tokenMetadata = {
                 name: reducedMetadata.name,
                 symbol: reducedMetadata.symbol,
@@ -49,16 +44,10 @@ var PhantomSplToken;
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             transaction.recentBlockhash = blockhashObj.value.blockhash;
             transaction.partialSign(mint);
-            const signed = yield phantom.signAllTransactions([transaction]);
-            // todo: refactoring
-            console.log('signed', signed);
-            (() => __awaiter(this, void 0, void 0, function* () {
-                for (const sign of signed) {
-                    const sig = yield connection.sendRawTransaction(sign.serialize());
-                    console.log(sig);
-                    yield shared_1.Node.confirmedSig(sig);
-                }
-            }))();
+            const signed = yield phantom.signTransaction(transaction);
+            (0, shared_1.debugLog)('# signed, signed.signatures: ', signed, signed.signatures.map((sig) => sig.publicKey.toString()));
+            const sig = yield connection.sendRawTransaction(signed.serialize());
+            yield shared_1.Node.confirmedSig(sig);
             return mint.publicKey.toString();
         }));
     });

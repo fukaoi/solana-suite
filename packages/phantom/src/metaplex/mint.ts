@@ -60,6 +60,8 @@ export namespace PhantomMetaplex {
         throw valid.error;
       }
 
+      debugLog('# input: ', input); 
+
       Node.changeConnection({ cluster });
 
       const uploaded = await Storage.uploadMetaContent(input, phantom);
