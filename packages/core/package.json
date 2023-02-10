@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/core",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Easy use of Solana APIs such as solana-web3.js, spl-token, metaplex nft, decentralized storage, etc.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

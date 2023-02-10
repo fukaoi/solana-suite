@@ -664,44 +664,44 @@
   dependencies:
     "@randlabs/communication-bridge" "1.0.1"
 
-"@solana-suite/core@latest", "@solana-suite/core@workspace:^":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@solana-suite/core/-/core-0.5.3.tgz#ba0a5f85d46bb9fd984ce2e7e67263d48878040e"
-  integrity sha512-3jzom3OZ2Fu9gv4y+bkzwENj1WH/jID7e3T5HL0JuO4H26uFvIeJVX1itL63Mk2o38uJt2q1ttFKf2lYb+OiPw==
+"@solana-suite/core@latest":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@solana-suite/core/-/core-0.5.4.tgz#303e4c375580e9e0a20026b9a453fc5bbc56424e"
+  integrity sha512-9rVO/KTA+67Oc95jRufWFVLI33fhnq3l/eF9W8oQ3MvUBrQbmqgSR7z2X8wfWGItO3bAfl18yoY5e2meVijJvw==
   dependencies:
-    "@solana-suite/shared-metaplex" "workspace:^"
-    "@solana-suite/storage" "workspace:^"
+    "@solana-suite/shared-metaplex" latest
+    "@solana-suite/storage" latest
 
 "@solana-suite/nft@latest":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@solana-suite/nft/-/nft-0.5.3.tgz#e2a698e9c4b00b34fe17ed1402ed3b613d916544"
-  integrity sha512-iLEl07MHjuZX9X9Hgg2R/AD0oMd2lnZ6qZwyk7rgPr7WM1Ce6Mg4ltOpF7FNa84eSVkZXuL2bWZzuHL/fDTeDQ==
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@solana-suite/nft/-/nft-0.5.4.tgz#aa14176bcd40c3f5399f7f0419a830c19d5f720e"
+  integrity sha512-cBDVx+VJDo22O7G765Sqf4GudOrAjuAt25loaIElWY5vsyHtmAwF5F5Fn3ZUIYBOCvRFYYNgoyRzkq06ek7m2w==
   dependencies:
-    "@solana-suite/core" "workspace:^"
-    "@solana-suite/shared-metaplex" "workspace:^"
-    "@solana-suite/storage" "workspace:^"
+    "@solana-suite/core" latest
+    "@solana-suite/shared-metaplex" latest
+    "@solana-suite/storage" latest
 
-"@solana-suite/shared-metaplex@latest", "@solana-suite/shared-metaplex@workspace:^":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@solana-suite/shared-metaplex/-/shared-metaplex-0.5.3.tgz#c5a58c269f9e14ac5c47695b73929118966acd09"
-  integrity sha512-UxvHzgJY2ExxDfWVBHJ46WmSCa0n3WNvtwdqsTF/A8SlL8BEn+fg86+sZdYJovb5oDCD5HjYS7+MtPm551LASQ==
+"@solana-suite/shared-metaplex@latest":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@solana-suite/shared-metaplex/-/shared-metaplex-0.5.4.tgz#5c6f0e30980cf2bf052fab805316d7170b0baad1"
+  integrity sha512-bvUpv76HH+NrH0rU8z7xpM1DKqAqCE20FaSF+w8J9hN1ixbGVCPWbBGvRhNykyteI2j/3/yYf4uUti90WPY4kA==
   dependencies:
     "@metaplex-foundation/js" "0.18.0"
-    "@solana-suite/shared" "workspace:^"
+    "@solana-suite/shared" latest
 
-"@solana-suite/shared@latest", "@solana-suite/shared@workspace:^":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@solana-suite/shared/-/shared-0.5.3.tgz#8a7b209da2d6fe50415c974da69bc41649e8ac6a"
-  integrity sha512-yIV43oW7s9icxTPncRGvW93gNwBEanHBps9qrwrFJFpQr31GvTmBNoFbU1pD5zWne1tk8ooroFci8N7yIBY3AA==
+"@solana-suite/shared@latest":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@solana-suite/shared/-/shared-0.5.4.tgz#b7bfc69463b48bc34e5268c704173b95a04983de"
+  integrity sha512-/VuIK72bpCVmunJH9TCSUuqYm2auzEpxlRZB6PBr9p8tI3KwNIByWwTqzhxHMjMIfWT2748hbLMabyKMPjhN/Q==
   dependencies:
     commander "9.3.0"
 
-"@solana-suite/storage@latest", "@solana-suite/storage@workspace:^":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@solana-suite/storage/-/storage-0.5.3.tgz#a30a843df2b3595e7fa2dd91b848228a28ee26d3"
-  integrity sha512-R/eHaAT8Pa8hZ9RqT2NCCQUsGR7mZjyb68NV50l1/00R5LYPuYyuGn7Zw61iC4LpGI2Vbzzp+opmn1C95NMlKA==
+"@solana-suite/storage@latest":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@solana-suite/storage/-/storage-0.5.4.tgz#1190aa3de7c14e90cd81bb8127c248692cbc12b6"
+  integrity sha512-q2BOnuRKzWzOXNmdYViScASOenHADuu7g/hOp3M5jfibixvuR3pyQ7wvN/X/pCCRJpT91d9yxi1qQ9opdERI+Q==
   dependencies:
-    "@solana-suite/shared-metaplex" "workspace:^"
+    "@solana-suite/shared-metaplex" latest
     cross-fetch "^3.1.4"
     form-data "^3.0.1"
     nft.storage "^3.3.0"
