@@ -18,6 +18,7 @@ const js_1 = require("@metaplex-foundation/js");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 var Metaplex;
 (function (Metaplex) {
+    // original: plugins/nftModule/operations/createNft.ts
     const createNftBuilder = (params, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const mint = web3_js_1.Keypair.generate();
         const updateAuthority = owner;
@@ -40,7 +41,8 @@ var Metaplex;
             .nfts()
             .builders()
             .createSft(Object.assign(Object.assign({}, params), { updateAuthority,
-            mintAuthority, freezeAuthority: mintAuthority.publicKey, useNewMint,
+            mintAuthority,
+            useNewMint,
             tokenOwner, tokenAmount: (0, js_1.token)(1), decimals: 0 }));
         const { mintAddress, metadataAddress, tokenAddress } = sftBuilder.getContext();
         const masterEditionAddress = metaplex
