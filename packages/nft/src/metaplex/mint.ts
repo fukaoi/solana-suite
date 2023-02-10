@@ -19,7 +19,8 @@ import {
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
 
-export namespace Metaplex { // original: plugins/nftModule/operations/createNft.ts
+export namespace Metaplex {
+  // original: plugins/nftModule/operations/createNft.ts
   const createNftBuilder = async (
     params: CreateNftBuilderParams,
     owner: Keypair,
@@ -71,7 +72,6 @@ export namespace Metaplex { // original: plugins/nftModule/operations/createNft.
         ...params,
         updateAuthority,
         mintAuthority,
-        freezeAuthority: mintAuthority.publicKey,
         useNewMint,
         tokenOwner,
         tokenAmount: token(1),
