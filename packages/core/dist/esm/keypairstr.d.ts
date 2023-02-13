@@ -6,5 +6,7 @@ export declare class KeypairStr {
     constructor(pubkey: Pubkey, secret: Secret);
     toPublicKey(): PublicKey;
     toKeypair(): Keypair;
+    static isPubkey: (value: string) => value is Pubkey;
+    static isSecret: (value: string) => value is Secret;
     static create: () => KeypairStr;
 }

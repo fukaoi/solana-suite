@@ -20,6 +20,8 @@ class KeypairStr {
     }
 }
 exports.KeypairStr = KeypairStr;
+KeypairStr.isPubkey = (value) => /^[0-9a-zA-Z]{32,44}$/.test(value);
+KeypairStr.isSecret = (value) => /^[0-9a-zA-Z]{64}$/.test(value);
 KeypairStr.create = () => {
     const keypair = web3_js_1.Keypair.generate();
     return new KeypairStr(keypair.publicKey.toBase58(), bs58_1.default.encode(keypair.secretKey));

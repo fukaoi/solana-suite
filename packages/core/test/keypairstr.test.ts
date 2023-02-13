@@ -21,4 +21,15 @@ describe('KeypairStr', () => {
     const res = account.toKeypair();
     assert.deepEqual(res, account.toKeypair());
   });
+
+  it('is Pubkey', async () => {
+    const pubkey = '0AWTL3RSxNe2mN7uS6MUvyWmBDBXUDQRNQftrS1R6baS';
+    assert.isTrue(KeypairStr.isPubkey(pubkey));
+  });
+
+  it('is Secret', async () => {
+    const secret =
+      '54SjeQxyNVS6xkNrqDSQ5aKyMCu7gzySku2p6UnPqF83NDDRfHsVrXQtiEVtsn7t5QWRCTm2VGmwkmjzxcSoYexa';
+    assert.isTrue(KeypairStr.isSecret(secret));
+  });
 });

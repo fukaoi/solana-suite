@@ -1,2 +1,9 @@
-export type Pubkey = string;
-export type Secret = string;
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+export type Pubkey = string & {
+    [pubKeyNominality]: never;
+};
+export type Secret = string & {
+    [secretNominality]: never;
+};
+export {};

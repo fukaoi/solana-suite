@@ -13,6 +13,8 @@ export class KeypairStr {
         return Keypair.fromSecretKey(decoded);
     }
 }
+KeypairStr.isPubkey = (value) => /^[0-9a-zA-Z]{32,44}$/.test(value);
+KeypairStr.isSecret = (value) => /^[0-9a-zA-Z]{64}$/.test(value);
 KeypairStr.create = () => {
     const keypair = Keypair.generate();
     return new KeypairStr(keypair.publicKey.toBase58(), bs.encode(keypair.secretKey));
