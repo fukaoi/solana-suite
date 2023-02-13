@@ -1,13 +1,19 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { PublicKey } from '@solana/web3.js';
-import { KeypairStr } from '../src';
+import { KeypairStr, Pubkey } from '../src';
 
 describe('KeypairStr', () => {
-  it('string to PublicKey', async () => {
+  it('Pubkey to PublicKey', async () => {
     const pubkey = '6KJBDz6qPZZyJ9gAWXSgHufqAzU8pnhQmVdTitfusYS5';
     const res = pubkey.toPublicKey();
     assert.deepEqual(res, new PublicKey(pubkey));
+  });
+
+  it('Secret to SecretKey', async () => {
+    const secret = '6KJBDz6qPZZyJ9gAWXSgHufqAzU8pnhQmVdTitfusYS5';
+    const res = secret.toKeypair();
+    // assert.deepEqual(res, new PublicKey(pubkey));
   });
 
   it('Account to PublicKey', async () => {
@@ -31,5 +37,14 @@ describe('KeypairStr', () => {
     const secret =
       '54SjeQxyNVS6xkNrqDSQ5aKyMCu7gzySku2p6UnPqF83NDDRfHsVrXQtiEVtsn7t5QWRCTm2VGmwkmjzxcSoYexa';
     assert.isTrue(KeypairStr.isSecret(secret));
+  });
+
+  it('Pubkey', async () => {
+    const pubkey = '0AWTL3RSxNe2mN7uS6MUvyWmBDBXUDQRNQftrS1R6baS';
+
+    const func = (address: Pubkey) => {
+      console.log(address);
+    }
+    func(pubkey as Pubkey);
   });
 });
