@@ -1,8 +1,8 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
-import { Pubkey, Secret } from './types/keypairstr';
+import { Pubkey, Secret } from './types/key-pair';
 import bs from 'bs58';
 
-export class KeypairStr {
+export class KeyPair {
   pubkey: Pubkey;
   secret: Secret;
 
@@ -26,9 +26,9 @@ export class KeypairStr {
   static isSecret = (value: string): value is Secret =>
     /^[0-9a-zA-Z]{88}$/.test(value);
 
-  static create = (): KeypairStr => {
+  static create = (): KeyPair => {
     const keypair = Keypair.generate();
-    return new KeypairStr(
+    return new KeyPair(
       keypair.publicKey.toBase58() as Pubkey,
       bs.encode(keypair.secretKey) as Secret
     );

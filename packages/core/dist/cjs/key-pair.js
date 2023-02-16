@@ -3,10 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.KeypairStr = void 0;
+exports.KeyPair = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const bs58_1 = __importDefault(require("bs58"));
-class KeypairStr {
+class KeyPair {
     constructor(pubkey, secret) {
         this.pubkey = pubkey;
         this.secret = secret;
@@ -19,11 +19,11 @@ class KeypairStr {
         return web3_js_1.Keypair.fromSecretKey(decoded);
     }
 }
-exports.KeypairStr = KeypairStr;
-KeypairStr.isPubkey = (value) => /^[0-9a-zA-Z]{32,44}$/.test(value);
-KeypairStr.isSecret = (value) => /^[0-9a-zA-Z]{64}$/.test(value);
-KeypairStr.create = () => {
+exports.KeyPair = KeyPair;
+KeyPair.isPubkey = (value) => /^[0-9a-zA-Z]{32,44}$/.test(value);
+KeyPair.isSecret = (value) => /^[0-9a-zA-Z]{88}$/.test(value);
+KeyPair.create = () => {
     const keypair = web3_js_1.Keypair.generate();
-    return new KeypairStr(keypair.publicKey.toBase58(), bs58_1.default.encode(keypair.secretKey));
+    return new KeyPair(keypair.publicKey.toBase58(), bs58_1.default.encode(keypair.secretKey));
 };
-//# sourceMappingURL=keypairstr.js.map
+//# sourceMappingURL=key-pair.js.map

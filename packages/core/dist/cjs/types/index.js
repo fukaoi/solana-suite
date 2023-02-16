@@ -15,7 +15,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./history"), exports);
-__exportStar(require("./keypairstr"), exports);
+__exportStar(require("./key-pair"), exports);
 __exportStar(require("./sol-native"), exports);
 __exportStar(require("./spl-token"), exports);
 //# sourceMappingURL=index.js.map
