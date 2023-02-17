@@ -14,6 +14,7 @@ import { Node } from './node';
 import { Result } from './result';
 import { Instruction as _Batch } from './instruction/batch-submit';
 import './types/global';
+import { KeyPair } from './key-pair';
 /**
  * senTransaction() TransactionInstruction
  *
@@ -53,6 +54,9 @@ Array.prototype.submit = function () {
  * @returns PublicKey
  */
 String.prototype.toPublicKey = function () {
+    if (!KeyPair.isPubkey(this.toString())) {
+        throw Error('No match KeyPair.PubKey type');
+    }
     return new PublicKey(this);
 };
 /**
@@ -62,6 +66,9 @@ String.prototype.toPublicKey = function () {
  * @returns Keypair
  */
 String.prototype.toKeypair = function () {
+    if (!KeyPair.isSecret(this.toString())) {
+        throw Error('No match KeyPair.Secret type');
+    }
     const decoded = bs.decode(this);
     return Keypair.fromSecretKey(decoded);
 };

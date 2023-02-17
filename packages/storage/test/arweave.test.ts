@@ -1,11 +1,11 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { KeypairStr } from '../../core';
+import { KeyPair } from '../../shared';
 import { Setup } from '../../shared/test/testSetup';
 import { RandomAsset } from './randomAsset';
 import { Arweave } from '../src/arweave';
 
-let source: KeypairStr;
+let source: KeyPair;
 
 describe('StorageArweave', () => {
   before(async () => {
@@ -17,7 +17,7 @@ describe('StorageArweave', () => {
     const asset = RandomAsset.get();
     const res = await Arweave.uploadContent(
       asset.filePath!,
-      source.toKeypair()
+      (source.secret as string).toKeypair()
     );
     res.match(
       (ok) => console.log('# arweave content upload url: ', ok),
@@ -29,7 +29,8 @@ describe('StorageArweave', () => {
     const asset = RandomAsset.get();
     const res = await Arweave.uploadContent(
       asset.filePath!,
-      source.toKeypair(),
+      (source.secret as string).toKeypair(),
+      // source.toKeypair(),
       {
         displayName: 'NFT test image',
         uniqueName: `randomAsset/${asset.image}`,
@@ -71,7 +72,8 @@ describe('StorageArweave', () => {
     const asset = RandomAsset.get();
     const res = await Arweave.getUploadPrice(
       asset.filePath!,
-      source.toKeypair()
+      (source.secret as string).toKeypair()
+      // source.toKeypair()
     );
     res.match(
       (ok) => console.log('# upload cost, currency: ', ok.price, ok.currency),

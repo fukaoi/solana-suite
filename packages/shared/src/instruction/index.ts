@@ -1,13 +1,13 @@
 import {
   sendAndConfirmTransaction,
   TransactionSignature,
-  Keypair,
   TransactionInstruction,
   Transaction,
   ConfirmOptions,
+  Keypair,
 } from '@solana/web3.js';
 
-import { Node, Result, Try } from '../';
+import { Node, Result, Secret, Try } from '../';
 import { MAX_RETRIES } from './define';
 
 export class Instruction {
@@ -18,13 +18,13 @@ export class Instruction {
 
   constructor(
     instructions: TransactionInstruction[],
-    signers: Keypair[],
-    feePayer?: Keypair,
+    signers: Secret[],
+    feePayer?: Secret,
     data?: unknown
   ) {
     this.instructions = instructions;
-    this.signers = signers;
-    this.feePayer = feePayer;
+    this.signers = signers.map((s) => s.toKeypair());
+    this.feePayer = feePayer?.toKeypair();
     this.data = data;
   }
 
