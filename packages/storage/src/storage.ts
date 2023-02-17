@@ -1,5 +1,5 @@
+import { Secret } from '@solana-suite/shared';
 import {
-  BundlrSigner,
   InputNftMetadata,
   Royalty,
   NftStorageMetadata,
@@ -28,7 +28,7 @@ export namespace Storage {
 
   export const uploadMetaContent = async (
     input: InputNftMetadata,
-    feePayer?: BundlrSigner
+    feePayer?: Secret
   ) => {
     let storage;
     const { filePath, storageType, royalty, options, ...reducedMetadata } =
@@ -49,7 +49,7 @@ export namespace Storage {
       ).unwrap(
         async (ok: string) => {
           storageData.image = ok;
-          return await Arweave.uploadMetadata(storageData, feePayer);
+          return await Arweave.uploadMetadata(storageData, feePayer.toKeypair());
         },
         (err: Error) => {
           throw err;
