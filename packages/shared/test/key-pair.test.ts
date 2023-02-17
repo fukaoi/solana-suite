@@ -21,15 +21,17 @@ describe('KeypairStr', () => {
     assert.deepEqual(res, Keypair.fromSecretKey(bs.decode(SECRET)));
   });
 
-  it.only('Failed convert string to PublicKey', async () => {
-    const res = 'failed-publickey'.toPublicKey();
-    // assert.equal(res.constructor.name, 'PublicKey');
+  it('Failed convert string to PublicKey', async () => {
+    assert.throws(() => 'failed-publickey'.toPublicKey());
   });
 
+  it('Failed convert string to SecretKey', async () => {
+    assert.throws(() => 'failed-secretKey'.toKeypair());
+  });
 
   it('Create KeyPair Object', async () => {
     const obj = new KeyPair(PUBKEY, SECRET);
-    assert.isEmpty(obj);
+    assert.isNotEmpty(obj);
   });
 
   it('is Pubkey', async () => {
