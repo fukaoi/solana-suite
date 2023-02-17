@@ -23,7 +23,7 @@ class PartialSignInstruction {
                 }
                 const decode = Buffer.from(this.hexInstruction, 'hex');
                 const transactionFromJson = web3_js_1.Transaction.from(decode);
-                transactionFromJson.partialSign(feePayer);
+                transactionFromJson.partialSign(feePayer.toKeypair());
                 const options = {
                     maxRetries: define_1.MAX_RETRIES,
                 };

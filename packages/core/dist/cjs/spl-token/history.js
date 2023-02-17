@@ -29,7 +29,7 @@ var SplToken;
             const actionFilter = (options === null || options === void 0 ? void 0 : options.actionFilter) !== undefined && options.actionFilter.length > 0
                 ? options.actionFilter
                 : [history_1.Filter.Transfer, history_1.Filter.TransferChecked];
-            const searchKeyAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, searchPubkey, true);
+            const searchKeyAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(mint.toPublicKey(), searchPubkey.toPublicKey(), true);
             let bufferedLimit = 0;
             if (options.limit && options.limit < 50) {
                 bufferedLimit = options.limit * 1.5; // To get more data, threshold
@@ -46,7 +46,7 @@ var SplToken;
             for (;;) {
                 const transactions = yield get_by_address_1.SolNative.getByAddress(searchKeyAccount, bufferedLimit, before);
                 (0, shared_1.debugLog)('# getTransactionHistory loop transactions count:', transactions.length);
-                const res = filter_transaction_1.SolNative.filterTransactions(searchPubkey, transactions, actionFilter, true, options.directionFilter);
+                const res = filter_transaction_1.SolNative.filterTransactions(searchPubkey.toPublicKey(), transactions, actionFilter, true, options.directionFilter);
                 hist = hist.concat(res);
                 if (hist.length >= options.limit || res.length === 0) {
                     hist = hist.slice(0, options.limit);

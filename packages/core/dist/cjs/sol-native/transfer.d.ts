@@ -1,5 +1,4 @@
-import { PublicKey, Keypair } from '@solana/web3.js';
-import { Result, Instruction } from '@solana-suite/shared';
+import { Result, Instruction, Pubkey, Secret } from '@solana-suite/shared';
 export declare namespace SolNative {
-    const transfer: (source: PublicKey, destination: PublicKey, signers: Keypair[], amount: number, feePayer?: Keypair) => Result<Instruction, Error>;
+    const transfer: (source: Pubkey, dest: Pubkey, signers: Secret[], amount: number, feePayer?: Secret) => Result<Instruction, Error>;
 }

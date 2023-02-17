@@ -18,10 +18,11 @@ var SplToken;
 (function (SplToken) {
     SplToken.add = (token, owner, signers, totalAmount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            !feePayer && (feePayer = signers[0]);
-            const tokenAssociated = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, owner, feePayer);
-            const inst = (0, spl_token_1.createMintToCheckedInstruction)(token, tokenAssociated.toPublicKey(), owner, calculate_amount_1.SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
-            return new shared_1.Instruction([inst], signers, feePayer, token.toBase58());
+            const payer = !feePayer ? signers[0].toKeypair() : feePayer.toKeypair();
+            const keypairs = signers.map((s) => s.toKeypair());
+            const tokenAssociated = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token.toPublicKey(), owner.toPublicKey(), payer);
+            const inst = (0, spl_token_1.createMintToCheckedInstruction)(token.toPublicKey(), tokenAssociated.toPublicKey(), owner.toPublicKey(), calculate_amount_1.SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, keypairs);
+            return new shared_1.Instruction([inst], keypairs, payer, token);
         }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));

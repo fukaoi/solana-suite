@@ -24,7 +24,7 @@ var Airdrop;
             if (airdropAmount > MAX_AIRDROP_SOL.toLamports()) {
                 throw Error(`Over max airdrop amount: ${airdropAmount}, max: ${MAX_AIRDROP_SOL.toLamports()}`);
             }
-            const sig = yield shared_1.Node.getConnection().requestAirdrop(pubkey, airdropAmount);
+            const sig = yield shared_1.Node.getConnection().requestAirdrop(pubkey.toPublicKey(), airdropAmount);
             yield shared_1.Node.confirmedSig(sig);
             return 'success';
         }));

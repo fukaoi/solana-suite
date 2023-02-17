@@ -1,11 +1,12 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
-import { SplToken, KeypairStr } from '../../src/';
-import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
-import { StorageType } from '@solana-suite/shared-metaplex';
+import { SplToken } from '../../src/';
+import { RandomAsset } from '../../../storage/test/randomAsset';
+import { StorageType } from '../../../shared-metaplex/src';
+import { KeyPair } from '../../../shared/src/';
 
-let source: KeypairStr;
+let source: KeyPair;
 let mintStr: string;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;
@@ -28,8 +29,8 @@ describe('SplToken', () => {
   it('Add minting token', async () => {
     // mint
     const inst = await SplToken.mint(
-      source.toPublicKey(),
-      source.toKeypair(),
+      source.pubkey,
+      source.pubkey,
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
       TOKEN_METADATA
@@ -44,9 +45,9 @@ describe('SplToken', () => {
 
     //add
     const inst2 = await SplToken.add(
-      mintStr.toPublicKey(),
-      source.toPublicKey(),
-      [source.toKeypair()],
+      mintStr,
+      source.pubkey,
+      [source.secret],
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL
     );

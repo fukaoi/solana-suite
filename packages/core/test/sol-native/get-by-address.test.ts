@@ -11,7 +11,7 @@ describe.skip('SolNative', () => {
   it('Get all transaction data with limit', async () => {
     const limit = 2;
     const res = await SolNative.getByAddress(
-      searchTokenKey.toPublicKey(),
+      searchTokenKey,
       limit
     );
 
@@ -22,7 +22,7 @@ describe.skip('SolNative', () => {
 
   it('Get all transaction data with limit, until', async () => {
     const res = await SolNative.getByAddress(
-      searchTokenKey2.toPublicKey(),
+      searchTokenKey2,
       undefined,
       undefined,
       oldSig

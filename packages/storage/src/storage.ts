@@ -49,7 +49,7 @@ export namespace Storage {
       ).unwrap(
         async (ok: string) => {
           storageData.image = ok;
-          return await Arweave.uploadMetadata(storageData, feePayer.toKeypair());
+          return await Arweave.uploadMetadata(storageData, feePayer);
         },
         (err: Error) => {
           throw err;

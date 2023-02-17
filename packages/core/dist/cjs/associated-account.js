@@ -16,9 +16,9 @@ const spl_token_1 = require("@solana/spl-token");
  * Get Associated token Account.
  * if not created, create new token accouint
  *
- * @param {PublicKey} mint
- * @param {PublicKey} owner
- * @param {PublicKey} feePayer
+ * @param {Pubkey} mint
+ * @param {Pubkey} owner
+ * @param {Pubkey} feePayer
  * @param {boolean} allowOwnerOffCurve
  * @returns Promise<string | Instruction>
  */
@@ -36,9 +36,9 @@ var AssociatedAccount;
     /**
      * Retry function if create new token accouint
      *
-     * @param {PublicKey} mint
-     * @param {PublicKey} owner
-     * @param {PublicKey} feePayer
+     * @param {Pubkey} mint
+     * @param {Pubkey} owner
+     * @param {Pubkey} feePayer
      * @returns Promise<string>
      */
     AssociatedAccount.retryGetOrCreate = (mint, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
@@ -72,9 +72,9 @@ var AssociatedAccount;
      * [Main logic]Get Associated token Account.
      * if not created, create new token accouint
      *
-     * @param {PublicKey} mint
-     * @param {PublicKey} owner
-     * @param {PublicKey} feePayer
+     * @param {Pubkey} mint
+     * @param {Pubkey} owner
+     * @param {Pubkey} feePayer
      * @returns Promise<string>
      */
     AssociatedAccount.makeOrCreateInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {

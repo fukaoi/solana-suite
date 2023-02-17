@@ -1,5 +1,4 @@
-import { Result } from '@solana-suite/shared';
-import { PublicKey } from '@solana/web3.js';
+import { Pubkey, Result } from '@solana-suite/shared';
 export declare namespace Multisig {
-    const isAddress: (multisig: PublicKey) => Promise<Result<boolean, Error>>;
+    const isAddress: (multisig: Pubkey) => Promise<Result<boolean, Error>>;
 }

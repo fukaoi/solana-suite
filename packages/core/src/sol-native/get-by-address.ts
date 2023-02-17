@@ -1,9 +1,8 @@
 import {
-  PublicKey,
   ParsedTransactionWithMeta,
 } from '@solana/web3.js';
 
-import { Node } from '@solana-suite/shared';
+import { Node, Pubkey } from '@solana-suite/shared';
 
 //@internal
 export namespace SolNative {
@@ -16,13 +15,13 @@ export namespace SolNative {
   };
  
   export const getByAddress = async (
-    pubkey: PublicKey,
+    pubkey: Pubkey,
     limit?: number | undefined,
     before?: string | undefined,
     until?: string | undefined
   ): Promise<ParsedTransactionWithMeta[]> => {
     const transactions = await Node.getConnection().getSignaturesForAddress(
-      pubkey,
+      pubkey.toPublicKey(),
       {
         limit,
         before,

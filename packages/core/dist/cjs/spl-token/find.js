@@ -16,7 +16,7 @@ var SplToken;
 (function (SplToken) {
     SplToken.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            const accounts = yield shared_1.Node.getConnection().getParsedTokenAccountsByOwner(owner, {
+            const accounts = yield shared_1.Node.getConnection().getParsedTokenAccountsByOwner(owner.toPublicKey(), {
                 programId: spl_token_1.TOKEN_PROGRAM_ID,
             });
             const info = accounts.value.reduce((arr, d) => {

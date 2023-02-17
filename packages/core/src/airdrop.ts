@@ -1,12 +1,11 @@
-import { PublicKey } from '@solana/web3.js';
-import { Node, Result, debugLog, Try } from '@solana-suite/shared';
+import { Node, Result, debugLog, Try, Pubkey } from '@solana-suite/shared';
 
 export namespace Airdrop {
   const DEFAULT_AIRDROP_AMOUNT = 1;
   const MAX_AIRDROP_SOL = 2;
 
   export const request = async (
-    pubkey: PublicKey,
+    pubkey: Pubkey,
     airdropAmount?: number
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
@@ -23,7 +22,7 @@ export namespace Airdrop {
       }
 
       const sig = await Node.getConnection().requestAirdrop(
-        pubkey,
+        pubkey.toPublicKey(),
         airdropAmount
       );
       await Node.confirmedSig(sig);

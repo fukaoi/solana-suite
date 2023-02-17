@@ -1,10 +1,11 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../shared/test/testSetup';
-import { Memo, SolNative, KeypairStr } from '../src';
+import { Memo, SolNative } from '../src';
+import { KeyPair } from '../../shared/src/key-pair';
 
-let source: KeypairStr;
-let dest: KeypairStr;
+let source: KeyPair;
+let dest: KeyPair;
 const DUMMY_DATA = 'dummy memo data';
 
 describe('Memo', () => {
@@ -21,11 +22,7 @@ describe('Memo', () => {
   });
 
   it('create instruction', async () => {
-    const res = Memo.create(
-      DUMMY_DATA,
-      source.toPublicKey(),
-      source.toKeypair()
-    );
+    const res = Memo.create(DUMMY_DATA, source.pubkey, source.secret);
     console.log(`# create: `, res);
     assert.isObject(res);
   });
@@ -33,8 +30,8 @@ describe('Memo', () => {
   it('send memo by own', async () => {
     const inst = Memo.create(
       '{"memo": "send memo by own"}',
-      source.toPublicKey(),
-      source.toKeypair()
+      source.pubkey,
+      source.secret
     );
 
     const res = await inst.submit();
@@ -45,14 +42,14 @@ describe('Memo', () => {
   it('send memo and sol transfer by owner', async () => {
     const inst1 = Memo.create(
       `send memo and sol transfer: ${new Date()}`,
-      dest.toPublicKey(),
-      source.toKeypair()
+      dest.pubkey,
+      source.secret
     );
 
     const inst2 = SolNative.transfer(
-      source.toPublicKey(),
-      dest.toPublicKey(),
-      [source.toKeypair()],
+      source.pubkey,
+      dest.pubkey,
+      [source.secret],
       0.01 // Too low lamports, but  error occurs
     );
 
@@ -63,11 +60,7 @@ describe('Memo', () => {
 
   it('[Err] Over max limit', async () => {
     const overData = 'a'.repeat(2000);
-    const inst = Memo.create(
-      overData,
-      source.toPublicKey(),
-      source.toKeypair()
-    );
+    const inst = Memo.create(overData, source.pubkey, source.secret);
 
     const res = await inst.submit();
     assert.isTrue(res.isErr);

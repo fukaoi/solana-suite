@@ -21,14 +21,14 @@ var SolNative;
             const tx = new web3_js_1.Transaction({
                 blockhash: blockHashObj.blockhash,
                 lastValidBlockHeight: blockHashObj.lastValidBlockHeight,
-                feePayer,
+                feePayer: feePayer.toPublicKey(),
             }).add(web3_js_1.SystemProgram.transfer({
-                fromPubkey: owner,
-                toPubkey: dest,
+                fromPubkey: owner.toPublicKey(),
+                toPubkey: dest.toPublicKey(),
                 lamports: parseInt(`${amount.toLamports()}`, RADIX),
             }));
             signers.forEach((signer) => {
-                tx.partialSign(signer);
+                tx.partialSign(signer.toKeypair());
             });
             const serializedTx = tx.serialize({
                 requireAllSignatures: false,

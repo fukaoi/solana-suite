@@ -1,5 +1,15 @@
-import { PublicKey, TransactionInstruction, Keypair } from '@solana/web3.js';
-import { Node, debugLog, Instruction, sleep } from '@solana-suite/shared';
+import {
+  PublicKey as Pubkey,
+  TransactionInstruction,
+  Keypair,
+} from '@solana/web3.js';
+import {
+  Node,
+  debugLog,
+  Instruction,
+  sleep,
+  Secret,
+} from '@solana-suite/shared';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
@@ -14,9 +24,9 @@ import {
  * Get Associated token Account.
  * if not created, create new token accouint
  *
- * @param {PublicKey} mint
- * @param {PublicKey} owner
- * @param {PublicKey} feePayer
+ * @param {Pubkey} mint
+ * @param {Pubkey} owner
+ * @param {Pubkey} feePayer
  * @param {boolean} allowOwnerOffCurve
  * @returns Promise<string | Instruction>
  */
@@ -24,9 +34,9 @@ export namespace AssociatedAccount {
   const RETRY_OVER_LIMIT = 10;
   const RETRY_SLEEP_TIME = 3;
   const get = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    feePayer: Keypair,
+    mint: Pubkey,
+    owner: Pubkey,
+    feePayer: Secret,
     allowOwnerOffCurve = false
   ): Promise<string | Instruction> => {
     const res = await makeOrCreateInstruction(
@@ -46,14 +56,14 @@ export namespace AssociatedAccount {
   /**
    * Retry function if create new token accouint
    *
-   * @param {PublicKey} mint
-   * @param {PublicKey} owner
-   * @param {PublicKey} feePayer
+   * @param {Pubkey} mint
+   * @param {Pubkey} owner
+   * @param {Pubkey} feePayer
    * @returns Promise<string>
    */
   export const retryGetOrCreate = async (
-    mint: PublicKey,
-    owner: PublicKey,
+    mint: Pubkey,
+    owner: Pubkey,
     feePayer: Keypair
   ): Promise<string> => {
     let counter = 1;
@@ -89,15 +99,15 @@ export namespace AssociatedAccount {
    * [Main logic]Get Associated token Account.
    * if not created, create new token accouint
    *
-   * @param {PublicKey} mint
-   * @param {PublicKey} owner
-   * @param {PublicKey} feePayer
+   * @param {Pubkey} mint
+   * @param {Pubkey} owner
+   * @param {Pubkey} feePayer
    * @returns Promise<string>
    */
   export const makeOrCreateInstruction = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    feePayer?: PublicKey,
+    mint: Pubkey,
+    owner: Pubkey,
+    feePayer?: Pubkey,
     allowOwnerOffCurve = false
   ): Promise<{
     tokenAccount: string;

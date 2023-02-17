@@ -1,6 +1,6 @@
 import { Currency, MetaplexFileContent } from '@metaplex-foundation/js';
-import { Result } from '@solana-suite/shared';
-import { BundlrSigner, NftStorageMetadata } from '@solana-suite/shared-metaplex';
+import { Result, Secret } from '@solana-suite/shared';
+import { NftStorageMetadata } from '@solana-suite/shared-metaplex';
 export interface MetaplexFileOptions {
     readonly displayName: string;
     readonly uniqueName: string;
@@ -12,10 +12,10 @@ export interface MetaplexFileOptions {
     }[];
 }
 export declare namespace Arweave {
-    const getUploadPrice: (filePath: MetaplexFileContent, feePayer: BundlrSigner) => Promise<Result<{
+    const getUploadPrice: (filePath: MetaplexFileContent, feePayer: Secret) => Promise<Result<{
         price: number;
         currency: Currency;
     }, Error>>;
-    const uploadContent: (filePath: MetaplexFileContent, feePayer: BundlrSigner, fileOptions?: MetaplexFileOptions) => Promise<Result<string, Error>>;
-    const uploadMetadata: (metadata: NftStorageMetadata, feePayer: BundlrSigner) => Promise<Result<string, Error>>;
+    const uploadContent: (filePath: MetaplexFileContent, feePayer: Secret, fileOptions?: MetaplexFileOptions) => Promise<Result<string, Error>>;
+    const uploadMetadata: (metadata: NftStorageMetadata, feePayer: Secret) => Promise<Result<string, Error>>;
 }

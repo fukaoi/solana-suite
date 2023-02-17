@@ -1,12 +1,13 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
-import { SplToken, KeypairStr } from '../../src/';
-import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
-import { StorageType } from '@solana-suite/shared-metaplex';
+import { SplToken } from '../../src/';
+import { RandomAsset } from '../../../storage/test/randomAsset';
+import { StorageType } from '../../../shared-metaplex';
+import { KeyPair } from '../../../shared';
 
-let source: KeypairStr;
-let dest: KeypairStr;
+let source: KeyPair;
+let dest: KeyPair;
 const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
 const TOKEN_METADATA = {
@@ -27,8 +28,8 @@ describe('SplToken', () => {
 
   it('Create token, batch transfer', async () => {
     const inst1 = await SplToken.mint(
-      source.toPublicKey(),
-      source.toKeypair(),
+      source.pubkey,
+      source.secret,
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
       TOKEN_METADATA
@@ -47,23 +48,23 @@ describe('SplToken', () => {
     );
 
     const inst2 = await SplToken.transfer(
-      token.toPublicKey(),
-      source.toPublicKey(),
-      dest.toPublicKey(),
-      [source.toKeypair()],
+      token,
+      source.pubkey,
+      dest.pubkey,
+      [source.secret],
       1,
       MINT_DECIMAL,
-      source.toKeypair()
+      source.secret
     );
 
     const inst3 = await SplToken.transfer(
-      token.toPublicKey(),
-      source.toPublicKey(),
-      dest.toPublicKey(),
-      [source.toKeypair()],
+      token,
+      source.pubkey,
+      dest.pubkey,
+      [source.secret],
       1,
       MINT_DECIMAL,
-      source.toKeypair()
+      source.secret
     );
 
     (await [inst2, inst3].submit()).match(

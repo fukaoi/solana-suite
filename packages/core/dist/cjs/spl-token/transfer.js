@@ -18,11 +18,12 @@ var SplToken;
 (function (SplToken) {
     SplToken.transfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            !feePayer && (feePayer = signers[0]);
-            const sourceToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(mint, owner, feePayer);
-            const destToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(mint, dest, feePayer);
-            const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.toPublicKey(), mint, destToken.toPublicKey(), owner, calculate_amount_1.SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
-            return new shared_1.Instruction([inst], signers, feePayer);
+            const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
+            const keypairs = signers.map((s) => s.toKeypair());
+            const sourceToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(mint.toPublicKey(), owner.toPublicKey(), payer);
+            const destToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(mint.toPublicKey(), dest.toPublicKey(), payer);
+            const inst = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.toPublicKey(), mint.toPublicKey(), destToken.toPublicKey(), owner.toPublicKey(), calculate_amount_1.SplToken.calculateAmount(amount, mintDecimal), mintDecimal, keypairs);
+            return new shared_1.Instruction([inst], keypairs, payer);
         }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));

@@ -1,7 +1,8 @@
 /// <reference types="@solana/web3.js" />
-import { BundlrSigner, InputNftMetadata } from '@solana-suite/shared-metaplex';
+import { Secret } from '@solana-suite/shared';
+import { InputNftMetadata } from '@solana-suite/shared-metaplex';
 export declare namespace Storage {
-    const uploadMetaContent: (input: InputNftMetadata, feePayer?: BundlrSigner) => Promise<{
+    const uploadMetaContent: (input: InputNftMetadata, feePayer?: Secret) => Promise<{
         uri: string;
         sellerFeeBasisPoints: number;
         reducedMetadata: {

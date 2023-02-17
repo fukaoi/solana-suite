@@ -1,10 +1,11 @@
 import { describe, it, before } from 'mocha';
-import { SolNative, Multisig, KeypairStr } from '../../src';
+import { SolNative, Multisig } from '../../src';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
+import { KeyPair } from '../../../shared/src';
 
-let source: KeypairStr;
-let dest: KeypairStr;
+let source: KeyPair;
+let dest: KeyPair;
 
 describe('SolNative', () => {
   before(async () => {
@@ -14,11 +15,11 @@ describe('SolNative', () => {
   });
 
   it('transfer transaction with multi sig', async () => {
-    const signer1 = KeypairStr.create();
-    const signer2 = KeypairStr.create();
-    const inst1 = await Multisig.create(2, source.toKeypair(), [
-      signer1.toPublicKey(),
-      signer2.toPublicKey(),
+    const signer1 = KeyPair.create();
+    const signer2 = KeyPair.create();
+    const inst1 = await Multisig.create(2, source.secret, [
+      signer1.pubkey,
+      signer2.pubkey,
     ]);
 
     let multisig!: string;
@@ -32,11 +33,11 @@ describe('SolNative', () => {
     );
 
     const inst2 = await SolNative.transferWithMultisig(
-      multisig.toPublicKey(),
-      dest.toPublicKey(),
-      [source.toKeypair(), signer1.toKeypair(), signer2.toKeypair()],
+      multisig,
+      dest.pubkey,
+      [source.secret, signer1.secret, signer2.secret],
       0.01,
-      source.toKeypair()
+      source.secret
     );
 
     (await inst2.submit()).match(

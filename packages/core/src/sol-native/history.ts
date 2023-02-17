@@ -1,12 +1,11 @@
-import { PublicKey } from '@solana/web3.js';
-import { Result, debugLog, Try } from '@solana-suite/shared';
+import { Result, debugLog, Try, Pubkey } from '@solana-suite/shared';
 import { TransferHistory, Filter, DirectionFilter } from '../types/history';
 import { SolNative as _Filter } from './filter-transaction';
 import { SolNative as _Get } from './get-by-address';
 
 export namespace SolNative {
   export const getHistory = async (
-    searchPubkey: PublicKey,
+    searchPubkey: Pubkey,
     options?: {
       limit?: number;
       actionFilter?: Filter[];
@@ -39,13 +38,13 @@ export namespace SolNative {
 
       for (;;) {
         const transactions = await _Get.getByAddress(
-          searchPubkey,
+          searchPubkey.toPublicKey(),
           bufferedLimit,
           before
         );
         debugLog('# getTransactionHistory loop');
         const res = _Filter.filterTransactions(
-          searchPubkey,
+          searchPubkey.toPublicKey(),
           transactions,
           actionFilter,
           false,

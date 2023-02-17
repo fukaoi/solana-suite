@@ -1,16 +1,14 @@
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { PublicKey } from '@solana/web3.js';
-import { Node, Result, Try } from '@solana-suite/shared';
-import { SplTokenOwnerInfo } from
-'../types/spl-token';
+import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
+import { SplTokenOwnerInfo } from '../types/spl-token';
 
 export namespace SplToken {
   export const findByOwner = async (
-    owner: PublicKey
+    owner: Pubkey
   ): Promise<Result<SplTokenOwnerInfo[], Error>> => {
     return Try(async () => {
       const accounts = await Node.getConnection().getParsedTokenAccountsByOwner(
-        owner,
+        owner.toPublicKey(),
         {
           programId: TOKEN_PROGRAM_ID,
         }

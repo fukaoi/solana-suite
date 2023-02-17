@@ -1,10 +1,11 @@
 import { describe, it, before } from 'mocha';
-import { SolNative, KeypairStr } from '../../src';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
+import { KeyPair } from '../../../shared/src/key-pair';
+import { SolNative } from '../../src/';
 
-let source: KeypairStr;
-let dest: KeypairStr;
+let source: KeyPair;
+let dest: KeyPair;
 
 describe('SolNative', () => {
   before(async () => {
@@ -16,11 +17,11 @@ describe('SolNative', () => {
   it('transfer feePayerPartialSign', async () => {
     const solAmount = 0.01;
     const serialized = await SolNative.feePayerPartialSignTransfer(
-      source.toPublicKey(),
-      dest.toPublicKey(),
-      [source.toKeypair()],
+      source.pubkey,
+      dest.pubkey,
+      [source.secret],
       solAmount,
-      source.pubkey.toPublicKey()
+      source.pubkey
     );
 
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);

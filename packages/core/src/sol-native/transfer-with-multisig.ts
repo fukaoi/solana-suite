@@ -5,10 +5,15 @@ import {
   createCloseAccountInstruction,
 } from '@solana/spl-token';
 
-import { PublicKey, Keypair } from '@solana/web3.js';
-
-import { Result, Node, Instruction, debugLog, Try } from '@solana-suite/shared';
-
+import {
+  Result,
+  Node,
+  Instruction,
+  debugLog,
+  Try,
+  Pubkey,
+  Secret,
+} from '@solana-suite/shared';
 import { AssociatedAccount } from '../associated-account';
 
 export namespace SolNative {
@@ -17,29 +22,36 @@ export namespace SolNative {
   // NOTICE: There is a lamports fluctuation when transfer under 0.001 sol
   // for multiSig only function
   export const transferWithMultisig = async (
-    owner: PublicKey,
-    dest: PublicKey,
-    signers: Keypair[],
+    owner: Pubkey,
+    dest: Pubkey,
+    signers: Secret[],
     amount: number,
-    feePayer?: Keypair
+    feePayer?: Secret
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
       const connection = Node.getConnection();
-      const payer = feePayer ? feePayer : signers[0];
+      const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
+      const keypairs = signers.map((s) => s.toKeypair());
       const wrapped = await createWrappedNativeAccount(
         connection,
         payer,
-        owner,
+        owner.toPublicKey(),
         parseInt(`${amount.toLamports()}`, RADIX)
       );
 
       debugLog('# wrapped sol: ', wrapped.toBase58());
 
-      const token = await createMint(connection, payer, owner, owner, 0);
+      const token = await createMint(
+        connection,
+        payer,
+        owner.toPublicKey(),
+        owner.toPublicKey(),
+        0
+      );
 
       const sourceToken = await AssociatedAccount.retryGetOrCreate(
         token,
-        owner,
+        owner.toPublicKey(),
         payer
       );
 
@@ -56,19 +68,19 @@ export namespace SolNative {
       const inst1 = createTransferInstruction(
         sourceToken.toPublicKey(),
         destToken.toPublicKey(),
-        owner,
+        owner.toPublicKey(),
         parseInt(`${amount}`, RADIX), // No lamports, its sol
-        signers
+        keypairs
       );
 
       const inst2 = createCloseAccountInstruction(
         wrapped,
-        dest,
-        owner,
-        signers
+        dest.toPublicKey(),
+        owner.toPublicKey(),
+        keypairs
       );
 
-      return new Instruction([inst1, inst2], signers, feePayer);
+      return new Instruction([inst1, inst2], keypairs, payer);
     });
   };
 }

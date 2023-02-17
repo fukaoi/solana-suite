@@ -8,7 +8,7 @@ const searchTokenKey = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk';
 describe.skip('SolNative', () => {
   it('Get transfer history with set optional filter', async () => {
     const limit = 20;
-    const res = await SolNative.getHistory(searchTokenKey.toPublicKey(), {
+    const res = await SolNative.getHistory(searchTokenKey, {
       limit,
       actionFilter: [Filter.MintTo],
     });
@@ -21,7 +21,7 @@ describe.skip('SolNative', () => {
   });
 
   it('Get transfer history with transfer destination filter', async () => {
-    const res = await SolNative.getHistory(searchTokenKey.toPublicKey(), {
+    const res = await SolNative.getHistory(searchTokenKey, {
       directionFilter: DirectionFilter.Dest,
     });
     assert.isTrue(res.isOk);
@@ -32,7 +32,7 @@ describe.skip('SolNative', () => {
   });
 
   it('Get transfer history with transfer source filter', async () => {
-    const res = await SolNative.getHistory(searchTokenKey.toPublicKey(), {
+    const res = await SolNative.getHistory(searchTokenKey, {
       directionFilter: DirectionFilter.Source,
     });
 
@@ -44,8 +44,7 @@ describe.skip('SolNative', () => {
   });
 
   it('Get transfer history by address', async () => {
-    const searchAddress =
-      'HeH2PRj4GEdLCsbKQ18LvwhbuH4anmPQ3HoeRsJmymVw'.toPublicKey();
+    const searchAddress = 'HeH2PRj4GEdLCsbKQ18LvwhbuH4anmPQ3HoeRsJmymVw';
     const res = await SolNative.getHistory(searchAddress);
     assert.isTrue(res.isOk);
     res.unwrap().forEach((v) => {

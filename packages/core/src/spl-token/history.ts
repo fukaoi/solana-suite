@@ -1,14 +1,13 @@
 import { getAssociatedTokenAddress } from '@solana/spl-token';
-import { PublicKey } from '@solana/web3.js';
-import { Result, debugLog, Try } from '@solana-suite/shared';
+import { Result, debugLog, Try, Pubkey } from '@solana-suite/shared';
 import { TransferHistory, Filter, DirectionFilter } from '../types/history';
 import { SolNative as _Get } from '../sol-native/get-by-address';
 import { SolNative as _Filter } from '../sol-native/filter-transaction';
 
 export namespace SplToken {
   export const getHistory = async (
-    mint: PublicKey,
-    searchPubkey: PublicKey,
+    mint: Pubkey,
+    searchPubkey: Pubkey,
     options?: {
       limit?: number;
       actionFilter?: Filter[];
@@ -30,8 +29,8 @@ export namespace SplToken {
           : [Filter.Transfer, Filter.TransferChecked];
 
       const searchKeyAccount = await getAssociatedTokenAddress(
-        mint,
-        searchPubkey,
+        mint.toPublicKey(),
+        searchPubkey.toPublicKey(),
         true
       );
 
@@ -60,7 +59,7 @@ export namespace SplToken {
           transactions.length
         );
         const res = _Filter.filterTransactions(
-          searchPubkey,
+          searchPubkey.toPublicKey(),
           transactions,
           actionFilter,
           true,

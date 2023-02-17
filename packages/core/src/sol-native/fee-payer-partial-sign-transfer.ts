@@ -1,42 +1,39 @@
-import {
-  PublicKey,
-  SystemProgram,
-  Keypair,
-  Transaction,
-} from '@solana/web3.js';
+import { SystemProgram, Transaction } from '@solana/web3.js';
 
 import {
   Result,
   Node,
   PartialSignInstruction,
   Try,
+  Pubkey,
+  Secret,
 } from '@solana-suite/shared';
 
 export namespace SolNative {
   const RADIX = 10;
   export const feePayerPartialSignTransfer = async (
-    owner: PublicKey,
-    dest: PublicKey,
-    signers: Keypair[],
+    owner: Pubkey,
+    dest: Pubkey,
+    signers: Secret[],
     amount: number,
-    feePayer: PublicKey
+    feePayer: Pubkey
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
       const blockHashObj = await Node.getConnection().getLatestBlockhash();
       const tx = new Transaction({
         blockhash: blockHashObj.blockhash,
         lastValidBlockHeight: blockHashObj.lastValidBlockHeight,
-        feePayer,
+        feePayer: feePayer.toPublicKey(),
       }).add(
         SystemProgram.transfer({
-          fromPubkey: owner,
-          toPubkey: dest,
+          fromPubkey: owner.toPublicKey(),
+          toPubkey: dest.toPublicKey(),
           lamports: parseInt(`${amount.toLamports()}`, RADIX),
         })
       );
 
       signers.forEach((signer) => {
-        tx.partialSign(signer);
+        tx.partialSign(signer.toKeypair());
       });
 
       const serializedTx = tx.serialize({
