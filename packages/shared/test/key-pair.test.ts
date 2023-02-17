@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import { PublicKey } from '@solana/web3.js';
 import { KeyPair } from '../src/key-pair';
 import { Pubkey } from '../src/types/key-pair';
+import '../src/global';
 
 describe('KeypairStr', () => {
   it('Pubkey to PublicKey', async () => {

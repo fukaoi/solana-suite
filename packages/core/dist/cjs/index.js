@@ -16,7 +16,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./airdrop"), exports);
 __exportStar(require("./associated-account"), exports);
-__exportStar(require("./key-pair"), exports);
 __exportStar(require("./memo"), exports);
 __exportStar(require("./multisig"), exports);
 __exportStar(require("./sol-native"), exports);
