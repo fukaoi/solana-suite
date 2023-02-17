@@ -11,15 +11,6 @@ export class KeyPair {
     this.secret = secret;
   }
 
-  toPublicKey(): PublicKey {
-    return new PublicKey(this.pubkey);
-  }
-
-  toKeypair(): Keypair {
-    const decoded = bs.decode(this.secret);
-    return Keypair.fromSecretKey(decoded);
-  }
-
   static isPubkey = (value: string): value is Pubkey =>
     /^[0-9a-zA-Z]{32,44}$/.test(value);
 
