@@ -55,7 +55,7 @@ export namespace Metaplex {
   };
 
   export const createNftBuilderInstruction = async (
-    feePayer: Secret,
+    feePayer: Secret | IdentityClient,
     params: CreateNftBuilderParams,
     useNewMint: Secret,
     updateAuthority: Secret | IdentityClient,
@@ -73,7 +73,7 @@ export namespace Metaplex {
     const mintAuthorityPair = (mintAuthority as Secret).toKeypair();
     const useNewMintPair = (useNewMint as Secret).toKeypair();
 
-    const metaplex = Bundlr.make(feePayer.toKeypair());
+    const metaplex = Bundlr.make((feePayer as Secret).toKeypair());
     const payer = metaplex.identity();
     const sftBuilder = await metaplex
       .nfts()

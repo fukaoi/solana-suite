@@ -4,7 +4,7 @@ import { InputNftMetadata } from '@solana-suite/shared-metaplex';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 export declare namespace Metaplex {
-    const createNftBuilderInstruction: (feePayer: Secret, params: CreateNftBuilderParams, useNewMint: Secret, updateAuthority: Secret | IdentityClient, mintAuthority: Secret | IdentityClient, tokenOwner: Pubkey) => Promise<TransactionInstruction[]>;
+    const createNftBuilderInstruction: (feePayer: Secret | IdentityClient, params: CreateNftBuilderParams, useNewMint: Secret, updateAuthority: Secret | IdentityClient, mintAuthority: Secret | IdentityClient, tokenOwner: Pubkey) => Promise<TransactionInstruction[]>;
     /**
      * Upload content and NFT mint
      *
