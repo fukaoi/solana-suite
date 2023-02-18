@@ -6,6 +6,7 @@ import {
   sleep,
   Pubkey,
   Secret,
+  KeyPair,
 } from '@solana-suite/shared';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -23,7 +24,7 @@ import {
  *
  * @param {Pubkey} mint
  * @param {Pubkey} owner
- * @param {Pubkey} feePayer
+ * @param {Secret} feePayer
  * @param {boolean} allowOwnerOffCurve
  * @returns Promise<string | Instruction>
  */
@@ -39,7 +40,7 @@ export namespace AssociatedAccount {
     const res = await makeOrCreateInstruction(
       mint,
       owner,
-      feePayer.toKeypair().publicKey.toString(),
+      new KeyPair({ secret: feePayer }).pubkey,
       allowOwnerOffCurve
     );
 
