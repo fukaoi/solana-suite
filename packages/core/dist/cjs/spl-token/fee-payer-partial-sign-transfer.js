@@ -20,8 +20,8 @@ var SplToken;
     SplToken.feePayerPartialSignTransfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             const keypairs = signers.map((s) => s.toKeypair());
-            const sourceToken = yield associated_account_1.AssociatedAccount.makeOrCreateInstruction(mint.toPublicKey(), owner.toPublicKey(), feePayer.toPublicKey());
-            const destToken = yield associated_account_1.AssociatedAccount.makeOrCreateInstruction(mint.toPublicKey(), dest.toPublicKey(), feePayer.toPublicKey());
+            const sourceToken = yield associated_account_1.AssociatedAccount.makeOrCreateInstruction(mint, owner, feePayer);
+            const destToken = yield associated_account_1.AssociatedAccount.makeOrCreateInstruction(mint, dest, feePayer);
             let inst2;
             const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
             const tx = new web3_js_1.Transaction({

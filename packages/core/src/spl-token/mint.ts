@@ -114,7 +114,7 @@ export namespace SplToken {
         throw valid.error;
       }
 
-      !feePayer && (feePayer = signer);
+      const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
       const uploaded = await Storage.uploadMetaContent(input, feePayer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 
@@ -142,13 +142,13 @@ export namespace SplToken {
         totalAmount,
         mintDecimal,
         tokenMetadata,
-        feePayer.toKeypair().publicKey,
+        payer.publicKey,
         isMutable
       );
       return new MintInstruction(
         insts,
         [signer.toKeypair(), mint],
-        feePayer.toKeypair(),
+        payer,
         mint.publicKey.toString()
       );
     });

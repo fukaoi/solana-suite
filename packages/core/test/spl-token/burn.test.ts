@@ -28,7 +28,7 @@ describe('SplToken', () => {
   it('Create token, burn token', async () => {
     const inst1 = await SplToken.mint(
       source.pubkey,
-      source.pubkey,
+      source.secret,
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
       TOKEN_METADATA

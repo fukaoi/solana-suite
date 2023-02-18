@@ -1,4 +1,5 @@
-import { PublicKey as Pubkey, TransactionInstruction, Keypair } from '@solana/web3.js';
+import { TransactionInstruction } from '@solana/web3.js';
+import { Pubkey, Secret } from '@solana-suite/shared';
 /**
  * Get Associated token Account.
  * if not created, create new token accouint
@@ -15,10 +16,10 @@ export declare namespace AssociatedAccount {
      *
      * @param {Pubkey} mint
      * @param {Pubkey} owner
-     * @param {Pubkey} feePayer
+     * @param {Secret} feePayer
      * @returns Promise<string>
      */
-    const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Keypair) => Promise<string>;
+    const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret) => Promise<string>;
     /**
      * [Main logic]Get Associated token Account.
      * if not created, create new token accouint

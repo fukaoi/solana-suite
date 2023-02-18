@@ -1,13 +1,10 @@
-import {
-  PublicKey as Pubkey,
-  TransactionInstruction,
-  Keypair,
-} from '@solana/web3.js';
+import { TransactionInstruction } from '@solana/web3.js';
 import {
   Node,
   debugLog,
   Instruction,
   sleep,
+  Pubkey,
   Secret,
 } from '@solana-suite/shared';
 import {
@@ -42,7 +39,7 @@ export namespace AssociatedAccount {
     const res = await makeOrCreateInstruction(
       mint,
       owner,
-      feePayer.publicKey,
+      feePayer.toKeypair().publicKey.toString(),
       allowOwnerOffCurve
     );
 
@@ -50,7 +47,12 @@ export namespace AssociatedAccount {
       return res.tokenAccount;
     }
 
-    return new Instruction([res.inst], [], feePayer, res.tokenAccount);
+    return new Instruction(
+      [res.inst],
+      [],
+      feePayer.toKeypair(),
+      res.tokenAccount
+    );
   };
 
   /**
@@ -58,13 +60,13 @@ export namespace AssociatedAccount {
    *
    * @param {Pubkey} mint
    * @param {Pubkey} owner
-   * @param {Pubkey} feePayer
+   * @param {Secret} feePayer
    * @returns Promise<string>
    */
   export const retryGetOrCreate = async (
     mint: Pubkey,
     owner: Pubkey,
-    feePayer: Keypair
+    feePayer: Secret
   ): Promise<string> => {
     let counter = 1;
     while (counter < RETRY_OVER_LIMIT) {
@@ -114,8 +116,8 @@ export namespace AssociatedAccount {
     inst: TransactionInstruction | undefined;
   }> => {
     const associatedTokenAccount = await getAssociatedTokenAddress(
-      mint,
-      owner,
+      mint.toPublicKey(),
+      owner.toPublicKey(),
       allowOwnerOffCurve,
       TOKEN_PROGRAM_ID,
       ASSOCIATED_TOKEN_PROGRAM_ID
@@ -146,10 +148,10 @@ export namespace AssociatedAccount {
       const payer = !feePayer ? owner : feePayer;
 
       const inst = createAssociatedTokenAccountInstruction(
-        payer,
+        payer.toPublicKey(),
         associatedTokenAccount,
-        owner,
-        mint,
+        owner.toPublicKey(),
+        mint.toPublicKey(),
         TOKEN_PROGRAM_ID,
         ASSOCIATED_TOKEN_PROGRAM_ID
       );

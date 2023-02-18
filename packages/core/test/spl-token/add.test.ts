@@ -4,10 +4,10 @@ import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { StorageType } from '../../../shared-metaplex/src';
-import { KeyPair } from '../../../shared/src/';
+import { KeyPair, Pubkey } from '../../../shared/src/';
 
 let source: KeyPair;
-let mintStr: string;
+let mint: Pubkey;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
@@ -30,7 +30,7 @@ describe('SplToken', () => {
     // mint
     const inst = await SplToken.mint(
       source.pubkey,
-      source.pubkey,
+      source.secret,
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
       TOKEN_METADATA
@@ -40,12 +40,12 @@ describe('SplToken', () => {
 
     const res = await inst.submit();
     assert.isTrue(res.isOk, res.unwrap());
-    mintStr = inst.unwrap().data as string;
-    console.log('# mint: ', mintStr);
+    mint = inst.unwrap().data as Pubkey;
+    console.log('# mint: ', mint);
 
     //add
     const inst2 = await SplToken.add(
-      mintStr,
+      mint,
       source.pubkey,
       [source.secret],
       TOKEN_TOTAL_AMOUNT,
@@ -56,7 +56,7 @@ describe('SplToken', () => {
 
     const res2 = await inst2.submit();
     assert.isTrue(res2.isOk, res2.unwrap());
-    mintStr = inst2.unwrap().data as string;
+    mint = inst2.unwrap().data as Pubkey;
     console.log('# sig: ', res2);
   });
 });

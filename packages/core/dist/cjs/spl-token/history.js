@@ -44,7 +44,7 @@ var SplToken;
             (0, shared_1.debugLog)('# bufferedLimit: ', bufferedLimit);
             (0, shared_1.debugLog)('# before: ', before);
             for (;;) {
-                const transactions = yield get_by_address_1.SolNative.getByAddress(searchKeyAccount, bufferedLimit, before);
+                const transactions = yield get_by_address_1.SolNative.getByAddress(searchKeyAccount.toString(), bufferedLimit, before);
                 (0, shared_1.debugLog)('# getTransactionHistory loop transactions count:', transactions.length);
                 const res = filter_transaction_1.SolNative.filterTransactions(searchPubkey.toPublicKey(), transactions, actionFilter, true, options.directionFilter);
                 hist = hist.concat(res);

@@ -30,11 +30,11 @@ export namespace SolNative {
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
       const connection = Node.getConnection();
-      const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
+      const payer = feePayer ? feePayer : signers[0];
       const keypairs = signers.map((s) => s.toKeypair());
       const wrapped = await createWrappedNativeAccount(
         connection,
-        payer,
+        payer.toKeypair(),
         owner.toPublicKey(),
         parseInt(`${amount.toLamports()}`, RADIX)
       );
@@ -43,23 +43,23 @@ export namespace SolNative {
 
       const token = await createMint(
         connection,
-        payer,
+        payer.toKeypair(),
         owner.toPublicKey(),
         owner.toPublicKey(),
         0
       );
 
       const sourceToken = await AssociatedAccount.retryGetOrCreate(
-        token,
-        owner.toPublicKey(),
+        token.toString(),
+        owner,
         payer
       );
 
       debugLog('# sourceToken: ', sourceToken);
 
       const destToken = await AssociatedAccount.retryGetOrCreate(
-        token,
-        wrapped,
+        token.toString(),
+        wrapped.toString(),
         payer
       );
 
@@ -80,7 +80,11 @@ export namespace SolNative {
         keypairs
       );
 
-      return new Instruction([inst1, inst2], keypairs, payer);
+      return new Instruction(
+        [inst1, inst2],
+        signers.map((s) => s.toKeypair()),
+        feePayer?.toKeypair()
+      );
     });
   };
 }

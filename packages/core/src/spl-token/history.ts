@@ -50,7 +50,7 @@ export namespace SplToken {
 
       for (;;) {
         const transactions = await _Get.getByAddress(
-          searchKeyAccount,
+          searchKeyAccount.toString(),
           bufferedLimit,
           before
         );

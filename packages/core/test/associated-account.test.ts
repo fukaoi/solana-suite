@@ -37,9 +37,9 @@ describe('AssociatedAccount', () => {
     const mint = mintInst.unwrap().data as string;
 
     const res = await AssociatedAccount.retryGetOrCreate(
-      mint.toPublicKey(),
-      source.toPublicKey(),
-      source.toKeypair()
+      mint,
+      source.pubkey,
+      source.secret
     );
 
     console.log('# associated token account: ', res);

@@ -27,7 +27,7 @@ describe('SolNative', () => {
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
     if (serialized.isOk) {
       console.log(serialized.value);
-      const res = await serialized.value.submit(source.toKeypair());
+      const res = await serialized.value.submit(source.secret);
       assert.isTrue(res.isOk, `${res.unwrap()}`);
       console.log('# tx signature: ', res.unwrap());
     }

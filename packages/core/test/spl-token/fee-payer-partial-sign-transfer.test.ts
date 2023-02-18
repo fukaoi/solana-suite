@@ -5,6 +5,7 @@ import { SplToken } from '../../src/';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { StorageType } from '../../../shared-metaplex';
 import { KeyPair } from '../../../shared';
+import { Pubkey } from '@solana-suite/shared/src';
 
 let source: KeyPair;
 
@@ -28,7 +29,7 @@ describe('SplToken', () => {
   it('transfer feePayerPartialSign', async () => {
     const tokenOwner = KeyPair.create();
     const receipt = KeyPair.create();
-    console.log('# tokenOwner: ', tokenOwner.pubkey);
+    console.log('# owner: ', tokenOwner.pubkey);
     console.log('# receipt: ', receipt.pubkey);
 
     const inst1 = await SplToken.mint(
@@ -42,7 +43,7 @@ describe('SplToken', () => {
 
     assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
     await inst1.submit();
-    const token = inst1.unwrap().data as string;
+    const token = inst1.unwrap().data as Pubkey;
     console.log('# mint: ', token);
 
     const serialized = await SplToken.feePayerPartialSignTransfer(
@@ -52,13 +53,13 @@ describe('SplToken', () => {
       [tokenOwner.secret],
       100,
       MINT_DECIMAL,
-      source.secret
+      source.pubkey
     );
 
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
 
     if (serialized.isOk) {
-      const res = await serialized.value.submit(source.toKeypair());
+      const res = await serialized.value.submit(source.secret);
       assert.isTrue(res.isOk, `${res.unwrap()}`);
       console.log('# tx signature: ', res.unwrap());
     }

@@ -14,18 +14,18 @@ export namespace SplToken {
     feePayer?: Secret
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
-      const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
+      const payer = feePayer ? feePayer : signers[0];
       const keypairs = signers.map((s) => s.toKeypair());
 
       const sourceToken = await AssociatedAccount.retryGetOrCreate(
-        mint.toPublicKey(),
-        owner.toPublicKey(),
+        mint,
+        owner,
         payer
       );
 
       const destToken = await AssociatedAccount.retryGetOrCreate(
-        mint.toPublicKey(),
-        dest.toPublicKey(),
+        mint,
+        dest,
         payer
       );
 
@@ -39,7 +39,7 @@ export namespace SplToken {
         keypairs
       );
 
-      return new Instruction([inst], keypairs, payer);
+      return new Instruction([inst], keypairs, payer.toKeypair());
     });
   };
 }

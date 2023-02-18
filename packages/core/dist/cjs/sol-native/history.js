@@ -39,7 +39,7 @@ var SolNative;
             let hist = [];
             let before;
             for (;;) {
-                const transactions = yield get_by_address_1.SolNative.getByAddress(searchPubkey.toPublicKey(), bufferedLimit, before);
+                const transactions = yield get_by_address_1.SolNative.getByAddress(searchPubkey, bufferedLimit, before);
                 (0, shared_1.debugLog)('# getTransactionHistory loop');
                 const res = filter_transaction_1.SolNative.filterTransactions(searchPubkey.toPublicKey(), transactions, actionFilter, false, options.directionFilter);
                 hist = hist.concat(res);

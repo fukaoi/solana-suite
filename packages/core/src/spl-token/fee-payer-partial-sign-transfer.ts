@@ -26,15 +26,15 @@ export namespace SplToken {
       const keypairs = signers.map((s) => s.toKeypair());
 
       const sourceToken = await AssociatedAccount.makeOrCreateInstruction(
-        mint.toPublicKey(),
-        owner.toPublicKey(),
-        feePayer.toPublicKey()
+        mint,
+        owner,
+        feePayer
       );
 
       const destToken = await AssociatedAccount.makeOrCreateInstruction(
-        mint.toPublicKey(),
-        dest.toPublicKey(),
-        feePayer.toPublicKey()
+        mint,
+        dest,
+        feePayer
       );
 
       let inst2;

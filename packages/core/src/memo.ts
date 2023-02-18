@@ -30,8 +30,8 @@ export namespace Memo {
     });
     return new Instruction(
       [instruction],
-      [signer],
-      signer
+      [signer.toKeypair()],
+      signer.toKeypair()
     );
   };
 }

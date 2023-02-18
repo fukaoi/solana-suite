@@ -38,7 +38,7 @@ export namespace SolNative {
 
       for (;;) {
         const transactions = await _Get.getByAddress(
-          searchPubkey.toPublicKey(),
+          searchPubkey,
           bufferedLimit,
           before
         );
