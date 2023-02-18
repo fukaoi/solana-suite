@@ -34,8 +34,8 @@ class Instruction {
             }));
         });
         this.instructions = instructions;
-        this.signers = signers.map((s) => s.toKeypair());
-        this.feePayer = feePayer === null || feePayer === void 0 ? void 0 : feePayer.toKeypair();
+        this.signers = signers;
+        this.feePayer = feePayer;
         this.data = data;
     }
 }

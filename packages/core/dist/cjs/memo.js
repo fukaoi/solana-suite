@@ -26,7 +26,7 @@ var Memo;
             data: Memo.encode(data),
             keys: key,
         });
-        return new shared_1.Instruction([instruction], [signer.toKeypair()], signer.toKeypair());
+        return new shared_1.Instruction([instruction], [signer], signer);
     };
 })(Memo = exports.Memo || (exports.Memo = {}));
 //# sourceMappingURL=memo.js.map

@@ -1,19 +1,20 @@
 import {
   sendAndConfirmTransaction,
   TransactionSignature,
+  Keypair,
   TransactionInstruction,
   Transaction,
   ConfirmOptions,
 } from '@solana/web3.js';
 
-import { Constants, debugLog, Instruction, Node, Result, Secret, Try } from './';
+import { Constants, debugLog, Instruction, Node, Result, Try } from './';
 import { MAX_RETRIES } from './instruction/define';
 
 export class MintInstruction extends Instruction {
   constructor(
     instructions: TransactionInstruction[],
-    signers: Secret[],
-    feePayer?: Secret,
+    signers: Keypair[],
+    feePayer?: Keypair,
     data?: unknown
   ) {
     super(instructions, signers, feePayer, data);
