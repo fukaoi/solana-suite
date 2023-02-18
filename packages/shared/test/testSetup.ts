@@ -17,8 +17,8 @@ export namespace Setup {
     const { source, dest } = await fetchSourceAndDest();
     log(source, dest);
     return {
-      source: new KeyPair(source.pubkey, source.secret),
-      dest: new KeyPair(dest.pubkey, dest.secret),
+      source: new KeyPair({ pubkey: source.pubkey, secret: source.secret }),
+      dest: new KeyPair({ pubkey: dest.pubkey, secret: dest.secret }),
     };
   };
 
@@ -58,15 +58,15 @@ export namespace Setup {
 
     await requestAirdrop(source.publicKey);
 
-    const sourceObject = new KeyPair(
-      source.publicKey.toBase58() as Pubkey,
-      bs.encode(source.secretKey) as Secret
-    );
+    const sourceObject = new KeyPair({
+      pubkey: source.publicKey.toBase58() as Pubkey,
+      secret: bs.encode(source.secretKey) as Secret,
+    });
 
-    const destObject = new KeyPair(
-      dest.publicKey.toBase58() as Pubkey,
-      bs.encode(dest.secretKey) as Secret
-    );
+    const destObject = new KeyPair({
+      pubkey: dest.publicKey.toBase58() as Pubkey,
+      secret: bs.encode(dest.secretKey) as Secret,
+    });
 
     const data = templateKeyPair(sourceObject, destObject);
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));

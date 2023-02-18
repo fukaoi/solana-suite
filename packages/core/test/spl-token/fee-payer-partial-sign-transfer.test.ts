@@ -4,8 +4,7 @@ import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { StorageType } from '../../../shared-metaplex';
-import { KeyPair } from '../../../shared';
-import { Pubkey } from '@solana-suite/shared/src';
+import { KeyPair, Pubkey } from '../../../shared';
 
 let source: KeyPair;
 

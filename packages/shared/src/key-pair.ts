@@ -6,9 +6,14 @@ export class KeyPair {
   pubkey: Pubkey;
   secret: Secret;
 
-  constructor(pubkey: Pubkey, secret: Secret) {
-    this.pubkey = pubkey;
-    this.secret = secret;
+  constructor(params: { pubkey?: Pubkey; secret: Secret }) {
+    if (!params.pubkey) {
+      const keypair = params.secret.toKeypair();
+      this.pubkey = keypair.publicKey.toString();
+    } else {
+      this.pubkey = params.pubkey;
+    }
+    this.secret = params.secret;
   }
 
   toPublicKey(): PublicKey {
@@ -19,7 +24,7 @@ export class KeyPair {
     const decoded = bs.decode(this.secret);
     return Keypair.fromSecretKey(decoded);
   }
-  
+
   static isPubkey = (value: string): value is Pubkey =>
     /^[0-9a-zA-Z]{32,44}$/.test(value);
 
@@ -28,9 +33,9 @@ export class KeyPair {
 
   static create = (): KeyPair => {
     const keypair = Keypair.generate();
-    return new KeyPair(
-      keypair.publicKey.toBase58() as Pubkey,
-      bs.encode(keypair.secretKey) as Secret
-    );
+    return new KeyPair({
+      pubkey: keypair.publicKey.toBase58() as Pubkey,
+      secret: bs.encode(keypair.secretKey) as Secret,
+    });
   };
 }
