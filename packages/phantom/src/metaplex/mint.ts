@@ -20,15 +20,15 @@ export namespace PhantomMetaplex {
   ): Promise<InitializeNftMint> => {
     const metaplex = Bundlr.make(phantom);
     const payer = metaplex.identity();
-    const useNewMint = KeyPair.create();
     const updateAuthority = metaplex.identity();
     const mintAuthority = metaplex.identity();
     const tokenOwner = metaplex.identity();
+    const useNewMint = KeyPair.create();
     const instructions = await Metaplex.createNftBuilderInstruction(
       payer,
       params,
       useNewMint.secret,
-      updateAuthority,
+      new KeyPair(updateAuthority.secretKey).secret,
       mintAuthority,
       tokenOwner.publicKey.toString()
     );

@@ -30,7 +30,7 @@ describe('KeypairStr', () => {
   });
 
   it('Create KeyPair Object', async () => {
-    const obj = new KeyPair(PUBKEY, SECRET);
+    const obj = new KeyPair({ pubkey: PUBKEY, secret: SECRET });
     assert.isNotEmpty(obj);
   });
 
@@ -42,6 +42,16 @@ describe('KeypairStr', () => {
     const secret =
       '54SjeQxyNVS6xkNrqDSQ5aKyMCu7gzySku2p6UnPqF83NDDRfHsVrXQtiEVtsn7t5QWRCTm2VGmwkmjzxcSoYexa';
     assert.isTrue(KeyPair.isSecret(secret));
+  });
+
+  it('Keypair to KeyPair', async () => {
+    const keypair = Keypair.generate();
+    const expeted = {
+      pubkey: keypair.publicKey.toString(),
+      secret: bs.encode(keypair.secretKey).toString(),
+    };
+    const res = KeyPair.toKeyPair(keypair);
+    assert.deepEqual(res, expeted);
   });
 
   it('Pubkey', async () => {

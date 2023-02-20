@@ -34,8 +34,15 @@ export class KeyPair {
   static create = (): KeyPair => {
     const keypair = Keypair.generate();
     return new KeyPair({
-      pubkey: keypair.publicKey.toBase58() as Pubkey,
+      pubkey: keypair.publicKey.toString() as Pubkey,
       secret: bs.encode(keypair.secretKey) as Secret,
     });
   };
+
+  static toKeyPair = (keypair: Keypair): KeyPair => {
+    return new KeyPair({
+      pubkey: keypair.publicKey.toString() as Pubkey,
+      secret: bs.encode(keypair.secretKey) as Secret,
+    });
+  }
 }
