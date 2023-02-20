@@ -22,7 +22,7 @@ var Metaplex;
         const mint = shared_1.KeyPair.create();
         const updateAuthority = owner;
         const mintAuthority = owner;
-        const inst = yield Metaplex.createNftBuilderInstruction(feePayer.toKeypair(), params, mint.secret.toKeypair(), updateAuthority.toKeypair(), mintAuthority.toKeypair(), new shared_1.KeyPair({ secret: owner }).pubkey);
+        const inst = yield Metaplex.createNftBuilderInstruction(feePayer.toKeypair(), params, mint.toKeypair(), updateAuthority.toKeypair(), mintAuthority.toKeypair(), new shared_1.KeyPair({ secret: owner }).pubkey);
         return new shared_1.MintInstruction(inst, [feePayer.toKeypair(), mint.toKeypair(), owner.toKeypair()], undefined, mint);
     });
     Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {
