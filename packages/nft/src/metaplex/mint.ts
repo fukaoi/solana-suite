@@ -1,4 +1,4 @@
-import { TransactionInstruction, PublicKey } from '@solana/web3.js';
+import { TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
 import {
   Result,
   debugLog,
@@ -38,11 +38,11 @@ export namespace Metaplex {
     const mintAuthority = owner;
 
     const inst = await createNftBuilderInstruction(
-      feePayer,
+      feePayer.toKeypair(),
       params,
-      mint.secret,
-      updateAuthority,
-      mintAuthority,
+      mint.toKeypair(),
+      updateAuthority.toKeypair(),
+      mintAuthority.toKeypair(),
       new KeyPair({ secret: owner }).pubkey
     );
 
@@ -55,11 +55,11 @@ export namespace Metaplex {
   };
 
   export const createNftBuilderInstruction = async (
-    feePayer: Secret | IdentityClient,
+    feePayer: Keypair | IdentityClient,
     params: CreateNftBuilderParams,
-    useNewMint: Secret,
-    updateAuthority: Secret | IdentityClient,
-    mintAuthority: Secret | IdentityClient,
+    useNewMint: Keypair,
+    updateAuthority: Keypair | IdentityClient,
+    mintAuthority: Keypair | IdentityClient,
     tokenOwner: Pubkey
   ): Promise<TransactionInstruction[]> => {
     debugLog('# params: ', params);
@@ -69,20 +69,16 @@ export namespace Metaplex {
     debugLog('# mintAuthority: ', mintAuthority);
     debugLog('# tokenOwner: ', tokenOwner);
 
-    const updateAuthorityPair = (updateAuthority as Secret).toKeypair();
-    const mintAuthorityPair = (mintAuthority as Secret).toKeypair();
-    const useNewMintPair = (useNewMint as Secret).toKeypair();
-
-    const metaplex = Bundlr.make((feePayer as Secret).toKeypair());
+    const metaplex = Bundlr.make(feePayer);
     const payer = metaplex.identity();
     const sftBuilder = await metaplex
       .nfts()
       .builders()
       .createSft({
         ...params,
-        updateAuthority: updateAuthorityPair,
-        mintAuthority: mintAuthorityPair,
-        useNewMint: useNewMintPair,
+        updateAuthority,
+        mintAuthority,
+        useNewMint,
         tokenOwner: tokenOwner.toPublicKey(),
         tokenAmount: token(1),
         decimals: 0,
@@ -115,8 +111,8 @@ export namespace Metaplex {
             {
               edition: masterEditionAddress,
               mint: mintAddress,
-              updateAuthority: updateAuthorityPair.publicKey,
-              mintAuthority: mintAuthorityPair.publicKey,
+              updateAuthority: updateAuthority.publicKey,
+              mintAuthority: mintAuthority.publicKey,
               payer: payer.publicKey,
               metadata: metadataAddress,
             },
@@ -127,7 +123,7 @@ export namespace Metaplex {
               },
             }
           ),
-          signers: [payer, mintAuthorityPair, updateAuthorityPair],
+          signers: [payer, mintAuthority, updateAuthority],
           key:
             params.createMasterEditionInstructionKey ?? 'createMasterEdition',
         })

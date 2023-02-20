@@ -24,8 +24,7 @@ var PhantomMetaplex;
         const mintAuthority = metaplex.identity();
         const tokenOwner = metaplex.identity();
         const useNewMint = shared_1.KeyPair.create();
-        const updateAuthorityKeypair = web3_js_1.Keypair.fromSecretKey(updateAuthority.secretKey);
-        const instructions = yield nft_1.Metaplex.createNftBuilderInstruction(payer, params, useNewMint.secret, shared_1.KeyPair.toKeyPair(updateAuthorityKeypair).secret, mintAuthority, tokenOwner.publicKey.toString());
+        const instructions = yield nft_1.Metaplex.createNftBuilderInstruction(payer, params, useNewMint.secret.toKeypair(), updateAuthority, mintAuthority, tokenOwner.publicKey.toString());
         const transaction = new web3_js_1.Transaction();
         transaction.feePayer = payer.publicKey;
         instructions.forEach((inst) => {

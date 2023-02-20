@@ -19,7 +19,7 @@ export var Metaplex;
         const mint = KeyPair.create();
         const updateAuthority = owner;
         const mintAuthority = owner;
-        const inst = yield Metaplex.createNftBuilderInstruction(feePayer, params, mint.secret, updateAuthority, mintAuthority, new KeyPair({ secret: owner }).pubkey);
+        const inst = yield Metaplex.createNftBuilderInstruction(feePayer.toKeypair(), params, mint.secret.toKeypair(), updateAuthority.toKeypair(), mintAuthority.toKeypair(), new KeyPair({ secret: owner }).pubkey);
         return new MintInstruction(inst, [feePayer.toKeypair(), mint.toKeypair(), owner.toKeypair()], undefined, mint);
     });
     Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {
@@ -30,15 +30,14 @@ export var Metaplex;
         debugLog('# updateAuthority: ', updateAuthority);
         debugLog('# mintAuthority: ', mintAuthority);
         debugLog('# tokenOwner: ', tokenOwner);
-        const updateAuthorityPair = updateAuthority.toKeypair();
-        const mintAuthorityPair = mintAuthority.toKeypair();
-        const useNewMintPair = useNewMint.toKeypair();
-        const metaplex = Bundlr.make(feePayer.toKeypair());
+        const metaplex = Bundlr.make(feePayer);
         const payer = metaplex.identity();
         const sftBuilder = yield metaplex
             .nfts()
             .builders()
-            .createSft(Object.assign(Object.assign({}, params), { updateAuthority: updateAuthorityPair, mintAuthority: mintAuthorityPair, useNewMint: useNewMintPair, tokenOwner: tokenOwner.toPublicKey(), tokenAmount: token(1), decimals: 0 }));
+            .createSft(Object.assign(Object.assign({}, params), { updateAuthority,
+            mintAuthority,
+            useNewMint, tokenOwner: tokenOwner.toPublicKey(), tokenAmount: token(1), decimals: 0 }));
         const { mintAddress, metadataAddress, tokenAddress } = sftBuilder.getContext();
         const masterEditionAddress = metaplex
             .nfts()
@@ -59,8 +58,8 @@ export var Metaplex;
             instruction: createCreateMasterEditionV3Instruction({
                 edition: masterEditionAddress,
                 mint: mintAddress,
-                updateAuthority: updateAuthorityPair.publicKey,
-                mintAuthority: mintAuthorityPair.publicKey,
+                updateAuthority: updateAuthority.publicKey,
+                mintAuthority: mintAuthority.publicKey,
                 payer: payer.publicKey,
                 metadata: metadataAddress,
             }, {
@@ -68,7 +67,7 @@ export var Metaplex;
                     maxSupply: params.maxSupply === undefined ? 0 : params.maxSupply,
                 },
             }),
-            signers: [payer, mintAuthorityPair, updateAuthorityPair],
+            signers: [payer, mintAuthority, updateAuthority],
             key: (_a = params.createMasterEditionInstructionKey) !== null && _a !== void 0 ? _a : 'createMasterEdition',
         })
             .getInstructions());

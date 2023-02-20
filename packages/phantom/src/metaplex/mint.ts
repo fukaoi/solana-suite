@@ -24,14 +24,11 @@ export namespace PhantomMetaplex {
     const mintAuthority = metaplex.identity();
     const tokenOwner = metaplex.identity();
     const useNewMint = KeyPair.create();
-    const updateAuthorityKeypair = Keypair.fromSecretKey(
-      updateAuthority.secretKey!
-    );
     const instructions = await Metaplex.createNftBuilderInstruction(
       payer,
       params,
-      useNewMint.secret,
-      KeyPair.toKeyPair(updateAuthorityKeypair).secret,
+      useNewMint.secret.toKeypair(),
+      updateAuthority,
       mintAuthority,
       tokenOwner.publicKey.toString()
     );

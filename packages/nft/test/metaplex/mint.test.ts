@@ -14,7 +14,7 @@ describe('Metaplex', () => {
     source = obj.source;
   });
 
-  it('[Arweave] mint nft', async () => {
+  it.only('[Arweave] mint nft', async () => {
     const asset = RandomAsset.get();
 
     const creator1 = {

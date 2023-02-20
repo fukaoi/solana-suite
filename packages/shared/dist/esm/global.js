@@ -55,7 +55,7 @@ Array.prototype.submit = function () {
  */
 String.prototype.toPublicKey = function () {
     if (!KeyPair.isPubkey(this.toString())) {
-        throw Error('No match KeyPair.PubKey type');
+        throw Error(`No match KeyPair.PubKey: ${this}`);
     }
     return new PublicKey(this);
 };
@@ -67,7 +67,7 @@ String.prototype.toPublicKey = function () {
  */
 String.prototype.toKeypair = function () {
     if (!KeyPair.isSecret(this.toString())) {
-        throw Error('No match KeyPair.Secret type');
+        throw Error(`No match KeyPair.Secret: ${this}`);
     }
     const decoded = bs.decode(this);
     return Keypair.fromSecretKey(decoded);
