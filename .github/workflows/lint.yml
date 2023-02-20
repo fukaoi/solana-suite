@@ -31,4 +31,5 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: install --frozen-lockfile
+      - run: npm run clean && npm run compile
       - run: npm run lint
