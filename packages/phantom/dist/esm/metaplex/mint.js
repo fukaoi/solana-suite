@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Transaction } from '@solana/web3.js';
+import { Transaction, Keypair } from '@solana/web3.js';
 import { Metaplex } from '@solana-suite/nft';
 import { Storage } from '@solana-suite/storage';
 import { debugLog, Node, Try, KeyPair } from '@solana-suite/shared';
@@ -17,11 +17,12 @@ export var PhantomMetaplex;
     const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
         const metaplex = Bundlr.make(phantom);
         const payer = metaplex.identity();
-        const useNewMint = KeyPair.create();
         const updateAuthority = metaplex.identity();
         const mintAuthority = metaplex.identity();
         const tokenOwner = metaplex.identity();
-        const instructions = yield Metaplex.createNftBuilderInstruction(payer, params, useNewMint.secret, updateAuthority, mintAuthority, tokenOwner.publicKey.toString());
+        const useNewMint = KeyPair.create();
+        const updateAuthorityKeypair = Keypair.fromSecretKey(updateAuthority.secretKey);
+        const instructions = yield Metaplex.createNftBuilderInstruction(payer, params, useNewMint.secret, KeyPair.toKeyPair(updateAuthorityKeypair).secret, mintAuthority, tokenOwner.publicKey.toString());
         const transaction = new Transaction();
         transaction.feePayer = payer.publicKey;
         instructions.forEach((inst) => {

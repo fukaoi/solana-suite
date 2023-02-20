@@ -31,7 +31,13 @@ KeyPair.isSecret = (value) => /^[0-9a-zA-Z]{88}$/.test(value);
 KeyPair.create = () => {
     const keypair = web3_js_1.Keypair.generate();
     return new KeyPair({
-        pubkey: keypair.publicKey.toBase58(),
+        pubkey: keypair.publicKey.toString(),
+        secret: bs58_1.default.encode(keypair.secretKey),
+    });
+};
+KeyPair.toKeyPair = (keypair) => {
+    return new KeyPair({
+        pubkey: keypair.publicKey.toString(),
         secret: bs58_1.default.encode(keypair.secretKey),
     });
 };

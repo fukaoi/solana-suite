@@ -1,4 +1,4 @@
-import { Transaction, TransactionInstruction } from '@solana/web3.js';
+import { Transaction, TransactionInstruction, Keypair } from '@solana/web3.js';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 
 import { Metaplex } from '@solana-suite/nft';
@@ -24,11 +24,14 @@ export namespace PhantomMetaplex {
     const mintAuthority = metaplex.identity();
     const tokenOwner = metaplex.identity();
     const useNewMint = KeyPair.create();
+    const updateAuthorityKeypair = Keypair.fromSecretKey(
+      updateAuthority.secretKey!
+    );
     const instructions = await Metaplex.createNftBuilderInstruction(
       payer,
       params,
       useNewMint.secret,
-      new KeyPair(updateAuthority.secretKey).secret,
+      KeyPair.toKeyPair(updateAuthorityKeypair).secret,
       mintAuthority,
       tokenOwner.publicKey.toString()
     );

@@ -12,4 +12,5 @@ export declare class KeyPair {
     static isPubkey: (value: string) => value is Pubkey;
     static isSecret: (value: string) => value is Secret;
     static create: () => KeyPair;
+    static toKeyPair: (keypair: Keypair) => KeyPair;
 }
