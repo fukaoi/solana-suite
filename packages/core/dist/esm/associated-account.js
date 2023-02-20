@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,10 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AssociatedAccount = void 0;
-const shared_1 = require("@solana-suite/shared");
-const spl_token_1 = require("@solana/spl-token");
+import { Node, debugLog, Instruction, sleep, KeyPair, } from '@solana-suite/shared';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddress, getAccount, TokenAccountNotFoundError, TokenInvalidAccountOwnerError, createAssociatedTokenAccountInstruction, } from '@solana/spl-token';
 /**
  * Get Associated token Account.
  * if not created, create new token accouint
@@ -22,16 +19,16 @@ const spl_token_1 = require("@solana/spl-token");
  * @param {boolean} allowOwnerOffCurve
  * @returns Promise<string | Instruction>
  */
-var AssociatedAccount;
+export var AssociatedAccount;
 (function (AssociatedAccount) {
     const RETRY_OVER_LIMIT = 10;
     const RETRY_SLEEP_TIME = 3;
     const get = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield AssociatedAccount.makeOrCreateInstruction(mint, owner, new shared_1.KeyPair({ secret: feePayer }).pubkey, allowOwnerOffCurve);
+        const res = yield AssociatedAccount.makeOrCreateInstruction(mint, owner, new KeyPair({ secret: feePayer }).pubkey, allowOwnerOffCurve);
         if (!res.inst) {
             return res.tokenAccount;
         }
-        return new shared_1.Instruction([res.inst], [], feePayer.toKeypair(), res.tokenAccount);
+        return new Instruction([res.inst], [], feePayer.toKeypair(), res.tokenAccount);
     });
     /**
      * Retry function if create new token accouint
@@ -47,23 +44,23 @@ var AssociatedAccount;
             try {
                 const inst = yield get(mint, owner, feePayer, true);
                 if (inst && typeof inst === 'string') {
-                    (0, shared_1.debugLog)('# associatedTokenAccount: ', inst);
+                    debugLog('# associatedTokenAccount: ', inst);
                     return inst;
                 }
-                else if (inst instanceof shared_1.Instruction) {
+                else if (inst instanceof Instruction) {
                     (yield [inst].submit()).map((ok) => __awaiter(this, void 0, void 0, function* () {
-                        yield shared_1.Node.confirmedSig(ok);
+                        yield Node.confirmedSig(ok);
                         return inst.data;
                     }), (err) => {
-                        (0, shared_1.debugLog)('# Error submit retryGetOrCreate: ', err);
+                        debugLog('# Error submit retryGetOrCreate: ', err);
                         throw err;
                     });
                 }
             }
             catch (e) {
-                (0, shared_1.debugLog)(`# retry: ${counter} create token account: `, e);
+                debugLog(`# retry: ${counter} create token account: `, e);
             }
-            yield (0, shared_1.sleep)(RETRY_SLEEP_TIME);
+            yield sleep(RETRY_SLEEP_TIME);
             counter++;
         }
         throw Error(`retry action is over limit ${RETRY_OVER_LIMIT}`);
@@ -78,28 +75,28 @@ var AssociatedAccount;
      * @returns Promise<string>
      */
     AssociatedAccount.makeOrCreateInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        const associatedTokenAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(mint.toPublicKey(), owner.toPublicKey(), allowOwnerOffCurve, spl_token_1.TOKEN_PROGRAM_ID, spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID);
-        (0, shared_1.debugLog)('# associatedTokenAccount: ', associatedTokenAccount.toString());
+        const associatedTokenAccount = yield getAssociatedTokenAddress(mint.toPublicKey(), owner.toPublicKey(), allowOwnerOffCurve, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+        debugLog('# associatedTokenAccount: ', associatedTokenAccount.toString());
         try {
             // Dont use Result
-            yield (0, spl_token_1.getAccount)(shared_1.Node.getConnection(), associatedTokenAccount, shared_1.Node.getConnection().commitment, spl_token_1.TOKEN_PROGRAM_ID);
+            yield getAccount(Node.getConnection(), associatedTokenAccount, Node.getConnection().commitment, TOKEN_PROGRAM_ID);
             return {
                 tokenAccount: associatedTokenAccount.toString(),
                 inst: undefined,
             };
         }
         catch (error) {
-            if (!(error instanceof spl_token_1.TokenAccountNotFoundError) &&
-                !(error instanceof spl_token_1.TokenInvalidAccountOwnerError)) {
+            if (!(error instanceof TokenAccountNotFoundError) &&
+                !(error instanceof TokenInvalidAccountOwnerError)) {
                 throw Error('Unexpected error');
             }
             const payer = !feePayer ? owner : feePayer;
-            const inst = (0, spl_token_1.createAssociatedTokenAccountInstruction)(payer.toPublicKey(), associatedTokenAccount, owner.toPublicKey(), mint.toPublicKey(), spl_token_1.TOKEN_PROGRAM_ID, spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID);
+            const inst = createAssociatedTokenAccountInstruction(payer.toPublicKey(), associatedTokenAccount, owner.toPublicKey(), mint.toPublicKey(), TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
             return {
                 tokenAccount: associatedTokenAccount.toString(),
                 inst,
             };
         }
     });
-})(AssociatedAccount = exports.AssociatedAccount || (exports.AssociatedAccount = {}));
+})(AssociatedAccount || (AssociatedAccount = {}));
 //# sourceMappingURL=associated-account.js.map
