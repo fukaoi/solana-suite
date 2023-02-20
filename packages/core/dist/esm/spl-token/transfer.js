@@ -8,18 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { createTransferCheckedInstruction } from '@solana/spl-token';
-import { Instruction, Try, } from '@solana-suite/shared';
+import { Instruction, Try } from '@solana-suite/shared';
 import { SplToken as _Calculator } from './calculate-amount';
 import { AssociatedAccount } from '../associated-account';
 export var SplToken;
 (function (SplToken) {
     SplToken.transfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            !feePayer && (feePayer = signers[0]);
-            const sourceToken = yield AssociatedAccount.retryGetOrCreate(mint, owner, feePayer);
-            const destToken = yield AssociatedAccount.retryGetOrCreate(mint, dest, feePayer);
-            const inst = createTransferCheckedInstruction(sourceToken.toPublicKey(), mint, destToken.toPublicKey(), owner, _Calculator.calculateAmount(amount, mintDecimal), mintDecimal, signers);
-            return new Instruction([inst], signers, feePayer);
+            const payer = feePayer ? feePayer : signers[0];
+            const keypairs = signers.map((s) => s.toKeypair());
+            const sourceToken = yield AssociatedAccount.retryGetOrCreate(mint, owner, payer);
+            const destToken = yield AssociatedAccount.retryGetOrCreate(mint, dest, payer);
+            const inst = createTransferCheckedInstruction(sourceToken.toPublicKey(), mint.toPublicKey(), destToken.toPublicKey(), owner.toPublicKey(), _Calculator.calculateAmount(amount, mintDecimal), mintDecimal, keypairs);
+            return new Instruction([inst], keypairs, payer.toKeypair());
         }));
     });
 })(SplToken || (SplToken = {}));

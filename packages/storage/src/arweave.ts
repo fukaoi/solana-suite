@@ -5,8 +5,15 @@ import {
   toMetaplexFile,
 } from '@metaplex-foundation/js';
 
-import { Result, isNode, isBrowser, debugLog, Try } from '@solana-suite/shared';
-import { Bundlr, BundlrSigner, NftStorageMetadata } from '@solana-suite/shared-metaplex';
+import {
+  Result,
+  isNode,
+  isBrowser,
+  debugLog,
+  Try,
+  Secret,
+} from '@solana-suite/shared';
+import { Bundlr, NftStorageMetadata } from '@solana-suite/shared-metaplex';
 
 export interface MetaplexFileOptions {
   readonly displayName: string;
@@ -19,7 +26,7 @@ export interface MetaplexFileOptions {
 export namespace Arweave {
   export const getUploadPrice = async (
     filePath: MetaplexFileContent,
-    feePayer: BundlrSigner
+    feePayer: Secret
   ): Promise<Result<{ price: number; currency: Currency }, Error>> => {
     return Try(async () => {
       let buffer!: Buffer;
@@ -33,7 +40,7 @@ export namespace Arweave {
         throw Error('Supported environment: only Node.js and Browser js');
       }
 
-      const res = await Bundlr.useStorage(feePayer).getUploadPrice(
+      const res = await Bundlr.useStorage(feePayer.toKeypair()).getUploadPrice(
         buffer.length
       );
 
@@ -52,7 +59,7 @@ export namespace Arweave {
 
   export const uploadContent = async (
     filePath: MetaplexFileContent,
-    feePayer: BundlrSigner,
+    feePayer: Secret,
     fileOptions?: MetaplexFileOptions // only arweave, not nft-storage
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
@@ -77,18 +84,18 @@ export namespace Arweave {
         throw Error('Supported environment: only Node.js and Browser js');
       }
 
-      return Bundlr.useStorage(feePayer).upload(file);
+      return Bundlr.useStorage(feePayer.toKeypair()).upload(file);
     });
   };
 
   export const uploadMetadata = async (
     metadata: NftStorageMetadata,
-    feePayer: BundlrSigner
+    feePayer: Secret
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       debugLog('# upload meta data: ', metadata);
 
-      const uploaded = await Bundlr.make(feePayer)
+      const uploaded = await Bundlr.make(feePayer.toKeypair())
         .nfts()
         .uploadMetadata(metadata);
 

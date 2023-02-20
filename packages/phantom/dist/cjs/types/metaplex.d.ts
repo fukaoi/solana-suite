@@ -1,5 +1,6 @@
-import { Keypair, Transaction } from '@solana/web3.js';
+import { KeyPair } from '@solana-suite/shared';
+import { Transaction } from '@solana/web3.js';
 export type InitializeNftMint = {
-    useNewMint: Keypair;
+    useNewMint: KeyPair;
     tx: Transaction;
 };

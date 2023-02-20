@@ -5,9 +5,8 @@ import { DirectionFilter } from '../../src/types/history';
 
 describe.skip('SplToken', () => {
   it('Get token transfer history by owner address', async () => {
-    const mint = '6yiSjqsmmW48zJ6bM2Fb6jHHebHRfDzXoYRV1f1nt3JX'.toPublicKey();
-    const searchAddress =
-      '8g66KBwriunG4PsKePYZaxd88dW3WKaryqtfpLqrijcV'.toPublicKey();
+    const mint = '6yiSjqsmmW48zJ6bM2Fb6jHHebHRfDzXoYRV1f1nt3JX';
+    const searchAddress = '8g66KBwriunG4PsKePYZaxd88dW3WKaryqtfpLqrijcV';
     const res = await SplToken.getHistory(mint, searchAddress);
     console.log(res);
     assert.isTrue(res.isOk);
@@ -21,9 +20,8 @@ describe.skip('SplToken', () => {
   });
 
   it('Get token transfer history with transfer source filter', async () => {
-    const mint = '6yiSjqsmmW48zJ6bM2Fb6jHHebHRfDzXoYRV1f1nt3JX'.toPublicKey();
-    const searchAddress =
-      '8g66KBwriunG4PsKePYZaxd88dW3WKaryqtfpLqrijcV'.toPublicKey();
+    const mint = '6yiSjqsmmW48zJ6bM2Fb6jHHebHRfDzXoYRV1f1nt3JX';
+    const searchAddress = '8g66KBwriunG4PsKePYZaxd88dW3WKaryqtfpLqrijcV';
     const res = await SplToken.getHistory(mint, searchAddress);
     assert.isTrue(res.isOk);
     assert.isTrue(res.unwrap().length > 0);
@@ -36,9 +34,8 @@ describe.skip('SplToken', () => {
   });
 
   it('Get token transfer history with transfer dest filter', async () => {
-    const mint = '6yiSjqsmmW48zJ6bM2Fb6jHHebHRfDzXoYRV1f1nt3JX'.toPublicKey();
-    const searchAddress =
-      '8g66KBwriunG4PsKePYZaxd88dW3WKaryqtfpLqrijcV'.toPublicKey();
+    const mint = '6yiSjqsmmW48zJ6bM2Fb6jHHebHRfDzXoYRV1f1nt3JX';
+    const searchAddress = '8g66KBwriunG4PsKePYZaxd88dW3WKaryqtfpLqrijcV';
     const res = await SplToken.getHistory(mint, searchAddress, {
       directionFilter: DirectionFilter.Dest,
     });
@@ -50,7 +47,7 @@ describe.skip('SplToken', () => {
   });
 
   it('Not found token', async () => {
-    const owner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT'.toPublicKey();
+    const owner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT';
     const res = await SplToken.findByOwner(owner);
     assert.isTrue(res.isOk, `${res.unwrap()}`);
 
@@ -62,7 +59,7 @@ describe.skip('SplToken', () => {
   });
 
   it('Get token info owned', async () => {
-    const owner = 'Hc3FoHMo3Von8by8oKxx9nqTWkjQuGxM1sgyDQCLEMA9'.toPublicKey();
+    const owner = 'Hc3FoHMo3Von8by8oKxx9nqTWkjQuGxM1sgyDQCLEMA9';
     const res = await SplToken.findByOwner(owner);
     assert.isTrue(res.isOk, `${res.unwrap()}`);
 

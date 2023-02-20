@@ -18,8 +18,8 @@ var Metaplex;
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             const allData = yield shared_metaplex_1.Bundlr.make()
                 .nfts()
-                .findAllByOwner({ owner });
-            const res = allData.map(d => {
+                .findAllByOwner({ owner: owner.toPublicKey() });
+            const res = allData.map((d) => {
                 return {
                     mint: d.mintAddress.toString(),
                     updateAuthority: d.updateAuthorityAddress.toString(),

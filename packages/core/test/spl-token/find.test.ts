@@ -7,7 +7,7 @@ const tokenAccount = 'GxGHgYQ9Ko3cjQu3zVmu93QcSY1puH3CkDTGzdrHK2VW';
 
 describe('SplToken', () => {
   it('Not found token', async () => {
-    const res = await SplToken.findByOwner(notFoundTokenOwner.toPublicKey());
+    const res = await SplToken.findByOwner(notFoundTokenOwner);
 
     assert.isTrue(res.isOk, `${res.unwrap()}`);
 
@@ -20,7 +20,7 @@ describe('SplToken', () => {
   });
 
   it('Get token info owned', async () => {
-    const res = await SplToken.findByOwner(owner.toPublicKey());
+    const res = await SplToken.findByOwner(owner);
 
     console.log(res);
     assert.isTrue(res.isOk, `${res.unwrap()}`);
@@ -34,7 +34,7 @@ describe('SplToken', () => {
   });
 
   it('Find by token account', async () => {
-    const res = await SplToken.findByOwner(tokenAccount.toPublicKey());
+    const res = await SplToken.findByOwner(tokenAccount);
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     assert.isEmpty(res.unwrap());
   });

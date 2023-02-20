@@ -15,14 +15,20 @@ import { SplToken as _Calculate } from './calculate-amount';
 export var SplToken;
 (function (SplToken) {
     const findAssociatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
-        const address = yield PublicKey.findProgramAddress([owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()], ASSOCIATED_TOKEN_PROGRAM_ID);
+        const address = yield PublicKey.findProgramAddress([
+            owner.toPublicKey().toBuffer(),
+            TOKEN_PROGRAM_ID.toBuffer(),
+            mint.toPublicKey().toBuffer(),
+        ], ASSOCIATED_TOKEN_PROGRAM_ID);
         return address[0];
     });
     SplToken.burn = (mint, owner, signers, burnAmount, tokenDecimals, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             const tokenAccount = yield findAssociatedTokenAddress(mint, owner);
-            const inst = createBurnCheckedInstruction(tokenAccount, mint, owner, _Calculate.calculateAmount(burnAmount, tokenDecimals), tokenDecimals, signers);
-            return new Instruction([inst], signers, feePayer);
+            const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
+            const keypairs = signers.map((s) => s.toKeypair());
+            const inst = createBurnCheckedInstruction(tokenAccount, mint.toPublicKey(), owner.toPublicKey(), _Calculate.calculateAmount(burnAmount, tokenDecimals), tokenDecimals, keypairs);
+            return new Instruction([inst], keypairs, payer);
         }));
     });
 })(SplToken || (SplToken = {}));

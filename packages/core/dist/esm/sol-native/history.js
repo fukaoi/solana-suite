@@ -38,7 +38,7 @@ export var SolNative;
             for (;;) {
                 const transactions = yield _Get.getByAddress(searchPubkey, bufferedLimit, before);
                 debugLog('# getTransactionHistory loop');
-                const res = _Filter.filterTransactions(searchPubkey, transactions, actionFilter, false, options.directionFilter);
+                const res = _Filter.filterTransactions(searchPubkey.toPublicKey(), transactions, actionFilter, false, options.directionFilter);
                 hist = hist.concat(res);
                 if (hist.length >= options.limit || res.length === 0) {
                     hist = hist.slice(0, options.limit);

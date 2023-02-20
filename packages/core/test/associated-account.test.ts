@@ -1,12 +1,13 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { AssociatedAccount } from '../src/associated-account';
-import { KeypairStr, SplToken } from '../src';
-import { Setup } from '@solana-suite/shared/test/testSetup';
-import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
-import { StorageType } from '@solana-suite/shared-metaplex';
+import { SplToken } from '../src';
+import { Setup } from '../../shared/test/testSetup';
+import { RandomAsset } from '../../storage/test/randomAsset';
+import { StorageType } from '../../shared-metaplex';
+import { KeyPair } from '../../shared';
 
-let source: KeypairStr;
+let source: KeyPair;
 const TOKEN_METADATA = {
   name: 'solana-suite-token',
   symbol: 'SST',
@@ -23,8 +24,8 @@ describe('AssociatedAccount', () => {
 
   it('Retry getOrCreate', async () => {
     const mintInst = await SplToken.mint(
-      source.toPublicKey(),
-      source.toKeypair(),
+      source.pubkey,
+      source.secret,
       10000,
       1,
       TOKEN_METADATA
@@ -36,9 +37,9 @@ describe('AssociatedAccount', () => {
     const mint = mintInst.unwrap().data as string;
 
     const res = await AssociatedAccount.retryGetOrCreate(
-      mint.toPublicKey(),
-      source.toPublicKey(),
-      source.toKeypair()
+      mint,
+      source.pubkey,
+      source.secret
     );
 
     console.log('# associated token account: ', res);

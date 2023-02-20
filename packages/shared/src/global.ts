@@ -7,6 +7,7 @@ import { Result } from './result';
 import { Instruction as _Instruction } from './instruction';
 import { Instruction as _Batch } from './instruction/batch-submit';
 import './types/global';
+import { KeyPair } from './key-pair';
 
 /**
  * senTransaction() TransactionInstruction
@@ -45,6 +46,9 @@ Array.prototype.submit = async function () {
  * @returns PublicKey
  */
 String.prototype.toPublicKey = function () {
+  if (!KeyPair.isPubkey(this.toString())) {
+    throw Error(`No match KeyPair.PubKey: ${this}`);
+  }
   return new PublicKey(this);
 };
 
@@ -55,6 +59,9 @@ String.prototype.toPublicKey = function () {
  * @returns Keypair
  */
 String.prototype.toKeypair = function () {
+  if (!KeyPair.isSecret(this.toString())) {
+    throw Error(`No match KeyPair.Secret: ${this}`);
+  }
   const decoded = bs.decode(this as string);
   return Keypair.fromSecretKey(decoded);
 };

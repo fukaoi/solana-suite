@@ -26,7 +26,7 @@ export var SplToken;
             const actionFilter = (options === null || options === void 0 ? void 0 : options.actionFilter) !== undefined && options.actionFilter.length > 0
                 ? options.actionFilter
                 : [Filter.Transfer, Filter.TransferChecked];
-            const searchKeyAccount = yield getAssociatedTokenAddress(mint, searchPubkey, true);
+            const searchKeyAccount = yield getAssociatedTokenAddress(mint.toPublicKey(), searchPubkey.toPublicKey(), true);
             let bufferedLimit = 0;
             if (options.limit && options.limit < 50) {
                 bufferedLimit = options.limit * 1.5; // To get more data, threshold
@@ -41,9 +41,9 @@ export var SplToken;
             debugLog('# bufferedLimit: ', bufferedLimit);
             debugLog('# before: ', before);
             for (;;) {
-                const transactions = yield _Get.getByAddress(searchKeyAccount, bufferedLimit, before);
+                const transactions = yield _Get.getByAddress(searchKeyAccount.toString(), bufferedLimit, before);
                 debugLog('# getTransactionHistory loop transactions count:', transactions.length);
-                const res = _Filter.filterTransactions(searchPubkey, transactions, actionFilter, true, options.directionFilter);
+                const res = _Filter.filterTransactions(searchPubkey.toPublicKey(), transactions, actionFilter, true, options.directionFilter);
                 hist = hist.concat(res);
                 if (hist.length >= options.limit || res.length === 0) {
                     hist = hist.slice(0, options.limit);

@@ -15,10 +15,11 @@ export var SplToken;
 (function (SplToken) {
     SplToken.add = (token, owner, signers, totalAmount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            !feePayer && (feePayer = signers[0]);
-            const tokenAssociated = yield AssociatedAccount.retryGetOrCreate(token, owner, feePayer);
-            const inst = createMintToCheckedInstruction(token, tokenAssociated.toPublicKey(), owner, _Calculate.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
-            return new Instruction([inst], signers, feePayer, token.toBase58());
+            const payer = !feePayer ? signers[0] : feePayer;
+            const keypairs = signers.map((s) => s.toKeypair());
+            const tokenAssociated = yield AssociatedAccount.retryGetOrCreate(token, owner, payer);
+            const inst = createMintToCheckedInstruction(token.toPublicKey(), tokenAssociated.toPublicKey(), owner.toPublicKey(), _Calculate.calculateAmount(totalAmount, mintDecimal), mintDecimal, keypairs);
+            return new Instruction([inst], keypairs, payer.toKeypair(), token);
         }));
     });
 })(SplToken || (SplToken = {}));

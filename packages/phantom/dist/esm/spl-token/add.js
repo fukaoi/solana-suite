@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { TOKEN_PROGRAM_ID, createMintToCheckedInstruction, } from '@solana/spl-token';
-import { Transaction, } from '@solana/web3.js';
+import { Transaction } from '@solana/web3.js';
 import { Node, Try } from '@solana-suite/shared';
 import { AssociatedAccount } from '@solana-suite/core';
 export var PhantomSplToken;
@@ -20,8 +20,8 @@ export var PhantomSplToken;
             const transaction = new Transaction();
             const makeInstruction = yield AssociatedAccount.makeOrCreateInstruction(tokenKey, owner);
             transaction.add(makeInstruction.inst);
-            transaction.add(createMintToCheckedInstruction(tokenKey, makeInstruction.tokenAccount.toPublicKey(), owner, totalAmount, mintDecimal, [], TOKEN_PROGRAM_ID));
-            transaction.feePayer = owner;
+            transaction.add(createMintToCheckedInstruction(tokenKey.toPublicKey(), makeInstruction.tokenAccount.toPublicKey(), owner.toPublicKey(), totalAmount, mintDecimal, [], TOKEN_PROGRAM_ID));
+            transaction.feePayer = owner.toPublicKey();
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             transaction.recentBlockhash = blockhashObj.value.blockhash;
             const signed = yield phantom.signAllTransactions([transaction]);
@@ -30,7 +30,7 @@ export var PhantomSplToken;
                 const sig = yield connection.sendRawTransaction(sign.serialize());
                 yield Node.confirmedSig(sig);
             }
-            return tokenKey.toBase58();
+            return tokenKey;
         }));
     });
 })(PhantomSplToken || (PhantomSplToken = {}));

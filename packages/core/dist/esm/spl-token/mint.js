@@ -50,7 +50,7 @@ export var SplToken;
             if (valid.isErr) {
                 throw valid.error;
             }
-            !feePayer && (feePayer = signer);
+            const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
             const uploaded = yield Storage.uploadMetaContent(input, feePayer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             debugLog('# upload content url: ', uri);
@@ -68,8 +68,8 @@ export var SplToken;
             const isMutable = !reducedMetadata.isMutable ? false : true;
             const connection = Node.getConnection();
             const mint = Keypair.generate();
-            const insts = yield SplToken.createMintInstruction(connection, mint.publicKey, owner, totalAmount, mintDecimal, tokenMetadata, feePayer.publicKey, isMutable);
-            return new MintInstruction(insts, [signer, mint], feePayer, mint.publicKey.toString());
+            const insts = yield SplToken.createMintInstruction(connection, mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, payer.publicKey, isMutable);
+            return new MintInstruction(insts, [signer.toKeypair(), mint], payer, mint.publicKey.toString());
         }));
     });
 })(SplToken || (SplToken = {}));

@@ -20,6 +20,7 @@ const node_1 = require("./node");
 const result_1 = require("./result");
 const batch_submit_1 = require("./instruction/batch-submit");
 require("./types/global");
+const key_pair_1 = require("./key-pair");
 /**
  * senTransaction() TransactionInstruction
  *
@@ -59,6 +60,9 @@ Array.prototype.submit = function () {
  * @returns PublicKey
  */
 String.prototype.toPublicKey = function () {
+    if (!key_pair_1.KeyPair.isPubkey(this.toString())) {
+        throw Error(`No match KeyPair.PubKey: ${this}`);
+    }
     return new web3_js_1.PublicKey(this);
 };
 /**
@@ -68,6 +72,9 @@ String.prototype.toPublicKey = function () {
  * @returns Keypair
  */
 String.prototype.toKeypair = function () {
+    if (!key_pair_1.KeyPair.isSecret(this.toString())) {
+        throw Error(`No match KeyPair.Secret: ${this}`);
+    }
     const decoded = bs58_1.default.decode(this);
     return web3_js_1.Keypair.fromSecretKey(decoded);
 };

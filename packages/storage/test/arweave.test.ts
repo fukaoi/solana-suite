@@ -1,11 +1,12 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { KeypairStr } from '../../core';
+import { KeyPair } from '../../shared';
 import { Setup } from '../../shared/test/testSetup';
 import { RandomAsset } from './randomAsset';
 import { Arweave } from '../src/arweave';
+import { Currency } from '@metaplex-foundation/js';
 
-let source: KeypairStr;
+let source: KeyPair;
 
 describe('StorageArweave', () => {
   before(async () => {
@@ -15,32 +16,25 @@ describe('StorageArweave', () => {
 
   it('Upload content data', async () => {
     const asset = RandomAsset.get();
-    const res = await Arweave.uploadContent(
-      asset.filePath!,
-      source.toKeypair()
-    );
+    const res = await Arweave.uploadContent(asset.filePath!, source.secret);
     res.match(
-      (ok) => console.log('# arweave content upload url: ', ok),
-      (err) => assert.fail(err.message)
+      (ok: string) => console.log('# arweave content upload url: ', ok),
+      (err: Error) => assert.fail(err.message)
     );
   });
 
   it('Upload content data  with options', async () => {
     const asset = RandomAsset.get();
-    const res = await Arweave.uploadContent(
-      asset.filePath!,
-      source.toKeypair(),
-      {
-        displayName: 'NFT test image',
-        uniqueName: `randomAsset/${asset.image}`,
-        contentType: 'image/jpeg',
-        extension: 'jpg',
-        tags: [{ name: 'demo', value: 'test' }],
-      }
-    );
+    const res = await Arweave.uploadContent(asset.filePath!, source.secret, {
+      displayName: 'NFT test image',
+      uniqueName: `randomAsset/${asset.image}`,
+      contentType: 'image/jpeg',
+      extension: 'jpg',
+      tags: [{ name: 'demo', value: 'test' }],
+    });
     res.match(
-      (ok) => console.log('# arweave content upload url: ', ok),
-      (err) => assert.fail(err.message)
+      (ok: string) => console.log('# arweave content upload url: ', ok),
+      (err: Error) => assert.fail(err.message)
     );
   });
 
@@ -59,23 +53,21 @@ describe('StorageArweave', () => {
         properties: asset.properties,
         collection: asset.collection,
       },
-      source.toKeypair()
+      source.secret
     );
     res.match(
-      (ok) => console.log('# arweave metadata url: ', ok),
-      (err) => assert.fail(err.message)
+      (ok: string) => console.log('# arweave metadata url: ', ok),
+      (err: Error) => assert.fail(err.message)
     );
   });
 
   it('Get file upload price', async () => {
     const asset = RandomAsset.get();
-    const res = await Arweave.getUploadPrice(
-      asset.filePath!,
-      source.toKeypair()
-    );
+    const res = await Arweave.getUploadPrice(asset.filePath!, source.secret);
     res.match(
-      (ok) => console.log('# upload cost, currency: ', ok.price, ok.currency),
-      (err) => assert.fail(err.message)
+      (ok: { price: number; currency: Currency }) =>
+        console.log('# upload cost, currency: ', ok.price, ok.currency),
+      (err: Error) => assert.fail(err.message)
     );
   });
 });

@@ -8,14 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Node, Try } from '@solana-suite/shared';
-import { PublicKey } from '@solana/web3.js';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { PublicKey } from '@solana/web3.js';
 import { Multisig as _Instruction } from './instruction';
 export var Multisig;
 (function (Multisig) {
     Multisig.getInfo = (multisig) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            const info = yield Node.getConnection().getAccountInfo(multisig);
+            const info = yield Node.getConnection().getAccountInfo(multisig.toPublicKey());
             if (info === null) {
                 throw Error('Failed to find multisig');
             }

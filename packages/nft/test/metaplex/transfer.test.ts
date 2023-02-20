@@ -1,12 +1,13 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { KeypairStr, Airdrop } from '@solana-suite/core';
+import { Airdrop } from '../../../core';
+import { KeyPair, Pubkey } from '../../../shared';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 
-let source: KeypairStr;
-let dest: KeypairStr;
+let source: KeyPair;
+let dest: KeyPair;
 
 describe('Metaplex', () => {
   before(async () => {
@@ -40,7 +41,7 @@ describe('Metaplex', () => {
         creators: [creator1, creator2],
         isMutable: true,
       },
-      source.toKeypair()
+      source.secret
     );
 
     const resMint = await mint.submit();
@@ -50,10 +51,10 @@ describe('Metaplex', () => {
     }
     const res = await (
       await Metaplex.transfer(
-        (mint.unwrap().data as string).toPublicKey(),
-        source.toPublicKey(),
-        dest.toPublicKey(),
-        [source.toKeypair()]
+        mint.unwrap().data as Pubkey,
+        source.pubkey,
+        dest.pubkey,
+        [source.secret]
       )
     ).submit();
 
@@ -70,8 +71,8 @@ describe('Metaplex', () => {
 
   // every call requestAirdrop(), raise internal error
   it.skip('[Arweave] mint nft with feePayer', async () => {
-    const feePayer = KeypairStr.create();
-    await Airdrop.request(feePayer.toPublicKey());
+    const feePayer = KeyPair.create();
+    await Airdrop.request(feePayer.pubkey);
     const asset = RandomAsset.get();
 
     const creator1 = {
@@ -96,8 +97,8 @@ describe('Metaplex', () => {
         creators: [creator1, creator2],
         isMutable: true,
       },
-      source.toKeypair(),
-      feePayer.toKeypair()
+      source.secret,
+      feePayer.secret
     );
 
     (await res.submit()).match(

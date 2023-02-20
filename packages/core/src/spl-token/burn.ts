@@ -1,48 +1,51 @@
 import { createBurnCheckedInstruction } from '@solana/spl-token';
-import { PublicKey, Keypair } from '@solana/web3.js';
-import { Instruction, Try, Result } from '@solana-suite/shared';
+import { PublicKey } from '@solana/web3.js';
+import { Instruction, Try, Result, Pubkey, Secret } from '@solana-suite/shared';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { SplToken as _Calculate} from './calculate-amount';
+import { SplToken as _Calculate } from './calculate-amount';
 
 export namespace SplToken {
   const findAssociatedTokenAddress = async (
-    mint: PublicKey,
-    owner: PublicKey
+    mint: Pubkey,
+    owner: Pubkey
   ): Promise<PublicKey> => {
     const address = await PublicKey.findProgramAddress(
-      [owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
+      [
+        owner.toPublicKey().toBuffer(),
+        TOKEN_PROGRAM_ID.toBuffer(),
+        mint.toPublicKey().toBuffer(),
+      ],
       ASSOCIATED_TOKEN_PROGRAM_ID
     );
     return address[0];
   };
 
   export const burn = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    signers: Keypair[],
+    mint: Pubkey,
+    owner: Pubkey,
+    signers: Secret[],
     burnAmount: number,
     tokenDecimals: number,
-    feePayer?: Keypair
+    feePayer?: Secret
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
-      const tokenAccount = await findAssociatedTokenAddress(
-        mint,
-        owner
-      );
+      const tokenAccount = await findAssociatedTokenAddress(mint, owner);
+      const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
+      const keypairs = signers.map((s) => s.toKeypair());
 
       const inst = createBurnCheckedInstruction(
         tokenAccount,
-        mint,
-        owner,
+        mint.toPublicKey(),
+        owner.toPublicKey(),
         _Calculate.calculateAmount(burnAmount, tokenDecimals),
         tokenDecimals,
-        signers
+        keypairs
       );
 
-      return new Instruction([inst], signers, feePayer);
+      return new Instruction([inst], keypairs, payer);
     });
   };
 }

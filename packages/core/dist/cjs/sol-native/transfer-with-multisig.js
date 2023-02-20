@@ -22,17 +22,18 @@ var SolNative;
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             const connection = shared_1.Node.getConnection();
             const payer = feePayer ? feePayer : signers[0];
-            const wrapped = yield (0, spl_token_1.createWrappedNativeAccount)(connection, payer, owner, parseInt(`${amount.toLamports()}`, RADIX));
+            const keypairs = signers.map((s) => s.toKeypair());
+            const wrapped = yield (0, spl_token_1.createWrappedNativeAccount)(connection, payer.toKeypair(), owner.toPublicKey(), parseInt(`${amount.toLamports()}`, RADIX));
             (0, shared_1.debugLog)('# wrapped sol: ', wrapped.toBase58());
-            const token = yield (0, spl_token_1.createMint)(connection, payer, owner, owner, 0);
-            const sourceToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, owner, payer);
+            const token = yield (0, spl_token_1.createMint)(connection, payer.toKeypair(), owner.toPublicKey(), owner.toPublicKey(), 0);
+            const sourceToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token.toString(), owner, payer);
             (0, shared_1.debugLog)('# sourceToken: ', sourceToken);
-            const destToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token, wrapped, payer);
+            const destToken = yield associated_account_1.AssociatedAccount.retryGetOrCreate(token.toString(), wrapped.toString(), payer);
             (0, shared_1.debugLog)('# destToken: ', destToken);
-            const inst1 = (0, spl_token_1.createTransferInstruction)(sourceToken.toPublicKey(), destToken.toPublicKey(), owner, parseInt(`${amount}`, RADIX), // No lamports, its sol
-            signers);
-            const inst2 = (0, spl_token_1.createCloseAccountInstruction)(wrapped, dest, owner, signers);
-            return new shared_1.Instruction([inst1, inst2], signers, feePayer);
+            const inst1 = (0, spl_token_1.createTransferInstruction)(sourceToken.toPublicKey(), destToken.toPublicKey(), owner.toPublicKey(), parseInt(`${amount}`, RADIX), // No lamports, its sol
+            keypairs);
+            const inst2 = (0, spl_token_1.createCloseAccountInstruction)(wrapped, dest.toPublicKey(), owner.toPublicKey(), keypairs);
+            return new shared_1.Instruction([inst1, inst2], signers.map((s) => s.toKeypair()), feePayer === null || feePayer === void 0 ? void 0 : feePayer.toKeypair());
         }));
     });
 })(SolNative = exports.SolNative || (exports.SolNative = {}));

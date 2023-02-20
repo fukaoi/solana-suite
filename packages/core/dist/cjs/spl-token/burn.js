@@ -18,14 +18,20 @@ const calculate_amount_1 = require("./calculate-amount");
 var SplToken;
 (function (SplToken) {
     const findAssociatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
-        const address = yield web3_js_1.PublicKey.findProgramAddress([owner.toBuffer(), spl_token_2.TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()], spl_token_2.ASSOCIATED_TOKEN_PROGRAM_ID);
+        const address = yield web3_js_1.PublicKey.findProgramAddress([
+            owner.toPublicKey().toBuffer(),
+            spl_token_2.TOKEN_PROGRAM_ID.toBuffer(),
+            mint.toPublicKey().toBuffer(),
+        ], spl_token_2.ASSOCIATED_TOKEN_PROGRAM_ID);
         return address[0];
     });
     SplToken.burn = (mint, owner, signers, burnAmount, tokenDecimals, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             const tokenAccount = yield findAssociatedTokenAddress(mint, owner);
-            const inst = (0, spl_token_1.createBurnCheckedInstruction)(tokenAccount, mint, owner, calculate_amount_1.SplToken.calculateAmount(burnAmount, tokenDecimals), tokenDecimals, signers);
-            return new shared_1.Instruction([inst], signers, feePayer);
+            const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
+            const keypairs = signers.map((s) => s.toKeypair());
+            const inst = (0, spl_token_1.createBurnCheckedInstruction)(tokenAccount, mint.toPublicKey(), owner.toPublicKey(), calculate_amount_1.SplToken.calculateAmount(burnAmount, tokenDecimals), tokenDecimals, keypairs);
+            return new shared_1.Instruction([inst], keypairs, payer);
         }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));

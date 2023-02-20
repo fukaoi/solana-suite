@@ -1,11 +1,12 @@
 import { createTransferCheckedInstruction } from '@solana/spl-token';
-import { PublicKey, Keypair, Transaction } from '@solana/web3.js';
-
+import { Transaction } from '@solana/web3.js';
 import {
   Node,
   Result,
   PartialSignInstruction,
   Try,
+  Pubkey,
+  Secret,
 } from '@solana-suite/shared';
 
 import { SplToken as _Calculator } from './calculate-amount';
@@ -13,15 +14,17 @@ import { AssociatedAccount } from '../associated-account';
 
 export namespace SplToken {
   export const feePayerPartialSignTransfer = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    dest: PublicKey,
-    signers: Keypair[],
+    mint: Pubkey,
+    owner: Pubkey,
+    dest: Pubkey,
+    signers: Secret[],
     amount: number,
     mintDecimal: number,
-    feePayer: PublicKey
+    feePayer: Pubkey
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
+      const keypairs = signers.map((s) => s.toKeypair());
+
       const sourceToken = await AssociatedAccount.makeOrCreateInstruction(
         mint,
         owner,
@@ -40,37 +43,37 @@ export namespace SplToken {
       const tx = new Transaction({
         lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
         blockhash: blockhashObj.blockhash,
-        feePayer,
+        feePayer: feePayer.toPublicKey(),
       });
 
       // return associated token account
       if (!destToken.inst) {
         inst2 = createTransferCheckedInstruction(
           sourceToken.tokenAccount.toPublicKey(),
-          mint,
+          mint.toPublicKey(),
           destToken.tokenAccount.toPublicKey(),
-          owner,
+          owner.toPublicKey(),
           _Calculator.calculateAmount(amount, mintDecimal),
           mintDecimal,
-          signers
+          keypairs
         );
         tx.add(inst2);
       } else {
         // return instruction and undecided associated token account
         inst2 = createTransferCheckedInstruction(
           sourceToken.tokenAccount.toPublicKey(),
-          mint,
+          mint.toPublicKey(),
           destToken.tokenAccount.toPublicKey(),
-          owner,
+          owner.toPublicKey(),
           _Calculator.calculateAmount(amount, mintDecimal),
           mintDecimal,
-          signers
+          keypairs
         );
         tx.add(destToken.inst).add(inst2);
       }
 
       tx.recentBlockhash = blockhashObj.blockhash;
-      signers.forEach((signer) => {
+      keypairs.forEach((signer) => {
         tx.partialSign(signer);
       });
 

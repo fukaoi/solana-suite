@@ -1,6 +1,5 @@
 import {
   TransactionSignature,
-  Keypair,
   Transaction,
   ConfirmOptions,
 } from '@solana/web3.js';
@@ -9,6 +8,7 @@ import { Node } from './node';
 import { Result } from './result';
 import { Try } from './global';
 import { MAX_RETRIES } from './instruction/define';
+import { Secret } from './types';
 
 export class PartialSignInstruction {
   hexInstruction: string;
@@ -18,7 +18,7 @@ export class PartialSignInstruction {
   }
 
   submit = async (
-    feePayer: Keypair
+    feePayer: Secret
   ): Promise<Result<TransactionSignature, Error>> => {
     return Try(async () => {
       if (!(this instanceof PartialSignInstruction)) {
@@ -27,7 +27,7 @@ export class PartialSignInstruction {
 
       const decode = Buffer.from(this.hexInstruction, 'hex');
       const transactionFromJson = Transaction.from(decode);
-      transactionFromJson.partialSign(feePayer);
+      transactionFromJson.partialSign(feePayer.toKeypair());
 
       const options: ConfirmOptions = {
         maxRetries: MAX_RETRIES,

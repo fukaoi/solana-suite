@@ -19,6 +19,7 @@ var SplToken;
 (function (SplToken) {
     SplToken.feePayerPartialSignTransfer = (mint, owner, dest, signers, amount, mintDecimal, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+            const keypairs = signers.map((s) => s.toKeypair());
             const sourceToken = yield associated_account_1.AssociatedAccount.makeOrCreateInstruction(mint, owner, feePayer);
             const destToken = yield associated_account_1.AssociatedAccount.makeOrCreateInstruction(mint, dest, feePayer);
             let inst2;
@@ -26,20 +27,20 @@ var SplToken;
             const tx = new web3_js_1.Transaction({
                 lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
                 blockhash: blockhashObj.blockhash,
-                feePayer,
+                feePayer: feePayer.toPublicKey(),
             });
             // return associated token account
             if (!destToken.inst) {
-                inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, calculate_amount_1.SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+                inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.tokenAccount.toPublicKey(), mint.toPublicKey(), destToken.tokenAccount.toPublicKey(), owner.toPublicKey(), calculate_amount_1.SplToken.calculateAmount(amount, mintDecimal), mintDecimal, keypairs);
                 tx.add(inst2);
             }
             else {
                 // return instruction and undecided associated token account
-                inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.tokenAccount.toPublicKey(), mint, destToken.tokenAccount.toPublicKey(), owner, calculate_amount_1.SplToken.calculateAmount(amount, mintDecimal), mintDecimal, signers);
+                inst2 = (0, spl_token_1.createTransferCheckedInstruction)(sourceToken.tokenAccount.toPublicKey(), mint.toPublicKey(), destToken.tokenAccount.toPublicKey(), owner.toPublicKey(), calculate_amount_1.SplToken.calculateAmount(amount, mintDecimal), mintDecimal, keypairs);
                 tx.add(destToken.inst).add(inst2);
             }
             tx.recentBlockhash = blockhashObj.blockhash;
-            signers.forEach((signer) => {
+            keypairs.forEach((signer) => {
                 tx.partialSign(signer);
             });
             const serializedTx = tx.serialize({

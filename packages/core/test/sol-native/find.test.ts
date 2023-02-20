@@ -8,7 +8,7 @@ const notFoundOwner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
 
 describe('SolNative', () => {
   it('find owner info', async () => {
-    const res = await SolNative.findByOwner(owner.toPublicKey());
+    const res = await SolNative.findByOwner(owner);
 
     console.log('SolNative.findByOwner: ', res);
 
@@ -25,7 +25,7 @@ describe('SolNative', () => {
   });
 
   it('find token account info', async () => {
-    const res = await SolNative.findByOwner(tokenAccount.toPublicKey());
+    const res = await SolNative.findByOwner(tokenAccount);
 
     console.log('SolNative.findByOwner: ', res);
 
@@ -42,7 +42,7 @@ describe('SolNative', () => {
   });
 
   it('not found asset owner', async () => {
-    const res = await SolNative.findByOwner(notFoundOwner.toPublicKey());
+    const res = await SolNative.findByOwner(notFoundOwner);
 
     console.log('SolNative.findByOwner: ', res);
 

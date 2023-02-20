@@ -22,7 +22,7 @@ var SolNative;
         return res;
     });
     SolNative.getByAddress = (pubkey, limit, before, until) => __awaiter(this, void 0, void 0, function* () {
-        const transactions = yield shared_1.Node.getConnection().getSignaturesForAddress(pubkey, {
+        const transactions = yield shared_1.Node.getConnection().getSignaturesForAddress(pubkey.toPublicKey(), {
             limit,
             before,
             until,

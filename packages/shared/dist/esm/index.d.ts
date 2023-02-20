@@ -1,6 +1,7 @@
 export * from './constants';
 export * from './instruction';
 export * from './global';
+export * from './key-pair';
 export * from './node';
 export * from './mint-instruction';
 export * from './partial-signInstruction';

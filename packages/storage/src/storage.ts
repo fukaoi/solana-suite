@@ -1,5 +1,5 @@
+import { Secret } from '@solana-suite/shared';
 import {
-  BundlrSigner,
   InputNftMetadata,
   Royalty,
   NftStorageMetadata,
@@ -28,7 +28,7 @@ export namespace Storage {
 
   export const uploadMetaContent = async (
     input: InputNftMetadata,
-    feePayer?: BundlrSigner
+    feePayer?: Secret
   ) => {
     let storage;
     const { filePath, storageType, royalty, options, ...reducedMetadata } =

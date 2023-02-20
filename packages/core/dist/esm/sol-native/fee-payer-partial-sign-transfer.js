@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { SystemProgram, Transaction, } from '@solana/web3.js';
+import { SystemProgram, Transaction } from '@solana/web3.js';
 import { Node, PartialSignInstruction, Try, } from '@solana-suite/shared';
 export var SolNative;
 (function (SolNative) {
@@ -18,14 +18,14 @@ export var SolNative;
             const tx = new Transaction({
                 blockhash: blockHashObj.blockhash,
                 lastValidBlockHeight: blockHashObj.lastValidBlockHeight,
-                feePayer,
+                feePayer: feePayer.toPublicKey(),
             }).add(SystemProgram.transfer({
-                fromPubkey: owner,
-                toPubkey: dest,
+                fromPubkey: owner.toPublicKey(),
+                toPubkey: dest.toPublicKey(),
                 lamports: parseInt(`${amount.toLamports()}`, RADIX),
             }));
             signers.forEach((signer) => {
-                tx.partialSign(signer);
+                tx.partialSign(signer.toKeypair());
             });
             const serializedTx = tx.serialize({
                 requireAllSignatures: false,

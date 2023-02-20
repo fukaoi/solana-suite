@@ -3,21 +3,17 @@ import {
   createMintToCheckedInstruction,
 } from '@solana/spl-token';
 
-import {
-  Transaction,
-  PublicKey,
-  TransactionInstruction,
-} from '@solana/web3.js';
+import { Transaction, TransactionInstruction } from '@solana/web3.js';
 
-import { Node, Result, Try } from '@solana-suite/shared';
+import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
 
 import { AssociatedAccount } from '@solana-suite/core';
 import { Phantom } from '../types';
 
 export namespace PhantomSplToken {
   export const add = async (
-    tokenKey: PublicKey,
-    owner: PublicKey,
+    tokenKey: Pubkey,
+    owner: Pubkey,
     cluster: string,
     totalAmount: number,
     mintDecimal: number,
@@ -35,9 +31,9 @@ export namespace PhantomSplToken {
       transaction.add(makeInstruction.inst as TransactionInstruction);
       transaction.add(
         createMintToCheckedInstruction(
-          tokenKey,
+          tokenKey.toPublicKey(),
           makeInstruction.tokenAccount.toPublicKey(),
-          owner,
+          owner.toPublicKey(),
           totalAmount,
           mintDecimal,
           [],
@@ -45,7 +41,7 @@ export namespace PhantomSplToken {
         )
       );
 
-      transaction.feePayer = owner;
+      transaction.feePayer = owner.toPublicKey();
       const blockhashObj = await connection.getLatestBlockhashAndContext();
       transaction.recentBlockhash = blockhashObj.value.blockhash;
 
@@ -56,7 +52,7 @@ export namespace PhantomSplToken {
         const sig = await connection.sendRawTransaction(sign.serialize());
         await Node.confirmedSig(sig);
       }
-      return tokenKey.toBase58();
+      return tokenKey;
     });
   };
 }

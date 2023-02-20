@@ -14,7 +14,7 @@ export var SolNative;
     SolNative.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c, _d, _e, _f;
-            const res = yield Node.getConnection().getParsedAccountInfo(owner);
+            const res = yield Node.getConnection().getParsedAccountInfo(owner.toPublicKey());
             const info = {
                 sol: 0,
                 lamports: 0,

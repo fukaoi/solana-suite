@@ -1,5 +1,13 @@
-import { PublicKey, TransactionInstruction, Keypair } from '@solana/web3.js';
-import { Node, debugLog, Instruction, sleep } from '@solana-suite/shared';
+import { TransactionInstruction } from '@solana/web3.js';
+import {
+  Node,
+  debugLog,
+  Instruction,
+  sleep,
+  Pubkey,
+  Secret,
+  KeyPair,
+} from '@solana-suite/shared';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
@@ -14,9 +22,9 @@ import {
  * Get Associated token Account.
  * if not created, create new token accouint
  *
- * @param {PublicKey} mint
- * @param {PublicKey} owner
- * @param {PublicKey} feePayer
+ * @param {Pubkey} mint
+ * @param {Pubkey} owner
+ * @param {Secret} feePayer
  * @param {boolean} allowOwnerOffCurve
  * @returns Promise<string | Instruction>
  */
@@ -24,15 +32,15 @@ export namespace AssociatedAccount {
   const RETRY_OVER_LIMIT = 10;
   const RETRY_SLEEP_TIME = 3;
   const get = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    feePayer: Keypair,
+    mint: Pubkey,
+    owner: Pubkey,
+    feePayer: Secret,
     allowOwnerOffCurve = false
   ): Promise<string | Instruction> => {
     const res = await makeOrCreateInstruction(
       mint,
       owner,
-      feePayer.publicKey,
+      new KeyPair({ secret: feePayer }).pubkey,
       allowOwnerOffCurve
     );
 
@@ -40,21 +48,26 @@ export namespace AssociatedAccount {
       return res.tokenAccount;
     }
 
-    return new Instruction([res.inst], [], feePayer, res.tokenAccount);
+    return new Instruction(
+      [res.inst],
+      [],
+      feePayer.toKeypair(),
+      res.tokenAccount
+    );
   };
 
   /**
    * Retry function if create new token accouint
    *
-   * @param {PublicKey} mint
-   * @param {PublicKey} owner
-   * @param {PublicKey} feePayer
+   * @param {Pubkey} mint
+   * @param {Pubkey} owner
+   * @param {Secret} feePayer
    * @returns Promise<string>
    */
   export const retryGetOrCreate = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    feePayer: Keypair
+    mint: Pubkey,
+    owner: Pubkey,
+    feePayer: Secret
   ): Promise<string> => {
     let counter = 1;
     while (counter < RETRY_OVER_LIMIT) {
@@ -89,23 +102,23 @@ export namespace AssociatedAccount {
    * [Main logic]Get Associated token Account.
    * if not created, create new token accouint
    *
-   * @param {PublicKey} mint
-   * @param {PublicKey} owner
-   * @param {PublicKey} feePayer
+   * @param {Pubkey} mint
+   * @param {Pubkey} owner
+   * @param {Pubkey} feePayer
    * @returns Promise<string>
    */
   export const makeOrCreateInstruction = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    feePayer?: PublicKey,
+    mint: Pubkey,
+    owner: Pubkey,
+    feePayer?: Pubkey,
     allowOwnerOffCurve = false
   ): Promise<{
     tokenAccount: string;
     inst: TransactionInstruction | undefined;
   }> => {
     const associatedTokenAccount = await getAssociatedTokenAddress(
-      mint,
-      owner,
+      mint.toPublicKey(),
+      owner.toPublicKey(),
       allowOwnerOffCurve,
       TOKEN_PROGRAM_ID,
       ASSOCIATED_TOKEN_PROGRAM_ID
@@ -136,10 +149,10 @@ export namespace AssociatedAccount {
       const payer = !feePayer ? owner : feePayer;
 
       const inst = createAssociatedTokenAccountInstruction(
-        payer,
+        payer.toPublicKey(),
         associatedTokenAccount,
-        owner,
-        mint,
+        owner.toPublicKey(),
+        mint.toPublicKey(),
         TOKEN_PROGRAM_ID,
         ASSOCIATED_TOKEN_PROGRAM_ID
       );

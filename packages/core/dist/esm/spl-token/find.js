@@ -13,7 +13,7 @@ export var SplToken;
 (function (SplToken) {
     SplToken.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            const accounts = yield Node.getConnection().getParsedTokenAccountsByOwner(owner, {
+            const accounts = yield Node.getConnection().getParsedTokenAccountsByOwner(owner.toPublicKey(), {
                 programId: TOKEN_PROGRAM_ID,
             });
             const info = accounts.value.reduce((arr, d) => {

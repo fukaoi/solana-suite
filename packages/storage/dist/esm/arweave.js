@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { toMetaplexFile, } from '@metaplex-foundation/js';
-import { isNode, isBrowser, debugLog, Try } from '@solana-suite/shared';
+import { isNode, isBrowser, debugLog, Try, } from '@solana-suite/shared';
 import { Bundlr } from '@solana-suite/shared-metaplex';
 export var Arweave;
 (function (Arweave) {
@@ -26,7 +26,7 @@ export var Arweave;
             else {
                 throw Error('Supported environment: only Node.js and Browser js');
             }
-            const res = yield Bundlr.useStorage(feePayer).getUploadPrice(buffer.length);
+            const res = yield Bundlr.useStorage(feePayer.toKeypair()).getUploadPrice(buffer.length);
             const basisPoints = res.basisPoints.toString();
             debugLog('# buffer length, price', buffer.length, parseInt(basisPoints).toSol());
             return {
@@ -62,13 +62,13 @@ export var Arweave;
             else {
                 throw Error('Supported environment: only Node.js and Browser js');
             }
-            return Bundlr.useStorage(feePayer).upload(file);
+            return Bundlr.useStorage(feePayer.toKeypair()).upload(file);
         }));
     });
     Arweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             debugLog('# upload meta data: ', metadata);
-            const uploaded = yield Bundlr.make(feePayer)
+            const uploaded = yield Bundlr.make(feePayer.toKeypair())
                 .nfts()
                 .uploadMetadata(metadata);
             return uploaded.uri;

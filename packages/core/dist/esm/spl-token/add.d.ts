@@ -1,5 +1,4 @@
-import { Keypair, PublicKey } from '@solana/web3.js';
-import { Result, Instruction } from '@solana-suite/shared';
+import { Result, Instruction, Pubkey, Secret } from '@solana-suite/shared';
 export declare namespace SplToken {
-    const add: (token: PublicKey, owner: PublicKey, signers: Keypair[], totalAmount: number, mintDecimal: number, feePayer?: Keypair) => Promise<Result<Instruction, Error>>;
+    const add: (token: Pubkey, owner: Pubkey, signers: Secret[], totalAmount: number, mintDecimal: number, feePayer?: Secret) => Promise<Result<Instruction, Error>>;
 }

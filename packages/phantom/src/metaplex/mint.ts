@@ -1,9 +1,9 @@
-import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
+import { Transaction, TransactionInstruction, Keypair } from '@solana/web3.js';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 
 import { Metaplex } from '@solana-suite/nft';
 import { Storage } from '@solana-suite/storage';
-import { debugLog, Node, Result, Try } from '@solana-suite/shared';
+import { debugLog, Node, Result, Try, KeyPair } from '@solana-suite/shared';
 import {
   Bundlr,
   Validator,
@@ -20,17 +20,17 @@ export namespace PhantomMetaplex {
   ): Promise<InitializeNftMint> => {
     const metaplex = Bundlr.make(phantom);
     const payer = metaplex.identity();
-    const useNewMint = Keypair.generate();
     const updateAuthority = metaplex.identity();
     const mintAuthority = metaplex.identity();
-    const tokenOwner = metaplex.identity().publicKey;
+    const tokenOwner = metaplex.identity();
+    const useNewMint = KeyPair.create();
     const instructions = await Metaplex.createNftBuilderInstruction(
       payer,
       params,
-      useNewMint,
+      useNewMint.secret.toKeypair(),
       updateAuthority,
       mintAuthority,
-      tokenOwner
+      tokenOwner.publicKey.toString()
     );
 
     const transaction = new Transaction();
@@ -60,11 +60,11 @@ export namespace PhantomMetaplex {
         throw valid.error;
       }
 
-      debugLog('# input: ', input); 
+      debugLog('# input: ', input);
 
       Node.changeConnection({ cluster });
 
-      const uploaded = await Storage.uploadMetaContent(input, phantom);
+      const uploaded = await Storage.uploadMetaContent(input);
 
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
       debugLog('# upload content url: ', uri);
@@ -79,11 +79,11 @@ export namespace PhantomMetaplex {
       const connection = Node.getConnection();
 
       const builder = await createNftBuilder(mintInput, phantom);
-      debugLog('# mint: ', builder.useNewMint.publicKey.toString());
+      debugLog('# mint: ', builder.useNewMint.pubkey);
       builder.tx.feePayer = phantom.publicKey;
       const blockhashObj = await connection.getLatestBlockhashAndContext();
       builder.tx.recentBlockhash = blockhashObj.value.blockhash;
-      builder.tx.partialSign(builder.useNewMint);
+      builder.tx.partialSign(builder.useNewMint.toKeypair());
       const signed = await phantom.signTransaction(builder.tx);
       debugLog(
         '# signed, signed.signatures: ',
@@ -92,7 +92,7 @@ export namespace PhantomMetaplex {
       );
       const sig = await connection.sendRawTransaction(signed.serialize());
       await Node.confirmedSig(sig);
-      return builder.useNewMint.publicKey.toString();
+      return builder.useNewMint.pubkey;
     });
   };
 }

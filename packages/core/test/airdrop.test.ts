@@ -2,9 +2,10 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../shared/test/testSetup';
 import { Airdrop } from '../src/airdrop';
-import { KeypairStr, SolNative } from '../src/';
+import { SolNative } from '../src/';
+import { KeyPair } from '../../shared';
 
-let source: KeypairStr;
+let source: KeyPair;
 
 describe.skip('Airdrop', () => {
   before(async () => {
@@ -13,9 +14,9 @@ describe.skip('Airdrop', () => {
   });
 
   it('Request airdrop with 1 SOL', async () => {
-    const res = await Airdrop.request(source.toPublicKey(), 1);
+    const res = await Airdrop.request(source.pubkey, 1);
     assert.isTrue(res.isOk, res.unwrap());
-    const info = await SolNative.findByOwner(source.toPublicKey());
+    const info = await SolNative.findByOwner(source.pubkey);
     assert.isNumber(info.unwrap().sol);
   });
 });

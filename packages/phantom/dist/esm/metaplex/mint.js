@@ -7,21 +7,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Keypair, Transaction } from '@solana/web3.js';
+import { Transaction } from '@solana/web3.js';
 import { Metaplex } from '@solana-suite/nft';
 import { Storage } from '@solana-suite/storage';
-import { debugLog, Node, Try } from '@solana-suite/shared';
+import { debugLog, Node, Try, KeyPair } from '@solana-suite/shared';
 import { Bundlr, Validator, } from '@solana-suite/shared-metaplex';
 export var PhantomMetaplex;
 (function (PhantomMetaplex) {
     const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
         const metaplex = Bundlr.make(phantom);
         const payer = metaplex.identity();
-        const useNewMint = Keypair.generate();
         const updateAuthority = metaplex.identity();
         const mintAuthority = metaplex.identity();
-        const tokenOwner = metaplex.identity().publicKey;
-        const instructions = yield Metaplex.createNftBuilderInstruction(payer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner);
+        const tokenOwner = metaplex.identity();
+        const useNewMint = KeyPair.create();
+        const instructions = yield Metaplex.createNftBuilderInstruction(payer, params, useNewMint.secret.toKeypair(), updateAuthority, mintAuthority, tokenOwner.publicKey.toString());
         const transaction = new Transaction();
         transaction.feePayer = payer.publicKey;
         instructions.forEach((inst) => {
@@ -44,7 +44,7 @@ export var PhantomMetaplex;
             }
             debugLog('# input: ', input);
             Node.changeConnection({ cluster });
-            const uploaded = yield Storage.uploadMetaContent(input, phantom);
+            const uploaded = yield Storage.uploadMetaContent(input);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             debugLog('# upload content url: ', uri);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
@@ -53,16 +53,16 @@ export var PhantomMetaplex;
                 sellerFeeBasisPoints }, reducedMetadata);
             const connection = Node.getConnection();
             const builder = yield createNftBuilder(mintInput, phantom);
-            debugLog('# mint: ', builder.useNewMint.publicKey.toString());
+            debugLog('# mint: ', builder.useNewMint.pubkey);
             builder.tx.feePayer = phantom.publicKey;
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             builder.tx.recentBlockhash = blockhashObj.value.blockhash;
-            builder.tx.partialSign(builder.useNewMint);
+            builder.tx.partialSign(builder.useNewMint.toKeypair());
             const signed = yield phantom.signTransaction(builder.tx);
             debugLog('# signed, signed.signatures: ', signed, signed.signatures.map((sig) => sig.publicKey.toString()));
             const sig = yield connection.sendRawTransaction(signed.serialize());
             yield Node.confirmedSig(sig);
-            return builder.useNewMint.publicKey.toString();
+            return builder.useNewMint.pubkey;
         }));
     });
 })(PhantomMetaplex || (PhantomMetaplex = {}));

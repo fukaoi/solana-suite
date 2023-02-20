@@ -19,6 +19,8 @@ import {
   MintInstruction,
   Try,
   debugLog,
+  Pubkey,
+  Secret,
 } from '@solana-suite/shared';
 
 import {
@@ -99,12 +101,12 @@ export namespace SplToken {
   };
 
   export const mint = async (
-    owner: PublicKey,
-    signer: Keypair,
+    owner: Pubkey,
+    signer: Secret,
     totalAmount: number,
     mintDecimal: number,
     input: InputTokenMetadata,
-    feePayer?: Keypair
+    feePayer?: Secret
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputTokenMetadata>(input);
@@ -112,7 +114,7 @@ export namespace SplToken {
         throw valid.error;
       }
 
-      !feePayer && (feePayer = signer);
+      const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
       const uploaded = await Storage.uploadMetaContent(input, feePayer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 
@@ -136,17 +138,17 @@ export namespace SplToken {
       const insts = await createMintInstruction(
         connection,
         mint.publicKey,
-        owner,
+        owner.toPublicKey(),
         totalAmount,
         mintDecimal,
         tokenMetadata,
-        feePayer.publicKey,
+        payer.publicKey,
         isMutable
       );
       return new MintInstruction(
         insts,
-        [signer, mint],
-        feePayer,
+        [signer.toKeypair(), mint],
+        payer,
         mint.publicKey.toString()
       );
     });

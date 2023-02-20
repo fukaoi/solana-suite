@@ -1,17 +1,15 @@
-import { Node, Result, Try } from '@solana-suite/shared';
-
-import { PublicKey } from '@solana/web3.js';
-
+import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
 import { LayoutObject } from '@solana/buffer-layout';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { PublicKey } from '@solana/web3.js';
 import { Multisig as _Instruction } from './instruction';
 
 export namespace Multisig {
   export const getInfo = async (
-    multisig: PublicKey
+    multisig: Pubkey
   ): Promise<Result<LayoutObject, Error>> => {
     return Try(async () => {
-      const info = await Node.getConnection().getAccountInfo(multisig);
+      const info = await Node.getConnection().getAccountInfo(multisig.toPublicKey());
       if (info === null) {
         throw Error('Failed to find multisig');
       }

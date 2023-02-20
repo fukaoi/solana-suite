@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha';
-import { KeypairStr } from '@solana-suite/core';
 import { Setup } from '../../shared/test/testSetup';
+import { KeyPair } from '../../shared/';
 import { assert } from 'chai';
 import { Bundlr } from '../src/bundlr';
 import {
@@ -8,7 +8,7 @@ import {
   Metaplex as MetaplexFoundation,
 } from '@metaplex-foundation/js';
 
-let source: KeypairStr;
+let source: KeyPair;
 
 describe('Bundlr', () => {
   before(async () => {

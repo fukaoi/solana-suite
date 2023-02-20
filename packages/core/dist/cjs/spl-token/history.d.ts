@@ -1,8 +1,7 @@
-import { PublicKey } from '@solana/web3.js';
-import { Result } from '@solana-suite/shared';
+import { Result, Pubkey } from '@solana-suite/shared';
 import { TransferHistory, Filter, DirectionFilter } from '../types/history';
 export declare namespace SplToken {
-    const getHistory: (mint: PublicKey, searchPubkey: PublicKey, options?: {
+    const getHistory: (mint: Pubkey, searchPubkey: Pubkey, options?: {
         limit?: number;
         actionFilter?: Filter[];
         directionFilter?: DirectionFilter;

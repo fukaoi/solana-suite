@@ -1,12 +1,12 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { KeypairStr } from '@solana-suite/core';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { ValidatorError } from '../../../shared-metaplex/';
+import { KeyPair } from '../../../shared';
 
-let source: KeypairStr;
+let source: KeyPair;
 
 describe('Metaplex', () => {
   before(async () => {
@@ -39,7 +39,7 @@ describe('Metaplex', () => {
         creators: [creator1, creator2],
         isMutable: true,
       },
-      source.toKeypair()
+      source.secret
     );
 
     (await res.submit()).match(
@@ -81,7 +81,7 @@ describe('Metaplex', () => {
           creators: [creator1, creator2],
         },
       },
-      source.toKeypair()
+      source.secret
     );
 
     (await res.submit()).match(
@@ -105,7 +105,7 @@ describe('Metaplex', () => {
         royalty: -100,
         storageType: 'nftStorage',
       },
-      source.toKeypair()
+      source.secret
     );
 
     res.match(

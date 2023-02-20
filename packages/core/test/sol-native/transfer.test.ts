@@ -1,10 +1,11 @@
 import { describe, it, before } from 'mocha';
-import { SolNative, KeypairStr, Airdrop } from '../../src';
+import { SolNative, Airdrop } from '../../src';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
+import { KeyPair } from '../../../shared/src';
 
-let source: KeypairStr;
-let dest: KeypairStr;
+let source: KeyPair;
+let dest: KeyPair;
 
 describe('SolNative', () => {
   before(async () => {
@@ -16,9 +17,9 @@ describe('SolNative', () => {
   it('transfer transaction', async () => {
     const solAmount = 0.01;
     const inst = SolNative.transfer(
-      source.toPublicKey(),
-      dest.toPublicKey(),
-      [source.toKeypair()],
+      source.pubkey,
+      dest.pubkey,
+      [source.secret],
       solAmount
     );
 
@@ -31,30 +32,26 @@ describe('SolNative', () => {
   // every call requestAirdrop(), raise internal error
   it.skip('transfer transaction with fee payer', async () => {
     const solAmount = 0.01;
-    const owner = KeypairStr.create();
-    await Airdrop.request(owner.toPublicKey());
+    const owner = KeyPair.create();
+    await Airdrop.request(owner.pubkey);
     const feePayer = source;
 
-    const before = (
-      await SolNative.findByOwner(feePayer.pubkey.toPublicKey())
-    ).unwrap();
+    const before = (await SolNative.findByOwner(feePayer.pubkey)).unwrap();
 
     console.log(before);
 
     const inst = SolNative.transfer(
-      owner.toPublicKey(),
-      dest.toPublicKey(),
-      [owner.toKeypair()],
+      owner.pubkey,
+      dest.pubkey,
+      [owner.secret],
       solAmount,
-      feePayer.toKeypair()
+      feePayer.secret
     );
 
     const res = await inst.submit();
     assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# tx signature: ', res.unwrap());
-    const after = (
-      await SolNative.findByOwner(feePayer.pubkey.toPublicKey())
-    ).unwrap();
+    const after = (await SolNative.findByOwner(feePayer.pubkey)).unwrap();
     assert.isTrue(
       before.sol > after.sol,
       `before fee: ${before}, after fee: ${after}`

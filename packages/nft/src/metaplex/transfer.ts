@@ -1,8 +1,9 @@
-import { PublicKey, Keypair } from '@solana/web3.js';
 import {
   Instruction,
   Result,
   PartialSignInstruction,
+  Pubkey,
+  Secret,
 } from '@solana-suite/shared';
 import { SplToken } from '@solana-suite/core';
 
@@ -11,11 +12,11 @@ export namespace Metaplex {
   const NFT_DECIMALS = 0;
 
   export const transfer = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    dest: PublicKey,
-    signers: Keypair[],
-    feePayer?: Keypair
+    mint: Pubkey,
+    owner: Pubkey,
+    dest: Pubkey,
+    signers: Secret[],
+    feePayer?: Secret
   ): Promise<Result<Instruction, Error>> => {
     return SplToken.transfer(
       mint,
@@ -29,11 +30,11 @@ export namespace Metaplex {
   };
 
   export const feePayerPartialSignTransferNft = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    dest: PublicKey,
-    signers: Keypair[],
-    feePayer: PublicKey
+    mint: Pubkey,
+    owner: Pubkey,
+    dest: Pubkey,
+    signers: Secret[],
+    feePayer: Pubkey
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return SplToken.feePayerPartialSignTransfer(
       mint,

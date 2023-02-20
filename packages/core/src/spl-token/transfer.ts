@@ -1,51 +1,45 @@
 import { createTransferCheckedInstruction } from '@solana/spl-token';
-import { PublicKey, Keypair } from '@solana/web3.js';
-
-import {
-  Result,
-  Instruction,
-  Try,
-} from '@solana-suite/shared';
-
+import { Result, Instruction, Try, Pubkey, Secret } from '@solana-suite/shared';
 import { SplToken as _Calculator } from './calculate-amount';
 import { AssociatedAccount } from '../associated-account';
 
 export namespace SplToken {
   export const transfer = async (
-    mint: PublicKey,
-    owner: PublicKey,
-    dest: PublicKey,
-    signers: Keypair[],
+    mint: Pubkey,
+    owner: Pubkey,
+    dest: Pubkey,
+    signers: Secret[],
     amount: number,
     mintDecimal: number,
-    feePayer?: Keypair
+    feePayer?: Secret
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
-      !feePayer && (feePayer = signers[0]);
+      const payer = feePayer ? feePayer : signers[0];
+      const keypairs = signers.map((s) => s.toKeypair());
 
       const sourceToken = await AssociatedAccount.retryGetOrCreate(
         mint,
         owner,
-        feePayer
+        payer
       );
 
       const destToken = await AssociatedAccount.retryGetOrCreate(
         mint,
         dest,
-        feePayer
+        payer
       );
 
       const inst = createTransferCheckedInstruction(
         sourceToken.toPublicKey(),
-        mint,
+        mint.toPublicKey(),
         destToken.toPublicKey(),
-        owner,
+        owner.toPublicKey(),
         _Calculator.calculateAmount(amount, mintDecimal),
         mintDecimal,
-        signers
+        keypairs
       );
 
-      return new Instruction([inst], signers, feePayer);
+      return new Instruction([inst], keypairs, payer.toKeypair());
     });
   };
 }

@@ -2,47 +2,27 @@ import fs from 'fs';
 import bs from 'bs58';
 import { Keypair, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { Constants } from '../src/constants';
-import { Node } from '../src/node';
-import { debugLog } from '../src/global';
+import { Node, debugLog, KeyPair, Pubkey, Secret } from '../src/';
 
 console.log(`\u001b[33m === TEST START ===`);
 console.log(`\u001b[33m solana-network: ${Constants.currentCluster}`);
-
-export class KeypairStr {
-  pubkey: string;
-  secret: string;
-
-  constructor(pubkey: string, secret: string) {
-    this.pubkey = pubkey;
-    this.secret = secret;
-  }
-
-  toPublicKey(): PublicKey {
-    return new PublicKey(this.pubkey);
-  }
-
-  toKeypair(): Keypair {
-    const decoded = bs.decode(this.secret);
-    return Keypair.fromSecretKey(decoded);
-  }
-}
 
 export namespace Setup {
   const TEMP_KEYPAIR_FILE = `../../solana-${Constants.currentCluster}-keypair`;
 
   export const generateKeyPair = async (): Promise<{
-    source: KeypairStr;
-    dest: KeypairStr;
+    source: KeyPair;
+    dest: KeyPair;
   }> => {
     const { source, dest } = await fetchSourceAndDest();
     log(source, dest);
     return {
-      source: new KeypairStr(source.pubkey, source.secret),
-      dest: new KeypairStr(dest.pubkey, dest.secret),
+      source: new KeyPair({ pubkey: source.pubkey, secret: source.secret }),
+      dest: new KeyPair({ pubkey: dest.pubkey, secret: dest.secret }),
     };
   };
 
-  const log = (source: KeypairStr, dest: KeypairStr) => {
+  const log = (source: KeyPair, dest: KeyPair) => {
     debugLog(`# source.pubkey:`, source.pubkey);
     debugLog(`# source.secret: `, source.secret);
     debugLog(`# destination.pubkey:`, dest.pubkey);
@@ -78,22 +58,22 @@ export namespace Setup {
 
     await requestAirdrop(source.publicKey);
 
-    const sourceObject = new KeypairStr(
-      source.publicKey.toBase58(),
-      bs.encode(source.secretKey)
-    );
+    const sourceObject = new KeyPair({
+      pubkey: source.publicKey.toBase58() as Pubkey,
+      secret: bs.encode(source.secretKey) as Secret,
+    });
 
-    const destObject = new KeypairStr(
-      dest.publicKey.toBase58(),
-      bs.encode(dest.secretKey)
-    );
+    const destObject = new KeyPair({
+      pubkey: dest.publicKey.toBase58() as Pubkey,
+      secret: bs.encode(dest.secretKey) as Secret,
+    });
 
     const data = templateKeyPair(sourceObject, destObject);
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));
     return data;
   };
 
-  const templateKeyPair = (source: KeypairStr, dest: KeypairStr) => {
+  const templateKeyPair = (source: KeyPair, dest: KeyPair) => {
     return {
       source: {
         pubkey: source.pubkey,

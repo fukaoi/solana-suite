@@ -7,8 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Keypair } from '@solana/web3.js';
-import { debugLog, Try, MintInstruction } from '@solana-suite/shared';
+import { debugLog, Try, MintInstruction, KeyPair, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { Bundlr, Validator, } from '@solana-suite/shared-metaplex';
 import { token, TransactionBuilder, } from '@metaplex-foundation/js';
@@ -17,21 +16,20 @@ export var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
     const createNftBuilder = (params, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const mint = Keypair.generate();
+        const mint = KeyPair.create();
         const updateAuthority = owner;
         const mintAuthority = owner;
-        const tokenOwner = owner.publicKey;
-        const inst = yield Metaplex.createNftBuilderInstruction(feePayer, params, mint, updateAuthority, mintAuthority, tokenOwner);
-        return new MintInstruction(inst, [feePayer, mint, owner], undefined, mint.publicKey.toString());
+        const inst = yield Metaplex.createNftBuilderInstruction(feePayer.toKeypair(), params, mint.secret.toKeypair(), updateAuthority.toKeypair(), mintAuthority.toKeypair(), new KeyPair({ secret: owner }).pubkey);
+        return new MintInstruction(inst, [feePayer.toKeypair(), mint.toKeypair(), owner.toKeypair()], undefined, mint);
     });
     Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {
         var _a;
         debugLog('# params: ', params);
-        debugLog('# feePayer: ', feePayer === null || feePayer === void 0 ? void 0 : feePayer.publicKey.toString());
-        debugLog('# useNewMint: ', useNewMint.publicKey.toString());
-        debugLog('# updateAuthority: ', updateAuthority.publicKey.toString());
-        debugLog('# mintAuthority: ', mintAuthority.publicKey.toString());
-        debugLog('# tokenOwner: ', tokenOwner.toString());
+        debugLog('# feePayer: ', feePayer);
+        debugLog('# useNewMint: ', useNewMint);
+        debugLog('# updateAuthority: ', updateAuthority);
+        debugLog('# mintAuthority: ', mintAuthority);
+        debugLog('# tokenOwner: ', tokenOwner);
         const metaplex = Bundlr.make(feePayer);
         const payer = metaplex.identity();
         const sftBuilder = yield metaplex
@@ -39,8 +37,7 @@ export var Metaplex;
             .builders()
             .createSft(Object.assign(Object.assign({}, params), { updateAuthority,
             mintAuthority,
-            useNewMint,
-            tokenOwner, tokenAmount: token(1), decimals: 0 }));
+            useNewMint, tokenOwner: tokenOwner.toPublicKey(), tokenAmount: token(1), decimals: 0 }));
         const { mintAddress, metadataAddress, tokenAddress } = sftBuilder.getContext();
         const masterEditionAddress = metaplex
             .nfts()
@@ -96,8 +93,8 @@ export var Metaplex;
      *   isMutable?: boolean           // enable update()
      *   maxSupply?: BigNumber         // mint copies
      * }
-     * @param {Keypair} owner          // first minted owner
-     * @param {Keypair} feePayer       // fee payer
+     * @param {Secret} owner          // first minted owner
+     * @param {Secret} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
     Metaplex.mint = (input, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {

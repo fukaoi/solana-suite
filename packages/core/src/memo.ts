@@ -1,11 +1,6 @@
-import {
-  PublicKey,
-  TransactionInstruction,
-  Keypair,
-} from '@solana/web3.js';
-
+import { TransactionInstruction } from '@solana/web3.js';
+import { Constants, Instruction, Pubkey, Secret } from '@solana-suite/shared';
 import bs from 'bs58';
-import {Constants, Instruction} from '@solana-suite/shared';
 
 export namespace Memo {
   export const decode = (encoded: string): string =>
@@ -15,29 +10,28 @@ export namespace Memo {
 
   export const create = (
     data: string,
-    owner: PublicKey,
-    signer: Keypair,
-  )
-    : Instruction => {
-
-    const key =
-      owner
-        ? [{
-          pubkey: owner,
-          isSigner: false,
-          isWritable: true
-        }]
-        : [];
+    owner: Pubkey,
+    signer: Secret
+  ): Instruction => {
+    const key = owner.toPublicKey()
+      ? [
+          {
+            pubkey: owner.toPublicKey(),
+            isSigner: false,
+            isWritable: true,
+          },
+        ]
+      : [];
 
     const instruction = new TransactionInstruction({
       programId: Constants.MEMO_PROGRAM_ID,
       data: encode(data),
-      keys: key
+      keys: key,
     });
     return new Instruction(
       [instruction],
-      [signer],
-      signer,
+      [signer.toKeypair()],
+      signer.toKeypair()
     );
   };
 }

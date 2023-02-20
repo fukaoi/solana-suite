@@ -1,10 +1,10 @@
-import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
-import { Result, MintInstruction } from '@solana-suite/shared';
-import { BundlrSigner, InputNftMetadata } from '@solana-suite/shared-metaplex';
+import { TransactionInstruction, Keypair } from '@solana/web3.js';
+import { Result, MintInstruction, Secret, Pubkey } from '@solana-suite/shared';
+import { InputNftMetadata } from '@solana-suite/shared-metaplex';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 export declare namespace Metaplex {
-    const createNftBuilderInstruction: (feePayer: BundlrSigner, params: CreateNftBuilderParams, useNewMint: Keypair, updateAuthority: Keypair | IdentityClient, mintAuthority: Keypair | IdentityClient, tokenOwner: PublicKey) => Promise<TransactionInstruction[]>;
+    const createNftBuilderInstruction: (feePayer: Keypair | IdentityClient, params: CreateNftBuilderParams, useNewMint: Keypair, updateAuthority: Keypair | IdentityClient, mintAuthority: Keypair | IdentityClient, tokenOwner: Pubkey) => Promise<TransactionInstruction[]>;
     /**
      * Upload content and NFT mint
      *
@@ -26,9 +26,9 @@ export declare namespace Metaplex {
      *   isMutable?: boolean           // enable update()
      *   maxSupply?: BigNumber         // mint copies
      * }
-     * @param {Keypair} owner          // first minted owner
-     * @param {Keypair} feePayer       // fee payer
+     * @param {Secret} owner          // first minted owner
+     * @param {Secret} feePayer       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    const mint: (input: InputNftMetadata, owner: Keypair, feePayer?: Keypair) => Promise<Result<MintInstruction, Error>>;
+    const mint: (input: InputNftMetadata, owner: Secret, feePayer?: Secret) => Promise<Result<MintInstruction, Error>>;
 }
