@@ -61,7 +61,7 @@ Array.prototype.submit = function () {
  */
 String.prototype.toPublicKey = function () {
     if (!key_pair_1.KeyPair.isPubkey(this.toString())) {
-        throw Error(`No match KeyPair.PubKey: ${this}`);
+        throw Error(`No match KeyPair.PubKey: ${this.toString()}`);
     }
     return new web3_js_1.PublicKey(this);
 };
@@ -73,7 +73,7 @@ String.prototype.toPublicKey = function () {
  */
 String.prototype.toKeypair = function () {
     if (!key_pair_1.KeyPair.isSecret(this.toString())) {
-        throw Error(`No match KeyPair.Secret: ${this}`);
+        throw Error(`No match KeyPair.Secret: ${this.toString()}`);
     }
     const decoded = bs58_1.default.decode(this);
     return web3_js_1.Keypair.fromSecretKey(decoded);

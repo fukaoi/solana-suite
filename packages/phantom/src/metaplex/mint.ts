@@ -1,4 +1,4 @@
-import { Transaction, TransactionInstruction, Keypair } from '@solana/web3.js';
+import { Transaction, TransactionInstruction } from '@solana/web3.js';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 
 import { Metaplex } from '@solana-suite/nft';

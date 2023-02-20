@@ -27,6 +27,7 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: install --frozen-lockfile
+      - run: npm run clean
       - run: npm run compile
       - name: Auto commit
         uses: stefanzweifel/git-auto-commit-action@v4.12.0
