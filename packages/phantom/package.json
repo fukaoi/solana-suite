@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/phantom",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Library spl-token/nft mint for phantom wallet",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

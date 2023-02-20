@@ -665,41 +665,43 @@
     "@randlabs/communication-bridge" "1.0.1"
 
 "@solana-suite/core@latest":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@solana-suite/core/-/core-0.5.4.tgz#303e4c375580e9e0a20026b9a453fc5bbc56424e"
-  integrity sha512-9rVO/KTA+67Oc95jRufWFVLI33fhnq3l/eF9W8oQ3MvUBrQbmqgSR7z2X8wfWGItO3bAfl18yoY5e2meVijJvw==
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@solana-suite/core/-/core-0.5.5.tgz#be63ca078141463a81a570e8c8491534344043ed"
+  integrity sha512-Broo9QYObaXafgcnrswy0+3rp27zjY7R6aJLo4gYlKQGNHU5ZENneCTDmQiXmJpgg9qJh0Zz7Kefh5SBv80HCw==
   dependencies:
+    "@solana-suite/shared" latest
     "@solana-suite/shared-metaplex" latest
     "@solana-suite/storage" latest
 
 "@solana-suite/nft@latest":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@solana-suite/nft/-/nft-0.5.4.tgz#aa14176bcd40c3f5399f7f0419a830c19d5f720e"
-  integrity sha512-cBDVx+VJDo22O7G765Sqf4GudOrAjuAt25loaIElWY5vsyHtmAwF5F5Fn3ZUIYBOCvRFYYNgoyRzkq06ek7m2w==
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@solana-suite/nft/-/nft-0.5.5.tgz#a01f7c9b8daf169c46abe2c962090932a2e70198"
+  integrity sha512-2RhSCfCmTvt/Xh4z+uG3TWozm3795jZOCFU+Ab1kYT8znJz6oYh1RcVjoyn3vytFZa9o+/UaJZXQBiIQe1s5qA==
   dependencies:
     "@solana-suite/core" latest
     "@solana-suite/shared-metaplex" latest
     "@solana-suite/storage" latest
 
 "@solana-suite/shared-metaplex@latest":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@solana-suite/shared-metaplex/-/shared-metaplex-0.5.4.tgz#5c6f0e30980cf2bf052fab805316d7170b0baad1"
-  integrity sha512-bvUpv76HH+NrH0rU8z7xpM1DKqAqCE20FaSF+w8J9hN1ixbGVCPWbBGvRhNykyteI2j/3/yYf4uUti90WPY4kA==
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@solana-suite/shared-metaplex/-/shared-metaplex-0.5.5.tgz#17a8f5ca5d0688392e040b33fe914a771d1091a9"
+  integrity sha512-f73IruE0VESAcJEa4MwDU7s4D8wIspMDNgbxvBU28pZCcJ2lymVfgNJupKBMcvJ7AJNQVHi6dULQgXq1P49JpA==
   dependencies:
     "@metaplex-foundation/js" "0.18.0"
     "@solana-suite/shared" latest
 
 "@solana-suite/shared@latest":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@solana-suite/shared/-/shared-0.5.4.tgz#b7bfc69463b48bc34e5268c704173b95a04983de"
-  integrity sha512-/VuIK72bpCVmunJH9TCSUuqYm2auzEpxlRZB6PBr9p8tI3KwNIByWwTqzhxHMjMIfWT2748hbLMabyKMPjhN/Q==
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@solana-suite/shared/-/shared-0.5.5.tgz#ff4aca412fb5ee9c6bf64afc26e9a7417c17d122"
+  integrity sha512-WYB+rLtJjFacx5QaVTtp0bEo6ggj3ZhmdRpJ7TTZRDLxOfNm09X5XvL7ksSCDOnQ1ufHemEZGwSjfC7iJxOh6g==
   dependencies:
+    "@solana/web3.js" "^1.73.2"
     commander "9.3.0"
 
 "@solana-suite/storage@latest":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@solana-suite/storage/-/storage-0.5.4.tgz#1190aa3de7c14e90cd81bb8127c248692cbc12b6"
-  integrity sha512-q2BOnuRKzWzOXNmdYViScASOenHADuu7g/hOp3M5jfibixvuR3pyQ7wvN/X/pCCRJpT91d9yxi1qQ9opdERI+Q==
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@solana-suite/storage/-/storage-0.5.5.tgz#7a70fc9d12b3b132557d10f8c4a5396e91827dc4"
+  integrity sha512-3ZSk5CU/EHUDdMrmFTywjSHlUhtCKpf4XtoDgUsQYkRmsh1qdW7j9e78kyp1mT9rRnbsbX38OIge7gfzw3e/1Q==
   dependencies:
     "@solana-suite/shared-metaplex" latest
     cross-fetch "^3.1.4"
@@ -734,11 +736,22 @@
     buffer "^6.0.3"
 
 "@solana/wallet-adapter-base@^0.9.2":
-  version "0.9.20"
-  resolved "https://registry.yarnpkg.com/@solana/wallet-adapter-base/-/wallet-adapter-base-0.9.20.tgz#42a3a2f42db9f6a41e36a132ee5a06a0bd3784f0"
-  integrity sha512-ZvnhJ4EJk61oyuBH/a9tMpUfeWQ3g3Cc0Nzl1NzE4SdqEhiNoEW8HXDig9HMemZ9bIEUxIpPWxp+SwjVl0u+rg==
+  version "0.9.21"
+  resolved "https://registry.yarnpkg.com/@solana/wallet-adapter-base/-/wallet-adapter-base-0.9.21.tgz#6e73e550aa64a12174ec746bbf338c21209cf70e"
+  integrity sha512-UPC7GKAMbeoF5Ki+eTi1BHCTjbhtxGIAbgfzSkgYYQKoziDcSr5EgdBL1ntO6wwe6/fRByO6J4q/Dhr7vakz7A==
   dependencies:
+    "@solana/wallet-standard-features" "^1.0.0"
+    "@wallet-standard/base" "^1.0.1"
+    "@wallet-standard/features" "^1.0.1"
     eventemitter3 "^4.0.0"
+
+"@solana/wallet-standard-features@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@solana/wallet-standard-features/-/wallet-standard-features-1.0.0.tgz#fee71c47fa8c4bacbdc5c8750487e60a2e5e6746"
+  integrity sha512-cZKUm2w67MQOAzbfdZCGAbePWuqSwpvpbWA2K2D0UcHX30I8ry8YEeHlqwqULIOTeY8lRCHu8WMxZwC9iMEqHQ==
+  dependencies:
+    "@wallet-standard/base" "^1.0.0"
+    "@wallet-standard/features" "^1.0.0"
 
 "@solana/web3.js@^1.32.0", "@solana/web3.js@^1.36.0", "@solana/web3.js@^1.56.2", "@solana/web3.js@^1.63.1", "@solana/web3.js@^1.66.2", "@solana/web3.js@^1.73.2":
   version "1.73.2"
@@ -1022,6 +1035,18 @@
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@ungap/promise-all-settled/-/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
   integrity sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==
+
+"@wallet-standard/base@^1.0.0", "@wallet-standard/base@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@wallet-standard/base/-/base-1.0.1.tgz#860dd94d47c9e3c5c43b79d91c6afdbd7a36264e"
+  integrity sha512-1To3ekMfzhYxe0Yhkpri+Fedq0SYcfrOfJi3vbLjMwF2qiKPjTGLwZkf2C9ftdQmxES+hmxhBzTwF4KgcOwf8w==
+
+"@wallet-standard/features@^1.0.0", "@wallet-standard/features@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@wallet-standard/features/-/features-1.0.1.tgz#9aab662ebc5394ec2463e5c8f67b8bbf30fef1b2"
+  integrity sha512-B/WzRpoEiGQ+kwL/AuzqzNjrGvdL5J2OXiXHkDGONsNbKdtTpExU+ttZKQwSP/EvPl8+ZZ/4OO/Bz4YkigtQDg==
+  dependencies:
+    "@wallet-standard/base" "^1.0.1"
 
 "@web-std/blob@^2.1.0":
   version "2.1.3"
