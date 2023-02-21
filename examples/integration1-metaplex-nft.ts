@@ -3,9 +3,9 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Airdrop, KeypairStr, Pubkey } from '@solana-suite/core';
+import { Airdrop } from '@solana-suite/core';
 import { Metaplex } from '@solana-suite/nft';
-import { Node } from '@solana-suite/shared';
+import { Node, KeypairAccount, Pubkey } from '@solana-suite/shared';
 import { RandomAsset } from '../packages/storage/test/randomAsset';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 
@@ -15,15 +15,15 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
 
   // create nft owner wallet.
-  const owner = KeypairStr.create();
-  const receipt = KeypairStr.create();
-  const feePayer = KeypairStr.create();
+  const owner = KeypairAccount.create();
+  const receipt = KeypairAccount.create();
+  const feePayer = KeypairAccount.create();
 
-  // faucet 
+  // faucet
   if (process.env.AIR_DROP) {
-    await Airdrop.request(feePayer.toPublicKey());
+    await Airdrop.request(feePayer.pubkey);
   } else {
-    await requestTransferByKeypair(feePayer.toPublicKey());
+    await requestTransferByKeypair(feePayer.pubkey);
   }
 
   console.log('# owner: ', owner.pubkey);
@@ -49,8 +49,8 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
       isMutable: true,
       external_url: 'https://github.com/atonoy/solana-suite',
     },
-    owner.toKeypair(),
-    feePayer.toKeypair()
+    owner.secret,
+    feePayer.secret
   );
 
   // this is NFT ID
@@ -66,7 +66,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // Display metadata from blockchain(optional)
   //////////////////////////////////////////////
 
-  const metadata = await Metaplex.findByOwner(owner.toPublicKey());
+  const metadata = await Metaplex.findByOwner(owner.pubkey);
 
   metadata.match(
     (value) => console.log('# metadata: ', value),
@@ -79,11 +79,11 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
 
   //transfer nft owner => receipt
   const inst2 = await Metaplex.transfer(
-    mint.toPublicKey(),
-    owner.toPublicKey(),
-    receipt.toPublicKey(),
-    [owner.toKeypair()],
-    feePayer.toKeypair()
+    mint,
+    owner.pubkey,
+    receipt.pubkey,
+    [owner.secret],
+    feePayer.secret
   );
 
   // submit instructions

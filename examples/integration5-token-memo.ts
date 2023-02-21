@@ -3,15 +3,9 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import {
-  KeypairStr,
-  SplToken,
-  Pubkey,
-  Memo,
-  Airdrop,
-} from '@solana-suite/core';
+import { SplToken, Memo, Airdrop } from '@solana-suite/core';
 
-import { Node } from '@solana-suite/shared';
+import { Node, Pubkey, KeypairAccount } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
 import { StorageType } from '@solana-suite/shared-metaplex';
@@ -22,14 +16,14 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   //////////////////////////////////////////////
 
   // create token owner wallet, receive token receipt wallet.
-  const owner = KeypairStr.create();
-  const receipt = KeypairStr.create();
+  const owner = KeypairAccount.create();
+  const receipt = KeypairAccount.create();
 
   // faucet
   if (process.env.AIR_DROP) {
-    await Airdrop.request(owner.toPublicKey());
+    await Airdrop.request(owner.pubkey);
   } else {
-    await requestTransferByKeypair(owner.toPublicKey());
+    await requestTransferByKeypair(owner.pubkey);
   }
 
   console.log('# owner: ', owner.pubkey);
@@ -52,8 +46,8 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   };
 
   const inst1 = await SplToken.mint(
-    owner.toPublicKey(),
-    owner.toKeypair(),
+    owner.pubkey,
+    owner.secret,
     totalAmount,
     decimals,
     tokenMetadata
@@ -76,8 +70,8 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   `;
   const inst2 = Memo.create(
     memoData,
-    receipt.toPublicKey(), // memo's owner
-    owner.toKeypair() // signer or feePayer
+    receipt.pubkey, // memo's owner
+    owner.secret // signer or feePayer
   );
 
   //////////////////////////////////////////////
@@ -86,10 +80,10 @@ import { StorageType } from '@solana-suite/shared-metaplex';
 
   // transfer nft to receipt wallet
   const inst3 = await SplToken.transfer(
-    mint.toPublicKey(),
-    owner.toPublicKey(),
-    receipt.toPublicKey(),
-    [owner.toKeypair()],
+    mint,
+    owner.pubkey,
+    receipt.pubkey,
+    [owner.secret],
     10,
     decimals
   );
@@ -106,10 +100,7 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   // GET MEMO DATA
   //////////////////////////////////////////////
 
-  const res = await SplToken.getHistory(
-    mint.toPublicKey(),
-    receipt.toPublicKey()
-  );
+  const res = await SplToken.getHistory(mint, receipt.pubkey);
 
   res.isOk && console.log('# Transfer Memo: ', res.value[0].memo);
 })();
