@@ -27,7 +27,7 @@ var AssociatedAccount;
     const RETRY_OVER_LIMIT = 10;
     const RETRY_SLEEP_TIME = 3;
     const get = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield AssociatedAccount.makeOrCreateInstruction(mint, owner, new shared_1.KeyPair({ secret: feePayer }).pubkey, allowOwnerOffCurve);
+        const res = yield AssociatedAccount.makeOrCreateInstruction(mint, owner, new shared_1.KeypairAccount({ secret: feePayer }).pubkey, allowOwnerOffCurve);
         if (!res.inst) {
             return res.tokenAccount;
         }

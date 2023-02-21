@@ -5,9 +5,9 @@ import { SplToken } from '../src';
 import { Setup } from '../../shared/test/testSetup';
 import { RandomAsset } from '../../storage/test/randomAsset';
 import { StorageType } from '../../shared-metaplex';
-import { KeyPair } from '../../shared';
+import { KeypairAccount } from '../../shared/src/keypair-account';
 
-let source: KeyPair;
+let source: KeypairAccount;
 const TOKEN_METADATA = {
   name: 'solana-suite-token',
   symbol: 'SST',

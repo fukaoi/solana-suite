@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { debugLog, Try, MintInstruction, KeyPair, } from '@solana-suite/shared';
+import { debugLog, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { Bundlr, Validator, } from '@solana-suite/shared-metaplex';
 import { token, TransactionBuilder, } from '@metaplex-foundation/js';
@@ -16,10 +16,10 @@ export var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
     const createNftBuilder = (params, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        const mint = KeyPair.create();
+        const mint = KeypairAccount.create();
         const updateAuthority = owner;
         const mintAuthority = owner;
-        const inst = yield Metaplex.createNftBuilderInstruction(feePayer.toKeypair(), params, mint.toKeypair(), updateAuthority.toKeypair(), mintAuthority.toKeypair(), new KeyPair({ secret: owner }).pubkey);
+        const inst = yield Metaplex.createNftBuilderInstruction(feePayer.toKeypair(), params, mint.toKeypair(), updateAuthority.toKeypair(), mintAuthority.toKeypair(), new KeypairAccount({ secret: owner }).pubkey);
         return new MintInstruction(inst, [feePayer.toKeypair(), mint.toKeypair(), owner.toKeypair()], undefined, mint);
     });
     Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {

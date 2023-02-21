@@ -1,9 +1,9 @@
 import { assert } from 'chai';
 import { Multisig } from '../src/';
 import { Setup } from '../../shared/test/testSetup';
-import { KeyPair, Pubkey } from '../../shared';
+import { KeypairAccount, Pubkey } from '../../shared';
 
-let source: KeyPair;
+let source: KeypairAccount;
 
 describe('Multisig', () => {
   before(async () => {
@@ -12,8 +12,8 @@ describe('Multisig', () => {
   });
 
   it('Is multisig address', async () => {
-    const signer1 = KeyPair.create();
-    const signer2 = KeyPair.create();
+    const signer1 = KeypairAccount.create();
+    const signer2 = KeypairAccount.create();
     const inst = await Multisig.create(2, source.secret, [
       signer1.pubkey,
       signer2.pubkey,
@@ -30,8 +30,8 @@ describe('Multisig', () => {
   });
 
   it('[Err]Invalid multisig address', async () => {
-    const signer1 = KeyPair.create();
-    const signer2 = KeyPair.create();
+    const signer1 = KeypairAccount.create();
+    const signer2 = KeypairAccount.create();
     const inst = await Multisig.create(2, source.secret, [
       signer1.pubkey,
       signer2.pubkey,
@@ -44,8 +44,8 @@ describe('Multisig', () => {
   });
 
   it('Create account 2 of 2', async () => {
-    const signer1 = KeyPair.create();
-    const signer2 = KeyPair.create();
+    const signer1 = KeypairAccount.create();
+    const signer2 = KeypairAccount.create();
     const inst = await Multisig.create(2, source.secret, [
       signer1.pubkey,
       signer2.pubkey,
@@ -58,9 +58,9 @@ describe('Multisig', () => {
   });
 
   it('Create account 2 of 3', async () => {
-    const signer1 = KeyPair.create();
-    const signer2 = KeyPair.create();
-    const signer3 = KeyPair.create();
+    const signer1 = KeypairAccount.create();
+    const signer2 = KeypairAccount.create();
+    const signer3 = KeypairAccount.create();
     const inst = await Multisig.create(2, source.secret, [
       signer1.pubkey,
       signer2.pubkey,
@@ -74,14 +74,14 @@ describe('Multisig', () => {
   });
 
   it('[Err] m number less than signers number', async () => {
-    const signer1 = KeyPair.create();
+    const signer1 = KeypairAccount.create();
     const res = await Multisig.create(2, source.secret, [signer1.pubkey]);
     assert.isTrue(res.isErr);
   });
 
   it('Get multisig info', async () => {
-    const signer1 = KeyPair.create();
-    const signer2 = KeyPair.create();
+    const signer1 = KeypairAccount.create();
+    const signer2 = KeypairAccount.create();
     const inst = await Multisig.create(2, source.secret, [
       signer1.pubkey,
       signer2.pubkey,

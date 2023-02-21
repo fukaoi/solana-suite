@@ -1,3 +1,3 @@
 export * from './global';
-export * from './key-pair';
+export * from './keypair-account';
 //# sourceMappingURL=index.js.map

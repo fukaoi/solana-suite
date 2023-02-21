@@ -1,7 +1,4 @@
-import {
-  JsonMetadata,
-  MetaplexFileContent,
-} from '@metaplex-foundation/js';
+import { JsonMetadata, MetaplexFileContent } from '@metaplex-foundation/js';
 import fs from 'fs';
 
 export namespace RandomAsset {

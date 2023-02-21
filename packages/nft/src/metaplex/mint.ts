@@ -5,7 +5,7 @@ import {
   Try,
   MintInstruction,
   Secret,
-  KeyPair,
+  KeypairAccount,
   Pubkey,
 } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
@@ -33,7 +33,7 @@ export namespace Metaplex {
     owner: Secret,
     feePayer: Secret
   ): Promise<MintInstruction> => {
-    const mint = KeyPair.create();
+    const mint = KeypairAccount.create();
     const updateAuthority = owner;
     const mintAuthority = owner;
 
@@ -43,7 +43,7 @@ export namespace Metaplex {
       mint.toKeypair(),
       updateAuthority.toKeypair(),
       mintAuthority.toKeypair(),
-      new KeyPair({ secret: owner }).pubkey
+      new KeypairAccount({ secret: owner }).pubkey
     );
 
     return new MintInstruction(

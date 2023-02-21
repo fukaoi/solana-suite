@@ -1,13 +1,13 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Airdrop } from '../../../core';
-import { KeyPair, Pubkey } from '../../../shared';
+import { KeypairAccount, Pubkey } from '../../../shared';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 
-let source: KeyPair;
-let dest: KeyPair;
+let source: KeypairAccount;
+let dest: KeypairAccount;
 
 describe('Metaplex', () => {
   before(async () => {
@@ -71,7 +71,7 @@ describe('Metaplex', () => {
 
   // every call requestAirdrop(), raise internal error
   it.skip('[Arweave] mint nft with feePayer', async () => {
-    const feePayer = KeyPair.create();
+    const feePayer = KeypairAccount.create();
     await Airdrop.request(feePayer.pubkey);
     const asset = RandomAsset.get();
 

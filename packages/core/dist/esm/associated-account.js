@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Node, debugLog, Instruction, sleep, KeyPair, } from '@solana-suite/shared';
+import { Node, debugLog, Instruction, sleep, KeypairAccount, } from '@solana-suite/shared';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddress, getAccount, TokenAccountNotFoundError, TokenInvalidAccountOwnerError, createAssociatedTokenAccountInstruction, } from '@solana/spl-token';
 /**
  * Get Associated token Account.
@@ -24,7 +24,7 @@ export var AssociatedAccount;
     const RETRY_OVER_LIMIT = 10;
     const RETRY_SLEEP_TIME = 3;
     const get = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        const res = yield AssociatedAccount.makeOrCreateInstruction(mint, owner, new KeyPair({ secret: feePayer }).pubkey, allowOwnerOffCurve);
+        const res = yield AssociatedAccount.makeOrCreateInstruction(mint, owner, new KeypairAccount({ secret: feePayer }).pubkey, allowOwnerOffCurve);
         if (!res.inst) {
             return res.tokenAccount;
         }

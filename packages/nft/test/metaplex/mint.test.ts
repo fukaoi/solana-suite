@@ -4,9 +4,9 @@ import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { ValidatorError } from '../../../shared-metaplex/';
-import { KeyPair } from '../../../shared';
+import { KeypairAccount } from '../../../shared';
 
-let source: KeyPair;
+let source: KeypairAccount;
 
 describe('Metaplex', () => {
   before(async () => {

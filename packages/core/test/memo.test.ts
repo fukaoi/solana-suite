@@ -2,10 +2,10 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../shared/test/testSetup';
 import { Memo, SolNative } from '../src';
-import { KeyPair } from '../../shared/src/key-pair';
+import { KeypairAccount } from '../../shared/src/keypair-account';
 
-let source: KeyPair;
-let dest: KeyPair;
+let source: KeypairAccount;
+let dest: KeypairAccount;
 const DUMMY_DATA = 'dummy memo data';
 
 describe('Memo', () => {
