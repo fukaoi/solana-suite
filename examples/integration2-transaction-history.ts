@@ -3,15 +3,9 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import {
-  SplToken,
-  Pubkey,
-  KeypairStr,
-  Airdrop,
-  DirectionFilter,
-} from '@solana-suite/core';
+import { SplToken, Airdrop, DirectionFilter } from '@solana-suite/core';
 
-import { Node } from '@solana-suite/shared';
+import { Node, Pubkey, KeypairAccount } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
 import { StorageType } from '@solana-suite/shared-metaplex';
@@ -22,14 +16,14 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   //////////////////////////////////////////////
 
   // create token owner wallet, receive token receipt wallet.
-  const owner = KeypairStr.create();
-  const receipt = KeypairStr.create();
+  const owner = KeypairAccount.create();
+  const receipt = KeypairAccount.create();
 
   // faucet
   if (process.env.AIR_DROP) {
-    await Airdrop.request(owner.toPublicKey());
+    await Airdrop.request(owner.pubkey);
   } else {
-    await requestTransferByKeypair(owner.toPublicKey());
+    await requestTransferByKeypair(owner.pubkey);
   }
 
   console.log('# owner: ', owner);
@@ -51,8 +45,8 @@ import { StorageType } from '@solana-suite/shared-metaplex';
     isMutable: false,
   };
   const inst1 = await SplToken.mint(
-    owner.toPublicKey(),
-    owner.toKeypair(),
+    owner.pubkey,
+    owner.secret,
     totalAmount,
     decimals,
     tokenMetadata
@@ -74,10 +68,10 @@ import { StorageType } from '@solana-suite/shared-metaplex';
 
   // transfer nft to receipt wallet
   const inst2 = await SplToken.transfer(
-    mint.toPublicKey(),
-    owner.toPublicKey(),
-    receipt.toPublicKey(),
-    [owner.toKeypair()],
+    mint,
+    owner.pubkey,
+    receipt.pubkey,
+    [owner.secret],
     10,
     decimals
   );
@@ -95,18 +89,14 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   //////////////////////////////////////////////
 
   const hist1 = await SplToken.getHistory(
-    mint.toPublicKey(), // used mint
-    owner.toPublicKey() // search key
+    mint, // used mint
+    owner.pubkey // search key
   );
   console.log('# token history by publish: ', hist1.unwrap());
 
-  const hist2 = await SplToken.getHistory(
-    mint.toPublicKey(),
-    receipt.toPublicKey(),
-    {
-      directionFilter: DirectionFilter.Dest, // Dest or Source
-    }
-  );
+  const hist2 = await SplToken.getHistory(mint, receipt.pubkey, {
+    directionFilter: DirectionFilter.Dest, // Dest or Source
+  });
   console.log(
     '# token history result by destination filter : ',
     hist2.unwrap()

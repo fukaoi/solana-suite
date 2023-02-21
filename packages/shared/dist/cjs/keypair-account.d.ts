@@ -1,6 +1,6 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
-import { Pubkey, Secret } from './types/key-pair';
-export declare class KeyPair {
+import { Pubkey, Secret } from './types/keypair-account';
+export declare class KeypairAccount {
     pubkey: Pubkey;
     secret: Secret;
     constructor(params: {
@@ -11,6 +11,6 @@ export declare class KeyPair {
     toKeypair(): Keypair;
     static isPubkey: (value: string) => value is Pubkey;
     static isSecret: (value: string) => value is Secret;
-    static create: () => KeyPair;
-    static toKeyPair: (keypair: Keypair) => KeyPair;
+    static create: () => KeypairAccount;
+    static toKeyPair: (keypair: Keypair) => KeypairAccount;
 }

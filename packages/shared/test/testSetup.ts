@@ -2,7 +2,7 @@ import fs from 'fs';
 import bs from 'bs58';
 import { Keypair, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { Constants } from '../src/constants';
-import { Node, debugLog, KeyPair, Pubkey, Secret } from '../src/';
+import { Node, debugLog, KeypairAccount, Pubkey, Secret } from '../src/';
 
 console.log(`\u001b[33m === TEST START ===`);
 console.log(`\u001b[33m solana-network: ${Constants.currentCluster}`);
@@ -11,18 +11,21 @@ export namespace Setup {
   const TEMP_KEYPAIR_FILE = `../../solana-${Constants.currentCluster}-keypair`;
 
   export const generateKeyPair = async (): Promise<{
-    source: KeyPair;
-    dest: KeyPair;
+    source: KeypairAccount;
+    dest: KeypairAccount;
   }> => {
     const { source, dest } = await fetchSourceAndDest();
     log(source, dest);
     return {
-      source: new KeyPair({ pubkey: source.pubkey, secret: source.secret }),
-      dest: new KeyPair({ pubkey: dest.pubkey, secret: dest.secret }),
+      source: new KeypairAccount({
+        pubkey: source.pubkey,
+        secret: source.secret,
+      }),
+      dest: new KeypairAccount({ pubkey: dest.pubkey, secret: dest.secret }),
     };
   };
 
-  const log = (source: KeyPair, dest: KeyPair) => {
+  const log = (source: KeypairAccount, dest: KeypairAccount) => {
     debugLog(`# source.pubkey:`, source.pubkey);
     debugLog(`# source.secret: `, source.secret);
     debugLog(`# destination.pubkey:`, dest.pubkey);
@@ -58,12 +61,12 @@ export namespace Setup {
 
     await requestAirdrop(source.publicKey);
 
-    const sourceObject = new KeyPair({
+    const sourceObject = new KeypairAccount({
       pubkey: source.publicKey.toBase58() as Pubkey,
       secret: bs.encode(source.secretKey) as Secret,
     });
 
-    const destObject = new KeyPair({
+    const destObject = new KeypairAccount({
       pubkey: dest.publicKey.toBase58() as Pubkey,
       secret: bs.encode(dest.secretKey) as Secret,
     });
@@ -73,7 +76,7 @@ export namespace Setup {
     return data;
   };
 
-  const templateKeyPair = (source: KeyPair, dest: KeyPair) => {
+  const templateKeyPair = (source: KeypairAccount, dest: KeypairAccount) => {
     return {
       source: {
         pubkey: source.pubkey,

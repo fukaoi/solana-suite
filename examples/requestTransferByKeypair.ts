@@ -1,6 +1,6 @@
 import { SolNative } from '@solana-suite/core';
+import { Pubkey, Secret } from '@solana-suite/shared';
 import { Node } from '@solana-suite/shared/src';
-import { PublicKey } from '@solana/web3.js';
 import assert from 'assert';
 import fs from 'fs';
 
@@ -15,19 +15,14 @@ import fs from 'fs';
 const LOCAL_KEYPAIR_FILE = './solana-localhost-devnet-keypair';
 
 export const requestTransferByKeypair = async (
-  pubkey: PublicKey,
+  pubkey: Pubkey,
   sol: number = 0.1
 ) => {
-  console.log('Now transfer...please wait');
-  const keypair: { pubkey: string; secret: string } = JSON.parse(
+  console.log('Now load...please wait');
+  const keypair: { pubkey: Pubkey; secret: Secret } = JSON.parse(
     fs.readFileSync(LOCAL_KEYPAIR_FILE, 'utf8')
   ).source;
-  const sig = SolNative.transfer(
-    keypair.pubkey.toPublicKey(),
-    pubkey,
-    [keypair.secret.toKeypair()],
-    sol
-  );
+  const sig = SolNative.transfer(keypair.pubkey, pubkey, [keypair.secret], sol);
 
   (await sig.submit()).match(
     (ok) => {

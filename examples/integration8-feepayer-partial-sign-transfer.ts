@@ -3,9 +3,14 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Airdrop, KeypairStr, SolNative, SplToken } from '@solana-suite/core';
+import { Airdrop, SolNative, SplToken } from '@solana-suite/core';
 
-import { PartialSignInstruction, sleep } from '@solana-suite/shared';
+import {
+  PartialSignInstruction,
+  sleep,
+  KeypairAccount,
+  Pubkey,
+} from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
 import { StorageType } from '@solana-suite/shared-metaplex';
@@ -15,29 +20,28 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   //////////////////////////////////////////////
 
   // random create
-  const owner = KeypairStr.create();
-  const tokenOwner = KeypairStr.create();
-  const dest = KeypairStr.create();
-  const feePayer = KeypairStr.create();
+  const owner = KeypairAccount.create();
+  const tokenOwner = KeypairAccount.create();
+  const dest = KeypairAccount.create();
+  const feePayer = KeypairAccount.create();
 
   // faucet
   if (process.env.AIR_DROP) {
-    await Airdrop.request(owner.toPublicKey());
-    await Airdrop.request(feePayer.toPublicKey());
+    await Airdrop.request(owner.pubkey);
+    await Airdrop.request(feePayer.pubkey);
   } else {
-    await requestTransferByKeypair(owner.toPublicKey());
-    await requestTransferByKeypair(feePayer.toPublicKey());
+    await requestTransferByKeypair(owner.pubkey);
+    await requestTransferByKeypair(feePayer.pubkey);
   }
 
   console.log('# owner: ', owner.pubkey);
 
   await sleep(10); // Avoid 429 error
 
-  await Airdrop.request(feePayer.toPublicKey());
-  console.log('# feePayer: ', feePayer.pubkey);
-
-  console.log('# tokenOwner: ', tokenOwner.pubkey);
-  console.log('# dest: ', dest.pubkey);
+  await Airdrop.request(feePayer.pubkey);
+  console.log('# feePayer: ', feePayer);
+  console.log('# tokenOwner: ', tokenOwner);
+  console.log('# dest: ', dest);
 
   // SOL version //
   //////////////////////////////////////////////
@@ -45,11 +49,11 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   //////////////////////////////////////////////
 
   const inst = await SolNative.feePayerPartialSignTransfer(
-    owner.toPublicKey(),
-    dest.toPublicKey(),
-    [owner.toKeypair()],
+    owner.pubkey,
+    dest.pubkey,
+    [owner.secret],
     0.001,
-    feePayer.toPublicKey()
+    feePayer.pubkey
   );
 
   let hex: string = '';
@@ -70,7 +74,7 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   //////////////////////////////////////////////
 
   const obj = new PartialSignInstruction(hex);
-  const res = await obj.submit(feePayer.toKeypair());
+  const res = await obj.submit(feePayer.secret);
   res.match(
     (ok) => console.log('# tx signature: ', ok),
     (err) => assert.fail(err.message)
@@ -91,24 +95,24 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   };
 
   const mintInst = await SplToken.mint(
-    tokenOwner.toPublicKey(),
-    tokenOwner.toKeypair(),
+    tokenOwner.pubkey,
+    tokenOwner.secret,
     10000,
     decimals,
     tokenMetadata,
-    feePayer.toKeypair()
+    feePayer.secret
   );
 
   await mintInst.submit();
 
   const inst2 = await SplToken.feePayerPartialSignTransfer(
-    (mintInst.unwrap().data as string).toPublicKey(),
-    tokenOwner.toPublicKey(),
-    dest.toPublicKey(),
-    [tokenOwner.toKeypair()],
+    mintInst.unwrap().data as Pubkey,
+    tokenOwner.pubkey,
+    dest.pubkey,
+    [tokenOwner.secret],
     100,
     decimals,
-    feePayer.toPublicKey()
+    feePayer.pubkey
   );
 
   let hex2: string = '';
@@ -129,7 +133,7 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   //////////////////////////////////////////////
 
   const obj2 = new PartialSignInstruction(hex2);
-  const res2 = await obj2.submit(feePayer.toKeypair());
+  const res2 = await obj2.submit(feePayer.secret);
   res2.match(
     (ok) => console.log('# tx signature: ', ok),
     (err) => assert.fail(err.message)

@@ -1,12 +1,12 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { KeyPair } from '../../shared';
+import { KeypairAccount } from '../../shared';
 import { Setup } from '../../shared/test/testSetup';
 import { RandomAsset } from './randomAsset';
 import { Arweave } from '../src/arweave';
 import { Currency } from '@metaplex-foundation/js';
 
-let source: KeyPair;
+let source: KeypairAccount;
 
 describe('StorageArweave', () => {
   before(async () => {

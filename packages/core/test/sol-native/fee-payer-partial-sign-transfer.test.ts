@@ -1,11 +1,11 @@
 import { describe, it, before } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
-import { KeyPair } from '../../../shared/src/key-pair';
+import { KeypairAccount } from '../../../shared/src/keypair-account';
 import { SolNative } from '../../src/';
 
-let source: KeyPair;
-let dest: KeyPair;
+let source: KeypairAccount;
+let dest: KeypairAccount;
 
 describe('SolNative', () => {
   before(async () => {

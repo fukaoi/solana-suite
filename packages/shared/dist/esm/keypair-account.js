@@ -1,6 +1,6 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
 import bs from 'bs58';
-export class KeyPair {
+export class KeypairAccount {
     constructor(params) {
         if (!params.pubkey) {
             const keypair = params.secret.toKeypair();
@@ -19,19 +19,19 @@ export class KeyPair {
         return Keypair.fromSecretKey(decoded);
     }
 }
-KeyPair.isPubkey = (value) => /^[0-9a-zA-Z]{32,44}$/.test(value);
-KeyPair.isSecret = (value) => /^[0-9a-zA-Z]{88}$/.test(value);
-KeyPair.create = () => {
+KeypairAccount.isPubkey = (value) => /^[0-9a-zA-Z]{32,44}$/.test(value);
+KeypairAccount.isSecret = (value) => /^[0-9a-zA-Z]{88}$/.test(value);
+KeypairAccount.create = () => {
     const keypair = Keypair.generate();
-    return new KeyPair({
+    return new KeypairAccount({
         pubkey: keypair.publicKey.toString(),
         secret: bs.encode(keypair.secretKey),
     });
 };
-KeyPair.toKeyPair = (keypair) => {
-    return new KeyPair({
+KeypairAccount.toKeyPair = (keypair) => {
+    return new KeypairAccount({
         pubkey: keypair.publicKey.toString(),
         secret: bs.encode(keypair.secretKey),
     });
 };
-//# sourceMappingURL=key-pair.js.map
+//# sourceMappingURL=keypair-account.js.map

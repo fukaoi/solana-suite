@@ -4,9 +4,9 @@ import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { StorageType } from '../../../shared-metaplex';
-import { KeyPair, Pubkey } from '../../../shared';
+import { KeypairAccount, Pubkey } from '../../../shared';
 
-let source: KeyPair;
+let source: KeypairAccount;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
@@ -26,8 +26,8 @@ describe('SplToken', () => {
   });
 
   it('transfer feePayerPartialSign', async () => {
-    const tokenOwner = KeyPair.create();
-    const receipt = KeyPair.create();
+    const tokenOwner = KeypairAccount.create();
+    const receipt = KeypairAccount.create();
     console.log('# owner: ', tokenOwner.pubkey);
     console.log('# receipt: ', receipt.pubkey);
 

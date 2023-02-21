@@ -1,8 +1,8 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
-import { Pubkey, Secret } from './types/key-pair';
+import { Pubkey, Secret } from './types/keypair-account';
 import bs from 'bs58';
 
-export class KeyPair {
+export class KeypairAccount {
   pubkey: Pubkey;
   secret: Secret;
 
@@ -31,18 +31,18 @@ export class KeyPair {
   static isSecret = (value: string): value is Secret =>
     /^[0-9a-zA-Z]{88}$/.test(value);
 
-  static create = (): KeyPair => {
+  static create = (): KeypairAccount => {
     const keypair = Keypair.generate();
-    return new KeyPair({
+    return new KeypairAccount({
       pubkey: keypair.publicKey.toString() as Pubkey,
       secret: bs.encode(keypair.secretKey) as Secret,
     });
   };
 
-  static toKeyPair = (keypair: Keypair): KeyPair => {
-    return new KeyPair({
+  static toKeyPair = (keypair: Keypair): KeypairAccount => {
+    return new KeypairAccount({
       pubkey: keypair.publicKey.toString() as Pubkey,
       secret: bs.encode(keypair.secretKey) as Secret,
     });
-  }
+  };
 }

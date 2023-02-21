@@ -3,7 +3,13 @@ import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 
 import { Metaplex } from '@solana-suite/nft';
 import { Storage } from '@solana-suite/storage';
-import { debugLog, Node, Result, Try, KeyPair } from '@solana-suite/shared';
+import {
+  debugLog,
+  Node,
+  Result,
+  Try,
+  KeypairAccount,
+} from '@solana-suite/shared';
 import {
   Bundlr,
   Validator,
@@ -23,7 +29,7 @@ export namespace PhantomMetaplex {
     const updateAuthority = metaplex.identity();
     const mintAuthority = metaplex.identity();
     const tokenOwner = metaplex.identity();
-    const useNewMint = KeyPair.create();
+    const useNewMint = KeypairAccount.create();
     const instructions = await Metaplex.createNftBuilderInstruction(
       payer,
       params,

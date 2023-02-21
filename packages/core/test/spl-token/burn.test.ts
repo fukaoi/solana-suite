@@ -2,11 +2,11 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/';
-import { Node, KeyPair } from '../../../shared';
+import { Node, KeypairAccount } from '../../../shared';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { StorageType } from '../../../shared-metaplex';
 
-let source: KeyPair;
+let source: KeypairAccount;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;

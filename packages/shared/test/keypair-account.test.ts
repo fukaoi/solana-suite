@@ -1,8 +1,8 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { PublicKey, Keypair } from '@solana/web3.js';
-import { KeyPair } from '../src/key-pair';
-import { Pubkey } from '../src/types/key-pair';
+import { KeypairAccount } from '../src/keypair-account';
+import { Pubkey } from '../src/types/keypair-account';
 import '../src/global';
 import bs from 'bs58';
 
@@ -30,18 +30,18 @@ describe('KeypairStr', () => {
   });
 
   it('Create KeyPair Object', async () => {
-    const obj = new KeyPair({ pubkey: PUBKEY, secret: SECRET });
+    const obj = new KeypairAccount({ pubkey: PUBKEY, secret: SECRET });
     assert.isNotEmpty(obj);
   });
 
   it('is Pubkey', async () => {
-    assert.isTrue(KeyPair.isPubkey(PUBKEY));
+    assert.isTrue(KeypairAccount.isPubkey(PUBKEY));
   });
 
   it('is Secret', async () => {
     const secret =
       '54SjeQxyNVS6xkNrqDSQ5aKyMCu7gzySku2p6UnPqF83NDDRfHsVrXQtiEVtsn7t5QWRCTm2VGmwkmjzxcSoYexa';
-    assert.isTrue(KeyPair.isSecret(secret));
+    assert.isTrue(KeypairAccount.isSecret(secret));
   });
 
   it('Keypair to KeyPair', async () => {
@@ -50,7 +50,7 @@ describe('KeypairStr', () => {
       pubkey: keypair.publicKey.toString(),
       secret: bs.encode(keypair.secretKey).toString(),
     };
-    const res = KeyPair.toKeyPair(keypair);
+    const res = KeypairAccount.toKeyPair(keypair);
     assert.deepEqual(res, expeted);
   });
 

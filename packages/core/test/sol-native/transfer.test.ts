@@ -2,10 +2,10 @@ import { describe, it, before } from 'mocha';
 import { SolNative, Airdrop } from '../../src';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
-import { KeyPair } from '../../../shared/src';
+import { KeypairAccount } from '../../../shared/src/keypair-account';
 
-let source: KeyPair;
-let dest: KeyPair;
+let source: KeypairAccount;
+let dest: KeypairAccount;
 
 describe('SolNative', () => {
   before(async () => {
@@ -32,7 +32,7 @@ describe('SolNative', () => {
   // every call requestAirdrop(), raise internal error
   it.skip('transfer transaction with fee payer', async () => {
     const solAmount = 0.01;
-    const owner = KeyPair.create();
+    const owner = KeypairAccount.create();
     await Airdrop.request(owner.pubkey);
     const feePayer = source;
 

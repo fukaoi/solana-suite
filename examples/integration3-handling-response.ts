@@ -17,7 +17,7 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   //////////////////////////////////////////////
   // Example1 type guard
   //////////////////////////////////////////////
-  const ex1 = await SolNative.findByOwner(DEMO_ADDRESS.toPublicKey());
+  const ex1 = await SolNative.findByOwner(DEMO_ADDRESS);
   ex1.isOk && console.log('# ex1: ', ex1.value);
 
   if (ex1.isOk) {
@@ -29,14 +29,14 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   //////////////////////////////////////////////
   // Example2 unwrap
   //////////////////////////////////////////////
-  const ex2 = await SolNative.findByOwner(DEMO_ADDRESS.toPublicKey());
+  const ex2 = await SolNative.findByOwner(DEMO_ADDRESS);
   console.log('# ex2: ', ex2.unwrap());
 
 
   //////////////////////////////////////////////
   // Example3 map()
   //////////////////////////////////////////////
-  const ex4 = await SolNative.findByOwner(DEMO_ADDRESS.toPublicKey());
+  const ex4 = await SolNative.findByOwner(DEMO_ADDRESS);
 
   const mapped = ex4.map(
     (value: SolNativeOwnerInfo) => value.sol * 100,
@@ -48,7 +48,7 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   //////////////////////////////////////////////
   // Example4 match()
   //////////////////////////////////////////////
-  const ex5 = await SolNative.findByOwner(DEMO_ADDRESS.toPublicKey());
+  const ex5 = await SolNative.findByOwner(DEMO_ADDRESS);
 
   ex5.match(
     (value: SolNativeOwnerInfo) => console.log('# ex5: ', value),

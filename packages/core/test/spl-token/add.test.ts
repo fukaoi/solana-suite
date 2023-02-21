@@ -4,9 +4,9 @@ import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { StorageType } from '../../../shared-metaplex/src';
-import { KeyPair, Pubkey } from '../../../shared/src/';
+import { KeypairAccount, Pubkey } from '../../../shared/src/';
 
-let source: KeyPair;
+let source: KeypairAccount;
 let mint: Pubkey;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;

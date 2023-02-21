@@ -3,9 +3,9 @@ import { assert } from 'chai';
 import { Setup } from '../../shared/test/testSetup';
 import { Airdrop } from '../src/airdrop';
 import { SolNative } from '../src/';
-import { KeyPair } from '../../shared';
+import { KeypairAccount } from '../../shared';
 
-let source: KeyPair;
+let source: KeypairAccount;
 
 describe.skip('Airdrop', () => {
   before(async () => {

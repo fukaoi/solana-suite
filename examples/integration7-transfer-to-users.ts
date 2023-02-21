@@ -3,17 +3,14 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import {
-  KeypairStr,
-  Airdrop,
-  Pubkey,
-  SplToken,
-  Secret,
-} from '@solana-suite/core';
+import { Airdrop, SplToken } from '@solana-suite/core';
 
 import {
   // Node,
   // Constants,
+  KeypairAccount,
+  Pubkey,
+  Secret,
   sleep,
 } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
@@ -35,7 +32,7 @@ const SLEEP_TIME_WAIT = 0;
 
   let users: { pubkey: Pubkey; secret: Secret }[] = [];
   for (let i = 0; i < USERS_COUNT; i++) {
-    users.push(KeypairStr.create());
+    users.push(KeypairAccount.create());
   }
 
   // manual setting
@@ -45,13 +42,13 @@ const SLEEP_TIME_WAIT = 0;
   // );
 
   // random create
-  const owner = KeypairStr.create();
+  const owner = KeypairAccount.create();
 
   // faucet
   if (process.env.AIR_DROP) {
-    await Airdrop.request(owner.toPublicKey());
+    await Airdrop.request(owner.pubkey);
   } else {
-    await requestTransferByKeypair(owner.toPublicKey());
+    await requestTransferByKeypair(owner.pubkey);
   }
 
   console.log('# owner: ', owner.pubkey);
@@ -72,8 +69,8 @@ const SLEEP_TIME_WAIT = 0;
   };
 
   const inst1 = await SplToken.mint(
-    owner.toPublicKey(),
-    owner.toKeypair(),
+    owner.pubkey,
+    owner.secret,
     totalAmount,
     decimals,
     tokenMetadata
@@ -96,10 +93,10 @@ const SLEEP_TIME_WAIT = 0;
   for (const user of users) {
     await sleep(SLEEP_TIME_WAIT);
     const inst2 = await SplToken.transfer(
-      mint.toPublicKey(),
-      owner.toPublicKey(),
-      user.pubkey.toPublicKey(),
-      [owner.toKeypair()],
+      mint,
+      owner.pubkey,
+      user.pubkey,
+      [owner.secret],
       10,
       decimals
     );

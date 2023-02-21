@@ -3,9 +3,9 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { KeypairStr, Multisig, Pubkey, Airdrop } from '@solana-suite/core';
+import { Multisig, Airdrop } from '@solana-suite/core';
 
-import { Node } from '@solana-suite/shared';
+import { Node, KeypairAccount, Pubkey } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 
 (async () => {
@@ -19,18 +19,18 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // publisher: mint token, transfer token and pay transaction fee account
   // receipt: generally user account. sol not stocked
 
-  const feePayer = KeypairStr.create();
+  const feePayer = KeypairAccount.create();
 
   // signer for multisig
-  const signer1 = KeypairStr.create();
-  const signer2 = KeypairStr.create();
-  const signer3 = KeypairStr.create();
+  const signer1 = KeypairAccount.create();
+  const signer2 = KeypairAccount.create();
+  const signer3 = KeypairAccount.create();
 
   // faucet
   if (process.env.AIR_DROP) {
-    await Airdrop.request(feePayer.toPublicKey());
+    await Airdrop.request(feePayer.pubkey);
   } else {
-    await requestTransferByKeypair(feePayer.toPublicKey(), 0.6);
+    await requestTransferByKeypair(feePayer.pubkey, 0.6);
   }
 
   console.log('# feePayer: ', feePayer.pubkey);
@@ -41,13 +41,8 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
   // Setting multisig 2 of 2(m of n)
   //////////////////////////////////////////////
-  const signerPubkeys = [
-    signer1.toPublicKey(),
-    signer2.toPublicKey(),
-    signer3.toPublicKey(),
-  ];
-
-  const inst1 = await Multisig.create(2, feePayer.toKeypair(), signerPubkeys);
+  const signerPubkeys = [signer1.pubkey, signer2.pubkey, signer3.pubkey];
+  const inst1 = await Multisig.create(2, feePayer.secret, signerPubkeys);
   const multisig = inst1.unwrap().data as Pubkey;
   (await inst1.submit()).match(
     async (value) => {

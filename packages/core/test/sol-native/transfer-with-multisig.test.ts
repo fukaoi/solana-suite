@@ -2,10 +2,10 @@ import { describe, it, before } from 'mocha';
 import { SolNative, Multisig } from '../../src';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
-import { KeyPair } from '../../../shared/src';
+import { KeypairAccount } from '../../../shared/src/keypair-account';
 
-let source: KeyPair;
-let dest: KeyPair;
+let source: KeypairAccount;
+let dest: KeypairAccount;
 
 describe('SolNative', () => {
   before(async () => {
@@ -15,8 +15,8 @@ describe('SolNative', () => {
   });
 
   it('transfer transaction with multi sig', async () => {
-    const signer1 = KeyPair.create();
-    const signer2 = KeyPair.create();
+    const signer1 = KeypairAccount.create();
+    const signer2 = KeypairAccount.create();
     const inst1 = await Multisig.create(2, source.secret, [
       signer1.pubkey,
       signer2.pubkey,
