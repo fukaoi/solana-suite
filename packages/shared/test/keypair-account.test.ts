@@ -35,13 +35,15 @@ describe('KeypairStr', () => {
   });
 
   it('is Pubkey', async () => {
-    assert.isTrue(KeypairAccount.isPubkey(PUBKEY));
+    for (let index = 0; index < 50; index++) {
+      assert.isTrue(KeypairAccount.isPubkey(KeypairAccount.create().pubkey));
+    }
   });
 
   it('is Secret', async () => {
-    const secret =
-      '54SjeQxyNVS6xkNrqDSQ5aKyMCu7gzySku2p6UnPqF83NDDRfHsVrXQtiEVtsn7t5QWRCTm2VGmwkmjzxcSoYexa';
-    assert.isTrue(KeypairAccount.isSecret(secret));
+    for (let index = 0; index < 50; index++) {
+      assert.isTrue(KeypairAccount.isSecret(KeypairAccount.create().secret));
+    }
   });
 
   it('Keypair to KeyPair', async () => {

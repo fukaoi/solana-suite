@@ -27,7 +27,7 @@ class KeypairAccount {
 }
 exports.KeypairAccount = KeypairAccount;
 KeypairAccount.isPubkey = (value) => /^[0-9a-zA-Z]{32,44}$/.test(value);
-KeypairAccount.isSecret = (value) => /^[0-9a-zA-Z]{88}$/.test(value);
+KeypairAccount.isSecret = (value) => /^[0-9a-zA-Z]{87,88}$/.test(value);
 KeypairAccount.create = () => {
     const keypair = web3_js_1.Keypair.generate();
     return new KeypairAccount({

@@ -29,7 +29,7 @@ export class KeypairAccount {
     /^[0-9a-zA-Z]{32,44}$/.test(value);
 
   static isSecret = (value: string): value is Secret =>
-    /^[0-9a-zA-Z]{88}$/.test(value);
+    /^[0-9a-zA-Z]{87,88}$/.test(value);
 
   static create = (): KeypairAccount => {
     const keypair = Keypair.generate();
