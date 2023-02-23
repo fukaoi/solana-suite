@@ -20,7 +20,7 @@ export class KeypairAccount {
     }
 }
 KeypairAccount.isPubkey = (value) => /^[0-9a-zA-Z]{32,44}$/.test(value);
-KeypairAccount.isSecret = (value) => /^[0-9a-zA-Z]{87, 88}$/.test(value);
+KeypairAccount.isSecret = (value) => /^[0-9a-zA-Z]{87,88}$/.test(value);
 KeypairAccount.create = () => {
     const keypair = Keypair.generate();
     return new KeypairAccount({
