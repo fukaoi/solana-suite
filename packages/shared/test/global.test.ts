@@ -91,10 +91,22 @@ describe('Global', () => {
     assert.equal(res, 0.0001);
   });
 
+  it('to sol part2', async () => {
+    const lamports = 0.02;
+    const res = lamports.toSol();
+    assert.equal(res, 2e-11);
+  });
+
   it('to lamports', async () => {
     const sol = 0.0001;
     const res = sol.toLamports();
     assert.equal(res, 100000);
+  });
+
+  it('to lamports part2', async () => {
+    const sol = 0.00000000000009;
+    const res = sol.toLamports();
+    assert.equal(res, 0.00009);
   });
 
   it('promise isPromise()', () => {
