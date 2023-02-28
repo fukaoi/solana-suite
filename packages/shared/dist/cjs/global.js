@@ -14,13 +14,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Try = exports.isPromise = exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = void 0;
 const web3_js_1 = require("@solana/web3.js");
-const bs58_1 = __importDefault(require("bs58"));
 const constants_1 = require("./constants");
 const node_1 = require("./node");
 const result_1 = require("./result");
 const batch_submit_1 = require("./instruction/batch-submit");
 require("./types/global");
 const keypair_account_1 = require("./keypair-account");
+const bignumber_js_1 = require("bignumber.js");
+const bs58_1 = __importDefault(require("bs58"));
 /**
  * senTransaction() TransactionInstruction
  *
@@ -117,7 +118,9 @@ String.prototype.toExplorerUrl = function () {
  * @returns number
  */
 Number.prototype.toSol = function () {
-    return this / web3_js_1.LAMPORTS_PER_SOL;
+    return (0, bignumber_js_1.BigNumber)(this)
+        .div(web3_js_1.LAMPORTS_PER_SOL)
+        .toNumber();
 };
 /**
  * SOL to LAMPORTS
@@ -126,7 +129,9 @@ Number.prototype.toSol = function () {
  * @returns number
  */
 Number.prototype.toLamports = function () {
-    return this * web3_js_1.LAMPORTS_PER_SOL;
+    return (0, bignumber_js_1.BigNumber)(this)
+        .times(web3_js_1.LAMPORTS_PER_SOL)
+        .toNumber();
 };
 /**
  * Display log for solana-suite-config.js

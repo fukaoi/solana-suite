@@ -1,6 +1,4 @@
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import bs from 'bs58';
-
 import { Constants } from './constants';
 import { Node } from './node';
 import { Result } from './result';
@@ -8,7 +6,8 @@ import { Instruction as _Instruction } from './instruction';
 import { Instruction as _Batch } from './instruction/batch-submit';
 import './types/global';
 import { KeypairAccount } from './keypair-account';
-
+import { BigNumber } from 'bignumber.js';
+import bs from 'bs58';
 /**
  * senTransaction() TransactionInstruction
  *
@@ -104,7 +103,9 @@ String.prototype.toExplorerUrl = function () {
  * @returns number
  */
 Number.prototype.toSol = function () {
-  return (this as number) / LAMPORTS_PER_SOL;
+  return BigNumber(this as number)
+    .div(LAMPORTS_PER_SOL)
+    .toNumber();
 };
 
 /**
@@ -114,7 +115,9 @@ Number.prototype.toSol = function () {
  * @returns number
  */
 Number.prototype.toLamports = function () {
-  return (this as number) * LAMPORTS_PER_SOL;
+  return BigNumber(this as number)
+    .times(LAMPORTS_PER_SOL)
+    .toNumber();
 };
 
 /**
