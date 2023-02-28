@@ -7,8 +7,8 @@ import {
   CreatorInput,
   Creator,
 } from '@metaplex-foundation/js';
-import { PublicKey } from '@solana/web3.js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
+import { Pubkey } from '@solana-suite/shared';
 import { StorageType } from './nft-storage-metadata';
 
 type noNeedOptional =
@@ -19,6 +19,7 @@ type noNeedOptional =
   | 'confirmOptions';
 
 export type MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
+// export type Creators = Omit<CreatorInput, address> 
 
 export type JsonMetadataAttribute = {
   trait_type?: string;
@@ -55,7 +56,7 @@ export type InputNftMetadata = {
   creators?: CreatorInput[];
   uses?: Option<Uses>;
   isCollection?: boolean;
-  collection?: Option<PublicKey>;
+  collection?: Option<Pubkey>;
   collectionAuthority?: Option<Signer>;
   collectionAuthorityIsDelegated?: boolean;
   collectionIsSized?: boolean;
@@ -73,6 +74,6 @@ export type OutputNftMetadata = {
   primarySaleHappened: boolean;
   creators: Creator[];
   editionNonce: Option<number>;
-  collection: Option<{ address: PublicKey; verified: boolean }>;
+  collection: Option<{ address: Pubkey; verified: boolean }>;
   uses: Option<Uses>;
 };
