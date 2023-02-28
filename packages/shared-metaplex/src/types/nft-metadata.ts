@@ -4,7 +4,6 @@ import {
   BigNumber,
   Option,
   Signer,
-  CreatorInput,
   Creator,
 } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
@@ -19,7 +18,17 @@ type noNeedOptional =
   | 'confirmOptions';
 
 export type MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
-// export type Creators = Omit<CreatorInput, address> 
+export type InputCreators = {
+  readonly address: Pubkey;
+  readonly share: number;
+  readonly authority?: Signer | undefined;
+};
+
+export type OutputCreators = {
+  readonly address: Pubkey;
+  readonly share: number;
+  readonly verified: boolean;
+};
 
 export type JsonMetadataAttribute = {
   trait_type?: string;
@@ -53,14 +62,14 @@ export type InputNftMetadata = {
   properties?: JsonMetadataProperties;
   isMutable?: boolean;
   maxSupply?: BigNumber;
-  creators?: CreatorInput[];
+  creators?: InputCreators[];
   uses?: Option<Uses>;
   isCollection?: boolean;
   collection?: Option<Pubkey>;
   collectionAuthority?: Option<Signer>;
   collectionAuthorityIsDelegated?: boolean;
   collectionIsSized?: boolean;
-  options?: {[key: string]: unknown};
+  options?: { [key: string]: unknown };
 };
 
 export type OutputNftMetadata = {
@@ -72,7 +81,7 @@ export type OutputNftMetadata = {
   uri: string;
   isMutable: boolean;
   primarySaleHappened: boolean;
-  creators: Creator[];
+  creators: OutputCreators[];
   editionNonce: Option<number>;
   collection: Option<{ address: Pubkey; verified: boolean }>;
   uses: Option<Uses>;

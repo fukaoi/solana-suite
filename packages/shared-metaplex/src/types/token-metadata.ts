@@ -1,11 +1,10 @@
 import {
   MetaplexFileContent,
   Option,
-  CreatorInput,
 } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import { Pubkey } from '@solana-suite/shared';
-import { JsonMetadataAttribute } from './nft-metadata';
+import { JsonMetadataAttribute, InputCreators } from './nft-metadata';
 import { StorageType } from './nft-storage-metadata';
 
 export type InputTokenMetadata = {
@@ -15,7 +14,7 @@ export type InputTokenMetadata = {
   filePath: MetaplexFileContent;
   storageType: StorageType;
   attributes?: JsonMetadataAttribute[];
-  creators?: CreatorInput[];
+  creators?: InputCreators[];
   collection?: Option<Pubkey>;
   uses?: Option<Uses>;
 };
@@ -26,7 +25,7 @@ export type TokenMetadata = {
   uri: string;
   sellerFeeBasisPoints: number;
   attributes?: JsonMetadataAttribute[];
-  creators?: CreatorInput[];
+  creators?: InputCreators[];
   collection?: Option<Pubkey>;
   uses?: Option<Uses>;
 };
