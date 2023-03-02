@@ -29,18 +29,15 @@ describe('Metaplex', () => {
       verified: false,
     };
 
-    const res = await Metaplex.mint(
-      {
-        filePath: asset.filePath as string,
-        storageType: 'arweave',
-        name: asset.name!,
-        symbol: asset.symbol!,
-        royalty: 50,
-        creators: [creator1, creator2],
-        isMutable: true,
-      },
-      source.secret
-    );
+    const res = await Metaplex.mint(source.pubkey, source.secret, {
+      filePath: asset.filePath as string,
+      storageType: 'arweave',
+      name: asset.name!,
+      symbol: asset.symbol!,
+      royalty: 50,
+      creators: [creator1, creator2],
+      isMutable: true,
+    });
 
     (await res.submit()).match(
       (ok: string) => {
@@ -66,23 +63,20 @@ describe('Metaplex', () => {
       verified: false,
     };
 
-    const res = await Metaplex.mint(
-      {
-        filePath: asset.filePath as string,
-        storageType: 'nftStorage',
-        name: asset.name!,
-        symbol: asset.symbol!,
-        royalty: 20,
+    const res = await Metaplex.mint(source.pubkey, source.secret, {
+      filePath: asset.filePath as string,
+      storageType: 'nftStorage',
+      name: asset.name!,
+      symbol: asset.symbol!,
+      royalty: 20,
+      creators: [creator1, creator2],
+      isMutable: true,
+      options: {
+        createdBy: 'Solana Suite',
+        poweredBy: 'Solana',
         creators: [creator1, creator2],
-        isMutable: true,
-        options: {
-          createdBy: 'Solana Suite',
-          poweredBy: 'Solana',
-          creators: [creator1, creator2],
-        },
       },
-      source.secret
-    );
+    });
 
     (await res.submit()).match(
       (ok) => {
@@ -97,16 +91,13 @@ describe('Metaplex', () => {
   });
 
   it('Raise validation error when upload meta data', async () => {
-    const res = await Metaplex.mint(
-      {
-        filePath: '',
-        name: '',
-        symbol: 'LONG-SYMBOL-LONG',
-        royalty: -100,
-        storageType: 'nftStorage',
-      },
-      source.secret
-    );
+    const res = await Metaplex.mint(source.pubkey, source.secret, {
+      filePath: '',
+      name: '',
+      symbol: 'LONG-SYMBOL-LONG',
+      royalty: -100,
+      storageType: 'nftStorage',
+    });
 
     res.match(
       (_) => assert.fail('Unrecognized error'),
