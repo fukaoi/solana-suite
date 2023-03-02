@@ -4,7 +4,6 @@ import {
   BigNumber,
   Option,
   Signer,
-  Creator,
 } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import { Pubkey } from '@solana-suite/shared';
