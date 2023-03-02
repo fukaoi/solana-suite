@@ -18,12 +18,12 @@ const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
-    const createNftBuilder = (params, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    const createNftBuilder = (params, owner, signer, feePayer) => __awaiter(this, void 0, void 0, function* () {
         const mint = shared_1.KeypairAccount.create();
-        const updateAuthority = owner;
-        const mintAuthority = owner;
-        const inst = yield Metaplex.createNftBuilderInstruction(feePayer.toKeypair(), params, mint.toKeypair(), updateAuthority.toKeypair(), mintAuthority.toKeypair(), new shared_1.KeypairAccount({ secret: owner }).pubkey);
-        return new shared_1.MintInstruction(inst, [feePayer.toKeypair(), mint.toKeypair(), owner.toKeypair()], undefined, mint);
+        const updateAuthority = signer;
+        const mintAuthority = signer;
+        const inst = yield Metaplex.createNftBuilderInstruction(feePayer.toKeypair(), params, mint.toKeypair(), updateAuthority.toKeypair(), mintAuthority.toKeypair(), owner);
+        return new shared_1.MintInstruction(inst, [feePayer.toKeypair(), mint.toKeypair(), signer.toKeypair()], undefined, mint);
     });
     Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {
         var _a;
@@ -78,6 +78,8 @@ var Metaplex;
     /**
      * Upload content and NFT mint
      *
+     * @param {Pubkey} owner          // first minted owner
+     * @param {Secret} signer         // owner's Secret
      * @param {NftMetadata}  input
      * {
      *   name: string               // nft content name
@@ -96,17 +98,16 @@ var Metaplex;
      *   isMutable?: boolean           // enable update()
      *   maxSupply?: BigNumber         // mint copies
      * }
-     * @param {Secret} owner          // first minted owner
-     * @param {Secret} feePayer       // fee payer
+     * @param {Secret} feePayer?       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    Metaplex.mint = (input, owner, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Metaplex.mint = (owner, signer, input, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             const valid = shared_metaplex_1.Validator.checkAll(input);
             if (valid.isErr) {
                 throw valid.error;
             }
-            const payer = feePayer ? feePayer : owner;
+            const payer = feePayer ? feePayer : signer;
             const uploaded = yield storage_1.Storage.uploadMetaContent(input, payer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);
@@ -114,7 +115,7 @@ var Metaplex;
             (0, shared_1.debugLog)('# reducedMetadata: ', reducedMetadata);
             const mintInput = Object.assign({ uri,
                 sellerFeeBasisPoints }, reducedMetadata);
-            return yield createNftBuilder(mintInput, owner, payer);
+            return yield createNftBuilder(mintInput, owner, signer, payer);
         }));
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));
