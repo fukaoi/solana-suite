@@ -31,18 +31,15 @@ describe('Metaplex', () => {
       verified: false,
     };
 
-    const mint = await Metaplex.mint(
-      {
-        filePath: asset.filePath as string,
-        storageType: 'arweave',
-        name: asset.name!,
-        symbol: asset.symbol!,
-        royalty: 50,
-        creators: [creator1, creator2],
-        isMutable: true,
-      },
-      source.secret
-    );
+    const mint = await Metaplex.mint(source.pubkey, source.secret, {
+      filePath: asset.filePath as string,
+      storageType: 'arweave',
+      name: asset.name!,
+      symbol: asset.symbol!,
+      royalty: 50,
+      creators: [creator1, creator2],
+      isMutable: true,
+    });
 
     const resMint = await mint.submit();
 
@@ -59,11 +56,11 @@ describe('Metaplex', () => {
     ).submit();
 
     res.match(
-      (ok) => {
+      (ok: string) => {
         console.log('# mint: ', mint.unwrap().data);
         console.log('# sig: ', ok);
       },
-      (err) => {
+      (err: Error) => {
         assert.fail(err.message);
       }
     );
@@ -88,6 +85,8 @@ describe('Metaplex', () => {
     };
 
     const res = await Metaplex.mint(
+      source.pubkey,
+      source.secret,
       {
         filePath: asset.filePath as string,
         storageType: 'arweave',
@@ -97,7 +96,6 @@ describe('Metaplex', () => {
         creators: [creator1, creator2],
         isMutable: true,
       },
-      source.secret,
       feePayer.secret
     );
 

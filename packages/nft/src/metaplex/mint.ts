@@ -30,12 +30,13 @@ export namespace Metaplex {
   // original: plugins/nftModule/operations/createNft.ts
   const createNftBuilder = async (
     params: CreateNftBuilderParams,
-    owner: Secret,
+    owner: Pubkey,
+    signer: Secret,
     feePayer: Secret
   ): Promise<MintInstruction> => {
     const mint = KeypairAccount.create();
-    const updateAuthority = owner;
-    const mintAuthority = owner;
+    const updateAuthority = signer;
+    const mintAuthority = signer;
 
     const inst = await createNftBuilderInstruction(
       feePayer.toKeypair(),
@@ -43,12 +44,12 @@ export namespace Metaplex {
       mint.toKeypair(),
       updateAuthority.toKeypair(),
       mintAuthority.toKeypair(),
-      new KeypairAccount({ secret: owner }).pubkey
+      owner
     );
 
     return new MintInstruction(
       inst,
-      [feePayer.toKeypair(), mint.toKeypair(), owner.toKeypair()],
+      [feePayer.toKeypair(), mint.toKeypair(), signer.toKeypair()],
       undefined,
       mint
     );
@@ -134,6 +135,8 @@ export namespace Metaplex {
   /**
    * Upload content and NFT mint
    *
+   * @param {Pubkey} owner          // first minted owner
+   * @param {Secret} signer         // owner's Secret
    * @param {NftMetadata}  input
    * {
    *   name: string               // nft content name
@@ -152,13 +155,13 @@ export namespace Metaplex {
    *   isMutable?: boolean           // enable update()
    *   maxSupply?: BigNumber         // mint copies
    * }
-   * @param {Secret} owner          // first minted owner
-   * @param {Secret} feePayer       // fee payer
+   * @param {Secret} feePayer?       // fee payer
    * @return Promise<Result<Instruction, Error>>
    */
   export const mint = async (
+    owner: Pubkey,
+    signer: Secret,
     input: InputNftMetadata,
-    owner: Secret,
     feePayer?: Secret
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
@@ -167,7 +170,7 @@ export namespace Metaplex {
         throw valid.error;
       }
 
-      const payer = feePayer ? feePayer : owner;
+      const payer = feePayer ? feePayer : signer;
       const uploaded = await Storage.uploadMetaContent(input, payer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 
@@ -180,7 +183,7 @@ export namespace Metaplex {
         sellerFeeBasisPoints,
         ...reducedMetadata,
       };
-      return await createNftBuilder(mintInput, owner, payer);
+      return await createNftBuilder(mintInput, owner, signer, payer);
     });
   };
 }

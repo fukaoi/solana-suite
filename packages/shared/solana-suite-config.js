@@ -164,7 +164,7 @@ const execCustomCluster = (url) => {
 const execDebug = (bool) => {
   if (bool != 'true' && bool != 'false') {
     warnMessage(
-      `No match parameter: need parameter is "on", "off". any one of them`
+      `No match parameter: need parameter is "true", "false". any one of them`
     );
     process.exit(0);
   }

@@ -40,6 +40,8 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
 
   const inst1 = await Metaplex.mint(
+    owner.pubkey,
+    owner.secret,
     {
       filePath: asset.filePath!,
       name: asset.name!,
@@ -49,7 +51,6 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
       isMutable: true,
       external_url: 'https://github.com/atonoy/solana-suite',
     },
-    owner.secret,
     feePayer.secret
   );
 

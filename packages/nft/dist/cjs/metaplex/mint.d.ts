@@ -8,6 +8,8 @@ export declare namespace Metaplex {
     /**
      * Upload content and NFT mint
      *
+     * @param {Pubkey} owner          // first minted owner
+     * @param {Secret} signer         // owner's Secret
      * @param {NftMetadata}  input
      * {
      *   name: string               // nft content name
@@ -26,9 +28,8 @@ export declare namespace Metaplex {
      *   isMutable?: boolean           // enable update()
      *   maxSupply?: BigNumber         // mint copies
      * }
-     * @param {Secret} owner          // first minted owner
-     * @param {Secret} feePayer       // fee payer
+     * @param {Secret} feePayer?       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    const mint: (input: InputNftMetadata, owner: Secret, feePayer?: Secret) => Promise<Result<MintInstruction, Error>>;
+    const mint: (owner: Pubkey, signer: Secret, input: InputNftMetadata, feePayer?: Secret) => Promise<Result<MintInstruction, Error>>;
 }
