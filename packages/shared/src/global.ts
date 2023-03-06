@@ -123,15 +123,19 @@ Number.prototype.toLamports = function () {
 /**
  * Overwrite JS Object
  *
- * @param {string} willKey
- * @param {unknown} willValue
+ * @param {string} targetKey
+ * @param {{key: string, value: unknown}} will
  * @returns Object
  */
-Object.prototype.overwrite = function (willKey: string, willValue: unknown) {
+Object.prototype.overwrite = function (
+  targetKey: string,
+  will: { Key: string; value: unknown }
+) {
   const keys = Object.keys(this);
   const values = Object.values(this);
   keys.forEach((key, i) => {
-    if (key === willKey) {
+    if (key === targetKey) {
+      delete(this[targetKey]);
       (this as any)[key] = willValue;
     } else {
       (this as any)[key] = values[i];

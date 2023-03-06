@@ -24,6 +24,6 @@ declare global {
   }
 
   interface Object {
-    overwrite(willKey: string, willValue: unknown): Object;
+    overwrite(targetKey: string, will: { key: string; value: unknown }): Object;
   }
 }
