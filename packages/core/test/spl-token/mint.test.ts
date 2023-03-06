@@ -5,6 +5,7 @@ import { SplToken } from '../../src/';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { StorageType } from '../../../shared-metaplex';
 import { KeypairAccount } from '../../../shared/src/keypair-account';
+import { Pubkey } from '../../../shared';
 
 let source: KeypairAccount;
 let mintStr: string;
@@ -36,6 +37,7 @@ describe('SplToken', () => {
     );
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);
+    assert.isTrue(KeypairAccount.isPubkey(inst.unwrap().data as Pubkey));
 
     const res = await inst.submit();
     assert.isTrue(res.isOk, res.unwrap());

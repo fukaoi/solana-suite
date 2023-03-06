@@ -51,7 +51,7 @@ export namespace Metaplex {
       inst,
       [feePayer.toKeypair(), mint.toKeypair(), signer.toKeypair()],
       undefined,
-      mint
+      mint.pubkey
     );
   };
 

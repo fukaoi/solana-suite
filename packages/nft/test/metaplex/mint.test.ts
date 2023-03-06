@@ -5,6 +5,7 @@ import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { ValidatorError } from '../../../shared-metaplex/';
 import { KeypairAccount } from '../../../shared';
+import { Pubkey } from '../../../shared/src';
 
 let source: KeypairAccount;
 
@@ -38,6 +39,8 @@ describe('Metaplex', () => {
       creators: [creator1, creator2],
       isMutable: true,
     });
+
+    assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
 
     (await res.submit()).match(
       (ok: string) => {
@@ -77,6 +80,8 @@ describe('Metaplex', () => {
         creators: [creator1, creator2],
       },
     });
+
+    assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
 
     (await res.submit()).match(
       (ok) => {
