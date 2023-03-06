@@ -121,6 +121,26 @@ Number.prototype.toLamports = function () {
 };
 
 /**
+ * Overwrite JS Object
+ *
+ * @param {string} willKey
+ * @param {unknown} willValue
+ * @returns Object
+ */
+Object.prototype.overwrite = function (willKey: string, willValue: unknown) {
+  const keys = Object.keys(this);
+  const values = Object.values(this);
+  keys.forEach((key, i) => {
+    if (key === willKey) {
+      (this as any)[key] = willValue;
+    } else {
+      (this as any)[key] = values[i];
+    }
+  });
+  return this;
+};
+
+/**
  * Display log for solana-suite-config.js
  *
  * @param {unknown} data1

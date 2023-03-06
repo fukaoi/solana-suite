@@ -28,6 +28,7 @@ import {
   InputTokenMetadata,
   TokenMetadata,
   Validator,
+  Creators,
 } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
 import { Storage } from '@solana-suite/storage';
@@ -82,7 +83,8 @@ export namespace SplToken {
       signers
     );
 
-    // tokenMetadata.creators = 
+    delete(tokenMetadata.creators);
+    tokenMetadata.creators = Creators.toInputConvert(tokenMetadata.creators);
 
     const inst5 = createCreateMetadataAccountV2Instruction(
       {
