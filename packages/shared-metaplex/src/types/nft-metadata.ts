@@ -3,10 +3,9 @@ import {
   MetaplexFileContent,
   BigNumber,
   Option,
-  Signer,
 } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
-import { Pubkey } from '@solana-suite/shared';
+import { Pubkey, Secret } from '@solana-suite/shared';
 import { StorageType } from './nft-storage-metadata';
 
 type noNeedOptional =
@@ -20,7 +19,7 @@ export type MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
 export type InputCreators = {
   readonly address: Pubkey;
   readonly share: number;
-  readonly authority?: Signer | undefined;
+  readonly authority?: Secret | undefined;
 };
 
 export type OutputCreators = {
@@ -65,7 +64,7 @@ export type InputNftMetadata = {
   uses?: Option<Uses>;
   isCollection?: boolean;
   collection?: Option<Pubkey>;
-  collectionAuthority?: Option<Signer>;
+  collectionAuthority?: Option<Secret>;
   collectionAuthorityIsDelegated?: boolean;
   collectionIsSized?: boolean;
   options?: { [key: string]: unknown };

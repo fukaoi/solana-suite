@@ -33,6 +33,7 @@ var SplToken;
         const inst2 = (0, spl_token_1.createInitializeMintInstruction)(mint, mintDecimal, owner, owner, spl_token_1.TOKEN_PROGRAM_ID);
         const inst3 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(feePayer, tokenAssociated, owner, mint);
         const inst4 = (0, spl_token_1.createMintToCheckedInstruction)(mint, tokenAssociated, owner, calculate_amount_1.SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
+        // tokenMetadata.creators = 
         const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV2Instruction)({
             metadata: metadataPda,
             mint,

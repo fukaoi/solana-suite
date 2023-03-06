@@ -1,9 +1,19 @@
-import { CreateNftInput, MetaplexFileContent, BigNumber, Option, Signer, CreatorInput, Creator } from '@metaplex-foundation/js';
-import { PublicKey } from '@solana/web3.js';
+import { CreateNftInput, MetaplexFileContent, BigNumber, Option } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
+import { Pubkey, Secret } from '@solana-suite/shared';
 import { StorageType } from './nft-storage-metadata';
 type noNeedOptional = 'payer' | 'owner' | 'associatedTokenProgram' | 'tokenProgram' | 'confirmOptions';
 export type MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
+export type InputCreators = {
+    readonly address: Pubkey;
+    readonly share: number;
+    readonly authority?: Secret | undefined;
+};
+export type OutputCreators = {
+    readonly address: Pubkey;
+    readonly share: number;
+    readonly verified: boolean;
+};
 export type JsonMetadataAttribute = {
     trait_type?: string;
     value?: string;
@@ -34,11 +44,11 @@ export type InputNftMetadata = {
     properties?: JsonMetadataProperties;
     isMutable?: boolean;
     maxSupply?: BigNumber;
-    creators?: CreatorInput[];
+    creators?: InputCreators[];
     uses?: Option<Uses>;
     isCollection?: boolean;
-    collection?: Option<PublicKey>;
-    collectionAuthority?: Option<Signer>;
+    collection?: Option<Pubkey>;
+    collectionAuthority?: Option<Secret>;
     collectionAuthorityIsDelegated?: boolean;
     collectionIsSized?: boolean;
     options?: {
@@ -54,10 +64,10 @@ export type OutputNftMetadata = {
     uri: string;
     isMutable: boolean;
     primarySaleHappened: boolean;
-    creators: Creator[];
+    creators: OutputCreators[];
     editionNonce: Option<number>;
     collection: Option<{
-        address: PublicKey;
+        address: Pubkey;
         verified: boolean;
     }>;
     uses: Option<Uses>;

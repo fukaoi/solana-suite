@@ -82,6 +82,8 @@ export namespace SplToken {
       signers
     );
 
+    // tokenMetadata.creators = 
+
     const inst5 = createCreateMetadataAccountV2Instruction(
       {
         metadata: metadataPda,
