@@ -7,16 +7,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Keypair, SystemProgram } from '@solana/web3.js';
+import { SystemProgram } from '@solana/web3.js';
 import { MINT_SIZE, TOKEN_PROGRAM_ID, createInitializeMintInstruction, getMinimumBalanceForRentExemptMint, createAssociatedTokenAccountInstruction, createMintToCheckedInstruction, getAssociatedTokenAddress, } from '@solana/spl-token';
 import { createCreateMetadataAccountV2Instruction, } from '@metaplex-foundation/mpl-token-metadata';
-import { Node, MintInstruction, Try, debugLog, } from '@solana-suite/shared';
+import { Node, MintInstruction, Try, debugLog, KeypairAccount, } from '@solana-suite/shared';
 import { Bundlr, Validator, } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
 import { Storage } from '@solana-suite/storage';
 export var SplToken;
 (function (SplToken) {
-    SplToken.createMintInstruction = (connection, mint, owner, totalAmount, mintDecimal, tokenMetadata, feePayer, isMutable, signers) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.createMintInstruction = (connection, mint, owner, totalAmount, mintDecimal, tokenMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
         const lamports = yield getMinimumBalanceForRentExemptMint(connection);
         const metadataPda = Bundlr.make().nfts().pdas().metadata({ mint: mint });
         const tokenAssociated = yield getAssociatedTokenAddress(mint, owner);
@@ -29,7 +29,7 @@ export var SplToken;
         });
         const inst2 = createInitializeMintInstruction(mint, mintDecimal, owner, owner, TOKEN_PROGRAM_ID);
         const inst3 = createAssociatedTokenAccountInstruction(feePayer, tokenAssociated, owner, mint);
-        const inst4 = createMintToCheckedInstruction(mint, tokenAssociated, owner, _Calculate.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
+        const inst4 = createMintToCheckedInstruction(mint, tokenAssociated, owner, _Calculate.calculateAmount(totalAmount, mintDecimal), mintDecimal);
         const inst5 = createCreateMetadataAccountV2Instruction({
             metadata: metadataPda,
             mint,
@@ -67,9 +67,9 @@ export var SplToken;
             };
             const isMutable = !reducedMetadata.isMutable ? false : true;
             const connection = Node.getConnection();
-            const mint = Keypair.generate();
-            const insts = yield SplToken.createMintInstruction(connection, mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, payer.publicKey, isMutable);
-            return new MintInstruction(insts, [signer.toKeypair(), mint], payer, mint.publicKey.toString());
+            const mint = KeypairAccount.create();
+            const insts = yield SplToken.createMintInstruction(connection, mint.toPublicKey(), owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, payer.publicKey, isMutable);
+            return new MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer, mint.pubkey);
         }));
     });
 })(SplToken || (SplToken = {}));

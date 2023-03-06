@@ -19,7 +19,7 @@ const calculate_amount_1 = require("./calculate-amount");
 const storage_1 = require("@solana-suite/storage");
 var SplToken;
 (function (SplToken) {
-    SplToken.createMintInstruction = (connection, mint, owner, totalAmount, mintDecimal, tokenMetadata, feePayer, isMutable, signers) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.createMintInstruction = (connection, mint, owner, totalAmount, mintDecimal, tokenMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
         const lamports = yield (0, spl_token_1.getMinimumBalanceForRentExemptMint)(connection);
         const metadataPda = shared_metaplex_1.Bundlr.make().nfts().pdas().metadata({ mint: mint });
         const tokenAssociated = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, owner);
@@ -32,7 +32,7 @@ var SplToken;
         });
         const inst2 = (0, spl_token_1.createInitializeMintInstruction)(mint, mintDecimal, owner, owner, spl_token_1.TOKEN_PROGRAM_ID);
         const inst3 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(feePayer, tokenAssociated, owner, mint);
-        const inst4 = (0, spl_token_1.createMintToCheckedInstruction)(mint, tokenAssociated, owner, calculate_amount_1.SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
+        const inst4 = (0, spl_token_1.createMintToCheckedInstruction)(mint, tokenAssociated, owner, calculate_amount_1.SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal);
         const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV2Instruction)({
             metadata: metadataPda,
             mint,
@@ -70,9 +70,9 @@ var SplToken;
             };
             const isMutable = !reducedMetadata.isMutable ? false : true;
             const connection = shared_1.Node.getConnection();
-            const mint = web3_js_1.Keypair.generate();
-            const insts = yield SplToken.createMintInstruction(connection, mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, payer.publicKey, isMutable);
-            return new shared_1.MintInstruction(insts, [signer.toKeypair(), mint], payer, mint.publicKey.toString());
+            const mint = shared_1.KeypairAccount.create();
+            const insts = yield SplToken.createMintInstruction(connection, mint.toPublicKey(), owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, payer.publicKey, isMutable);
+            return new shared_1.MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer, mint.pubkey);
         }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));

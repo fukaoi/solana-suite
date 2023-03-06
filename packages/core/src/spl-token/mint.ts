@@ -1,4 +1,4 @@
-import { Connection, Keypair, PublicKey, SystemProgram } from '@solana/web3.js';
+import { Connection, PublicKey, SystemProgram } from '@solana/web3.js';
 import {
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
@@ -13,6 +13,7 @@ import {
   createCreateMetadataAccountV2Instruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
+
 import {
   Node,
   Result,
@@ -21,6 +22,7 @@ import {
   debugLog,
   Pubkey,
   Secret,
+  KeypairAccount,
 } from '@solana-suite/shared';
 
 import {
@@ -41,8 +43,7 @@ export namespace SplToken {
     mintDecimal: number,
     tokenMetadata: TokenMetadata,
     feePayer: PublicKey,
-    isMutable: boolean,
-    signers?: Keypair[]
+    isMutable: boolean
   ) => {
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
 
@@ -78,8 +79,7 @@ export namespace SplToken {
       tokenAssociated,
       owner,
       _Calculate.calculateAmount(totalAmount, mintDecimal),
-      mintDecimal,
-      signers
+      mintDecimal
     );
 
     const inst5 = createCreateMetadataAccountV2Instruction(
@@ -134,10 +134,10 @@ export namespace SplToken {
       const isMutable = !reducedMetadata.isMutable ? false : true;
 
       const connection = Node.getConnection();
-      const mint = Keypair.generate();
+      const mint = KeypairAccount.create();
       const insts = await createMintInstruction(
         connection,
-        mint.publicKey,
+        mint.toPublicKey(),
         owner.toPublicKey(),
         totalAmount,
         mintDecimal,
@@ -147,9 +147,9 @@ export namespace SplToken {
       );
       return new MintInstruction(
         insts,
-        [signer.toKeypair(), mint],
+        [signer.toKeypair(), mint.toKeypair()],
         payer,
-        mint.publicKey.toString()
+        mint.pubkey
       );
     });
   };
