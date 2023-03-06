@@ -4,6 +4,9 @@ exports.Creators = void 0;
 var Creators;
 (function (Creators) {
     Creators.toInputConvert = (input) => {
+        if (!input) {
+            return [];
+        }
         return input.map((data) => {
             const authority = data.authority
                 ? data.authority.toKeypair()

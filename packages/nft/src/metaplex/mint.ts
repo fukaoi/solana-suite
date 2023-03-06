@@ -14,7 +14,9 @@ import {
   Bundlr,
   Validator,
   InputNftMetadata,
-  MetaplexNftMetaData,
+  _InputNftMetadata,
+  _MetaplexNftMetaData,
+  Creators,
 } from '@solana-suite/shared-metaplex';
 
 import {
@@ -170,15 +172,23 @@ export namespace Metaplex {
         throw valid.error;
       }
 
+      const value = Creators.toInputConvert(input.creators);
+      const metadata = input.overwrite('creators', {
+        key: 'creators',
+        value,
+      }) as _InputNftMetadata;
+
       const payer = feePayer ? feePayer : signer;
-      const uploaded = await Storage.uploadMetaContent(input, payer);
+      const uploaded = await Storage.uploadMetaContent(metadata, payer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+
+      delete reducedMetadata.creators;
 
       debugLog('# upload content url: ', uri);
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);
 
-      const mintInput: MetaplexNftMetaData = {
+      const mintInput: _MetaplexNftMetaData = {
         uri,
         sellerFeeBasisPoints,
         ...reducedMetadata,

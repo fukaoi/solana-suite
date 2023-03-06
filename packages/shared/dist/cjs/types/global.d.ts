@@ -1,5 +1,4 @@
 import { Keypair, PublicKey, TransactionSignature } from '@solana/web3.js';
-import { Instruction } from '..';
 import { Result } from '../result';
 declare global {
     interface String {
@@ -12,7 +11,7 @@ declare global {
         toSol(): number;
         toLamports(): number;
     }
-    interface Array<T extends Instruction> {
+    interface Array<T> {
         submit(): Promise<Result<TransactionSignature, Error>>;
     }
     interface Console {
@@ -22,7 +21,7 @@ declare global {
         overwrite(targetKey: string, will: {
             key: string;
             value: unknown;
-        }): Object;
+        }): unknown;
     }
 }
 export type AnyObject = {

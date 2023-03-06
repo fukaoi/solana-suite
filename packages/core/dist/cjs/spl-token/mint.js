@@ -33,8 +33,14 @@ var SplToken;
         const inst2 = (0, spl_token_1.createInitializeMintInstruction)(mint, mintDecimal, owner, owner, spl_token_1.TOKEN_PROGRAM_ID);
         const inst3 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(feePayer, tokenAssociated, owner, mint);
         const inst4 = (0, spl_token_1.createMintToCheckedInstruction)(mint, tokenAssociated, owner, calculate_amount_1.SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
-        delete (tokenMetadata.creators);
-        tokenMetadata.creators = shared_metaplex_1.Creators.toInputConvert(tokenMetadata.creators);
+        let metadata;
+        if (tokenMetadata.creators) {
+            const value = shared_metaplex_1.Creators.toInputConvert(tokenMetadata.creators);
+            metadata = tokenMetadata.overwrite('creators', {
+                key: 'creators',
+                value,
+            });
+        }
         const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV2Instruction)({
             metadata: metadataPda,
             mint,
@@ -43,7 +49,7 @@ var SplToken;
             updateAuthority: owner,
         }, {
             createMetadataAccountArgsV2: {
-                data: tokenMetadata,
+                data: metadata,
                 isMutable,
             },
         });
@@ -56,6 +62,7 @@ var SplToken;
                 throw valid.error;
             }
             const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
+            input.royalty = input.royalty ? input.royalty : 0;
             const uploaded = yield storage_1.Storage.uploadMetaContent(input, feePayer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);

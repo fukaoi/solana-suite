@@ -83,9 +83,13 @@ export namespace SplToken {
       signers
     );
 
+    let metadata!: DataV2;
     if (tokenMetadata.creators) {
-      const creators = Creators.toInputConvert(tokenMetadata.creators);
-      (tokenMetadata as Object).overwrite('creators', creators)
+      const value = Creators.toInputConvert(tokenMetadata.creators);
+      metadata = (tokenMetadata as Object).overwrite('creators', {
+        key: 'creators',
+        value,
+      }) as DataV2;
     }
 
     const inst5 = createCreateMetadataAccountV2Instruction(
@@ -98,7 +102,7 @@ export namespace SplToken {
       },
       {
         createMetadataAccountArgsV2: {
-          data: tokenMetadata as DataV2,
+          data: metadata,
           isMutable,
         },
       }
@@ -121,6 +125,7 @@ export namespace SplToken {
       }
 
       const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
+      input.royalty = input.royalty ? input.royalty : 0;
       const uploaded = await Storage.uploadMetaContent(input, feePayer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 

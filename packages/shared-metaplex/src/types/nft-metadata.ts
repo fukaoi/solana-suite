@@ -3,6 +3,7 @@ import {
   MetaplexFileContent,
   BigNumber,
   Option,
+  CreatorInput,
 } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import { Pubkey, Secret } from '@solana-suite/shared';
@@ -15,7 +16,6 @@ type noNeedOptional =
   | 'tokenProgram'
   | 'confirmOptions';
 
-export type MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
 export type InputCreators = {
   readonly address: Pubkey;
   readonly share: number;
@@ -83,4 +83,10 @@ export type OutputNftMetadata = {
   editionNonce: Option<number>;
   collection: Option<{ address: Pubkey; verified: boolean }>;
   uses: Option<Uses>;
+};
+
+//---- Internal type ----//
+export type _MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
+export type _InputNftMetadata = Exclude<InputNftMetadata, InputCreators[]> & {
+  creators: CreatorInput[];
 };

@@ -107,9 +107,18 @@ var Metaplex;
             if (valid.isErr) {
                 throw valid.error;
             }
+            let metadata;
+            if (input.creators) {
+                const value = shared_metaplex_1.Creators.toInputConvert(input.creators);
+                metadata = input.overwrite('creators', {
+                    key: 'creators',
+                    value,
+                });
+            }
             const payer = feePayer ? feePayer : signer;
             const uploaded = yield storage_1.Storage.uploadMetaContent(input, payer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+            delete (reducedMetadata.creators);
             (0, shared_1.debugLog)('# upload content url: ', uri);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             (0, shared_1.debugLog)('# reducedMetadata: ', reducedMetadata);

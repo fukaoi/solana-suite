@@ -3,7 +3,12 @@ import { Secret } from '@solana-suite/shared';
 import { InputCreators, OutputCreators } from './types';
 
 export module Creators {
-  export const toInputConvert = (input: InputCreators[]): CreatorInput[] => {
+  export const toInputConvert = (
+    input: InputCreators[] | undefined
+  ): CreatorInput[] => {
+    if (!input) {
+      return [];
+    }
     return input.map((data) => {
       const authority = data.authority
         ? (data.authority as Secret).toKeypair()

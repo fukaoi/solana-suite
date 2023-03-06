@@ -27,4 +27,9 @@ describe('Creators', () => {
     assert.equal(res[1].share, input[1].share);
     assert.deepEqual(res[1].authority, input[1].authority.toKeypair());
   });
+
+  it('To undefine convert', async () => {
+    const res = Creators.toInputConvert([]);
+    assert.deepEqual(res, []);
+  });
 });
