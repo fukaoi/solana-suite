@@ -27,3 +27,7 @@ declare global {
     overwrite(targetKey: string, will: { key: string; value: unknown }): Object;
   }
 }
+
+export type AnyObject = {
+  [key: string]: unknown;
+};

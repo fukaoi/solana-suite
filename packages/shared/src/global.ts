@@ -8,6 +8,7 @@ import './types/global';
 import { KeypairAccount } from './keypair-account';
 import { BigNumber } from 'bignumber.js';
 import bs from 'bs58';
+import { AnyObject } from './types/global';
 /**
  * senTransaction() TransactionInstruction
  *
@@ -123,25 +124,18 @@ Number.prototype.toLamports = function () {
 /**
  * Overwrite JS Object
  *
- * @param {string} targetKey
+ * @param {string} key
  * @param {{key: string, value: unknown}} will
  * @returns Object
  */
 Object.prototype.overwrite = function (
-  targetKey: string,
-  will: { Key: string; value: unknown }
+  key: string,
+  will: { key: string; value: unknown }
 ) {
-  const keys = Object.keys(this);
-  const values = Object.values(this);
-  keys.forEach((key, i) => {
-    if (key === targetKey) {
-      delete(this[targetKey]);
-      (this as any)[key] = willValue;
-    } else {
-      (this as any)[key] = values[i];
-    }
-  });
-  return this;
+  const that: AnyObject = this as AnyObject;
+  delete that[key];
+  that[will.key] = will.value;
+  return that;
 };
 
 /**

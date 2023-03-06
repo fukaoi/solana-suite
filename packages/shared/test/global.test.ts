@@ -109,6 +109,26 @@ describe('Global', () => {
     assert.equal(res, 0.00009);
   });
 
+  it('Object overwrite', () => {
+    const original = {
+      address: '122pJ24W3kc3Ra5QKAJzUD9LvSEdircGhCjBDz4Ax1ct',
+      share: 40,
+    };
+    const will = { key: 'word', value: 'zzzzzzzzzzz' };
+    const res = original.overwrite('address', will);
+    assert.deepEqual(res, { word: will.value, share: original.share });
+  });
+
+  it('Object overwrite', () => {
+    const original = {
+      address: '122pJ24W3kc3Ra5QKAJzUD9LvSEdircGhCjBDz4Ax1ct',
+      share: 40,
+    };
+    const will = { key: 'percent', value: '40%' };
+    const res = original.overwrite('share', will);
+    assert.deepEqual(res, { address: original.address, percent: will.value });
+  });
+
   it('promise isPromise()', () => {
     const mess = 'called promise';
     const promise = () =>
