@@ -83,8 +83,10 @@ export namespace SplToken {
       signers
     );
 
-    delete(tokenMetadata.creators);
-    tokenMetadata.creators = Creators.toInputConvert(tokenMetadata.creators);
+    if (tokenMetadata.creators) {
+      const creators = Creators.toInputConvert(tokenMetadata.creators);
+      (tokenMetadata as Object).overwrite('creators', creators)
+    }
 
     const inst5 = createCreateMetadataAccountV2Instruction(
       {

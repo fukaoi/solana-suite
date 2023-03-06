@@ -1,4 +1,3 @@
-/// <reference types="@solana/web3.js" />
 import { Secret } from '@solana-suite/shared';
 import { InputNftMetadata } from '@solana-suite/shared-metaplex';
 export declare namespace Storage {
@@ -14,11 +13,11 @@ export declare namespace Storage {
             properties?: import("@solana-suite/shared-metaplex").JsonMetadataProperties | undefined;
             isMutable?: boolean | undefined;
             maxSupply?: import("@metaplex-foundation/js").BigNumber | undefined;
-            creators?: import("@metaplex-foundation/js").CreatorInput[] | undefined;
+            creators?: import("@solana-suite/shared-metaplex").InputCreators[] | undefined;
             uses?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/mpl-token-metadata").Uses> | undefined;
             isCollection?: boolean | undefined;
-            collection?: import("@metaplex-foundation/js").Option<import("@solana/web3.js").PublicKey> | undefined;
-            collectionAuthority?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/js").Signer> | undefined;
+            collection?: import("@metaplex-foundation/js").Option<import("@solana-suite/shared").Pubkey> | undefined;
+            collectionAuthority?: import("@metaplex-foundation/js").Option<Secret> | undefined;
             collectionAuthorityIsDelegated?: boolean | undefined;
             collectionIsSized?: boolean | undefined;
         };

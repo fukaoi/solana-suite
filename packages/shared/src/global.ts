@@ -130,7 +130,7 @@ Number.prototype.toLamports = function () {
  */
 Object.prototype.overwrite = function (
   key: string,
-  will: { key: string; value: unknown }
+  will: { key: string; value: AnyObject }
 ) {
   const that: AnyObject = this as AnyObject;
   delete that[key];

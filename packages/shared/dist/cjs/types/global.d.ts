@@ -19,6 +19,12 @@ declare global {
         debug(data: unknown, data2?: unknown, data3?: unknown): void;
     }
     interface Object {
-        overwrite(willKey: string, willValue: unknown): Object;
+        overwrite(targetKey: string, will: {
+            key: string;
+            value: unknown;
+        }): Object;
     }
 }
+export type AnyObject = {
+    [key: string]: unknown;
+};

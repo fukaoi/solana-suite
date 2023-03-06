@@ -12,6 +12,8 @@ import {
 } from '../src';
 import { JSDOM } from 'jsdom';
 
+import { InputCreators } from '../../shared-metaplex/src';
+
 const PUBKEY = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
 const SIG =
   '47KcZGxPayz3cJ3Vy6mKCFmz6N4kGkKm3TDnb9VVJ4krrgdu3WznRKyweh4n6KfWgXTm2LzdVqf8sPmjV1H2u6YR';
@@ -119,14 +121,21 @@ describe('Global', () => {
     assert.deepEqual(res, { word: will.value, share: original.share });
   });
 
-  it('Object overwrite', () => {
+  it('Object overwrite, use Creators', () => {
     const original = {
       address: '122pJ24W3kc3Ra5QKAJzUD9LvSEdircGhCjBDz4Ax1ct',
-      share: 40,
     };
-    const will = { key: 'percent', value: '40%' };
-    const res = original.overwrite('share', will);
-    assert.deepEqual(res, { address: original.address, percent: will.value });
+    const value: InputCreators = {
+      address: '122pJ24W3kc3Ra5QKAJzUD9LvSEdircGhCjBDz4Ax1ct',
+      share: 40,
+      authority:
+        'dJZLhvgtbbFxGPZsrDKYHoUJXbHira4THELQKKFVjmP6W7fPJ4MkzTbTMjWe3A6NApQwwB',
+    };
+    const res = original.overwrite('address', {
+      key: 'creators',
+      value: value,
+    });
+    assert.deepEqual(res, { creators: value });
   });
 
   it('promise isPromise()', () => {

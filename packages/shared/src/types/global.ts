@@ -1,5 +1,4 @@
 import { Keypair, PublicKey, TransactionSignature } from '@solana/web3.js';
-import { Instruction } from '..';
 import { Result } from '../result';
 
 declare global {
@@ -15,7 +14,7 @@ declare global {
     toLamports(): number;
   }
 
-  interface Array<T extends Instruction> {
+  interface Array<T> {
     submit(): Promise<Result<TransactionSignature, Error>>;
   }
 
