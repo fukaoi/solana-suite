@@ -48,8 +48,7 @@ describe('Metaplex', () => {
     );
   });
 
-  it.only('[Nft Storage] mint nft', async () => {
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+  it('[Nft Storage] mint nft', async () => {
     const asset = RandomAsset.get();
 
     const creator1: InputCreators = {

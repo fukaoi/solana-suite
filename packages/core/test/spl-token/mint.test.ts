@@ -23,13 +23,13 @@ describe('SplToken', () => {
       filePath: RandomAsset.get().filePath as string,
       storageType: 'nftStorage' as StorageType,
       royalty: 50,
-      // creators: [
-      //   {
-      //     address: source.pubkey,
-      //     share: 100,
-      //     authority: source.secret,
-      //   },
-      // ],
+      creators: [
+        {
+          address: source.pubkey,
+          share: 100,
+          authority: source.secret,
+        },
+      ],
     };
   });
 
