@@ -43,6 +43,7 @@ export type InputNftMetadata = {
     properties?: JsonMetadataProperties;
     isMutable?: boolean;
     maxSupply?: BigNumber;
+  //collections
     creators?: InputCreators[];
     uses?: Option<Uses>;
     options?: {
@@ -60,10 +61,10 @@ export type OutputNftMetadata = {
     primarySaleHappened: boolean;
     creators: OutputCreators[];
     editionNonce: Option<number>;
-    collection: Option<{
-        address: Pubkey;
-        verified: boolean;
-    }>;
+    // collection: Option<{
+    //     address: Pubkey;
+    //     verified: boolean;
+    // }>;
     uses: Option<Uses>;
 };
 export type _MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
