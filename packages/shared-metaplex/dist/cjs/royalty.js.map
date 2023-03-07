@@ -1,1 +1,0 @@
-{"version":3,"file":"royalty.js","sourceRoot":"","sources":["../../src/royalty.ts"],"names":[],"mappings":";;;AAAA,IAAiB,OAAO,CAKvB;AALD,WAAiB,OAAO;IACT,iBAAS,GAAG,GAAG,CAAC;IAChB,eAAO,GAAG,CAAC,UAAkB,EAAE,EAAE;QAC5C,OAAO,UAAU,GAAG,QAAA,SAAS,CAAC;IAChC,CAAC,CAAA;AACH,CAAC,EALgB,OAAO,GAAP,eAAO,KAAP,eAAO,QAKvB"}
