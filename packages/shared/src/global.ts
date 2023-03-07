@@ -131,7 +131,7 @@ Number.prototype.toLamports = function () {
 export const overwriteObject = (
   obj: unknown,
   key: string,
-  will: { key: string; value: AnyObject }
+  will: { key: string; value: unknown }
 ): unknown => {
   const that: AnyObject = obj as AnyObject;
   delete that[key];

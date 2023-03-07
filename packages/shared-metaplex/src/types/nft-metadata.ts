@@ -87,6 +87,6 @@ export type OutputNftMetadata = {
 
 //---- Internal type ----//
 export type _MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
-export type _InputNftMetadata = Exclude<InputNftMetadata, InputCreators[]> & {
+export type _InputNftMetadata = Omit<InputNftMetadata, 'creators'> & {
   creators: CreatorInput[];
 };

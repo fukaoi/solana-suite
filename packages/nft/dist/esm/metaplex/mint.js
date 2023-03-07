@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { debugLog, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
+import { debugLog, overwriteObject, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { Bundlr, Validator, Creators, } from '@solana-suite/shared-metaplex';
 import { token, TransactionBuilder, } from '@metaplex-foundation/js';
@@ -105,7 +105,7 @@ export var Metaplex;
                 throw valid.error;
             }
             const value = Creators.toInputConvert(input.creators);
-            const metadata = input.overwrite('creators', {
+            const metadata = overwriteObject(input, 'creators', {
                 key: 'creators',
                 value,
             });

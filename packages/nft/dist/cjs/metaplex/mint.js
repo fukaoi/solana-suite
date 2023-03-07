@@ -108,7 +108,7 @@ var Metaplex;
                 throw valid.error;
             }
             const value = shared_metaplex_1.Creators.toInputConvert(input.creators);
-            const metadata = input.overwrite('creators', {
+            const metadata = (0, shared_1.overwriteObject)(input, 'creators', {
                 key: 'creators',
                 value,
             });

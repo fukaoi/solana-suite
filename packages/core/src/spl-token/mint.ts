@@ -19,6 +19,7 @@ import {
   MintInstruction,
   Try,
   debugLog,
+  overwriteObject,
   Pubkey,
   Secret,
 } from '@solana-suite/shared';
@@ -26,8 +27,9 @@ import {
 import {
   Bundlr,
   InputTokenMetadata,
-  _InputNftMetadata,
   TokenMetadata,
+  _InputNftMetadata,
+  _TokenMetadata,
   Validator,
   Creators,
 } from '@solana-suite/shared-metaplex';
@@ -41,7 +43,7 @@ export namespace SplToken {
     owner: PublicKey,
     totalAmount: number,
     mintDecimal: number,
-    tokenMetadata: TokenMetadata,
+    tokenMetadata: _TokenMetadata,
     feePayer: PublicKey,
     isMutable: boolean,
     signers?: Keypair[]
@@ -84,15 +86,6 @@ export namespace SplToken {
       signers
     );
 
-    let metadata!: DataV2;
-    if (tokenMetadata.creators) {
-      const value = Creators.toInputConvert(tokenMetadata.creators);
-      metadata = (tokenMetadata as Object).overwrite('creators', {
-        key: 'creators',
-        value,
-      }) as DataV2;
-    }
-
     const inst5 = createCreateMetadataAccountV2Instruction(
       {
         metadata: metadataPda,
@@ -103,7 +96,7 @@ export namespace SplToken {
       },
       {
         createMetadataAccountArgsV2: {
-          data: metadata,
+          data: tokenMetadata as DataV2,
           isMutable,
         },
       }
@@ -129,7 +122,7 @@ export namespace SplToken {
       input.royalty = input.royalty ? input.royalty : 0;
 
       const value = Creators.toInputConvert(input.creators);
-      const metadata = input.overwrite('creators', {
+      const metadata = overwriteObject(input, 'creators', {
         key: 'creators',
         value,
       }) as _InputNftMetadata;
@@ -141,7 +134,7 @@ export namespace SplToken {
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);
 
-      const tokenMetadata: TokenMetadata = {
+      const tokenMetadata: _TokenMetadata = {
         name: reducedMetadata.name,
         symbol: reducedMetadata.symbol,
         uri,

@@ -12,16 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Try = exports.isPromise = exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = void 0;
+exports.Try = exports.isPromise = exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = exports.overwriteObject = void 0;
+const bs58_1 = __importDefault(require("bs58"));
 const web3_js_1 = require("@solana/web3.js");
 const constants_1 = require("./constants");
 const node_1 = require("./node");
 const result_1 = require("./result");
 const batch_submit_1 = require("./instruction/batch-submit");
-require("./types/global");
 const keypair_account_1 = require("./keypair-account");
 const bignumber_js_1 = require("bignumber.js");
-const bs58_1 = __importDefault(require("bs58"));
 /**
  * senTransaction() TransactionInstruction
  *
@@ -140,12 +139,13 @@ Number.prototype.toLamports = function () {
  * @param {{key: string, value: unknown}} will
  * @returns Object
  */
-Object.prototype.overwrite = function (key, will) {
-    const that = this;
+const overwriteObject = (obj, key, will) => {
+    const that = obj;
     delete that[key];
     that[will.key] = will.value;
     return that;
 };
+exports.overwriteObject = overwriteObject;
 /**
  * Display log for solana-suite-config.js
  *

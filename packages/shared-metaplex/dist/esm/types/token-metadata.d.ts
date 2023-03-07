@@ -1,4 +1,4 @@
-import { MetaplexFileContent, Option } from '@metaplex-foundation/js';
+import { MetaplexFileContent, Option, CreatorInput } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import { Pubkey } from '@solana-suite/shared';
 import { JsonMetadataAttribute, InputCreators } from './nft-metadata';
@@ -23,4 +23,7 @@ export type TokenMetadata = {
     creators?: InputCreators[];
     collection?: Option<Pubkey>;
     uses?: Option<Uses>;
+};
+export type _TokenMetadata = Omit<TokenMetadata, 'creators'> & {
+    creators: CreatorInput[];
 };

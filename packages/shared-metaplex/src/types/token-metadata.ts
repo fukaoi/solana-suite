@@ -1,6 +1,7 @@
 import {
   MetaplexFileContent,
   Option,
+  CreatorInput,
 } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import { Pubkey } from '@solana-suite/shared';
@@ -28,4 +29,9 @@ export type TokenMetadata = {
   creators?: InputCreators[];
   collection?: Option<Pubkey>;
   uses?: Option<Uses>;
+};
+
+//---- Internal type ----//
+export type _TokenMetadata = Omit<TokenMetadata, 'creators'> & {
+  creators: CreatorInput[];
 };

@@ -33,14 +33,6 @@ var SplToken;
         const inst2 = (0, spl_token_1.createInitializeMintInstruction)(mint, mintDecimal, owner, owner, spl_token_1.TOKEN_PROGRAM_ID);
         const inst3 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(feePayer, tokenAssociated, owner, mint);
         const inst4 = (0, spl_token_1.createMintToCheckedInstruction)(mint, tokenAssociated, owner, calculate_amount_1.SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
-        let metadata;
-        if (tokenMetadata.creators) {
-            const value = shared_metaplex_1.Creators.toInputConvert(tokenMetadata.creators);
-            metadata = tokenMetadata.overwrite('creators', {
-                key: 'creators',
-                value,
-            });
-        }
         const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV2Instruction)({
             metadata: metadataPda,
             mint,
@@ -49,7 +41,7 @@ var SplToken;
             updateAuthority: owner,
         }, {
             createMetadataAccountArgsV2: {
-                data: metadata,
+                data: tokenMetadata,
                 isMutable,
             },
         });
@@ -64,7 +56,7 @@ var SplToken;
             const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
             input.royalty = input.royalty ? input.royalty : 0;
             const value = shared_metaplex_1.Creators.toInputConvert(input.creators);
-            const metadata = input.overwrite('creators', {
+            const metadata = (0, shared_1.overwriteObject)(input, 'creators', {
                 key: 'creators',
                 value,
             });

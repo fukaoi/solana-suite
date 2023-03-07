@@ -2,6 +2,7 @@ import { TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
 import {
   Result,
   debugLog,
+  overwriteObject,
   Try,
   MintInstruction,
   Secret,
@@ -173,7 +174,7 @@ export namespace Metaplex {
       }
 
       const value = Creators.toInputConvert(input.creators);
-      const metadata = input.overwrite('creators', {
+      const metadata = overwriteObject(input, 'creators', {
         key: 'creators',
         value,
       }) as _InputNftMetadata;

@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Keypair, SystemProgram } from '@solana/web3.js';
 import { MINT_SIZE, TOKEN_PROGRAM_ID, createInitializeMintInstruction, getMinimumBalanceForRentExemptMint, createAssociatedTokenAccountInstruction, createMintToCheckedInstruction, getAssociatedTokenAddress, } from '@solana/spl-token';
 import { createCreateMetadataAccountV2Instruction, } from '@metaplex-foundation/mpl-token-metadata';
-import { Node, MintInstruction, Try, debugLog, } from '@solana-suite/shared';
+import { Node, MintInstruction, Try, debugLog, overwriteObject, } from '@solana-suite/shared';
 import { Bundlr, Validator, Creators, } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
 import { Storage } from '@solana-suite/storage';
@@ -30,14 +30,6 @@ export var SplToken;
         const inst2 = createInitializeMintInstruction(mint, mintDecimal, owner, owner, TOKEN_PROGRAM_ID);
         const inst3 = createAssociatedTokenAccountInstruction(feePayer, tokenAssociated, owner, mint);
         const inst4 = createMintToCheckedInstruction(mint, tokenAssociated, owner, _Calculate.calculateAmount(totalAmount, mintDecimal), mintDecimal, signers);
-        let metadata;
-        if (tokenMetadata.creators) {
-            const value = Creators.toInputConvert(tokenMetadata.creators);
-            metadata = tokenMetadata.overwrite('creators', {
-                key: 'creators',
-                value,
-            });
-        }
         const inst5 = createCreateMetadataAccountV2Instruction({
             metadata: metadataPda,
             mint,
@@ -46,7 +38,7 @@ export var SplToken;
             updateAuthority: owner,
         }, {
             createMetadataAccountArgsV2: {
-                data: metadata,
+                data: tokenMetadata,
                 isMutable,
             },
         });
@@ -61,7 +53,7 @@ export var SplToken;
             const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
             input.royalty = input.royalty ? input.royalty : 0;
             const value = Creators.toInputConvert(input.creators);
-            const metadata = input.overwrite('creators', {
+            const metadata = overwriteObject(input, 'creators', {
                 key: 'creators',
                 value,
             });
