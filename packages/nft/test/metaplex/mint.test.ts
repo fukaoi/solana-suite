@@ -51,13 +51,13 @@ describe('Metaplex', () => {
     );
   });
 
-  it.only('[Nft Storage] mint nft', async () => {
+  it('[Nft Storage] mint nft', async () => {
     const asset = RandomAsset.get();
 
     const creator1: InputCreators = {
-      address: 'CGDRajhcFo9ysuUjBsbwCQHKJuCHiXeEUrMKSot1eyay',
+      address: source.pubkey,
       share: 70,
-      authority: '',
+      authority: source.secret,
     };
 
     const creator2 = {
@@ -74,10 +74,59 @@ describe('Metaplex', () => {
       royalty: 20,
       creators: [creator1, creator2],
       isMutable: true,
+    });
+
+    assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
+
+    (await res.submit()).match(
+      (ok: string) => {
+        console.log('# mint:', res.unwrap().data);
+        console.log('# sig:', ok);
+      },
+      (ng: Error) => {
+        console.log(ng);
+        assert.fail(ng.message);
+      }
+    );
+  });
+
+  it.only('[Nft Storage] mint nft with many optional datas', async () => {
+    const asset = RandomAsset.get();
+
+    const creator1: InputCreators = {
+      address: source.pubkey,
+      share: 60,
+      authority: source.secret,
+    };
+
+    const creator2: InputCreators = {
+      address: 'G2Fjvm2ab1xxwMxLPFRSmuEDcX8jzsg2L1gFK4MKMkt5',
+      share: 30,
+      authority:
+        '4HBrM8BTmEqb3wTTzMm77353e1yHC1aTgXJUqmtNovswEfK9SCwrwF56TmjEGakVBeYB17CpdbrSFy7SXaQHDbkR',
+    };
+
+    const creator3: InputCreators = {
+      address: 'DtoMJQF8kUkePJ8YwcQt9cAKbWQFXmBXXNdq5USwJw3s',
+      share: 10,
+      authority:
+        'HsJ144zNS1mc79HgzraFS6pLbfWBpd3zXrXmDM2zCoX9Kmra9Gg9wKc2WbF2JX5JsHz8fkTun7Dw3E8MtaeLKGH',
+    };
+
+    const res = await Metaplex.mint(source.pubkey, source.secret, {
+      filePath: asset.filePath as string,
+      storageType: 'nftStorage',
+      name: asset.name!,
+      symbol: asset.symbol!,
+      royalty: 30,
+      description: 'This is Solana Suite test',
+      external_url: 'https://atonoy.github.io/solana-suite/',
+      creators: [creator1, creator2, creator3],
+      isMutable: true,
       options: {
-        createdBy: 'Solana Suite',
-        poweredBy: 'Solana',
-        creators: [creator1, creator2],
+        github_url: 'https://github.com/atonoy/solana-suite',
+        docs_url:
+          'https://solana-suite.gitbook.io/solana-suite-develpoment-guide/',
       },
     });
 

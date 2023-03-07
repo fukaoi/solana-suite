@@ -50,9 +50,21 @@ export namespace Metaplex {
       owner
     );
 
+    let creatorSigners: Keypair[] = [feePayer.toKeypair()];
+    if (params.creators) {
+      creatorSigners = params.creators?.map(
+        (creator) => creator.authority as Keypair
+      );
+    }
+
     return new MintInstruction(
       inst,
-      [feePayer.toKeypair(), mint.toKeypair(), signer.toKeypair()],
+      [
+        feePayer.toKeypair(),
+        mint.toKeypair(),
+        signer.toKeypair(),
+        ...creatorSigners,
+      ],
       undefined,
       mint.pubkey
     );
@@ -174,6 +186,9 @@ export namespace Metaplex {
       }
 
       const value = Creators.toInputConvert(input.creators);
+
+      debugLog('# creators: ', value);
+
       const metadata = overwriteObject(input, 'creators', {
         key: 'creators',
         value,
