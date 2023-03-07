@@ -21,10 +21,6 @@ declare global {
   interface Console {
     debug(data: unknown, data2?: unknown, data3?: unknown): void;
   }
-
-  interface Object {
-    overwrite(targetKey: string, will: { key: string; value: unknown }): unknown;
-  }
 }
 
 export type AnyObject = {
