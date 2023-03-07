@@ -18,6 +18,7 @@ describe('SplToken', () => {
   before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
+    const creator = KeypairAccount.create();
     tokenMetadata = {
       name: 'solana-suite-token',
       symbol: 'SST',
@@ -27,8 +28,13 @@ describe('SplToken', () => {
       creators: [
         {
           address: source.pubkey,
-          share: 100,
+          share: 30,
           authority: source.secret,
+        },
+        {
+          address: creator.pubkey,
+          share: 70,
+          authority: creator.secret,
         },
       ],
     };
