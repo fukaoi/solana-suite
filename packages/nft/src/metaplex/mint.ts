@@ -52,9 +52,9 @@ export namespace Metaplex {
 
     let creatorSigners: Keypair[] = [feePayer.toKeypair()];
     if (params.creators) {
-      creatorSigners = params.creators?.map(
-        (creator) => creator.authority as Keypair
-      );
+      creatorSigners = params.creators
+        ?.filter((creator) => creator.authority)
+        .map((creator) => creator.authority as Keypair);
     }
 
     return new MintInstruction(
