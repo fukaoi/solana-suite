@@ -182,8 +182,6 @@ export namespace Metaplex {
       const uploaded = await Storage.uploadMetaContent(metadata, payer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 
-      delete reducedMetadata.creators;
-
       debugLog('# upload content url: ', uri);
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);

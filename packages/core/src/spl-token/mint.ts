@@ -26,6 +26,7 @@ import {
 import {
   Bundlr,
   InputTokenMetadata,
+  _InputNftMetadata,
   TokenMetadata,
   Validator,
   Creators,
@@ -126,7 +127,14 @@ export namespace SplToken {
 
       const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
       input.royalty = input.royalty ? input.royalty : 0;
-      const uploaded = await Storage.uploadMetaContent(input, feePayer);
+
+      const value = Creators.toInputConvert(input.creators);
+      const metadata = input.overwrite('creators', {
+        key: 'creators',
+        value,
+      }) as _InputNftMetadata;
+
+      const uploaded = await Storage.uploadMetaContent(metadata, feePayer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 
       debugLog('# upload content url: ', uri);
@@ -139,7 +147,7 @@ export namespace SplToken {
         uri,
         sellerFeeBasisPoints,
         creators: reducedMetadata.creators,
-        collection: reducedMetadata.collection,
+        // collection: reducedMetadata.collection,
         uses: reducedMetadata.uses,
       };
       const isMutable = !reducedMetadata.isMutable ? false : true;

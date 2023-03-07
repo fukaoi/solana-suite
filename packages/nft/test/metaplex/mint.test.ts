@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
-import { ValidatorError } from '../../../shared-metaplex/';
+import { InputCreators, ValidatorError } from '../../../shared-metaplex/';
 import { KeypairAccount } from '../../../shared';
 
 let source: KeypairAccount;
@@ -17,16 +17,16 @@ describe('Metaplex', () => {
   it('[Arweave] mint nft', async () => {
     const asset = RandomAsset.get();
 
-    const creator1 = {
-      address: source.toPublicKey(),
+    const creator1: InputCreators = {
+      address: source.pubkey,
       share: 70,
-      verified: false,
+      authority: source.secret,
     };
 
-    const creator2 = {
-      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk'.toPublicKey(),
+    const creator2: InputCreators = {
+      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk',
       share: 30,
-      verified: false,
+      authority: '',
     };
 
     const res = await Metaplex.mint(source.pubkey, source.secret, {
@@ -48,19 +48,20 @@ describe('Metaplex', () => {
     );
   });
 
-  it('[Nft Storage] mint nft', async () => {
+  it.only('[Nft Storage] mint nft', async () => {
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     const asset = RandomAsset.get();
 
-    const creator1 = {
-      address: 'CGDRajhcFo9ysuUjBsbwCQHKJuCHiXeEUrMKSot1eyay'.toPublicKey(),
+    const creator1: InputCreators = {
+      address: 'CGDRajhcFo9ysuUjBsbwCQHKJuCHiXeEUrMKSot1eyay',
       share: 70,
-      verified: false,
+      authority: '',
     };
 
     const creator2 = {
-      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk'.toPublicKey(),
+      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk',
       share: 30,
-      verified: false,
+      authority: '',
     };
 
     const res = await Metaplex.mint(source.pubkey, source.secret, {

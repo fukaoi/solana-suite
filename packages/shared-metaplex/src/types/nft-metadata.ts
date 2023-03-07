@@ -62,11 +62,11 @@ export type InputNftMetadata = {
   maxSupply?: BigNumber;
   creators?: InputCreators[];
   uses?: Option<Uses>;
-  isCollection?: boolean;
-  collection?: Option<Pubkey>;
-  collectionAuthority?: Option<Secret>;
-  collectionAuthorityIsDelegated?: boolean;
-  collectionIsSized?: boolean;
+  // isCollection?: boolean;
+  // collection?: Option<Pubkey>;
+  // collectionAuthority?: Option<Secret>;
+  // collectionAuthorityIsDelegated?: boolean;
+  // collectionIsSized?: boolean;
   options?: { [key: string]: unknown };
 };
 
