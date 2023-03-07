@@ -3,8 +3,8 @@ import { Pubkey, Secret } from './types/keypair-account';
 import bs from 'bs58';
 
 export class KeypairAccount {
-  pubkey: Pubkey;
   secret: Secret;
+  pubkey: Pubkey;
 
   constructor(params: { pubkey?: Pubkey; secret: Secret }) {
     if (!params.pubkey) {
