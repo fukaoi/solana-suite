@@ -51,7 +51,7 @@ describe('Metaplex', () => {
     );
   });
 
-  it('[Nft Storage] mint nft', async () => {
+  it.only('[Nft Storage] mint nft', async () => {
     const asset = RandomAsset.get();
 
     const creator1: InputCreators = {
@@ -84,7 +84,7 @@ describe('Metaplex', () => {
     assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
 
     (await res.submit()).match(
-      (ok) => {
+      (ok: string) => {
         console.log('# mint:', res.unwrap().data);
         console.log('# sig:', ok);
       },
@@ -105,8 +105,8 @@ describe('Metaplex', () => {
     });
 
     res.match(
-      (_) => assert.fail('Unrecognized error'),
-      (_) => {
+      (_: unknown) => assert.fail('Unrecognized error'),
+      (_: unknown) => {
         (err: ValidatorError) => {
           assert.isNotEmpty(err.message);
           console.log(err.details);
