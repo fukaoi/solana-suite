@@ -1,4 +1,4 @@
-import { CreateNftInput, MetaplexFileContent, BigNumber, Option, CreatorInput } from '@metaplex-foundation/js';
+import { CreateNftInput, MetaplexFileContent, BigNumber, Option, CreatorInput, PublicKey, Signer } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import { Pubkey, Secret } from '@solana-suite/shared';
 import { StorageType } from './nft-storage-metadata';
@@ -13,6 +13,18 @@ export type OutputCreators = {
     readonly share: number;
     readonly verified: boolean;
 };
+export type InputCollection = Option<Pubkey>;
+export type _InputCollection = Option<PublicKey>;
+export type InputCollectionAuthority = Option<Secret>;
+export type _InputCollectionAuthority = Option<Signer>;
+export type OutputCollection = Option<{
+    address: Pubkey;
+    verified: boolean;
+}>;
+export type _OutputCollection = Option<{
+    address: PublicKey;
+    verified: boolean;
+}>;
 export type JsonMetadataAttribute = {
     trait_type?: string;
     value?: string;
@@ -45,6 +57,11 @@ export type InputNftMetadata = {
     maxSupply?: BigNumber;
     creators?: InputCreators[];
     uses?: Option<Uses>;
+    isCollection?: boolean;
+    collection?: InputCollection;
+    collectionAuthority?: InputCollectionAuthority;
+    collectionAuthorityIsDelegated?: boolean;
+    collectionIsSized?: boolean;
     options?: {
         [key: string]: unknown;
     };
@@ -60,14 +77,13 @@ export type OutputNftMetadata = {
     primarySaleHappened: boolean;
     creators: OutputCreators[];
     editionNonce: Option<number>;
-    collection: Option<{
-        address: Pubkey;
-        verified: boolean;
-    }>;
+    collection: OutputCollection;
     uses: Option<Uses>;
 };
 export type _MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
-export type _InputNftMetadata = Omit<InputNftMetadata, 'creators'> & {
-    creators: CreatorInput[];
+export type _InputNftMetadata = Omit<InputNftMetadata, 'creators' | 'collection' | 'collectionAuthority'> & {
+    creators?: CreatorInput[];
+    collection?: _InputCollection;
+    collectionAuthority?: _InputCollectionAuthority;
 };
 export {};

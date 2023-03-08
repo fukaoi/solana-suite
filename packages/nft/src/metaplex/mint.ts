@@ -18,6 +18,7 @@ import {
   _InputNftMetadata,
   _MetaplexNftMetaData,
   Creators,
+  Collections,
 } from '@solana-suite/shared-metaplex';
 
 import {
@@ -185,17 +186,26 @@ export namespace Metaplex {
         throw valid.error;
       }
 
-      const value = Creators.toInputConvert(input.creators);
+      //Convert creators
+      const creators = Creators.toInputConvert(input.creators);
+      debugLog('# creators: ', creators);
 
-      debugLog('# creators: ', value);
+      //Convert collection
+      const collection = Collections.toInputConvert(input.collection);
+      debugLog('# collection: ', collection);
+      //Convert collection authority
+      const collectionAuthority = Collections.toInputAuthorityConvert(
+        input.collectionAuthority
+      );
+      debugLog('# collectionAuthority: ', collectionAuthority);
 
-      const metadata = overwriteObject(input, 'creators', {
+      const overwrited = overwriteObject(input, 'creators', {
         key: 'creators',
-        value,
+        value: creators,
       }) as _InputNftMetadata;
 
       const payer = feePayer ? feePayer : signer;
-      const uploaded = await Storage.uploadMetaContent(metadata, payer);
+      const uploaded = await Storage.uploadMetaContent(overwrited, payer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 
       debugLog('# upload content url: ', uri);

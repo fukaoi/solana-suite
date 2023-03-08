@@ -3,6 +3,7 @@ import {
   Bundlr,
   OutputNftMetadata,
   Creators,
+  Collections,
 } from '@solana-suite/shared-metaplex';
 import { Metadata } from '@metaplex-foundation/js';
 
@@ -27,7 +28,7 @@ export namespace Metaplex {
           primarySaleHappened: d.primarySaleHappened,
           creators: Creators.toOutputConvert(d.creators),
           editionNonce: d.editionNonce,
-          collection: d.collection,
+          collection: Collections.toOutputConvert(d.collection),
           uses: d.uses,
         };
       });

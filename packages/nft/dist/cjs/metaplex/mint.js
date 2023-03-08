@@ -19,14 +19,24 @@ var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
     const createNftBuilder = (params, owner, signer, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        var _a;
         const mint = shared_1.KeypairAccount.create();
         const updateAuthority = signer;
         const mintAuthority = signer;
         const inst = yield Metaplex.createNftBuilderInstruction(feePayer.toKeypair(), params, mint.toKeypair(), updateAuthority.toKeypair(), mintAuthority.toKeypair(), owner);
-        return new shared_1.MintInstruction(inst, [feePayer.toKeypair(), mint.toKeypair(), signer.toKeypair()], undefined, mint.pubkey);
+        let creatorSigners = [feePayer.toKeypair()];
+        if (params.creators) {
+            creatorSigners = (_a = params.creators) === null || _a === void 0 ? void 0 : _a.filter((creator) => creator.authority).map((creator) => creator.authority);
+        }
+        return new shared_1.MintInstruction(inst, [
+            feePayer.toKeypair(),
+            mint.toKeypair(),
+            signer.toKeypair(),
+            ...creatorSigners,
+        ], undefined, mint.pubkey);
     });
     Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {
-        var _a;
+        var _b;
         (0, shared_1.debugLog)('# params: ', params);
         (0, shared_1.debugLog)('# feePayer: ', feePayer);
         (0, shared_1.debugLog)('# useNewMint: ', useNewMint);
@@ -71,7 +81,7 @@ var Metaplex;
                 },
             }),
             signers: [payer, mintAuthority, updateAuthority],
-            key: (_a = params.createMasterEditionInstructionKey) !== null && _a !== void 0 ? _a : 'createMasterEdition',
+            key: (_b = params.createMasterEditionInstructionKey) !== null && _b !== void 0 ? _b : 'createMasterEdition',
         })
             .getInstructions());
     });
@@ -107,10 +117,15 @@ var Metaplex;
             if (valid.isErr) {
                 throw valid.error;
             }
-            const value = shared_metaplex_1.Creators.toInputConvert(input.creators);
+            //Convert creators
+            const creators = shared_metaplex_1.Creators.toInputConvert(input.creators);
+            (0, shared_1.debugLog)('# creators: ', creators);
+            //Convert collection
+            const collection = shared_metaplex_1.Collections.toInputConvert(input.collection);
+            (0, shared_1.debugLog)('# collection: ', collection);
             const metadata = (0, shared_1.overwriteObject)(input, 'creators', {
                 key: 'creators',
-                value,
+                value: creators,
             });
             const payer = feePayer ? feePayer : signer;
             const uploaded = yield storage_1.Storage.uploadMetaContent(metadata, payer);

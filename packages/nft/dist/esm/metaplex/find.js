@@ -8,32 +8,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Try } from '@solana-suite/shared';
+import { Bundlr, Creators, Collections, } from '@solana-suite/shared-metaplex';
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            // const allData = await Bundlr.make()
-            //   .nfts()
-            //   .findAllByOwner({ owner: owner.toPublicKey() });
-            //
-            // const res = allData.map((d) => {
-            //   return {
-            //     mint: (d as Metadata).mintAddress.toString(),
-            //     updateAuthority: d.updateAuthorityAddress.toString(),
-            //     royalty: d.sellerFeeBasisPoints,
-            //     name: d.name,
-            //     symbol: d.symbol,
-            //     uri: d.uri,
-            //     isMutable: d.isMutable,
-            //     primarySaleHappened: d.primarySaleHappened,
-            //     creators: d.creators,
-            //     editionNonce: d.editionNonce,
-            //     collection: d.collection,
-            //     uses: d.uses,
-            //   };
-            // });
-            // return res;
-            return [];
+            const allData = yield Bundlr.make()
+                .nfts()
+                .findAllByOwner({ owner: owner.toPublicKey() });
+            const res = allData.map((d) => {
+                return {
+                    mint: d.mintAddress.toString(),
+                    updateAuthority: d.updateAuthorityAddress.toString(),
+                    royalty: d.sellerFeeBasisPoints,
+                    name: d.name,
+                    symbol: d.symbol,
+                    uri: d.uri,
+                    isMutable: d.isMutable,
+                    primarySaleHappened: d.primarySaleHappened,
+                    creators: Creators.toOutputConvert(d.creators),
+                    editionNonce: d.editionNonce,
+                    collection: Collections.toOutputConvert(d.collection),
+                    uses: d.uses,
+                };
+            });
+            return res;
         }));
     });
 })(Metaplex || (Metaplex = {}));

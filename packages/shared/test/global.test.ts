@@ -9,6 +9,7 @@ import {
   Node,
   Constants,
   isPromise,
+  overwriteObject,
 } from '../src';
 import { JSDOM } from 'jsdom';
 
@@ -116,9 +117,21 @@ describe('Global', () => {
       address: '122pJ24W3kc3Ra5QKAJzUD9LvSEdircGhCjBDz4Ax1ct',
       share: 40,
     };
-    const will = { key: 'word', value: 'zzzzzzzzzzz' };
-    const res = original.overwrite('address', will);
-    assert.deepEqual(res, { word: will.value, share: original.share });
+    const targets = [
+      {
+        existsKey: 'address',
+        will: { key: 'word', value: 'zzzzzzzzzzz' },
+      },
+      {
+        existsKey: 'share',
+        will: { key: 'price', value: 10000 },
+      },
+    ];
+    const res = overwriteObject(original, targets);
+    assert.deepEqual(res, {
+      word: targets[0].will.value,
+      price: targets[1].will.value,
+    });
   });
 
   it('Object overwrite, use Creators', () => {
@@ -131,10 +144,17 @@ describe('Global', () => {
       authority:
         'dJZLhvgtbbFxGPZsrDKYHoUJXbHira4THELQKKFVjmP6W7fPJ4MkzTbTMjWe3A6NApQwwB',
     };
-    const res = original.overwrite('address', {
-      key: 'creators',
-      value: value,
-    });
+    const targets = [
+      {
+        existsKey: 'address',
+        will: {
+          key: 'creators',
+          value: value,
+        },
+      },
+    ];
+
+    const res = overwriteObject(original, targets);
     assert.deepEqual(res, { creators: value });
   });
 

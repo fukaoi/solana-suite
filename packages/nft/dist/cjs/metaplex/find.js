@@ -11,32 +11,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metaplex = void 0;
 const shared_1 = require("@solana-suite/shared");
+const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            // const allData = await Bundlr.make()
-            //   .nfts()
-            //   .findAllByOwner({ owner: owner.toPublicKey() });
-            //
-            // const res = allData.map((d) => {
-            //   return {
-            //     mint: (d as Metadata).mintAddress.toString(),
-            //     updateAuthority: d.updateAuthorityAddress.toString(),
-            //     royalty: d.sellerFeeBasisPoints,
-            //     name: d.name,
-            //     symbol: d.symbol,
-            //     uri: d.uri,
-            //     isMutable: d.isMutable,
-            //     primarySaleHappened: d.primarySaleHappened,
-            //     creators: d.creators,
-            //     editionNonce: d.editionNonce,
-            //     collection: d.collection,
-            //     uses: d.uses,
-            //   };
-            // });
-            // return res;
-            return [];
+            const allData = yield shared_metaplex_1.Bundlr.make()
+                .nfts()
+                .findAllByOwner({ owner: owner.toPublicKey() });
+            const res = allData.map((d) => {
+                return {
+                    mint: d.mintAddress.toString(),
+                    updateAuthority: d.updateAuthorityAddress.toString(),
+                    royalty: d.sellerFeeBasisPoints,
+                    name: d.name,
+                    symbol: d.symbol,
+                    uri: d.uri,
+                    isMutable: d.isMutable,
+                    primarySaleHappened: d.primarySaleHappened,
+                    creators: shared_metaplex_1.Creators.toOutputConvert(d.creators),
+                    editionNonce: d.editionNonce,
+                    collection: shared_metaplex_1.Collections.toOutputConvert(d.collection),
+                    uses: d.uses,
+                };
+            });
+            return res;
         }));
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));

@@ -9,21 +9,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { debugLog, overwriteObject, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
-import { Bundlr, Validator, Creators, } from '@solana-suite/shared-metaplex';
+import { Bundlr, Validator, Creators, Collections, } from '@solana-suite/shared-metaplex';
 import { token, TransactionBuilder, } from '@metaplex-foundation/js';
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
 export var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
     const createNftBuilder = (params, owner, signer, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        var _a;
         const mint = KeypairAccount.create();
         const updateAuthority = signer;
         const mintAuthority = signer;
         const inst = yield Metaplex.createNftBuilderInstruction(feePayer.toKeypair(), params, mint.toKeypair(), updateAuthority.toKeypair(), mintAuthority.toKeypair(), owner);
-        return new MintInstruction(inst, [feePayer.toKeypair(), mint.toKeypair(), signer.toKeypair()], undefined, mint.pubkey);
+        let creatorSigners = [feePayer.toKeypair()];
+        if (params.creators) {
+            creatorSigners = (_a = params.creators) === null || _a === void 0 ? void 0 : _a.filter((creator) => creator.authority).map((creator) => creator.authority);
+        }
+        return new MintInstruction(inst, [
+            feePayer.toKeypair(),
+            mint.toKeypair(),
+            signer.toKeypair(),
+            ...creatorSigners,
+        ], undefined, mint.pubkey);
     });
     Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {
-        var _a;
+        var _b;
         debugLog('# params: ', params);
         debugLog('# feePayer: ', feePayer);
         debugLog('# useNewMint: ', useNewMint);
@@ -68,7 +78,7 @@ export var Metaplex;
                 },
             }),
             signers: [payer, mintAuthority, updateAuthority],
-            key: (_a = params.createMasterEditionInstructionKey) !== null && _a !== void 0 ? _a : 'createMasterEdition',
+            key: (_b = params.createMasterEditionInstructionKey) !== null && _b !== void 0 ? _b : 'createMasterEdition',
         })
             .getInstructions());
     });
@@ -104,10 +114,15 @@ export var Metaplex;
             if (valid.isErr) {
                 throw valid.error;
             }
-            const value = Creators.toInputConvert(input.creators);
+            //Convert creators
+            const creators = Creators.toInputConvert(input.creators);
+            debugLog('# creators: ', creators);
+            //Convert collection
+            const collection = Collections.toInputConvert(input.collection);
+            debugLog('# collection: ', collection);
             const metadata = overwriteObject(input, 'creators', {
                 key: 'creators',
-                value,
+                value: creators,
             });
             const payer = feePayer ? feePayer : signer;
             const uploaded = yield Storage.uploadMetaContent(metadata, payer);

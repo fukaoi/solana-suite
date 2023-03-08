@@ -71,7 +71,7 @@ var SplToken;
                 uri,
                 sellerFeeBasisPoints,
                 creators: reducedMetadata.creators,
-                // collection: reducedMetadata.collection,
+                collection: undefined,
                 uses: reducedMetadata.uses,
             };
             const isMutable = !reducedMetadata.isMutable ? false : true;

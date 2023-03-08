@@ -4,6 +4,8 @@ import {
   BigNumber,
   Option,
   CreatorInput,
+  PublicKey,
+  Signer,
 } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import { Pubkey, Secret } from '@solana-suite/shared';
@@ -16,6 +18,7 @@ type noNeedOptional =
   | 'tokenProgram'
   | 'confirmOptions';
 
+// Creators
 export type InputCreators = {
   readonly address: Pubkey;
   readonly share: number;
@@ -27,6 +30,17 @@ export type OutputCreators = {
   readonly share: number;
   readonly verified: boolean;
 };
+
+// Collection
+export type InputCollection = Option<Pubkey>;
+export type _InputCollection = Option<PublicKey>;
+export type InputCollectionAuthority = Option<Secret>;
+export type _InputCollectionAuthority = Option<Signer>;
+export type OutputCollection = Option<{ address: Pubkey; verified: boolean }>;
+export type _OutputCollection = Option<{
+  address: PublicKey;
+  verified: boolean;
+}>;
 
 export type JsonMetadataAttribute = {
   trait_type?: string;
@@ -62,11 +76,11 @@ export type InputNftMetadata = {
   maxSupply?: BigNumber;
   creators?: InputCreators[];
   uses?: Option<Uses>;
-  // isCollection?: boolean;
-  // collection?: Option<Pubkey>;
-  // collectionAuthority?: Option<Secret>;
-  // collectionAuthorityIsDelegated?: boolean;
-  // collectionIsSized?: boolean;
+  isCollection?: boolean;
+  collection?: InputCollection;
+  collectionAuthority?: InputCollectionAuthority;
+  collectionAuthorityIsDelegated?: boolean;
+  collectionIsSized?: boolean;
   options?: { [key: string]: unknown };
 };
 
@@ -81,12 +95,17 @@ export type OutputNftMetadata = {
   primarySaleHappened: boolean;
   creators: OutputCreators[];
   editionNonce: Option<number>;
-  collection: Option<{ address: Pubkey; verified: boolean }>;
+  collection: OutputCollection;
   uses: Option<Uses>;
 };
 
 //---- Internal type ----//
 export type _MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
-export type _InputNftMetadata = Omit<InputNftMetadata, 'creators'> & {
-  creators: CreatorInput[];
+export type _InputNftMetadata = Omit<
+  InputNftMetadata,
+  'creators' | 'collection' | 'collectionAuthority'
+> & {
+  creators?: CreatorInput[];
+  collection?: _InputCollection;
+  collectionAuthority?: _InputCollectionAuthority;
 };

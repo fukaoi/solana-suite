@@ -6,7 +6,7 @@ export var Creators;
         }
         return input.map((data) => {
             const authority = data.authority
-                ? data.authority.toKeypair()
+                ? (data.authority).toKeypair()
                 : undefined;
             const modify = {
                 address: data.address.toPublicKey(),

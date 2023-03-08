@@ -14,7 +14,12 @@ export declare namespace Storage {
             isMutable?: boolean | undefined;
             maxSupply?: import("@metaplex-foundation/js").BigNumber | undefined;
             uses?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/mpl-token-metadata").Uses> | undefined;
-            creators: import("@metaplex-foundation/js").CreatorInput[];
+            isCollection?: boolean | undefined;
+            collectionAuthorityIsDelegated?: boolean | undefined;
+            collectionIsSized?: boolean | undefined;
+            creators?: import("@metaplex-foundation/js").CreatorInput[] | undefined;
+            collection?: import("@solana-suite/shared-metaplex")._InputCollection | undefined;
+            collectionAuthority?: import("@solana-suite/shared-metaplex")._InputCollectionAuthority | undefined;
         };
     }>;
 }

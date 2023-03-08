@@ -7,7 +7,7 @@ import { Instruction as _Instruction } from './instruction';
 import { Instruction as _Batch } from './instruction/batch-submit';
 import { KeypairAccount } from './keypair-account';
 import { BigNumber } from 'bignumber.js';
-import { AnyObject } from './types/global';
+import { AnyObject, OverwriteObject } from './types/global';
 
 /**
  * senTransaction() TransactionInstruction
@@ -124,18 +124,22 @@ Number.prototype.toLamports = function () {
 /**
  * Overwrite JS Object
  *
- * @param {string} key
- * @param {{key: string, value: unknown}} will
+ * @param {unknown} object
+ * @param {OverwriteObject[]} targets
  * @returns Object
  */
 export const overwriteObject = (
-  obj: unknown,
-  key: string,
-  will: { key: string; value: unknown }
+  object: unknown,
+  targets: {
+    existsKey: string;
+    will: { key: string; value: unknown };
+  }[]
 ): unknown => {
-  const that: AnyObject = obj as AnyObject;
-  delete that[key];
-  that[will.key] = will.value;
+  const that: AnyObject = object as AnyObject;
+  targets.forEach((target) => {
+    delete that[target.existsKey];
+    that[target.will.key] = target.will.value;
+  });
   return that;
 };
 
