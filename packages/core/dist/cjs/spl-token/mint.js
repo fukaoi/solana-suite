@@ -56,10 +56,15 @@ var SplToken;
             const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
             input.royalty = input.royalty ? input.royalty : 0;
             const value = shared_metaplex_1.Creators.toInputConvert(input.creators);
-            const metadata = (0, shared_1.overwriteObject)(input, 'creators', {
-                key: 'creators',
-                value,
-            });
+            const metadata = (0, shared_1.overwriteObject)(input, [
+                {
+                    existsKey: 'creators',
+                    will: {
+                        key: 'creators',
+                        value,
+                    },
+                },
+            ]);
             const uploaded = yield storage_1.Storage.uploadMetaContent(metadata, feePayer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);

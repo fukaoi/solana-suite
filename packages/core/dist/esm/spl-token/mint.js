@@ -53,10 +53,15 @@ export var SplToken;
             const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
             input.royalty = input.royalty ? input.royalty : 0;
             const value = Creators.toInputConvert(input.creators);
-            const metadata = overwriteObject(input, 'creators', {
-                key: 'creators',
-                value,
-            });
+            const metadata = overwriteObject(input, [
+                {
+                    existsKey: 'creators',
+                    will: {
+                        key: 'creators',
+                        value,
+                    },
+                },
+            ]);
             const uploaded = yield Storage.uploadMetaContent(metadata, feePayer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             debugLog('# upload content url: ', uri);

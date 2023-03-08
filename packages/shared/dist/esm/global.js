@@ -129,14 +129,16 @@ Number.prototype.toLamports = function () {
 /**
  * Overwrite JS Object
  *
- * @param {string} key
- * @param {{key: string, value: unknown}} will
+ * @param {unknown} object
+ * @param {OverwriteObject[]} targets
  * @returns Object
  */
-export const overwriteObject = (obj, key, will) => {
-    const that = obj;
-    delete that[key];
-    that[will.key] = will.value;
+export const overwriteObject = (object, targets) => {
+    const that = object;
+    targets.forEach((target) => {
+        delete that[target.existsKey];
+        that[target.will.key] = target.will.value;
+    });
     return that;
 };
 /**

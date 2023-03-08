@@ -120,12 +120,20 @@ export var Metaplex;
             //Convert collection
             const collection = Collections.toInputConvert(input.collection);
             debugLog('# collection: ', collection);
-            const metadata = overwriteObject(input, 'creators', {
-                key: 'creators',
-                value: creators,
-            });
+            //Convert collection authority
+            const collectionAuthority = Collections.toInputAuthorityConvert(input.collectionAuthority);
+            debugLog('# collectionAuthority: ', collectionAuthority);
+            const overwrited = overwriteObject(input, [
+                {
+                    existsKey: 'creators',
+                    will: {
+                        key: 'creators',
+                        value: creators,
+                    },
+                },
+            ]);
             const payer = feePayer ? feePayer : signer;
-            const uploaded = yield Storage.uploadMetaContent(metadata, payer);
+            const uploaded = yield Storage.uploadMetaContent(overwrited, payer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             debugLog('# upload content url: ', uri);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);

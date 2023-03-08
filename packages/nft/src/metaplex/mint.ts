@@ -199,10 +199,29 @@ export namespace Metaplex {
       );
       debugLog('# collectionAuthority: ', collectionAuthority);
 
-      const overwrited = overwriteObject(input, 'creators', {
-        key: 'creators',
-        value: creators,
-      }) as _InputNftMetadata;
+      const overwrited = overwriteObject(input, [
+        {
+          existsKey: 'creators',
+          will: {
+            key: 'creators',
+            value: creators,
+          },
+        },
+        {
+          existsKey: 'collection',
+          will: {
+            key: 'collection',
+            value: collection,
+          },
+        },
+        {
+          existsKey: 'collectionAuthority',
+          will: {
+            key: 'collectionAuthority',
+            value: collectionAuthority,
+          },
+        },
+      ]) as _InputNftMetadata;
 
       const payer = feePayer ? feePayer : signer;
       const uploaded = await Storage.uploadMetaContent(overwrited, payer);

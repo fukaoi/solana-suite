@@ -121,10 +121,15 @@ export namespace SplToken {
       input.royalty = input.royalty ? input.royalty : 0;
 
       const value = Creators.toInputConvert(input.creators);
-      const metadata = overwriteObject(input, 'creators', {
-        key: 'creators',
-        value,
-      }) as _InputNftMetadata;
+      const metadata = overwriteObject(input, [
+        {
+          existsKey: 'creators',
+          will: {
+            key: 'creators',
+            value,
+          },
+        },
+      ]) as _InputNftMetadata;
 
       const uploaded = await Storage.uploadMetaContent(metadata, feePayer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;

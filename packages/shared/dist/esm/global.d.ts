@@ -2,14 +2,17 @@ import { Result } from './result';
 /**
  * Overwrite JS Object
  *
- * @param {string} key
- * @param {{key: string, value: unknown}} will
+ * @param {unknown} object
+ * @param {OverwriteObject[]} targets
  * @returns Object
  */
-export declare const overwriteObject: (obj: unknown, key: string, will: {
-    key: string;
-    value: unknown;
-}) => unknown;
+export declare const overwriteObject: (object: unknown, targets: {
+    existsKey: string;
+    will: {
+        key: string;
+        value: unknown;
+    };
+}[]) => unknown;
 /**
  * Display log for solana-suite-config.js
  *
