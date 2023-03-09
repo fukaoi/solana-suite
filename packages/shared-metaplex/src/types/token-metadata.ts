@@ -7,9 +7,9 @@ import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import {
   JsonMetadataAttribute,
   InputCreators,
-  InputCollection,
   OutputCollection,
   _OutputCollection,
+  _InputCollection,
 } from './nft-metadata';
 import { StorageType } from './nft-storage-metadata';
 
@@ -24,7 +24,6 @@ export type InputTokenMetadata = {
   storageType: StorageType;
   attributes?: JsonMetadataAttribute[];
   creators?: InputCreators[];
-  collection?: InputCollection;
   uses?: Option<Uses>;
 };
 
@@ -35,12 +34,11 @@ export type TokenMetadata = {
   sellerFeeBasisPoints: number;
   attributes?: JsonMetadataAttribute[];
   creators?: InputCreators[];
-  collection?: Collection;
   uses?: Option<Uses>;
 };
 
 //---- Internal type ----//
-export type _TokenMetadata = Omit<TokenMetadata, 'creators' | 'collection'> & {
+export type _TokenMetadata = Omit<TokenMetadata, 'creators'> & {
   creators?: CreatorInput[];
   collection?: _Collection;
 };

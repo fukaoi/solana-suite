@@ -55,17 +55,18 @@ var SplToken;
             }
             const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
             input.royalty = input.royalty ? input.royalty : 0;
-            const value = shared_metaplex_1.Creators.toInputConvert(input.creators);
-            const metadata = (0, shared_1.overwriteObject)(input, [
+            const creatorsValue = shared_metaplex_1.Creators.toInputConvert(input.creators);
+            const overwrited = (0, shared_1.overwriteObject)(input, [
                 {
                     existsKey: 'creators',
                     will: {
                         key: 'creators',
-                        value,
+                        value: creatorsValue,
                     },
                 },
             ]);
-            const uploaded = yield storage_1.Storage.uploadMetaContent(metadata, feePayer);
+            (0, shared_1.debugLog)('# overwrited: ', overwrited);
+            const uploaded = yield storage_1.Storage.uploadMetaContent(overwrited, feePayer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
@@ -76,8 +77,8 @@ var SplToken;
                 uri,
                 sellerFeeBasisPoints,
                 creators: reducedMetadata.creators,
-                collection: undefined,
                 uses: reducedMetadata.uses,
+                collection: undefined,
             };
             const isMutable = !reducedMetadata.isMutable ? false : true;
             const connection = shared_1.Node.getConnection();
