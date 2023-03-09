@@ -98,8 +98,8 @@ export var Metaplex;
      *   external_url?: string      // landing page, home page uri, related url
      *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
      *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
-     *   collection?: Collection                  // collections of different colors, shapes, etc.
-     *   [key: string]?: unknown                   // optional param, Usually not used.
+     *   collection?: Pubkey           // collections of different colors, shapes, etc.
+     *   [key: string]?: unknow        // optional param, Usually not used.
      *   creators?: Creator[]          // other creators than owner
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
@@ -120,15 +120,19 @@ export var Metaplex;
             //Convert collection
             const collection = Collections.toInputConvert(input.collection);
             debugLog('# collection: ', collection);
-            //Convert collection authority
-            const collectionAuthority = Collections.toInputAuthorityConvert(input.collectionAuthority);
-            debugLog('# collectionAuthority: ', collectionAuthority);
             const overwrited = overwriteObject(input, [
                 {
                     existsKey: 'creators',
                     will: {
                         key: 'creators',
                         value: creators,
+                    },
+                },
+                {
+                    existsKey: 'collection',
+                    will: {
+                        key: 'collection',
+                        value: collection,
                     },
                 },
             ]);

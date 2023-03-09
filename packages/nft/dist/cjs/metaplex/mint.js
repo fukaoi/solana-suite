@@ -101,8 +101,8 @@ var Metaplex;
      *   external_url?: string      // landing page, home page uri, related url
      *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
      *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
-     *   collection?: Collection                  // collections of different colors, shapes, etc.
-     *   [key: string]?: unknown                   // optional param, Usually not used.
+     *   collection?: Pubkey           // collections of different colors, shapes, etc.
+     *   [key: string]?: unknow        // optional param, Usually not used.
      *   creators?: Creator[]          // other creators than owner
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
@@ -123,15 +123,19 @@ var Metaplex;
             //Convert collection
             const collection = shared_metaplex_1.Collections.toInputConvert(input.collection);
             (0, shared_1.debugLog)('# collection: ', collection);
-            //Convert collection authority
-            const collectionAuthority = shared_metaplex_1.Collections.toInputAuthorityConvert(input.collectionAuthority);
-            (0, shared_1.debugLog)('# collectionAuthority: ', collectionAuthority);
             const overwrited = (0, shared_1.overwriteObject)(input, [
                 {
                     existsKey: 'creators',
                     will: {
                         key: 'creators',
                         value: creators,
+                    },
+                },
+                {
+                    existsKey: 'collection',
+                    will: {
+                        key: 'collection',
+                        value: collection,
                     },
                 },
             ]);

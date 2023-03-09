@@ -90,7 +90,7 @@ describe('Metaplex', () => {
     );
   });
 
-  it('[Nft Storage] mint nft with many optional datas', async () => {
+  it.only('[Nft Storage] mint nft with many optional datas', async () => {
     const asset = RandomAsset.get();
 
     const creator1: InputCreators = {
@@ -113,6 +113,8 @@ describe('Metaplex', () => {
         'HsJ144zNS1mc79HgzraFS6pLbfWBpd3zXrXmDM2zCoX9Kmra9Gg9wKc2WbF2JX5JsHz8fkTun7Dw3E8MtaeLKGH',
     };
 
+    const collection = KeypairAccount.create().pubkey;
+
     const res = await Metaplex.mint(source.pubkey, source.secret, {
       filePath: asset.filePath as string,
       storageType: 'nftStorage',
@@ -123,6 +125,7 @@ describe('Metaplex', () => {
       external_url: 'https://atonoy.github.io/solana-suite/',
       creators: [creator1, creator2, creator3],
       isMutable: true,
+      collection: collection,
       options: {
         github_url: 'https://github.com/atonoy/solana-suite',
         docs_url:

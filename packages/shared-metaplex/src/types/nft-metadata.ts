@@ -5,7 +5,6 @@ import {
   Option,
   CreatorInput,
   PublicKey,
-  Signer,
 } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import { Pubkey, Secret } from '@solana-suite/shared';
@@ -34,8 +33,6 @@ export type OutputCreators = {
 // Collection
 export type InputCollection = Option<Pubkey>;
 export type _InputCollection = Option<PublicKey>;
-export type InputCollectionAuthority = Option<Secret>;
-export type _InputCollectionAuthority = Option<Signer>;
 export type OutputCollection = Option<{ address: Pubkey; verified: boolean }>;
 export type _OutputCollection = Option<{
   address: PublicKey;
@@ -78,9 +75,6 @@ export type InputNftMetadata = {
   uses?: Option<Uses>;
   isCollection?: boolean;
   collection?: InputCollection;
-  collectionAuthority?: InputCollectionAuthority;
-  collectionAuthorityIsDelegated?: boolean;
-  collectionIsSized?: boolean;
   options?: { [key: string]: unknown };
 };
 
@@ -107,5 +101,4 @@ export type _InputNftMetadata = Omit<
 > & {
   creators?: CreatorInput[];
   collection?: _InputCollection;
-  collectionAuthority?: _InputCollectionAuthority;
 };
