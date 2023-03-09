@@ -9,13 +9,17 @@ import {
   Result,
   Try,
   KeypairAccount,
+  overwriteObject,
 } from '@solana-suite/shared';
 import {
   Bundlr,
   Validator,
   ValidatorError,
   InputNftMetadata,
-  MetaplexNftMetaData,
+  Creators,
+  Collections,
+  _InputNftMetadata,
+  _MetaplexNftMetaData,
 } from '@solana-suite/shared-metaplex';
 import { InitializeNftMint, Phantom } from '../types';
 
@@ -70,14 +74,39 @@ export namespace PhantomMetaplex {
 
       Node.changeConnection({ cluster });
 
-      const uploaded = await Storage.uploadMetaContent(input);
+      //Convert creators
+      const creators = Creators.toInputConvert(input.creators);
+      debugLog('# creators: ', creators);
+
+      //Convert collection
+      const collection = Collections.toInputConvert(input.collection);
+      debugLog('# collection: ', collection);
+
+      const overwrited = overwriteObject(input, [
+        {
+          existsKey: 'creators',
+          will: {
+            key: 'creators',
+            value: creators,
+          },
+        },
+        {
+          existsKey: 'collection',
+          will: {
+            key: 'collection',
+            value: collection,
+          },
+        },
+      ]) as _InputNftMetadata;
+
+      const uploaded = await Storage.uploadMetaContent(overwrited);
 
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
       debugLog('# upload content url: ', uri);
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);
 
-      const mintInput: MetaplexNftMetaData = {
+      const mintInput: _MetaplexNftMetaData = {
         uri,
         sellerFeeBasisPoints,
         ...reducedMetadata,
