@@ -100,7 +100,7 @@ export var Metaplex;
      *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
      *   collection?: Pubkey           // collections of different colors, shapes, etc.
      *   [key: string]?: unknown       // optional param, Usually not used.
-     *   creators?: Creator[]          // other creators than owner
+     *   creators?: InputCreators[]          // other creators than owner
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
      *   maxSupply?: BigNumber         // mint copies

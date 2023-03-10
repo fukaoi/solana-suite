@@ -55,16 +55,19 @@ var SplToken;
             }
             const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
             input.royalty = input.royalty ? input.royalty : 0;
-            const creatorsValue = shared_metaplex_1.Creators.toInputConvert(input.creators);
-            const overwrited = (0, shared_1.overwriteObject)(input, [
-                {
-                    existsKey: 'creators',
-                    will: {
-                        key: 'creators',
-                        value: creatorsValue,
+            let overwrited = input;
+            if (input.creators) {
+                const creatorsValue = shared_metaplex_1.Creators.toInputConvert(input.creators);
+                overwrited = (0, shared_1.overwriteObject)(input, [
+                    {
+                        existsKey: 'creators',
+                        will: {
+                            key: 'creators',
+                            value: creatorsValue,
+                        },
                     },
-                },
-            ]);
+                ]);
+            }
             (0, shared_1.debugLog)('# overwrited: ', overwrited);
             const uploaded = yield storage_1.Storage.uploadMetaContent(overwrited, feePayer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
