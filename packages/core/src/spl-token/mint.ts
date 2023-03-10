@@ -120,19 +120,21 @@ export namespace SplToken {
       const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
       input.royalty = input.royalty ? input.royalty : 0;
 
-      const creatorsValue = Creators.toInputConvert(input.creators);
-      const overwrited = overwriteObject(input, [
-        {
-          existsKey: 'creators',
-          will: {
-            key: 'creators',
-            value: creatorsValue,
+      let overwrited = input as _InputNftMetadata;
+      if (input.creators) {
+        const creatorsValue = Creators.toInputConvert(input.creators);
+        overwrited = overwriteObject(input, [
+          {
+            existsKey: 'creators',
+            will: {
+              key: 'creators',
+              value: creatorsValue,
+            },
           },
-        },
-      ]) as _InputNftMetadata;
+        ]) as _InputNftMetadata;
+      }
 
       debugLog('# overwrited: ', overwrited);
-
       const uploaded = await Storage.uploadMetaContent(overwrited, feePayer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 

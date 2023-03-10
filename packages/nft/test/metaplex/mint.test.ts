@@ -17,26 +17,12 @@ describe('Metaplex', () => {
 
   it('[Arweave] mint nft', async () => {
     const asset = RandomAsset.get();
-
-    const creator1: InputCreators = {
-      address: source.pubkey,
-      share: 70,
-      authority: source.secret,
-    };
-
-    const creator2: InputCreators = {
-      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk',
-      share: 30,
-      authority: '',
-    };
-
     const res = await Metaplex.mint(source.pubkey, source.secret, {
       filePath: asset.filePath as string,
       storageType: 'arweave',
       name: asset.name!,
       symbol: asset.symbol!,
       royalty: 50,
-      creators: [creator1, creator2],
       isMutable: true,
     });
 
