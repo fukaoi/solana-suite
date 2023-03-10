@@ -165,7 +165,7 @@ export namespace Metaplex {
    *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
    *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
    *   collection?: Pubkey           // collections of different colors, shapes, etc.
-   *   [key: string]?: unknow        // optional param, Usually not used.
+   *   [key: string]?: unknown       // optional param, Usually not used.
    *   creators?: Creator[]          // other creators than owner
    *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()

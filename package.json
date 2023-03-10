@@ -13,7 +13,8 @@
       "packages/shared-metaplex",
       "packages/storage",
       "packages/core",
-      "packages/nft"
+      "packages/nft",
+      "packages/phantom"
     ]
   },
   "devDependencies": {
