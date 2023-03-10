@@ -2,6 +2,7 @@ import { TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
 import {
   Result,
   debugLog,
+  overwriteObject,
   Try,
   MintInstruction,
   Secret,
@@ -14,7 +15,10 @@ import {
   Bundlr,
   Validator,
   InputNftMetadata,
-  MetaplexNftMetaData,
+  _InputNftMetadata,
+  _MetaplexNftMetaData,
+  Creators,
+  Collections,
 } from '@solana-suite/shared-metaplex';
 
 import {
@@ -47,9 +51,21 @@ export namespace Metaplex {
       owner
     );
 
+    let creatorSigners: Keypair[] = [feePayer.toKeypair()];
+    if (params.creators) {
+      creatorSigners = params.creators
+        ?.filter((creator) => creator.authority)
+        .map((creator) => creator.authority as Keypair);
+    }
+
     return new MintInstruction(
       inst,
-      [feePayer.toKeypair(), mint.toKeypair(), signer.toKeypair()],
+      [
+        feePayer.toKeypair(),
+        mint.toKeypair(),
+        signer.toKeypair(),
+        ...creatorSigners,
+      ],
       undefined,
       mint.pubkey
     );
@@ -148,9 +164,9 @@ export namespace Metaplex {
    *   external_url?: string      // landing page, home page uri, related url
    *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
    *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
-   *   collection?: Collection                  // collections of different colors, shapes, etc.
-   *   [key: string]?: unknown                   // optional param, Usually not used.
-   *   creators?: Creator[]          // other creators than owner
+   *   collection?: Pubkey           // collections of different colors, shapes, etc.
+   *   [key: string]?: unknown       // optional param, Usually not used.
+   *   creators?: InputCreators[]          // other creators than owner
    *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()
    *   maxSupply?: BigNumber         // mint copies
@@ -170,15 +186,40 @@ export namespace Metaplex {
         throw valid.error;
       }
 
+      //Convert creators
+      const creators = Creators.toInputConvert(input.creators);
+      debugLog('# creators: ', creators);
+
+      //Convert collection
+      const collection = Collections.toInputConvert(input.collection);
+      debugLog('# collection: ', collection);
+
+      const overwrited = overwriteObject(input, [
+        {
+          existsKey: 'creators',
+          will: {
+            key: 'creators',
+            value: creators,
+          },
+        },
+        {
+          existsKey: 'collection',
+          will: {
+            key: 'collection',
+            value: collection,
+          },
+        },
+      ]) as _InputNftMetadata;
+
       const payer = feePayer ? feePayer : signer;
-      const uploaded = await Storage.uploadMetaContent(input, payer);
+      const uploaded = await Storage.uploadMetaContent(overwrited, payer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 
       debugLog('# upload content url: ', uri);
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);
 
-      const mintInput: MetaplexNftMetaData = {
+      const mintInput: _MetaplexNftMetaData = {
         uri,
         sellerFeeBasisPoints,
         ...reducedMetadata,

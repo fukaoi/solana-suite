@@ -7,23 +7,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { debugLog, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
+import { debugLog, overwriteObject, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
-import { Bundlr, Validator, } from '@solana-suite/shared-metaplex';
+import { Bundlr, Validator, Creators, Collections, } from '@solana-suite/shared-metaplex';
 import { token, TransactionBuilder, } from '@metaplex-foundation/js';
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
 export var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
     const createNftBuilder = (params, owner, signer, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        var _a;
         const mint = KeypairAccount.create();
         const updateAuthority = signer;
         const mintAuthority = signer;
         const inst = yield Metaplex.createNftBuilderInstruction(feePayer.toKeypair(), params, mint.toKeypair(), updateAuthority.toKeypair(), mintAuthority.toKeypair(), owner);
-        return new MintInstruction(inst, [feePayer.toKeypair(), mint.toKeypair(), signer.toKeypair()], undefined, mint.pubkey);
+        let creatorSigners = [feePayer.toKeypair()];
+        if (params.creators) {
+            creatorSigners = (_a = params.creators) === null || _a === void 0 ? void 0 : _a.filter((creator) => creator.authority).map((creator) => creator.authority);
+        }
+        return new MintInstruction(inst, [
+            feePayer.toKeypair(),
+            mint.toKeypair(),
+            signer.toKeypair(),
+            ...creatorSigners,
+        ], undefined, mint.pubkey);
     });
     Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {
-        var _a;
+        var _b;
         debugLog('# params: ', params);
         debugLog('# feePayer: ', feePayer);
         debugLog('# useNewMint: ', useNewMint);
@@ -68,7 +78,7 @@ export var Metaplex;
                 },
             }),
             signers: [payer, mintAuthority, updateAuthority],
-            key: (_a = params.createMasterEditionInstructionKey) !== null && _a !== void 0 ? _a : 'createMasterEdition',
+            key: (_b = params.createMasterEditionInstructionKey) !== null && _b !== void 0 ? _b : 'createMasterEdition',
         })
             .getInstructions());
     });
@@ -88,8 +98,8 @@ export var Metaplex;
      *   external_url?: string      // landing page, home page uri, related url
      *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
      *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
-     *   collection?: Collection                  // collections of different colors, shapes, etc.
-     *   [key: string]?: unknown                   // optional param, Usually not used.
+     *   collection?: Pubkey           // collections of different colors, shapes, etc.
+     *   [key: string]?: unknown       // optional param, Usually not used.
      *   creators?: Creator[]          // other creators than owner
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
@@ -104,8 +114,30 @@ export var Metaplex;
             if (valid.isErr) {
                 throw valid.error;
             }
+            //Convert creators
+            const creators = Creators.toInputConvert(input.creators);
+            debugLog('# creators: ', creators);
+            //Convert collection
+            const collection = Collections.toInputConvert(input.collection);
+            debugLog('# collection: ', collection);
+            const overwrited = overwriteObject(input, [
+                {
+                    existsKey: 'creators',
+                    will: {
+                        key: 'creators',
+                        value: creators,
+                    },
+                },
+                {
+                    existsKey: 'collection',
+                    will: {
+                        key: 'collection',
+                        value: collection,
+                    },
+                },
+            ]);
             const payer = feePayer ? feePayer : signer;
-            const uploaded = yield Storage.uploadMetaContent(input, payer);
+            const uploaded = yield Storage.uploadMetaContent(overwrited, payer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             debugLog('# upload content url: ', uri);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);

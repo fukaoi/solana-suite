@@ -29,9 +29,9 @@ var Metaplex;
                     uri: d.uri,
                     isMutable: d.isMutable,
                     primarySaleHappened: d.primarySaleHappened,
-                    creators: d.creators,
+                    creators: shared_metaplex_1.Creators.toOutputConvert(d.creators),
                     editionNonce: d.editionNonce,
-                    collection: d.collection,
+                    collection: shared_metaplex_1.Collections.toOutputConvert(d.collection),
                     uses: d.uses,
                 };
             });

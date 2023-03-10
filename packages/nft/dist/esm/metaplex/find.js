@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Try } from '@solana-suite/shared';
-import { Bundlr } from '@solana-suite/shared-metaplex';
+import { Bundlr, Creators, Collections, } from '@solana-suite/shared-metaplex';
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
@@ -26,9 +26,9 @@ export var Metaplex;
                     uri: d.uri,
                     isMutable: d.isMutable,
                     primarySaleHappened: d.primarySaleHappened,
-                    creators: d.creators,
+                    creators: Creators.toOutputConvert(d.creators),
                     editionNonce: d.editionNonce,
-                    collection: d.collection,
+                    collection: Collections.toOutputConvert(d.collection),
                     uses: d.uses,
                 };
             });

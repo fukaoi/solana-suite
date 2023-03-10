@@ -5,3 +5,5 @@ solana-localhost-devnet-keypair
 yarn-error.log
 .node-version
 package-lock.json
+.yarn/
+.yarnrc.yml

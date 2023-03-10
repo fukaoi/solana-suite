@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { SystemProgram } from '@solana/web3.js';
 import { MINT_SIZE, TOKEN_PROGRAM_ID, createInitializeMintInstruction, getMinimumBalanceForRentExemptMint, createAssociatedTokenAccountInstruction, createMintToCheckedInstruction, getAssociatedTokenAddress, } from '@solana/spl-token';
 import { createCreateMetadataAccountV2Instruction, } from '@metaplex-foundation/mpl-token-metadata';
-import { Node, MintInstruction, Try, debugLog, KeypairAccount, } from '@solana-suite/shared';
-import { Bundlr, Validator, } from '@solana-suite/shared-metaplex';
+import { Node, MintInstruction, Try, debugLog, overwriteObject, KeypairAccount, } from '@solana-suite/shared';
+import { Bundlr, Validator, Creators, } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
 import { Storage } from '@solana-suite/storage';
 export var SplToken;
@@ -51,7 +51,19 @@ export var SplToken;
                 throw valid.error;
             }
             const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
-            const uploaded = yield Storage.uploadMetaContent(input, feePayer);
+            input.royalty = input.royalty ? input.royalty : 0;
+            const creatorsValue = Creators.toInputConvert(input.creators);
+            const overwrited = overwriteObject(input, [
+                {
+                    existsKey: 'creators',
+                    will: {
+                        key: 'creators',
+                        value: creatorsValue,
+                    },
+                },
+            ]);
+            debugLog('# overwrited: ', overwrited);
+            const uploaded = yield Storage.uploadMetaContent(overwrited, feePayer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             debugLog('# upload content url: ', uri);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
@@ -62,8 +74,8 @@ export var SplToken;
                 uri,
                 sellerFeeBasisPoints,
                 creators: reducedMetadata.creators,
-                collection: reducedMetadata.collection,
                 uses: reducedMetadata.uses,
+                collection: undefined,
             };
             const isMutable = !reducedMetadata.isMutable ? false : true;
             const connection = Node.getConnection();

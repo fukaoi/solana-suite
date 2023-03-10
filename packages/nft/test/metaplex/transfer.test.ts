@@ -20,15 +20,15 @@ describe('Metaplex', () => {
     const asset = RandomAsset.get();
 
     const creator1 = {
-      address: source.toPublicKey(),
+      address: source.pubkey,
       share: 70,
-      verified: false,
+      authority: source.secret,
     };
 
     const creator2 = {
-      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk'.toPublicKey(),
+      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk',
       share: 30,
-      verified: false,
+      authority: '',
     };
 
     const mint = await Metaplex.mint(source.pubkey, source.secret, {
@@ -73,15 +73,15 @@ describe('Metaplex', () => {
     const asset = RandomAsset.get();
 
     const creator1 = {
-      address: source.toPublicKey(),
+      address: source.pubkey,
       share: 70,
-      verified: false,
+      authority: source.secret,
     };
 
     const creator2 = {
-      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk'.toPublicKey(),
+      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk',
       share: 30,
-      verified: false,
+      authority: '',
     };
 
     const res = await Metaplex.mint(

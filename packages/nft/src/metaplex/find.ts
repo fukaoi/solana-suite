@@ -1,5 +1,10 @@
 import { Pubkey, Result, Try } from '@solana-suite/shared';
-import { Bundlr, OutputNftMetadata } from '@solana-suite/shared-metaplex';
+import {
+  Bundlr,
+  OutputNftMetadata,
+  Creators,
+  Collections,
+} from '@solana-suite/shared-metaplex';
 import { Metadata } from '@metaplex-foundation/js';
 
 export namespace Metaplex {
@@ -21,9 +26,9 @@ export namespace Metaplex {
           uri: d.uri,
           isMutable: d.isMutable,
           primarySaleHappened: d.primarySaleHappened,
-          creators: d.creators,
+          creators: Creators.toOutputConvert(d.creators),
           editionNonce: d.editionNonce,
-          collection: d.collection,
+          collection: Collections.toOutputConvert(d.collection),
           uses: d.uses,
         };
       });

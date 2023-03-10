@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Transaction } from '@solana/web3.js';
 import { Metaplex } from '@solana-suite/nft';
 import { Storage } from '@solana-suite/storage';
-import { debugLog, Node, Try, KeypairAccount, } from '@solana-suite/shared';
-import { Bundlr, Validator, } from '@solana-suite/shared-metaplex';
+import { debugLog, Node, Try, KeypairAccount, overwriteObject, } from '@solana-suite/shared';
+import { Bundlr, Validator, Creators, Collections, } from '@solana-suite/shared-metaplex';
 export var PhantomMetaplex;
 (function (PhantomMetaplex) {
     const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
@@ -44,7 +44,29 @@ export var PhantomMetaplex;
             }
             debugLog('# input: ', input);
             Node.changeConnection({ cluster });
-            const uploaded = yield Storage.uploadMetaContent(input);
+            //Convert creators
+            const creators = Creators.toInputConvert(input.creators);
+            debugLog('# creators: ', creators);
+            //Convert collection
+            const collection = Collections.toInputConvert(input.collection);
+            debugLog('# collection: ', collection);
+            const overwrited = overwriteObject(input, [
+                {
+                    existsKey: 'creators',
+                    will: {
+                        key: 'creators',
+                        value: creators,
+                    },
+                },
+                {
+                    existsKey: 'collection',
+                    will: {
+                        key: 'collection',
+                        value: collection,
+                    },
+                },
+            ]);
+            const uploaded = yield Storage.uploadMetaContent(overwrited);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             debugLog('# upload content url: ', uri);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);

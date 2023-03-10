@@ -7,10 +7,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Transaction, Keypair, } from '@solana/web3.js';
-import { Node, Try, debugLog } from '@solana-suite/shared';
+import { Transaction, Keypair } from '@solana/web3.js';
+import { Node, Try, debugLog, overwriteObject, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { SplToken } from '@solana-suite/core';
+import { Creators, } from '@solana-suite/shared-metaplex';
 export var PhantomSplToken;
 (function (PhantomSplToken) {
     PhantomSplToken.mint = (input, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
@@ -20,7 +21,17 @@ export var PhantomSplToken;
             const transaction = new Transaction();
             const mint = Keypair.generate();
             debugLog('# input: ', input);
-            const uploaded = yield Storage.uploadMetaContent(input);
+            const creatorsValue = Creators.toInputConvert(input.creators);
+            const overwrited = overwriteObject(input, [
+                {
+                    existsKey: 'creators',
+                    will: {
+                        key: 'creators',
+                        value: creatorsValue,
+                    },
+                },
+            ]);
+            const uploaded = yield Storage.uploadMetaContent(overwrited);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             debugLog('# upload content url: ', uri);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
@@ -31,13 +42,13 @@ export var PhantomSplToken;
                 uri,
                 sellerFeeBasisPoints,
                 creators: reducedMetadata.creators,
-                collection: reducedMetadata.collection,
+                collection: undefined,
                 uses: reducedMetadata.uses,
             };
             const isMutable = !reducedMetadata.isMutable ? false : true;
-            const insturctions = yield SplToken.createMintInstruction(connection, mint.publicKey, owner, totalAmount, mintDecimal, tokenMetadata, owner, isMutable);
+            const insturctions = yield SplToken.createMintInstruction(connection, mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, owner.toPublicKey(), isMutable);
             insturctions.forEach((inst) => transaction.add(inst));
-            transaction.feePayer = owner;
+            transaction.feePayer = owner.toPublicKey();
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             transaction.recentBlockhash = blockhashObj.value.blockhash;
             transaction.partialSign(mint);

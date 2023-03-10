@@ -20,6 +20,7 @@ import {
   MintInstruction,
   Try,
   debugLog,
+  overwriteObject,
   Pubkey,
   Secret,
   KeypairAccount,
@@ -28,8 +29,10 @@ import {
 import {
   Bundlr,
   InputTokenMetadata,
-  TokenMetadata,
+  _InputNftMetadata,
+  _TokenMetadata,
   Validator,
+  Creators,
 } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
 import { Storage } from '@solana-suite/storage';
@@ -41,7 +44,7 @@ export namespace SplToken {
     owner: PublicKey,
     totalAmount: number,
     mintDecimal: number,
-    tokenMetadata: TokenMetadata,
+    tokenMetadata: _TokenMetadata,
     feePayer: PublicKey,
     isMutable: boolean
   ) => {
@@ -115,21 +118,38 @@ export namespace SplToken {
       }
 
       const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
-      const uploaded = await Storage.uploadMetaContent(input, feePayer);
+      input.royalty = input.royalty ? input.royalty : 0;
+
+      let overwrited = input as _InputNftMetadata;
+      if (input.creators) {
+        const creatorsValue = Creators.toInputConvert(input.creators);
+        overwrited = overwriteObject(input, [
+          {
+            existsKey: 'creators',
+            will: {
+              key: 'creators',
+              value: creatorsValue,
+            },
+          },
+        ]) as _InputNftMetadata;
+      }
+
+      debugLog('# overwrited: ', overwrited);
+      const uploaded = await Storage.uploadMetaContent(overwrited, feePayer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 
       debugLog('# upload content url: ', uri);
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);
 
-      const tokenMetadata: TokenMetadata = {
+      const tokenMetadata: _TokenMetadata = {
         name: reducedMetadata.name,
         symbol: reducedMetadata.symbol,
         uri,
         sellerFeeBasisPoints,
         creators: reducedMetadata.creators,
-        collection: reducedMetadata.collection,
         uses: reducedMetadata.uses,
+        collection: undefined,
       };
       const isMutable = !reducedMetadata.isMutable ? false : true;
 

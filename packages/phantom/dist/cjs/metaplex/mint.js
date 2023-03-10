@@ -47,7 +47,29 @@ var PhantomMetaplex;
             }
             (0, shared_1.debugLog)('# input: ', input);
             shared_1.Node.changeConnection({ cluster });
-            const uploaded = yield storage_1.Storage.uploadMetaContent(input);
+            //Convert creators
+            const creators = shared_metaplex_1.Creators.toInputConvert(input.creators);
+            (0, shared_1.debugLog)('# creators: ', creators);
+            //Convert collection
+            const collection = shared_metaplex_1.Collections.toInputConvert(input.collection);
+            (0, shared_1.debugLog)('# collection: ', collection);
+            const overwrited = (0, shared_1.overwriteObject)(input, [
+                {
+                    existsKey: 'creators',
+                    will: {
+                        key: 'creators',
+                        value: creators,
+                    },
+                },
+                {
+                    existsKey: 'collection',
+                    will: {
+                        key: 'collection',
+                        value: collection,
+                    },
+                },
+            ]);
+            const uploaded = yield storage_1.Storage.uploadMetaContent(overwrited);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);

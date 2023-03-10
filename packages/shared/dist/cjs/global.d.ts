@@ -1,5 +1,18 @@
 import { Result } from './result';
-import './types/global';
+/**
+ * Overwrite JS Object
+ *
+ * @param {unknown} object
+ * @param {OverwriteObject[]} targets
+ * @returns Object
+ */
+export declare const overwriteObject: (object: unknown, targets: {
+    existsKey: string;
+    will: {
+        key: string;
+        value: unknown;
+    };
+}[]) => unknown;
 /**
  * Display log for solana-suite-config.js
  *

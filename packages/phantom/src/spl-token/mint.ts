@@ -1,20 +1,27 @@
-import {
-  Transaction,
-  TransactionInstruction,
-  PublicKey,
-  Keypair,
-} from '@solana/web3.js';
+import { Transaction, TransactionInstruction, Keypair } from '@solana/web3.js';
 
-import { Node, Result, Try, debugLog } from '@solana-suite/shared';
+import {
+  Node,
+  Result,
+  Try,
+  debugLog,
+  Pubkey,
+  overwriteObject,
+} from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { SplToken } from '@solana-suite/core';
 import { Phantom } from '../types';
-import { InputTokenMetadata } from '@solana-suite/shared-metaplex';
+import {
+  Creators,
+  InputTokenMetadata,
+  _InputNftMetadata,
+  _TokenMetadata,
+} from '@solana-suite/shared-metaplex';
 
 export namespace PhantomSplToken {
   export const mint = async (
     input: InputTokenMetadata,
-    owner: PublicKey,
+    owner: Pubkey,
     cluster: string,
     totalAmount: number,
     mintDecimal: number,
@@ -28,20 +35,31 @@ export namespace PhantomSplToken {
 
       debugLog('# input: ', input);
 
-      const uploaded = await Storage.uploadMetaContent(input);
+      const creatorsValue = Creators.toInputConvert(input.creators);
+      const overwrited = overwriteObject(input, [
+        {
+          existsKey: 'creators',
+          will: {
+            key: 'creators',
+            value: creatorsValue,
+          },
+        },
+      ]) as _InputNftMetadata;
+
+      const uploaded = await Storage.uploadMetaContent(overwrited);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 
       debugLog('# upload content url: ', uri);
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);
 
-      const tokenMetadata = {
+      const tokenMetadata: _TokenMetadata = {
         name: reducedMetadata.name,
         symbol: reducedMetadata.symbol,
         uri,
         sellerFeeBasisPoints,
         creators: reducedMetadata.creators,
-        collection: reducedMetadata.collection,
+        collection: undefined,
         uses: reducedMetadata.uses,
       };
 
@@ -50,18 +68,18 @@ export namespace PhantomSplToken {
       const insturctions = await SplToken.createMintInstruction(
         connection,
         mint.publicKey,
-        owner,
+        owner.toPublicKey(),
         totalAmount,
         mintDecimal,
         tokenMetadata,
-        owner,
+        owner.toPublicKey(),
         isMutable
       );
 
       insturctions.forEach((inst: TransactionInstruction) =>
         transaction.add(inst)
       );
-      transaction.feePayer = owner;
+      transaction.feePayer = owner.toPublicKey();
       const blockhashObj = await connection.getLatestBlockhashAndContext();
       transaction.recentBlockhash = blockhashObj.value.blockhash;
       transaction.partialSign(mint);

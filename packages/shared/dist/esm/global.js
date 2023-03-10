@@ -7,15 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import bs from 'bs58';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Constants } from './constants';
 import { Node } from './node';
 import { Result } from './result';
 import { Instruction as _Batch } from './instruction/batch-submit';
-import './types/global';
 import { KeypairAccount } from './keypair-account';
 import { BigNumber } from 'bignumber.js';
-import bs from 'bs58';
 /**
  * senTransaction() TransactionInstruction
  *
@@ -126,6 +125,21 @@ Number.prototype.toLamports = function () {
     return BigNumber(this)
         .times(LAMPORTS_PER_SOL)
         .toNumber();
+};
+/**
+ * Overwrite JS Object
+ *
+ * @param {unknown} object
+ * @param {OverwriteObject[]} targets
+ * @returns Object
+ */
+export const overwriteObject = (object, targets) => {
+    const that = object;
+    targets.forEach((target) => {
+        delete that[target.existsKey];
+        that[target.will.key] = target.will.value;
+    });
+    return that;
 };
 /**
  * Display log for solana-suite-config.js

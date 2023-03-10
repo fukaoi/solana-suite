@@ -1,13 +1,14 @@
+import bs from 'bs58';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Constants } from './constants';
 import { Node } from './node';
 import { Result } from './result';
 import { Instruction as _Instruction } from './instruction';
 import { Instruction as _Batch } from './instruction/batch-submit';
-import './types/global';
 import { KeypairAccount } from './keypair-account';
 import { BigNumber } from 'bignumber.js';
-import bs from 'bs58';
+import { AnyObject, OverwriteObject } from './types/global';
+
 /**
  * senTransaction() TransactionInstruction
  *
@@ -118,6 +119,28 @@ Number.prototype.toLamports = function () {
   return BigNumber(this as number)
     .times(LAMPORTS_PER_SOL)
     .toNumber();
+};
+
+/**
+ * Overwrite JS Object
+ *
+ * @param {unknown} object
+ * @param {OverwriteObject[]} targets
+ * @returns Object
+ */
+export const overwriteObject = (
+  object: unknown,
+  targets: {
+    existsKey: string;
+    will: { key: string; value: unknown };
+  }[]
+): unknown => {
+  const that: AnyObject = object as AnyObject;
+  targets.forEach((target) => {
+    delete that[target.existsKey];
+    that[target.will.key] = target.will.value;
+  });
+  return that;
 };
 
 /**

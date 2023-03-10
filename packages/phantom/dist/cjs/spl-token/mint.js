@@ -14,6 +14,7 @@ const web3_js_1 = require("@solana/web3.js");
 const shared_1 = require("@solana-suite/shared");
 const storage_1 = require("@solana-suite/storage");
 const core_1 = require("@solana-suite/core");
+const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 var PhantomSplToken;
 (function (PhantomSplToken) {
     PhantomSplToken.mint = (input, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
@@ -23,7 +24,17 @@ var PhantomSplToken;
             const transaction = new web3_js_1.Transaction();
             const mint = web3_js_1.Keypair.generate();
             (0, shared_1.debugLog)('# input: ', input);
-            const uploaded = yield storage_1.Storage.uploadMetaContent(input);
+            const creatorsValue = shared_metaplex_1.Creators.toInputConvert(input.creators);
+            const overwrited = (0, shared_1.overwriteObject)(input, [
+                {
+                    existsKey: 'creators',
+                    will: {
+                        key: 'creators',
+                        value: creatorsValue,
+                    },
+                },
+            ]);
+            const uploaded = yield storage_1.Storage.uploadMetaContent(overwrited);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
@@ -34,13 +45,13 @@ var PhantomSplToken;
                 uri,
                 sellerFeeBasisPoints,
                 creators: reducedMetadata.creators,
-                collection: reducedMetadata.collection,
+                collection: undefined,
                 uses: reducedMetadata.uses,
             };
             const isMutable = !reducedMetadata.isMutable ? false : true;
-            const insturctions = yield core_1.SplToken.createMintInstruction(connection, mint.publicKey, owner, totalAmount, mintDecimal, tokenMetadata, owner, isMutable);
+            const insturctions = yield core_1.SplToken.createMintInstruction(connection, mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, owner.toPublicKey(), isMutable);
             insturctions.forEach((inst) => transaction.add(inst));
-            transaction.feePayer = owner;
+            transaction.feePayer = owner.toPublicKey();
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             transaction.recentBlockhash = blockhashObj.value.blockhash;
             transaction.partialSign(mint);

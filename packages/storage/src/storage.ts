@@ -1,6 +1,6 @@
 import { Secret } from '@solana-suite/shared';
 import {
-  InputNftMetadata,
+  _InputNftMetadata,
   Royalty,
   NftStorageMetadata,
 } from '@solana-suite/shared-metaplex';
@@ -9,7 +9,7 @@ import { NftStorage } from './nft-storage';
 
 export namespace Storage {
   const initNftStorageMetadata = (
-    input: InputNftMetadata,
+    input: _InputNftMetadata,
     sellerFeeBasisPoints: number,
     options?: { [key: string]: unknown }
   ): NftStorageMetadata => {
@@ -27,7 +27,7 @@ export namespace Storage {
   };
 
   export const uploadMetaContent = async (
-    input: InputNftMetadata,
+    input: _InputNftMetadata,
     feePayer?: Secret
   ) => {
     let storage;

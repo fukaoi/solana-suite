@@ -12,14 +12,6 @@ let mintStr: string;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
-const TOKEN_METADATA = {
-  name: 'solana-suite-token',
-  symbol: 'SST',
-  royalty: 50,
-  filePath: RandomAsset.get().filePath as string,
-  storageType: 'nftStorage' as StorageType,
-  isMutable: false,
-};
 
 describe('SplToken', () => {
   before(async () => {
@@ -28,12 +20,58 @@ describe('SplToken', () => {
   });
 
   it('Create token', async () => {
+    const tokenMetadata = {
+      name: 'solana-suite-token',
+      symbol: 'SST',
+      filePath: RandomAsset.get().filePath as string,
+      storageType: 'nftStorage' as StorageType,
+      royalty: 50,
+    };
+
     const inst = await SplToken.mint(
       source.pubkey,
       source.secret,
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
-      TOKEN_METADATA
+      tokenMetadata
+    );
+
+    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
+    assert.isTrue(KeypairAccount.isPubkey(inst.unwrap().data as Pubkey));
+
+    const res = await inst.submit();
+    assert.isTrue(res.isOk, res.unwrap());
+    mintStr = inst.unwrap().data as string;
+    console.log('# mint: ', mintStr);
+  });
+
+  it('Create token with creators', async () => {
+    const creator = KeypairAccount.create();
+    const tokenMetadata = {
+      name: 'solana-suite-token',
+      symbol: 'SST',
+      filePath: RandomAsset.get().filePath as string,
+      storageType: 'nftStorage' as StorageType,
+      royalty: 50,
+      creators: [
+        {
+          address: source.pubkey,
+          share: 30,
+          authority: source.secret,
+        },
+        {
+          address: creator.pubkey,
+          share: 70,
+          authority: creator.secret,
+        },
+      ],
+    };
+    const inst = await SplToken.mint(
+      source.pubkey,
+      source.secret,
+      TOKEN_TOTAL_AMOUNT,
+      MINT_DECIMAL,
+      tokenMetadata
     );
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);

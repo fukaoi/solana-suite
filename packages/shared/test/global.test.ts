@@ -9,8 +9,11 @@ import {
   Node,
   Constants,
   isPromise,
+  overwriteObject,
 } from '../src';
 import { JSDOM } from 'jsdom';
+
+import { InputCreators } from '../../shared-metaplex/src';
 
 const PUBKEY = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
 const SIG =
@@ -107,6 +110,52 @@ describe('Global', () => {
     const sol = 0.00000000000009;
     const res = sol.toLamports();
     assert.equal(res, 0.00009);
+  });
+
+  it('Object overwrite', () => {
+    const original = {
+      address: '122pJ24W3kc3Ra5QKAJzUD9LvSEdircGhCjBDz4Ax1ct',
+      share: 40,
+    };
+    const targets = [
+      {
+        existsKey: 'address',
+        will: { key: 'word', value: 'zzzzzzzzzzz' },
+      },
+      {
+        existsKey: 'share',
+        will: { key: 'price', value: 10000 },
+      },
+    ];
+    const res = overwriteObject(original, targets);
+    assert.deepEqual(res, {
+      word: targets[0].will.value,
+      price: targets[1].will.value,
+    });
+  });
+
+  it('Object overwrite, use Creators', () => {
+    const original = {
+      address: '122pJ24W3kc3Ra5QKAJzUD9LvSEdircGhCjBDz4Ax1ct',
+    };
+    const value: InputCreators = {
+      address: '122pJ24W3kc3Ra5QKAJzUD9LvSEdircGhCjBDz4Ax1ct',
+      share: 40,
+      authority:
+        'dJZLhvgtbbFxGPZsrDKYHoUJXbHira4THELQKKFVjmP6W7fPJ4MkzTbTMjWe3A6NApQwwB',
+    };
+    const targets = [
+      {
+        existsKey: 'address',
+        will: {
+          key: 'creators',
+          value: value,
+        },
+      },
+    ];
+
+    const res = overwriteObject(original, targets);
+    assert.deepEqual(res, { creators: value });
   });
 
   it('promise isPromise()', () => {

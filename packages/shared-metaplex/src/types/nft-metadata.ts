@@ -3,12 +3,11 @@ import {
   MetaplexFileContent,
   BigNumber,
   Option,
-  Signer,
   CreatorInput,
-  Creator,
+  PublicKey,
 } from '@metaplex-foundation/js';
-import { PublicKey } from '@solana/web3.js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
+import { Pubkey, Secret } from '@solana-suite/shared';
 import { StorageType } from './nft-storage-metadata';
 
 type noNeedOptional =
@@ -18,7 +17,27 @@ type noNeedOptional =
   | 'tokenProgram'
   | 'confirmOptions';
 
-export type MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
+// Creators
+export type InputCreators = {
+  readonly address: Pubkey;
+  readonly share: number;
+  readonly authority?: Secret | undefined;
+};
+
+export type OutputCreators = {
+  readonly address: Pubkey;
+  readonly share: number;
+  readonly verified: boolean;
+};
+
+// Collection
+export type InputCollection = Option<Pubkey>;
+export type _InputCollection = Option<PublicKey>;
+export type OutputCollection = Option<{ address: Pubkey; verified: boolean }>;
+export type _OutputCollection = Option<{
+  address: PublicKey;
+  verified: boolean;
+}>;
 
 export type JsonMetadataAttribute = {
   trait_type?: string;
@@ -52,14 +71,11 @@ export type InputNftMetadata = {
   properties?: JsonMetadataProperties;
   isMutable?: boolean;
   maxSupply?: BigNumber;
-  creators?: CreatorInput[];
+  creators?: InputCreators[];
   uses?: Option<Uses>;
   isCollection?: boolean;
-  collection?: Option<PublicKey>;
-  collectionAuthority?: Option<Signer>;
-  collectionAuthorityIsDelegated?: boolean;
-  collectionIsSized?: boolean;
-  options?: {[key: string]: unknown};
+  collection?: InputCollection;
+  options?: { [key: string]: unknown };
 };
 
 export type OutputNftMetadata = {
@@ -71,8 +87,18 @@ export type OutputNftMetadata = {
   uri: string;
   isMutable: boolean;
   primarySaleHappened: boolean;
-  creators: Creator[];
+  creators: OutputCreators[];
   editionNonce: Option<number>;
-  collection: Option<{ address: PublicKey; verified: boolean }>;
+  collection: OutputCollection;
   uses: Option<Uses>;
+};
+
+//---- Internal type ----//
+export type _MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
+export type _InputNftMetadata = Omit<
+  InputNftMetadata,
+  'creators' | 'collection' | 'collectionAuthority'
+> & {
+  creators?: CreatorInput[];
+  collection?: _InputCollection;
 };
