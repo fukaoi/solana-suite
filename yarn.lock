@@ -564,9 +564,9 @@
     node-fetch "^2.6.7"
 
 "@metaplex-foundation/mpl-auction-house@^2.3.0":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-auction-house/-/mpl-auction-house-2.3.2.tgz#0cb1becb862b1c97d4448b12177108fa869c4461"
-  integrity sha512-Msj2hYuAi25hj0kmLIlBG2TafsvIDlEa6GlOcWr91z+wCn0rnrCy50p0QkbGY+qmhe7LQYWtwtA7rsqMj9IDpA==
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-auction-house/-/mpl-auction-house-2.5.0.tgz#23c0848b39e8955f33c21b6958ae67d8d759b0fe"
+  integrity sha512-n6yOHnzxJlNKn3gmvW/f1lX8pMCrFf/8TjQ5WiBsvXQkOceTVNb1MFJUVDfDlcmHyNxUDekPLO6eIbBZWWGvKg==
   dependencies:
     "@metaplex-foundation/beet" "^0.6.1"
     "@metaplex-foundation/beet-solana" "^0.3.1"
@@ -670,34 +670,43 @@
     "@randlabs/communication-bridge" "1.0.1"
 
 "@solana-suite/core@latest":
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/@solana-suite/core/-/core-0.5.7.tgz#24146b93b91e48070e5a057f86cc1d5980564b7d"
-  integrity sha512-N28b1Q7CXYqTWVyPjAbyC0eBMWY08UXc5E2MopDua2mZ2MTK7EiZ4wdSRO1EL7Ws/qfpQ8253fKPiBR8jlH6SQ==
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/@solana-suite/core/-/core-0.5.8.tgz#2eb59f45d7cd0ed59b363b2f00f27a099a69831d"
+  integrity sha512-hk55Yavog9x7FCaUfXRj+OWg4zS6u+cHgMsFrBrHHJBfWJD4mcPKULFwpWmp7Ttc3qB+8xypZ5R3blfTvqSpiQ==
   dependencies:
     "@solana-suite/shared" latest
     "@solana-suite/shared-metaplex" latest
     "@solana-suite/storage" latest
 
+"@solana-suite/nft@latest":
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/@solana-suite/nft/-/nft-0.5.8.tgz#d3b7a2ff595c59e9f3ad276841360f340f2b7eb0"
+  integrity sha512-+pv0HrqKZnHE9Fp6w/dtINOpq36btWqXzkAFTm+4XKHOZGAnBAIFrhzHjiZyo3NQ1/Mg5aSaPnIgVbKhphQsgQ==
+  dependencies:
+    "@solana-suite/core" latest
+    "@solana-suite/shared-metaplex" latest
+    "@solana-suite/storage" latest
+
 "@solana-suite/shared-metaplex@latest":
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/@solana-suite/shared-metaplex/-/shared-metaplex-0.5.7.tgz#d92188c1302568e22d08309b1bba1dfe247cbf62"
-  integrity sha512-BNf4uljOOBR3mOn3dnIJ0OISn/PCVA+N115sn4MCYkFYabnR9Biep/O6jGYmIYPPt1zEYrNVlpzAu/0Vp9q4gw==
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/@solana-suite/shared-metaplex/-/shared-metaplex-0.5.8.tgz#227f31aa80f67fcbfeee84a71925009c76e09fc0"
+  integrity sha512-9hhTBrXg6IoVqrbLYtI2V8iPwiCw3kWwKdAotL9sv8OG3ZcX/nHp2rfqTZhEfHbcHkdBSMMmRN9STZ4cZfsuow==
   dependencies:
     "@metaplex-foundation/js" "0.18.0"
     "@solana-suite/shared" latest
 
 "@solana-suite/shared@latest":
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/@solana-suite/shared/-/shared-0.5.7.tgz#266afe421a90b4a4ddb0f3a3b17d14bd8bf62246"
-  integrity sha512-rJl1F7Hxf8LwqnUL6wi1JJdHK08CT392uGUUJrITiDCenaxq/PGI8eI2EfW+JIQu4GjQxywU5Oc7ptriJ2+SdQ==
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/@solana-suite/shared/-/shared-0.5.8.tgz#a3bf94b4a25f89657b51810cc4b689a61d7d58c8"
+  integrity sha512-+GcGXhZjOvpfAL2JYvxRjUha4MUNin5EP5t17ELlC/3Axs2yo5xP04yZz7/uGzjA0TMMEjeBqNgocY16AmgKwQ==
   dependencies:
     "@solana/web3.js" "^1.73.2"
     commander "9.3.0"
 
 "@solana-suite/storage@latest":
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/@solana-suite/storage/-/storage-0.5.7.tgz#33c4bf1a471349e0a78698a3b3594fba90bb4b90"
-  integrity sha512-B0WGCaPBubG7KXX/9SzsYkMQeUWaVt/e/qFBMO3zplErPSktd0qSVkT2AMbBre3lhGUL7kqw0X3xf5fB4kgbUg==
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/@solana-suite/storage/-/storage-0.5.8.tgz#b0d1a58ec7ddb445f523dbc1f10ecb243bf2fcd5"
+  integrity sha512-Kl9Qe2fDlY1DxTLY75Vpqs8gOcZYBkdFssy+i7hNHLP2SULjjOcWMdka6LMRqoocvvP2fVEtY6YJ+tdPHnQ4QA==
   dependencies:
     "@solana-suite/shared-metaplex" latest
     cross-fetch "^3.1.4"
@@ -876,9 +885,9 @@
   integrity sha512-ekGvFhFgrc2zYQoX4JeZPmVzZxw6Dtllga7iGHzfbYIYkAMUx/sAFP2GdFpLff+vdHXu5fl7WX9AT+TtqYcsyw==
 
 "@types/node@*":
-  version "18.14.6"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.14.6.tgz#ae1973dd2b1eeb1825695bb11ebfb746d27e3e93"
-  integrity sha512-93+VvleD3mXwlLI/xASjw0FzKcwzl3OdTCzm1LaRfqgS21gfFtK3zDXM5Op9TeeMsJVOaJ2VRDpT9q4Y3d0AvA==
+  version "18.15.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.0.tgz#286a65e3fdffd691e170541e6ecb0410b16a38be"
+  integrity sha512-z6nr0TTEOBGkzLGmbypWOGnpSpSIBorEhC4L+4HeQ2iezKCi4f77kyslRwvHeNitymGQ+oFyIWGP96l/DPSV9w==
 
 "@types/node@11.11.6":
   version "11.11.6"
