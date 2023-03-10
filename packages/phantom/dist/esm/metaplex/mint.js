@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,24 +7,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PhantomMetaplex = void 0;
-const web3_js_1 = require("@solana/web3.js");
-const nft_1 = require("@solana-suite/nft");
-const storage_1 = require("@solana-suite/storage");
-const shared_1 = require("@solana-suite/shared");
-const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
-var PhantomMetaplex;
+import { Transaction } from '@solana/web3.js';
+import { Metaplex } from '@solana-suite/nft';
+import { Storage } from '@solana-suite/storage';
+import { debugLog, Node, Try, KeypairAccount, overwriteObject, } from '@solana-suite/shared';
+import { Bundlr, Validator, Creators, Collections, } from '@solana-suite/shared-metaplex';
+export var PhantomMetaplex;
 (function (PhantomMetaplex) {
     const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
-        const metaplex = shared_metaplex_1.Bundlr.make(phantom);
+        const metaplex = Bundlr.make(phantom);
         const payer = metaplex.identity();
         const updateAuthority = metaplex.identity();
         const mintAuthority = metaplex.identity();
         const tokenOwner = metaplex.identity();
-        const useNewMint = shared_1.KeypairAccount.create();
-        const instructions = yield nft_1.Metaplex.createNftBuilderInstruction(payer, params, useNewMint.secret.toKeypair(), updateAuthority, mintAuthority, tokenOwner.publicKey.toString());
-        const transaction = new web3_js_1.Transaction();
+        const useNewMint = KeypairAccount.create();
+        const instructions = yield Metaplex.createNftBuilderInstruction(payer, params, useNewMint.secret.toKeypair(), updateAuthority, mintAuthority, tokenOwner.publicKey.toString());
+        const transaction = new Transaction();
         transaction.feePayer = payer.publicKey;
         instructions.forEach((inst) => {
             transaction.add(inst);
@@ -40,20 +37,20 @@ var PhantomMetaplex;
      * @return Promise<Result<Instruction, Error>>
      */
     PhantomMetaplex.mint = (input, cluster, phantom) => __awaiter(this, void 0, void 0, function* () {
-        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            const valid = shared_metaplex_1.Validator.checkAll(input);
+        return Try(() => __awaiter(this, void 0, void 0, function* () {
+            const valid = Validator.checkAll(input);
             if (valid.isErr) {
                 throw valid.error;
             }
-            (0, shared_1.debugLog)('# input: ', input);
-            shared_1.Node.changeConnection({ cluster });
+            debugLog('# input: ', input);
+            Node.changeConnection({ cluster });
             //Convert creators
-            const creators = shared_metaplex_1.Creators.toInputConvert(input.creators);
-            (0, shared_1.debugLog)('# creators: ', creators);
+            const creators = Creators.toInputConvert(input.creators);
+            debugLog('# creators: ', creators);
             //Convert collection
-            const collection = shared_metaplex_1.Collections.toInputConvert(input.collection);
-            (0, shared_1.debugLog)('# collection: ', collection);
-            const overwrited = (0, shared_1.overwriteObject)(input, [
+            const collection = Collections.toInputConvert(input.collection);
+            debugLog('# collection: ', collection);
+            const overwrited = overwriteObject(input, [
                 {
                     existsKey: 'creators',
                     will: {
@@ -69,26 +66,26 @@ var PhantomMetaplex;
                     },
                 },
             ]);
-            const uploaded = yield storage_1.Storage.uploadMetaContent(overwrited);
+            const uploaded = yield Storage.uploadMetaContent(overwrited);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
-            (0, shared_1.debugLog)('# upload content url: ', uri);
-            (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-            (0, shared_1.debugLog)('# reducedMetadata: ', reducedMetadata);
+            debugLog('# upload content url: ', uri);
+            debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
+            debugLog('# reducedMetadata: ', reducedMetadata);
             const mintInput = Object.assign({ uri,
                 sellerFeeBasisPoints }, reducedMetadata);
-            const connection = shared_1.Node.getConnection();
+            const connection = Node.getConnection();
             const builder = yield createNftBuilder(mintInput, phantom);
-            (0, shared_1.debugLog)('# mint: ', builder.useNewMint.pubkey);
+            debugLog('# mint: ', builder.useNewMint.pubkey);
             builder.tx.feePayer = phantom.publicKey;
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
             builder.tx.recentBlockhash = blockhashObj.value.blockhash;
             builder.tx.partialSign(builder.useNewMint.toKeypair());
             const signed = yield phantom.signTransaction(builder.tx);
-            (0, shared_1.debugLog)('# signed, signed.signatures: ', signed, signed.signatures.map((sig) => sig.publicKey.toString()));
+            debugLog('# signed, signed.signatures: ', signed, signed.signatures.map((sig) => sig.publicKey.toString()));
             const sig = yield connection.sendRawTransaction(signed.serialize());
-            yield shared_1.Node.confirmedSig(sig);
+            yield Node.confirmedSig(sig);
             return builder.useNewMint.pubkey;
         }));
     });
-})(PhantomMetaplex = exports.PhantomMetaplex || (exports.PhantomMetaplex = {}));
+})(PhantomMetaplex || (PhantomMetaplex = {}));
 //# sourceMappingURL=mint.js.map
