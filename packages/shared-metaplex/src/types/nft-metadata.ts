@@ -32,20 +32,14 @@ export type OutputCreators = {
 
 // Collection
 export type InputCollection = Option<Pubkey>;
-export type _InputCollection = Option<PublicKey>;
 export type OutputCollection = Option<{ address: Pubkey; verified: boolean }>;
-export type _OutputCollection = Option<{
-  address: PublicKey;
-  verified: boolean;
-}>;
-
-export type JsonMetadataAttribute = {
+export type MetadataAttribute = {
   trait_type?: string;
   value?: string;
   [key: string]: unknown;
 };
 
-export type JsonMetadataProperties = {
+export type MetadataProperties = {
   creators?: {
     address?: string;
     share?: number;
@@ -53,7 +47,7 @@ export type JsonMetadataProperties = {
   }[];
   files?: {
     type?: string;
-    uri?: string;
+    filePath: MetaplexFileContent;
     [key: string]: unknown;
   }[];
   [key: string]: unknown;
@@ -67,8 +61,8 @@ export type InputNftMetadata = {
   storageType: StorageType;
   description?: string;
   external_url?: string;
-  attributes?: JsonMetadataAttribute[];
-  properties?: JsonMetadataProperties;
+  attributes?: MetadataAttribute[];
+  properties?: MetadataProperties;
   isMutable?: boolean;
   maxSupply?: BigNumber;
   creators?: InputCreators[];
@@ -95,10 +89,30 @@ export type OutputNftMetadata = {
 
 //---- Internal type ----//
 export type _MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
+export type _InputCollection = Option<PublicKey>;
+export type _OutputCollection = Option<{
+  address: PublicKey;
+  verified: boolean;
+}>;
+export type _MetadataProperties = {
+  creators?: {
+    address?: string;
+    share?: number;
+    [key: string]: unknown;
+  }[];
+  files?: {
+    type?: string;
+    uri?: string;
+    [key: string]: unknown;
+  }[];
+  [key: string]: unknown;
+};
+
 export type _InputNftMetadata = Omit<
   InputNftMetadata,
-  'creators' | 'collection' | 'collectionAuthority'
+  'creators' | 'collection' | 'collectionAuthority' | 'properties'
 > & {
   creators?: CreatorInput[];
   collection?: _InputCollection;
+  properties?: _MetadataProperties;
 };

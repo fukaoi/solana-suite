@@ -5,7 +5,7 @@ import {
 } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import {
-  JsonMetadataAttribute,
+  MetadataAttribute,
   InputCreators,
   OutputCollection,
   _OutputCollection,
@@ -22,7 +22,7 @@ export type InputTokenMetadata = {
   royalty: number;
   filePath: MetaplexFileContent;
   storageType: StorageType;
-  attributes?: JsonMetadataAttribute[];
+  attributes?: MetadataAttribute[];
   creators?: InputCreators[];
   uses?: Option<Uses>;
 };
@@ -32,7 +32,7 @@ export type TokenMetadata = {
   symbol: string;
   uri: string;
   sellerFeeBasisPoints: number;
-  attributes?: JsonMetadataAttribute[];
+  attributes?: MetadataAttribute[];
   creators?: InputCreators[];
   uses?: Option<Uses>;
 };

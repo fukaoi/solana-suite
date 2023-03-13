@@ -23,12 +23,12 @@ export type _OutputCollection = Option<{
     address: PublicKey;
     verified: boolean;
 }>;
-export type JsonMetadataAttribute = {
+export type MetadataAttribute = {
     trait_type?: string;
     value?: string;
     [key: string]: unknown;
 };
-export type JsonMetadataProperties = {
+export type MetadataProperties = {
     creators?: {
         address?: string;
         share?: number;
@@ -49,8 +49,8 @@ export type InputNftMetadata = {
     storageType: StorageType;
     description?: string;
     external_url?: string;
-    attributes?: JsonMetadataAttribute[];
-    properties?: JsonMetadataProperties;
+    attributes?: MetadataAttribute[];
+    properties?: MetadataProperties;
     isMutable?: boolean;
     maxSupply?: BigNumber;
     creators?: InputCreators[];
