@@ -9,8 +9,8 @@ export declare namespace Storage {
             name: string;
             description?: string | undefined;
             external_url?: string | undefined;
-            attributes?: import("@solana-suite/shared-metaplex").JsonMetadataAttribute[] | undefined;
-            properties?: import("@solana-suite/shared-metaplex").JsonMetadataProperties | undefined;
+            attributes?: import("@solana-suite/shared-metaplex").MetadataAttribute[] | undefined;
+            properties?: import("@solana-suite/shared-metaplex").MetadataProperties | undefined;
             isMutable?: boolean | undefined;
             maxSupply?: import("@metaplex-foundation/js").BigNumber | undefined;
             uses?: import("@metaplex-foundation/js").Option<import("@metaplex-foundation/mpl-token-metadata").Uses> | undefined;
