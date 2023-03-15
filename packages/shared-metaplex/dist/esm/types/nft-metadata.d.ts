@@ -14,13 +14,8 @@ export type OutputCreators = {
     readonly verified: boolean;
 };
 export type InputCollection = Option<Pubkey>;
-export type _InputCollection = Option<PublicKey>;
 export type OutputCollection = Option<{
     address: Pubkey;
-    verified: boolean;
-}>;
-export type _OutputCollection = Option<{
-    address: PublicKey;
     verified: boolean;
 }>;
 export type MetadataAttribute = {
@@ -36,7 +31,7 @@ export type MetadataProperties = {
     }[];
     files?: {
         type?: string;
-        uri?: string;
+        filePath: MetaplexFileContent;
         [key: string]: unknown;
     }[];
     [key: string]: unknown;
@@ -76,8 +71,27 @@ export type OutputNftMetadata = {
     uses: Option<Uses>;
 };
 export type _MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
-export type _InputNftMetadata = Omit<InputNftMetadata, 'creators' | 'collection' | 'collectionAuthority'> & {
+export type _InputCollection = Option<PublicKey>;
+export type _OutputCollection = Option<{
+    address: PublicKey;
+    verified: boolean;
+}>;
+export type _MetadataProperties = {
+    creators?: {
+        address?: string;
+        share?: number;
+        [key: string]: unknown;
+    }[];
+    files?: {
+        type?: string;
+        uri?: string;
+        [key: string]: unknown;
+    }[];
+    [key: string]: unknown;
+};
+export type _InputNftMetadata = Omit<InputNftMetadata, 'creators' | 'collection' | 'collectionAuthority' | 'properties'> & {
     creators?: CreatorInput[];
     collection?: _InputCollection;
+    properties?: _MetadataProperties;
 };
 export {};

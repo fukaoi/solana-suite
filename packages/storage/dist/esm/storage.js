@@ -36,6 +36,20 @@ export var Storage;
         };
         return Object.assign(Object.assign({}, data), options);
     };
+    Storage.uploadContent = (filePath, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        if (storageType === 'arweave') {
+            if (!feePayer) {
+                throw Error('Arweave needs to have feepayer');
+            }
+            return yield Arweave.uploadContent(filePath, feePayer);
+        }
+        else if (storageType === 'nftStorage') {
+            return yield NftStorage.uploadContent(filePath);
+        }
+        else {
+            throw Error('Not found storageType');
+        }
+    });
     Storage.uploadMetaContent = (input, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let storage;
         const { filePath, storageType, royalty, options } = input, reducedMetadata = __rest(input, ["filePath", "storageType", "royalty", "options"]);
