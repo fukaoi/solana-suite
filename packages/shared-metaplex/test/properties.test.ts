@@ -22,8 +22,7 @@ describe('Properties', () => {
 
     const files = Properties.toInputConvert(input, 'nftStorage');
     files?.forEach(async (file) => {
-      console.log(await file);
+      assert.isNotNull(await file);
     });
-    // assert.deepEqual(expected, res);
   });
 });
