@@ -20,8 +20,10 @@ describe('Properties', () => {
       ],
     };
 
-    const res = await Properties.toInputConvert(input, 'nftStorage');
-    console.log(res);
+    const files = Properties.toInputConvert(input, 'nftStorage');
+    files?.forEach(async (file) => {
+      console.log(await file);
+    });
     // assert.deepEqual(expected, res);
   });
 });
