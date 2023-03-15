@@ -43,7 +43,7 @@ var Metaplex;
         (0, shared_1.debugLog)('# updateAuthority: ', updateAuthority);
         (0, shared_1.debugLog)('# mintAuthority: ', mintAuthority);
         (0, shared_1.debugLog)('# tokenOwner: ', tokenOwner);
-        const metaplex = shared_metaplex_1.Bundlr.make(feePayer);
+        const metaplex = storage_1.Bundlr.make(feePayer);
         const payer = metaplex.identity();
         const sftBuilder = yield metaplex
             .nfts()

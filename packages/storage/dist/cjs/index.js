@@ -15,6 +15,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./arweave"), exports);
+__exportStar(require("./bundlr"), exports);
 __exportStar(require("./nft-storage"), exports);
 __exportStar(require("./storage"), exports);
 //# sourceMappingURL=index.js.map

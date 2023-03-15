@@ -40,7 +40,7 @@ describe('Creators', () => {
     });
   });
 
-  it('To undefine convert', async () => {
+  it('To un-define convert', async () => {
     const res = Creators.toInputConvert([]);
     assert.deepEqual(res, []);
   });

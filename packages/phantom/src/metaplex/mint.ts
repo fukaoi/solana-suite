@@ -2,7 +2,7 @@ import { Transaction, TransactionInstruction } from '@solana/web3.js';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 
 import { Metaplex } from '@solana-suite/nft';
-import { Storage } from '@solana-suite/storage';
+import { Storage, Bundlr } from '@solana-suite/storage';
 import {
   debugLog,
   Node,
@@ -12,7 +12,6 @@ import {
   overwriteObject,
 } from '@solana-suite/shared';
 import {
-  Bundlr,
   Validator,
   ValidatorError,
   InputNftMetadata,

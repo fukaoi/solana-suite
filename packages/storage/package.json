@@ -43,7 +43,6 @@
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
   "dependencies": {
-    "@solana-suite/shared-metaplex": "latest",
     "form-data": "^3.0.1",
     "nft.storage": "^3.3.0",
     "node-fetch": "^3.0.0",

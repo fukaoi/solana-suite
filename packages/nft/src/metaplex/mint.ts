@@ -9,10 +9,9 @@ import {
   KeypairAccount,
   Pubkey,
 } from '@solana-suite/shared';
-import { Storage } from '@solana-suite/storage';
+import { Storage, Bundlr } from '@solana-suite/storage';
 
 import {
-  Bundlr,
   Validator,
   InputNftMetadata,
   _InputNftMetadata,
