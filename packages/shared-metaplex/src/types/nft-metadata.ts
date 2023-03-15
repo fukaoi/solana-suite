@@ -47,7 +47,7 @@ export type MetadataProperties = {
   }[];
   files?: {
     type?: string;
-    filePath: MetaplexFileContent;
+    filePath?: MetaplexFileContent;
     [key: string]: unknown;
   }[];
   [key: string]: unknown;

@@ -1,5 +1,4 @@
 import { CreatorInput, Creator } from '@metaplex-foundation/js';
-import { Secret } from '@solana-suite/shared';
 import { InputCreators, OutputCreators } from './types';
 
 export namespace Creators {

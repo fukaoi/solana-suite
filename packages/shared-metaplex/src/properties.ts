@@ -1,25 +1,36 @@
-import { overwriteObject } from '@solana-suite/shared';
-import { MetadataProperties, _MetadataProperties } from './types';
+import { overwriteObject, Pubkey } from '@solana-suite/shared';
+import { Storage } from '@solana-suite/storage';
+import { MetadataProperties, StorageType, _MetadataProperties } from './types';
 
 export namespace Properties {
   export const toInputConvert = (
     input: MetadataProperties,
-    uploadedUrl: string
-  ): _MetadataProperties | null => {
+    storageType: StorageType,
+    feePayer?: Pubkey
+  ): Promise<_MetadataProperties>[] | undefined => {
     if (!input) {
-      return null;
+      return input;
     }
-    const files = input?.files?.map((data) => {
-      return overwriteObject(data, [
-        { existsKey: 'filePath', will: { key: 'url', value: uploadedUrl } },
-      ]);
-    });
 
-    return overwriteObject(input, [
-      {
-        existsKey: 'files',
-        will: { key: 'files', value: files },
-      },
-    ]) as _MetadataProperties;
+    return input?.files?.map(async (data) => {
+      let uri = '';
+      if (data.filePath) {
+        const res = await Storage.uploadContent(
+          data.filePath,
+          storageType,
+          feePayer
+        );
+        if (res.isErr) {
+          throw Error(res.error.message);
+        }
+        uri = res.value;
+      }
+      return overwriteObject(data, [
+        {
+          existsKey: 'filePath',
+          will: { key: 'uri', value: uri },
+        },
+      ]) as _MetadataProperties;
+    });
   };
 }

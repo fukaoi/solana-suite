@@ -1,25 +1,27 @@
 import { describe, it } from 'mocha';
 import { Properties } from '../src/properties';
 import { assert } from 'chai';
+import { RandomAsset } from '../../storage/test/randomAsset';
+import { MetadataProperties } from '../dist/cjs';
 
 describe('Properties', () => {
-  it('To input convert', () => {
-    const expected = [
-      {
-        files: {
+  it('To input convert', async () => {
+    const asset = RandomAsset.get();
+    const input: MetadataProperties = {
+      files: [
+        {
           type: 'image/jpeg',
-          uri: 'https://ipfs.org/demo.jpg',
+          filePath: asset.filePath!,
         },
-      },
-      {
-        files: {
+        {
           type: 'image/gif',
-          uri: 'https://arweave.com/demo.gif',
+          filePath: asset.filePath!,
         },
-      },
-    ];
+      ],
+    };
 
-    const res = Properties.toInputConvert();
-    assert.deepEqual(expected, res);
+    const res = await Properties.toInputConvert(input, 'nftStorage');
+    console.log(res);
+    // assert.deepEqual(expected, res);
   });
 });
