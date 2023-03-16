@@ -3,16 +3,16 @@ import { MetadataProperties, StorageType, _MetadataProperties } from './types';
 
 export namespace Properties {
   export const toInputConvert = async (
-    input: MetadataProperties,
+    input: MetadataProperties | undefined,
     storageFunc: any,
     storageType: StorageType,
     feePayer?: Pubkey
-  ): Promise<_MetadataProperties[]> => {
+  ): Promise<_MetadataProperties> => {
     if (!input || !input.files) {
-      return [];
+      return {};
     }
 
-    return await Promise.all(
+    const files = await Promise.all(
       input.files.map(async (data) => {
         const res = await storageFunc(data.filePath, storageType, feePayer);
         if (res.isErr) {
@@ -23,8 +23,9 @@ export namespace Properties {
             existsKey: 'filePath',
             will: { key: 'uri', value: res.value },
           },
-        ]) as _MetadataProperties;
+        ]);
       })
     );
+    return { ...input, files } as _MetadataProperties;
   };
 }

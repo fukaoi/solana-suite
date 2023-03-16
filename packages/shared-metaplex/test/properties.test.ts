@@ -21,12 +21,16 @@ describe('Properties', () => {
       ],
     };
 
-    const files = await Properties.toInputConvert(
+    const output = await Properties.toInputConvert(
       input,
       Storage.uploadContent,
       'nftStorage'
     );
-    files.forEach(async (file) => {
+
+    if (!output.files) {
+      assert.fail('Miss match output.files');
+    }
+    output.files.forEach(async (file) => {
       console.log('# uploade content', file);
       assert.isNotNull(file);
     });
