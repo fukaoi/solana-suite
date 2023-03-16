@@ -9,7 +9,6 @@ import {
   InputCreators,
   OutputCollection,
   _OutputCollection,
-  _InputCollection,
 } from './nft-metadata';
 import { StorageType } from './nft-storage-metadata';
 

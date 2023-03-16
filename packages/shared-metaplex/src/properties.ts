@@ -1,10 +1,15 @@
-import { overwriteObject, Pubkey } from '@solana-suite/shared';
+import { MetaplexFileContent } from '@metaplex-foundation/js';
+import { overwriteObject, Pubkey, Secret, Result } from '@solana-suite/shared';
 import { MetadataProperties, StorageType, _MetadataProperties } from './types';
 
 export namespace Properties {
   export const toInputConvert = async (
     input: MetadataProperties | undefined,
-    storageFunc: any,
+    storageFunc: (
+      data: MetaplexFileContent | undefined,
+      storageType: StorageType,
+      feePayer?: Secret
+    ) => Promise<Result<string, Error>>,
     storageType: StorageType,
     feePayer?: Pubkey
   ): Promise<_MetadataProperties> => {

@@ -7,7 +7,7 @@ import { Instruction as _Instruction } from './instruction';
 import { Instruction as _Batch } from './instruction/batch-submit';
 import { KeypairAccount } from './keypair-account';
 import { BigNumber } from 'bignumber.js';
-import { AnyObject, OverwriteObject } from './types/global';
+import { AnyObject } from './types/global';
 
 /**
  * senTransaction() TransactionInstruction
