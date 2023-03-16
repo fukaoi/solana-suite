@@ -1,4 +1,5 @@
-import { MetadataProperties, _MetadataProperties } from './types';
+import { Pubkey } from '@solana-suite/shared';
+import { MetadataProperties, StorageType, _MetadataProperties } from './types';
 export declare namespace Properties {
-    const toInputConvert: (input: MetadataProperties | undefined) => _MetadataProperties | null;
+    const toInputConvert: (input: MetadataProperties, storageFunc: any, storageType: StorageType, feePayer?: Pubkey) => Promise<_MetadataProperties[]>;
 }

@@ -3,6 +3,7 @@ import { Properties } from '../src/properties';
 import { assert } from 'chai';
 import { RandomAsset } from '../../storage/test/randomAsset';
 import { MetadataProperties } from '../dist/cjs';
+import { Storage } from '../../storage/src';
 
 describe('Properties', () => {
   it('To input convert', async () => {
@@ -20,9 +21,14 @@ describe('Properties', () => {
       ],
     };
 
-    const files = Properties.toInputConvert(input, 'nftStorage');
-    files?.forEach(async (file) => {
-      assert.isNotNull(await file);
+    const files = await Properties.toInputConvert(
+      input,
+      Storage.uploadContent,
+      'nftStorage'
+    );
+    files.forEach(async (file) => {
+      console.log('# uploade content', file);
+      assert.isNotNull(file);
     });
   });
 });
