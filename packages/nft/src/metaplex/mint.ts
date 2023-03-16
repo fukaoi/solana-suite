@@ -2,7 +2,6 @@ import { TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
 import {
   Result,
   debugLog,
-  overwriteObject,
   Try,
   MintInstruction,
   Secret,
@@ -18,6 +17,7 @@ import {
   _MetaplexNftMetaData,
   Creators,
   Collections,
+  Properties,
 } from '@solana-suite/shared-metaplex';
 
 import {
@@ -185,6 +185,8 @@ export namespace Metaplex {
         throw valid.error;
       }
 
+      const payer = feePayer ? feePayer : signer;
+
       //Convert creators
       const creators = Creators.toInputConvert(input.creators);
       debugLog('# creators: ', creators);
@@ -193,24 +195,22 @@ export namespace Metaplex {
       const collection = Collections.toInputConvert(input.collection);
       debugLog('# collection: ', collection);
 
-      const overwrited = overwriteObject(input, [
-        {
-          existsKey: 'creators',
-          will: {
-            key: 'creators',
-            value: creators,
-          },
-        },
-        {
-          existsKey: 'collection',
-          will: {
-            key: 'collection',
-            value: collection,
-          },
-        },
-      ]) as _InputNftMetadata;
+      //Convert porperties, Upload content
+      const properties = await Properties.toInputConvert(
+        input.properties,
+        Storage.uploadContent,
+        input.storageType,
+        feePayer
+      );
+      debugLog('# properties: ', properties);
 
-      const payer = feePayer ? feePayer : signer;
+      const overwrited = {
+        ...input,
+        creators,
+        collection,
+        properties,
+      } as _InputNftMetadata;
+
       const uploaded = await Storage.uploadMetaContent(overwrited, payer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 

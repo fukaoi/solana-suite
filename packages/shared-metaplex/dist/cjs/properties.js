@@ -15,9 +15,9 @@ var Properties;
 (function (Properties) {
     Properties.toInputConvert = (input, storageFunc, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
         if (!input || !input.files) {
-            return [];
+            return {};
         }
-        return yield Promise.all(input.files.map((data) => __awaiter(this, void 0, void 0, function* () {
+        const files = yield Promise.all(input.files.map((data) => __awaiter(this, void 0, void 0, function* () {
             const res = yield storageFunc(data.filePath, storageType, feePayer);
             if (res.isErr) {
                 throw Error(res.error.message);
@@ -29,6 +29,7 @@ var Properties;
                 },
             ]);
         })));
+        return Object.assign(Object.assign({}, input), { files });
     });
 })(Properties = exports.Properties || (exports.Properties = {}));
 //# sourceMappingURL=properties.js.map

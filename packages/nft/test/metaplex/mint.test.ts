@@ -63,9 +63,13 @@ describe('Metaplex', () => {
     const collection = KeypairAccount.create().pubkey;
 
     const properties = {
-      filePath: asset.filePath,
-      fileName: 'properties image',
-      fileType: 'image/jpg',
+      files: [
+        {
+          filePath: asset.filePath,
+          fileName: 'properties image',
+          fileType: 'image/jpg',
+        },
+      ],
     };
 
     const res = await Metaplex.mint(source.pubkey, source.secret, {
