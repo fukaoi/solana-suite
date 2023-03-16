@@ -78,7 +78,7 @@ export namespace AssociatedAccount {
           debugLog('# associatedTokenAccount: ', inst);
           return inst;
         } else if (inst instanceof Instruction) {
-          (await [inst].submit()).map(
+          (await inst.submit()).map(
             async (ok) => {
               await Node.confirmedSig(ok);
               return inst.data as string;

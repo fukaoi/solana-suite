@@ -48,7 +48,7 @@ export var AssociatedAccount;
                     return inst;
                 }
                 else if (inst instanceof Instruction) {
-                    (yield [inst].submit()).map((ok) => __awaiter(this, void 0, void 0, function* () {
+                    (yield inst.submit()).map((ok) => __awaiter(this, void 0, void 0, function* () {
                         yield Node.confirmedSig(ok);
                         return inst.data;
                     }), (err) => {

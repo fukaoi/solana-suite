@@ -127,29 +127,6 @@ var Metaplex;
             //Convert porperties, Upload content
             const properties = yield shared_metaplex_1.Properties.toInputConvert(input.properties, storage_1.Storage.uploadContent, input.storageType, feePayer);
             (0, shared_1.debugLog)('# properties: ', properties);
-            // const overwrited = overwriteObject(input, [
-            //   {
-            //     existsKey: 'creators',
-            //     will: {
-            //       key: 'creators',
-            //       value: creators,
-            //     },
-            //   },
-            //   {
-            //     existsKey: 'collection',
-            //     will: {
-            //       key: 'collection',
-            //       value: collection,
-            //     },
-            //   },
-            //   {
-            //     existsKey: 'properties',
-            //     will: {
-            //       key: 'properties',
-            //       value: properties,
-            //     },
-            //   },
-            // ]) as _InputNftMetadata;
             const overwrited = Object.assign(Object.assign({}, input), { creators,
                 collection,
                 properties });

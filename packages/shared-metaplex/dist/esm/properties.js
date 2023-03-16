@@ -14,12 +14,15 @@ export var Properties;
         if (!input || !input.files) {
             return {};
         }
-        const files = yield Promise.all(input.files.map((data) => __awaiter(this, void 0, void 0, function* () {
-            const res = yield storageFunc(data.filePath, storageType, feePayer);
+        const files = yield Promise.all(input.files.map((file) => __awaiter(this, void 0, void 0, function* () {
+            if (!file.filePath) {
+                return {};
+            }
+            const res = yield storageFunc(file.filePath, storageType, feePayer);
             if (res.isErr) {
                 throw Error(res.error.message);
             }
-            return overwriteObject(data, [
+            return overwriteObject(file, [
                 {
                     existsKey: 'filePath',
                     will: { key: 'uri', value: res.value },
