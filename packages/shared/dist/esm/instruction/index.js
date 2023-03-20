@@ -24,7 +24,8 @@ export class Instruction {
                     // transaction.feePayer = this.feePayer.publicKey;
                     // finalSigners = [this.feePayer, ...this.signers];
                     transaction.feePayer = feePayer === null || feePayer === void 0 ? void 0 : feePayer.toKeypair().publicKey;
-                    finalSigners = [feePayer === null || feePayer === void 0 ? void 0 : feePayer.toKeypair(), ...this.signers];
+                    transaction.partialSign(feePayer.toKeypair());
+                    finalSigners = [...this.signers];
                 }
                 this.instructions.forEach((inst) => transaction.add(inst));
                 const options = {

@@ -42,7 +42,8 @@ export class Instruction {
         // transaction.feePayer = this.feePayer.publicKey;
         // finalSigners = [this.feePayer, ...this.signers];
         transaction.feePayer = feePayer?.toKeypair().publicKey;
-        finalSigners = [feePayer?.toKeypair(), ...this.signers];
+        transaction.partialSign(feePayer.toKeypair());
+        finalSigners = [...this.signers];
       }
 
       this.instructions.forEach((inst) => transaction.add(inst));

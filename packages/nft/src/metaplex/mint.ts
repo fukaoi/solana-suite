@@ -85,7 +85,9 @@ export namespace Metaplex {
     debugLog('# mintAuthority: ', mintAuthority);
     debugLog('# tokenOwner: ', tokenOwner);
 
-    const metaplex = Bundlr.make(feePayer);
+    // const metaplex = Bundlr.make(feePayer);
+    const metaplex = Bundlr.make();
+    const payer = feePayer;
     // const payer = metaplex.identity();
     const sftBuilder = await metaplex
       .nfts()
@@ -110,7 +112,7 @@ export namespace Metaplex {
 
     return (
       TransactionBuilder.make<CreateNftBuilderContext>()
-        // .setFeePayer(payer)
+        .setFeePayer(payer)
         .setContext({
           mintAddress,
           metadataAddress,
@@ -122,27 +124,27 @@ export namespace Metaplex {
         .add(sftBuilder)
 
         // Create master edition account (prevents further minting).
-        // .add({
-        //   instruction: createCreateMasterEditionV3Instruction(
-        //     {
-        //       edition: masterEditionAddress,
-        //       mint: mintAddress,
-        //       updateAuthority: updateAuthority.publicKey,
-        //       mintAuthority: mintAuthority.publicKey,
-        //       payer: payer.publicKey,
-        //       metadata: metadataAddress,
-        //     },
-        //     {
-        //       createMasterEditionArgs: {
-        //         maxSupply:
-        //           params.maxSupply === undefined ? 0 : params.maxSupply,
-        //       },
-        //     }
-        //   ),
-        //   signers: [payer, mintAuthority, updateAuthority],
-        //   key:
-        //     params.createMasterEditionInstructionKey ?? 'createMasterEdition',
-        // })
+        .add({
+          instruction: createCreateMasterEditionV3Instruction(
+            {
+              edition: masterEditionAddress,
+              mint: mintAddress,
+              updateAuthority: updateAuthority.publicKey,
+              mintAuthority: mintAuthority.publicKey,
+              payer: payer.publicKey,
+              metadata: metadataAddress,
+            },
+            {
+              createMasterEditionArgs: {
+                maxSupply:
+                  params.maxSupply === undefined ? 0 : params.maxSupply,
+              },
+            }
+          ),
+          signers: [payer, mintAuthority, updateAuthority],
+          key:
+            params.createMasterEditionInstructionKey ?? 'createMasterEdition',
+        })
         .getInstructions()
     );
   };
