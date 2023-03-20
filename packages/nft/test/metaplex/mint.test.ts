@@ -4,7 +4,7 @@ import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { InputCreators, ValidatorError } from '../../../shared-metaplex/';
-import { KeypairAccount } from '../../../shared';
+import { KeypairAccount, MintInstruction } from '../../../shared';
 import { Pubkey } from '../../../shared/src';
 
 let source: KeypairAccount;
@@ -29,6 +29,36 @@ describe('Metaplex', () => {
     assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
 
     (await res.submit()).match(
+      (ok: string) => {
+        console.log('# mint:', res.unwrap().data);
+        console.log('# sig:', ok);
+      },
+      (ng: Error) => assert.fail(ng.message)
+    );
+  });
+
+  it.only('[Nft Storage] mint nft', async () => {
+    const asset = RandomAsset.get();
+    const wallet = KeypairAccount.create();
+    // const res = await Metaplex.mint(source.pubkey, source.secret, {
+    const res = await Metaplex.mint(wallet.pubkey, wallet.secret, {
+      filePath: asset.filePath as string,
+      storageType: 'nftStorage',
+      name: asset.name!,
+      symbol: asset.symbol!,
+      royalty: 50,
+      isMutable: true,
+    });
+
+    assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
+
+    (res.unwrap() as MintInstruction).instructions.forEach(i => {
+      // console.log();
+    })
+    return ;
+
+    // (await res.submit()).match(
+    (await res.submit(source.secret)).match(
       (ok: string) => {
         console.log('# mint:', res.unwrap().data);
         console.log('# sig:', ok);

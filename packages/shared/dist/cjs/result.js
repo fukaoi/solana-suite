@@ -31,7 +31,7 @@ class AbstractResult {
         this._chain((value) => Result.ok(ok(value)), (error) => Result.err(err(error)));
     }
     /// submit (alias Instruction.submit) ////
-    submit() {
+    submit(feePayer) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const instruction = this.unwrap();
@@ -39,7 +39,7 @@ class AbstractResult {
                 // why return false?
                 // if (instruction instanceof Instruction) {
                 if (castedInst.instructions && castedInst.signers) {
-                    return yield castedInst.submit();
+                    return yield castedInst.submit(feePayer);
                 }
                 return Result.err(Error('Only Instruction object'));
             }

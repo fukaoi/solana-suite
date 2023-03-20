@@ -14,7 +14,6 @@ const shared_1 = require("@solana-suite/shared");
 const storage_1 = require("@solana-suite/storage");
 const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 const js_1 = require("@metaplex-foundation/js");
-const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
@@ -36,7 +35,6 @@ var Metaplex;
         ], undefined, mint.pubkey);
     });
     Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {
-        var _b;
         (0, shared_1.debugLog)('# params: ', params);
         (0, shared_1.debugLog)('# feePayer: ', feePayer);
         (0, shared_1.debugLog)('# useNewMint: ', useNewMint);
@@ -67,22 +65,27 @@ var Metaplex;
             // Create the mint, the token and the metadata.
             .add(sftBuilder)
             // Create master edition account (prevents further minting).
-            .add({
-            instruction: (0, mpl_token_metadata_1.createCreateMasterEditionV3Instruction)({
-                edition: masterEditionAddress,
-                mint: mintAddress,
-                updateAuthority: updateAuthority.publicKey,
-                mintAuthority: mintAuthority.publicKey,
-                payer: payer.publicKey,
-                metadata: metadataAddress,
-            }, {
-                createMasterEditionArgs: {
-                    maxSupply: params.maxSupply === undefined ? 0 : params.maxSupply,
-                },
-            }),
-            signers: [payer, mintAuthority, updateAuthority],
-            key: (_b = params.createMasterEditionInstructionKey) !== null && _b !== void 0 ? _b : 'createMasterEdition',
-        })
+            // .add({
+            //   instruction: createCreateMasterEditionV3Instruction(
+            //     {
+            //       edition: masterEditionAddress,
+            //       mint: mintAddress,
+            //       updateAuthority: updateAuthority.publicKey,
+            //       mintAuthority: mintAuthority.publicKey,
+            //       payer: payer.publicKey,
+            //       metadata: metadataAddress,
+            //     },
+            //     {
+            //       createMasterEditionArgs: {
+            //         maxSupply:
+            //           params.maxSupply === undefined ? 0 : params.maxSupply,
+            //       },
+            //     }
+            //   ),
+            //   signers: [payer, mintAuthority, updateAuthority],
+            //   key:
+            //     params.createMasterEditionInstructionKey ?? 'createMasterEdition',
+            // })
             .getInstructions());
     });
     /**

@@ -7,7 +7,7 @@ import {
   ConfirmOptions,
 } from '@solana/web3.js';
 
-import { Node, Result, Try } from '../';
+import { Node, Result, Secret, Try } from '../';
 import { MAX_RETRIES } from './define';
 
 export class Instruction {
@@ -28,16 +28,21 @@ export class Instruction {
     this.data = data;
   }
 
-  submit = async (): Promise<Result<TransactionSignature, Error>> => {
+  submit = async (
+    feePayer?: Secret
+  ): Promise<Result<TransactionSignature, Error>> => {
     return Try(async () => {
       if (!(this instanceof Instruction)) {
         throw Error('only Instruction object that can use this');
       }
       const transaction = new Transaction();
       let finalSigners = this.signers;
-      if (this.feePayer) {
-        transaction.feePayer = this.feePayer.publicKey;
-        finalSigners = [this.feePayer, ...this.signers];
+      if (feePayer) {
+        // if (this.feePayer) {
+        // transaction.feePayer = this.feePayer.publicKey;
+        // finalSigners = [this.feePayer, ...this.signers];
+        transaction.feePayer = feePayer?.toKeypair().publicKey;
+        finalSigners = [feePayer?.toKeypair(), ...this.signers];
       }
 
       this.instructions.forEach((inst) => transaction.add(inst));

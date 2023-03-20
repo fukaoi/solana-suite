@@ -12,16 +12,19 @@ import { Node, Try } from '../';
 import { MAX_RETRIES } from './define';
 export class Instruction {
     constructor(instructions, signers, feePayer, data) {
-        this.submit = () => __awaiter(this, void 0, void 0, function* () {
+        this.submit = (feePayer) => __awaiter(this, void 0, void 0, function* () {
             return Try(() => __awaiter(this, void 0, void 0, function* () {
                 if (!(this instanceof Instruction)) {
                     throw Error('only Instruction object that can use this');
                 }
                 const transaction = new Transaction();
                 let finalSigners = this.signers;
-                if (this.feePayer) {
-                    transaction.feePayer = this.feePayer.publicKey;
-                    finalSigners = [this.feePayer, ...this.signers];
+                if (feePayer) {
+                    // if (this.feePayer) {
+                    // transaction.feePayer = this.feePayer.publicKey;
+                    // finalSigners = [this.feePayer, ...this.signers];
+                    transaction.feePayer = feePayer === null || feePayer === void 0 ? void 0 : feePayer.toKeypair().publicKey;
+                    finalSigners = [feePayer === null || feePayer === void 0 ? void 0 : feePayer.toKeypair(), ...this.signers];
                 }
                 this.instructions.forEach((inst) => transaction.add(inst));
                 const options = {
