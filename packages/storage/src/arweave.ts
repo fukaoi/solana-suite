@@ -13,7 +13,8 @@ import {
   Try,
   Secret,
 } from '@solana-suite/shared';
-import { Bundlr, NftStorageMetadata } from '@solana-suite/shared-metaplex';
+import { NftStorageMetadata } from '@solana-suite/shared-metaplex';
+import { Bundlr } from './bundlr';
 
 export interface MetaplexFileOptions {
   readonly displayName: string;

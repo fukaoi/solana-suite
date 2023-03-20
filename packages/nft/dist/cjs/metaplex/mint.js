@@ -43,7 +43,7 @@ var Metaplex;
         (0, shared_1.debugLog)('# updateAuthority: ', updateAuthority);
         (0, shared_1.debugLog)('# mintAuthority: ', mintAuthority);
         (0, shared_1.debugLog)('# tokenOwner: ', tokenOwner);
-        const metaplex = shared_metaplex_1.Bundlr.make(feePayer);
+        const metaplex = storage_1.Bundlr.make(feePayer);
         const payer = metaplex.identity();
         const sftBuilder = yield metaplex
             .nfts()
@@ -99,8 +99,8 @@ var Metaplex;
      *   storageType: 'arweave'|'nftStorage' // royalty percentage
      *   description?: string       // nft content description
      *   external_url?: string      // landing page, home page uri, related url
-     *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
-     *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
+     *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
+     *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
      *   collection?: Pubkey           // collections of different colors, shapes, etc.
      *   [key: string]?: unknown       // optional param, Usually not used.
      *   creators?: InputCreators[]          // other creators than owner
@@ -117,29 +117,19 @@ var Metaplex;
             if (valid.isErr) {
                 throw valid.error;
             }
+            const payer = feePayer ? feePayer : signer;
             //Convert creators
             const creators = shared_metaplex_1.Creators.toInputConvert(input.creators);
             (0, shared_1.debugLog)('# creators: ', creators);
             //Convert collection
             const collection = shared_metaplex_1.Collections.toInputConvert(input.collection);
             (0, shared_1.debugLog)('# collection: ', collection);
-            const overwrited = (0, shared_1.overwriteObject)(input, [
-                {
-                    existsKey: 'creators',
-                    will: {
-                        key: 'creators',
-                        value: creators,
-                    },
-                },
-                {
-                    existsKey: 'collection',
-                    will: {
-                        key: 'collection',
-                        value: collection,
-                    },
-                },
-            ]);
-            const payer = feePayer ? feePayer : signer;
+            //Convert porperties, Upload content
+            const properties = yield shared_metaplex_1.Properties.toInputConvert(input.properties, storage_1.Storage.uploadContent, input.storageType, feePayer);
+            (0, shared_1.debugLog)('# properties: ', properties);
+            const overwrited = Object.assign(Object.assign({}, input), { creators,
+                collection,
+                properties });
             const uploaded = yield storage_1.Storage.uploadMetaContent(overwrited, payer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);

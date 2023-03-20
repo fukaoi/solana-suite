@@ -19,8 +19,8 @@ export declare namespace Metaplex {
      *   storageType: 'arweave'|'nftStorage' // royalty percentage
      *   description?: string       // nft content description
      *   external_url?: string      // landing page, home page uri, related url
-     *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
-     *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
+     *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
+     *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
      *   collection?: Pubkey           // collections of different colors, shapes, etc.
      *   [key: string]?: unknown       // optional param, Usually not used.
      *   creators?: InputCreators[]          // other creators than owner

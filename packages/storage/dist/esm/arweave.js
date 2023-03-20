@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { toMetaplexFile, } from '@metaplex-foundation/js';
 import { isNode, isBrowser, debugLog, Try, } from '@solana-suite/shared';
-import { Bundlr } from '@solana-suite/shared-metaplex';
+import { Bundlr } from './bundlr';
 export var Arweave;
 (function (Arweave) {
     Arweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {

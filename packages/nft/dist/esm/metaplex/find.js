@@ -8,7 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Try } from '@solana-suite/shared';
-import { Bundlr, Creators, Collections, } from '@solana-suite/shared-metaplex';
+import { Creators, Collections, } from '@solana-suite/shared-metaplex';
+import { Bundlr } from '@solana-suite/storage';
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {

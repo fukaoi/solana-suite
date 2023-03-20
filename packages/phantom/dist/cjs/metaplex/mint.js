@@ -18,7 +18,7 @@ const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 var PhantomMetaplex;
 (function (PhantomMetaplex) {
     const createNftBuilder = (params, phantom) => __awaiter(this, void 0, void 0, function* () {
-        const metaplex = shared_metaplex_1.Bundlr.make(phantom);
+        const metaplex = storage_1.Bundlr.make(phantom);
         const payer = metaplex.identity();
         const updateAuthority = metaplex.identity();
         const mintAuthority = metaplex.identity();
@@ -53,22 +53,12 @@ var PhantomMetaplex;
             //Convert collection
             const collection = shared_metaplex_1.Collections.toInputConvert(input.collection);
             (0, shared_1.debugLog)('# collection: ', collection);
-            const overwrited = (0, shared_1.overwriteObject)(input, [
-                {
-                    existsKey: 'creators',
-                    will: {
-                        key: 'creators',
-                        value: creators,
-                    },
-                },
-                {
-                    existsKey: 'collection',
-                    will: {
-                        key: 'collection',
-                        value: collection,
-                    },
-                },
-            ]);
+            //Convert porperties, Upload content
+            const properties = yield shared_metaplex_1.Properties.toInputConvert(input.properties, storage_1.Storage.uploadContent, input.storageType);
+            (0, shared_1.debugLog)('# properties: ', properties);
+            const overwrited = Object.assign(Object.assign({}, input), { creators,
+                collection,
+                properties });
             const uploaded = yield storage_1.Storage.uploadMetaContent(overwrited);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             (0, shared_1.debugLog)('# upload content url: ', uri);

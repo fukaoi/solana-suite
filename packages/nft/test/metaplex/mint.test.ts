@@ -37,45 +37,6 @@ describe('Metaplex', () => {
     );
   });
 
-  it('[Nft Storage] mint nft', async () => {
-    const asset = RandomAsset.get();
-
-    const creator1: InputCreators = {
-      address: source.pubkey,
-      share: 70,
-      authority: source.secret,
-    };
-
-    const creator2 = {
-      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk',
-      share: 30,
-      authority: '',
-    };
-
-    const res = await Metaplex.mint(source.pubkey, source.secret, {
-      filePath: asset.filePath as string,
-      storageType: 'nftStorage',
-      name: asset.name!,
-      symbol: asset.symbol!,
-      royalty: 20,
-      creators: [creator1, creator2],
-      isMutable: true,
-    });
-
-    assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
-
-    (await res.submit()).match(
-      (ok: string) => {
-        console.log('# mint:', res.unwrap().data);
-        console.log('# sig:', ok);
-      },
-      (ng: Error) => {
-        console.log(ng);
-        assert.fail(ng.message);
-      }
-    );
-  });
-
   it('[Nft Storage] mint nft with many optional datas', async () => {
     const asset = RandomAsset.get();
 
@@ -101,6 +62,16 @@ describe('Metaplex', () => {
 
     const collection = KeypairAccount.create().pubkey;
 
+    const properties = {
+      files: [
+        {
+          filePath: asset.filePath,
+          fileName: 'properties image',
+          fileType: 'image/jpg',
+        },
+      ],
+    };
+
     const res = await Metaplex.mint(source.pubkey, source.secret, {
       filePath: asset.filePath as string,
       storageType: 'nftStorage',
@@ -112,6 +83,7 @@ describe('Metaplex', () => {
       creators: [creator1, creator2, creator3],
       isMutable: true,
       collection: collection,
+      properties: properties,
       options: {
         github_url: 'https://github.com/atonoy/solana-suite',
         docs_url:

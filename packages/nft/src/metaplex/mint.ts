@@ -2,23 +2,22 @@ import { TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
 import {
   Result,
   debugLog,
-  overwriteObject,
   Try,
   MintInstruction,
   Secret,
   KeypairAccount,
   Pubkey,
 } from '@solana-suite/shared';
-import { Storage } from '@solana-suite/storage';
+import { Storage, Bundlr } from '@solana-suite/storage';
 
 import {
-  Bundlr,
   Validator,
   InputNftMetadata,
   _InputNftMetadata,
   _MetaplexNftMetaData,
   Creators,
   Collections,
+  Properties,
 } from '@solana-suite/shared-metaplex';
 
 import {
@@ -162,8 +161,8 @@ export namespace Metaplex {
    *   storageType: 'arweave'|'nftStorage' // royalty percentage
    *   description?: string       // nft content description
    *   external_url?: string      // landing page, home page uri, related url
-   *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
-   *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
+   *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
+   *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
    *   collection?: Pubkey           // collections of different colors, shapes, etc.
    *   [key: string]?: unknown       // optional param, Usually not used.
    *   creators?: InputCreators[]          // other creators than owner
@@ -186,6 +185,8 @@ export namespace Metaplex {
         throw valid.error;
       }
 
+      const payer = feePayer ? feePayer : signer;
+
       //Convert creators
       const creators = Creators.toInputConvert(input.creators);
       debugLog('# creators: ', creators);
@@ -194,24 +195,22 @@ export namespace Metaplex {
       const collection = Collections.toInputConvert(input.collection);
       debugLog('# collection: ', collection);
 
-      const overwrited = overwriteObject(input, [
-        {
-          existsKey: 'creators',
-          will: {
-            key: 'creators',
-            value: creators,
-          },
-        },
-        {
-          existsKey: 'collection',
-          will: {
-            key: 'collection',
-            value: collection,
-          },
-        },
-      ]) as _InputNftMetadata;
+      //Convert porperties, Upload content
+      const properties = await Properties.toInputConvert(
+        input.properties,
+        Storage.uploadContent,
+        input.storageType,
+        feePayer
+      );
+      debugLog('# properties: ', properties);
 
-      const payer = feePayer ? feePayer : signer;
+      const overwrited = {
+        ...input,
+        creators,
+        collection,
+        properties,
+      } as _InputNftMetadata;
+
       const uploaded = await Storage.uploadMetaContent(overwrited, payer);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 

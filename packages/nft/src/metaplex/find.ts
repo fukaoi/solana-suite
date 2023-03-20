@@ -1,11 +1,11 @@
 import { Pubkey, Result, Try } from '@solana-suite/shared';
 import {
-  Bundlr,
   OutputNftMetadata,
   Creators,
   Collections,
 } from '@solana-suite/shared-metaplex';
 import { Metadata } from '@metaplex-foundation/js';
+import { Bundlr } from '@solana-suite/storage';
 
 export namespace Metaplex {
   export const findByOwner = async (

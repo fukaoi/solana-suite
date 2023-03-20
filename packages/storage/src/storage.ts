@@ -1,9 +1,13 @@
-import { Secret } from '@solana-suite/shared';
+import { Result, Secret } from '@solana-suite/shared';
 import {
   _InputNftMetadata,
   Royalty,
   NftStorageMetadata,
+  StorageType,
 } from '@solana-suite/shared-metaplex';
+
+import { MetaplexFileContent } from '@metaplex-foundation/js';
+
 import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
 
@@ -24,6 +28,23 @@ export namespace Storage {
       image: '',
     };
     return { ...data, ...options };
+  };
+
+  export const uploadContent = async (
+    filePath: MetaplexFileContent,
+    storageType: StorageType,
+    feePayer?: Secret
+  ): Promise<Result<string, Error>> => {
+    if (storageType === 'arweave') {
+      if (!feePayer) {
+        throw Error('Arweave needs to have feepayer');
+      }
+      return await Arweave.uploadContent(filePath, feePayer);
+    } else if (storageType === 'nftStorage') {
+      return await NftStorage.uploadContent(filePath);
+    } else {
+      throw Error('Not found storageType');
+    }
   };
 
   export const uploadMetaContent = async (

@@ -27,7 +27,6 @@ import {
 } from '@solana-suite/shared';
 
 import {
-  Bundlr,
   InputTokenMetadata,
   _InputNftMetadata,
   _TokenMetadata,
@@ -35,7 +34,7 @@ import {
   Creators,
 } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
-import { Storage } from '@solana-suite/storage';
+import { Storage, Bundlr } from '@solana-suite/storage';
 
 export namespace SplToken {
   export const createMintInstruction = async (

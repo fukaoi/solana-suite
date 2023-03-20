@@ -2,22 +2,21 @@ import { Transaction, TransactionInstruction } from '@solana/web3.js';
 import { CreateNftBuilderParams } from '@metaplex-foundation/js';
 
 import { Metaplex } from '@solana-suite/nft';
-import { Storage } from '@solana-suite/storage';
+import { Storage, Bundlr } from '@solana-suite/storage';
 import {
   debugLog,
   Node,
   Result,
   Try,
   KeypairAccount,
-  overwriteObject,
 } from '@solana-suite/shared';
 import {
-  Bundlr,
   Validator,
   ValidatorError,
   InputNftMetadata,
   Creators,
   Collections,
+  Properties,
   _InputNftMetadata,
   _MetaplexNftMetaData,
 } from '@solana-suite/shared-metaplex';
@@ -82,22 +81,20 @@ export namespace PhantomMetaplex {
       const collection = Collections.toInputConvert(input.collection);
       debugLog('# collection: ', collection);
 
-      const overwrited = overwriteObject(input, [
-        {
-          existsKey: 'creators',
-          will: {
-            key: 'creators',
-            value: creators,
-          },
-        },
-        {
-          existsKey: 'collection',
-          will: {
-            key: 'collection',
-            value: collection,
-          },
-        },
-      ]) as _InputNftMetadata;
+      //Convert porperties, Upload content
+      const properties = await Properties.toInputConvert(
+        input.properties,
+        Storage.uploadContent,
+        input.storageType,
+      );
+      debugLog('# properties: ', properties);
+
+      const overwrited = {
+        ...input,
+        creators,
+        collection,
+        properties,
+      } as _InputNftMetadata;
 
       const uploaded = await Storage.uploadMetaContent(overwrited);
 

@@ -11,9 +11,9 @@ import { SystemProgram } from '@solana/web3.js';
 import { MINT_SIZE, TOKEN_PROGRAM_ID, createInitializeMintInstruction, getMinimumBalanceForRentExemptMint, createAssociatedTokenAccountInstruction, createMintToCheckedInstruction, getAssociatedTokenAddress, } from '@solana/spl-token';
 import { createCreateMetadataAccountV2Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 import { Node, MintInstruction, Try, debugLog, overwriteObject, KeypairAccount, } from '@solana-suite/shared';
-import { Bundlr, Validator, Creators, } from '@solana-suite/shared-metaplex';
+import { Validator, Creators, } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
-import { Storage } from '@solana-suite/storage';
+import { Storage, Bundlr } from '@solana-suite/storage';
 export var SplToken;
 (function (SplToken) {
     SplToken.createMintInstruction = (connection, mint, owner, totalAmount, mintDecimal, tokenMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {

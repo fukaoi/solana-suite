@@ -7,9 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { debugLog, overwriteObject, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
-import { Storage } from '@solana-suite/storage';
-import { Bundlr, Validator, Creators, Collections, } from '@solana-suite/shared-metaplex';
+import { debugLog, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
+import { Storage, Bundlr } from '@solana-suite/storage';
+import { Validator, Creators, Collections, Properties, } from '@solana-suite/shared-metaplex';
 import { token, TransactionBuilder, } from '@metaplex-foundation/js';
 import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
 export var Metaplex;
@@ -96,8 +96,8 @@ export var Metaplex;
      *   storageType: 'arweave'|'nftStorage' // royalty percentage
      *   description?: string       // nft content description
      *   external_url?: string      // landing page, home page uri, related url
-     *   attributes?: JsonMetadataAttribute[]     // game character parameter, personality, characteristics
-     *   properties?: JsonMetadataProperties<Uri> // include file name, uri, supported file type
+     *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
+     *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
      *   collection?: Pubkey           // collections of different colors, shapes, etc.
      *   [key: string]?: unknown       // optional param, Usually not used.
      *   creators?: InputCreators[]          // other creators than owner
@@ -114,29 +114,19 @@ export var Metaplex;
             if (valid.isErr) {
                 throw valid.error;
             }
+            const payer = feePayer ? feePayer : signer;
             //Convert creators
             const creators = Creators.toInputConvert(input.creators);
             debugLog('# creators: ', creators);
             //Convert collection
             const collection = Collections.toInputConvert(input.collection);
             debugLog('# collection: ', collection);
-            const overwrited = overwriteObject(input, [
-                {
-                    existsKey: 'creators',
-                    will: {
-                        key: 'creators',
-                        value: creators,
-                    },
-                },
-                {
-                    existsKey: 'collection',
-                    will: {
-                        key: 'collection',
-                        value: collection,
-                    },
-                },
-            ]);
-            const payer = feePayer ? feePayer : signer;
+            //Convert porperties, Upload content
+            const properties = yield Properties.toInputConvert(input.properties, Storage.uploadContent, input.storageType, feePayer);
+            debugLog('# properties: ', properties);
+            const overwrited = Object.assign(Object.assign({}, input), { creators,
+                collection,
+                properties });
             const uploaded = yield Storage.uploadMetaContent(overwrited, payer);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             debugLog('# upload content url: ', uri);
