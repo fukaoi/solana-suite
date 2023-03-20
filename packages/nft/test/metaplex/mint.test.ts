@@ -57,7 +57,7 @@ describe('Metaplex', () => {
 
     console.log(res);
 
-    res.unwrap().submit(source.secret);
+    console.log(await res.unwrap().submit(source.secret));
   });
 
   // it('[Nft Storage] mint nft with many optional datas', async () => {
