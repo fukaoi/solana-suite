@@ -1,4 +1,9 @@
-import { TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
+import {
+  TransactionInstruction,
+  PublicKey,
+  Keypair,
+  Transaction,
+} from '@solana/web3.js';
 import {
   Result,
   debugLog,
@@ -7,6 +12,8 @@ import {
   Secret,
   KeypairAccount,
   Pubkey,
+  Node,
+  PartialSignInstruction,
 } from '@solana-suite/shared';
 import { Storage, Bundlr } from '@solana-suite/storage';
 
@@ -85,10 +92,9 @@ export namespace Metaplex {
     debugLog('# mintAuthority: ', mintAuthority);
     debugLog('# tokenOwner: ', tokenOwner);
 
-    // const metaplex = Bundlr.make(feePayer);
-    const metaplex = Bundlr.make();
-    const payer = feePayer;
-    // const payer = metaplex.identity();
+    // const metaplex = Bundlr.make(feePayer);  // ok
+    const metaplex = Bundlr.make(); // ng
+    const payer = metaplex.identity();
     const sftBuilder = await metaplex
       .nfts()
       .builders()
@@ -112,7 +118,7 @@ export namespace Metaplex {
 
     return (
       TransactionBuilder.make<CreateNftBuilderContext>()
-        .setFeePayer(payer)
+        // .setFeePayer(payer)
         .setContext({
           mintAddress,
           metadataAddress,
@@ -141,7 +147,8 @@ export namespace Metaplex {
               },
             }
           ),
-          signers: [payer, mintAuthority, updateAuthority],
+          // signers: [payer, mintAuthority, updateAuthority],
+          signers: [mintAuthority, updateAuthority],
           key:
             params.createMasterEditionInstructionKey ?? 'createMasterEdition',
         })
@@ -180,7 +187,8 @@ export namespace Metaplex {
     signer: Secret,
     input: InputNftMetadata,
     feePayer?: Secret
-  ): Promise<Result<MintInstruction, Error>> => {
+    // ): Promise<Result<MintInstruction, Error>> => {
+  ) => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -225,7 +233,32 @@ export namespace Metaplex {
         sellerFeeBasisPoints,
         ...reducedMetadata,
       };
-      return await createNftBuilder(mintInput, owner, signer, payer);
+      const instructions = await createNftBuilder(
+        mintInput,
+        owner,
+        signer,
+        payer
+      );
+
+      const blockhashObj = await Node.getConnection().getLatestBlockhash();
+
+      const tx = new Transaction({
+        lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
+        blockhash: blockhashObj.blockhash,
+        feePayer: feePayer?.toKeypair().publicKey,
+      });
+
+      tx.recentBlockhash = blockhashObj.blockhash;
+      instructions.instructions.forEach((inst) => tx.add(inst));
+      
+      console.log(instructions.signers);
+
+      instructions.signers.forEach((signer) => tx.partialSign(signer));
+      const serializedTx = tx.serialize({
+        requireAllSignatures: false,
+      });
+      const hex = serializedTx.toString('hex');
+      return new PartialSignInstruction(hex);
     });
   };
 }
