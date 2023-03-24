@@ -18,6 +18,10 @@ export class Instruction {
                     throw Error('only Instruction object that can use this');
                 }
                 const transaction = new Transaction();
+                const blockhashObj = yield Node.getConnection().getLatestBlockhash();
+                transaction.lastValidBlockHeight = blockhashObj.lastValidBlockHeight;
+                // transaction.blockhash = blockhashObj.blockhash;
+                transaction.recentBlockhash = blockhashObj.blockhash;
                 let finalSigners = this.signers;
                 if (feePayer) {
                     // if (this.feePayer) {

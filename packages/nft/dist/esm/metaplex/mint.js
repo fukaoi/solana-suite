@@ -11,7 +11,7 @@ import { debugLog, Try, MintInstruction, KeypairAccount, } from '@solana-suite/s
 import { Storage, Bundlr } from '@solana-suite/storage';
 import { Validator, Creators, Collections, Properties, } from '@solana-suite/shared-metaplex';
 import { token, TransactionBuilder, } from '@metaplex-foundation/js';
-import { createCreateMasterEditionV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
+import { createCreateMasterEditionV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 export var Metaplex;
 (function (Metaplex) {
     // original: plugins/nftModule/operations/createNft.ts
@@ -40,10 +40,8 @@ export var Metaplex;
         debugLog('# updateAuthority: ', updateAuthority);
         debugLog('# mintAuthority: ', mintAuthority);
         debugLog('# tokenOwner: ', tokenOwner);
-        // const metaplex = Bundlr.make(feePayer);
-        const metaplex = Bundlr.make();
-        const payer = feePayer;
-        // const payer = metaplex.identity();
+        const metaplex = Bundlr.make(feePayer);
+        const payer = metaplex.identity();
         const sftBuilder = yield metaplex
             .nfts()
             .builders()
@@ -56,7 +54,7 @@ export var Metaplex;
             .pdas()
             .masterEdition({ mint: mintAddress });
         return (TransactionBuilder.make()
-            .setFeePayer(payer)
+            .setFeePayer(feePayer)
             .setContext({
             mintAddress,
             metadataAddress,
@@ -84,6 +82,80 @@ export var Metaplex;
         })
             .getInstructions());
     });
+    // export const createMintInstructions = async (
+    //   mint: PublicKey,
+    //   owner: PublicKey,
+    //   totalAmount: number,
+    //   mintDecimal: number,
+    //   nftMetadata: _MetaplexNftMetaData,
+    //   feePayer: PublicKey,
+    //   isMutable: boolean
+    // ): Promise<TransactionInstruction[]> => {
+    //   let ata = await getAssociatedTokenAddress(mint, feePayer);
+    //   let tokenMetadataPubkey = getMetadataPDA(mint);
+    //   let masterEditionPubkey = getMasterEditionPDA(mint);
+    //
+    //   const inst1 = createInitializeMintInstruction(
+    //     mint,
+    //     0,
+    //     feePayer,
+    //     feePayer
+    //   );
+    //
+    //   const inst2 = createAssociatedTokenAccountInstruction(
+    //     feePayer.publicKey,
+    //     ata,
+    //     feePayer.publicKey,
+    //     mint.publicKey
+    //   );
+    //
+    //   const inst3 = createMintToCheckedInstruction(
+    //     mint.publicKey,
+    //     ata,
+    //     feePayer.publicKey,
+    //     1,
+    //     0
+    //   );
+    //
+    //   const inst4 = createCreateMetadataAccountInstruction(
+    //     {
+    //       metadata: tokenMetadataPubkey,
+    //       mint: mint.publicKey,
+    //       mintAuthority: feePayer.publicKey,
+    //       payer: feePayer.publicKey,
+    //       updateAuthority: feePayer.publicKey,
+    //     },
+    //     {
+    //       createMetadataAccountArgs: {
+    //         data: {
+    //           name: 'Fake NFT',
+    //           symbol: 'FAKE',
+    //           uri: 'https://ipfs.io/ipfs/bafkreiandjvsdew2jbtjej2h35bjkywjnpgq56sdngqzga3tzf6nqacpnm',
+    //           sellerFeeBasisPoints: 100,
+    //           creators: null,
+    //         },
+    //         isMutable: true,
+    //       },
+    //     }
+    //   );
+    //
+    //   const inst5 = createCreateMasterEditionInstruction(
+    //     {
+    //       edition: masterEditionPubkey,
+    //       mint: mint.publicKey,
+    //       updateAuthority: feePayer.publicKey,
+    //       mintAuthority: feePayer.publicKey,
+    //       payer: feePayer.publicKey,
+    //       metadata: tokenMetadataPubkey,
+    //     },
+    //     {
+    //       createMasterEditionArgs: {
+    //         maxSupply: 0,
+    //       },
+    //     }
+    //   );
+    //   return [inst1, inst2, inst3, inst4, inst5];
+    // };
     /**
      * Upload content and NFT mint
      *
@@ -129,7 +201,7 @@ export var Metaplex;
             const overwrited = Object.assign(Object.assign({}, input), { creators,
                 collection,
                 properties });
-            const uploaded = yield Storage.uploadMetaContent(overwrited, payer);
+            const uploaded = yield Storage.uploadMetaContent(overwrited);
             const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
             debugLog('# upload content url: ', uri);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);

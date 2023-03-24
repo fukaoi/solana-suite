@@ -65,8 +65,7 @@ export namespace PhantomSplToken {
 
       const isMutable = !reducedMetadata.isMutable ? false : true;
 
-      const insturctions = await SplToken.createMintInstruction(
-        connection,
+      const insturctions = await SplToken.createMintInstructions(
         mint.publicKey,
         owner.toPublicKey(),
         totalAmount,

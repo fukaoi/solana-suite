@@ -31,5 +31,5 @@ export declare namespace Metaplex {
      * @param {Secret} feePayer?       // fee payer
      * @return Promise<Result<Instruction, Error>>
      */
-    const mint: (owner: Pubkey, signer: Secret, input: InputNftMetadata, feePayer?: Secret) => Promise<Result<MintInstruction, Error>>;
+    const mint: (owner: Pubkey, signer: Secret, input: InputNftMetadata, feePayer?: Pubkey) => Promise<Result<MintInstruction, Error>>;
 }

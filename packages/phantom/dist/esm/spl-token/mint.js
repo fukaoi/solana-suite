@@ -46,7 +46,7 @@ export var PhantomSplToken;
                 uses: reducedMetadata.uses,
             };
             const isMutable = !reducedMetadata.isMutable ? false : true;
-            const insturctions = yield SplToken.createMintInstruction(connection, mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, owner.toPublicKey(), isMutable);
+            const insturctions = yield SplToken.createMintInstructions(mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, owner.toPublicKey(), isMutable);
             insturctions.forEach((inst) => transaction.add(inst));
             transaction.feePayer = owner.toPublicKey();
             const blockhashObj = yield connection.getLatestBlockhashAndContext();
