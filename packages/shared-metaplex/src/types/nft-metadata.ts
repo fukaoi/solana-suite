@@ -87,6 +87,8 @@ export type OutputNftMetadata = {
   uses: Option<Uses>;
 };
 
+
+//todo: change
 //---- Internal type ----//
 export type _MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
 export type _InputCollection = Option<PublicKey>;
@@ -108,6 +110,8 @@ export type _MetadataProperties = {
   [key: string]: unknown;
 };
 
+
+//todo: change
 export type _InputNftMetadata = Omit<
   InputNftMetadata,
   'creators' | 'collection' | 'collectionAuthority' | 'properties'

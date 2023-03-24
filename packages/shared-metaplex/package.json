@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@metaplex-foundation/js": "0.18.0",
+    "@metaplex-foundation/mpl-token-metadata": "^2.9.1",
     "@solana-suite/shared": "latest"
   }
 }
