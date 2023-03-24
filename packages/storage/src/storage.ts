@@ -6,13 +6,14 @@ import {
   StorageType,
 } from '@solana-suite/shared-metaplex';
 
+//todo: replaced
 import { MetaplexFileContent } from '@metaplex-foundation/js';
 
 import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
 
 export namespace Storage {
-  const initNftStorageMetadata = (
+  const toConvertNftStorageMetadata = (
     input: _InputNftMetadata,
     sellerFeeBasisPoints: number,
     options?: { [key: string]: unknown }
@@ -55,7 +56,7 @@ export namespace Storage {
     const { filePath, storageType, royalty, options, ...reducedMetadata } =
       input;
     const sellerFeeBasisPoints = Royalty.convert(royalty);
-    const storageData = initNftStorageMetadata(
+    const storageData = toConvertNftStorageMetadata(
       input,
       sellerFeeBasisPoints,
       options

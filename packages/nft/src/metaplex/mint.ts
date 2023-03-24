@@ -42,160 +42,160 @@ import {
 } from '@metaplex-foundation/js';
 import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
 import {
-  createCreateMetadataAccountInstruction,
+  createCreateMetadataAccountV2Instruction,
   createCreateMasterEditionInstruction,
   createCreateMasterEditionV3Instruction,
+  DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 export namespace Metaplex {
-  // original: plugins/nftModule/operations/createNft.ts
-  const createNftBuilder = async (
-    params: CreateNftBuilderParams,
-    owner: Pubkey,
-    signer: Secret,
-    feePayer: Secret
-  ): Promise<MintInstruction> => {
-    const mint = KeypairAccount.create();
-    const updateAuthority = signer;
-    const mintAuthority = signer;
-
-    const inst = await createNftBuilderInstruction(
-      feePayer.toKeypair(),
-      params,
-      mint.toKeypair(),
-      updateAuthority.toKeypair(),
-      mintAuthority.toKeypair(),
-      owner
-    );
-
-    let creatorSigners: Keypair[] = [feePayer.toKeypair()];
-    if (params.creators) {
-      creatorSigners = params.creators
-        ?.filter((creator) => creator.authority)
-        .map((creator) => creator.authority as Keypair);
-    }
-
-    return new MintInstruction(
-      inst,
-      [
-        feePayer.toKeypair(),
-        mint.toKeypair(),
-        signer.toKeypair(),
-        ...creatorSigners,
-      ],
-      undefined,
-      mint.pubkey
-    );
-  };
-
-  export const createNftBuilderInstruction = async (
-    feePayer: Keypair | IdentityClient,
-    params: CreateNftBuilderParams,
-    useNewMint: Keypair,
-    updateAuthority: Keypair | IdentityClient,
-    mintAuthority: Keypair | IdentityClient,
-    tokenOwner: Pubkey
-  ): Promise<TransactionInstruction[]> => {
-    debugLog('# params: ', params);
-    debugLog('# feePayer: ', feePayer);
-    debugLog('# useNewMint: ', useNewMint);
-    debugLog('# updateAuthority: ', updateAuthority);
-    debugLog('# mintAuthority: ', mintAuthority);
-    debugLog('# tokenOwner: ', tokenOwner);
-
-    const metaplex = Bundlr.make(feePayer);
-    const payer = metaplex.identity();
-    const sftBuilder = await metaplex
-      .nfts()
-      .builders()
-      .createSft({
-        ...params,
-        updateAuthority,
-        mintAuthority,
-        useNewMint,
-        tokenOwner: tokenOwner.toPublicKey(),
-        tokenAmount: token(1),
-        decimals: 0,
-      });
-
-    const { mintAddress, metadataAddress, tokenAddress } =
-      sftBuilder.getContext();
-
-    const masterEditionAddress = metaplex
-      .nfts()
-      .pdas()
-      .masterEdition({ mint: mintAddress });
-
-    return (
-      TransactionBuilder.make<CreateNftBuilderContext>()
-        .setFeePayer(feePayer)
-        .setContext({
-          mintAddress,
-          metadataAddress,
-          masterEditionAddress,
-          tokenAddress: tokenAddress as PublicKey,
-        })
-
-        // Create the mint, the token and the metadata.
-        .add(sftBuilder)
-
-        // Create master edition account (prevents further minting).
-        .add({
-          instruction: createCreateMasterEditionV3Instruction(
-            {
-              edition: masterEditionAddress,
-              mint: mintAddress,
-              updateAuthority: updateAuthority.publicKey,
-              mintAuthority: mintAuthority.publicKey,
-              payer: payer.publicKey,
-              metadata: metadataAddress,
-            },
-            {
-              createMasterEditionArgs: {
-                maxSupply:
-                  params.maxSupply === undefined ? 0 : params.maxSupply,
-              },
-            }
-          ),
-          signers: [payer, mintAuthority, updateAuthority],
-          key:
-            params.createMasterEditionInstructionKey ?? 'createMasterEdition',
-        })
-        .getInstructions()
-    );
-  };
-
+  // const createNftBuilder = async (
+  //   params: CreateNftBuilderParams,
+  //   owner: Pubkey,
+  //   signer: Secret,
+  //   feePayer: Secret
+  // ): Promise<MintInstruction> => {
+  //   const mint = KeypairAccount.create();
+  //   const updateAuthority = signer;
+  //   const mintAuthority = signer;
+  //
+  //   const inst = await createNftBuilderInstruction(
+  //     feePayer.toKeypair(),
+  //     params,
+  //     mint.toKeypair(),
+  //     updateAuthority.toKeypair(),
+  //     mintAuthority.toKeypair(),
+  //     owner
+  //   );
+  //
+  //   let creatorSigners: Keypair[] = [feePayer.toKeypair()];
+  //   if (params.creators) {
+  //     creatorSigners = params.creators
+  //       ?.filter((creator) => creator.authority)
+  //       .map((creator) => creator.authority as Keypair);
+  //   }
+  //
+  //   return new MintInstruction(
+  //     inst,
+  //     [
+  //       feePayer.toKeypair(),
+  //       mint.toKeypair(),
+  //       signer.toKeypair(),
+  //       ...creatorSigners,
+  //     ],
+  //     undefined,
+  //     mint.pubkey
+  //   );
+  // };
+  //
+  // export const createNftBuilderInstruction = async (
+  //   feePayer: Keypair | IdentityClient,
+  //   params: CreateNftBuilderParams,
+  //   useNewMint: Keypair,
+  //   updateAuthority: Keypair | IdentityClient,
+  //   mintAuthority: Keypair | IdentityClient,
+  //   tokenOwner: Pubkey
+  // ): Promise<TransactionInstruction[]> => {
+  //   debugLog('# params: ', params);
+  //   debugLog('# feePayer: ', feePayer);
+  //   debugLog('# useNewMint: ', useNewMint);
+  //   debugLog('# updateAuthority: ', updateAuthority);
+  //   debugLog('# mintAuthority: ', mintAuthority);
+  //   debugLog('# tokenOwner: ', tokenOwner);
+  //
+  //   const metaplex = Bundlr.make(feePayer);
+  //   const payer = metaplex.identity();
+  //   const sftBuilder = await metaplex
+  //     .nfts()
+  //     .builders()
+  //     .createSft({
+  //       ...params,
+  //       updateAuthority,
+  //       mintAuthority,
+  //       useNewMint,
+  //       tokenOwner: tokenOwner.toPublicKey(),
+  //       tokenAmount: token(1),
+  //       decimals: 0,
+  //     });
+  //
+  //   const { mintAddress, metadataAddress, tokenAddress } =
+  //     sftBuilder.getContext();
+  //
+  //   const masterEditionAddress = metaplex
+  //     .nfts()
+  //     .pdas()
+  //     .masterEdition({ mint: mintAddress });
+  //
+  //   return (
+  //     TransactionBuilder.make<CreateNftBuilderContext>()
+  //       .setFeePayer(feePayer)
+  //       .setContext({
+  //         mintAddress,
+  //         metadataAddress,
+  //         masterEditionAddress,
+  //         tokenAddress: tokenAddress as PublicKey,
+  //       })
+  //
+  //       // Create the mint, the token and the metadata.
+  //       .add(sftBuilder)
+  //
+  //       // Create master edition account (prevents further minting).
+  //       .add({
+  //         instruction: createCreateMasterEditionV3Instruction(
+  //           {
+  //             edition: masterEditionAddress,
+  //             mint: mintAddress,
+  //             updateAuthority: updateAuthority.publicKey,
+  //             mintAuthority: mintAuthority.publicKey,
+  //             payer: payer.publicKey,
+  //             metadata: metadataAddress,
+  //           },
+  //           {
+  //             createMasterEditionArgs: {
+  //               maxSupply:
+  //                 params.maxSupply === undefined ? 0 : params.maxSupply,
+  //             },
+  //           }
+  //         ),
+  //         signers: [payer, mintAuthority, updateAuthority],
+  //         key:
+  //           params.createMasterEditionInstructionKey ?? 'createMasterEdition',
+  //       })
+  //       .getInstructions()
+  //   );
+  // };
+  //
   export const createMintInstructions = async (
     mint: PublicKey,
     owner: PublicKey,
-    nftMetadata: _MetaplexNftMetaData,
+    nftMetadata: DataV2,
     feePayer: PublicKey,
     isMutable: boolean
   ): Promise<TransactionInstruction[]> => {
-    let ata = await getAssociatedTokenAddress(mint, feePayer);
+    let ata = await getAssociatedTokenAddress(mint, owner);
     let tokenMetadataPubkey = Pda.getMetadata(mint);
     let masterEditionPubkey = Pda.getMasterEdition(mint);
 
-    const inst1 = createInitializeMintInstruction(mint, 0, feePayer, feePayer);
+    const inst1 = createInitializeMintInstruction(mint, 0, owner, owner);
 
     const inst2 = createAssociatedTokenAccountInstruction(
       feePayer,
       ata,
-      feePayer,
+      owner,
       mint
     );
 
     const inst3 = createMintToCheckedInstruction(mint, ata, feePayer, 1, 0);
 
-    const inst4 = createCreateMetadataAccountInstruction(
+    const inst4 = createCreateMetadataAccountV2Instruction(
       {
         metadata: tokenMetadataPubkey,
         mint,
-        mintAuthority: feePayer,
+        mintAuthority: owner,
         payer: feePayer,
-        updateAuthority: feePayer,
+        updateAuthority: owner,
       },
       {
-        createMetadataAccountArgs: {
+        createMetadataAccountArgsV2: {
           data: nftMetadata,
           isMutable,
         },
@@ -206,8 +206,8 @@ export namespace Metaplex {
       {
         edition: masterEditionPubkey,
         mint,
-        updateAuthority: feePayer,
-        mintAuthority: feePayer,
+        updateAuthority: owner,
+        mintAuthority: owner,
         payer: feePayer,
         metadata: tokenMetadataPubkey,
       },
@@ -284,6 +284,7 @@ export namespace Metaplex {
         properties,
       } as _InputNftMetadata;
 
+      // const nftStorageMetadata = Storage
       const uploaded = await Storage.uploadMetaContent(overwrited);
       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
 
@@ -291,19 +292,18 @@ export namespace Metaplex {
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# reducedMetadata: ', reducedMetadata);
 
-      // const mintInput: _MetaplexNftMetaData = {
-      //   uri,
-      //   sellerFeeBasisPoints,
-      //   ...reducedMetadata,
-      // };
-      // return await createNftBuilder(mintInput, owner, signer, payer);
-      
       const mint = KeypairAccount.create();
-      const insts = createMintInstructions(mint.toPublicKey());
+      const insts = await createMintInstructions(
+        mint.toPublicKey(),
+        owner.toPublicKey(),
+        input as DataV2,
+        payer.toPublicKey(),
+        input.isMutable || true
+      );
       return new MintInstruction(
         insts,
         [signer.toKeypair(), mint.toKeypair()],
-        payer,
+        payer.toKeypair(),
         mint.pubkey
       );
     });

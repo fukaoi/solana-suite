@@ -26,6 +26,8 @@ export type InputTokenMetadata = {
   uses?: Option<Uses>;
 };
 
+
+// todo: OutpuTokenMetadata
 export type TokenMetadata = {
   name: string;
   symbol: string;

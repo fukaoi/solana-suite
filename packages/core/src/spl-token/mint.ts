@@ -46,7 +46,7 @@ export namespace SplToken {
     owner: PublicKey,
     totalAmount: number,
     mintDecimal: number,
-    tokenMetadata: _TokenMetadata,
+    tokenMetadata: DataV2,
     feePayer: PublicKey,
     isMutable: boolean
   ): Promise<TransactionInstruction[]> => {
@@ -160,7 +160,7 @@ export namespace SplToken {
         owner.toPublicKey(),
         totalAmount,
         mintDecimal,
-        tokenMetadata,
+        tokenMetadata as DataV2,
         payer.publicKey,
         isMutable
       );
