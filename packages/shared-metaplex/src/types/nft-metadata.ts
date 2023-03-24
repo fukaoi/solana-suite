@@ -53,13 +53,13 @@ export type MetadataProperties = {
   [key: string]: unknown;
 };
 
-// todo: InputMetaplexMetadata
 export type InputNftMetadata = {
   name: string;
   symbol: string;
   royalty: number;
-  filePath: MetaplexFileContent;
   storageType: StorageType;
+  filePath: MetaplexFileContent; // todo: optional or uri?
+  uri?: string;
   description?: string;
   external_url?: string;
   attributes?: MetadataAttribute[];
@@ -88,7 +88,6 @@ export type OutputNftMetadata = {
   uses: Option<Uses>;
 };
 
-
 //todo: change
 //---- Internal type ----//
 export type _MetaplexNftMetaData = Omit<CreateNftInput, noNeedOptional>;
@@ -111,11 +110,10 @@ export type _MetadataProperties = {
   [key: string]: unknown;
 };
 
-
 //todo: change
 export type _InputNftMetadata = Omit<
   InputNftMetadata,
-  'creators' | 'collection' | 'collectionAuthority' | 'properties'
+  'creators' | 'collection' | 'properties'
 > & {
   creators?: CreatorInput[];
   collection?: _InputCollection;
