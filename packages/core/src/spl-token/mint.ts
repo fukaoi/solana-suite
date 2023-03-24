@@ -1,4 +1,8 @@
-import { Connection, PublicKey, SystemProgram } from '@solana/web3.js';
+import {
+  PublicKey,
+  SystemProgram,
+  TransactionInstruction,
+} from '@solana/web3.js';
 import {
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
@@ -37,8 +41,7 @@ import { SplToken as _Calculate } from './calculate-amount';
 import { Storage, Bundlr } from '@solana-suite/storage';
 
 export namespace SplToken {
-  export const createMintInstruction = async (
-    connection: Connection,
+  export const createMintInstructions = async (
     mint: PublicKey,
     owner: PublicKey,
     totalAmount: number,
@@ -46,11 +49,10 @@ export namespace SplToken {
     tokenMetadata: _TokenMetadata,
     feePayer: PublicKey,
     isMutable: boolean
-  ) => {
+  ): Promise<TransactionInstruction[]> => {
+    const connection = Node.getConnection();
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
-
     const metadataPda = Bundlr.make().nfts().pdas().metadata({ mint: mint });
-
     const tokenAssociated = await getAssociatedTokenAddress(mint, owner);
 
     const inst = SystemProgram.createAccount({
@@ -152,10 +154,8 @@ export namespace SplToken {
       };
       const isMutable = !reducedMetadata.isMutable ? false : true;
 
-      const connection = Node.getConnection();
       const mint = KeypairAccount.create();
-      const insts = await createMintInstruction(
-        connection,
+      const insts = await createMintInstructions(
         mint.toPublicKey(),
         owner.toPublicKey(),
         totalAmount,
