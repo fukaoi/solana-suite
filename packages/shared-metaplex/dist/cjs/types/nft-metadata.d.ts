@@ -36,8 +36,6 @@ export type MetadataProperties = {
     }[];
     [key: string]: unknown;
 };
-
-// todo: InputMetaplexMetadata
 export type InputNftMetadata = {
     name: string;
     symbol: string;

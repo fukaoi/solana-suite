@@ -14,7 +14,6 @@ const web3_js_1 = require("@solana/web3.js");
 const spl_token_1 = require("@solana/spl-token");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 const shared_1 = require("@solana-suite/shared");
-const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 const calculate_amount_1 = require("./calculate-amount");
 const storage_1 = require("@solana-suite/storage");
 var SplToken;
@@ -48,47 +47,81 @@ var SplToken;
         });
         return [inst, inst2, inst3, inst4, inst5];
     });
-    SplToken.mint = (owner, signer, totalAmount, mintDecimal, input, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            const valid = shared_metaplex_1.Validator.checkAll(input);
-            if (valid.isErr) {
-                throw valid.error;
-            }
-            const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
-            input.royalty = input.royalty ? input.royalty : 0;
-            let overwrited = input;
-            if (input.creators) {
-                const creatorsValue = shared_metaplex_1.Creators.toInputConvert(input.creators);
-                overwrited = (0, shared_1.overwriteObject)(input, [
-                    {
-                        existsKey: 'creators',
-                        will: {
-                            key: 'creators',
-                            value: creatorsValue,
-                        },
-                    },
-                ]);
-            }
-            (0, shared_1.debugLog)('# overwrited: ', overwrited);
-            const uploaded = yield storage_1.Storage.uploadMetaContent(overwrited, feePayer);
-            const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
-            (0, shared_1.debugLog)('# upload content url: ', uri);
-            (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-            (0, shared_1.debugLog)('# reducedMetadata: ', reducedMetadata);
-            const tokenMetadata = {
-                name: reducedMetadata.name,
-                symbol: reducedMetadata.symbol,
-                uri,
-                sellerFeeBasisPoints,
-                creators: reducedMetadata.creators,
-                uses: reducedMetadata.uses,
-                collection: undefined,
-            };
-            const isMutable = !reducedMetadata.isMutable ? false : true;
-            const mint = shared_1.KeypairAccount.create();
-            const insts = yield SplToken.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, payer.publicKey, isMutable);
-            return new shared_1.MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer, mint.pubkey);
-        }));
-    });
+    // export const mint = async (
+    //   owner: Pubkey,
+    //   signer: Secret,
+    //   totalAmount: number,
+    //   mintDecimal: number,
+    //   input: InputTokenMetadata,
+    //   feePayer?: Secret
+    // ): Promise<Result<MintInstruction, Error>> => {
+    //   return Try(async () => {
+    //     const valid = Validator.checkAll<InputTokenMetadata>(input);
+    //     if (valid.isErr) {
+    //       throw valid.error;
+    //     }
+    //
+    //     const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
+    //     input.royalty = input.royalty ? input.royalty : 0;
+    //
+    //     let overwrited = input as _InputNftMetadata;
+    //     if (input.creators) {
+    //       const creatorsValue = Creators.toInputConvert(input.creators);
+    //       overwrited = overwriteObject(input, [
+    //         {
+    //           existsKey: 'creators',
+    //           will: {
+    //             key: 'creators',
+    //             value: creatorsValue,
+    //           },
+    //         },
+    //       ]) as _InputNftMetadata;
+    //     }
+    //
+    //     debugLog('# overwrited: ', overwrited);
+    //
+    //     const sellerFeeBasisPoints = Royalty.convert(overwrited.royalty);
+    //     const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
+    //       overwrited,
+    //       sellerFeeBasisPoints,
+    //       overwrited.options
+    //     );
+    //
+    //     const uploaded = await Storage.uploadMetaContent(overwrited, feePayer);
+    //     const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+    //
+    //     debugLog('# upload content url: ', uri);
+    //     debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
+    //     debugLog('# reducedMetadata: ', reducedMetadata);
+    //
+    //     const tokenMetadata: _TokenMetadata = {
+    //       name: reducedMetadata.name,
+    //       symbol: reducedMetadata.symbol,
+    //       uri,
+    //       sellerFeeBasisPoints,
+    //       creators: reducedMetadata.creators,
+    //       uses: reducedMetadata.uses,
+    //       collection: undefined,
+    //     };
+    //     const isMutable = !reducedMetadata.isMutable ? false : true;
+    //
+    //     const mint = KeypairAccount.create();
+    //     const insts = await createMintInstructions(
+    //       mint.toPublicKey(),
+    //       owner.toPublicKey(),
+    //       totalAmount,
+    //       mintDecimal,
+    //       tokenMetadata as DataV2,
+    //       payer.publicKey,
+    //       isMutable
+    //     );
+    //     return new MintInstruction(
+    //       insts,
+    //       [signer.toKeypair(), mint.toKeypair()],
+    //       payer,
+    //       mint.pubkey
+    //     );
+    //   });
+    // };
 })(SplToken = exports.SplToken || (exports.SplToken = {}));
 //# sourceMappingURL=mint.js.map

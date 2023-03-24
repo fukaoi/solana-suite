@@ -10,155 +10,46 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metaplex = void 0;
+const spl_token_1 = require("@solana/spl-token");
 const shared_1 = require("@solana-suite/shared");
 const storage_1 = require("@solana-suite/storage");
 const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
-const js_1 = require("@metaplex-foundation/js");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 var Metaplex;
 (function (Metaplex) {
-    // original: plugins/nftModule/operations/createNft.ts
-    const createNftBuilder = (params, owner, signer, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        var _a;
-        const mint = shared_1.KeypairAccount.create();
-        const updateAuthority = signer;
-        const mintAuthority = signer;
-        const inst = yield Metaplex.createNftBuilderInstruction(feePayer.toKeypair(), params, mint.toKeypair(), updateAuthority.toKeypair(), mintAuthority.toKeypair(), owner);
-        let creatorSigners = [feePayer.toKeypair()];
-        if (params.creators) {
-            creatorSigners = (_a = params.creators) === null || _a === void 0 ? void 0 : _a.filter((creator) => creator.authority).map((creator) => creator.authority);
-        }
-        return new shared_1.MintInstruction(inst, [
-            feePayer.toKeypair(),
-            mint.toKeypair(),
-            signer.toKeypair(),
-            ...creatorSigners,
-        ], undefined, mint.pubkey);
+    Metaplex.createMintInstructions = (mint, owner, nftMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
+        let ata = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, owner);
+        let tokenMetadataPubkey = shared_metaplex_1.Pda.getMetadata(mint);
+        let masterEditionPubkey = shared_metaplex_1.Pda.getMasterEdition(mint);
+        const inst1 = (0, spl_token_1.createInitializeMintInstruction)(mint, 0, owner, owner);
+        const inst2 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(feePayer, ata, owner, mint);
+        const inst3 = (0, spl_token_1.createMintToCheckedInstruction)(mint, ata, feePayer, 1, 0);
+        const inst4 = (0, mpl_token_metadata_1.createCreateMetadataAccountV2Instruction)({
+            metadata: tokenMetadataPubkey,
+            mint,
+            mintAuthority: owner,
+            payer: feePayer,
+            updateAuthority: owner,
+        }, {
+            createMetadataAccountArgsV2: {
+                data: nftMetadata,
+                isMutable,
+            },
+        });
+        const inst5 = (0, mpl_token_metadata_1.createCreateMasterEditionV3Instruction)({
+            edition: masterEditionPubkey,
+            mint,
+            updateAuthority: owner,
+            mintAuthority: owner,
+            payer: feePayer,
+            metadata: tokenMetadataPubkey,
+        }, {
+            createMasterEditionArgs: {
+                maxSupply: 0,
+            },
+        });
+        return [inst1, inst2, inst3, inst4, inst5];
     });
-    Metaplex.createNftBuilderInstruction = (feePayer, params, useNewMint, updateAuthority, mintAuthority, tokenOwner) => __awaiter(this, void 0, void 0, function* () {
-        var _b;
-        (0, shared_1.debugLog)('# params: ', params);
-        (0, shared_1.debugLog)('# feePayer: ', feePayer);
-        (0, shared_1.debugLog)('# useNewMint: ', useNewMint);
-        (0, shared_1.debugLog)('# updateAuthority: ', updateAuthority);
-        (0, shared_1.debugLog)('# mintAuthority: ', mintAuthority);
-        (0, shared_1.debugLog)('# tokenOwner: ', tokenOwner);
-        const metaplex = storage_1.Bundlr.make(feePayer);
-        const payer = metaplex.identity();
-        const sftBuilder = yield metaplex
-            .nfts()
-            .builders()
-            .createSft(Object.assign(Object.assign({}, params), { updateAuthority,
-            mintAuthority,
-            useNewMint, tokenOwner: tokenOwner.toPublicKey(), tokenAmount: (0, js_1.token)(1), decimals: 0 }));
-        const { mintAddress, metadataAddress, tokenAddress } = sftBuilder.getContext();
-        const masterEditionAddress = metaplex
-            .nfts()
-            .pdas()
-            .masterEdition({ mint: mintAddress });
-        return (js_1.TransactionBuilder.make()
-            .setFeePayer(feePayer)
-            .setContext({
-            mintAddress,
-            metadataAddress,
-            masterEditionAddress,
-            tokenAddress: tokenAddress,
-        })
-            // Create the mint, the token and the metadata.
-            .add(sftBuilder)
-            // Create master edition account (prevents further minting).
-            .add({
-            instruction: (0, mpl_token_metadata_1.createCreateMasterEditionV3Instruction)({
-                edition: masterEditionAddress,
-                mint: mintAddress,
-                updateAuthority: updateAuthority.publicKey,
-                mintAuthority: mintAuthority.publicKey,
-                payer: payer.publicKey,
-                metadata: metadataAddress,
-            }, {
-                createMasterEditionArgs: {
-                    maxSupply: params.maxSupply === undefined ? 0 : params.maxSupply,
-                },
-            }),
-            signers: [payer, mintAuthority, updateAuthority],
-            key: (_b = params.createMasterEditionInstructionKey) !== null && _b !== void 0 ? _b : 'createMasterEdition',
-        })
-            .getInstructions());
-    });
-    // export const createMintInstructions = async (
-    //   mint: PublicKey,
-    //   owner: PublicKey,
-    //   totalAmount: number,
-    //   mintDecimal: number,
-    //   nftMetadata: _MetaplexNftMetaData,
-    //   feePayer: PublicKey,
-    //   isMutable: boolean
-    // ): Promise<TransactionInstruction[]> => {
-    //   let ata = await getAssociatedTokenAddress(mint, feePayer);
-    //   let tokenMetadataPubkey = getMetadataPDA(mint);
-    //   let masterEditionPubkey = getMasterEditionPDA(mint);
-    //
-    //   const inst1 = createInitializeMintInstruction(
-    //     mint,
-    //     0,
-    //     feePayer,
-    //     feePayer
-    //   );
-    //
-    //   const inst2 = createAssociatedTokenAccountInstruction(
-    //     feePayer.publicKey,
-    //     ata,
-    //     feePayer.publicKey,
-    //     mint.publicKey
-    //   );
-    //
-    //   const inst3 = createMintToCheckedInstruction(
-    //     mint.publicKey,
-    //     ata,
-    //     feePayer.publicKey,
-    //     1,
-    //     0
-    //   );
-    //
-    //   const inst4 = createCreateMetadataAccountInstruction(
-    //     {
-    //       metadata: tokenMetadataPubkey,
-    //       mint: mint.publicKey,
-    //       mintAuthority: feePayer.publicKey,
-    //       payer: feePayer.publicKey,
-    //       updateAuthority: feePayer.publicKey,
-    //     },
-    //     {
-    //       createMetadataAccountArgs: {
-    //         data: {
-    //           name: 'Fake NFT',
-    //           symbol: 'FAKE',
-    //           uri: 'https://ipfs.io/ipfs/bafkreiandjvsdew2jbtjej2h35bjkywjnpgq56sdngqzga3tzf6nqacpnm',
-    //           sellerFeeBasisPoints: 100,
-    //           creators: null,
-    //         },
-    //         isMutable: true,
-    //       },
-    //     }
-    //   );
-    //
-    //   const inst5 = createCreateMasterEditionInstruction(
-    //     {
-    //       edition: masterEditionPubkey,
-    //       mint: mint.publicKey,
-    //       updateAuthority: feePayer.publicKey,
-    //       mintAuthority: feePayer.publicKey,
-    //       payer: feePayer.publicKey,
-    //       metadata: tokenMetadataPubkey,
-    //     },
-    //     {
-    //       createMasterEditionArgs: {
-    //         maxSupply: 0,
-    //       },
-    //     }
-    //   );
-    //   return [inst1, inst2, inst3, inst4, inst5];
-    // };
     /**
      * Upload content and NFT mint
      *
@@ -204,14 +95,15 @@ var Metaplex;
             const overwrited = Object.assign(Object.assign({}, input), { creators,
                 collection,
                 properties });
-            const uploaded = yield storage_1.Storage.uploadMetaContent(overwrited);
-            const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+            const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(overwrited.royalty);
+            const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(overwrited, sellerFeeBasisPoints);
+            const uri = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, overwrited.filePath, payer);
             (0, shared_1.debugLog)('# upload content url: ', uri);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-            (0, shared_1.debugLog)('# reducedMetadata: ', reducedMetadata);
-            const mintInput = Object.assign({ uri,
-                sellerFeeBasisPoints }, reducedMetadata);
-            return yield createNftBuilder(mintInput, owner, signer, payer);
+            // debugLog('# reducedMetadata: ', reducedMetadata);
+            const mint = shared_1.KeypairAccount.create();
+            const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), input, payer.toPublicKey(), input.isMutable || true);
+            return new shared_1.MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer.toKeypair(), mint.pubkey);
         }));
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));

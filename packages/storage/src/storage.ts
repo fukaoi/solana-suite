@@ -1,7 +1,6 @@
 import { Result, Secret } from '@solana-suite/shared';
 import {
   _InputNftMetadata,
-  Royalty,
   NftStorageMetadata,
   StorageType,
 } from '@solana-suite/shared-metaplex';
@@ -13,10 +12,9 @@ import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
 
 export namespace Storage {
-  const toConvertNftStorageMetadata = (
+  export const toConvertNftStorageMetadata = (
     input: _InputNftMetadata,
-    sellerFeeBasisPoints: number,
-    options?: { [key: string]: unknown }
+    sellerFeeBasisPoints: number
   ): NftStorageMetadata => {
     const data = {
       name: input.name,
@@ -27,8 +25,9 @@ export namespace Storage {
       attributes: input.attributes,
       properties: input.properties,
       image: '',
+      options: input.options,
     };
-    return { ...data, ...options };
+    return data;
   };
 
   export const uploadContent = async (
@@ -49,20 +48,12 @@ export namespace Storage {
   };
 
   export const uploadMetaContent = async (
-    input: _InputNftMetadata,
+    input: NftStorageMetadata,
+    filePath: MetaplexFileContent,
     feePayer?: Secret
-  ) => {
+  ): Promise<Result<string, Error>> => {
     let storage;
-    const { filePath, storageType, royalty, options, ...reducedMetadata } =
-      input;
-    const sellerFeeBasisPoints = Royalty.convert(royalty);
-    const storageData = toConvertNftStorageMetadata(
-      input,
-      sellerFeeBasisPoints,
-      options
-    );
-
-    if (storageType === 'arweave') {
+    if (input.storageType === 'arweave') {
       if (!feePayer) {
         throw Error('Arweave needs to have feepayer');
       }
@@ -70,20 +61,20 @@ export namespace Storage {
         await Arweave.uploadContent(filePath, feePayer)
       ).unwrap(
         async (ok: string) => {
-          storageData.image = ok;
-          return await Arweave.uploadMetadata(storageData, feePayer);
+          input.image = ok;
+          return await Arweave.uploadMetadata(input, feePayer);
         },
         (err: Error) => {
           throw err;
         }
       );
-    } else if (storageType === 'nftStorage') {
+    } else if (input.storageType === 'nftStorage') {
       storage = await (
         await NftStorage.uploadContent(filePath)
       ).unwrap(
         async (ok: string) => {
-          storageData.image = ok;
-          return await NftStorage.uploadMetadata(storageData);
+          input.image = ok;
+          return await NftStorage.uploadMetadata(input);
         },
         (err: Error) => {
           throw err;
@@ -94,11 +85,6 @@ export namespace Storage {
     if (!storage) {
       throw Error('Empty storage object');
     }
-
-    return {
-      uri: storage.unwrap(),
-      sellerFeeBasisPoints,
-      reducedMetadata,
-    };
+    return storage;
   };
 }

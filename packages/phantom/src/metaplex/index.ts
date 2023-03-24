@@ -1,5 +1,5 @@
-import { PhantomMetaplex as Mint } from './mint';
-
-export const PhantomMetaplex = {
-  ...Mint,
-};
+// import { PhantomMetaplex as Mint } from './mint';
+//
+// export const PhantomMetaplex = {
+//   ...Mint,
+// };
