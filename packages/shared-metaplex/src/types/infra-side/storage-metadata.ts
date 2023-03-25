@@ -1,3 +1,5 @@
+import { Infra, _Common } from '../shared';
+
 export type StorageMetadata = {
   name?: string;
   symbol?: string;
@@ -5,30 +7,9 @@ export type StorageMetadata = {
   seller_fee_basis_points?: number;
   image?: string;
   external_url?: string;
-  attributes?: Array<{
-    trait_type?: string;
-    value?: string;
-    [key: string]: unknown;
-  }>;
-  properties?: {
-    creators?: Array<{
-      address?: string;
-      share?: number;
-      [key: string]: unknown;
-    }>;
-    files?: Array<{
-      type?: string;
-      uri?: string;
-      [key: string]: unknown;
-    }>;
-    [key: string]: unknown;
-  };
-  collection?: {
-    name?: string;
-    family?: string;
-    [key: string]: unknown;
-  };
-  [key: string]: unknown;
+  attributes?: Infra.Attribute[];
+  properties?: _Common.Properties[];
+  collection?: _Common.Collection;
 };
 
 export interface File extends Blob {

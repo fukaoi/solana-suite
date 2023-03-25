@@ -1,22 +1,22 @@
-import {
-  ICollection,
-  OCollection,
-  Collection,
-} from './types';
-
-export namespace Collections {
-  export const toInputConvert = (
-    input: ICollection | undefined
-  ): any => (!input ? null : input.toPublicKey());
-
-  export const toOutputConvert = (
-    output: OCollection | undefined
-  ): OCollection => {
-    return !output
-      ? null
-      : {
-          address: output.address.toString(),
-          verified: output.verified,
-        };
-  };
-}
+// import {
+//   User,
+//   Infra,
+//   Common,
+// } from './types';
+//
+// export namespace Collections {
+//   export const toInputConvert = (
+//     input: User.Collection | undefined
+//   ): Common.Collection => (!input ? undefined : input.toPublicKey());
+//
+//   export const toOutputConvert = (
+//     output: Common.Collection | undefined
+//   ): User.Collection => {
+//     return !output
+//       ? null
+//       : {
+//           address: output.address.toString(),
+//           verified: output.verified,
+//         };
+//   };
+// }

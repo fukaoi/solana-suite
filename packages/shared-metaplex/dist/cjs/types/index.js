@@ -20,5 +20,6 @@ __exportStar(require("./user-side/input-nft-metadata"), exports);
 __exportStar(require("./user-side/output-nft-metadata"), exports);
 __exportStar(require("./user-side/input-token-metadata"), exports);
 __exportStar(require("./user-side/output-token-metadata"), exports);
+__exportStar(require("./shared"), exports);
 __exportStar(require("./validator"), exports);
 //# sourceMappingURL=index.js.map

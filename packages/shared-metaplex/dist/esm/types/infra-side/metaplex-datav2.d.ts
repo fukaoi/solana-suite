@@ -1,6 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
-import { UseMethod } from '@metaplex-foundation/mpl-token-metadata';
-import { COption, bignum } from '../shared';
+import { COption, _Common } from '../shared';
 export type MetaplexDataV2 = {
     name: string;
     symbol: string;
@@ -8,7 +7,7 @@ export type MetaplexDataV2 = {
     sellerFeeBasisPoints: number;
     creators: COption<Creator[]>;
     collection: COption<Collection>;
-    uses: COption<Uses>;
+    uses: COption<_Common.Uses>;
 };
 export type DataV2 = {
     name: string;
@@ -17,7 +16,7 @@ export type DataV2 = {
     sellerFeeBasisPoints: number;
     creators: COption<Creator[]>;
     collection: COption<Collection>;
-    uses: COption<Uses>;
+    uses: COption<_Common.Uses>;
 };
 export type Creator = {
     address: PublicKey;
@@ -27,9 +26,4 @@ export type Creator = {
 export type Collection = {
     verified: boolean;
     key: PublicKey;
-};
-export type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
 };

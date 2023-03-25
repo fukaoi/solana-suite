@@ -1,11 +1,5 @@
 import { Pubkey } from '@solana-suite/shared';
-import { Uses } from '../infra-side/metaplex-datav2';
-import { COption } from '../shared';
-export type OCreators = {
-    readonly address: Pubkey;
-    readonly share: number;
-    readonly verified: boolean;
-};
+import { COption, User, _Common } from '../shared';
 export type OCollection = COption<{
     address: Pubkey;
     verified: boolean;
@@ -19,8 +13,8 @@ export type OutputNftMetadata = {
     uri: string;
     isMutable: boolean;
     primarySaleHappened: boolean;
-    creators: OCreators[];
+    creators: User.Creators[];
     editionNonce: COption<number>;
     collection: OCollection;
-    uses: COption<Uses>;
+    uses: COption<_Common.Uses>;
 };
