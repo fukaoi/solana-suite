@@ -26,16 +26,16 @@ import {
 import { Storage } from '@solana-suite/storage';
 
 import {
-  _InputNftMetadata,
-  _MetaplexNftMetaData,
   Validator,
   InputNftMetadata,
-  Creators,
-  Collections,
-  Properties,
+  // Creators,
+  // Collections,
+  // Properties,
   Pda,
   Royalty,
   MetaplexMetadata,
+  User,
+  Infra,
 } from '@solana-suite/shared-metaplex';
 
 import {
@@ -151,39 +151,43 @@ export namespace Metaplex {
 
       const payer = feePayer ? feePayer : signer;
 
-      //Convert creators
-      const creators = Creators.toInputConvert(input.creators);
-      debugLog('# creators: ', creators);
+      // //Convert creators
+      // const creators = Creators.toInputConvert(input.creators);
+      // debugLog('# creators: ', creators);
+      //
+      // //Convert collection
+      // const collection = Collections.toInputConvert(input.collection);
+      // debugLog('# collection: ', collection);
+      //
+      // //Convert porperties, Upload content
+      // const properties = await Properties.toInputConvert(
+      //   input.properties,
+      //   Storage.uploadContent,
+      //   input.storageType,
+      //   feePayer
+      // );
+      // debugLog('# properties: ', properties);
+      //
+      // const overwrited = {
+      //   ...input,
+      //   creators,
+      //   collection,
+      //   properties,
+      // } as _InputNftMetadata;
 
-      //Convert collection
-      const collection = Collections.toInputConvert(input.collection);
-      debugLog('# collection: ', collection);
-
-      //Convert porperties, Upload content
-      const properties = await Properties.toInputConvert(
-        input.properties,
-        Storage.uploadContent,
-        input.storageType,
-        feePayer
-      );
-      debugLog('# properties: ', properties);
-
-      const overwrited = {
+      const inputInfra = {
         ...input,
-        creators,
-        collection,
-        properties,
-      } as _InputNftMetadata;
+      };
 
-      const sellerFeeBasisPoints = Royalty.convert(overwrited.royalty);
+      const sellerFeeBasisPoints = Royalty.convert(inputInfra.royalty);
       const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
-        overwrited,
+        inputInfra,
         sellerFeeBasisPoints
       );
       const uploaded = await Storage.uploadMetaContent(
         nftStorageMetadata,
-        overwrited.filePath,
-        overwrited.storageType,
+        inputInfra.filePath,
+        inputInfra.storageType,
         payer
       );
 
@@ -193,7 +197,7 @@ export namespace Metaplex {
       const uri = uploaded.value;
 
       const datav2 = MetaplexMetadata.toConvertDataV2(
-        overwrited,
+        inputInfra,
         uri,
         sellerFeeBasisPoints
       );

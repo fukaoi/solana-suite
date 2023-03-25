@@ -1,8 +1,7 @@
 import { Result, Secret } from '@solana-suite/shared';
-import { _InputNftMetadata, StorageMetadata, StorageType } from '@solana-suite/shared-metaplex';
-import { MetaplexFileContent } from '@metaplex-foundation/js';
+import { StorageMetadata, StorageType, InputNftMetadata, FileContent } from '@solana-suite/shared-metaplex';
 export declare namespace Storage {
-    const toConvertNftStorageMetadata: (input: _InputNftMetadata, sellerFeeBasisPoints: number) => StorageMetadata;
-    const uploadContent: (filePath: MetaplexFileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
-    const uploadMetaContent: (input: StorageMetadata, filePath: MetaplexFileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const toConvertNftStorageMetadata: (input: InputNftMetadata, sellerFeeBasisPoints: number) => StorageMetadata;
+    const uploadContent: (filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const uploadMetaContent: (input: StorageMetadata, filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
 }

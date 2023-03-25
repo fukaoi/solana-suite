@@ -1,19 +1,17 @@
 import { Result, Secret } from '@solana-suite/shared';
 import {
-  _InputNftMetadata,
   StorageMetadata,
   StorageType,
+  InputNftMetadata,
+  FileContent,
 } from '@solana-suite/shared-metaplex';
-
-//todo: replaced
-import { MetaplexFileContent } from '@metaplex-foundation/js';
 
 import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
 
 export namespace Storage {
   export const toConvertNftStorageMetadata = (
-    input: _InputNftMetadata,
+    input: InputNftMetadata,
     sellerFeeBasisPoints: number
   ): StorageMetadata => {
     const data = {
@@ -31,7 +29,7 @@ export namespace Storage {
   };
 
   export const uploadContent = async (
-    filePath: MetaplexFileContent,
+    filePath: FileContent,
     storageType: StorageType,
     feePayer?: Secret
   ): Promise<Result<string, Error>> => {
@@ -49,7 +47,7 @@ export namespace Storage {
 
   export const uploadMetaContent = async (
     input: StorageMetadata,
-    filePath: MetaplexFileContent,
+    filePath: FileContent,
     storageType: StorageType,
     feePayer?: Secret
   ): Promise<Result<string, Error>> => {
@@ -75,7 +73,6 @@ export namespace Storage {
       ).unwrap(
         async (ok: string) => {
           input.image = ok;
-          console.log('#input.image: ', input);
           return await NftStorage.uploadMetadata(input);
         },
         (err: Error) => {
@@ -86,7 +83,6 @@ export namespace Storage {
       throw Error('No match storageType');
     }
 
-    console.log('#storage: ', storage);
     if (!storage) {
       throw Error('Empty storage object');
     }

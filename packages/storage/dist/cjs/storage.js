@@ -58,7 +58,6 @@ var Storage;
         else if (storageType === 'nftStorage') {
             storage = yield (yield nft_storage_1.NftStorage.uploadContent(filePath)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 input.image = ok;
-                console.log('#input.image: ', input);
                 return yield nft_storage_1.NftStorage.uploadMetadata(input);
             }), (err) => {
                 throw err;
@@ -67,7 +66,6 @@ var Storage;
         else {
             throw Error('No match storageType');
         }
-        console.log('#storage: ', storage);
         if (!storage) {
             throw Error('Empty storage object');
         }
