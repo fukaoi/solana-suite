@@ -4,7 +4,7 @@ import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { InputCreators, ValidatorError } from '../../../shared-metaplex/';
-import { KeypairAccount, MintInstruction } from '../../../shared';
+import { KeypairAccount } from '../../../shared';
 import { Pubkey } from '../../../shared/src';
 
 let source: KeypairAccount;
@@ -58,7 +58,6 @@ describe('Metaplex', () => {
       (ng: Error) => assert.fail(ng.message)
     );
   });
-
 
   it('[Nft Storage] mint nft with many optional datas', async () => {
     const asset = RandomAsset.get();

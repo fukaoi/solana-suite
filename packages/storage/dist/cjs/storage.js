@@ -42,9 +42,9 @@ var Storage;
             throw Error('Not found storageType');
         }
     });
-    Storage.uploadMetaContent = (input, filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Storage.uploadMetaContent = (input, filePath, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let storage;
-        if (input.storageType === 'arweave') {
+        if (storageType === 'arweave') {
             if (!feePayer) {
                 throw Error('Arweave needs to have feepayer');
             }
@@ -55,14 +55,19 @@ var Storage;
                 throw err;
             });
         }
-        else if (input.storageType === 'nftStorage') {
+        else if (storageType === 'nftStorage') {
             storage = yield (yield nft_storage_1.NftStorage.uploadContent(filePath)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 input.image = ok;
+                console.log('#input.image: ', input);
                 return yield nft_storage_1.NftStorage.uploadMetadata(input);
             }), (err) => {
                 throw err;
             });
         }
+        else {
+            throw Error('No match storageType');
+        }
+        console.log('#storage: ', storage);
         if (!storage) {
             throw Error('Empty storage object');
         }

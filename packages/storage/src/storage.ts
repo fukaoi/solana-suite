@@ -50,10 +50,11 @@ export namespace Storage {
   export const uploadMetaContent = async (
     input: NftStorageMetadata,
     filePath: MetaplexFileContent,
+    storageType: StorageType,
     feePayer?: Secret
   ): Promise<Result<string, Error>> => {
     let storage;
-    if (input.storageType === 'arweave') {
+    if (storageType === 'arweave') {
       if (!feePayer) {
         throw Error('Arweave needs to have feepayer');
       }
@@ -68,20 +69,24 @@ export namespace Storage {
           throw err;
         }
       );
-    } else if (input.storageType === 'nftStorage') {
+    } else if (storageType === 'nftStorage') {
       storage = await (
         await NftStorage.uploadContent(filePath)
       ).unwrap(
         async (ok: string) => {
           input.image = ok;
+          console.log('#input.image: ', input);
           return await NftStorage.uploadMetadata(input);
         },
         (err: Error) => {
           throw err;
         }
       );
+    } else {
+      throw Error('No match storageType');
     }
 
+    console.log('#storage: ', storage);
     if (!storage) {
       throw Error('Empty storage object');
     }

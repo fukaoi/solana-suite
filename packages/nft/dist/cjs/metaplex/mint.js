@@ -97,12 +97,17 @@ var Metaplex;
                 properties });
             const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(overwrited.royalty);
             const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(overwrited, sellerFeeBasisPoints);
-            const uri = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, overwrited.filePath, payer);
-            (0, shared_1.debugLog)('# upload content url: ', uri);
+            const uploaded = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, overwrited.filePath, overwrited.storageType, payer);
+            if (uploaded.isErr) {
+                throw uploaded;
+            }
+            const uri = uploaded.value;
+            const datav2 = shared_metaplex_1.MetaplexMetadata.toConvertDataV2(overwrited, uri, sellerFeeBasisPoints);
+            (0, shared_1.debugLog)('# upload content url: ', uploaded);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-            // debugLog('# reducedMetadata: ', reducedMetadata);
+            (0, shared_1.debugLog)('# datav2: ', datav2);
             const mint = shared_1.KeypairAccount.create();
-            const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), input, payer.toPublicKey(), input.isMutable || true);
+            const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, payer.toPublicKey(), input.isMutable || true);
             return new shared_1.MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer.toKeypair(), mint.pubkey);
         }));
     });

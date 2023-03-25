@@ -56,7 +56,7 @@ export namespace SplToken {
     const metadataPda = Bundlr.make().nfts().pdas().metadata({ mint: mint }); //todo: replaced getMetadataPda()
     const tokenAssociated = await getAssociatedTokenAddress(mint, owner);
 
-    const inst = SystemProgram.createAccount({
+    const inst1 = SystemProgram.createAccount({
       fromPubkey: feePayer,
       newAccountPubkey: mint,
       space: MINT_SIZE,
@@ -102,7 +102,7 @@ export namespace SplToken {
         },
       }
     );
-    return [inst, inst2, inst3, inst4, inst5];
+    return [inst1, inst2, inst3, inst4, inst5];
   };
 
   // export const mint = async (

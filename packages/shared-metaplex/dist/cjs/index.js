@@ -16,6 +16,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./collections"), exports);
 __exportStar(require("./creators"), exports);
+__exportStar(require("./metaplex-metadata"), exports);
 __exportStar(require("./pda"), exports);
 __exportStar(require("./properties"), exports);
 __exportStar(require("./royalty"), exports);

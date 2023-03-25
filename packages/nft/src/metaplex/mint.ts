@@ -1,10 +1,18 @@
-import { TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
+import {
+  TransactionInstruction,
+  PublicKey,
+  Keypair,
+  SystemProgram,
+} from '@solana/web3.js';
 
 import {
   createAssociatedTokenAccountInstruction,
   createInitializeMintInstruction,
   createMintToCheckedInstruction,
   getAssociatedTokenAddress,
+  getMinimumBalanceForRentExemptMint,
+  MINT_SIZE,
+  TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import {
   Result,
@@ -19,15 +27,16 @@ import {
 import { Storage } from '@solana-suite/storage';
 
 import {
-  Validator,
-  InputNftMetadata,
   _InputNftMetadata,
   _MetaplexNftMetaData,
+  Validator,
+  InputNftMetadata,
   Creators,
   Collections,
   Properties,
   Pda,
   Royalty,
+  MetaplexMetadata,
 } from '@solana-suite/shared-metaplex';
 
 import {
@@ -35,6 +44,7 @@ import {
   createCreateMasterEditionV3Instruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
+import { Node } from '@solana-suite/shared';
 export namespace Metaplex {
   export const createMintInstructions = async (
     mint: PublicKey,
@@ -47,18 +57,28 @@ export namespace Metaplex {
     let tokenMetadataPubkey = Pda.getMetadata(mint);
     let masterEditionPubkey = Pda.getMasterEdition(mint);
 
-    const inst1 = createInitializeMintInstruction(mint, 0, owner, owner);
+    const connection = Node.getConnection();
 
-    const inst2 = createAssociatedTokenAccountInstruction(
+    const inst1 = SystemProgram.createAccount({
+      fromPubkey: owner,
+      newAccountPubkey: mint,
+      lamports: await getMinimumBalanceForRentExemptMint(connection),
+      space: MINT_SIZE,
+      programId: TOKEN_PROGRAM_ID,
+    });
+
+    const inst2 = createInitializeMintInstruction(mint, 0, owner, owner);
+
+    const inst3 = createAssociatedTokenAccountInstruction(
       feePayer,
       ata,
       owner,
       mint
     );
 
-    const inst3 = createMintToCheckedInstruction(mint, ata, feePayer, 1, 0);
+    const inst4 = createMintToCheckedInstruction(mint, ata, feePayer, 1, 0);
 
-    const inst4 = createCreateMetadataAccountV2Instruction(
+    const inst5 = createCreateMetadataAccountV2Instruction(
       {
         metadata: tokenMetadataPubkey,
         mint,
@@ -74,7 +94,7 @@ export namespace Metaplex {
       }
     );
 
-    const inst5 = createCreateMasterEditionV3Instruction(
+    const inst6 = createCreateMasterEditionV3Instruction(
       {
         edition: masterEditionPubkey,
         mint,
@@ -89,7 +109,7 @@ export namespace Metaplex {
         },
       }
     );
-    return [inst1, inst2, inst3, inst4, inst5];
+    return [inst1, inst2, inst3, inst4, inst5, inst6];
   };
 
   /**
@@ -122,7 +142,7 @@ export namespace Metaplex {
     owner: Pubkey,
     signer: Secret,
     input: InputNftMetadata,
-    feePayer?: Pubkey
+    feePayer?: Secret
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
@@ -161,21 +181,34 @@ export namespace Metaplex {
         overwrited,
         sellerFeeBasisPoints
       );
-      const uri = await Storage.uploadMetaContent(
+      const uploaded = await Storage.uploadMetaContent(
         nftStorageMetadata,
         overwrited.filePath,
+        overwrited.storageType,
         payer
       );
 
-      debugLog('# upload content url: ', uri);
+      if (uploaded.isErr) {
+        throw uploaded;
+      }
+      const uri = uploaded.value;
+
+      const datav2 = MetaplexMetadata.toConvertDataV2(
+        overwrited,
+        uri,
+        sellerFeeBasisPoints
+      );
+
+      debugLog('# upload content url: ', uploaded);
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
+      debugLog('# datav2: ', datav2);
 
       const mint = KeypairAccount.create();
       const insts = await createMintInstructions(
         mint.toPublicKey(),
         owner.toPublicKey(),
-        input as any,
-        payer.toPublicKey(),
+        datav2,
+        payer.toKeypair().publicKey,
         input.isMutable || true
       );
       return new MintInstruction(

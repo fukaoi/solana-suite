@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, getAssociatedTokenAddress, } from '@solana/spl-token';
 import { debugLog, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
-import { Validator, Creators, Collections, Properties, Pda, Royalty, } from '@solana-suite/shared-metaplex';
+import { Validator, Creators, Collections, Properties, Pda, Royalty, MetaplexMetadata, } from '@solana-suite/shared-metaplex';
 import { createCreateMetadataAccountV2Instruction, createCreateMasterEditionV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 export var Metaplex;
 (function (Metaplex) {
@@ -94,12 +94,17 @@ export var Metaplex;
                 properties });
             const sellerFeeBasisPoints = Royalty.convert(overwrited.royalty);
             const nftStorageMetadata = Storage.toConvertNftStorageMetadata(overwrited, sellerFeeBasisPoints);
-            const uri = yield Storage.uploadMetaContent(nftStorageMetadata, overwrited.filePath, payer);
-            debugLog('# upload content url: ', uri);
+            const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, overwrited.filePath, overwrited.storageType, payer);
+            if (uploaded.isErr) {
+                throw uploaded;
+            }
+            const uri = uploaded.value;
+            const datav2 = MetaplexMetadata.toConvertDataV2(overwrited, uri, sellerFeeBasisPoints);
+            debugLog('# upload content url: ', uploaded);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-            // debugLog('# reducedMetadata: ', reducedMetadata);
+            debugLog('# datav2: ', datav2);
             const mint = KeypairAccount.create();
-            const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), input, payer.toPublicKey(), input.isMutable || true);
+            const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, payer.toPublicKey(), input.isMutable || true);
             return new MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer.toKeypair(), mint.pubkey);
         }));
     });

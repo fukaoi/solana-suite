@@ -40,8 +40,9 @@ export type InputNftMetadata = {
     name: string;
     symbol: string;
     royalty: number;
-    filePath: MetaplexFileContent;
     storageType: StorageType;
+    filePath: MetaplexFileContent;
+    uri?: string;
     description?: string;
     external_url?: string;
     attributes?: MetadataAttribute[];
@@ -89,7 +90,7 @@ export type _MetadataProperties = {
     }[];
     [key: string]: unknown;
 };
-export type _InputNftMetadata = Omit<InputNftMetadata, 'creators' | 'collection' | 'collectionAuthority' | 'properties'> & {
+export type _InputNftMetadata = Omit<InputNftMetadata, 'creators' | 'collection' | 'properties'> & {
     creators?: CreatorInput[];
     collection?: _InputCollection;
     properties?: _MetadataProperties;

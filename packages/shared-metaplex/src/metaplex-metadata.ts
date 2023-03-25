@@ -12,9 +12,9 @@ export module MetaplexMetadata {
       symbol: input.symbol,
       uri,
       sellerFeeBasisPoints,
-      creators: input.creators,
-      collection: input.collection,
-      uses: input.uses,
+      creators: null,
+      collection: null,
+      uses: null,
     };
   };
 }
