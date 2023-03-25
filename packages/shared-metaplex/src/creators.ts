@@ -1,17 +1,15 @@
 import { CreatorInput, Creator } from '@metaplex-foundation/js';
-import { InputCreators, OutputCreators } from './types';
+import { ICreators, OCreators } from './types';
 
 export namespace Creators {
   export const toInputConvert = (
-    input: InputCreators[] | undefined
+    input: ICreators[] | undefined
   ): CreatorInput[] => {
     if (!input) {
       return [];
     }
     return input.map((data) => {
-      const authority = data.authority
-        ? (data.authority ).toKeypair()
-        : undefined;
+      const authority = data.authority ? data.authority.toKeypair() : undefined;
       const modify: CreatorInput = {
         address: data.address.toPublicKey(),
         share: data.share,
@@ -21,9 +19,9 @@ export namespace Creators {
     });
   };
 
-  export const toOutputConvert = (output: Creator[]): OutputCreators[] => {
+  export const toOutputConvert = (output: Creator[]): OCreators[] => {
     return output.map((data) => {
-      const modify: OutputCreators = {
+      const modify: OCreators = {
         address: data.address.toString(),
         share: data.share,
         verified: data.verified,

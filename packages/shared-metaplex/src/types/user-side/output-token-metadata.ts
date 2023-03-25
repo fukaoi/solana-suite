@@ -7,7 +7,7 @@ export type OutputTokenMetadata = {
   symbol: string;
   uri: string;
   sellerFeeBasisPoints: number;
-  attributes?: IAttribute[];
-  creators?: ICreators[];
+  attributes?: IAttribute[]; // todo: researdh
+  creators?: ICreators[];    // todo: research
   uses?: COption<Uses>;
 };

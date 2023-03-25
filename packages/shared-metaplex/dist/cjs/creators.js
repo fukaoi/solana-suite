@@ -8,9 +8,7 @@ var Creators;
             return [];
         }
         return input.map((data) => {
-            const authority = data.authority
-                ? (data.authority).toKeypair()
-                : undefined;
+            const authority = data.authority ? data.authority.toKeypair() : undefined;
             const modify = {
                 address: data.address.toPublicKey(),
                 share: data.share,

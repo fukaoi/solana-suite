@@ -1,10 +1,10 @@
 import { MetaplexFileContent } from '@metaplex-foundation/js';
 import { overwriteObject, Secret, Result } from '@solana-suite/shared';
-import { MetadataProperties, StorageType, _MetadataProperties } from './types';
+import { IProperties, StorageType } from './types';
 
 export namespace Properties {
   export const toInputConvert = async (
-    input: MetadataProperties | undefined,
+    input: IProperties | undefined,
     storageFunc: (
       data: MetaplexFileContent,
       storageType: StorageType,
@@ -12,7 +12,7 @@ export namespace Properties {
     ) => Promise<Result<string, Error>>,
     storageType: StorageType,
     feePayer?: Secret
-  ): Promise<_MetadataProperties> => {
+  ): Promise<IProperties> => {
     if (!input || !input.files) {
       return {};
     }
@@ -34,6 +34,6 @@ export namespace Properties {
         ]);
       })
     );
-    return { ...input, files } as _MetadataProperties;
+    return { ...input, files } as IProperties;
   };
 }

@@ -3,7 +3,7 @@ import { isBrowser, Result, Try } from '@solana-suite/shared';
 import { Royalty } from './royalty';
 import {
   InputNftMetadata,
-  _MetaplexNftMetaData,
+  MetaplexDataV2,
   StorageMetadata,
 } from './types/';
 import { Limit, Details } from './types/validator';
@@ -199,7 +199,7 @@ export namespace Validator {
     'name' | 'symbol' | 'royalty' | 'filePath'
   >;
   type PickMetaplex = Pick<
-    _MetaplexNftMetaData,
+    MetaplexDataV2,
     'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'
   >;
 

@@ -1,18 +1,17 @@
 import {
-  InputCollection,
-  OutputCollection,
-  _InputCollection,
-  _OutputCollection,
+  ICollection,
+  OCollection,
+  Collection,
 } from './types';
 
 export namespace Collections {
   export const toInputConvert = (
-    input: InputCollection | undefined
-  ): _InputCollection => (!input ? null : input.toPublicKey());
+    input: ICollection | undefined
+  ): any => (!input ? null : input.toPublicKey());
 
   export const toOutputConvert = (
-    output: _OutputCollection | undefined
-  ): OutputCollection => {
+    output: OCollection | undefined
+  ): OCollection => {
     return !output
       ? null
       : {

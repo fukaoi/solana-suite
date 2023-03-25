@@ -1,5 +1,5 @@
-import { InputCollection, OutputCollection, _InputCollection, _OutputCollection } from './types';
+import { ICollection, OCollection } from './types';
 export declare namespace Collections {
-    const toInputConvert: (input: InputCollection | undefined) => _InputCollection;
-    const toOutputConvert: (output: _OutputCollection | undefined) => OutputCollection;
+    const toInputConvert: (input: ICollection | undefined) => any;
+    const toOutputConvert: (output: OCollection | undefined) => OCollection;
 }

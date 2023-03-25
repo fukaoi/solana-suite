@@ -1,6 +1,6 @@
 import { CreatorInput, Creator } from '@metaplex-foundation/js';
-import { InputCreators, OutputCreators } from './types';
+import { ICreators, OCreators } from './types';
 export declare namespace Creators {
-    const toInputConvert: (input: InputCreators[] | undefined) => CreatorInput[];
-    const toOutputConvert: (output: Creator[]) => OutputCreators[];
+    const toInputConvert: (input: ICreators[] | undefined) => CreatorInput[];
+    const toOutputConvert: (output: Creator[]) => OCreators[];
 }
