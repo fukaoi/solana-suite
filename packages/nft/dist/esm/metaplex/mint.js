@@ -7,21 +7,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, getAssociatedTokenAddress, } from '@solana/spl-token';
+import { SystemProgram, } from '@solana/web3.js';
+import { createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, getAssociatedTokenAddress, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
 import { debugLog, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { Validator, Creators, Collections, Properties, Pda, Royalty, MetaplexMetadata, } from '@solana-suite/shared-metaplex';
 import { createCreateMetadataAccountV2Instruction, createCreateMasterEditionV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
+import { Node } from '@solana-suite/shared';
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.createMintInstructions = (mint, owner, nftMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
         let ata = yield getAssociatedTokenAddress(mint, owner);
         let tokenMetadataPubkey = Pda.getMetadata(mint);
         let masterEditionPubkey = Pda.getMasterEdition(mint);
-        const inst1 = createInitializeMintInstruction(mint, 0, owner, owner);
-        const inst2 = createAssociatedTokenAccountInstruction(feePayer, ata, owner, mint);
-        const inst3 = createMintToCheckedInstruction(mint, ata, feePayer, 1, 0);
-        const inst4 = createCreateMetadataAccountV2Instruction({
+        const connection = Node.getConnection();
+        const inst1 = SystemProgram.createAccount({
+            fromPubkey: owner,
+            newAccountPubkey: mint,
+            lamports: yield getMinimumBalanceForRentExemptMint(connection),
+            space: MINT_SIZE,
+            programId: TOKEN_PROGRAM_ID,
+        });
+        const inst2 = createInitializeMintInstruction(mint, 0, owner, owner);
+        const inst3 = createAssociatedTokenAccountInstruction(feePayer, ata, owner, mint);
+        const inst4 = createMintToCheckedInstruction(mint, ata, feePayer, 1, 0);
+        const inst5 = createCreateMetadataAccountV2Instruction({
             metadata: tokenMetadataPubkey,
             mint,
             mintAuthority: owner,
@@ -33,7 +43,7 @@ export var Metaplex;
                 isMutable,
             },
         });
-        const inst5 = createCreateMasterEditionV3Instruction({
+        const inst6 = createCreateMasterEditionV3Instruction({
             edition: masterEditionPubkey,
             mint,
             updateAuthority: owner,
@@ -45,7 +55,7 @@ export var Metaplex;
                 maxSupply: 0,
             },
         });
-        return [inst1, inst2, inst3, inst4, inst5];
+        return [inst1, inst2, inst3, inst4, inst5, inst6];
     });
     /**
      * Upload content and NFT mint
@@ -104,7 +114,7 @@ export var Metaplex;
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             debugLog('# datav2: ', datav2);
             const mint = KeypairAccount.create();
-            const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, payer.toPublicKey(), input.isMutable || true);
+            const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, payer.toKeypair().publicKey, input.isMutable || true);
             return new MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer.toKeypair(), mint.pubkey);
         }));
     });

@@ -83,7 +83,7 @@ var NftStorage;
     /**
      * Upload content
      *
-     * @param {NftStorageMetadata} metadata
+     * @param {StorageMetadata} metadata
      * {
      *   name?: {string}                      // nft content name
      *   symbol?: {string}                    // nft ticker symbol

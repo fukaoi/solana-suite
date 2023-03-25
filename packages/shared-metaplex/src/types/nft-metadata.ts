@@ -8,7 +8,7 @@ import {
 } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import { Pubkey, Secret } from '@solana-suite/shared';
-import { StorageType } from './nft-storage-metadata';
+import { StorageType } from './storage-metadata';
 
 type noNeedOptional =
   | 'payer'
@@ -33,12 +33,15 @@ export type OutputCreators = {
 // Collection
 export type InputCollection = Option<Pubkey>;
 export type OutputCollection = Option<{ address: Pubkey; verified: boolean }>;
+
+// Attributes
 export type MetadataAttribute = {
   trait_type?: string;
   value?: string;
   [key: string]: unknown;
 };
 
+// Properties
 export type MetadataProperties = {
   creators?: {
     address?: string;

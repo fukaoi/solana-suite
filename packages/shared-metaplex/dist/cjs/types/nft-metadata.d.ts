@@ -1,7 +1,7 @@
 import { CreateNftInput, MetaplexFileContent, BigNumber, Option, CreatorInput, PublicKey } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import { Pubkey, Secret } from '@solana-suite/shared';
-import { StorageType } from './nft-storage-metadata';
+import { StorageType } from './storage-metadata';
 type noNeedOptional = 'payer' | 'owner' | 'associatedTokenProgram' | 'tokenProgram' | 'confirmOptions';
 export type InputCreators = {
     readonly address: Pubkey;

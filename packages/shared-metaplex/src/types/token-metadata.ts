@@ -10,7 +10,7 @@ import {
   OutputCollection,
   _OutputCollection,
 } from './nft-metadata';
-import { StorageType } from './nft-storage-metadata';
+import { StorageType } from './storage-metadata';
 
 export type Collection = OutputCollection;
 export type _Collection = _OutputCollection;

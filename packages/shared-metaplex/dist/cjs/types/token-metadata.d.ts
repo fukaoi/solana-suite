@@ -1,7 +1,7 @@
 import { MetaplexFileContent, Option, CreatorInput } from '@metaplex-foundation/js';
 import { Uses } from '@metaplex-foundation/mpl-token-metadata';
 import { MetadataAttribute, InputCreators, OutputCollection, _OutputCollection } from './nft-metadata';
-import { StorageType } from './nft-storage-metadata';
+import { StorageType } from './storage-metadata';
 export type Collection = OutputCollection;
 export type _Collection = _OutputCollection;
 export type InputTokenMetadata = {

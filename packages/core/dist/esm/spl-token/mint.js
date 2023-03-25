@@ -20,7 +20,7 @@ export var SplToken;
         const lamports = yield getMinimumBalanceForRentExemptMint(connection);
         const metadataPda = Bundlr.make().nfts().pdas().metadata({ mint: mint }); //todo: replaced getMetadataPda()
         const tokenAssociated = yield getAssociatedTokenAddress(mint, owner);
-        const inst = SystemProgram.createAccount({
+        const inst1 = SystemProgram.createAccount({
             fromPubkey: feePayer,
             newAccountPubkey: mint,
             space: MINT_SIZE,
@@ -42,7 +42,7 @@ export var SplToken;
                 isMutable,
             },
         });
-        return [inst, inst2, inst3, inst4, inst5];
+        return [inst1, inst2, inst3, inst4, inst5];
     });
     // export const mint = async (
     //   owner: Pubkey,

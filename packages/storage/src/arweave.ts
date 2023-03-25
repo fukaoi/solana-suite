@@ -13,7 +13,7 @@ import {
   Try,
   Secret,
 } from '@solana-suite/shared';
-import { NftStorageMetadata } from '@solana-suite/shared-metaplex';
+import { StorageMetadata } from '@solana-suite/shared-metaplex';
 import { Bundlr } from './bundlr';
 
 export interface MetaplexFileOptions {
@@ -90,7 +90,7 @@ export namespace Arweave {
   };
 
   export const uploadMetadata = async (
-    metadata: NftStorageMetadata,
+    metadata: StorageMetadata,
     feePayer: Secret
   ): Promise<Result<string, Error>> => {
     return Try(async () => {

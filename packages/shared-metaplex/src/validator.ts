@@ -4,7 +4,7 @@ import { Royalty } from './royalty';
 import {
   InputNftMetadata,
   _MetaplexNftMetaData,
-  NftStorageMetadata,
+  StorageMetadata,
 } from './types/';
 import { Limit, Details } from './types/validator';
 
@@ -191,7 +191,7 @@ export namespace Validator {
   };
 
   type PickNftStorage = Pick<
-    NftStorageMetadata,
+    StorageMetadata,
     'name' | 'symbol' | 'image' | 'seller_fee_basis_points'
   >;
   type PickNftStorageMetaplex = Pick<

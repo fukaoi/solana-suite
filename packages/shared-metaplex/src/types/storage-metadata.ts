@@ -10,7 +10,7 @@ export type StorageArweaveMetadata = JsonMetadata & {
   storageType?: 'arweave';
 };
 
-export type NftStorageMetadata =
+export type StorageMetadata =
   | StorageArweaveMetadata
   | (StorageNftStorageMetadata & {
       name: string;

@@ -1,7 +1,7 @@
 import { Result, Secret } from '@solana-suite/shared';
 import {
   _InputNftMetadata,
-  NftStorageMetadata,
+  StorageMetadata,
   StorageType,
 } from '@solana-suite/shared-metaplex';
 
@@ -15,7 +15,7 @@ export namespace Storage {
   export const toConvertNftStorageMetadata = (
     input: _InputNftMetadata,
     sellerFeeBasisPoints: number
-  ): NftStorageMetadata => {
+  ): StorageMetadata => {
     const data = {
       name: input.name,
       symbol: input.symbol,
@@ -48,7 +48,7 @@ export namespace Storage {
   };
 
   export const uploadMetaContent = async (
-    input: NftStorageMetadata,
+    input: StorageMetadata,
     filePath: MetaplexFileContent,
     storageType: StorageType,
     feePayer?: Secret

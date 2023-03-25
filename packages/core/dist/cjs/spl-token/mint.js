@@ -23,7 +23,7 @@ var SplToken;
         const lamports = yield (0, spl_token_1.getMinimumBalanceForRentExemptMint)(connection);
         const metadataPda = storage_1.Bundlr.make().nfts().pdas().metadata({ mint: mint }); //todo: replaced getMetadataPda()
         const tokenAssociated = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, owner);
-        const inst = web3_js_1.SystemProgram.createAccount({
+        const inst1 = web3_js_1.SystemProgram.createAccount({
             fromPubkey: feePayer,
             newAccountPubkey: mint,
             space: spl_token_1.MINT_SIZE,
@@ -45,7 +45,7 @@ var SplToken;
                 isMutable,
             },
         });
-        return [inst, inst2, inst3, inst4, inst5];
+        return [inst1, inst2, inst3, inst4, inst5];
     });
     // export const mint = async (
     //   owner: Pubkey,
