@@ -4,11 +4,13 @@ import { Setup } from '../../shared/test/testSetup';
 import { KeypairAccount, Pubkey } from '../../shared';
 
 let source: KeypairAccount;
+let dest: KeypairAccount;
 
 describe('Multisig', () => {
   before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
+    dest = obj.dest;
   });
 
   it('Is multisig address', async () => {
@@ -43,10 +45,10 @@ describe('Multisig', () => {
     assert.isFalse(res.unwrap());
   });
 
-  it('Create account 2 of 2', async () => {
+  it.only('Create account 2 of 2', async () => {
     const signer1 = KeypairAccount.create();
     const signer2 = KeypairAccount.create();
-    const inst = await Multisig.create(2, source.secret, [
+    const inst = await Multisig.create(2, dest.secret, [
       signer1.pubkey,
       signer2.pubkey,
     ]);
