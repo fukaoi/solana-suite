@@ -12,7 +12,7 @@ import { Node, Try } from '../';
 import { MAX_RETRIES } from './define';
 export class Instruction {
     constructor(instructions, signers, feePayer, data) {
-        this.submit = (feePayer) => __awaiter(this, void 0, void 0, function* () {
+        this.submit = () => __awaiter(this, void 0, void 0, function* () {
             return Try(() => __awaiter(this, void 0, void 0, function* () {
                 if (!(this instanceof Instruction)) {
                     throw Error('only Instruction object that can use this');
@@ -23,13 +23,9 @@ export class Instruction {
                 // transaction.blockhash = blockhashObj.blockhash;
                 transaction.recentBlockhash = blockhashObj.blockhash;
                 let finalSigners = this.signers;
-                if (feePayer) {
-                    // if (this.feePayer) {
-                    // transaction.feePayer = this.feePayer.publicKey;
-                    // finalSigners = [this.feePayer, ...this.signers];
-                    transaction.feePayer = feePayer === null || feePayer === void 0 ? void 0 : feePayer.toKeypair().publicKey;
-                    transaction.partialSign(feePayer.toKeypair());
-                    finalSigners = [...this.signers];
+                if (this.feePayer) {
+                    transaction.feePayer = this.feePayer.publicKey;
+                    finalSigners = [this.feePayer, ...this.signers];
                 }
                 this.instructions.forEach((inst) => transaction.add(inst));
                 const options = {

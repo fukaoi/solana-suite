@@ -69,14 +69,14 @@ abstract class AbstractResult<T, E extends Error> {
   }
 
   /// submit (alias Instruction.submit) ////
-  async submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>> {
+  async submit(): Promise<Result<TransactionSignature, Error>> {
     try {
       const instruction = this.unwrap() as unknown;
       const castedInst = instruction as Instruction;
       // why return false?
       // if (instruction instanceof Instruction) {
       if (castedInst.instructions && castedInst.signers) {
-        return await castedInst.submit(feePayer);
+        return await castedInst.submit();
       }
       return Result.err(Error('Only Instruction object'));
     } catch (err) {

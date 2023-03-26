@@ -1,10 +1,10 @@
 import { TransactionSignature, Keypair, TransactionInstruction } from '@solana/web3.js';
-import { Result, Secret } from '../';
+import { Result } from '../';
 export declare class Instruction {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
     data?: unknown;
     constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
-    submit: (feePayer?: Secret) => Promise<Result<TransactionSignature, Error>>;
+    submit: () => Promise<Result<TransactionSignature, Error>>;
 }

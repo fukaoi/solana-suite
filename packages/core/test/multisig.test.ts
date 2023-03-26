@@ -45,7 +45,7 @@ describe('Multisig', () => {
     assert.isFalse(res.unwrap());
   });
 
-  it.only('Create account 2 of 2', async () => {
+  it('Create account 2 of 2', async () => {
     const signer1 = KeypairAccount.create();
     const signer2 = KeypairAccount.create();
     const inst = await Multisig.create(2, dest.secret, [
