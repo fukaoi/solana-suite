@@ -28,25 +28,33 @@ export namespace _Common {
     [key: string]: unknown;
   };
 
-  export type Collection = {
-    name?: string;
-    family?: string;
-    [key: string]: unknown;
-  };
-
   export enum UseMethod {
     Burn = 0,
     Multiple = 1,
     Single = 2,
   }
+  
+  export type Collection = {
+    name?: string;
+    family?: string;
+    [key: string]: unknown;
+  };
 }
 
 // To Solana, Decentrized storage
 export namespace Infra {
-  export type Collection = Option<{
-    verified: boolean;
-    key: PublicKey;
-  }>;
+  export namespace Input {
+    export type Collection = Option<{
+      verified: boolean;
+      key: PublicKey;
+    }>;
+  }
+  export namespace Output {
+    export type Collection = Option<{
+      address: PublicKey;
+      verified: boolean;
+    }>;
+  }
 
   export type Properties = _Common.Properties;
 
@@ -65,7 +73,13 @@ export namespace Infra {
 
 // To User application, Web service
 export namespace User {
-  export type Collection = Option<Pubkey>;
+  export namespace Input {
+    export type Collection = Option<Pubkey>;
+  }
+
+  export namespace Output {
+    export type Collection = Option<{ address: Pubkey; verified: boolean }>;
+  }
 
   export type Properties = _Common.Properties;
 

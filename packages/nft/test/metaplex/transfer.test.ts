@@ -1,6 +1,5 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { Airdrop } from '../../../core';
 import { KeypairAccount, Pubkey } from '../../../shared';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
@@ -22,13 +21,13 @@ describe('Metaplex', () => {
     const creator1 = {
       address: source.pubkey,
       share: 70,
-      authority: source.secret,
+      verified: true,
     };
 
     const creator2 = {
       address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk',
       share: 30,
-      authority: '',
+      verified: false,
     };
 
     const mint = await Metaplex.mint(source.pubkey, source.secret, {
@@ -63,48 +62,6 @@ describe('Metaplex', () => {
       (err: Error) => {
         assert.fail(err.message);
       }
-    );
-  });
-
-  // every call requestAirdrop(), raise internal error
-  it.skip('[Arweave] mint nft with feePayer', async () => {
-    const feePayer = KeypairAccount.create();
-    await Airdrop.request(feePayer.pubkey);
-    const asset = RandomAsset.get();
-
-    const creator1 = {
-      address: source.pubkey,
-      share: 70,
-      authority: source.secret,
-    };
-
-    const creator2 = {
-      address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk',
-      share: 30,
-      authority: '',
-    };
-
-    const res = await Metaplex.mint(
-      source.pubkey,
-      source.secret,
-      {
-        filePath: asset.filePath as string,
-        storageType: 'arweave',
-        name: asset.name!,
-        symbol: asset.symbol!,
-        royalty: 50,
-        creators: [creator1, creator2],
-        isMutable: true,
-      },
-      feePayer.secret
-    );
-
-    (await res.submit()).match(
-      (ok: string) => {
-        console.log('# mint:', res.unwrap().data);
-        console.log('# sig:', ok);
-      },
-      (ng: Error) => assert.fail(ng.message)
     );
   });
 });

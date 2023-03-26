@@ -13,7 +13,13 @@ var Collections;
         };
     };
     Collections.toConvertUser = (output) => {
-        return !output ? null : output.toString();
+        if (!output) {
+            return null;
+        }
+        return {
+            address: output.address.toString(),
+            verified: output.verified,
+        };
     };
 })(Collections = exports.Collections || (exports.Collections = {}));
 //# sourceMappingURL=collections.js.map

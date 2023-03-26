@@ -37,7 +37,28 @@ describe('Metaplex', () => {
     );
   });
 
-  it.only('[Nft Storage] mint nft with many optional datas', async () => {
+  it.only('[Nft Storage] mint nft', async () => {
+    const asset = RandomAsset.get();
+    const res = await Metaplex.mint(source.pubkey, source.secret, {
+      filePath: asset.filePath as string,
+      storageType: 'arweave',
+      name: asset.name!,
+      symbol: asset.symbol!,
+      royalty: 50,
+      isMutable: true,
+    });
+
+    assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
+
+    (await res.submit()).match(
+      (ok: string) => {
+        console.log('# mint:', res.unwrap().data);
+        console.log('# sig:', ok);
+      },
+      (ng: Error) => assert.fail(ng.message)
+    );
+  });
+  it('[Nft Storage] mint nft with many optional datas', async () => {
     const asset = RandomAsset.get();
     const creators: User.Creators[] = [];
 

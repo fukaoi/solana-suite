@@ -24,22 +24,30 @@ export declare namespace _Common {
         }[];
         [key: string]: unknown;
     };
-    type Collection = {
-        name?: string;
-        family?: string;
-        [key: string]: unknown;
-    };
     enum UseMethod {
         Burn = 0,
         Multiple = 1,
         Single = 2
     }
+    type Collection = {
+        name?: string;
+        family?: string;
+        [key: string]: unknown;
+    };
 }
 export declare namespace Infra {
-    type Collection = Option<{
-        verified: boolean;
-        key: PublicKey;
-    }>;
+    namespace Input {
+        type Collection = Option<{
+            verified: boolean;
+            key: PublicKey;
+        }>;
+    }
+    namespace Output {
+        type Collection = Option<{
+            address: PublicKey;
+            verified: boolean;
+        }>;
+    }
     type Properties = _Common.Properties;
     type Creators = {
         readonly address: PublicKey;
@@ -53,7 +61,15 @@ export declare namespace Infra {
     };
 }
 export declare namespace User {
-    type Collection = Option<Pubkey>;
+    namespace Input {
+        type Collection = Option<Pubkey>;
+    }
+    namespace Output {
+        type Collection = Option<{
+            address: Pubkey;
+            verified: boolean;
+        }>;
+    }
     type Properties = _Common.Properties;
     type Creators = {
         readonly address: Pubkey;

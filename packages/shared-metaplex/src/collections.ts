@@ -2,8 +2,8 @@ import { User, Infra } from './types';
 
 export namespace Collections {
   export const toConvertInfra = (
-    input: User.Collection | undefined
-  ): Infra.Collection => {
+    input: User.Input.Collection | undefined
+  ): Infra.Input.Collection => {
     if (!input) {
       return null;
     }
@@ -15,8 +15,15 @@ export namespace Collections {
   };
 
   export const toConvertUser = (
-    output: Infra.Collection | undefined
-  ): User.Collection => {
-    return !output ? null : output.toString();
+    output: Infra.Output.Collection | undefined
+  ): User.Output.Collection => {
+    if (!output) {
+      return null;
+    }
+
+    return {
+      address: output.address.toString(),
+      verified: output.verified,
+    };
   };
 }

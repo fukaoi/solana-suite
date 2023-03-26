@@ -17,6 +17,6 @@ export type InputNftMetadata = {
   maxSupply?: bignum;
   creators?: User.Creators[];
   uses?: _Common.Uses;
-  collection?: User.Collection;
+  collection?: User.Input.Collection;
   options?: { [key: string]: unknown };
 };
