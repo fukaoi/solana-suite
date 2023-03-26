@@ -1,14 +1,13 @@
-import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import { Collections } from './collections';
 import { Creators } from './creators';
-import { InputNftMetadata } from './types';
+import { InputNftMetadata, MetaplexDataV2 } from './types';
 
 export module MetaplexMetadata {
   export const toConvertDataV2 = (
     input: InputNftMetadata,
     uri: string,
     sellerFeeBasisPoints: number
-  ): DataV2 => {
+  ): MetaplexDataV2 => {
     return {
       name: input.name,
       symbol: input.symbol,

@@ -3,9 +3,9 @@ import { User, Infra } from './types';
 export namespace Creators {
   export const toConvertInfra = (
     input: User.Creators[] | undefined
-  ): Infra.Creators[] => {
+  ): Infra.Creators[] | null => {
     if (!input) {
-      return [];
+      return null;
     }
     return input.map((data) => {
       const modify = {

@@ -37,7 +37,7 @@ describe('Metaplex', () => {
     );
   });
 
-  it.only('[Nft Storage] mint nft', async () => {
+  it('[Nft Storage] mint nft', async () => {
     const asset = RandomAsset.get();
     const res = await Metaplex.mint(source.pubkey, source.secret, {
       filePath: asset.filePath as string,

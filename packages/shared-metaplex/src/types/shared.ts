@@ -33,7 +33,7 @@ export namespace _Common {
     Multiple = 1,
     Single = 2,
   }
-  
+
   export type Collection = {
     name?: string;
     family?: string;

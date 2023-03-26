@@ -5,7 +5,7 @@ var Creators;
 (function (Creators) {
     Creators.toConvertInfra = (input) => {
         if (!input) {
-            return [];
+            return null;
         }
         return input.map((data) => {
             const modify = {
