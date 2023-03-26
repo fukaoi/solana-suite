@@ -5,7 +5,7 @@ const collections_1 = require("./collections");
 const creators_1 = require("./creators");
 var MetaplexMetadata;
 (function (MetaplexMetadata) {
-    MetaplexMetadata.toConvertDataV2 = (input, uri, sellerFeeBasisPoints) => {
+    MetaplexMetadata.toConvertInfra = (input, uri, sellerFeeBasisPoints) => {
         return {
             name: input.name,
             symbol: input.symbol,

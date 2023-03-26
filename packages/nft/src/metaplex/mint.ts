@@ -179,7 +179,7 @@ export namespace Metaplex {
       }
       const uri = uploaded.value;
 
-      const datav2 = MetaplexMetadata.toConvertDataV2(
+      const datav2 = MetaplexMetadata.toConvertInfra(
         inputInfra,
         uri,
         sellerFeeBasisPoints

@@ -57,12 +57,12 @@ describe('SplToken', () => {
         {
           address: source.pubkey,
           share: 30,
-          authority: source.secret,
+          verified: false,
         },
         {
           address: creator.pubkey,
           share: 70,
-          authority: creator.secret,
+          verified: false,
         },
       ],
     };

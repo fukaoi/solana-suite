@@ -1,10 +1,9 @@
-import { Collections } from './collections';
 import { Creators } from './creators';
-import { InputNftMetadata, MetaplexDataV2 } from './types';
+import { InputTokenMetadata, MetaplexDataV2 } from './types';
 
-export module MetaplexMetadata {
+export module TokenMetadata {
   export const toConvertInfra = (
-    input: InputNftMetadata,
+    input: InputTokenMetadata,
     uri: string,
     sellerFeeBasisPoints: number
   ): MetaplexDataV2 => {
@@ -14,7 +13,7 @@ export module MetaplexMetadata {
       uri,
       sellerFeeBasisPoints,
       creators: Creators.toConvertInfra(input.creators),
-      collection: Collections.toConvertInfra(input.collection),
+      collection: null,
       uses: input.uses || null,
     };
   };

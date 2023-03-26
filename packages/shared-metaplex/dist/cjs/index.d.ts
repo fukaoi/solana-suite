@@ -5,4 +5,5 @@ export * from './pda';
 export * from './properties';
 export * from './royalty';
 export * from './validator';
+export * from './token-metadata';
 export * from './types';

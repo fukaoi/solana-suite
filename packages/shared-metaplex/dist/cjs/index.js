@@ -21,5 +21,6 @@ __exportStar(require("./pda"), exports);
 __exportStar(require("./properties"), exports);
 __exportStar(require("./royalty"), exports);
 __exportStar(require("./validator"), exports);
+__exportStar(require("./token-metadata"), exports);
 __exportStar(require("./types"), exports);
 //# sourceMappingURL=index.js.map
