@@ -1,7 +1,7 @@
 import { Pubkey } from '@solana-suite/shared';
-import { COption, User, _Common } from '../shared';
+import { Option, User, _Common } from '../shared';
 
-export type OCollection = COption<{ address: Pubkey; verified: boolean }>;
+export type OCollection = Option<{ address: Pubkey; verified: boolean }>;
 
 export type OutputNftMetadata = {
   mint: string;
@@ -13,7 +13,7 @@ export type OutputNftMetadata = {
   isMutable: boolean;
   primarySaleHappened: boolean;
   creators: User.Creators[];
-  editionNonce: COption<number>;
+  editionNonce: Option<number>;
   collection: OCollection;
-  uses: COption<_Common.Uses>;
+  uses: Option<_Common.Uses>;
 };

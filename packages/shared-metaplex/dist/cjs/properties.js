@@ -13,7 +13,7 @@ exports.Properties = void 0;
 const shared_1 = require("@solana-suite/shared");
 var Properties;
 (function (Properties) {
-    Properties.toInputConvert = (input, storageFunc, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Properties.toConvertInfra = (input, storageFunc, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
         if (!input || !input.files) {
             return {};
         }

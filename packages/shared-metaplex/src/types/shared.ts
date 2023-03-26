@@ -1,10 +1,12 @@
 import BN from 'bn.js';
 import { Pubkey } from '@solana-suite/shared';
+import { PublicKey } from '@solana/web3.js';
 
-export type COption<T> = T | null;
+export type Option<T> = T | null;
 export type bignum = number | BN;
 export type FileContent = string | Buffer | Uint8Array | ArrayBuffer;
 
+// Common types
 export namespace _Common {
   export type Uses = {
     useMethod: UseMethod;
@@ -32,12 +34,6 @@ export namespace _Common {
     [key: string]: unknown;
   };
 
-  export type Creators = {
-    readonly address: Pubkey;
-    readonly share: number;
-    readonly verified: boolean;
-  };
-
   export enum UseMethod {
     Burn = 0,
     Multiple = 1,
@@ -45,10 +41,20 @@ export namespace _Common {
   }
 }
 
+// To Solana, Decentrized storage
 export namespace Infra {
-  export type Collection = COption<Pubkey>;
-  export type Creators = _Common.Creators;
+  export type Collection = Option<{
+    verified: boolean;
+    key: PublicKey;
+  }>;
+
   export type Properties = _Common.Properties;
+
+  export type Creators = {
+    readonly address: PublicKey;
+    readonly share: number;
+    readonly verified: boolean;
+  };
 
   export type Attribute = {
     trait_type?: string;
@@ -57,10 +63,17 @@ export namespace Infra {
   };
 }
 
+// To User application, Web service
 export namespace User {
-  export type Collection = COption<Pubkey>;
-  export type Creators = _Common.Creators;
+  export type Collection = Option<Pubkey>;
+
   export type Properties = _Common.Properties;
+
+  export type Creators = {
+    readonly address: Pubkey;
+    readonly share: number;
+    readonly verified: boolean;
+  };
 
   export type Attribute = {
     trait_type?: string;

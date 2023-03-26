@@ -1,4 +1,6 @@
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
+import { Collections } from './collections';
+import { Creators } from './creators';
 import { InputNftMetadata } from './types';
 
 export module MetaplexMetadata {
@@ -12,9 +14,9 @@ export module MetaplexMetadata {
       symbol: input.symbol,
       uri,
       sellerFeeBasisPoints,
-      creators: null,
-      collection: null,
-      uses: null,
+      creators: Creators.toConvertInfra(input.creators),
+      collection: Collections.toConvertInfra(input.collection),
+      uses: input.uses || null,
     };
   };
 }

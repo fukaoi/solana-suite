@@ -1,4 +1,4 @@
-import { _Common, COption, User } from '../shared';
+import { _Common, Option, User } from '../shared';
 
 export type OutputTokenMetadata = {
   name: string;
@@ -7,5 +7,5 @@ export type OutputTokenMetadata = {
   sellerFeeBasisPoints: number;
   attributes?: User.Attribute[];
   creators?: User.Creators[];
-  uses?: COption<_Common.Uses>;
+  uses?: Option<_Common.Uses>;
 };

@@ -1,22 +1,22 @@
-// import {
-//   User,
-//   Infra,
-//   Common,
-// } from './types';
-//
-// export namespace Collections {
-//   export const toInputConvert = (
-//     input: User.Collection | undefined
-//   ): Common.Collection => (!input ? undefined : input.toPublicKey());
-//
-//   export const toOutputConvert = (
-//     output: Common.Collection | undefined
-//   ): User.Collection => {
-//     return !output
-//       ? null
-//       : {
-//           address: output.address.toString(),
-//           verified: output.verified,
-//         };
-//   };
-// }
+import { User, Infra } from './types';
+
+export namespace Collections {
+  export const toConvertInfra = (
+    input: User.Collection | undefined
+  ): Infra.Collection => {
+    if (!input) {
+      return null;
+    }
+
+    return {
+      key: input.toPublicKey(),
+      verified: true,
+    };
+  };
+
+  export const toConvertUser = (
+    output: Infra.Collection | undefined
+  ): User.Collection => {
+    return !output ? null : output.toString();
+  };
+}

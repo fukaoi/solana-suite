@@ -1,4 +1,4 @@
-import { FileContent, COption } from '../shared';
+import { FileContent, Option } from '../shared';
 import { StorageType } from '../infra-side/storage-metadata';
 import { User, _Common } from '../shared';
 export type InputTokenMetadata = {
@@ -9,5 +9,5 @@ export type InputTokenMetadata = {
     storageType: StorageType;
     attributes?: User.Attribute[];
     creators?: User.Creators[];
-    uses?: COption<_Common.Uses>;
+    uses?: Option<_Common.Uses>;
 };

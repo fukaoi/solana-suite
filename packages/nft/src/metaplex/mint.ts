@@ -28,14 +28,12 @@ import { Storage } from '@solana-suite/storage';
 import {
   Validator,
   InputNftMetadata,
-  // Creators,
-  // Collections,
-  // Properties,
+  Properties,
   Pda,
   Royalty,
   MetaplexMetadata,
-  User,
-  Infra,
+  // User,
+  // Infra,
 } from '@solana-suite/shared-metaplex';
 
 import {
@@ -151,32 +149,17 @@ export namespace Metaplex {
 
       const payer = feePayer ? feePayer : signer;
 
-      // //Convert creators
-      // const creators = Creators.toInputConvert(input.creators);
-      // debugLog('# creators: ', creators);
-      //
-      // //Convert collection
-      // const collection = Collections.toInputConvert(input.collection);
-      // debugLog('# collection: ', collection);
-      //
-      // //Convert porperties, Upload content
-      // const properties = await Properties.toInputConvert(
-      //   input.properties,
-      //   Storage.uploadContent,
-      //   input.storageType,
-      //   feePayer
-      // );
-      // debugLog('# properties: ', properties);
-      //
-      // const overwrited = {
-      //   ...input,
-      //   creators,
-      //   collection,
-      //   properties,
-      // } as _InputNftMetadata;
+      //Convert porperties, Upload content
+      const properties = await Properties.toConvertInfra(
+        input.properties,
+        Storage.uploadContent,
+        input.storageType,
+        feePayer
+      );
 
       const inputInfra = {
         ...input,
+        properties,
       };
 
       const sellerFeeBasisPoints = Royalty.convert(inputInfra.royalty);
@@ -202,6 +185,10 @@ export namespace Metaplex {
         sellerFeeBasisPoints
       );
 
+      const isMutable =
+        inputInfra.isMutable === undefined ? true : inputInfra.isMutable;
+
+      debugLog('# inputInfra: ', inputInfra);
       debugLog('# upload content url: ', uploaded);
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# datav2: ', datav2);
@@ -212,7 +199,7 @@ export namespace Metaplex {
         owner.toPublicKey(),
         datav2,
         payer.toKeypair().publicKey,
-        input.isMutable || true
+        isMutable
       );
       return new MintInstruction(
         insts,

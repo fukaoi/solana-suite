@@ -3,7 +3,7 @@ import { overwriteObject, Secret, Result } from '@solana-suite/shared';
 import { User, StorageType, Infra } from './types';
 
 export namespace Properties {
-  export const toInputConvert = async (
+  export const toConvertInfra = async (
     input: User.Properties | undefined,
     storageFunc: (
       data: MetaplexFileContent,

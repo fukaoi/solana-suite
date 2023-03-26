@@ -1,7 +1,8 @@
 /// <reference types="node" />
 import BN from 'bn.js';
 import { Pubkey } from '@solana-suite/shared';
-export type COption<T> = T | null;
+import { PublicKey } from '@solana/web3.js';
+export type Option<T> = T | null;
 export type bignum = number | BN;
 export type FileContent = string | Buffer | Uint8Array | ArrayBuffer;
 export declare namespace _Common {
@@ -28,11 +29,6 @@ export declare namespace _Common {
         family?: string;
         [key: string]: unknown;
     };
-    type Creators = {
-        readonly address: Pubkey;
-        readonly share: number;
-        readonly verified: boolean;
-    };
     enum UseMethod {
         Burn = 0,
         Multiple = 1,
@@ -40,9 +36,16 @@ export declare namespace _Common {
     }
 }
 export declare namespace Infra {
-    type Collection = COption<Pubkey>;
-    type Creators = _Common.Creators;
+    type Collection = Option<{
+        verified: boolean;
+        key: PublicKey;
+    }>;
     type Properties = _Common.Properties;
+    type Creators = {
+        readonly address: PublicKey;
+        readonly share: number;
+        readonly verified: boolean;
+    };
     type Attribute = {
         trait_type?: string;
         value?: string;
@@ -50,9 +53,13 @@ export declare namespace Infra {
     };
 }
 export declare namespace User {
-    type Collection = COption<Pubkey>;
-    type Creators = _Common.Creators;
+    type Collection = Option<Pubkey>;
     type Properties = _Common.Properties;
+    type Creators = {
+        readonly address: Pubkey;
+        readonly share: number;
+        readonly verified: boolean;
+    };
     type Attribute = {
         trait_type?: string;
         value?: string;
