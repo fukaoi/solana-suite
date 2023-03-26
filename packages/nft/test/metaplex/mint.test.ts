@@ -58,6 +58,7 @@ describe('Metaplex', () => {
       (ng: Error) => assert.fail(ng.message)
     );
   });
+  
   it('[Nft Storage] mint nft with many optional datas', async () => {
     const asset = RandomAsset.get();
     const creators: User.Creators[] = [];

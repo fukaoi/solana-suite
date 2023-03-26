@@ -1,98 +1,49 @@
-"use strict";
-// import { Transaction, TransactionInstruction, Keypair } from '@solana/web3.js';
-//
-// import {
-//   Node,
-//   Result,
-//   Try,
-//   debugLog,
-//   Pubkey,
-//   overwriteObject,
-// } from '@solana-suite/shared';
-// import { Storage } from '@solana-suite/storage';
-// import { SplToken } from '@solana-suite/core';
-// import { Phantom } from '../types';
-// import {
-//   Creators,
-//   InputTokenMetadata,
-//   _InputNftMetadata,
-//   _TokenMetadata,
-// } from '@solana-suite/shared-metaplex';
-//
-// export namespace PhantomSplToken {
-//   export const mint = async (
-//     input: InputTokenMetadata,
-//     owner: Pubkey,
-//     cluster: string,
-//     totalAmount: number,
-//     mintDecimal: number,
-//     phantom: Phantom
-//   ): Promise<Result<string, Error>> => {
-//     return Try(async () => {
-//       Node.changeConnection({ cluster });
-//       const connection = Node.getConnection();
-//       const transaction = new Transaction();
-//       const mint = Keypair.generate();
-//
-//       debugLog('# input: ', input);
-//
-//       const creatorsValue = Creators.toInputConvert(input.creators);
-//       const overwrited = overwriteObject(input, [
-//         {
-//           existsKey: 'creators',
-//           will: {
-//             key: 'creators',
-//             value: creatorsValue,
-//           },
-//         },
-//       ]) as _InputNftMetadata;
-//
-//       const uploaded = await Storage.uploadMetaContent(overwrited);
-//       const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
-//
-//       debugLog('# upload content url: ', uri);
-//       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-//       debugLog('# reducedMetadata: ', reducedMetadata);
-//
-//       const tokenMetadata: _TokenMetadata = {
-//         name: reducedMetadata.name,
-//         symbol: reducedMetadata.symbol,
-//         uri,
-//         sellerFeeBasisPoints,
-//         creators: reducedMetadata.creators,
-//         collection: undefined,
-//         uses: reducedMetadata.uses,
-//       };
-//
-//       const isMutable = !reducedMetadata.isMutable ? false : true;
-//
-//       const insturctions = await SplToken.createMintInstructions(
-//         mint.publicKey,
-//         owner.toPublicKey(),
-//         totalAmount,
-//         mintDecimal,
-//         tokenMetadata,
-//         owner.toPublicKey(),
-//         isMutable
-//       );
-//
-//       insturctions.forEach((inst: TransactionInstruction) =>
-//         transaction.add(inst)
-//       );
-//       transaction.feePayer = owner.toPublicKey();
-//       const blockhashObj = await connection.getLatestBlockhashAndContext();
-//       transaction.recentBlockhash = blockhashObj.value.blockhash;
-//       transaction.partialSign(mint);
-//       const signed = await phantom.signTransaction(transaction);
-//       debugLog(
-//         '# signed, signed.signatures: ',
-//         signed,
-//         signed.signatures.map((sig) => sig.publicKey.toString())
-//       );
-//       const sig = await connection.sendRawTransaction(signed.serialize());
-//       await Node.confirmedSig(sig);
-//       return mint.publicKey.toString();
-//     });
-//   };
-// }
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+import { Transaction, Keypair } from '@solana/web3.js';
+import { Node, Try, debugLog } from '@solana-suite/shared';
+import { Storage } from '@solana-suite/storage';
+import { SplToken } from '@solana-suite/core';
+import { TokenMetadata, } from '@solana-suite/shared-metaplex';
+export var PhantomSplToken;
+(function (PhantomSplToken) {
+    PhantomSplToken.mint = (input, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
+        return Try(() => __awaiter(this, void 0, void 0, function* () {
+            Node.changeConnection({ cluster });
+            const connection = Node.getConnection();
+            const transaction = new Transaction();
+            const mint = Keypair.generate();
+            input.royalty = 0;
+            const sellerFeeBasisPoints = 0;
+            const tokenStorageMetadata = Storage.toConvertNftStorageMetadata(input, input.royalty);
+            const uploaded = yield Storage.uploadMetaContent(tokenStorageMetadata, input.filePath, input.storageType);
+            if (uploaded.isErr) {
+                throw uploaded;
+            }
+            const uri = uploaded.value;
+            const isMutable = true;
+            const datav2 = TokenMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            debugLog('# datav2: ', datav2);
+            debugLog('# upload content url: ', uri);
+            const insturctions = yield SplToken.createMintInstructions(mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, datav2, owner.toPublicKey(), isMutable);
+            insturctions.forEach((inst) => transaction.add(inst));
+            transaction.feePayer = owner.toPublicKey();
+            const blockhashObj = yield connection.getLatestBlockhashAndContext();
+            transaction.recentBlockhash = blockhashObj.value.blockhash;
+            transaction.partialSign(mint);
+            const signed = yield phantom.signTransaction(transaction);
+            debugLog('# signed, signed.signatures: ', signed, signed.signatures.map((sig) => sig.publicKey.toString()));
+            const sig = yield connection.sendRawTransaction(signed.serialize());
+            yield Node.confirmedSig(sig);
+            return mint.publicKey.toString();
+        }));
+    });
+})(PhantomSplToken || (PhantomSplToken = {}));
 //# sourceMappingURL=mint.js.map
