@@ -1,5 +1,5 @@
 import { StorageType } from '../infra-side/storage-metadata';
-import { COption, bignum, FileContent } from '../shared';
+import { bignum, FileContent } from '../shared';
 import { User, _Common } from '../shared';
 export type InputNftMetadata = {
     name: string;
@@ -8,16 +8,15 @@ export type InputNftMetadata = {
     storageType: StorageType;
     filePath: FileContent;
     uri?: string;
+    isMutable?: boolean;
     description?: string;
     external_url?: string;
     attributes?: User.Attribute[];
     properties?: _Common.Properties;
-    isMutable?: boolean;
     maxSupply?: bignum;
     creators?: User.Creators[];
-    uses?: COption<_Common.Uses>;
-    isCollection?: boolean;
-    collection?: User.Collection;
+    uses?: _Common.Uses;
+    collection?: User.Input.Collection;
     options?: {
         [key: string]: unknown;
     };

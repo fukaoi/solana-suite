@@ -11,7 +11,10 @@ import { SystemProgram, } from '@solana/web3.js';
 import { createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, getAssociatedTokenAddress, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
 import { debugLog, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
-import { Validator, Creators, Collections, Properties, Pda, Royalty, MetaplexMetadata, } from '@solana-suite/shared-metaplex';
+import { Validator, Properties, Pda, Royalty, MetaplexMetadata,
+// User,
+// Infra,
+ } from '@solana-suite/shared-metaplex';
 import { createCreateMetadataAccountV2Instruction, createCreateMasterEditionV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
 export var Metaplex;
@@ -90,31 +93,24 @@ export var Metaplex;
                 throw valid.error;
             }
             const payer = feePayer ? feePayer : signer;
-            //Convert creators
-            const creators = Creators.toInputConvert(input.creators);
-            debugLog('# creators: ', creators);
-            //Convert collection
-            const collection = Collections.toInputConvert(input.collection);
-            debugLog('# collection: ', collection);
             //Convert porperties, Upload content
-            const properties = yield Properties.toInputConvert(input.properties, Storage.uploadContent, input.storageType, feePayer);
-            debugLog('# properties: ', properties);
-            const overwrited = Object.assign(Object.assign({}, input), { creators,
-                collection,
-                properties });
-            const sellerFeeBasisPoints = Royalty.convert(overwrited.royalty);
-            const nftStorageMetadata = Storage.toConvertNftStorageMetadata(overwrited, sellerFeeBasisPoints);
-            const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, overwrited.filePath, overwrited.storageType, payer);
+            const properties = yield Properties.toConvertInfra(input.properties, Storage.uploadContent, input.storageType, feePayer);
+            const inputInfra = Object.assign(Object.assign({}, input), { properties });
+            const sellerFeeBasisPoints = Royalty.convert(inputInfra.royalty);
+            const nftStorageMetadata = Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);
+            const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType, payer);
             if (uploaded.isErr) {
                 throw uploaded;
             }
             const uri = uploaded.value;
-            const datav2 = MetaplexMetadata.toConvertDataV2(overwrited, uri, sellerFeeBasisPoints);
+            const datav2 = MetaplexMetadata.toConvertInfra(inputInfra, uri, sellerFeeBasisPoints);
+            const isMutable = inputInfra.isMutable === undefined ? true : inputInfra.isMutable;
+            debugLog('# inputInfra: ', inputInfra);
             debugLog('# upload content url: ', uploaded);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             debugLog('# datav2: ', datav2);
             const mint = KeypairAccount.create();
-            const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, payer.toKeypair().publicKey, input.isMutable || true);
+            const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, payer.toKeypair().publicKey, isMutable);
             return new MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer.toKeypair(), mint.pubkey);
         }));
     });

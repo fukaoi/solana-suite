@@ -93,31 +93,24 @@ var Metaplex;
                 throw valid.error;
             }
             const payer = feePayer ? feePayer : signer;
-            //Convert creators
-            const creators = shared_metaplex_1.Creators.toInputConvert(input.creators);
-            (0, shared_1.debugLog)('# creators: ', creators);
-            //Convert collection
-            const collection = shared_metaplex_1.Collections.toInputConvert(input.collection);
-            (0, shared_1.debugLog)('# collection: ', collection);
             //Convert porperties, Upload content
-            const properties = yield shared_metaplex_1.Properties.toInputConvert(input.properties, storage_1.Storage.uploadContent, input.storageType, feePayer);
-            (0, shared_1.debugLog)('# properties: ', properties);
-            const overwrited = Object.assign(Object.assign({}, input), { creators,
-                collection,
-                properties });
-            const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(overwrited.royalty);
-            const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(overwrited, sellerFeeBasisPoints);
-            const uploaded = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, overwrited.filePath, overwrited.storageType, payer);
+            const properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType, feePayer);
+            const inputInfra = Object.assign(Object.assign({}, input), { properties });
+            const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(inputInfra.royalty);
+            const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);
+            const uploaded = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType, payer);
             if (uploaded.isErr) {
                 throw uploaded;
             }
             const uri = uploaded.value;
-            const datav2 = shared_metaplex_1.MetaplexMetadata.toConvertDataV2(overwrited, uri, sellerFeeBasisPoints);
+            const datav2 = shared_metaplex_1.MetaplexMetadata.toConvertInfra(inputInfra, uri, sellerFeeBasisPoints);
+            const isMutable = inputInfra.isMutable === undefined ? true : inputInfra.isMutable;
+            (0, shared_1.debugLog)('# inputInfra: ', inputInfra);
             (0, shared_1.debugLog)('# upload content url: ', uploaded);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             (0, shared_1.debugLog)('# datav2: ', datav2);
             const mint = shared_1.KeypairAccount.create();
-            const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, payer.toKeypair().publicKey, input.isMutable || true);
+            const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, payer.toKeypair().publicKey, isMutable);
             return new shared_1.MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer.toKeypair(), mint.pubkey);
         }));
     });

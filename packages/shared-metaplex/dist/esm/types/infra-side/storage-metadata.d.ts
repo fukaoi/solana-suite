@@ -7,7 +7,7 @@ export type StorageMetadata = {
     image?: string;
     external_url?: string;
     attributes?: Infra.Attribute[];
-    properties?: _Common.Properties[];
+    properties?: _Common.Properties;
     collection?: _Common.Collection;
 };
 export interface File extends Blob {

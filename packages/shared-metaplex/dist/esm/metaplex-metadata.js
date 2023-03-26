@@ -1,14 +1,16 @@
+import { Collections } from './collections';
+import { Creators } from './creators';
 export var MetaplexMetadata;
 (function (MetaplexMetadata) {
-    MetaplexMetadata.toConvertDataV2 = (input, uri, sellerFeeBasisPoints) => {
+    MetaplexMetadata.toConvertInfra = (input, uri, sellerFeeBasisPoints) => {
         return {
             name: input.name,
             symbol: input.symbol,
             uri,
             sellerFeeBasisPoints,
-            creators: null,
-            collection: null,
-            uses: null,
+            creators: Creators.toConvertInfra(input.creators),
+            collection: Collections.toConvertInfra(input.collection),
+            uses: input.uses || null,
         };
     };
 })(MetaplexMetadata || (MetaplexMetadata = {}));

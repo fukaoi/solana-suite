@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { overwriteObject } from '@solana-suite/shared';
 export var Properties;
 (function (Properties) {
-    Properties.toInputConvert = (input, storageFunc, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Properties.toConvertInfra = (input, storageFunc, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
         if (!input || !input.files) {
             return {};
         }

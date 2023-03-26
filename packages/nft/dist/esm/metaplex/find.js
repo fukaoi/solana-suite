@@ -13,10 +13,12 @@ import { Bundlr } from '@solana-suite/storage';
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
+        // ) => {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             const allData = yield Bundlr.make()
                 .nfts()
                 .findAllByOwner({ owner: owner.toPublicKey() });
+            console.log(allData);
             const res = allData.map((d) => {
                 return {
                     mint: d.mintAddress.toString(),
@@ -27,9 +29,9 @@ export var Metaplex;
                     uri: d.uri,
                     isMutable: d.isMutable,
                     primarySaleHappened: d.primarySaleHappened,
-                    creators: Creators.toOutputConvert(d.creators),
+                    creators: Creators.toConvertUser(d.creators),
                     editionNonce: d.editionNonce,
-                    collection: Collections.toOutputConvert(d.collection),
+                    collection: Collections.toConvertUser(d.collection),
                     uses: d.uses,
                 };
             });

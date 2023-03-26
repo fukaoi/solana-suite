@@ -1,3 +1,4 @@
+// Common types
 export var _Common;
 (function (_Common) {
     let UseMethod;
