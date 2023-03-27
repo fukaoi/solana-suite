@@ -58,7 +58,7 @@ export namespace PhantomMetaplex {
       );
       const uploaded = await Storage.uploadMetaContent(
         nftStorageMetadata,
-        inputInfra.filePath,
+        inputInfra.filePath!,
         inputInfra.storageType
       );
 
