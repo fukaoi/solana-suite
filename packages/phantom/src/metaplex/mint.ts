@@ -43,23 +43,23 @@ export namespace PhantomMetaplex {
       const properties = await Properties.toConvertInfra(
         input.properties,
         Storage.uploadContent,
-        input.storageType
+        input.storageType!
       );
 
-      const inputInfra = {
+      input = {
         ...input,
         properties,
       };
 
-      const sellerFeeBasisPoints = Royalty.convert(inputInfra.royalty);
+      const sellerFeeBasisPoints = Royalty.convert(input.royalty);
       const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
-        inputInfra,
+        input,
         sellerFeeBasisPoints
       );
       const uploaded = await Storage.uploadMetaContent(
         nftStorageMetadata,
-        inputInfra.filePath!,
-        inputInfra.storageType
+        input.filePath!,
+        input.storageType!
       );
 
       if (uploaded.isErr) {
@@ -68,7 +68,7 @@ export namespace PhantomMetaplex {
       const uri = uploaded.value;
 
       const datav2 = MetaplexMetadata.toConvertInfra(
-        inputInfra,
+        input,
         uri,
         sellerFeeBasisPoints
       );

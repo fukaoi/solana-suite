@@ -1,8 +1,6 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Validator } from '../src/validator';
-import { RandomAsset } from '../../storage/test/randomAsset';
-import { JSDOM } from 'jsdom';
 
 describe('Validator', () => {
   it('[Success]isRoyalty', async () => {
@@ -87,26 +85,6 @@ describe('Validator', () => {
     assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
   });
 
-  it('[Success]isFilePath', async () => {
-    const res = Validator.isFilePath('../../');
-    assert.isOk(res.isOk);
-  });
-
-  it('[Error]isFilePath: empty value', async () => {
-    const res = Validator.isFilePath('');
-    assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
-  });
-
-  it('[Error]isFilePath: string type is only node.js', async () => {
-    // dummy browser env
-    const jsdom = new JSDOM('<html></html>');
-    // @ts-expect-error
-    global.window = jsdom.window;
-    const asset = RandomAsset.get();
-    const res = Validator.isFilePath(asset.filePath!);
-    assert.include(res.isErr && res.error.message, Validator.Message.ONLY_NODE_JS);
-  });
-
   it('[Success]isSymbol', async () => {
     const res = Validator.isSymbol('SYMBOL');
     assert.isOk(res.isOk);
@@ -147,34 +125,6 @@ describe('Validator', () => {
 
   it('[Error]isImageUrl: too long length', async () => {
     const res = Validator.isImageUrl(`https://example.com/${'x'.repeat(200)}`);
-    assert.include(
-      res.isErr && res.error.message,
-      Validator.Message.LONG_LENGTH
-    );
-  });
-
-  it('[Success]isUri', async () => {
-    const res = Validator.isUri(
-      'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50'
-    );
-    assert.isOk(res.isOk);
-  });
-
-  it('[Error]isUri: empty value', async () => {
-    const res = Validator.isUri('');
-    assert.include(res.isErr && res.error.message, Validator.Message.EMPTY);
-  });
-
-  it('[Error]isUri: invalid value', async () => {
-    const res = Validator.isUri('invalid url');
-    assert.include(
-      res.isErr && res.error.message,
-      Validator.Message.INVALID_URL
-    );
-  });
-
-  it('[Error]isUri: too long length', async () => {
-    const res = Validator.isUri(`https://example.com/${'x'.repeat(200)}`);
     assert.include(
       res.isErr && res.error.message,
       Validator.Message.LONG_LENGTH

@@ -94,19 +94,34 @@ var Metaplex;
             }
             const payer = feePayer ? feePayer : signer;
             //Convert porperties, Upload content
-            const properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType, payer);
+            let properties;
+            if (input.properties && input.storageType) {
+                properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType, payer);
+            }
+            else if (input.properties && !input.storageType) {
+                throw Error('Must set storageType if will use properties');
+            }
             const inputInfra = Object.assign(Object.assign({}, input), { properties });
             const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(inputInfra.royalty);
             const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);
-            const uploaded = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType, payer);
-            if (uploaded.isErr) {
-                throw uploaded;
+            let uri;
+            if (inputInfra.filePath && inputInfra.storageType) {
+                const uploaded = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType, payer);
+                (0, shared_1.debugLog)('# upload content url: ', uploaded);
+                if (uploaded.isErr) {
+                    throw uploaded;
+                }
+                uri = uploaded.value;
             }
-            const uri = uploaded.value;
+            else if (inputInfra.uri) {
+                uri = inputInfra.uri;
+            }
+            else {
+                throw Error(`Must set 'storageType + filePath' or 'uri'`);
+            }
             const datav2 = shared_metaplex_1.MetaplexMetadata.toConvertInfra(inputInfra, uri, sellerFeeBasisPoints);
             const isMutable = inputInfra.isMutable === undefined ? true : inputInfra.isMutable;
             (0, shared_1.debugLog)('# inputInfra: ', inputInfra);
-            (0, shared_1.debugLog)('# upload content url: ', uploaded);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             (0, shared_1.debugLog)('# datav2: ', datav2);
             const mint = shared_1.KeypairAccount.create();

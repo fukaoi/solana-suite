@@ -91,19 +91,34 @@ export var Metaplex;
             }
             const payer = feePayer ? feePayer : signer;
             //Convert porperties, Upload content
-            const properties = yield Properties.toConvertInfra(input.properties, Storage.uploadContent, input.storageType, payer);
+            let properties;
+            if (input.properties && input.storageType) {
+                properties = yield Properties.toConvertInfra(input.properties, Storage.uploadContent, input.storageType, payer);
+            }
+            else if (input.properties && !input.storageType) {
+                throw Error('Must set storageType if will use properties');
+            }
             const inputInfra = Object.assign(Object.assign({}, input), { properties });
             const sellerFeeBasisPoints = Royalty.convert(inputInfra.royalty);
             const nftStorageMetadata = Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);
-            const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType, payer);
-            if (uploaded.isErr) {
-                throw uploaded;
+            let uri;
+            if (inputInfra.filePath && inputInfra.storageType) {
+                const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType, payer);
+                debugLog('# upload content url: ', uploaded);
+                if (uploaded.isErr) {
+                    throw uploaded;
+                }
+                uri = uploaded.value;
             }
-            const uri = uploaded.value;
+            else if (inputInfra.uri) {
+                uri = inputInfra.uri;
+            }
+            else {
+                throw Error(`Must set 'storageType + filePath' or 'uri'`);
+            }
             const datav2 = MetaplexMetadata.toConvertInfra(inputInfra, uri, sellerFeeBasisPoints);
             const isMutable = inputInfra.isMutable === undefined ? true : inputInfra.isMutable;
             debugLog('# inputInfra: ', inputInfra);
-            debugLog('# upload content url: ', uploaded);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             debugLog('# datav2: ', datav2);
             const mint = KeypairAccount.create();

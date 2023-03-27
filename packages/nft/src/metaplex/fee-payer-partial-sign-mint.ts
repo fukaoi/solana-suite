@@ -5,7 +5,7 @@ import {
   Secret,
   KeypairAccount,
   Pubkey,
-  PartialSignInstruction,
+  PartialSignMintInstruction,
   Result,
 } from '@solana-suite/shared';
 
@@ -29,7 +29,7 @@ export namespace Metaplex {
     signer: Secret,
     input: InputNftMetadata,
     feePayer: Pubkey
-  ): Promise<Result<PartialSignInstruction, Error>> => {
+  ): Promise<Result<PartialSignMintInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -38,59 +38,48 @@ export namespace Metaplex {
 
       const sellerFeeBasisPoints = Royalty.convert(input.royalty);
 
-      let uploadUrl: string = '';
       let uri: string = '';
-      let inputInfra!: InputNftMetadata;
-      //Convert porperties, Upload content
-      // storageType == 'only nft.storage'
-      // -------------------------------------------------------------
-      if (input.storageType === 'nftStorage') {
+      if (input.filePath && input.storageType === 'nftStorage') {
         const properties = await Properties.toConvertInfra(
           input.properties,
           Storage.uploadContent,
           input.storageType
         );
 
-        inputInfra = {
+        input = {
           ...input,
           properties,
         };
 
         const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
-          inputInfra,
+          input,
           sellerFeeBasisPoints
         );
         const uploaded = await Storage.uploadMetaContent(
           nftStorageMetadata,
-          inputInfra.filePath,
-          inputInfra.storageType
+          input.filePath!,
+          input.storageType!
         );
         if (uploaded.isErr) {
           throw uploaded;
         }
-        uploadUrl = uploaded.value;
+        uri = uploaded.value;
         debugLog('# upload content url: ', uploaded);
-      }
-      // -------------------------------------------------------------
-
-      if (input.storageType === 'nftStorage' && uploadUrl) {
-        uri = uploadUrl;
-      } else if (input.storageType === 'arweave' && input.uri) {
+      } else if (input.uri) {
         uri = input.uri;
       } else {
-        throw Error('If want to use arweave, set input.uri parameter');
+        throw Error(`Must set 'storageType=nftStorage + filePath' or 'uri'`);
       }
 
       const datav2 = MetaplexMetadata.toConvertInfra(
-        inputInfra,
+        input,
         uri,
         sellerFeeBasisPoints
       );
 
-      const isMutable =
-        inputInfra.isMutable === undefined ? true : inputInfra.isMutable;
+      const isMutable = input.isMutable === undefined ? true : input.isMutable;
 
-      debugLog('# inputInfra: ', inputInfra);
+      debugLog('# input: ', input);
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# datav2: ', datav2);
 
@@ -118,7 +107,7 @@ export namespace Metaplex {
         requireAllSignatures: false,
       });
       const hex = serializedTx.toString('hex');
-      return new PartialSignInstruction(hex);
+      return new PartialSignMintInstruction(hex, mint.pubkey);
     });
   };
 }

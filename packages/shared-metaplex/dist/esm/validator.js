@@ -1,4 +1,4 @@
-import { isBrowser, Try } from '@solana-suite/shared';
+import { Try } from '@solana-suite/shared';
 import { Royalty } from './royalty';
 export var Validator;
 (function (Validator) {
@@ -90,19 +90,6 @@ export var Validator;
             return Message.SUCCESS;
         });
     };
-    Validator.isFilePath = (filePath) => {
-        return Try(() => {
-            const key = 'filePath';
-            if (!filePath) {
-                throw createError(key, Message.EMPTY, filePath);
-            }
-            if (isBrowser() && typeof filePath === 'string') {
-                throw createError(key, Message.ONLY_NODE_JS, filePath);
-            }
-            return Message.SUCCESS;
-        });
-    };
-    Validator.isUri = (uri) => isUriOrImage(uri, 'uri');
     Validator.isImageUrl = (image) => isUriOrImage(image, 'image');
     Validator.checkAll = (metadata) => {
         return Try(() => {
@@ -111,11 +98,6 @@ export var Validator;
             keys.map((key) => {
                 let res;
                 switch (key) {
-                    case 'uri':
-                        if (key in metadata) {
-                            res = Validator.isUri(metadata.uri);
-                        }
-                        break;
                     case 'image':
                         if (key in metadata && metadata.image) {
                             res = Validator.isImageUrl(metadata.image);
@@ -144,11 +126,6 @@ export var Validator;
                     case 'symbol':
                         if (metadata.symbol) {
                             res = Validator.isSymbol(metadata.symbol);
-                        }
-                        break;
-                    case 'filePath':
-                        if (key in metadata) {
-                            res = Validator.isFilePath(metadata.filePath);
                         }
                         break;
                 }

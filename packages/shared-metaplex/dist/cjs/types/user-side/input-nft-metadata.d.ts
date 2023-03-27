@@ -5,8 +5,8 @@ export type InputNftMetadata = {
     name: string;
     symbol: string;
     royalty: number;
-    storageType: StorageType;
-    filePath: FileContent;
+    storageType?: StorageType;
+    filePath?: FileContent;
     uri?: string;
     isMutable?: boolean;
     description?: string;

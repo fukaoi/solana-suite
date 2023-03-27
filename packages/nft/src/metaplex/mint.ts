@@ -148,46 +148,57 @@ export namespace Metaplex {
       const payer = feePayer ? feePayer : signer;
 
       //Convert porperties, Upload content
-      const properties = await Properties.toConvertInfra(
-        input.properties,
-        Storage.uploadContent,
-        input.storageType,
-        payer 
-      );
+      let properties;
+      if (input.properties && input.storageType) {
+        properties = await Properties.toConvertInfra(
+          input.properties,
+          Storage.uploadContent,
+          input.storageType,
+          payer
+        );
+      } else if (input.properties && !input.storageType) {
+        throw Error('Must set storageType if will use properties');
+      }
 
-      const inputInfra = {
+      input = {
         ...input,
         properties,
       };
 
-      const sellerFeeBasisPoints = Royalty.convert(inputInfra.royalty);
+      const sellerFeeBasisPoints = Royalty.convert(input.royalty);
       const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
-        inputInfra,
+        input,
         sellerFeeBasisPoints
       );
-      const uploaded = await Storage.uploadMetaContent(
-        nftStorageMetadata,
-        inputInfra.filePath,
-        inputInfra.storageType,
-        payer
-      );
 
-      if (uploaded.isErr) {
-        throw uploaded;
+      let uri!: string;
+      if (input.filePath && input.storageType) {
+        const uploaded = await Storage.uploadMetaContent(
+          nftStorageMetadata,
+          input.filePath,
+          input.storageType,
+          payer
+        );
+        debugLog('# upload content url: ', uploaded);
+        if (uploaded.isErr) {
+          throw uploaded;
+        }
+        uri = uploaded.value;
+      } else if (input.uri) {
+        uri = input.uri;
+      } else {
+        throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
-      const uri = uploaded.value;
 
       const datav2 = MetaplexMetadata.toConvertInfra(
-        inputInfra,
+        input,
         uri,
         sellerFeeBasisPoints
       );
 
-      const isMutable =
-        inputInfra.isMutable === undefined ? true : inputInfra.isMutable;
+      const isMutable = input.isMutable === undefined ? true : input.isMutable;
 
-      debugLog('# inputInfra: ', inputInfra);
-      debugLog('# upload content url: ', uploaded);
+      debugLog('# input: ', input);
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# datav2: ', datav2);
 

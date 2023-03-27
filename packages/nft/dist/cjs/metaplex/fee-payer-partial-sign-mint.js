@@ -17,51 +17,53 @@ const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 const mint_1 = require("./mint");
 var Metaplex;
 (function (Metaplex) {
-    Metaplex.feePayerPartialSignMint = (owner, signer, input, feePayer
-    // ): Promise<Result<PartialSignInstruction, Error>> => {
-    ) => __awaiter(this, void 0, void 0, function* () {
+    Metaplex.feePayerPartialSignMint = (owner, signer, input, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             const valid = shared_metaplex_1.Validator.checkAll(input);
             if (valid.isErr) {
                 throw valid.error;
             }
-            const payer = feePayer ? feePayer : signer;
-            //Convert porperties, Upload content
-            const properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType, payer);
-            const inputInfra = Object.assign(Object.assign({}, input), { properties });
-            const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(inputInfra.royalty);
-            const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);
-            const uploaded = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType, payer);
-            if (uploaded.isErr) {
-                throw uploaded;
+            const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(input.royalty);
+            let uri = '';
+            let inputInfra;
+            if (input.filePath && input.storageType === 'nftStorage') {
+                const properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType);
+                inputInfra = Object.assign(Object.assign({}, input), { properties });
+                const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);
+                const uploaded = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType);
+                if (uploaded.isErr) {
+                    throw uploaded;
+                }
+                uri = uploaded.value;
+                (0, shared_1.debugLog)('# upload content url: ', uploaded);
             }
-            const uri = uploaded.value;
+            else if (inputInfra.uri) {
+                uri = inputInfra.uri;
+            }
+            else {
+                throw Error(`Must set 'storageType=nftStorage + filePath' or 'uri'`);
+            }
             const datav2 = shared_metaplex_1.MetaplexMetadata.toConvertInfra(inputInfra, uri, sellerFeeBasisPoints);
             const isMutable = inputInfra.isMutable === undefined ? true : inputInfra.isMutable;
             (0, shared_1.debugLog)('# inputInfra: ', inputInfra);
-            (0, shared_1.debugLog)('# upload content url: ', uploaded);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             (0, shared_1.debugLog)('# datav2: ', datav2);
             const mint = shared_1.KeypairAccount.create();
-            const insts = yield mint_1.Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, payer.toKeypair().publicKey, isMutable);
+            const insts = yield mint_1.Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, feePayer.toPublicKey(), isMutable);
             const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
             const tx = new web3_js_1.Transaction({
                 lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
                 blockhash: blockhashObj.blockhash,
-                feePayer: payer.toPublicKey(),
+                feePayer: feePayer.toPublicKey(),
             });
             insts.forEach((inst) => tx.add(inst));
             tx.recentBlockhash = blockhashObj.blockhash;
-            [signer, mint, feePayer].forEach((signer) => {
-                if (signer) {
-                    tx.partialSign(signer.toKeypair());
-                }
-            });
+            [signer, mint].forEach((signer) => tx.partialSign(signer.toKeypair()));
             const serializedTx = tx.serialize({
                 requireAllSignatures: false,
             });
             const hex = serializedTx.toString('hex');
-            return new shared_1.PartialSignInstruction(hex);
+            return new shared_1.PartialSignMintInstruction(hex, mint.pubkey);
         }));
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));
