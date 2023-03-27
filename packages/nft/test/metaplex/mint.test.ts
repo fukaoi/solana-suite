@@ -37,16 +37,22 @@ describe('Metaplex', () => {
     );
   });
 
-  it('[Nft Storage] mint nft', async () => {
+  it('[Nft Storage] mint nft with fee payer', async () => {
+    const owner = KeypairAccount.create();
     const asset = RandomAsset.get();
-    const res = await Metaplex.mint(source.pubkey, source.secret, {
-      filePath: asset.filePath as string,
-      storageType: 'arweave',
-      name: asset.name!,
-      symbol: asset.symbol!,
-      royalty: 50,
-      isMutable: true,
-    });
+    const res = await Metaplex.mint(
+      owner.pubkey,
+      owner.secret,
+      {
+        filePath: asset.filePath as string,
+        storageType: 'arweave',
+        name: asset.name!,
+        symbol: asset.symbol!,
+        royalty: 50,
+        isMutable: true,
+      },
+      source.secret
+    );
 
     assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
 
@@ -58,7 +64,7 @@ describe('Metaplex', () => {
       (ng: Error) => assert.fail(ng.message)
     );
   });
-  
+
   it('[Nft Storage] mint nft with many optional datas', async () => {
     const asset = RandomAsset.get();
     const creators: User.Creators[] = [];

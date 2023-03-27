@@ -20,7 +20,6 @@ export class Instruction {
                 const transaction = new Transaction();
                 const blockhashObj = yield Node.getConnection().getLatestBlockhash();
                 transaction.lastValidBlockHeight = blockhashObj.lastValidBlockHeight;
-                // transaction.blockhash = blockhashObj.blockhash;
                 transaction.recentBlockhash = blockhashObj.blockhash;
                 let finalSigners = this.signers;
                 if (this.feePayer) {

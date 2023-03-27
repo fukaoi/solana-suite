@@ -25,7 +25,7 @@ var Metaplex;
         let masterEditionPubkey = shared_metaplex_1.Pda.getMasterEdition(mint);
         const connection = shared_2.Node.getConnection();
         const inst1 = web3_js_1.SystemProgram.createAccount({
-            fromPubkey: owner,
+            fromPubkey: feePayer,
             newAccountPubkey: mint,
             lamports: yield (0, spl_token_1.getMinimumBalanceForRentExemptMint)(connection),
             space: spl_token_1.MINT_SIZE,
@@ -33,7 +33,7 @@ var Metaplex;
         });
         const inst2 = (0, spl_token_1.createInitializeMintInstruction)(mint, 0, owner, owner);
         const inst3 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(feePayer, ata, owner, mint);
-        const inst4 = (0, spl_token_1.createMintToCheckedInstruction)(mint, ata, feePayer, 1, 0);
+        const inst4 = (0, spl_token_1.createMintToCheckedInstruction)(mint, ata, owner, 1, 0);
         const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV2Instruction)({
             metadata: tokenMetadataPubkey,
             mint,

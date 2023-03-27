@@ -25,7 +25,7 @@ export var Metaplex;
         let masterEditionPubkey = Pda.getMasterEdition(mint);
         const connection = Node.getConnection();
         const inst1 = SystemProgram.createAccount({
-            fromPubkey: owner,
+            fromPubkey: feePayer,
             newAccountPubkey: mint,
             lamports: yield getMinimumBalanceForRentExemptMint(connection),
             space: MINT_SIZE,
@@ -33,7 +33,7 @@ export var Metaplex;
         });
         const inst2 = createInitializeMintInstruction(mint, 0, owner, owner);
         const inst3 = createAssociatedTokenAccountInstruction(feePayer, ata, owner, mint);
-        const inst4 = createMintToCheckedInstruction(mint, ata, feePayer, 1, 0);
+        const inst4 = createMintToCheckedInstruction(mint, ata, owner, 1, 0);
         const inst5 = createCreateMetadataAccountV2Instruction({
             metadata: tokenMetadataPubkey,
             mint,

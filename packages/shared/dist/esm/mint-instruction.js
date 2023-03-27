@@ -19,7 +19,11 @@ export class MintInstruction extends Instruction {
                     throw Error('only MintInstruction object that can use this');
                 }
                 const transaction = new Transaction();
+                const blockhashObj = yield Node.getConnection().getLatestBlockhash();
+                transaction.lastValidBlockHeight = blockhashObj.lastValidBlockHeight;
+                transaction.recentBlockhash = blockhashObj.blockhash;
                 let finalSigners = this.signers;
+                console.log(finalSigners);
                 if (this.feePayer) {
                     transaction.feePayer = this.feePayer.publicKey;
                     finalSigners = [this.feePayer, ...this.signers];

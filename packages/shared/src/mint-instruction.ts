@@ -26,13 +26,19 @@ export class MintInstruction extends Instruction {
         throw Error('only MintInstruction object that can use this');
       }
       const transaction = new Transaction();
+      const blockhashObj = await Node.getConnection().getLatestBlockhash();
+      transaction.lastValidBlockHeight = blockhashObj.lastValidBlockHeight;
+      transaction.recentBlockhash = blockhashObj.blockhash;
       let finalSigners = this.signers;
+
+      console.log(finalSigners);
       if (this.feePayer) {
         transaction.feePayer = this.feePayer.publicKey;
         finalSigners = [this.feePayer, ...this.signers];
       }
 
       this.instructions.forEach((inst) => transaction.add(inst));
+
       const options: ConfirmOptions = {
         maxRetries: MAX_RETRIES,
       };

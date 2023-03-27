@@ -37,7 +37,6 @@ export class Instruction {
 
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
       transaction.lastValidBlockHeight = blockhashObj.lastValidBlockHeight;
-      // transaction.blockhash = blockhashObj.blockhash;
       transaction.recentBlockhash = blockhashObj.blockhash;
       let finalSigners = this.signers;
 
