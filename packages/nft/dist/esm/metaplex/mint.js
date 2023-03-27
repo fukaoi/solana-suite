@@ -11,10 +11,7 @@ import { SystemProgram, } from '@solana/web3.js';
 import { createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, getAssociatedTokenAddress, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
 import { debugLog, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
-import { Validator, Properties, Pda, Royalty, MetaplexMetadata,
-// User,
-// Infra,
- } from '@solana-suite/shared-metaplex';
+import { Validator, Properties, Pda, Royalty, MetaplexMetadata, } from '@solana-suite/shared-metaplex';
 import { createCreateMetadataAccountV2Instruction, createCreateMasterEditionV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
 export var Metaplex;
@@ -94,7 +91,7 @@ export var Metaplex;
             }
             const payer = feePayer ? feePayer : signer;
             //Convert porperties, Upload content
-            const properties = yield Properties.toConvertInfra(input.properties, Storage.uploadContent, input.storageType, feePayer);
+            const properties = yield Properties.toConvertInfra(input.properties, Storage.uploadContent, input.storageType, payer);
             const inputInfra = Object.assign(Object.assign({}, input), { properties });
             const sellerFeeBasisPoints = Royalty.convert(inputInfra.royalty);
             const nftStorageMetadata = Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);

@@ -94,7 +94,7 @@ var Metaplex;
             }
             const payer = feePayer ? feePayer : signer;
             //Convert porperties, Upload content
-            const properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType, feePayer);
+            const properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType, payer);
             const inputInfra = Object.assign(Object.assign({}, input), { properties });
             const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(inputInfra.royalty);
             const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);

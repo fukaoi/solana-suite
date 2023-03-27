@@ -26,7 +26,6 @@ class MintInstruction extends _1.Instruction {
                 transaction.lastValidBlockHeight = blockhashObj.lastValidBlockHeight;
                 transaction.recentBlockhash = blockhashObj.blockhash;
                 let finalSigners = this.signers;
-                console.log(finalSigners);
                 if (this.feePayer) {
                     transaction.feePayer = this.feePayer.publicKey;
                     finalSigners = [this.feePayer, ...this.signers];

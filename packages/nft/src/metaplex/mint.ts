@@ -32,8 +32,6 @@ import {
   Pda,
   Royalty,
   MetaplexMetadata,
-  // User,
-  // Infra,
 } from '@solana-suite/shared-metaplex';
 
 import {
@@ -154,7 +152,7 @@ export namespace Metaplex {
         input.properties,
         Storage.uploadContent,
         input.storageType,
-        feePayer
+        payer 
       );
 
       const inputInfra = {
