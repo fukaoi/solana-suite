@@ -79,4 +79,29 @@ describe('Metaplex', () => {
       );
     }
   });
+
+  it.only('[Error]Raise parameter error when not need uri or filePath', async () => {
+    const owner = KeypairAccount.create();
+    const asset = RandomAsset.get();
+    const res = await Metaplex.feePayerPartialSignMint(
+      owner.pubkey,
+      owner.secret,
+      {
+        name: asset.name!,
+        symbol: asset.symbol!,
+        royalty: 50,
+        isMutable: true,
+      },
+      source.pubkey
+    );
+    res.match(
+      (_: unknown) => assert.fail('Unrecognized error'),
+      (err) => {
+        assert.equal(
+          err.message,
+          `Must set 'storageType=nftStorage + filePath' or 'uri'`
+        );
+      }
+    );
+  });
 });

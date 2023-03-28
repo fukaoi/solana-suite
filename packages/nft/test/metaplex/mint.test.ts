@@ -134,7 +134,7 @@ describe('Metaplex', () => {
     );
   });
 
-  it('Raise validation error when upload meta data', async () => {
+  it('[Error]Raise validation error when upload meta data', async () => {
     const res = await Metaplex.mint(source.pubkey, source.secret, {
       filePath: '',
       name: '',
@@ -150,6 +150,23 @@ describe('Metaplex', () => {
           assert.isNotEmpty(err.message);
           console.log(err.details);
         };
+      }
+    );
+  });
+
+  it('[Error]Raise parameter error when not need uri or filePath', async () => {
+    const owner = KeypairAccount.create();
+    const asset = RandomAsset.get();
+    const res = await Metaplex.mint(owner.pubkey, owner.secret, {
+      name: asset.name!,
+      symbol: asset.symbol!,
+      royalty: 50,
+      isMutable: true,
+    });
+    res.match(
+      (_: unknown) => assert.fail('Unrecognized error'),
+      (err) => {
+        assert.equal(err.message, `Must set 'storageType + filePath' or 'uri'`);
       }
     );
   });
