@@ -101,27 +101,27 @@ var Metaplex;
             else if (input.properties && !input.storageType) {
                 throw Error('Must set storageType if will use properties');
             }
-            const inputInfra = Object.assign(Object.assign({}, input), { properties });
-            const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(inputInfra.royalty);
-            const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);
+            input = Object.assign(Object.assign({}, input), { properties });
+            const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(input.royalty);
+            const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
             let uri;
-            if (inputInfra.filePath && inputInfra.storageType) {
-                const uploaded = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType, payer);
+            if (input.filePath && input.storageType) {
+                const uploaded = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, input.filePath, input.storageType, payer);
                 (0, shared_1.debugLog)('# upload content url: ', uploaded);
                 if (uploaded.isErr) {
                     throw uploaded;
                 }
                 uri = uploaded.value;
             }
-            else if (inputInfra.uri) {
-                uri = inputInfra.uri;
+            else if (input.uri) {
+                uri = input.uri;
             }
             else {
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
-            const datav2 = shared_metaplex_1.MetaplexMetadata.toConvertInfra(inputInfra, uri, sellerFeeBasisPoints);
-            const isMutable = inputInfra.isMutable === undefined ? true : inputInfra.isMutable;
-            (0, shared_1.debugLog)('# inputInfra: ', inputInfra);
+            const datav2 = shared_metaplex_1.MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const isMutable = input.isMutable === undefined ? true : input.isMutable;
+            (0, shared_1.debugLog)('# input: ', input);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             (0, shared_1.debugLog)('# datav2: ', datav2);
             const mint = shared_1.KeypairAccount.create();

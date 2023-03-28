@@ -5,8 +5,9 @@ import { User, _Common } from '../shared';
 export type InputTokenMetadata = {
   name: string;
   symbol: string;
-  filePath: FileContent;
-  storageType: StorageType;
+  filePath?: FileContent;
+  uri?: string;
+  storageType?: StorageType;
   description?: string;
   royalty?: number;
   attributes?: User.Attribute[];

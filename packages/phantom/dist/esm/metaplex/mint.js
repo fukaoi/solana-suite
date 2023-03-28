@@ -30,15 +30,15 @@ export var PhantomMetaplex;
             Node.changeConnection({ cluster });
             //Convert porperties, Upload content
             const properties = yield Properties.toConvertInfra(input.properties, Storage.uploadContent, input.storageType);
-            const inputInfra = Object.assign(Object.assign({}, input), { properties });
-            const sellerFeeBasisPoints = Royalty.convert(inputInfra.royalty);
-            const nftStorageMetadata = Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);
-            const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType);
+            input = Object.assign(Object.assign({}, input), { properties });
+            const sellerFeeBasisPoints = Royalty.convert(input.royalty);
+            const nftStorageMetadata = Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
+            const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, input.filePath, input.storageType);
             if (uploaded.isErr) {
                 throw uploaded;
             }
             const uri = uploaded.value;
-            const datav2 = MetaplexMetadata.toConvertInfra(inputInfra, uri, sellerFeeBasisPoints);
+            const datav2 = MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
             const connection = Node.getConnection();
             const mint = KeypairAccount.create();
             const isMutable = true;

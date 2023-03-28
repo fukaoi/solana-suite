@@ -22,27 +22,26 @@ export var Metaplex;
             }
             const sellerFeeBasisPoints = Royalty.convert(input.royalty);
             let uri = '';
-            let inputInfra;
             if (input.filePath && input.storageType === 'nftStorage') {
                 const properties = yield Properties.toConvertInfra(input.properties, Storage.uploadContent, input.storageType);
-                inputInfra = Object.assign(Object.assign({}, input), { properties });
-                const nftStorageMetadata = Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);
-                const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType);
+                input = Object.assign(Object.assign({}, input), { properties });
+                const nftStorageMetadata = Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
+                const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, input.filePath, input.storageType);
                 if (uploaded.isErr) {
                     throw uploaded;
                 }
                 uri = uploaded.value;
                 debugLog('# upload content url: ', uploaded);
             }
-            else if (inputInfra.uri) {
-                uri = inputInfra.uri;
+            else if (input.uri) {
+                uri = input.uri;
             }
             else {
                 throw Error(`Must set 'storageType=nftStorage + filePath' or 'uri'`);
             }
-            const datav2 = MetaplexMetadata.toConvertInfra(inputInfra, uri, sellerFeeBasisPoints);
-            const isMutable = inputInfra.isMutable === undefined ? true : inputInfra.isMutable;
-            debugLog('# inputInfra: ', inputInfra);
+            const datav2 = MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const isMutable = input.isMutable === undefined ? true : input.isMutable;
+            debugLog('# input: ', input);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             debugLog('# datav2: ', datav2);
             const mint = KeypairAccount.create();

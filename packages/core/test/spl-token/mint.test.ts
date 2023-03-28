@@ -82,4 +82,25 @@ describe('SplToken', () => {
     mintStr = inst.unwrap().data as string;
     console.log('# mint: ', mintStr);
   });
+
+  it('[Error]Raise parameter error when not need uri or filePath', async () => {
+    const owner = KeypairAccount.create();
+    const asset = RandomAsset.get();
+    const res = await SplToken.mint(
+      owner.pubkey,
+      owner.secret,
+      TOKEN_TOTAL_AMOUNT,
+      MINT_DECIMAL,
+      {
+        name: asset.name!,
+        symbol: asset.symbol!,
+      }
+    );
+    res.match(
+      (_: unknown) => assert.fail('Unrecognized error'),
+      (err) => {
+        assert.equal(err.message, `Must set 'storageType + filePath' or 'uri'`);
+      }
+    );
+  });
 });

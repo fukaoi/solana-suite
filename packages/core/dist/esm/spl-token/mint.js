@@ -56,11 +56,20 @@ export var SplToken;
             input.royalty = 0;
             const sellerFeeBasisPoints = 0;
             const tokenStorageMetadata = Storage.toConvertNftStorageMetadata(input, input.royalty);
-            const uploaded = yield Storage.uploadMetaContent(tokenStorageMetadata, input.filePath, input.storageType, payer);
-            if (uploaded.isErr) {
-                throw uploaded;
+            let uri;
+            if (input.filePath && input.storageType) {
+                const uploaded = yield Storage.uploadMetaContent(tokenStorageMetadata, input.filePath, input.storageType, payer);
+                if (uploaded.isErr) {
+                    throw uploaded;
+                }
+                uri = uploaded.value;
             }
-            const uri = uploaded.value;
+            else if (input.uri) {
+                uri = input.uri;
+            }
+            else {
+                throw Error(`Must set 'storageType + filePath' or 'uri'`);
+            }
             const isMutable = true;
             const datav2 = TokenMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
             debugLog('# datav2: ', datav2);

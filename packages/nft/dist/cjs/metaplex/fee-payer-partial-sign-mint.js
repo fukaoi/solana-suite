@@ -25,27 +25,26 @@ var Metaplex;
             }
             const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(input.royalty);
             let uri = '';
-            let inputInfra;
             if (input.filePath && input.storageType === 'nftStorage') {
                 const properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType);
-                inputInfra = Object.assign(Object.assign({}, input), { properties });
-                const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);
-                const uploaded = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType);
+                input = Object.assign(Object.assign({}, input), { properties });
+                const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
+                const uploaded = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, input.filePath, input.storageType);
                 if (uploaded.isErr) {
                     throw uploaded;
                 }
                 uri = uploaded.value;
                 (0, shared_1.debugLog)('# upload content url: ', uploaded);
             }
-            else if (inputInfra.uri) {
-                uri = inputInfra.uri;
+            else if (input.uri) {
+                uri = input.uri;
             }
             else {
                 throw Error(`Must set 'storageType=nftStorage + filePath' or 'uri'`);
             }
-            const datav2 = shared_metaplex_1.MetaplexMetadata.toConvertInfra(inputInfra, uri, sellerFeeBasisPoints);
-            const isMutable = inputInfra.isMutable === undefined ? true : inputInfra.isMutable;
-            (0, shared_1.debugLog)('# inputInfra: ', inputInfra);
+            const datav2 = shared_metaplex_1.MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const isMutable = input.isMutable === undefined ? true : input.isMutable;
+            (0, shared_1.debugLog)('# input: ', input);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             (0, shared_1.debugLog)('# datav2: ', datav2);
             const mint = shared_1.KeypairAccount.create();

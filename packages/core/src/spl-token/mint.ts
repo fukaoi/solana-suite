@@ -126,17 +126,25 @@ export namespace SplToken {
         input.royalty
       );
 
-      const uploaded = await Storage.uploadMetaContent(
-        tokenStorageMetadata,
-        input.filePath,
-        input.storageType,
-        payer
-      );
+      let uri!: string;
+      if (input.filePath && input.storageType) {
+        const uploaded = await Storage.uploadMetaContent(
+          tokenStorageMetadata,
+          input.filePath,
+          input.storageType,
+          payer
+        );
 
-      if (uploaded.isErr) {
-        throw uploaded;
+        if (uploaded.isErr) {
+          throw uploaded;
+        }
+        uri = uploaded.value;
+      } else if (input.uri) {
+        uri = input.uri;
+      } else {
+        throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
-      const uri = uploaded.value;
+
       const isMutable = true;
 
       const datav2 = TokenMetadata.toConvertInfra(

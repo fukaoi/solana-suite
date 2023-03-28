@@ -98,27 +98,27 @@ export var Metaplex;
             else if (input.properties && !input.storageType) {
                 throw Error('Must set storageType if will use properties');
             }
-            const inputInfra = Object.assign(Object.assign({}, input), { properties });
-            const sellerFeeBasisPoints = Royalty.convert(inputInfra.royalty);
-            const nftStorageMetadata = Storage.toConvertNftStorageMetadata(inputInfra, sellerFeeBasisPoints);
+            input = Object.assign(Object.assign({}, input), { properties });
+            const sellerFeeBasisPoints = Royalty.convert(input.royalty);
+            const nftStorageMetadata = Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
             let uri;
-            if (inputInfra.filePath && inputInfra.storageType) {
-                const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, inputInfra.filePath, inputInfra.storageType, payer);
+            if (input.filePath && input.storageType) {
+                const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, input.filePath, input.storageType, payer);
                 debugLog('# upload content url: ', uploaded);
                 if (uploaded.isErr) {
                     throw uploaded;
                 }
                 uri = uploaded.value;
             }
-            else if (inputInfra.uri) {
-                uri = inputInfra.uri;
+            else if (input.uri) {
+                uri = input.uri;
             }
             else {
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
-            const datav2 = MetaplexMetadata.toConvertInfra(inputInfra, uri, sellerFeeBasisPoints);
-            const isMutable = inputInfra.isMutable === undefined ? true : inputInfra.isMutable;
-            debugLog('# inputInfra: ', inputInfra);
+            const datav2 = MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const isMutable = input.isMutable === undefined ? true : input.isMutable;
+            debugLog('# input: ', input);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             debugLog('# datav2: ', datav2);
             const mint = KeypairAccount.create();
