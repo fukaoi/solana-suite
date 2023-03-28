@@ -13,7 +13,6 @@ import { Bundlr } from '@solana-suite/storage';
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
-        // ) => {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             const allData = yield Bundlr.make()
                 .nfts()

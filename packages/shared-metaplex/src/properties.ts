@@ -1,12 +1,11 @@
-import { MetaplexFileContent } from '@metaplex-foundation/js';
 import { overwriteObject, Secret, Result } from '@solana-suite/shared';
-import { User, StorageType, Infra } from './types';
+import { User, StorageType, Infra, FileContent } from './types';
 
 export namespace Properties {
   export const toConvertInfra = async (
     input: User.Properties | undefined,
     storageFunc: (
-      data: MetaplexFileContent,
+      data: FileContent,
       storageType: StorageType,
       feePayer?: Secret
     ) => Promise<Result<string, Error>>,

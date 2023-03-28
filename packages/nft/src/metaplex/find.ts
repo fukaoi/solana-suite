@@ -3,15 +3,15 @@ import {
   OutputNftMetadata,
   Creators,
   Collections,
+  MetaplexOriginal,
 } from '@solana-suite/shared-metaplex';
-import { Metadata } from '@metaplex-foundation/js';
+
 import { Bundlr } from '@solana-suite/storage';
 
 export namespace Metaplex {
   export const findByOwner = async (
     owner: Pubkey
   ): Promise<Result<OutputNftMetadata[], Error>> => {
-    // ) => {
     return Try(async () => {
       const allData = await Bundlr.make()
         .nfts()
@@ -21,7 +21,7 @@ export namespace Metaplex {
 
       const res = allData.map((d) => {
         return {
-          mint: (d as Metadata).mintAddress.toString(),
+          mint: (d as MetaplexOriginal).mintAddress.toString(),
           updateAuthority: d.updateAuthorityAddress.toString(),
           royalty: d.sellerFeeBasisPoints,
           name: d.name,

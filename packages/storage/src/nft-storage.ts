@@ -8,8 +8,8 @@ import {
   Try,
 } from '@solana-suite/shared';
 
-import { MetaplexFileContent, toMetaplexFile } from '@metaplex-foundation/js';
-import { StorageMetadata } from '@solana-suite/shared-metaplex';
+import { toMetaplexFile } from '@metaplex-foundation/js';
+import { StorageMetadata, FileContent } from '@solana-suite/shared-metaplex';
 
 export namespace NftStorage {
   let isDisplayWarning = false;
@@ -40,7 +40,7 @@ export namespace NftStorage {
   const connect = () => new NFTStorage({ token: getNftStorageApiKey() });
 
   export const uploadContent = async (
-    filePath: MetaplexFileContent
+    filePath: FileContent
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       debugLog('# upload content: ', filePath);

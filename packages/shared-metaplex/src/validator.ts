@@ -1,5 +1,4 @@
-import { MetaplexFileContent } from '@metaplex-foundation/js';
-import { isBrowser, Result, Try } from '@solana-suite/shared';
+import { Result, Try } from '@solana-suite/shared';
 import { Royalty } from './royalty';
 import { InputNftMetadata, MetaplexDataV2, StorageMetadata } from './types/';
 import { Limit, Details } from './types/validator';

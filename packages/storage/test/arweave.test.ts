@@ -4,7 +4,6 @@ import { KeypairAccount } from '../../shared';
 import { Setup } from '../../shared/test/testSetup';
 import { RandomAsset } from './randomAsset';
 import { Arweave } from '../src/arweave';
-import { Currency } from '@metaplex-foundation/js';
 
 let source: KeypairAccount;
 
@@ -65,7 +64,7 @@ describe('StorageArweave', () => {
     const asset = RandomAsset.get();
     const res = await Arweave.getUploadPrice(asset.filePath!, source.secret);
     res.match(
-      (ok: { price: number; currency: Currency }) =>
+      (ok: { price: number; currency: any }) =>
         console.log('# upload cost, currency: ', ok.price, ok.currency),
       (err: Error) => assert.fail(err.message)
     );

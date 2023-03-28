@@ -15,6 +15,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./infra-side/metaplex-datav2"), exports);
+__exportStar(require("./infra-side/metaplex-original"), exports);
 __exportStar(require("./infra-side/storage-metadata"), exports);
 __exportStar(require("./user-side/input-nft-metadata"), exports);
 __exportStar(require("./user-side/output-nft-metadata"), exports);

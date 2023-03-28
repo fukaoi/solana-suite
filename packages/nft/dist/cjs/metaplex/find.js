@@ -16,7 +16,6 @@ const storage_1 = require("@solana-suite/storage");
 var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
-        // ) => {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             const allData = yield storage_1.Bundlr.make()
                 .nfts()

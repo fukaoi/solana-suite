@@ -1,8 +1,7 @@
 import { Result } from '@solana-suite/shared';
-import { MetaplexFileContent } from '@metaplex-foundation/js';
-import { StorageMetadata } from '@solana-suite/shared-metaplex';
+import { StorageMetadata, FileContent } from '@solana-suite/shared-metaplex';
 export declare namespace NftStorage {
-    const uploadContent: (filePath: MetaplexFileContent) => Promise<Result<string, Error>>;
+    const uploadContent: (filePath: FileContent) => Promise<Result<string, Error>>;
     /**
      * Upload content
      *
