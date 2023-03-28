@@ -80,7 +80,7 @@ describe('Metaplex', () => {
     }
   });
 
-  it.only('[Error]Raise parameter error when not need uri or filePath', async () => {
+  it('[Error]Raise parameter error when not need uri or filePath', async () => {
     const owner = KeypairAccount.create();
     const asset = RandomAsset.get();
     const res = await Metaplex.feePayerPartialSignMint(
