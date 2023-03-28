@@ -32,11 +32,12 @@ import {
 import {
   InputNftMetadata,
   InputTokenMetadata,
+  Pda,
   TokenMetadata,
   Validator,
 } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
-import { Storage, Bundlr } from '@solana-suite/storage';
+import { Storage } from '@solana-suite/storage';
 
 export namespace SplToken {
   export const createMintInstructions = async (
@@ -50,8 +51,7 @@ export namespace SplToken {
   ): Promise<TransactionInstruction[]> => {
     const connection = Node.getConnection();
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
-    //todo: replaced getMetadataPda()
-    const metadataPda = Bundlr.make().nfts().pdas().metadata({ mint: mint });
+    const metadataPda = Pda.getMetadata(mint);
     const tokenAssociated = await getAssociatedTokenAddress(mint, owner);
 
     const inst1 = SystemProgram.createAccount({
