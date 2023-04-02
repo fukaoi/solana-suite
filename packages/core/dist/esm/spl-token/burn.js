@@ -15,7 +15,7 @@ import { SplToken as _Calculate } from './calculate-amount';
 export var SplToken;
 (function (SplToken) {
     const findAssociatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
-        const address = yield PublicKey.findProgramAddress([
+        const address = PublicKey.findProgramAddressSync([
             owner.toPublicKey().toBuffer(),
             TOKEN_PROGRAM_ID.toBuffer(),
             mint.toPublicKey().toBuffer(),

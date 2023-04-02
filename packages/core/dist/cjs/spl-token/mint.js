@@ -22,8 +22,7 @@ var SplToken;
     SplToken.createMintInstructions = (mint, owner, totalAmount, mintDecimal, tokenMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
         const connection = shared_1.Node.getConnection();
         const lamports = yield (0, spl_token_1.getMinimumBalanceForRentExemptMint)(connection);
-        //todo: replaced getMetadataPda()
-        const metadataPda = storage_1.Bundlr.make().nfts().pdas().metadata({ mint: mint });
+        const metadataPda = shared_metaplex_1.Pda.getMetadata(mint);
         const tokenAssociated = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, owner);
         const inst1 = web3_js_1.SystemProgram.createAccount({
             fromPubkey: feePayer,

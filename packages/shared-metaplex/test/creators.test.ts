@@ -33,10 +33,14 @@ describe('Creators', () => {
     ];
     const results = Creators.toConvertInfra(input);
     console.log('# converted creators', results);
-    results.forEach((res, i) => {
-      assert.equal(res.address.toString(), input[i].address);
-      assert.equal(res.share, input[i].share);
-    });
+    if (results) {
+      results.forEach((res, i) => {
+        assert.equal(res.address.toString(), input[i].address);
+        assert.equal(res.share, input[i].share);
+      });
+    } else {
+      assert.fail('`results` is null, empty');
+    }
   });
 
   it('To un-define convert', async () => {

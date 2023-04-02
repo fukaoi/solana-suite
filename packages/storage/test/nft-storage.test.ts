@@ -16,10 +16,11 @@ describe('StorageNftStorage', () => {
 
   it('Upload metadata json', async () => {
     const asset = RandomAsset.get();
-    const image = await NftStorage.uploadContent(asset.filePath!);
-    asset.image = image.unwrap();
-    delete asset.filePath;
-    const res = await NftStorage.uploadMetadata(asset);
+    const image = {
+      image: 'https://arweave.net/mVT6g3X99bZG0oMlTBB8fdbH7arnQ9lKWMUR9jMTXbQ',
+    };
+    const meta = { ...asset, ...image };
+    const res = await NftStorage.uploadMetadata(meta);
 
     res.match(
       (ok) => console.log('# nft.storage metadata url: ', ok),

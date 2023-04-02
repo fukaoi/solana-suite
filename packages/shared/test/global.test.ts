@@ -13,8 +13,6 @@ import {
 } from '../src';
 import { JSDOM } from 'jsdom';
 
-import { InputCreators } from '../../shared-metaplex/src';
-
 const PUBKEY = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
 const SIG =
   '47KcZGxPayz3cJ3Vy6mKCFmz6N4kGkKm3TDnb9VVJ4krrgdu3WznRKyweh4n6KfWgXTm2LzdVqf8sPmjV1H2u6YR';
@@ -138,7 +136,7 @@ describe('Global', () => {
     const original = {
       address: '122pJ24W3kc3Ra5QKAJzUD9LvSEdircGhCjBDz4Ax1ct',
     };
-    const value: InputCreators = {
+    const value = {
       address: '122pJ24W3kc3Ra5QKAJzUD9LvSEdircGhCjBDz4Ax1ct',
       share: 40,
       authority:

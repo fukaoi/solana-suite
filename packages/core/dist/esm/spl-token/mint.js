@@ -11,16 +11,15 @@ import { SystemProgram, } from '@solana/web3.js';
 import { MINT_SIZE, TOKEN_PROGRAM_ID, createInitializeMintInstruction, getMinimumBalanceForRentExemptMint, createAssociatedTokenAccountInstruction, createMintToCheckedInstruction, getAssociatedTokenAddress, } from '@solana/spl-token';
 import { createCreateMetadataAccountV2Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 import { Node, MintInstruction, Try, debugLog, KeypairAccount, } from '@solana-suite/shared';
-import { TokenMetadata, Validator, } from '@solana-suite/shared-metaplex';
+import { Pda, TokenMetadata, Validator, } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
-import { Storage, Bundlr } from '@solana-suite/storage';
+import { Storage } from '@solana-suite/storage';
 export var SplToken;
 (function (SplToken) {
     SplToken.createMintInstructions = (mint, owner, totalAmount, mintDecimal, tokenMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
         const connection = Node.getConnection();
         const lamports = yield getMinimumBalanceForRentExemptMint(connection);
-        //todo: replaced getMetadataPda()
-        const metadataPda = Bundlr.make().nfts().pdas().metadata({ mint: mint });
+        const metadataPda = Pda.getMetadata(mint);
         const tokenAssociated = yield getAssociatedTokenAddress(mint, owner);
         const inst1 = SystemProgram.createAccount({
             fromPubkey: feePayer,
