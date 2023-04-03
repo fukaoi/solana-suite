@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SplToken = void 0;
 const spl_token_1 = require("@solana/spl-token");
@@ -25,14 +16,14 @@ var SplToken;
         ], spl_token_2.ASSOCIATED_TOKEN_PROGRAM_ID);
         return address[0];
     };
-    SplToken.burn = (mint, owner, signers, burnAmount, tokenDecimals, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+    SplToken.burn = (mint, owner, signers, burnAmount, tokenDecimals, feePayer) => {
+        return (0, shared_1.Try)(() => {
             const tokenAccount = findAssociatedTokenAddress(mint, owner);
             const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
             const keypairs = signers.map((s) => s.toKeypair());
             const inst = (0, spl_token_1.createBurnCheckedInstruction)(tokenAccount, mint.toPublicKey(), owner.toPublicKey(), calculate_amount_1.SplToken.calculateAmount(burnAmount, tokenDecimals), tokenDecimals, keypairs);
             return new shared_1.Instruction([inst], keypairs, payer);
-        }));
-    });
+        });
+    };
 })(SplToken = exports.SplToken || (exports.SplToken = {}));
 //# sourceMappingURL=burn.js.map
