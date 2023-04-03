@@ -17,7 +17,6 @@ export var Metaplex;
             const allData = yield Bundlr.make()
                 .nfts()
                 .findAllByOwner({ owner: owner.toPublicKey() });
-            console.log(allData);
             const res = allData.map((d) => {
                 return {
                     mint: d.mintAddress.toString(),

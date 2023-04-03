@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/spl-token/index.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,IAAI,GAAG,EAAE,MAAM,OAAO,CAAC;AAC/C,oDAAoD;AAEpD,MAAM,CAAC,MAAM,eAAe,qBACvB,GAAG,CAEP,CAAC"}
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/spl-token/index.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,IAAI,GAAG,EAAE,MAAM,OAAO,CAAC;AAC/C,OAAO,EAAE,eAAe,IAAI,IAAI,EAAE,MAAM,QAAQ,CAAC;AAEjD,MAAM,CAAC,MAAM,eAAe,mCACvB,GAAG,GACH,IAAI,CACR,CAAC"}
