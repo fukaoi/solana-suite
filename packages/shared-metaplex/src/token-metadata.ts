@@ -1,7 +1,7 @@
 import { Creators } from './creators';
 import { InputTokenMetadata, MetaplexDataV2 } from './types';
 
-export module TokenMetadata {
+export namespace TokenMetadata {
   export const toConvertInfra = (
     input: InputTokenMetadata,
     uri: string,

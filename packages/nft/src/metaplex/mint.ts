@@ -48,9 +48,9 @@ export namespace Metaplex {
     feePayer: PublicKey,
     isMutable: boolean
   ): Promise<TransactionInstruction[]> => {
-    let ata = await getAssociatedTokenAddress(mint, owner);
-    let tokenMetadataPubkey = Pda.getMetadata(mint);
-    let masterEditionPubkey = Pda.getMasterEdition(mint);
+    const ata = await getAssociatedTokenAddress(mint, owner);
+    const tokenMetadataPubkey = Pda.getMetadata(mint);
+    const masterEditionPubkey = Pda.getMasterEdition(mint);
 
     const connection = Node.getConnection();
 
@@ -173,7 +173,7 @@ export namespace Metaplex {
 
       let uri!: string;
       if (input.filePath && input.storageType) {
-        const uploaded = await Storage.uploadMetaContent(
+        const uploaded = await Storage.uploadMetaAndContent(
           nftStorageMetadata,
           input.filePath,
           input.storageType,

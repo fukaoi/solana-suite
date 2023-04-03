@@ -39,7 +39,7 @@ describe('SplToken', () => {
     console.log('# mint: ', token);
 
     const burnAmount = 500000;
-    const inst2 = await SplToken.burn(
+    const inst2 = SplToken.burn(
       token,
       source.pubkey,
       [source.secret],

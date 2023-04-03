@@ -38,7 +38,7 @@ export namespace Metaplex {
 
       const sellerFeeBasisPoints = Royalty.convert(input.royalty);
 
-      let uri: string = '';
+      let uri = '';
       if (input.filePath && input.storageType === 'nftStorage') {
         const properties = await Properties.toConvertInfra(
           input.properties,
@@ -55,7 +55,7 @@ export namespace Metaplex {
           input,
           sellerFeeBasisPoints
         );
-        const uploaded = await Storage.uploadMetaContent(
+        const uploaded = await Storage.uploadMetaAndContent(
           nftStorageMetadata,
           input.filePath!,
           input.storageType!

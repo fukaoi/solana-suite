@@ -95,7 +95,7 @@ export namespace SplToken {
       },
       {
         createMetadataAccountArgsV2: {
-          data: tokenMetadata as DataV2,
+          data: tokenMetadata ,
           isMutable,
         },
       }
@@ -128,7 +128,7 @@ export namespace SplToken {
 
       let uri!: string;
       if (input.filePath && input.storageType) {
-        const uploaded = await Storage.uploadMetaContent(
+        const uploaded = await Storage.uploadMetaAndContent(
           tokenStorageMetadata,
           input.filePath,
           input.storageType,

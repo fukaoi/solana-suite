@@ -4,10 +4,10 @@ import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { KeypairAccount } from '../../../shared';
-import { Storage } from '@solana-suite/storage';
+import { Storage } from '../../../storage';
+import { StorageMetadata, Royalty } from '../../../shared-metaplex';
 
 let source: KeypairAccount;
-
 describe('Metaplex', () => {
   before(async () => {
     const obj = await Setup.generateKeyPair();
@@ -45,23 +45,37 @@ describe('Metaplex', () => {
   });
 
   it('[Arweave] use case arweave', async () => {
+    const royalty = 60;
     const owner = KeypairAccount.create();
     const asset = RandomAsset.get();
+    const sellerFeeBasisPoints = Royalty.convert(royalty);
 
-    const uploaded = await Storage.uploadContent(
-      asset.filePath!,
+    const nftStorageMetadata: StorageMetadata = {
+      name: asset.name,
+      symbol: asset.symbol,
+      description: 'upload meta and content',
+      seller_fee_basis_points: sellerFeeBasisPoints,
+    };
+
+    const uploaded = await Storage.uploadMetaAndContent(
+      nftStorageMetadata,
+      asset.filePath,
       'arweave',
       source.secret
     );
+    if (uploaded.isErr) {
+      throw uploaded;
+    }
+    const uri = uploaded.value;
 
     const serialized = await Metaplex.feePayerPartialSignMint(
       owner.pubkey,
       owner.secret,
       {
-        uri: uploaded.unwrap(),
+        uri,
         name: asset.name!,
         symbol: asset.symbol!,
-        royalty: 50,
+        royalty,
         isMutable: true,
       },
       source.pubkey

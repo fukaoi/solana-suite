@@ -33,7 +33,7 @@ export var PhantomMetaplex;
             input = Object.assign(Object.assign({}, input), { properties });
             const sellerFeeBasisPoints = Royalty.convert(input.royalty);
             const nftStorageMetadata = Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
-            const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, input.filePath, input.storageType);
+            const uploaded = yield Storage.uploadMetaAndContent(nftStorageMetadata, input.filePath, input.storageType);
             if (uploaded.isErr) {
                 throw uploaded;
             }

@@ -8,10 +8,10 @@ import {
 import { SplToken as _Calculate } from './calculate-amount';
 
 export namespace SplToken {
-  const findAssociatedTokenAddress = async (
+  const findAssociatedTokenAddress = (
     mint: Pubkey,
     owner: Pubkey
-  ): Promise<PublicKey> => {
+  ): PublicKey => {
     const address = PublicKey.findProgramAddressSync(
       [
         owner.toPublicKey().toBuffer(),
@@ -23,16 +23,16 @@ export namespace SplToken {
     return address[0];
   };
 
-  export const burn = async (
+  export const burn = (
     mint: Pubkey,
     owner: Pubkey,
     signers: Secret[],
     burnAmount: number,
     tokenDecimals: number,
     feePayer?: Secret
-  ): Promise<Result<Instruction, Error>> => {
-    return Try(async () => {
-      const tokenAccount = await findAssociatedTokenAddress(mint, owner);
+  ): Result<Instruction, Error> => {
+    return Try(() => {
+      const tokenAccount = findAssociatedTokenAddress(mint, owner);
       const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
       const keypairs = signers.map((s) => s.toKeypair());
 

@@ -45,7 +45,7 @@ export namespace Storage {
     }
   };
 
-  export const uploadMetaContent = async (
+  export const uploadMetaAndContent = async (
     input: StorageMetadata,
     filePath: FileContent,
     storageType: StorageType,

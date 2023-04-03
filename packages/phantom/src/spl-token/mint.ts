@@ -34,7 +34,7 @@ export namespace PhantomSplToken {
 
       let uri!: string;
       if (input.filePath && input.storageType) {
-        const uploaded = await Storage.uploadMetaContent(
+        const uploaded = await Storage.uploadMetaAndContent(
           tokenStorageMetadata,
           input.filePath,
           input.storageType
