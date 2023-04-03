@@ -1,6 +1,6 @@
 {
   "name": "solana-suite",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "private": true,
   "scripts": {
     "clean": "npm run clean -ws",
