@@ -1,22 +1,22 @@
 export var Creators;
 (function (Creators) {
-    Creators.toInputConvert = (input) => {
+    Creators.toConvertInfra = (input) => {
         if (!input) {
-            return [];
+            return null;
         }
         return input.map((data) => {
-            const authority = data.authority
-                ? (data.authority).toKeypair()
-                : undefined;
             const modify = {
                 address: data.address.toPublicKey(),
                 share: data.share,
-                authority: authority,
+                verified: data.verified,
             };
             return modify;
         });
     };
-    Creators.toOutputConvert = (output) => {
+    Creators.toConvertUser = (output) => {
+        if (!output) {
+            return [];
+        }
         return output.map((data) => {
             const modify = {
                 address: data.address.toString(),

@@ -51,7 +51,7 @@ var AssociatedAccount;
                     return inst;
                 }
                 else if (inst instanceof shared_1.Instruction) {
-                    (yield inst.submit()).map((ok) => __awaiter(this, void 0, void 0, function* () {
+                    (yield [inst].submit()).map((ok) => __awaiter(this, void 0, void 0, function* () {
                         yield shared_1.Node.confirmedSig(ok);
                         return inst.data;
                     }), (err) => {
@@ -62,6 +62,7 @@ var AssociatedAccount;
             }
             catch (e) {
                 (0, shared_1.debugLog)(`# retry: ${counter} create token account: `, e);
+                (0, shared_1.debugLog)(`# mint: ${mint}, owner: ${owner}, feePayer: ${feePayer}`);
             }
             yield (0, shared_1.sleep)(RETRY_SLEEP_TIME);
             counter++;

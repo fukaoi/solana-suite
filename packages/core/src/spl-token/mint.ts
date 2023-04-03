@@ -1,4 +1,8 @@
-import { Connection, PublicKey, SystemProgram } from '@solana/web3.js';
+import {
+  PublicKey,
+  SystemProgram,
+  TransactionInstruction,
+} from '@solana/web3.js';
 import {
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
@@ -20,40 +24,37 @@ import {
   MintInstruction,
   Try,
   debugLog,
-  overwriteObject,
   Pubkey,
   Secret,
   KeypairAccount,
 } from '@solana-suite/shared';
 
 import {
+  InputNftMetadata,
   InputTokenMetadata,
-  _InputNftMetadata,
-  _TokenMetadata,
+  Pda,
+  TokenMetadata,
   Validator,
-  Creators,
 } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
-import { Storage, Bundlr } from '@solana-suite/storage';
+import { Storage } from '@solana-suite/storage';
 
 export namespace SplToken {
-  export const createMintInstruction = async (
-    connection: Connection,
+  export const createMintInstructions = async (
     mint: PublicKey,
     owner: PublicKey,
     totalAmount: number,
     mintDecimal: number,
-    tokenMetadata: _TokenMetadata,
+    tokenMetadata: DataV2,
     feePayer: PublicKey,
     isMutable: boolean
-  ) => {
+  ): Promise<TransactionInstruction[]> => {
+    const connection = Node.getConnection();
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
-
-    const metadataPda = Bundlr.make().nfts().pdas().metadata({ mint: mint });
-
+    const metadataPda = Pda.getMetadata(mint);
     const tokenAssociated = await getAssociatedTokenAddress(mint, owner);
 
-    const inst = SystemProgram.createAccount({
+    const inst1 = SystemProgram.createAccount({
       fromPubkey: feePayer,
       newAccountPubkey: mint,
       space: MINT_SIZE,
@@ -99,7 +100,7 @@ export namespace SplToken {
         },
       }
     );
-    return [inst, inst2, inst3, inst4, inst5];
+    return [inst1, inst2, inst3, inst4, inst5];
   };
 
   export const mint = async (
@@ -116,58 +117,60 @@ export namespace SplToken {
         throw valid.error;
       }
 
-      const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
-      input.royalty = input.royalty ? input.royalty : 0;
+      const payer = feePayer ? feePayer : signer;
+      input.royalty = 0;
+      const sellerFeeBasisPoints = 0;
 
-      let overwrited = input as _InputNftMetadata;
-      if (input.creators) {
-        const creatorsValue = Creators.toInputConvert(input.creators);
-        overwrited = overwriteObject(input, [
-          {
-            existsKey: 'creators',
-            will: {
-              key: 'creators',
-              value: creatorsValue,
-            },
-          },
-        ]) as _InputNftMetadata;
+      const tokenStorageMetadata = Storage.toConvertNftStorageMetadata(
+        input as InputNftMetadata,
+        input.royalty
+      );
+
+      let uri!: string;
+      if (input.filePath && input.storageType) {
+        const uploaded = await Storage.uploadMetaContent(
+          tokenStorageMetadata,
+          input.filePath,
+          input.storageType,
+          payer
+        );
+
+        if (uploaded.isErr) {
+          throw uploaded;
+        }
+        uri = uploaded.value;
+      } else if (input.uri) {
+        uri = input.uri;
+      } else {
+        throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
 
-      debugLog('# overwrited: ', overwrited);
-      const uploaded = await Storage.uploadMetaContent(overwrited, feePayer);
-      const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+      const isMutable = true;
 
-      debugLog('# upload content url: ', uri);
-      debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-      debugLog('# reducedMetadata: ', reducedMetadata);
-
-      const tokenMetadata: _TokenMetadata = {
-        name: reducedMetadata.name,
-        symbol: reducedMetadata.symbol,
+      const datav2 = TokenMetadata.toConvertInfra(
+        input,
         uri,
-        sellerFeeBasisPoints,
-        creators: reducedMetadata.creators,
-        uses: reducedMetadata.uses,
-        collection: undefined,
-      };
-      const isMutable = !reducedMetadata.isMutable ? false : true;
+        sellerFeeBasisPoints
+      );
 
-      const connection = Node.getConnection();
+      debugLog('# datav2: ', datav2);
+      debugLog('# upload content url: ', uri);
+
       const mint = KeypairAccount.create();
-      const insts = await createMintInstruction(
-        connection,
+      const insts = await createMintInstructions(
         mint.toPublicKey(),
         owner.toPublicKey(),
         totalAmount,
         mintDecimal,
-        tokenMetadata,
-        payer.publicKey,
+        datav2,
+        payer.toKeypair().publicKey,
         isMutable
       );
+
       return new MintInstruction(
         insts,
         [signer.toKeypair(), mint.toKeypair()],
-        payer,
+        payer.toKeypair(),
         mint.pubkey
       );
     });

@@ -30,9 +30,9 @@ var Metaplex;
                     uri: d.uri,
                     isMutable: d.isMutable,
                     primarySaleHappened: d.primarySaleHappened,
-                    creators: shared_metaplex_1.Creators.toOutputConvert(d.creators),
+                    creators: shared_metaplex_1.Creators.toConvertUser(d.creators),
                     editionNonce: d.editionNonce,
-                    collection: shared_metaplex_1.Collections.toOutputConvert(d.collection),
+                    collection: shared_metaplex_1.Collections.toConvertUser(d.collection),
                     uses: d.uses,
                 };
             });

@@ -13,35 +13,38 @@ describe('Creators', () => {
       {
         address: creator1.pubkey,
         share: 20,
-        authority: creator1.secret,
+        verified: false,
       },
       {
         address: creator2.pubkey,
         share: 30,
-        authority: creator2.secret,
+        verified: false,
       },
       {
         address: creator3.pubkey,
         share: 40,
-        authority: creator3.secret,
+        verified: false,
       },
       {
         address: creator4.pubkey,
         share: 10,
-        authority: creator4.secret,
+        verified: false,
       },
     ];
-    const results = Creators.toInputConvert(input);
+    const results = Creators.toConvertInfra(input);
     console.log('# converted creators', results);
-    results.forEach((res, i) => {
-      assert.equal(res.address.toString(), input[i].address);
-      assert.equal(res.share, input[i].share);
-      assert.deepEqual(res.authority, input[i].authority.toKeypair());
-    });
+    if (results) {
+      results.forEach((res, i) => {
+        assert.equal(res.address.toString(), input[i].address);
+        assert.equal(res.share, input[i].share);
+      });
+    } else {
+      assert.fail('`results` is null, empty');
+    }
   });
 
   it('To un-define convert', async () => {
-    const res = Creators.toInputConvert([]);
+    const res = Creators.toConvertInfra([]);
     assert.deepEqual(res, []);
   });
 });

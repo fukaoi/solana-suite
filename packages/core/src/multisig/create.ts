@@ -13,10 +13,10 @@ export namespace Multisig {
   export const create = async (
     m: number,
     feePayer: Secret,
-    signerPubkey: Pubkey[]
+    signerPubkeys: Pubkey[]
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
-      if (m > signerPubkey.length) {
+      if (m > signerPubkeys.length) {
         throw Error('signers number less than m number');
       }
 
@@ -32,13 +32,17 @@ export namespace Multisig {
         balanceNeeded
       );
 
-      const inst2 = _Instruction.multisig(m, account, signerPubkey.map(s => s.toPublicKey()));
+      const inst2 = _Instruction.multisig(
+        m,
+        account,
+        signerPubkeys.map((pubkey: Pubkey) => pubkey.toPublicKey())
+      );
 
       return new Instruction(
         [inst1, inst2],
         [account],
         feePayer.toKeypair(),
-        account.publicKey.toBase58()
+        account.publicKey.toString()
       );
     });
   };

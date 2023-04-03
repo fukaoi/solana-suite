@@ -3,8 +3,9 @@ import {
   OutputNftMetadata,
   Creators,
   Collections,
+  MetaplexOriginal,
 } from '@solana-suite/shared-metaplex';
-import { Metadata } from '@metaplex-foundation/js';
+
 import { Bundlr } from '@solana-suite/storage';
 
 export namespace Metaplex {
@@ -18,7 +19,7 @@ export namespace Metaplex {
 
       const res = allData.map((d) => {
         return {
-          mint: (d as Metadata).mintAddress.toString(),
+          mint: (d as MetaplexOriginal).mintAddress.toString(),
           updateAuthority: d.updateAuthorityAddress.toString(),
           royalty: d.sellerFeeBasisPoints,
           name: d.name,
@@ -26,9 +27,9 @@ export namespace Metaplex {
           uri: d.uri,
           isMutable: d.isMutable,
           primarySaleHappened: d.primarySaleHappened,
-          creators: Creators.toOutputConvert(d.creators),
+          creators: Creators.toConvertUser(d.creators),
           editionNonce: d.editionNonce,
-          collection: Collections.toOutputConvert(d.collection),
+          collection: Collections.toConvertUser(d.collection),
           uses: d.uses,
         };
       });

@@ -18,7 +18,7 @@ const calculate_amount_1 = require("./calculate-amount");
 var SplToken;
 (function (SplToken) {
     const findAssociatedTokenAddress = (mint, owner) => __awaiter(this, void 0, void 0, function* () {
-        const address = yield web3_js_1.PublicKey.findProgramAddress([
+        const address = web3_js_1.PublicKey.findProgramAddressSync([
             owner.toPublicKey().toBuffer(),
             spl_token_2.TOKEN_PROGRAM_ID.toBuffer(),
             mint.toPublicKey().toBuffer(),

@@ -8,10 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Transaction, Keypair } from '@solana/web3.js';
-import { Node, Try, debugLog, overwriteObject, } from '@solana-suite/shared';
+import { Node, Try, debugLog } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { SplToken } from '@solana-suite/core';
-import { Creators, } from '@solana-suite/shared-metaplex';
+import { TokenMetadata, } from '@solana-suite/shared-metaplex';
 export var PhantomSplToken;
 (function (PhantomSplToken) {
     PhantomSplToken.mint = (input, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
@@ -20,33 +20,28 @@ export var PhantomSplToken;
             const connection = Node.getConnection();
             const transaction = new Transaction();
             const mint = Keypair.generate();
-            debugLog('# input: ', input);
-            const creatorsValue = Creators.toInputConvert(input.creators);
-            const overwrited = overwriteObject(input, [
-                {
-                    existsKey: 'creators',
-                    will: {
-                        key: 'creators',
-                        value: creatorsValue,
-                    },
-                },
-            ]);
-            const uploaded = yield Storage.uploadMetaContent(overwrited);
-            const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+            input.royalty = 0;
+            const sellerFeeBasisPoints = 0;
+            const tokenStorageMetadata = Storage.toConvertNftStorageMetadata(input, input.royalty);
+            let uri;
+            if (input.filePath && input.storageType) {
+                const uploaded = yield Storage.uploadMetaContent(tokenStorageMetadata, input.filePath, input.storageType);
+                if (uploaded.isErr) {
+                    throw uploaded;
+                }
+                uri = uploaded.value;
+            }
+            else if (input.uri) {
+                uri = input.uri;
+            }
+            else {
+                throw Error(`Must set 'storageType + filePath' or 'uri'`);
+            }
+            const isMutable = true;
+            const datav2 = TokenMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            debugLog('# datav2: ', datav2);
             debugLog('# upload content url: ', uri);
-            debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-            debugLog('# reducedMetadata: ', reducedMetadata);
-            const tokenMetadata = {
-                name: reducedMetadata.name,
-                symbol: reducedMetadata.symbol,
-                uri,
-                sellerFeeBasisPoints,
-                creators: reducedMetadata.creators,
-                collection: undefined,
-                uses: reducedMetadata.uses,
-            };
-            const isMutable = !reducedMetadata.isMutable ? false : true;
-            const insturctions = yield SplToken.createMintInstruction(connection, mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, owner.toPublicKey(), isMutable);
+            const insturctions = yield SplToken.createMintInstructions(mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, datav2, owner.toPublicKey(), isMutable);
             insturctions.forEach((inst) => transaction.add(inst));
             transaction.feePayer = owner.toPublicKey();
             const blockhashObj = yield connection.getLatestBlockhashAndContext();

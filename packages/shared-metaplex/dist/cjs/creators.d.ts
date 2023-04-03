@@ -1,6 +1,5 @@
-import { CreatorInput, Creator } from '@metaplex-foundation/js';
-import { InputCreators, OutputCreators } from './types';
+import { User, Infra } from './types';
 export declare namespace Creators {
-    const toInputConvert: (input: InputCreators[] | undefined) => CreatorInput[];
-    const toOutputConvert: (output: Creator[]) => OutputCreators[];
+    const toConvertInfra: (input: User.Creators[] | undefined) => Infra.Creators[] | null;
+    const toConvertUser: (output: Infra.Creators[]) => User.Creators[];
 }

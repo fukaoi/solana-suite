@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
-import { InputCreators, ValidatorError } from '../../../shared-metaplex/';
+import { ValidatorError, User } from '../../../shared-metaplex/';
 import { KeypairAccount } from '../../../shared';
 import { Pubkey } from '../../../shared/src';
 
@@ -37,30 +37,49 @@ describe('Metaplex', () => {
     );
   });
 
+  it('[Nft Storage] mint nft with fee payer', async () => {
+    const owner = KeypairAccount.create();
+    const asset = RandomAsset.get();
+    const res = await Metaplex.mint(
+      owner.pubkey,
+      owner.secret,
+      {
+        filePath: asset.filePath as string,
+        storageType: 'arweave',
+        name: asset.name!,
+        symbol: asset.symbol!,
+        royalty: 50,
+        isMutable: true,
+      },
+      source.secret
+    );
+
+    assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
+
+    (await res.submit()).match(
+      (ok: string) => {
+        console.log('# mint:', res.unwrap().data);
+        console.log('# sig:', ok);
+      },
+      (ng: Error) => assert.fail(ng.message)
+    );
+  });
+
   it('[Nft Storage] mint nft with many optional datas', async () => {
     const asset = RandomAsset.get();
+    const creators: User.Creators[] = [];
 
-    const creator1: InputCreators = {
+    creators.push({
       address: source.pubkey,
       share: 60,
-      authority: source.secret,
-    };
+      verified: true,
+    });
 
-    const creator2: InputCreators = {
+    creators.push({
       address: 'G2Fjvm2ab1xxwMxLPFRSmuEDcX8jzsg2L1gFK4MKMkt5',
-      share: 30,
-      authority:
-        '4HBrM8BTmEqb3wTTzMm77353e1yHC1aTgXJUqmtNovswEfK9SCwrwF56TmjEGakVBeYB17CpdbrSFy7SXaQHDbkR',
-    };
-
-    const creator3: InputCreators = {
-      address: 'DtoMJQF8kUkePJ8YwcQt9cAKbWQFXmBXXNdq5USwJw3s',
-      share: 10,
-      authority:
-        'HsJ144zNS1mc79HgzraFS6pLbfWBpd3zXrXmDM2zCoX9Kmra9Gg9wKc2WbF2JX5JsHz8fkTun7Dw3E8MtaeLKGH',
-    };
-
-    const collection = KeypairAccount.create().pubkey;
+      share: 40,
+      verified: false,
+    });
 
     const properties = {
       files: [
@@ -72,23 +91,36 @@ describe('Metaplex', () => {
       ],
     };
 
+    const collection = '2XgApg3pcPkyNxoHr8N6bWtZ4gG5W6iV3MksJ3brLmRZ';
+
+    const attributes = [
+      {
+        trait_type: 'hair',
+        value: 'brown',
+      },
+      {
+        trait_type: 'eye',
+        value: 'blue',
+      },
+    ];
+
+    const options = {
+      github_url: 'https://github.com/atonoy/solana-suite',
+      docs_url:
+        'https://solana-suite.gitbook.io/solana-suite-develpoment-guide/',
+    };
+
     const res = await Metaplex.mint(source.pubkey, source.secret, {
       filePath: asset.filePath as string,
       storageType: 'nftStorage',
       name: asset.name!,
       symbol: asset.symbol!,
-      royalty: 30,
-      description: 'This is Solana Suite test',
-      external_url: 'https://atonoy.github.io/solana-suite/',
-      creators: [creator1, creator2, creator3],
-      isMutable: true,
-      collection: collection,
-      properties: properties,
-      options: {
-        github_url: 'https://github.com/atonoy/solana-suite',
-        docs_url:
-          'https://solana-suite.gitbook.io/solana-suite-develpoment-guide/',
-      },
+      royalty: 50,
+      creators,
+      properties,
+      // collection,
+      attributes,
+      options,
     });
 
     assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
@@ -98,14 +130,11 @@ describe('Metaplex', () => {
         console.log('# mint:', res.unwrap().data);
         console.log('# sig:', ok);
       },
-      (ng: Error) => {
-        console.log(ng);
-        assert.fail(ng.message);
-      }
+      (ng: Error) => assert.fail(ng.message)
     );
   });
 
-  it('Raise validation error when upload meta data', async () => {
+  it('[Error]Raise validation error when upload meta data', async () => {
     const res = await Metaplex.mint(source.pubkey, source.secret, {
       filePath: '',
       name: '',
@@ -121,6 +150,23 @@ describe('Metaplex', () => {
           assert.isNotEmpty(err.message);
           console.log(err.details);
         };
+      }
+    );
+  });
+
+  it('[Error]Raise parameter error when not need uri or filePath', async () => {
+    const owner = KeypairAccount.create();
+    const asset = RandomAsset.get();
+    const res = await Metaplex.mint(owner.pubkey, owner.secret, {
+      name: asset.name!,
+      symbol: asset.symbol!,
+      royalty: 50,
+      isMutable: true,
+    });
+    res.match(
+      (_: unknown) => assert.fail('Unrecognized error'),
+      (err) => {
+        assert.equal(err.message, `Must set 'storageType + filePath' or 'uri'`);
       }
     );
   });

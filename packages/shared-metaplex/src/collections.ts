@@ -1,23 +1,29 @@
-import {
-  InputCollection,
-  OutputCollection,
-  _InputCollection,
-  _OutputCollection,
-} from './types';
+import { User, Infra } from './types';
 
 export namespace Collections {
-  export const toInputConvert = (
-    input: InputCollection | undefined
-  ): _InputCollection => (!input ? null : input.toPublicKey());
+  export const toConvertInfra = (
+    input: User.Input.Collection | undefined
+  ): Infra.Input.Collection => {
+    if (!input) {
+      return null;
+    }
 
-  export const toOutputConvert = (
-    output: _OutputCollection | undefined
-  ): OutputCollection => {
-    return !output
-      ? null
-      : {
-          address: output.address.toString(),
-          verified: output.verified,
-        };
+    return {
+      key: input.toPublicKey(),
+      verified: true,
+    };
+  };
+
+  export const toConvertUser = (
+    output: Infra.Output.Collection | undefined
+  ): User.Output.Collection => {
+    if (!output) {
+      return null;
+    }
+
+    return {
+      address: output.address.toString(),
+      verified: output.verified,
+    };
   };
 }

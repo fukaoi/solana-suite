@@ -1,10 +1,9 @@
-import { TransactionInstruction, Keypair } from '@solana/web3.js';
+import { TransactionInstruction, PublicKey } from '@solana/web3.js';
 import { Result, MintInstruction, Secret, Pubkey } from '@solana-suite/shared';
 import { InputNftMetadata } from '@solana-suite/shared-metaplex';
-import { CreateNftBuilderParams } from '@metaplex-foundation/js';
-import { IdentityClient } from '@metaplex-foundation/js/dist/types/plugins/identityModule';
+import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 export declare namespace Metaplex {
-    const createNftBuilderInstruction: (feePayer: Keypair | IdentityClient, params: CreateNftBuilderParams, useNewMint: Keypair, updateAuthority: Keypair | IdentityClient, mintAuthority: Keypair | IdentityClient, tokenOwner: Pubkey) => Promise<TransactionInstruction[]>;
+    const createMintInstructions: (mint: PublicKey, owner: PublicKey, nftMetadata: DataV2, feePayer: PublicKey, isMutable: boolean) => Promise<TransactionInstruction[]>;
     /**
      * Upload content and NFT mint
      *

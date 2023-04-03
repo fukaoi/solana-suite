@@ -1,11 +1,6 @@
-import { MetaplexFileContent } from '@metaplex-foundation/js';
-import { isBrowser, Result, Try } from '@solana-suite/shared';
+import { Result, Try } from '@solana-suite/shared';
 import { Royalty } from './royalty';
-import {
-  InputNftMetadata,
-  _MetaplexNftMetaData,
-  NftStorageMetadata,
-} from './types/';
+import { InputNftMetadata, MetaplexDataV2, StorageMetadata } from './types/';
 import { Limit, Details } from './types/validator';
 
 export namespace Validator {
@@ -104,24 +99,6 @@ export namespace Validator {
     });
   };
 
-  export const isFilePath = (
-    filePath: MetaplexFileContent
-  ): Result<string, ValidatorError> => {
-    return Try(() => {
-      const key = 'filePath';
-      if (!filePath) {
-        throw createError(key, Message.EMPTY, filePath);
-      }
-      if (isBrowser() && typeof filePath === 'string') {
-        throw createError(key, Message.ONLY_NODE_JS, filePath);
-      }
-      return Message.SUCCESS;
-    });
-  };
-
-  export const isUri = (uri: string): Result<string, ValidatorError> =>
-    isUriOrImage(uri, 'uri');
-
   export const isImageUrl = (image: string): Result<string, ValidatorError> =>
     isUriOrImage(image, 'image');
 
@@ -136,11 +113,6 @@ export namespace Validator {
       keys.map((key) => {
         let res!: Result<string, ValidatorError>;
         switch (key) {
-          case 'uri':
-            if (key in metadata) {
-              res = isUri(metadata.uri);
-            }
-            break;
           case 'image':
             if (key in metadata && metadata.image) {
               res = isImageUrl(metadata.image);
@@ -171,11 +143,6 @@ export namespace Validator {
               res = isSymbol(metadata.symbol);
             }
             break;
-          case 'filePath':
-            if (key in metadata) {
-              res = isFilePath(metadata.filePath);
-            }
-            break;
         }
         if (res && res.isErr) {
           results.push(...res.error.details);
@@ -191,7 +158,7 @@ export namespace Validator {
   };
 
   type PickNftStorage = Pick<
-    NftStorageMetadata,
+    StorageMetadata,
     'name' | 'symbol' | 'image' | 'seller_fee_basis_points'
   >;
   type PickNftStorageMetaplex = Pick<
@@ -199,7 +166,7 @@ export namespace Validator {
     'name' | 'symbol' | 'royalty' | 'filePath'
   >;
   type PickMetaplex = Pick<
-    _MetaplexNftMetaData,
+    MetaplexDataV2,
     'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'
   >;
 

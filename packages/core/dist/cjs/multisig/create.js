@@ -15,17 +15,17 @@ const web3_js_1 = require("@solana/web3.js");
 const instruction_1 = require("./instruction");
 var Multisig;
 (function (Multisig) {
-    Multisig.create = (m, feePayer, signerPubkey) => __awaiter(this, void 0, void 0, function* () {
+    Multisig.create = (m, feePayer, signerPubkeys) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            if (m > signerPubkey.length) {
+            if (m > signerPubkeys.length) {
                 throw Error('signers number less than m number');
             }
             const account = web3_js_1.Keypair.generate();
             const connection = shared_1.Node.getConnection();
             const balanceNeeded = yield connection.getMinimumBalanceForRentExemption(instruction_1.Multisig.Layout.span);
             const inst1 = instruction_1.Multisig.account(account, feePayer.toKeypair(), balanceNeeded);
-            const inst2 = instruction_1.Multisig.multisig(m, account, signerPubkey.map(s => s.toPublicKey()));
-            return new shared_1.Instruction([inst1, inst2], [account], feePayer.toKeypair(), account.publicKey.toBase58());
+            const inst2 = instruction_1.Multisig.multisig(m, account, signerPubkeys.map((pubkey) => pubkey.toPublicKey()));
+            return new shared_1.Instruction([inst1, inst2], [account], feePayer.toKeypair(), account.publicKey.toString());
         }));
     });
 })(Multisig = exports.Multisig || (exports.Multisig = {}));

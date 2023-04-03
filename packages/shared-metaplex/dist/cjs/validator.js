@@ -93,19 +93,6 @@ var Validator;
             return Message.SUCCESS;
         });
     };
-    Validator.isFilePath = (filePath) => {
-        return (0, shared_1.Try)(() => {
-            const key = 'filePath';
-            if (!filePath) {
-                throw createError(key, Message.EMPTY, filePath);
-            }
-            if ((0, shared_1.isBrowser)() && typeof filePath === 'string') {
-                throw createError(key, Message.ONLY_NODE_JS, filePath);
-            }
-            return Message.SUCCESS;
-        });
-    };
-    Validator.isUri = (uri) => isUriOrImage(uri, 'uri');
     Validator.isImageUrl = (image) => isUriOrImage(image, 'image');
     Validator.checkAll = (metadata) => {
         return (0, shared_1.Try)(() => {
@@ -114,11 +101,6 @@ var Validator;
             keys.map((key) => {
                 let res;
                 switch (key) {
-                    case 'uri':
-                        if (key in metadata) {
-                            res = Validator.isUri(metadata.uri);
-                        }
-                        break;
                     case 'image':
                         if (key in metadata && metadata.image) {
                             res = Validator.isImageUrl(metadata.image);
@@ -147,11 +129,6 @@ var Validator;
                     case 'symbol':
                         if (metadata.symbol) {
                             res = Validator.isSymbol(metadata.symbol);
-                        }
-                        break;
-                    case 'filePath':
-                        if (key in metadata) {
-                            res = Validator.isFilePath(metadata.filePath);
                         }
                         break;
                 }

@@ -1,21 +1,13 @@
 import { Transaction, TransactionInstruction, Keypair } from '@solana/web3.js';
 
-import {
-  Node,
-  Result,
-  Try,
-  debugLog,
-  Pubkey,
-  overwriteObject,
-} from '@solana-suite/shared';
+import { Node, Result, Try, debugLog, Pubkey } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { SplToken } from '@solana-suite/core';
 import { Phantom } from '../types';
 import {
-  Creators,
+  TokenMetadata,
   InputTokenMetadata,
-  _InputNftMetadata,
-  _TokenMetadata,
+  InputNftMetadata,
 } from '@solana-suite/shared-metaplex';
 
 export namespace PhantomSplToken {
@@ -33,45 +25,48 @@ export namespace PhantomSplToken {
       const transaction = new Transaction();
       const mint = Keypair.generate();
 
-      debugLog('# input: ', input);
+      input.royalty = 0;
+      const sellerFeeBasisPoints = 0;
+      const tokenStorageMetadata = Storage.toConvertNftStorageMetadata(
+        input as InputNftMetadata,
+        input.royalty
+      );
 
-      const creatorsValue = Creators.toInputConvert(input.creators);
-      const overwrited = overwriteObject(input, [
-        {
-          existsKey: 'creators',
-          will: {
-            key: 'creators',
-            value: creatorsValue,
-          },
-        },
-      ]) as _InputNftMetadata;
+      let uri!: string;
+      if (input.filePath && input.storageType) {
+        const uploaded = await Storage.uploadMetaContent(
+          tokenStorageMetadata,
+          input.filePath,
+          input.storageType
+        );
 
-      const uploaded = await Storage.uploadMetaContent(overwrited);
-      const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+        if (uploaded.isErr) {
+          throw uploaded;
+        }
+        uri = uploaded.value;
+      } else if (input.uri) {
+        uri = input.uri;
+      } else {
+        throw Error(`Must set 'storageType + filePath' or 'uri'`);
+      }
 
-      debugLog('# upload content url: ', uri);
-      debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-      debugLog('# reducedMetadata: ', reducedMetadata);
+      const isMutable = true;
 
-      const tokenMetadata: _TokenMetadata = {
-        name: reducedMetadata.name,
-        symbol: reducedMetadata.symbol,
+      const datav2 = TokenMetadata.toConvertInfra(
+        input,
         uri,
-        sellerFeeBasisPoints,
-        creators: reducedMetadata.creators,
-        collection: undefined,
-        uses: reducedMetadata.uses,
-      };
+        sellerFeeBasisPoints
+      );
 
-      const isMutable = !reducedMetadata.isMutable ? false : true;
+      debugLog('# datav2: ', datav2);
+      debugLog('# upload content url: ', uri);
 
-      const insturctions = await SplToken.createMintInstruction(
-        connection,
+      const insturctions = await SplToken.createMintInstructions(
         mint.publicKey,
         owner.toPublicKey(),
         totalAmount,
         mintDecimal,
-        tokenMetadata,
+        datav2,
         owner.toPublicKey(),
         isMutable
       );

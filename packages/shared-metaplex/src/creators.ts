@@ -1,29 +1,28 @@
-import { CreatorInput, Creator } from '@metaplex-foundation/js';
-import { InputCreators, OutputCreators } from './types';
+import { User, Infra } from './types';
 
 export namespace Creators {
-  export const toInputConvert = (
-    input: InputCreators[] | undefined
-  ): CreatorInput[] => {
+  export const toConvertInfra = (
+    input: User.Creators[] | undefined
+  ): Infra.Creators[] | null => {
     if (!input) {
-      return [];
+      return null;
     }
     return input.map((data) => {
-      const authority = data.authority
-        ? (data.authority ).toKeypair()
-        : undefined;
-      const modify: CreatorInput = {
+      const modify = {
         address: data.address.toPublicKey(),
         share: data.share,
-        authority: authority,
+        verified: data.verified,
       };
       return modify;
     });
   };
 
-  export const toOutputConvert = (output: Creator[]): OutputCreators[] => {
+  export const toConvertUser = (output: Infra.Creators[]): User.Creators[] => {
+    if (!output) {
+      return [];
+    }
     return output.map((data) => {
-      const modify: OutputCreators = {
+      const modify: User.Creators = {
         address: data.address.toString(),
         share: data.share,
         verified: data.verified,

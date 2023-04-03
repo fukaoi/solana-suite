@@ -12,7 +12,7 @@ export namespace SplToken {
     mint: Pubkey,
     owner: Pubkey
   ): Promise<PublicKey> => {
-    const address = await PublicKey.findProgramAddress(
+    const address = PublicKey.findProgramAddressSync(
       [
         owner.toPublicKey().toBuffer(),
         TOKEN_PROGRAM_ID.toBuffer(),

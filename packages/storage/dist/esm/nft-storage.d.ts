@@ -1,12 +1,11 @@
 import { Result } from '@solana-suite/shared';
-import { MetaplexFileContent } from '@metaplex-foundation/js';
-import { NftStorageMetadata } from '@solana-suite/shared-metaplex';
+import { StorageMetadata, FileContent } from '@solana-suite/shared-metaplex';
 export declare namespace NftStorage {
-    const uploadContent: (filePath: MetaplexFileContent) => Promise<Result<string, Error>>;
+    const uploadContent: (filePath: FileContent) => Promise<Result<string, Error>>;
     /**
      * Upload content
      *
-     * @param {NftStorageMetadata} metadata
+     * @param {StorageMetadata} metadata
      * {
      *   name?: {string}                      // nft content name
      *   symbol?: {string}                    // nft ticker symbol
@@ -21,5 +20,5 @@ export declare namespace NftStorage {
      * }
      * @return Promise<Result<string, Error>>
      */
-    const uploadMetadata: (metadata: NftStorageMetadata) => Promise<Result<string, Error>>;
+    const uploadMetadata: (metadata: StorageMetadata) => Promise<Result<string, Error>>;
 }

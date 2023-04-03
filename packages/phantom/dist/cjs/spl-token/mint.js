@@ -23,33 +23,28 @@ var PhantomSplToken;
             const connection = shared_1.Node.getConnection();
             const transaction = new web3_js_1.Transaction();
             const mint = web3_js_1.Keypair.generate();
-            (0, shared_1.debugLog)('# input: ', input);
-            const creatorsValue = shared_metaplex_1.Creators.toInputConvert(input.creators);
-            const overwrited = (0, shared_1.overwriteObject)(input, [
-                {
-                    existsKey: 'creators',
-                    will: {
-                        key: 'creators',
-                        value: creatorsValue,
-                    },
-                },
-            ]);
-            const uploaded = yield storage_1.Storage.uploadMetaContent(overwrited);
-            const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+            input.royalty = 0;
+            const sellerFeeBasisPoints = 0;
+            const tokenStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(input, input.royalty);
+            let uri;
+            if (input.filePath && input.storageType) {
+                const uploaded = yield storage_1.Storage.uploadMetaContent(tokenStorageMetadata, input.filePath, input.storageType);
+                if (uploaded.isErr) {
+                    throw uploaded;
+                }
+                uri = uploaded.value;
+            }
+            else if (input.uri) {
+                uri = input.uri;
+            }
+            else {
+                throw Error(`Must set 'storageType + filePath' or 'uri'`);
+            }
+            const isMutable = true;
+            const datav2 = shared_metaplex_1.TokenMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            (0, shared_1.debugLog)('# datav2: ', datav2);
             (0, shared_1.debugLog)('# upload content url: ', uri);
-            (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-            (0, shared_1.debugLog)('# reducedMetadata: ', reducedMetadata);
-            const tokenMetadata = {
-                name: reducedMetadata.name,
-                symbol: reducedMetadata.symbol,
-                uri,
-                sellerFeeBasisPoints,
-                creators: reducedMetadata.creators,
-                collection: undefined,
-                uses: reducedMetadata.uses,
-            };
-            const isMutable = !reducedMetadata.isMutable ? false : true;
-            const insturctions = yield core_1.SplToken.createMintInstruction(connection, mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, owner.toPublicKey(), isMutable);
+            const insturctions = yield core_1.SplToken.createMintInstructions(mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, datav2, owner.toPublicKey(), isMutable);
             insturctions.forEach((inst) => transaction.add(inst));
             transaction.feePayer = owner.toPublicKey();
             const blockhashObj = yield connection.getLatestBlockhashAndContext();

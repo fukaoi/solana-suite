@@ -19,11 +19,12 @@ const calculate_amount_1 = require("./calculate-amount");
 const storage_1 = require("@solana-suite/storage");
 var SplToken;
 (function (SplToken) {
-    SplToken.createMintInstruction = (connection, mint, owner, totalAmount, mintDecimal, tokenMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.createMintInstructions = (mint, owner, totalAmount, mintDecimal, tokenMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
+        const connection = shared_1.Node.getConnection();
         const lamports = yield (0, spl_token_1.getMinimumBalanceForRentExemptMint)(connection);
-        const metadataPda = storage_1.Bundlr.make().nfts().pdas().metadata({ mint: mint });
+        const metadataPda = shared_metaplex_1.Pda.getMetadata(mint);
         const tokenAssociated = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, owner);
-        const inst = web3_js_1.SystemProgram.createAccount({
+        const inst1 = web3_js_1.SystemProgram.createAccount({
             fromPubkey: feePayer,
             newAccountPubkey: mint,
             space: spl_token_1.MINT_SIZE,
@@ -45,7 +46,7 @@ var SplToken;
                 isMutable,
             },
         });
-        return [inst, inst2, inst3, inst4, inst5];
+        return [inst1, inst2, inst3, inst4, inst5];
     });
     SplToken.mint = (owner, signer, totalAmount, mintDecimal, input, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
@@ -53,41 +54,31 @@ var SplToken;
             if (valid.isErr) {
                 throw valid.error;
             }
-            const payer = feePayer ? feePayer.toKeypair() : signer.toKeypair();
-            input.royalty = input.royalty ? input.royalty : 0;
-            let overwrited = input;
-            if (input.creators) {
-                const creatorsValue = shared_metaplex_1.Creators.toInputConvert(input.creators);
-                overwrited = (0, shared_1.overwriteObject)(input, [
-                    {
-                        existsKey: 'creators',
-                        will: {
-                            key: 'creators',
-                            value: creatorsValue,
-                        },
-                    },
-                ]);
+            const payer = feePayer ? feePayer : signer;
+            input.royalty = 0;
+            const sellerFeeBasisPoints = 0;
+            const tokenStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(input, input.royalty);
+            let uri;
+            if (input.filePath && input.storageType) {
+                const uploaded = yield storage_1.Storage.uploadMetaContent(tokenStorageMetadata, input.filePath, input.storageType, payer);
+                if (uploaded.isErr) {
+                    throw uploaded;
+                }
+                uri = uploaded.value;
             }
-            (0, shared_1.debugLog)('# overwrited: ', overwrited);
-            const uploaded = yield storage_1.Storage.uploadMetaContent(overwrited, feePayer);
-            const { uri, sellerFeeBasisPoints, reducedMetadata } = uploaded;
+            else if (input.uri) {
+                uri = input.uri;
+            }
+            else {
+                throw Error(`Must set 'storageType + filePath' or 'uri'`);
+            }
+            const isMutable = true;
+            const datav2 = shared_metaplex_1.TokenMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            (0, shared_1.debugLog)('# datav2: ', datav2);
             (0, shared_1.debugLog)('# upload content url: ', uri);
-            (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
-            (0, shared_1.debugLog)('# reducedMetadata: ', reducedMetadata);
-            const tokenMetadata = {
-                name: reducedMetadata.name,
-                symbol: reducedMetadata.symbol,
-                uri,
-                sellerFeeBasisPoints,
-                creators: reducedMetadata.creators,
-                uses: reducedMetadata.uses,
-                collection: undefined,
-            };
-            const isMutable = !reducedMetadata.isMutable ? false : true;
-            const connection = shared_1.Node.getConnection();
             const mint = shared_1.KeypairAccount.create();
-            const insts = yield SplToken.createMintInstruction(connection, mint.toPublicKey(), owner.toPublicKey(), totalAmount, mintDecimal, tokenMetadata, payer.publicKey, isMutable);
-            return new shared_1.MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer, mint.pubkey);
+            const insts = yield SplToken.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), totalAmount, mintDecimal, datav2, payer.toKeypair().publicKey, isMutable);
+            return new shared_1.MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer.toKeypair(), mint.pubkey);
         }));
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));

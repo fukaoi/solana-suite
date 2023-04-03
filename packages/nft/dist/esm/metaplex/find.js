@@ -27,9 +27,9 @@ export var Metaplex;
                     uri: d.uri,
                     isMutable: d.isMutable,
                     primarySaleHappened: d.primarySaleHappened,
-                    creators: Creators.toOutputConvert(d.creators),
+                    creators: Creators.toConvertUser(d.creators),
                     editionNonce: d.editionNonce,
-                    collection: Collections.toOutputConvert(d.collection),
+                    collection: Collections.toConvertUser(d.collection),
                     uses: d.uses,
                 };
             });
