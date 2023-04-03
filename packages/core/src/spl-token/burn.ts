@@ -8,7 +8,7 @@ import {
 import { SplToken as _Calculate } from './calculate-amount';
 
 export namespace SplToken {
-  const findAssociatedTokenAddress = async (
+  const findAssociatedTokenAddress = (
     mint: Pubkey,
     owner: Pubkey
   ): Promise<PublicKey> => {

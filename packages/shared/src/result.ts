@@ -2,7 +2,6 @@
 
 import { TransactionSignature } from '@solana/web3.js';
 import { Instruction } from './instruction';
-import { Secret } from './types';
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(

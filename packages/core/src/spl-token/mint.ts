@@ -95,7 +95,7 @@ export namespace SplToken {
       },
       {
         createMetadataAccountArgsV2: {
-          data: tokenMetadata as DataV2,
+          data: tokenMetadata ,
           isMutable,
         },
       }

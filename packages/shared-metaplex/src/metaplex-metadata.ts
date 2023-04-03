@@ -2,7 +2,7 @@ import { Collections } from './collections';
 import { Creators } from './creators';
 import { InputNftMetadata, MetaplexDataV2 } from './types';
 
-export module MetaplexMetadata {
+export namespace MetaplexMetadata {
   export const toConvertInfra = (
     input: InputNftMetadata,
     uri: string,
