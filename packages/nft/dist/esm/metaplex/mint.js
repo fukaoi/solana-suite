@@ -17,9 +17,9 @@ import { Node } from '@solana-suite/shared';
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.createMintInstructions = (mint, owner, nftMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
-        let ata = yield getAssociatedTokenAddress(mint, owner);
-        let tokenMetadataPubkey = Pda.getMetadata(mint);
-        let masterEditionPubkey = Pda.getMasterEdition(mint);
+        const ata = yield getAssociatedTokenAddress(mint, owner);
+        const tokenMetadataPubkey = Pda.getMetadata(mint);
+        const masterEditionPubkey = Pda.getMasterEdition(mint);
         const connection = Node.getConnection();
         const inst1 = SystemProgram.createAccount({
             fromPubkey: feePayer,
@@ -103,7 +103,7 @@ export var Metaplex;
             const nftStorageMetadata = Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
             let uri;
             if (input.filePath && input.storageType) {
-                const uploaded = yield Storage.uploadMetaContent(nftStorageMetadata, input.filePath, input.storageType, payer);
+                const uploaded = yield Storage.uploadMetaAndContent(nftStorageMetadata, input.filePath, input.storageType, payer);
                 debugLog('# upload content url: ', uploaded);
                 if (uploaded.isErr) {
                     throw uploaded;

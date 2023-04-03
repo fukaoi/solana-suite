@@ -3,5 +3,5 @@ import { StorageMetadata, StorageType, InputNftMetadata, FileContent } from '@so
 export declare namespace Storage {
     const toConvertNftStorageMetadata: (input: InputNftMetadata, sellerFeeBasisPoints: number) => StorageMetadata;
     const uploadContent: (filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
-    const uploadMetaContent: (input: StorageMetadata, filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const uploadMetaAndContent: (input: StorageMetadata, filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
 }

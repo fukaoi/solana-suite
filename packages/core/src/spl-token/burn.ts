@@ -11,7 +11,7 @@ export namespace SplToken {
   const findAssociatedTokenAddress = (
     mint: Pubkey,
     owner: Pubkey
-  ): Promise<PublicKey> => {
+  ): PublicKey => {
     const address = PublicKey.findProgramAddressSync(
       [
         owner.toPublicKey().toBuffer(),
@@ -32,7 +32,7 @@ export namespace SplToken {
     feePayer?: Secret
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
-      const tokenAccount = await findAssociatedTokenAddress(mint, owner);
+      const tokenAccount = findAssociatedTokenAddress(mint, owner);
       const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
       const keypairs = signers.map((s) => s.toKeypair());
 

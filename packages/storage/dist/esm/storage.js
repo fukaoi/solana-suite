@@ -39,7 +39,7 @@ export var Storage;
             throw Error('Not found storageType');
         }
     });
-    Storage.uploadMetaContent = (input, filePath, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Storage.uploadMetaAndContent = (input, filePath, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let storage;
         if (storageType === 'arweave') {
             if (!feePayer) {

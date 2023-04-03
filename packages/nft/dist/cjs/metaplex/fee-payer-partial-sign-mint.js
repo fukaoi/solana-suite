@@ -29,7 +29,7 @@ var Metaplex;
                 const properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType);
                 input = Object.assign(Object.assign({}, input), { properties });
                 const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
-                const uploaded = yield storage_1.Storage.uploadMetaContent(nftStorageMetadata, input.filePath, input.storageType);
+                const uploaded = yield storage_1.Storage.uploadMetaAndContent(nftStorageMetadata, input.filePath, input.storageType);
                 if (uploaded.isErr) {
                     throw uploaded;
                 }

@@ -55,7 +55,7 @@ export namespace Metaplex {
           input,
           sellerFeeBasisPoints
         );
-        const uploaded = await Storage.uploadMetaContent(
+        const uploaded = await Storage.uploadMetaAndContent(
           nftStorageMetadata,
           input.filePath!,
           input.storageType!

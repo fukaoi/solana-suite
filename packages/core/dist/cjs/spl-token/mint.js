@@ -60,7 +60,7 @@ var SplToken;
             const tokenStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(input, input.royalty);
             let uri;
             if (input.filePath && input.storageType) {
-                const uploaded = yield storage_1.Storage.uploadMetaContent(tokenStorageMetadata, input.filePath, input.storageType, payer);
+                const uploaded = yield storage_1.Storage.uploadMetaAndContent(tokenStorageMetadata, input.filePath, input.storageType, payer);
                 if (uploaded.isErr) {
                     throw uploaded;
                 }

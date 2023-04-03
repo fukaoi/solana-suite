@@ -173,7 +173,7 @@ export namespace Metaplex {
 
       let uri!: string;
       if (input.filePath && input.storageType) {
-        const uploaded = await Storage.uploadMetaContent(
+        const uploaded = await Storage.uploadMetaAndContent(
           nftStorageMetadata,
           input.filePath,
           input.storageType,
