@@ -23,15 +23,15 @@ export namespace SplToken {
     return address[0];
   };
 
-  export const burn = async (
+  export const burn = (
     mint: Pubkey,
     owner: Pubkey,
     signers: Secret[],
     burnAmount: number,
     tokenDecimals: number,
     feePayer?: Secret
-  ): Promise<Result<Instruction, Error>> => {
-    return Try(async () => {
+  ): Result<Instruction, Error> => {
+    return Try(() => {
       const tokenAccount = findAssociatedTokenAddress(mint, owner);
       const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
       const keypairs = signers.map((s) => s.toKeypair());
