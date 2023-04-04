@@ -14,6 +14,7 @@ declare global {
     toLamports(): number;
   }
 
+
   interface Array<T> {
     submit(): Promise<Result<TransactionSignature, Error>>;
   }

@@ -30,12 +30,14 @@ var PhantomMetaplex;
             if (valid.isErr) {
                 throw valid.error;
             }
+            if (!input.filePath || !input.storageType) {
+                throw Error('Not found filePath or storageType');
+            }
             shared_1.Node.changeConnection({ cluster });
             //Convert porperties, Upload content
             const properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType);
-            input = Object.assign(Object.assign({}, input), { properties });
             const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(input.royalty);
-            const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
+            const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(Object.assign(Object.assign({}, input), { properties }), sellerFeeBasisPoints);
             const uploaded = yield storage_1.Storage.uploadMetaAndContent(nftStorageMetadata, input.filePath, input.storageType);
             if (uploaded.isErr) {
                 throw uploaded;

@@ -54,7 +54,7 @@ describe('Memo', () => {
     );
 
     const res = await [inst1, inst2].submit();
-    assert.isTrue(res.isOk, res.unwrap());
+    assert.isTrue(res.isOk);
     console.log('# tx signature: ', res.unwrap());
   });
 

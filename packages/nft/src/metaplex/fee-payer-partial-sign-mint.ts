@@ -17,6 +17,7 @@ import {
   Validator,
   InputNftMetadata,
   Properties,
+  Collections,
   Royalty,
   MetaplexMetadata,
 } from '@solana-suite/shared-metaplex';
@@ -38,6 +39,7 @@ export namespace Metaplex {
 
       const sellerFeeBasisPoints = Royalty.convert(input.royalty);
 
+      //--- porperties, Upload content ---
       let uri = '';
       if (input.filePath && input.storageType === 'nftStorage') {
         const properties = await Properties.toConvertInfra(
@@ -46,19 +48,15 @@ export namespace Metaplex {
           input.storageType
         );
 
-        input = {
-          ...input,
-          properties,
-        };
-
         const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
-          input,
+          {...input, properties},
           sellerFeeBasisPoints
         );
+
         const uploaded = await Storage.uploadMetaAndContent(
           nftStorageMetadata,
-          input.filePath!,
-          input.storageType!
+          input.filePath,
+          input.storageType
         );
         if (uploaded.isErr) {
           throw uploaded;
@@ -70,12 +68,21 @@ export namespace Metaplex {
       } else {
         throw Error(`Must set 'storageType=nftStorage + filePath' or 'uri'`);
       }
+      //--- porperties, Upload content ---
 
-      const datav2 = MetaplexMetadata.toConvertInfra(
+      let datav2 = MetaplexMetadata.toConvertInfra(
         input,
         uri,
         sellerFeeBasisPoints
       );
+
+      //--- collection ---
+      let collection;
+      if (input.collection && input.collection) {
+        collection = Collections.toConvertInfra(input.collection);
+        datav2 = { ...datav2, collection };
+      }
+      //--- collection ---
 
       const isMutable = input.isMutable === undefined ? true : input.isMutable;
 

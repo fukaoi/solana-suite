@@ -27,12 +27,14 @@ export var PhantomMetaplex;
             if (valid.isErr) {
                 throw valid.error;
             }
+            if (!input.filePath || !input.storageType) {
+                throw Error('Not found filePath or storageType');
+            }
             Node.changeConnection({ cluster });
             //Convert porperties, Upload content
             const properties = yield Properties.toConvertInfra(input.properties, Storage.uploadContent, input.storageType);
-            input = Object.assign(Object.assign({}, input), { properties });
             const sellerFeeBasisPoints = Royalty.convert(input.royalty);
-            const nftStorageMetadata = Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
+            const nftStorageMetadata = Storage.toConvertNftStorageMetadata(Object.assign(Object.assign({}, input), { properties }), sellerFeeBasisPoints);
             const uploaded = yield Storage.uploadMetaAndContent(nftStorageMetadata, input.filePath, input.storageType);
             if (uploaded.isErr) {
                 throw uploaded;

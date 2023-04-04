@@ -10,7 +10,7 @@ export namespace Collections {
 
     return {
       key: input.toPublicKey(),
-      verified: true,
+      verified: false,
     };
   };
 

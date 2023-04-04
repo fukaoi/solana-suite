@@ -24,11 +24,11 @@ var Metaplex;
                 throw valid.error;
             }
             const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(input.royalty);
+            //--- porperties, Upload content ---
             let uri = '';
             if (input.filePath && input.storageType === 'nftStorage') {
                 const properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType);
-                input = Object.assign(Object.assign({}, input), { properties });
-                const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
+                const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(Object.assign(Object.assign({}, input), { properties }), sellerFeeBasisPoints);
                 const uploaded = yield storage_1.Storage.uploadMetaAndContent(nftStorageMetadata, input.filePath, input.storageType);
                 if (uploaded.isErr) {
                     throw uploaded;
@@ -42,7 +42,15 @@ var Metaplex;
             else {
                 throw Error(`Must set 'storageType=nftStorage + filePath' or 'uri'`);
             }
-            const datav2 = shared_metaplex_1.MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            //--- porperties, Upload content ---
+            let datav2 = shared_metaplex_1.MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            //--- collection ---
+            let collection;
+            if (input.collection && input.collection) {
+                collection = shared_metaplex_1.Collections.toConvertInfra(input.collection);
+                datav2 = Object.assign(Object.assign({}, datav2), { collection });
+            }
+            //--- collection ---
             const isMutable = input.isMutable === undefined ? true : input.isMutable;
             (0, shared_1.debugLog)('# input: ', input);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);

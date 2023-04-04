@@ -118,7 +118,7 @@ describe('Metaplex', () => {
       royalty: 50,
       creators,
       properties,
-      // collection,
+      collection,
       attributes,
       options,
     });

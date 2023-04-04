@@ -1,12 +1,11 @@
-import { PublicKey } from '@solana/web3.js';
-import { Option, _Common } from '../shared';
+import { Option, _Common, Infra } from '../shared';
 export type MetaplexDataV2 = {
     name: string;
     symbol: string;
     uri: string;
     sellerFeeBasisPoints: number;
-    creators: Option<Creator[]>;
-    collection: Option<Collection>;
+    creators: Option<Infra.Creators[]>;
+    collection: Option<Infra.Input.Collection>;
     uses: Option<_Common.Uses>;
 };
 export type DataV2 = {
@@ -14,16 +13,7 @@ export type DataV2 = {
     symbol: string;
     uri: string;
     sellerFeeBasisPoints: number;
-    creators: Option<Creator[]>;
-    collection: Option<Collection>;
+    creators: Option<Infra.Creators[]>;
+    collection: Option<Infra.Input.Collection>;
     uses: Option<_Common.Uses>;
-};
-export type Creator = {
-    address: PublicKey;
-    verified: boolean;
-    share: number;
-};
-export type Collection = {
-    verified: boolean;
-    key: PublicKey;
 };
