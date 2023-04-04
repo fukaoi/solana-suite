@@ -37,29 +37,28 @@ export namespace PhantomMetaplex {
         throw valid.error;
       }
 
+      if (!input.filePath || !input.storageType) {
+        throw Error('Not found filePath or storageType');
+      }
+
       Node.changeConnection({ cluster });
 
       //Convert porperties, Upload content
       const properties = await Properties.toConvertInfra(
         input.properties,
         Storage.uploadContent,
-        input.storageType!
+        input.storageType
       );
-
-      input = {
-        ...input,
-        properties,
-      };
 
       const sellerFeeBasisPoints = Royalty.convert(input.royalty);
       const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
-        input,
+        { ...input, properties },
         sellerFeeBasisPoints
       );
       const uploaded = await Storage.uploadMetaAndContent(
         nftStorageMetadata,
-        input.filePath!,
-        input.storageType!
+        input.filePath,
+        input.storageType
       );
 
       if (uploaded.isErr) {

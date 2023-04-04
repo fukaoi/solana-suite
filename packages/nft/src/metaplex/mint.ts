@@ -113,7 +113,7 @@ export namespace Metaplex {
    *
    * @param {Pubkey} owner          // first minted owner
    * @param {Secret} signer         // owner's Secret
-   * @param {NftMetadata}  input
+   * @param {InputNftMetadata} input
    * {
    *   name: string               // nft content name
    *   symbol: string             // nft ticker symbol
@@ -148,7 +148,7 @@ export namespace Metaplex {
 
       const payer = feePayer ? feePayer : signer;
 
-      //Convert porperties, Upload content
+      //--- porperties, Upload content ---
       let properties;
       if (input.properties && input.storageType) {
         properties = await Properties.toConvertInfra(
@@ -161,16 +161,11 @@ export namespace Metaplex {
         throw Error('Must set storageType if will use properties');
       }
 
-      let collections;
-      if (input.collection && input.collection) {
-        collections = Collections.toConvertInfra(input.collection);
-      }
-
       input = {
         ...input,
         properties,
-        collections,
       };
+      //--- porperties, Upload content ---
 
       const sellerFeeBasisPoints = Royalty.convert(input.royalty);
       const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
@@ -197,11 +192,19 @@ export namespace Metaplex {
         throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
 
-      const datav2 = MetaplexMetadata.toConvertInfra(
+      let datav2 = MetaplexMetadata.toConvertInfra(
         input,
         uri,
         sellerFeeBasisPoints
       );
+
+      //--- collection ---
+      let collection;
+      if (input.collection && input.collection) {
+        collection = Collections.toConvertInfra(input.collection);
+        datav2 = { ...datav2, collection };
+      }
+      //--- collection ---
 
       const isMutable = input.isMutable === undefined ? true : input.isMutable;
 

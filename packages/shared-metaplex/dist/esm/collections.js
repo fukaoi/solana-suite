@@ -6,7 +6,7 @@ export var Collections;
         }
         return {
             key: input.toPublicKey(),
-            verified: true,
+            verified: false,
         };
     };
     Collections.toConvertUser = (output) => {

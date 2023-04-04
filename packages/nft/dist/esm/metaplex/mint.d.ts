@@ -9,7 +9,7 @@ export declare namespace Metaplex {
      *
      * @param {Pubkey} owner          // first minted owner
      * @param {Secret} signer         // owner's Secret
-     * @param {NftMetadata}  input
+     * @param {InputNftMetadata} input
      * {
      *   name: string               // nft content name
      *   symbol: string             // nft ticker symbol

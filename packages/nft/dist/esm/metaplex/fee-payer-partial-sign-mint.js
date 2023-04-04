@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { debugLog, Try, Node, KeypairAccount, PartialSignMintInstruction, } from '@solana-suite/shared';
 import { Transaction } from '@solana/web3.js';
 import { Storage } from '@solana-suite/storage';
-import { Validator, Properties, Royalty, MetaplexMetadata, } from '@solana-suite/shared-metaplex';
+import { Validator, Properties, Collections, Royalty, MetaplexMetadata, } from '@solana-suite/shared-metaplex';
 import { Metaplex as _Mint } from './mint';
 export var Metaplex;
 (function (Metaplex) {
@@ -21,11 +21,11 @@ export var Metaplex;
                 throw valid.error;
             }
             const sellerFeeBasisPoints = Royalty.convert(input.royalty);
+            //--- porperties, Upload content ---
             let uri = '';
             if (input.filePath && input.storageType === 'nftStorage') {
                 const properties = yield Properties.toConvertInfra(input.properties, Storage.uploadContent, input.storageType);
-                input = Object.assign(Object.assign({}, input), { properties });
-                const nftStorageMetadata = Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
+                const nftStorageMetadata = Storage.toConvertNftStorageMetadata(Object.assign(Object.assign({}, input), { properties }), sellerFeeBasisPoints);
                 const uploaded = yield Storage.uploadMetaAndContent(nftStorageMetadata, input.filePath, input.storageType);
                 if (uploaded.isErr) {
                     throw uploaded;
@@ -39,7 +39,15 @@ export var Metaplex;
             else {
                 throw Error(`Must set 'storageType=nftStorage + filePath' or 'uri'`);
             }
-            const datav2 = MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            //--- porperties, Upload content ---
+            let datav2 = MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            //--- collection ---
+            let collection;
+            if (input.collection && input.collection) {
+                collection = Collections.toConvertInfra(input.collection);
+                datav2 = Object.assign(Object.assign({}, datav2), { collection });
+            }
+            //--- collection ---
             const isMutable = input.isMutable === undefined ? true : input.isMutable;
             debugLog('# input: ', input);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
