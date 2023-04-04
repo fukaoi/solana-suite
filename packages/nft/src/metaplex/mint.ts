@@ -32,6 +32,7 @@ import {
   Pda,
   Royalty,
   MetaplexMetadata,
+  Collections,
 } from '@solana-suite/shared-metaplex';
 
 import {
@@ -160,9 +161,15 @@ export namespace Metaplex {
         throw Error('Must set storageType if will use properties');
       }
 
+      let collections;
+      if (input.collection && input.collection) {
+        collections = Collections.toConvertInfra(input.collection);
+      }
+
       input = {
         ...input,
         properties,
+        collections,
       };
 
       const sellerFeeBasisPoints = Royalty.convert(input.royalty);
