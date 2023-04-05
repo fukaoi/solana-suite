@@ -4,6 +4,8 @@ import {
   SystemProgram,
 } from '@solana/web3.js';
 
+import { BigNumber } from 'bignumber.js';
+
 import {
   createAssociatedTokenAccountInstruction,
   createInitializeMintInstruction,
@@ -36,7 +38,7 @@ import {
 } from '@solana-suite/shared-metaplex';
 
 import {
-  createCreateMetadataAccountV2Instruction,
+  createCreateMetadataAccountV3Instruction,
   createCreateMasterEditionV3Instruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
@@ -74,7 +76,7 @@ export namespace Metaplex {
 
     const inst4 = createMintToCheckedInstruction(mint, ata, owner, 1, 0);
 
-    const inst5 = createCreateMetadataAccountV2Instruction(
+    const inst5 = createCreateMetadataAccountV3Instruction(
       {
         metadata: tokenMetadataPubkey,
         mint,
@@ -83,9 +85,10 @@ export namespace Metaplex {
         updateAuthority: owner,
       },
       {
-        createMetadataAccountArgsV2: {
+        createMetadataAccountArgsV3: {
           data: nftMetadata,
           isMutable,
+          collectionDetails: { __kind: 'V1', size: 8 },
         },
       }
     );

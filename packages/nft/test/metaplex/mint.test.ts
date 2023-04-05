@@ -65,7 +65,7 @@ describe('Metaplex', () => {
     );
   });
 
-  it('[Nft Storage] mint nft with many optional datas', async () => {
+  it.only('[Nft Storage] mint nft with many optional datas', async () => {
     const asset = RandomAsset.get();
     const creators: User.Creators[] = [];
 

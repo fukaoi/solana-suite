@@ -18,6 +18,7 @@ export namespace Metaplex {
         .findAllByOwner({ owner: owner.toPublicKey() });
 
       const res = allData.map((d) => {
+        console.log(d.collectionDetails);
         return {
           mint: (d as MetaplexOriginal).mintAddress.toString(),
           updateAuthority: d.updateAuthorityAddress.toString(),
