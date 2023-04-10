@@ -18,6 +18,7 @@ export var Metaplex;
                 .nfts()
                 .findAllByOwner({ owner: owner.toPublicKey() });
             const res = allData.map((d) => {
+                console.log(d.json);
                 return {
                     mint: d.mintAddress.toString(),
                     updateAuthority: d.updateAuthorityAddress.toString(),

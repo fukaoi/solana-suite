@@ -4,7 +4,7 @@ import {
   SystemProgram,
 } from '@solana/web3.js';
 
-import { BigNumber } from 'bignumber.js';
+import BN from 'bn.js';
 
 import {
   createAssociatedTokenAccountInstruction,
@@ -88,7 +88,7 @@ export namespace Metaplex {
         createMetadataAccountArgsV3: {
           data: nftMetadata,
           isMutable,
-          collectionDetails: { __kind: 'V1', size: 8 },
+          collectionDetails: { __kind: 'V1', size: new BN(1) },
         },
       }
     );

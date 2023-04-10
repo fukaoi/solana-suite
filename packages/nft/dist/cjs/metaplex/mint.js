@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metaplex = void 0;
 const web3_js_1 = require("@solana/web3.js");
+const bn_js_1 = __importDefault(require("bn.js"));
 const spl_token_1 = require("@solana/spl-token");
 const shared_1 = require("@solana-suite/shared");
 const storage_1 = require("@solana-suite/storage");
@@ -34,16 +38,17 @@ var Metaplex;
         const inst2 = (0, spl_token_1.createInitializeMintInstruction)(mint, 0, owner, owner);
         const inst3 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(feePayer, ata, owner, mint);
         const inst4 = (0, spl_token_1.createMintToCheckedInstruction)(mint, ata, owner, 1, 0);
-        const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV2Instruction)({
+        const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV3Instruction)({
             metadata: tokenMetadataPubkey,
             mint,
             mintAuthority: owner,
             payer: feePayer,
             updateAuthority: owner,
         }, {
-            createMetadataAccountArgsV2: {
+            createMetadataAccountArgsV3: {
                 data: nftMetadata,
                 isMutable,
+                collectionDetails: { __kind: 'V1', size: new bn_js_1.default(1) },
             },
         });
         const inst6 = (0, mpl_token_metadata_1.createCreateMasterEditionV3Instruction)({

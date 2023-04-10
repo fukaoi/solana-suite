@@ -91,7 +91,7 @@ describe('Metaplex', () => {
       ],
     };
 
-    const collection = '2XgApg3pcPkyNxoHr8N6bWtZ4gG5W6iV3MksJ3brLmRZ';
+    const collection = 'F2g4RRH4J7DiZd17idZcBkuTDonVeJEveTdzwXdGHUue';
 
     const attributes = [
       {

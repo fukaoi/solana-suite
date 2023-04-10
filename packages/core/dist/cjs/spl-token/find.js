@@ -21,7 +21,6 @@ var SplToken;
             });
             const info = accounts.value.reduce((arr, d) => {
                 if (d.account.data.parsed.info.tokenAmount.uiAmount > 0) {
-                    console.log(d.account.data.parsed);
                     arr.push({
                         owner: owner.toString(),
                         mint: d.account.data.parsed.info.mint,

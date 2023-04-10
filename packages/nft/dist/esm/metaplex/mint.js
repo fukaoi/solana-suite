@@ -8,11 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { SystemProgram, } from '@solana/web3.js';
+import BN from 'bn.js';
 import { createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, getAssociatedTokenAddress, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
 import { debugLog, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { Validator, Properties, Pda, Royalty, MetaplexMetadata, Collections, } from '@solana-suite/shared-metaplex';
-import { createCreateMetadataAccountV2Instruction, createCreateMasterEditionV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
+import { createCreateMetadataAccountV3Instruction, createCreateMasterEditionV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
 export var Metaplex;
 (function (Metaplex) {
@@ -31,16 +32,17 @@ export var Metaplex;
         const inst2 = createInitializeMintInstruction(mint, 0, owner, owner);
         const inst3 = createAssociatedTokenAccountInstruction(feePayer, ata, owner, mint);
         const inst4 = createMintToCheckedInstruction(mint, ata, owner, 1, 0);
-        const inst5 = createCreateMetadataAccountV2Instruction({
+        const inst5 = createCreateMetadataAccountV3Instruction({
             metadata: tokenMetadataPubkey,
             mint,
             mintAuthority: owner,
             payer: feePayer,
             updateAuthority: owner,
         }, {
-            createMetadataAccountArgsV2: {
+            createMetadataAccountArgsV3: {
                 data: nftMetadata,
                 isMutable,
+                collectionDetails: { __kind: 'V1', size: new BN(1) },
             },
         });
         const inst6 = createCreateMasterEditionV3Instruction({
