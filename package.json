@@ -41,5 +41,5 @@
   "repository": "git@github.com:atonoy/solana-suite.git",
   "author": "fukaoi <usapyon2022@gmail.com>",
   "license": "MIT",
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@1.22.19",
 }

@@ -11,6 +11,7 @@ import { Node, Try } from '@solana-suite/shared';
 import { Collections, Creators, Pda, } from '@solana-suite/shared-metaplex';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Bundlr } from '@solana-suite/storage';
+import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
@@ -39,16 +40,19 @@ export var Metaplex;
     });
     Metaplex.findByOwner2 = (owner) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            const info = yield Node.getConnection().getParsedTokenAccountsByOwner(owner.toPublicKey(), {
+            const connection = Node.getConnection();
+            const info = yield connection.getParsedTokenAccountsByOwner(owner.toPublicKey(), {
                 programId: TOKEN_PROGRAM_ID,
             });
-            info.value.forEach((el) => {
-                // console.log('pubkey: ', el.pubkey.toString());
+            info.value.forEach((el) => __awaiter(this, void 0, void 0, function* () {
                 const mint = el.account.data.parsed.info.mint;
-                console.log('account: ', mint);
-                const tokenAccount = Pda.getMetadata(mint.toPublicKey());
-                console.log(tokenAccount);
-            });
+                const metaAccount = Pda.getMetadata(mint);
+                const metadata = yield Metadata.fromAccountAddress(connection, metaAccount);
+                console.log(metadata.data.uri);
+                const url = 'http://httpbin.org/get';
+                const response = yield fetch(url);
+                const json = yield response.json();
+            }));
         }));
     });
 })(Metaplex || (Metaplex = {}));

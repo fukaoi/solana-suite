@@ -14,6 +14,7 @@ const shared_1 = require("@solana-suite/shared");
 const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 const spl_token_1 = require("@solana/spl-token");
 const storage_1 = require("@solana-suite/storage");
+const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
@@ -42,16 +43,19 @@ var Metaplex;
     });
     Metaplex.findByOwner2 = (owner) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            const info = yield shared_1.Node.getConnection().getParsedTokenAccountsByOwner(owner.toPublicKey(), {
+            const connection = shared_1.Node.getConnection();
+            const info = yield connection.getParsedTokenAccountsByOwner(owner.toPublicKey(), {
                 programId: spl_token_1.TOKEN_PROGRAM_ID,
             });
-            info.value.forEach((el) => {
-                // console.log('pubkey: ', el.pubkey.toString());
+            info.value.forEach((el) => __awaiter(this, void 0, void 0, function* () {
                 const mint = el.account.data.parsed.info.mint;
-                console.log('account: ', mint);
-                const tokenAccount = shared_metaplex_1.Pda.getMetadata(mint.toPublicKey());
-                console.log(tokenAccount);
-            });
+                const metaAccount = shared_metaplex_1.Pda.getMetadata(mint);
+                const metadata = yield mpl_token_metadata_1.Metadata.fromAccountAddress(connection, metaAccount);
+                console.log(metadata.data.uri);
+                const url = 'http://httpbin.org/get';
+                const response = yield fetch(url);
+                const json = yield response.json();
+            }));
         }));
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));
