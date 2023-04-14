@@ -1,18 +1,23 @@
-import { Instruction, Pubkey, Result, Secret } from '@solana-suite/shared';
+import {
+  PartialSignInstruction,
+  Pubkey,
+  Result,
+  Secret,
+} from '@solana-suite/shared';
 import { SplToken } from '@solana-suite/core';
 
 export namespace Metaplex {
   const NFT_AMOUNT = 1;
   const NFT_DECIMALS = 0;
 
-  export const transfer = async (
+  export const feePayerPartialSignTransferNft = async (
     mint: Pubkey,
     owner: Pubkey,
     dest: Pubkey,
     signers: Secret[],
-    feePayer?: Secret
-  ): Promise<Result<Instruction, Error>> => {
-    return SplToken.transfer(
+    feePayer: Pubkey
+  ): Promise<Result<PartialSignInstruction, Error>> => {
+    return SplToken.feePayerPartialSignTransfer(
       mint,
       owner,
       dest,

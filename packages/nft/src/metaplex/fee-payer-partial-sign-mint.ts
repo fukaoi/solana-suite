@@ -1,12 +1,12 @@
 import {
   debugLog,
-  Try,
-  Node,
-  Secret,
   KeypairAccount,
+  Node,
+  PartialSignInstruction,
   Pubkey,
-  PartialSignMintInstruction,
   Result,
+  Secret,
+  Try,
 } from '@solana-suite/shared';
 
 import { Transaction } from '@solana/web3.js';
@@ -14,12 +14,12 @@ import { Transaction } from '@solana/web3.js';
 import { Storage } from '@solana-suite/storage';
 
 import {
-  Validator,
-  InputNftMetadata,
-  Properties,
   Collections,
-  Royalty,
+  InputNftMetadata,
   MetaplexMetadata,
+  Properties,
+  Royalty,
+  Validator,
 } from '@solana-suite/shared-metaplex';
 
 import { Metaplex as _Mint } from './mint';
@@ -30,7 +30,7 @@ export namespace Metaplex {
     signer: Secret,
     input: InputNftMetadata,
     feePayer: Pubkey
-  ): Promise<Result<PartialSignMintInstruction, Error>> => {
+  ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -49,7 +49,7 @@ export namespace Metaplex {
         );
 
         const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
-          {...input, properties},
+          { ...input, properties },
           sellerFeeBasisPoints
         );
 
@@ -114,7 +114,7 @@ export namespace Metaplex {
         requireAllSignatures: false,
       });
       const hex = serializedTx.toString('hex');
-      return new PartialSignMintInstruction(hex, mint.pubkey);
+      return new PartialSignInstruction(hex, mint.pubkey);
     });
   };
 }

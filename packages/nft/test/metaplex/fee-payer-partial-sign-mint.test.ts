@@ -5,7 +5,7 @@ import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { KeypairAccount } from '../../../shared';
 import { Storage } from '../../../storage';
-import { StorageMetadata, Royalty } from '../../../shared-metaplex';
+import { Royalty, StorageMetadata } from '../../../shared-metaplex';
 
 let source: KeypairAccount;
 describe('Metaplex', () => {
@@ -110,7 +110,7 @@ describe('Metaplex', () => {
     );
     res.match(
       (_: unknown) => assert.fail('Unrecognized error'),
-      (err) => {
+      (err: Error) => {
         assert.equal(
           err.message,
           `Must set 'storageType=nftStorage + filePath' or 'uri'`

@@ -15,7 +15,7 @@ const node_1 = require("./node");
 const global_1 = require("./global");
 const define_1 = require("./instruction/define");
 class PartialSignInstruction {
-    constructor(instructions) {
+    constructor(instructions, mint) {
         this.submit = (feePayer) => __awaiter(this, void 0, void 0, function* () {
             return (0, global_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
                 if (!(this instanceof PartialSignInstruction)) {
@@ -32,6 +32,7 @@ class PartialSignInstruction {
             }));
         });
         this.hexInstruction = instructions;
+        this.data = mint;
     }
 }
 exports.PartialSignInstruction = PartialSignInstruction;

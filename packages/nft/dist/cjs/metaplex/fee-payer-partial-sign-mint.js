@@ -70,7 +70,7 @@ var Metaplex;
                 requireAllSignatures: false,
             });
             const hex = serializedTx.toString('hex');
-            return new shared_1.PartialSignMintInstruction(hex, mint.pubkey);
+            return new shared_1.PartialSignInstruction(hex, mint.pubkey);
         }));
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));
