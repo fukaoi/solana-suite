@@ -1,4 +1,4 @@
-import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
+import { Node, Pubkey, Result, sleep, Try } from '@solana-suite/shared';
 import {
   Collections,
   Creators,
@@ -10,6 +10,7 @@ import {
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Bundlr } from '@solana-suite/storage';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
+import {fetch} from 'node-fetch';
 
 export namespace Metaplex {
   export const findByOwner = async (
@@ -49,18 +50,19 @@ export namespace Metaplex {
           programId: TOKEN_PROGRAM_ID,
         }
       );
-      info.value.forEach(async (el) => {
-        const mint = el.account.data.parsed.info.mint;
+
+      for (let index = 0; index < info.value.length; index++) {
+        const mint = info.value[index].account.data.parsed.info.mint;
         const metaAccount = Pda.getMetadata(mint);
         const metadata = await Metadata.fromAccountAddress(
           connection,
           metaAccount
         );
-        console.log(metadata.data.uri);
+        console.log('#metadata: ', metadata);
         const response = await fetch(metadata.data.uri);
         const json = await response.json();
-        console.log(json);
-      });
+        console.log('#json: ', json);
+      }
     });
   };
 }
