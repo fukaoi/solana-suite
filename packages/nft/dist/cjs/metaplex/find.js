@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metaplex = void 0;
 const shared_1 = require("@solana-suite/shared");
@@ -15,6 +18,7 @@ const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 const spl_token_1 = require("@solana/spl-token");
 const storage_1 = require("@solana-suite/storage");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
+const cross_fetch_1 = __importDefault(require("cross-fetch"));
 var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
@@ -47,16 +51,15 @@ var Metaplex;
             const info = yield connection.getParsedTokenAccountsByOwner(owner.toPublicKey(), {
                 programId: spl_token_1.TOKEN_PROGRAM_ID,
             });
-            info.value.forEach((el) => __awaiter(this, void 0, void 0, function* () {
-                const mint = el.account.data.parsed.info.mint;
+            for (let index = 0; index < info.value.length; index++) {
+                const mint = info.value[index].account.data.parsed.info.mint;
                 const metaAccount = shared_metaplex_1.Pda.getMetadata(mint);
                 const metadata = yield mpl_token_metadata_1.Metadata.fromAccountAddress(connection, metaAccount);
-                console.log(metadata.data.uri);
-                const url = 'http://httpbin.org/get';
-                const response = yield fetch(url);
+                console.log('#metadata: ', metadata);
+                const response = yield (0, cross_fetch_1.default)(metadata.data.uri);
                 const json = yield response.json();
-                console.log(json);
-            }));
+                console.log('#json: ', json);
+            }
         }));
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));

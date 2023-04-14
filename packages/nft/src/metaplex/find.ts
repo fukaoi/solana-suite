@@ -1,6 +1,5 @@
-import { Node, Pubkey, Result, sleep, Try } from '@solana-suite/shared';
-import {
-  Collections,
+import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
+import { Collections,
   Creators,
   MetaplexOriginal,
   OutputNftMetadata,
@@ -10,7 +9,7 @@ import {
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Bundlr } from '@solana-suite/storage';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
-import {fetch} from 'node-fetch';
+import fetch from 'cross-fetch';
 
 export namespace Metaplex {
   export const findByOwner = async (

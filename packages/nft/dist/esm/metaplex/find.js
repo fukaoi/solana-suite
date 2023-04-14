@@ -12,6 +12,7 @@ import { Collections, Creators, Pda, } from '@solana-suite/shared-metaplex';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Bundlr } from '@solana-suite/storage';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
+import fetch from 'cross-fetch';
 export var Metaplex;
 (function (Metaplex) {
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
@@ -44,16 +45,15 @@ export var Metaplex;
             const info = yield connection.getParsedTokenAccountsByOwner(owner.toPublicKey(), {
                 programId: TOKEN_PROGRAM_ID,
             });
-            info.value.forEach((el) => __awaiter(this, void 0, void 0, function* () {
-                const mint = el.account.data.parsed.info.mint;
+            for (let index = 0; index < info.value.length; index++) {
+                const mint = info.value[index].account.data.parsed.info.mint;
                 const metaAccount = Pda.getMetadata(mint);
                 const metadata = yield Metadata.fromAccountAddress(connection, metaAccount);
-                console.log(metadata.data.uri);
-                const url = 'http://httpbin.org/get';
-                const response = yield fetch(url);
+                console.log('#metadata: ', metadata);
+                const response = yield fetch(metadata.data.uri);
                 const json = yield response.json();
-                console.log(json);
-            }));
+                console.log('#json: ', json);
+            }
         }));
     });
 })(Metaplex || (Metaplex = {}));
