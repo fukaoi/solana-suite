@@ -51,7 +51,7 @@ export namespace SplToken {
   ): Promise<TransactionInstruction[]> => {
     const connection = Node.getConnection();
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
-    const metadataPda = Pda.getMetadata(mint);
+    const metadataPda = Pda.getMetadata(mint.toString());
     const tokenAssociated = await getAssociatedTokenAddress(mint, owner);
 
     const inst1 = SystemProgram.createAccount({

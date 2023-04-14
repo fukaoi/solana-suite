@@ -52,8 +52,8 @@ export namespace Metaplex {
     isMutable: boolean
   ): Promise<TransactionInstruction[]> => {
     const ata = await getAssociatedTokenAddress(mint, owner);
-    const tokenMetadataPubkey = Pda.getMetadata(mint);
-    const masterEditionPubkey = Pda.getMasterEdition(mint);
+    const tokenMetadataPubkey = Pda.getMetadata(mint.toString());
+    const masterEditionPubkey = Pda.getMasterEdition(mint.toString());
 
     const connection = Node.getConnection();
 

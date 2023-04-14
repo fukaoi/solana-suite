@@ -19,8 +19,8 @@ export var Metaplex;
 (function (Metaplex) {
     Metaplex.createMintInstructions = (mint, owner, nftMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
         const ata = yield getAssociatedTokenAddress(mint, owner);
-        const tokenMetadataPubkey = Pda.getMetadata(mint);
-        const masterEditionPubkey = Pda.getMasterEdition(mint);
+        const tokenMetadataPubkey = Pda.getMetadata(mint.toString());
+        const masterEditionPubkey = Pda.getMasterEdition(mint.toString());
         const connection = Node.getConnection();
         const inst1 = SystemProgram.createAccount({
             fromPubkey: feePayer,

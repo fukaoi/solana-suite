@@ -19,7 +19,7 @@ export var SplToken;
     SplToken.createMintInstructions = (mint, owner, totalAmount, mintDecimal, tokenMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
         const connection = Node.getConnection();
         const lamports = yield getMinimumBalanceForRentExemptMint(connection);
-        const metadataPda = Pda.getMetadata(mint);
+        const metadataPda = Pda.getMetadata(mint.toString());
         const tokenAssociated = yield getAssociatedTokenAddress(mint, owner);
         const inst1 = SystemProgram.createAccount({
             fromPubkey: feePayer,

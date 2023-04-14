@@ -1,13 +1,17 @@
-import { Pubkey, Result, Try } from '@solana-suite/shared';
+import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
 import {
-  OutputNftMetadata,
-  Creators,
   Collections,
+  Creators,
   MetaplexOriginal,
+  OutputNftMetadata,
+  Pda,
 } from '@solana-suite/shared-metaplex';
 
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+
 import { Bundlr } from '@solana-suite/storage';
-import { Metadata } from "@metaplex-foundation/js";
+
+import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 export namespace Metaplex {
   export const findByOwner = async (
@@ -18,11 +22,7 @@ export namespace Metaplex {
         .nfts()
         .findAllByOwner({ owner: owner.toPublicKey() });
 
-
-
-
-      const res = allData.map((d: Metadata) => {
-      console.log(d.json);
+      const res = allData.map((d) => {
         return {
           mint: (d as MetaplexOriginal).mintAddress.toString(),
           updateAuthority: d.updateAuthorityAddress.toString(),
@@ -39,6 +39,24 @@ export namespace Metaplex {
         };
       });
       return res;
+    });
+  };
+
+  export const findByOwner2 = async (owner: Pubkey) => {
+    return Try(async () => {
+      const connection = Node.getConnection();
+      const info = await connection.getParsedTokenAccountsByOwner(
+        owner.toPublicKey(),
+        {
+          programId: TOKEN_PROGRAM_ID,
+        }
+      );
+      info.value.forEach(async (el) => {
+        const mint = el.account.data.parsed.info.mint;
+        // console.log('account: ', mint);
+        const metaAccount = Pda.getMetadata(mint);
+        console.log(await Metadata.fromAccountAddress(connection, metaAccount));
+      });
     });
   };
 }

@@ -12,6 +12,13 @@ describe('Metaplex.find', () => {
     });
     // const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
     const owner = 'BAWTL3RSxNe2mN7uS6MUvyWmBDBXUDQRNQftrS1R6baS';
+    const res = await Metaplex.findByOwner2(owner);
+    console.log(res);
+  });
+
+  it('Find owner info', async () => {
+    // const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
+    const owner = 'BAWTL3RSxNe2mN7uS6MUvyWmBDBXUDQRNQftrS1R6baS';
     const res = await Metaplex.findByOwner(owner);
     res.match(
       (ok) => {
