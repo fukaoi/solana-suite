@@ -15,8 +15,5 @@ export var Metaplex;
     Metaplex.transfer = (mint, owner, dest, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
         return SplToken.transfer(mint, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
     });
-    Metaplex.feePayerPartialSignTransferNft = (mint, owner, dest, signers, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        return SplToken.feePayerPartialSignTransfer(mint, owner, dest, signers, NFT_AMOUNT, NFT_DECIMALS, feePayer);
-    });
 })(Metaplex || (Metaplex = {}));
 //# sourceMappingURL=transfer.js.map
