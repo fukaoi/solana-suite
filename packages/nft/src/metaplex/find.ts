@@ -8,9 +8,7 @@ import {
 } from '@solana-suite/shared-metaplex';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-
 import { Bundlr } from '@solana-suite/storage';
-
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 export namespace Metaplex {
@@ -53,9 +51,12 @@ export namespace Metaplex {
       );
       info.value.forEach(async (el) => {
         const mint = el.account.data.parsed.info.mint;
-        // console.log('account: ', mint);
         const metaAccount = Pda.getMetadata(mint);
-        console.log(await Metadata.fromAccountAddress(connection, metaAccount));
+        const metadata = await Metadata.fromAccountAddress(
+          connection,
+          metaAccount
+        );
+        console.log(metadata.data.uri);
       });
     });
   };
