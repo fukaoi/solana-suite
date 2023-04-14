@@ -55,6 +55,7 @@ var Metaplex;
                 const url = 'http://httpbin.org/get';
                 const response = yield fetch(url);
                 const json = yield response.json();
+                console.log(json);
             }));
         }));
     });

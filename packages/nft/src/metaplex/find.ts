@@ -57,8 +57,7 @@ export namespace Metaplex {
           metaAccount
         );
         console.log(metadata.data.uri);
-        const url = 'http://httpbin.org/get';
-        const response = await fetch(url);
+        const response = await fetch(metadata.data.uri);
         const json = await response.json();
         console.log(json);
       });
