@@ -7,10 +7,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { debugLog, Try, Node, KeypairAccount, PartialSignMintInstruction, } from '@solana-suite/shared';
+import { debugLog, KeypairAccount, Node, PartialSignInstruction, Try, } from '@solana-suite/shared';
 import { Transaction } from '@solana/web3.js';
 import { Storage } from '@solana-suite/storage';
-import { Validator, Properties, Collections, Royalty, MetaplexMetadata, } from '@solana-suite/shared-metaplex';
+import { Collections, MetaplexMetadata, Properties, Royalty, Validator, } from '@solana-suite/shared-metaplex';
 import { Metaplex as _Mint } from './mint';
 export var Metaplex;
 (function (Metaplex) {
@@ -67,7 +67,7 @@ export var Metaplex;
                 requireAllSignatures: false,
             });
             const hex = serializedTx.toString('hex');
-            return new PartialSignMintInstruction(hex, mint.pubkey);
+            return new PartialSignInstruction(hex, mint.pubkey);
         }));
     });
 })(Metaplex || (Metaplex = {}));

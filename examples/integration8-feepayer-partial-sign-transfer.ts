@@ -6,9 +6,8 @@ import assert from 'assert';
 import { Airdrop, SolNative, SplToken } from '@solana-suite/core';
 
 import {
-  PartialSignInstruction,
-  sleep,
   KeypairAccount,
+  PartialSignInstruction,
   Pubkey,
 } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
@@ -16,9 +15,6 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
 import { StorageType } from '@solana-suite/shared-metaplex';
 
 (async () => {
-  ////////////////////////////////////////////// CREATE WALLET
-  //////////////////////////////////////////////
-
   // random create
   const owner = KeypairAccount.create();
   const tokenOwner = KeypairAccount.create();
@@ -35,10 +31,6 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   }
 
   console.log('# owner: ', owner.pubkey);
-
-  await sleep(10); // Avoid 429 error
-
-  await Airdrop.request(feePayer.pubkey);
   console.log('# feePayer: ', feePayer);
   console.log('# tokenOwner: ', tokenOwner);
   console.log('# dest: ', dest);

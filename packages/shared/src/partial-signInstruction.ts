@@ -1,20 +1,22 @@
 import {
-  TransactionSignature,
-  Transaction,
   ConfirmOptions,
+  Transaction,
+  TransactionSignature,
 } from '@solana/web3.js';
 
 import { Node } from './node';
 import { Result } from './result';
 import { Try } from './global';
 import { MAX_RETRIES } from './instruction/define';
-import { Secret } from './types';
+import { Pubkey, Secret } from './types';
 
 export class PartialSignInstruction {
   hexInstruction: string;
+  data?: Pubkey;
 
-  constructor(instructions: string) {
+  constructor(instructions: string, mint?: Pubkey) {
     this.hexInstruction = instructions;
+    this.data = mint;
   }
 
   submit = async (
