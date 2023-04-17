@@ -1,7 +1,7 @@
 import {
-  TransactionInstruction,
   PublicKey,
   SystemProgram,
+  TransactionInstruction,
 } from '@solana/web3.js';
 
 import BN from 'bn.js';
@@ -16,30 +16,30 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import {
-  Result,
   debugLog,
-  Try,
-  MintInstruction,
-  Secret,
   KeypairAccount,
+  MintInstruction,
   Pubkey,
+  Result,
+  Secret,
+  Try,
 } from '@solana-suite/shared';
 
 import { Storage } from '@solana-suite/storage';
 
 import {
-  Validator,
-  InputNftMetadata,
-  Properties,
-  Pda,
-  Royalty,
-  MetaplexMetadata,
   Collections,
+  InputNftMetadata,
+  MetaplexMetadata,
+  Pda,
+  Properties,
+  Royalty,
+  Validator,
 } from '@solana-suite/shared-metaplex';
 
 import {
-  createCreateMetadataAccountV3Instruction,
   createCreateMasterEditionV3Instruction,
+  createCreateMetadataAccountV3Instruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
@@ -162,6 +162,15 @@ export namespace Metaplex {
         );
       } else if (input.properties && !input.storageType) {
         throw Error('Must set storageType if will use properties');
+      }
+
+      // created at by unix timestamp
+      const createdAt = new Date().getTime() / 1000;
+      if (input.options) {
+        input.options.created_at = createdAt;
+      } else {
+        const options = { created_at: createdAt };
+        input = { ...input, options };
       }
 
       input = {
