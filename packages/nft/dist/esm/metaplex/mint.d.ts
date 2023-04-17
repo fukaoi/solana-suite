@@ -25,7 +25,6 @@ export declare namespace Metaplex {
      *   creators?: InputCreators[]          // other creators than owner
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
-     *   maxSupply?: BigNumber         // mint copies
      * }
      * @param {Secret} feePayer?       // fee payer
      * @return Promise<Result<Instruction, Error>>
