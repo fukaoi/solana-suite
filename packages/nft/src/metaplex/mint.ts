@@ -165,7 +165,7 @@ export namespace Metaplex {
       }
 
       // created at by unix timestamp
-      const createdAt = new Date().getTime() / 1000;
+      const createdAt = Math.floor(new Date().getTime() / 1000);
       if (input.options) {
         input.options.created_at = createdAt;
       } else {
