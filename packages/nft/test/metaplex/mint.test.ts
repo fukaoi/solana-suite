@@ -45,11 +45,10 @@ describe('Metaplex', () => {
       owner.secret,
       {
         filePath: asset.filePath as string,
-        storageType: 'arweave',
+        storageType: 'nftStorage',
         name: asset.name!,
         symbol: asset.symbol!,
-        royalty: 50,
-        isMutable: true,
+        royalty: 0,
       },
       source.secret
     );
