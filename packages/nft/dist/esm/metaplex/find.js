@@ -15,6 +15,12 @@ import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import fetch from 'cross-fetch';
 export var Metaplex;
 (function (Metaplex) {
+    /**
+     * Fetch minted metadata by owner Pubkey
+     *
+     * @param {Pubkey} owner
+     * @return Promise<Result<OutputNftMetadata[], Error>>
+     */
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             const allData = yield Bundlr.make()
@@ -47,12 +53,20 @@ export var Metaplex;
             });
             for (let index = 0; index < info.value.length; index++) {
                 const mint = info.value[index].account.data.parsed.info.mint;
-                const metaAccount = Pda.getMetadata(mint);
-                const metadata = yield Metadata.fromAccountAddress(connection, metaAccount);
-                console.log('#metadata: ', metadata);
-                const response = yield fetch(metadata.data.uri);
-                const json = yield response.json();
-                console.log('#json: ', json);
+                try {
+                    const metaAccount = Pda.getMetadata(mint);
+                    const metadata = yield Metadata.fromAccountAddress(connection, metaAccount);
+                    const uri = metadata.data.uri;
+                    const response = yield fetch(uri);
+                    const json = yield response.json();
+                    console.log(mint);
+                    // console.log('#metadata: ', metadata);
+                    // console.log('#json: ', json);
+                }
+                catch (e) {
+                    console.error('#maybe no nft: ', e);
+                    console.error('#info: ', info.value[index]);
+                }
             }
         }));
     });

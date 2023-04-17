@@ -21,6 +21,12 @@ const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 const cross_fetch_1 = __importDefault(require("cross-fetch"));
 var Metaplex;
 (function (Metaplex) {
+    /**
+     * Fetch minted metadata by owner Pubkey
+     *
+     * @param {Pubkey} owner
+     * @return Promise<Result<OutputNftMetadata[], Error>>
+     */
     Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             const allData = yield storage_1.Bundlr.make()
@@ -53,12 +59,20 @@ var Metaplex;
             });
             for (let index = 0; index < info.value.length; index++) {
                 const mint = info.value[index].account.data.parsed.info.mint;
-                const metaAccount = shared_metaplex_1.Pda.getMetadata(mint);
-                const metadata = yield mpl_token_metadata_1.Metadata.fromAccountAddress(connection, metaAccount);
-                console.log('#metadata: ', metadata);
-                const response = yield (0, cross_fetch_1.default)(metadata.data.uri);
-                const json = yield response.json();
-                console.log('#json: ', json);
+                try {
+                    const metaAccount = shared_metaplex_1.Pda.getMetadata(mint);
+                    const metadata = yield mpl_token_metadata_1.Metadata.fromAccountAddress(connection, metaAccount);
+                    const uri = metadata.data.uri;
+                    const response = yield (0, cross_fetch_1.default)(uri);
+                    const json = yield response.json();
+                    console.log(mint);
+                    // console.log('#metadata: ', metadata);
+                    // console.log('#json: ', json);
+                }
+                catch (e) {
+                    console.error('#maybe no nft: ', e);
+                    console.error('#info: ', info.value[index]);
+                }
             }
         }));
     });

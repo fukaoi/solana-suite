@@ -10,8 +10,8 @@ describe('Metaplex.find', () => {
         'https://sparkling-ancient-snow.solana-devnet.discover.quiknode.pro/caf0ca64ee225f376da0d05ef893c57a2b6644a7/',
       ],
     });
-    const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
-    // const owner = 'BAWTL3RSxNe2mN7uS6MUvyWmBDBXUDQRNQftrS1R6baS';
+    // const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
+    const owner = 'BAWTL3RSxNe2mN7uS6MUvyWmBDBXUDQRNQftrS1R6baS';
     const res = await Metaplex.findByOwner2(owner);
     console.log(res);
   });

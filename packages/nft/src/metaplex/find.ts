@@ -14,7 +14,7 @@ import fetch from 'cross-fetch';
 
 export namespace Metaplex {
   /**
-   * fetch minted data by owner Pubkey
+   * Fetch minted metadata by owner Pubkey
    *
    * @param {Pubkey} owner
    * @return Promise<Result<OutputNftMetadata[], Error>>
@@ -49,31 +49,33 @@ export namespace Metaplex {
 
   export const findByOwner2 = async (owner: Pubkey) => {
     return Try(async () => {
-      const connection = Node.getConnection();
-      const info = await connection.getParsedTokenAccountsByOwner(
-        owner.toPublicKey(),
-        {
-          programId: TOKEN_PROGRAM_ID,
+      try {
+        const connection = Node.getConnection();
+        const info = await connection.getParsedTokenAccountsByOwner(
+          owner.toPublicKey(),
+          {
+            programId: TOKEN_PROGRAM_ID,
+          }
+        );
+        for await (const d of info.value) {
+          if (d.account.data.parsed.info.tokenAmount.uiAmount == 1) {
+            const mint = d.account.data.parsed.info.mint;
+            const metaAccount = Pda.getMetadata(mint);
+            console.log('# metadata: ', metaAccount.toString());
+            const metadata = await Metadata.fromAccountAddress(
+              connection,
+              metaAccount
+            );
+            const uri = metadata.data.uri;
+            fetch(uri).then((r) => {
+              r.json().then((json) => {
+                console.log('# json: ', json);
+              });
+            });
+          }
         }
-      );
-
-      for (let index = 0; index < info.value.length; index++) {
-        const mint = info.value[index].account.data.parsed.info.mint;
-        try {
-          const metaAccount = Pda.getMetadata(mint);
-          const metadata = await Metadata.fromAccountAddress(
-            connection,
-            metaAccount
-          );
-          const uri = metadata.data.uri;
-          const response = await fetch(uri);
-          const json = await response.json();
-          console.log('#metadata: ', metadata);
-          console.log('#json: ', json);
-        } catch (e) {
-          console.error('#maybe no nft: ', e);
-          console.error('#info: ', info.value[index]);
-        }
+      } catch (e) {
+        console.error('# EEEEE: ', e);
       }
     });
   };
