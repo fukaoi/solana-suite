@@ -57,18 +57,18 @@ export namespace Metaplex {
             programId: TOKEN_PROGRAM_ID,
           }
         );
+
+        const metadatas = [{metadata: any, mint: String, json: any}];
         for await (const d of info.value) {
           if (d.account.data.parsed.info.tokenAmount.uiAmount == 1) {
             const mint = d.account.data.parsed.info.mint;
-            const metaAccount = Pda.getMetadata(mint);
-            console.log('# metadata: ', metaAccount.toString());
             const metadata = await Metadata.fromAccountAddress(
               connection,
-              metaAccount
+              Pda.getMetadata(mint)
             );
-            const uri = metadata.data.uri;
-            fetch(uri).then((r) => {
-              r.json().then((json) => {
+            metadatas.push({metadata, mint});
+            fetch(metadata.data.uri).then((response) => {
+              response.json().then((json) => {
                 console.log('# json: ', json);
               });
             });
