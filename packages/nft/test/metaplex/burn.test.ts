@@ -56,12 +56,12 @@ describe('Metaplex', () => {
     );
   });
 
-  it.only('burn script', async () => {
-    const mint = 'BsjjAPgHMW3qCesAvpsRaNx7kFxcYFYCCZ2wnpXzuFgN';
+  it('burn script', async () => {
+    const mint = '';
     const owner = new KeypairAccount({
-      pubkey: '6yVHt5qgGnGZ3rGJoX9dX5zKpWgvmz5rLgzco77HiW2H',
+      pubkey: '',
       secret:
-        '5K8YJqfs8Zs6fkRK9UyuX1TvSchofkwodQHciDpmw3zzEE3Tkiuyg6jes2FtmvQNETafE5tqfrb7ssYUMmEggWwF',
+        '',
     });
     const res = Metaplex.burn(mint, owner.pubkey, [owner.secret]);
     (await res.submit()).match(
