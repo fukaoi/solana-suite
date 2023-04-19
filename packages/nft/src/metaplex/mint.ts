@@ -1,7 +1,8 @@
 import {
-  TransactionInstruction,
+  Keypair,
   PublicKey,
   SystemProgram,
+  TransactionInstruction,
 } from '@solana/web3.js';
 
 import {
@@ -14,30 +15,30 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import {
-  Result,
   debugLog,
-  Try,
-  MintInstruction,
-  Secret,
   KeypairAccount,
+  MintInstruction,
   Pubkey,
+  Result,
+  Secret,
+  Try,
 } from '@solana-suite/shared';
 
 import { Storage } from '@solana-suite/storage';
 
 import {
-  Validator,
-  InputNftMetadata,
-  Properties,
-  Pda,
-  Royalty,
-  MetaplexMetadata,
   Collections,
+  InputNftMetadata,
+  MetaplexMetadata,
+  Pda,
+  Properties,
+  Royalty,
+  Validator,
 } from '@solana-suite/shared-metaplex';
 
 import {
-  createCreateMetadataAccountV2Instruction,
   createCreateMasterEditionV3Instruction,
+  createCreateMetadataAccountV2Instruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
@@ -47,7 +48,8 @@ export namespace Metaplex {
     owner: PublicKey,
     nftMetadata: DataV2,
     feePayer: PublicKey,
-    isMutable: boolean
+    isMutable: boolean,
+    freezeAuthority?: Keypair
   ): Promise<TransactionInstruction[]> => {
     const ata = await getAssociatedTokenAddress(mint, owner);
     const tokenMetadataPubkey = Pda.getMetadata(mint);
@@ -63,7 +65,8 @@ export namespace Metaplex {
       programId: TOKEN_PROGRAM_ID,
     });
 
-    const inst2 = createInitializeMintInstruction(mint, 0, owner, owner);
+    const freeze = freezeAuthority ? freezeAuthority.publicKey : owner;
+    const inst2 = createInitializeMintInstruction(mint, 0, owner, freeze);
 
     const inst3 = createAssociatedTokenAccountInstruction(
       feePayer,
@@ -130,14 +133,16 @@ export namespace Metaplex {
    *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()
    * }
-   * @param {Secret} feePayer?       // fee payer
+   * @param {Secret} feePayer?         // fee payer
+   * @param {Secret} freezeAuthority? // fee payer
    * @return Promise<Result<Instruction, Error>>
    */
   export const mint = async (
     owner: Pubkey,
     signer: Secret,
     input: InputNftMetadata,
-    feePayer?: Secret
+    feePayer?: Secret,
+    freezeAuthority?: Secret
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
@@ -212,12 +217,23 @@ export namespace Metaplex {
       debugLog('# datav2: ', datav2);
 
       const mint = KeypairAccount.create();
+
+      const signers = [signer.toKeypair(), mint.toKeypair()];
+
+      freezeAuthority && signers.push(freezeAuthority.toKeypair());
+
+      console.log(signers.length);
+      signers.forEach((s) =>
+        console.log('# signers: ', s.publicKey.toString())
+      );
+
       const insts = await createMintInstructions(
         mint.toPublicKey(),
         owner.toPublicKey(),
         datav2,
         payer.toKeypair().publicKey,
-        isMutable
+        isMutable,
+        freezeAuthority?.toKeypair()
       );
       return new MintInstruction(
         insts,

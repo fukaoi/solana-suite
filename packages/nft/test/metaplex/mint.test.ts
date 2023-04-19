@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
-import { ValidatorError, User } from '../../../shared-metaplex/';
+import { User, ValidatorError } from '../../../shared-metaplex/';
 import { KeypairAccount } from '../../../shared';
 import { Pubkey } from '../../../shared/src';
 
@@ -64,14 +64,15 @@ describe('Metaplex', () => {
     );
   });
 
-  it('[Nft Storage] mint nft with many optional datas', async () => {
+  it.only('[Nft Storage] mint nft with many optional datas', async () => {
     const asset = RandomAsset.get();
     const creators: User.Creators[] = [];
+    const owner = KeypairAccount.create();
 
     creators.push({
-      address: source.pubkey,
+      address: owner.pubkey,
       share: 60,
-      verified: true,
+      verified: false,
     });
 
     creators.push({
@@ -109,18 +110,24 @@ describe('Metaplex', () => {
         'https://solana-suite.gitbook.io/solana-suite-develpoment-guide/',
     };
 
-    const res = await Metaplex.mint(source.pubkey, source.secret, {
-      filePath: asset.filePath as string,
-      storageType: 'nftStorage',
-      name: asset.name!,
-      symbol: asset.symbol!,
-      royalty: 50,
-      creators,
-      properties,
-      collection,
-      attributes,
-      options,
-    });
+    const res = await Metaplex.mint(
+      owner.pubkey,
+      owner.secret,
+      {
+        filePath: asset.filePath as string,
+        storageType: 'nftStorage',
+        name: asset.name!,
+        symbol: asset.symbol!,
+        royalty: 50,
+        creators,
+        properties,
+        collection,
+        attributes,
+        options,
+      },
+      source.secret,
+      owner.secret
+    );
 
     assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
 
