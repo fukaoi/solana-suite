@@ -129,11 +129,11 @@ describe('Metaplex', () => {
       owner.secret
     );
 
-    assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
-
     (await res.submit()).match(
       (ok: string) => {
-        console.log('# mint:', res.unwrap().data);
+        const mint = res.unwrap().data as Pubkey;
+        assert.isTrue(KeypairAccount.isPubkey(mint));
+        console.log('# mint:', mint);
         console.log('# sig:', ok);
       },
       (ng: Error) => assert.fail(ng.message)
