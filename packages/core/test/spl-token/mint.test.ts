@@ -45,8 +45,9 @@ describe('SplToken', () => {
     console.log('# mint: ', mintStr);
   });
 
-  it('Create token with creators', async () => {
+  it('Create token with creators, freezeAuthority', async () => {
     const creator = KeypairAccount.create();
+    const freezeAuthority = KeypairAccount.create();
     const tokenMetadata = {
       name: 'solana-suite-token',
       symbol: 'SST',
@@ -71,7 +72,9 @@ describe('SplToken', () => {
       source.secret,
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
-      tokenMetadata
+      tokenMetadata,
+      undefined,
+      freezeAuthority.pubkey
     );
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);

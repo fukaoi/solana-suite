@@ -4,9 +4,11 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 import {
+  AuthorityType,
   createAssociatedTokenAccountInstruction,
   createInitializeMintInstruction,
   createMintToCheckedInstruction,
+  createSetAuthorityInstruction,
   getAssociatedTokenAddressSync,
   getMinimumBalanceForRentExemptMint,
   MINT_SIZE,
@@ -40,6 +42,19 @@ import { SplToken as _Calculate } from './calculate-amount';
 import { Storage } from '@solana-suite/storage';
 
 export namespace SplToken {
+  export const createFreezeAuthority = (
+    mint: PublicKey,
+    owner: PublicKey,
+    freezeAuthority: PublicKey
+  ): TransactionInstruction => {
+    return createSetAuthorityInstruction(
+      mint,
+      owner,
+      AuthorityType.FreezeAccount,
+      freezeAuthority
+    );
+  };
+
   export const createMintInstructions = async (
     mint: PublicKey,
     owner: PublicKey,
@@ -103,13 +118,26 @@ export namespace SplToken {
     return [inst1, inst2, inst3, inst4, inst5];
   };
 
+  /**
+   * SPL-TOKEN mint
+   *
+   * @param {Pubkey} owner       // token owner
+   * @param {Secret} signer      // token owner Secret
+   * @param {number} totalAmount // total number
+   * @param {number} mintDecimal // token decimal
+   * @param {Pubkey} input       // token metadata
+   * @param {Secret} feePayer?   // fee payer
+   * @param {Pubkey} freezeAuthority? // freeze authority
+   * @return Promise<Result<MintInstruction, Error>>
+   */
   export const mint = async (
     owner: Pubkey,
     signer: Secret,
     totalAmount: number,
     mintDecimal: number,
     input: InputTokenMetadata,
-    feePayer?: Secret
+    feePayer?: Secret,
+    freezeAuthority?: Pubkey
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputTokenMetadata>(input);
@@ -166,6 +194,17 @@ export namespace SplToken {
         payer.toKeypair().publicKey,
         isMutable
       );
+
+      // freezeAuthority
+      if (freezeAuthority) {
+        insts.push(
+          createFreezeAuthority(
+            mint.toPublicKey(),
+            owner.toPublicKey(),
+            freezeAuthority.toPublicKey()
+          )
+        );
+      }
 
       return new MintInstruction(
         insts,

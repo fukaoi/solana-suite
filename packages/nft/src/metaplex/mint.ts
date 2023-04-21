@@ -143,12 +143,12 @@ export namespace Metaplex {
    *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
    *   collection?: Pubkey           // collections of different colors, shapes, etc.
    *   [key: string]?: unknown       // optional param, Usually not used.
-   *   creators?: InputCreators[]          // other creators than owner
+   *   creators?: InputCreators[]    // other creators than owner
    *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()
    * }
    * @param {Secret} feePayer?         // fee payer
-   * @param {Pubkey} freezeAuthority? // fee payer
+   * @param {Pubkey} freezeAuthority?  // freeze authority
    * @return Promise<Result<MintInstruction, Error>>
    */
   export const mint = async (
