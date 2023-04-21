@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
-import { SplToken } from '../../src/';
+import { SplToken } from '../../src/spl-token';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { StorageType } from '../../../shared-metaplex';
 import { KeypairAccount } from '../../../shared/src/keypair-account';
