@@ -42,6 +42,7 @@ import {
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
+const NFT_AMOUNT = 1;
 export namespace Metaplex {
   export const createDeleagateInstruction = (
     mint: PublicKey,
@@ -50,7 +51,12 @@ export namespace Metaplex {
   ): TransactionInstruction => {
     const tokenAccount = getAssociatedTokenAddressSync(mint, owner);
 
-    return createApproveInstruction(tokenAccount, delegateAuthority, owner, 1);
+    return createApproveInstruction(
+      tokenAccount,
+      delegateAuthority,
+      owner,
+      NFT_AMOUNT
+    );
   };
 
   export const createMintInstructions = async (
