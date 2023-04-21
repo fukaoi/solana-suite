@@ -126,7 +126,7 @@ describe('Metaplex', () => {
         options,
       },
       source.secret,
-      owner.secret
+      source.secret
     );
 
     (await res.submit()).match(

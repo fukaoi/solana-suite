@@ -1,15 +1,15 @@
 import {
-  Keypair,
   PublicKey,
   SystemProgram,
   TransactionInstruction,
 } from '@solana/web3.js';
 
 import {
+  createApproveInstruction,
   createAssociatedTokenAccountInstruction,
   createInitializeMintInstruction,
   createMintToCheckedInstruction,
-  getAssociatedTokenAddress,
+  getAssociatedTokenAddressSync,
   getMinimumBalanceForRentExemptMint,
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
@@ -43,7 +43,15 @@ import {
 } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
 export namespace Metaplex {
-  const createFreezeInstruction = async () => {};
+  export const createDeleagateInstruction = (
+    mint: PublicKey,
+    owner: PublicKey,
+    delegateAuthority: PublicKey
+  ): TransactionInstruction => {
+    const tokenAccount = getAssociatedTokenAddressSync(mint, owner);
+
+    return createApproveInstruction(tokenAccount, delegateAuthority, owner, 1);
+  };
 
   export const createMintInstructions = async (
     mint: PublicKey,
@@ -52,7 +60,7 @@ export namespace Metaplex {
     feePayer: PublicKey,
     isMutable: boolean
   ): Promise<TransactionInstruction[]> => {
-    const ata = await getAssociatedTokenAddress(mint, owner);
+    const ata = getAssociatedTokenAddressSync(mint, owner);
     const tokenMetadataPubkey = Pda.getMetadata(mint);
     const masterEditionPubkey = Pda.getMasterEdition(mint);
 
@@ -208,7 +216,6 @@ export namespace Metaplex {
         collection = Collections.toConvertInfra(input.collection);
         datav2 = { ...datav2, collection };
       }
-      //--- collection ---
 
       const isMutable = input.isMutable === undefined ? true : input.isMutable;
 
@@ -218,9 +225,6 @@ export namespace Metaplex {
 
       const mint = KeypairAccount.create();
 
-      // const signers = [signer.toKeypair(), mint.toKeypair()];
-      // freezeAuthority && signers.push(freezeAuthority.toKeypair());
-
       const insts = await createMintInstructions(
         mint.toPublicKey(),
         owner.toPublicKey(),
@@ -228,6 +232,18 @@ export namespace Metaplex {
         payer.toKeypair().publicKey,
         isMutable
       );
+
+      // freezeAuthority
+      if (freezeAuthority) {
+        insts.push(
+          createDeleagateInstruction(
+            mint.toPublicKey(),
+            owner.toPublicKey(),
+            freezeAuthority.toKeypair().publicKey
+          )
+        );
+      }
+
       return new MintInstruction(
         insts,
         [signer.toKeypair(), mint.toKeypair()],
