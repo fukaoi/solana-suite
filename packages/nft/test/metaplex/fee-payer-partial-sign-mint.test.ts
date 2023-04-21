@@ -16,6 +16,7 @@ describe('Metaplex', () => {
 
   it('[Nft Storage] mint nft with partial sing fee payer', async () => {
     const owner = KeypairAccount.create();
+    const freezeAuthority = KeypairAccount.create();
     const asset = RandomAsset.get();
     const serialized = await Metaplex.feePayerPartialSignMint(
       owner.pubkey,
@@ -28,7 +29,8 @@ describe('Metaplex', () => {
         royalty: 50,
         isMutable: true,
       },
-      source.pubkey
+      source.pubkey,
+      freezeAuthority.pubkey
     );
 
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);

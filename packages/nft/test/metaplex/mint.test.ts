@@ -64,10 +64,11 @@ describe('Metaplex', () => {
     );
   });
 
-  it.only('[Nft Storage] mint nft with many optional datas', async () => {
+  it('[Nft Storage] mint nft with many optional datas', async () => {
     const asset = RandomAsset.get();
     const creators: User.Creators[] = [];
     const owner = KeypairAccount.create();
+    const freezeAuthority = KeypairAccount.create();
 
     creators.push({
       address: owner.pubkey,
@@ -126,7 +127,7 @@ describe('Metaplex', () => {
         options,
       },
       source.secret,
-      source.secret
+      freezeAuthority.pubkey
     );
 
     (await res.submit()).match(

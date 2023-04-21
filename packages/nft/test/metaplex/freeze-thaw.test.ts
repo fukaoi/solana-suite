@@ -30,7 +30,7 @@ describe('Metaplex', () => {
         royalty: 0,
       },
       feePayer.secret,
-      freezeAuthority.secret
+      freezeAuthority.pubkey
     );
 
     const mint = inst1.unwrap().data as Pubkey;

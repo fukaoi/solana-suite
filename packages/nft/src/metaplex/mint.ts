@@ -148,15 +148,15 @@ export namespace Metaplex {
    *   isMutable?: boolean           // enable update()
    * }
    * @param {Secret} feePayer?         // fee payer
-   * @param {Secret} freezeAuthority? // fee payer
-   * @return Promise<Result<Instruction, Error>>
+   * @param {Pubkey} freezeAuthority? // fee payer
+   * @return Promise<Result<MintInstruction, Error>>
    */
   export const mint = async (
     owner: Pubkey,
     signer: Secret,
     input: InputNftMetadata,
     feePayer?: Secret,
-    freezeAuthority?: Secret
+    freezeAuthority?: Pubkey
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
@@ -245,7 +245,7 @@ export namespace Metaplex {
           createDeleagateInstruction(
             mint.toPublicKey(),
             owner.toPublicKey(),
-            freezeAuthority.toKeypair().publicKey
+            freezeAuthority.toPublicKey()
           )
         );
       }
