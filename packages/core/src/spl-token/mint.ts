@@ -4,13 +4,13 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 import {
+  createAssociatedTokenAccountInstruction,
+  createInitializeMintInstruction,
+  createMintToCheckedInstruction,
+  getAssociatedTokenAddressSync,
+  getMinimumBalanceForRentExemptMint,
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
-  createInitializeMintInstruction,
-  getMinimumBalanceForRentExemptMint,
-  createAssociatedTokenAccountInstruction,
-  createMintToCheckedInstruction,
-  getAssociatedTokenAddress,
 } from '@solana/spl-token';
 
 import {
@@ -19,14 +19,14 @@ import {
 } from '@metaplex-foundation/mpl-token-metadata';
 
 import {
-  Node,
-  Result,
-  MintInstruction,
-  Try,
   debugLog,
-  Pubkey,
-  Secret,
   KeypairAccount,
+  MintInstruction,
+  Node,
+  Pubkey,
+  Result,
+  Secret,
+  Try,
 } from '@solana-suite/shared';
 
 import {
@@ -52,7 +52,7 @@ export namespace SplToken {
     const connection = Node.getConnection();
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
     const metadataPda = Pda.getMetadata(mint);
-    const tokenAssociated = await getAssociatedTokenAddress(mint, owner);
+    const tokenAssociated = getAssociatedTokenAddressSync(mint, owner);
 
     const inst1 = SystemProgram.createAccount({
       fromPubkey: feePayer,
@@ -95,7 +95,7 @@ export namespace SplToken {
       },
       {
         createMetadataAccountArgsV2: {
-          data: tokenMetadata ,
+          data: tokenMetadata,
           isMutable,
         },
       }

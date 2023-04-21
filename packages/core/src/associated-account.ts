@@ -1,21 +1,21 @@
 import { TransactionInstruction } from '@solana/web3.js';
 import {
-  Node,
   debugLog,
   Instruction,
-  sleep,
+  KeypairAccount,
+  Node,
   Pubkey,
   Secret,
-  KeypairAccount,
+  sleep,
 } from '@solana-suite/shared';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  TOKEN_PROGRAM_ID,
-  getAssociatedTokenAddress,
+  createAssociatedTokenAccountInstruction,
   getAccount,
+  getAssociatedTokenAddressSync,
+  TOKEN_PROGRAM_ID,
   TokenAccountNotFoundError,
   TokenInvalidAccountOwnerError,
-  createAssociatedTokenAccountInstruction,
 } from '@solana/spl-token';
 
 /**
@@ -117,7 +117,7 @@ export namespace AssociatedAccount {
     tokenAccount: string;
     inst: TransactionInstruction | undefined;
   }> => {
-    const associatedTokenAccount = await getAssociatedTokenAddress(
+    const associatedTokenAccount = getAssociatedTokenAddressSync(
       mint.toPublicKey(),
       owner.toPublicKey(),
       allowOwnerOffCurve,
