@@ -43,13 +43,14 @@ import {
 } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
 export namespace Metaplex {
+  const createFreezeInstruction = async () => {};
+
   export const createMintInstructions = async (
     mint: PublicKey,
     owner: PublicKey,
     nftMetadata: DataV2,
     feePayer: PublicKey,
-    isMutable: boolean,
-    freezeAuthority?: Keypair
+    isMutable: boolean
   ): Promise<TransactionInstruction[]> => {
     const ata = await getAssociatedTokenAddress(mint, owner);
     const tokenMetadataPubkey = Pda.getMetadata(mint);
@@ -65,8 +66,7 @@ export namespace Metaplex {
       programId: TOKEN_PROGRAM_ID,
     });
 
-    const freeze = freezeAuthority ? freezeAuthority.publicKey : owner;
-    const inst2 = createInitializeMintInstruction(mint, 0, owner, freeze);
+    const inst2 = createInitializeMintInstruction(mint, 0, owner, owner);
 
     const inst3 = createAssociatedTokenAccountInstruction(
       feePayer,
@@ -218,22 +218,15 @@ export namespace Metaplex {
 
       const mint = KeypairAccount.create();
 
-      const signers = [signer.toKeypair(), mint.toKeypair()];
-
-      freezeAuthority && signers.push(freezeAuthority.toKeypair());
-
-      console.log(signers.length);
-      signers.forEach((s) =>
-        console.log('# signers: ', s.publicKey.toString())
-      );
+      // const signers = [signer.toKeypair(), mint.toKeypair()];
+      // freezeAuthority && signers.push(freezeAuthority.toKeypair());
 
       const insts = await createMintInstructions(
         mint.toPublicKey(),
         owner.toPublicKey(),
         datav2,
         payer.toKeypair().publicKey,
-        isMutable,
-        freezeAuthority?.toKeypair()
+        isMutable
       );
       return new MintInstruction(
         insts,

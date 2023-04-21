@@ -56,12 +56,12 @@ describe('Metaplex', () => {
     );
   });
 
-  it('burn script', async () => {
+  // Usually not used
+  it.skip('burn script', async () => {
     const mint = '';
     const owner = new KeypairAccount({
       pubkey: '',
-      secret:
-        '',
+      secret: '',
     });
     const res = Metaplex.burn(mint, owner.pubkey, [owner.secret]);
     (await res.submit()).match(
