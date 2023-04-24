@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
-import { ValidatorError, User } from '../../../shared-metaplex/';
+import { User, ValidatorError } from '../../../shared-metaplex/';
 import { KeypairAccount } from '../../../shared';
 import { Pubkey } from '../../../shared/src';
 
@@ -67,11 +67,13 @@ describe('Metaplex', () => {
   it('[Nft Storage] mint nft with many optional datas', async () => {
     const asset = RandomAsset.get();
     const creators: User.Creators[] = [];
+    const owner = KeypairAccount.create();
+    const freezeAuthority = KeypairAccount.create();
 
     creators.push({
-      address: source.pubkey,
+      address: owner.pubkey,
       share: 60,
-      verified: true,
+      verified: false,
     });
 
     creators.push({
@@ -109,24 +111,30 @@ describe('Metaplex', () => {
         'https://solana-suite.gitbook.io/solana-suite-develpoment-guide/',
     };
 
-    const res = await Metaplex.mint(source.pubkey, source.secret, {
-      filePath: asset.filePath as string,
-      storageType: 'nftStorage',
-      name: asset.name!,
-      symbol: asset.symbol!,
-      royalty: 50,
-      creators,
-      properties,
-      collection,
-      attributes,
-      options,
-    });
-
-    assert.isTrue(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
+    const res = await Metaplex.mint(
+      owner.pubkey,
+      owner.secret,
+      {
+        filePath: asset.filePath as string,
+        storageType: 'nftStorage',
+        name: asset.name!,
+        symbol: asset.symbol!,
+        royalty: 50,
+        creators,
+        properties,
+        collection,
+        attributes,
+        options,
+      },
+      source.secret,
+      freezeAuthority.pubkey
+    );
 
     (await res.submit()).match(
       (ok: string) => {
-        console.log('# mint:', res.unwrap().data);
+        const mint = res.unwrap().data as Pubkey;
+        assert.isTrue(KeypairAccount.isPubkey(mint));
+        console.log('# mint:', mint);
         console.log('# sig:', ok);
       },
       (ng: Error) => assert.fail(ng.message)
