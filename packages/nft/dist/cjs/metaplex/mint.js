@@ -21,10 +21,15 @@ const storage_1 = require("@solana-suite/storage");
 const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
 const shared_2 = require("@solana-suite/shared");
+const NFT_AMOUNT = 1;
 var Metaplex;
 (function (Metaplex) {
+    Metaplex.createDeleagateInstruction = (mint, owner, delegateAuthority) => {
+        const tokenAccount = (0, spl_token_1.getAssociatedTokenAddressSync)(mint, owner);
+        return (0, spl_token_1.createApproveInstruction)(tokenAccount, delegateAuthority, owner, NFT_AMOUNT);
+    };
     Metaplex.createMintInstructions = (mint, owner, nftMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
-        const ata = yield (0, spl_token_1.getAssociatedTokenAddress)(mint, owner);
+        const ata = (0, spl_token_1.getAssociatedTokenAddressSync)(mint, owner);
         const tokenMetadataPubkey = shared_metaplex_1.Pda.getMetadata(mint.toString());
         const masterEditionPubkey = shared_metaplex_1.Pda.getMasterEdition(mint.toString());
         const connection = shared_2.Node.getConnection();
@@ -83,15 +88,15 @@ var Metaplex;
      *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
      *   collection?: Pubkey           // collections of different colors, shapes, etc.
      *   [key: string]?: unknown       // optional param, Usually not used.
-     *   creators?: InputCreators[]          // other creators than owner
+     *   creators?: InputCreators[]    // other creators than owner
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
-     *   maxSupply?: BigNumber         // mint copies
      * }
-     * @param {Secret} feePayer?       // fee payer
-     * @return Promise<Result<Instruction, Error>>
+     * @param {Secret} feePayer?         // fee payer
+     * @param {Pubkey} freezeAuthority?  // freeze authority
+     * @return Promise<Result<MintInstruction, Error>>
      */
-    Metaplex.mint = (owner, signer, input, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Metaplex.mint = (owner, signer, input, feePayer, freezeAuthority) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             const valid = shared_metaplex_1.Validator.checkAll(input);
             if (valid.isErr) {
@@ -105,6 +110,15 @@ var Metaplex;
             }
             else if (input.properties && !input.storageType) {
                 throw Error('Must set storageType if will use properties');
+            }
+            // created at by unix timestamp
+            const createdAt = Math.floor(new Date().getTime() / 1000);
+            if (input.options) {
+                input.options.created_at = createdAt;
+            }
+            else {
+                const options = { created_at: createdAt };
+                input = Object.assign(Object.assign({}, input), { options });
             }
             input = Object.assign(Object.assign({}, input), { properties });
             //--- porperties, Upload content ---
@@ -132,13 +146,16 @@ var Metaplex;
                 collection = shared_metaplex_1.Collections.toConvertInfra(input.collection);
                 datav2 = Object.assign(Object.assign({}, datav2), { collection });
             }
-            //--- collection ---
             const isMutable = input.isMutable === undefined ? true : input.isMutable;
             (0, shared_1.debugLog)('# input: ', input);
             (0, shared_1.debugLog)('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             (0, shared_1.debugLog)('# datav2: ', datav2);
             const mint = shared_1.KeypairAccount.create();
             const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, payer.toKeypair().publicKey, isMutable);
+            // freezeAuthority
+            if (freezeAuthority) {
+                insts.push(Metaplex.createDeleagateInstruction(mint.toPublicKey(), owner.toPublicKey(), freezeAuthority.toPublicKey()));
+            }
             return new shared_1.MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer.toKeypair(), mint.pubkey);
         }));
     });

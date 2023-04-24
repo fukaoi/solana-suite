@@ -7,19 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __asyncValues = (this && this.__asyncValues) || function (o) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var m = o[Symbol.asyncIterator], i;
-    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
-    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
-    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
-};
-import { Node, Try } from '@solana-suite/shared';
-import { Collections, Creators, Pda, } from '@solana-suite/shared-metaplex';
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { Try } from '@solana-suite/shared';
+import { Collections, Creators, } from '@solana-suite/shared-metaplex';
 import { Bundlr } from '@solana-suite/storage';
-import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
-import fetch from 'cross-fetch';
 export var Metaplex;
 (function (Metaplex) {
     /**
@@ -52,50 +42,37 @@ export var Metaplex;
             return res;
         }));
     });
-    Metaplex.findByOwner2 = (owner) => __awaiter(this, void 0, void 0, function* () {
-        return Try(() => __awaiter(this, void 0, void 0, function* () {
-            var _a, e_1, _b, _c;
-            try {
-                const connection = Node.getConnection();
-                const info = yield connection.getParsedTokenAccountsByOwner(owner.toPublicKey(), {
-                    programId: TOKEN_PROGRAM_ID,
-                });
-                try {
-                    for (var _d = true, _e = __asyncValues(info.value), _f; _f = yield _e.next(), _a = _f.done, !_a;) {
-                        _c = _f.value;
-                        _d = false;
-                        try {
-                            const d = _c;
-                            if (d.account.data.parsed.info.tokenAmount.uiAmount == 1) {
-                                const mint = d.account.data.parsed.info.mint;
-                                const metaAccount = Pda.getMetadata(mint);
-                                console.log('# metadata: ', metaAccount.toString());
-                                const metadata = yield Metadata.fromAccountAddress(connection, metaAccount);
-                                const uri = metadata.data.uri;
-                                fetch(uri).then((r) => {
-                                    r.json().then((json) => {
-                                        console.log('# json: ', json);
-                                    });
-                                });
-                            }
-                        }
-                        finally {
-                            _d = true;
-                        }
-                    }
-                }
-                catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                finally {
-                    try {
-                        if (!_d && !_a && (_b = _e.return)) yield _b.call(_e);
-                    }
-                    finally { if (e_1) throw e_1.error; }
-                }
-            }
-            catch (e) {
-                console.error('# EEEEE: ', e);
-            }
-        }));
-    });
+    // export const findByOwner2 = async (owner: Pubkey) => {
+    //   return Try(async () => {
+    //     try {
+    //       const connection = Node.getConnection();
+    //       const info = await connection.getParsedTokenAccountsByOwner(
+    //         owner.toPublicKey(),
+    //         {
+    //           programId: TOKEN_PROGRAM_ID,
+    //         }
+    //       );
+    //
+    //       const metadatas = [{metadata: any, mint: String, json: any}];
+    //       for await (const d of info.value) {
+    //         if (d.account.data.parsed.info.tokenAmount.uiAmount == 1) {
+    //           const mint = d.account.data.parsed.info.mint;
+    //           const metadata = await Metadata.fromAccountAddress(
+    //             connection,
+    //             Pda.getMetadata(mint)
+    //           );
+    //           metadatas.push({metadata, mint});
+    //           fetch(metadata.data.uri).then((response) => {
+    //             response.json().then((json) => {
+    //               console.log('# json: ', json);
+    //             });
+    //           });
+    //         }
+    //       }
+    //     } catch (e) {
+    //       console.error('# EEEEE: ', e);
+    //     }
+    //   });
+    // };
 })(Metaplex || (Metaplex = {}));
 //# sourceMappingURL=find.js.map

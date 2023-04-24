@@ -7,8 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Node, debugLog, Instruction, sleep, KeypairAccount, } from '@solana-suite/shared';
-import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddress, getAccount, TokenAccountNotFoundError, TokenInvalidAccountOwnerError, createAssociatedTokenAccountInstruction, } from '@solana/spl-token';
+import { debugLog, Instruction, KeypairAccount, Node, sleep, } from '@solana-suite/shared';
+import { ASSOCIATED_TOKEN_PROGRAM_ID, createAssociatedTokenAccountInstruction, getAccount, getAssociatedTokenAddressSync, TOKEN_PROGRAM_ID, TokenAccountNotFoundError, TokenInvalidAccountOwnerError, } from '@solana/spl-token';
 /**
  * Get Associated token Account.
  * if not created, create new token accouint
@@ -76,7 +76,7 @@ export var AssociatedAccount;
      * @returns Promise<string>
      */
     AssociatedAccount.makeOrCreateInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        const associatedTokenAccount = yield getAssociatedTokenAddress(mint.toPublicKey(), owner.toPublicKey(), allowOwnerOffCurve, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+        const associatedTokenAccount = getAssociatedTokenAddressSync(mint.toPublicKey(), owner.toPublicKey(), allowOwnerOffCurve, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
         debugLog('# associatedTokenAccount: ', associatedTokenAccount.toString());
         try {
             // Dont use Result

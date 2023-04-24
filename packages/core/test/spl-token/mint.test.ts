@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
-import { SplToken } from '../../src/';
+import { SplToken } from '../../src/spl-token';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { StorageType } from '../../../shared-metaplex';
 import { KeypairAccount } from '../../../shared/src/keypair-account';
@@ -45,8 +45,9 @@ describe('SplToken', () => {
     console.log('# mint: ', mintStr);
   });
 
-  it('Create token with creators', async () => {
+  it('Create token with creators, freezeAuthority', async () => {
     const creator = KeypairAccount.create();
+    const freezeAuthority = KeypairAccount.create();
     const tokenMetadata = {
       name: 'solana-suite-token',
       symbol: 'SST',
@@ -71,7 +72,9 @@ describe('SplToken', () => {
       source.secret,
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
-      tokenMetadata
+      tokenMetadata,
+      undefined,
+      freezeAuthority.pubkey
     );
 
     assert.isTrue(inst.isOk, `${inst.unwrap()}`);

@@ -1,28 +1,11 @@
-import { createBurnCheckedInstruction } from '@solana/spl-token';
-import { PublicKey } from '@solana/web3.js';
-import { Instruction, Try, Result, Pubkey, Secret } from '@solana-suite/shared';
 import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  TOKEN_PROGRAM_ID,
+  createBurnCheckedInstruction,
+  getAssociatedTokenAddressSync,
 } from '@solana/spl-token';
+import { Instruction, Pubkey, Result, Secret, Try } from '@solana-suite/shared';
 import { SplToken as _Calculate } from './calculate-amount';
 
 export namespace SplToken {
-  const findAssociatedTokenAddress = (
-    mint: Pubkey,
-    owner: Pubkey
-  ): PublicKey => {
-    const address = PublicKey.findProgramAddressSync(
-      [
-        owner.toPublicKey().toBuffer(),
-        TOKEN_PROGRAM_ID.toBuffer(),
-        mint.toPublicKey().toBuffer(),
-      ],
-      ASSOCIATED_TOKEN_PROGRAM_ID
-    );
-    return address[0];
-  };
-
   export const burn = (
     mint: Pubkey,
     owner: Pubkey,
@@ -32,7 +15,10 @@ export namespace SplToken {
     feePayer?: Secret
   ): Result<Instruction, Error> => {
     return Try(() => {
-      const tokenAccount = findAssociatedTokenAddress(mint, owner);
+      const tokenAccount = getAssociatedTokenAddressSync(
+        mint.toPublicKey(),
+        owner.toPublicKey()
+      );
       const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
       const keypairs = signers.map((s) => s.toKeypair());
 

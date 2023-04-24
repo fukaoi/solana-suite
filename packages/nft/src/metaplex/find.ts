@@ -47,36 +47,36 @@ export namespace Metaplex {
     });
   };
 
-  export const findByOwner2 = async (owner: Pubkey) => {
-    return Try(async () => {
-      try {
-        const connection = Node.getConnection();
-        const info = await connection.getParsedTokenAccountsByOwner(
-          owner.toPublicKey(),
-          {
-            programId: TOKEN_PROGRAM_ID,
-          }
-        );
-
-        const metadatas = [{metadata: any, mint: String, json: any}];
-        for await (const d of info.value) {
-          if (d.account.data.parsed.info.tokenAmount.uiAmount == 1) {
-            const mint = d.account.data.parsed.info.mint;
-            const metadata = await Metadata.fromAccountAddress(
-              connection,
-              Pda.getMetadata(mint)
-            );
-            metadatas.push({metadata, mint});
-            fetch(metadata.data.uri).then((response) => {
-              response.json().then((json) => {
-                console.log('# json: ', json);
-              });
-            });
-          }
-        }
-      } catch (e) {
-        console.error('# EEEEE: ', e);
-      }
-    });
-  };
+  // export const findByOwner2 = async (owner: Pubkey) => {
+  //   return Try(async () => {
+  //     try {
+  //       const connection = Node.getConnection();
+  //       const info = await connection.getParsedTokenAccountsByOwner(
+  //         owner.toPublicKey(),
+  //         {
+  //           programId: TOKEN_PROGRAM_ID,
+  //         }
+  //       );
+  //
+  //       const metadatas = [{metadata: any, mint: String, json: any}];
+  //       for await (const d of info.value) {
+  //         if (d.account.data.parsed.info.tokenAmount.uiAmount == 1) {
+  //           const mint = d.account.data.parsed.info.mint;
+  //           const metadata = await Metadata.fromAccountAddress(
+  //             connection,
+  //             Pda.getMetadata(mint)
+  //           );
+  //           metadatas.push({metadata, mint});
+  //           fetch(metadata.data.uri).then((response) => {
+  //             response.json().then((json) => {
+  //               console.log('# json: ', json);
+  //             });
+  //           });
+  //         }
+  //       }
+  //     } catch (e) {
+  //       console.error('# EEEEE: ', e);
+  //     }
+  //   });
+  // };
 }

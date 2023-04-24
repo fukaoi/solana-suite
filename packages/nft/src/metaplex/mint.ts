@@ -7,10 +7,11 @@ import {
 import BN from 'bn.js';
 
 import {
+  createApproveInstruction,
   createAssociatedTokenAccountInstruction,
   createInitializeMintInstruction,
   createMintToCheckedInstruction,
-  getAssociatedTokenAddress,
+  getAssociatedTokenAddressSync,
   getMinimumBalanceForRentExemptMint,
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
@@ -43,7 +44,23 @@ import {
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
+const NFT_AMOUNT = 1;
 export namespace Metaplex {
+  export const createDeleagateInstruction = (
+    mint: PublicKey,
+    owner: PublicKey,
+    delegateAuthority: PublicKey
+  ): TransactionInstruction => {
+    const tokenAccount = getAssociatedTokenAddressSync(mint, owner);
+
+    return createApproveInstruction(
+      tokenAccount,
+      delegateAuthority,
+      owner,
+      NFT_AMOUNT
+    );
+  };
+
   export const createMintInstructions = async (
     mint: PublicKey,
     owner: PublicKey,
@@ -51,10 +68,9 @@ export namespace Metaplex {
     feePayer: PublicKey,
     isMutable: boolean
   ): Promise<TransactionInstruction[]> => {
-    const ata = await getAssociatedTokenAddress(mint, owner);
+    const ata = getAssociatedTokenAddressSync(mint, owner);
     const tokenMetadataPubkey = Pda.getMetadata(mint.toString());
     const masterEditionPubkey = Pda.getMasterEdition(mint.toString());
-
     const connection = Node.getConnection();
 
     const inst1 = SystemProgram.createAccount({
@@ -129,19 +145,20 @@ export namespace Metaplex {
    *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
    *   collection?: Pubkey           // collections of different colors, shapes, etc.
    *   [key: string]?: unknown       // optional param, Usually not used.
-   *   creators?: InputCreators[]          // other creators than owner
+   *   creators?: InputCreators[]    // other creators than owner
    *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()
-   *   maxSupply?: BigNumber         // mint copies
    * }
-   * @param {Secret} feePayer?       // fee payer
-   * @return Promise<Result<Instruction, Error>>
+   * @param {Secret} feePayer?         // fee payer
+   * @param {Pubkey} freezeAuthority?  // freeze authority
+   * @return Promise<Result<MintInstruction, Error>>
    */
   export const mint = async (
     owner: Pubkey,
     signer: Secret,
     input: InputNftMetadata,
-    feePayer?: Secret
+    feePayer?: Secret,
+    freezeAuthority?: Pubkey
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
@@ -216,7 +233,6 @@ export namespace Metaplex {
         collection = Collections.toConvertInfra(input.collection);
         datav2 = { ...datav2, collection };
       }
-      //--- collection ---
 
       const isMutable = input.isMutable === undefined ? true : input.isMutable;
 
@@ -225,6 +241,7 @@ export namespace Metaplex {
       debugLog('# datav2: ', datav2);
 
       const mint = KeypairAccount.create();
+
       const insts = await createMintInstructions(
         mint.toPublicKey(),
         owner.toPublicKey(),
@@ -232,6 +249,18 @@ export namespace Metaplex {
         payer.toKeypair().publicKey,
         isMutable
       );
+
+      // freezeAuthority
+      if (freezeAuthority) {
+        insts.push(
+          createDeleagateInstruction(
+            mint.toPublicKey(),
+            owner.toPublicKey(),
+            freezeAuthority.toPublicKey()
+          )
+        );
+      }
+
       return new MintInstruction(
         insts,
         [signer.toKeypair(), mint.toKeypair()],

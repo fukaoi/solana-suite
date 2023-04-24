@@ -79,7 +79,7 @@ var AssociatedAccount;
      * @returns Promise<string>
      */
     AssociatedAccount.makeOrCreateInstruction = (mint, owner, feePayer, allowOwnerOffCurve = false) => __awaiter(this, void 0, void 0, function* () {
-        const associatedTokenAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(mint.toPublicKey(), owner.toPublicKey(), allowOwnerOffCurve, spl_token_1.TOKEN_PROGRAM_ID, spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID);
+        const associatedTokenAccount = (0, spl_token_1.getAssociatedTokenAddressSync)(mint.toPublicKey(), owner.toPublicKey(), allowOwnerOffCurve, spl_token_1.TOKEN_PROGRAM_ID, spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID);
         (0, shared_1.debugLog)('# associatedTokenAccount: ', associatedTokenAccount.toString());
         try {
             // Dont use Result
