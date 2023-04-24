@@ -1,6 +1,6 @@
 export * from './collections';
 export * from './creators';
-export * from './metaplex-metadata';
+export * from './nft-metadata';
 export * from './pda';
 export * from './properties';
 export * from './royalty';

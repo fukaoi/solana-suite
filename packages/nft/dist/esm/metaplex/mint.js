@@ -12,7 +12,7 @@ import BN from 'bn.js';
 import { createApproveInstruction, createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, getAssociatedTokenAddressSync, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
 import { debugLog, KeypairAccount, MintInstruction, Try, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
-import { Collections, MetaplexMetadata, Pda, Properties, Royalty, Validator, } from '@solana-suite/shared-metaplex';
+import { Collections, NftMetadata, Pda, Properties, Royalty, Validator, } from '@solana-suite/shared-metaplex';
 import { createCreateMasterEditionV3Instruction, createCreateMetadataAccountV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
 const NFT_AMOUNT = 1;
@@ -133,7 +133,7 @@ export var Metaplex;
             else {
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
-            let datav2 = MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            let datav2 = NftMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
             //--- collection ---
             let collection;
             if (input.collection && input.collection) {

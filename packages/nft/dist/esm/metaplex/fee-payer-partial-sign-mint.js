@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { debugLog, KeypairAccount, Node, PartialSignInstruction, Try, } from '@solana-suite/shared';
 import { Transaction } from '@solana/web3.js';
 import { Storage } from '@solana-suite/storage';
-import { Collections, MetaplexMetadata, Properties, Royalty, Validator, } from '@solana-suite/shared-metaplex';
+import { Collections, NftMetadata, Properties, Royalty, Validator, } from '@solana-suite/shared-metaplex';
 import { Metaplex as _Mint } from './mint';
 export var Metaplex;
 (function (Metaplex) {
@@ -66,7 +66,7 @@ export var Metaplex;
                 throw Error(`Must set 'storageType=nftStorage + filePath' or 'uri'`);
             }
             //--- porperties, Upload content ---
-            let datav2 = MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            let datav2 = NftMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
             //--- collection ---
             let collection;
             if (input.collection && input.collection) {

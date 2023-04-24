@@ -11,7 +11,7 @@ import { Transaction } from '@solana/web3.js';
 import { Metaplex } from '@solana-suite/nft';
 import { Storage } from '@solana-suite/storage';
 import { debugLog, Node, Try, KeypairAccount, } from '@solana-suite/shared';
-import { Royalty, Validator, Properties, MetaplexMetadata, } from '@solana-suite/shared-metaplex';
+import { Royalty, Validator, Properties, NftMetadata, } from '@solana-suite/shared-metaplex';
 export var PhantomMetaplex;
 (function (PhantomMetaplex) {
     /**
@@ -40,7 +40,7 @@ export var PhantomMetaplex;
                 throw uploaded;
             }
             const uri = uploaded.value;
-            const datav2 = MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const datav2 = NftMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
             const connection = Node.getConnection();
             const mint = KeypairAccount.create();
             const isMutable = true;

@@ -1,8 +1,8 @@
 import { Collections } from './collections';
 import { Creators } from './creators';
-export var MetaplexMetadata;
-(function (MetaplexMetadata) {
-    MetaplexMetadata.toConvertInfra = (input, uri, sellerFeeBasisPoints) => {
+export var NftMetadata;
+(function (NftMetadata) {
+    NftMetadata.toConvertInfra = (input, uri, sellerFeeBasisPoints) => {
         return {
             name: input.name,
             symbol: input.symbol,
@@ -13,5 +13,5 @@ export var MetaplexMetadata;
             uses: input.uses || null,
         };
     };
-})(MetaplexMetadata || (MetaplexMetadata = {}));
-//# sourceMappingURL=metaplex-metadata.js.map
+})(NftMetadata || (NftMetadata = {}));
+//# sourceMappingURL=nft-metadata.js.map

@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MetaplexMetadata = void 0;
+exports.NftMetadata = void 0;
 const collections_1 = require("./collections");
 const creators_1 = require("./creators");
-var MetaplexMetadata;
-(function (MetaplexMetadata) {
-    MetaplexMetadata.toConvertInfra = (input, uri, sellerFeeBasisPoints) => {
+var NftMetadata;
+(function (NftMetadata) {
+    NftMetadata.toConvertInfra = (input, uri, sellerFeeBasisPoints) => {
         return {
             name: input.name,
             symbol: input.symbol,
@@ -16,5 +16,5 @@ var MetaplexMetadata;
             uses: input.uses || null,
         };
     };
-})(MetaplexMetadata = exports.MetaplexMetadata || (exports.MetaplexMetadata = {}));
-//# sourceMappingURL=metaplex-metadata.js.map
+})(NftMetadata = exports.NftMetadata || (exports.NftMetadata = {}));
+//# sourceMappingURL=nft-metadata.js.map

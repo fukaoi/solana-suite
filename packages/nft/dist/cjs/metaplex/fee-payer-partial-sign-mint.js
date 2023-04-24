@@ -69,7 +69,7 @@ var Metaplex;
                 throw Error(`Must set 'storageType=nftStorage + filePath' or 'uri'`);
             }
             //--- porperties, Upload content ---
-            let datav2 = shared_metaplex_1.MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            let datav2 = shared_metaplex_1.NftMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
             //--- collection ---
             let collection;
             if (input.collection && input.collection) {

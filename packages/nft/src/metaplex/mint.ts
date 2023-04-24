@@ -31,7 +31,7 @@ import { Storage } from '@solana-suite/storage';
 import {
   Collections,
   InputNftMetadata,
-  MetaplexMetadata,
+  NftMetadata,
   Pda,
   Properties,
   Royalty,
@@ -221,7 +221,7 @@ export namespace Metaplex {
         throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
 
-      let datav2 = MetaplexMetadata.toConvertInfra(
+      let datav2 = NftMetadata.toConvertInfra(
         input,
         uri,
         sellerFeeBasisPoints

@@ -16,7 +16,7 @@ import { Storage } from '@solana-suite/storage';
 import {
   Collections,
   InputNftMetadata,
-  MetaplexMetadata,
+  NftMetadata,
   Properties,
   Royalty,
   Validator,
@@ -97,7 +97,7 @@ export namespace Metaplex {
       }
       //--- porperties, Upload content ---
 
-      let datav2 = MetaplexMetadata.toConvertInfra(
+      let datav2 = NftMetadata.toConvertInfra(
         input,
         uri,
         sellerFeeBasisPoints

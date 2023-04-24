@@ -43,7 +43,7 @@ var PhantomMetaplex;
                 throw uploaded;
             }
             const uri = uploaded.value;
-            const datav2 = shared_metaplex_1.MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const datav2 = shared_metaplex_1.NftMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
             const connection = shared_1.Node.getConnection();
             const mint = shared_1.KeypairAccount.create();
             const isMutable = true;

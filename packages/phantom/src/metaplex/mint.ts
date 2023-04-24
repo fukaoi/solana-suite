@@ -14,7 +14,7 @@ import {
   ValidatorError,
   InputNftMetadata,
   Properties,
-  MetaplexMetadata,
+  NftMetadata,
 } from '@solana-suite/shared-metaplex';
 import { Phantom } from '../types';
 
@@ -66,7 +66,7 @@ export namespace PhantomMetaplex {
       }
       const uri = uploaded.value;
 
-      const datav2 = MetaplexMetadata.toConvertInfra(
+      const datav2 = NftMetadata.toConvertInfra(
         input,
         uri,
         sellerFeeBasisPoints
