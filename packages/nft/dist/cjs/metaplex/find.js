@@ -80,6 +80,7 @@ var Metaplex;
                                 (0, cross_fetch_1.default)(metadata.data.uri).then((response) => {
                                     response.json().then((json) => {
                                         contentsDatas.push({ onchain: metadata, offchain: json });
+                                        console.log(contentsDatas);
                                     });
                                 });
                             }
@@ -100,7 +101,6 @@ var Metaplex;
             catch (e) {
                 console.error('# EEEEE: ', e);
             }
-            console.log(contentsDatas);
         }));
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));
