@@ -17,7 +17,33 @@ const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 const mint_1 = require("./mint");
 var Metaplex;
 (function (Metaplex) {
-    Metaplex.feePayerPartialSignMint = (owner, signer, input, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    /**
+     * Upload content and NFT mint with Partial Sign
+     *
+     * @param {Pubkey} owner          // first minted owner
+     * @param {Secret} signer         // owner's Secret
+     * @param {InputNftMetadata} input
+     * {
+     *   name: string               // nft content name
+     *   symbol: string             // nft ticker symbol
+     *   filePath: string | File    // nft ticker symbol
+     *   royalty: number            // royalty percentage
+     *   storageType: 'arweave'|'nftStorage' // royalty percentage
+     *   description?: string       // nft content description
+     *   external_url?: string      // landing page, home page uri, related url
+     *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
+     *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
+     *   collection?: Pubkey           // collections of different colors, shapes, etc.
+     *   [key: string]?: unknown       // optional param, Usually not used.
+     *   creators?: InputCreators[]          // other creators than owner
+     *   uses?: Uses                   // usage feature: burn, single, multiple
+     *   isMutable?: boolean           // enable update()
+     * }
+     * @param {Secret} feePayer?         // fee payer
+     * @param {Pubkey} freezeAuthority?  // freeze authority
+     * @return Promise<Result<PartialSignInstruction, Error>>
+     */
+    Metaplex.feePayerPartialSignMint = (owner, signer, input, feePayer, freezeAuthority) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
             const valid = shared_metaplex_1.Validator.checkAll(input);
             if (valid.isErr) {
@@ -57,6 +83,10 @@ var Metaplex;
             (0, shared_1.debugLog)('# datav2: ', datav2);
             const mint = shared_1.KeypairAccount.create();
             const insts = yield mint_1.Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, feePayer.toPublicKey(), isMutable);
+            // freezeAuthority
+            if (freezeAuthority) {
+                insts.push(mint_1.Metaplex.createDeleagateInstruction(mint.toPublicKey(), owner.toPublicKey(), freezeAuthority.toPublicKey()));
+            }
             const blockhashObj = yield shared_1.Node.getConnection().getLatestBlockhash();
             const tx = new web3_js_1.Transaction({
                 lastValidBlockHeight: blockhashObj.lastValidBlockHeight,

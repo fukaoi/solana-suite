@@ -8,16 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { SystemProgram, } from '@solana/web3.js';
-import { createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, getAssociatedTokenAddress, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
-import { debugLog, Try, MintInstruction, KeypairAccount, } from '@solana-suite/shared';
+import { createApproveInstruction, createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, getAssociatedTokenAddressSync, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
+import { debugLog, KeypairAccount, MintInstruction, Try, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
-import { Validator, Properties, Pda, Royalty, MetaplexMetadata, Collections, } from '@solana-suite/shared-metaplex';
-import { createCreateMetadataAccountV2Instruction, createCreateMasterEditionV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
+import { Collections, MetaplexMetadata, Pda, Properties, Royalty, Validator, } from '@solana-suite/shared-metaplex';
+import { createCreateMasterEditionV3Instruction, createCreateMetadataAccountV2Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
+const NFT_AMOUNT = 1;
 export var Metaplex;
 (function (Metaplex) {
+    Metaplex.createDeleagateInstruction = (mint, owner, delegateAuthority) => {
+        const tokenAccount = getAssociatedTokenAddressSync(mint, owner);
+        return createApproveInstruction(tokenAccount, delegateAuthority, owner, NFT_AMOUNT);
+    };
     Metaplex.createMintInstructions = (mint, owner, nftMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
-        const ata = yield getAssociatedTokenAddress(mint, owner);
+        const ata = getAssociatedTokenAddressSync(mint, owner);
         const tokenMetadataPubkey = Pda.getMetadata(mint);
         const masterEditionPubkey = Pda.getMasterEdition(mint);
         const connection = Node.getConnection();
@@ -75,14 +80,15 @@ export var Metaplex;
      *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
      *   collection?: Pubkey           // collections of different colors, shapes, etc.
      *   [key: string]?: unknown       // optional param, Usually not used.
-     *   creators?: InputCreators[]          // other creators than owner
+     *   creators?: InputCreators[]    // other creators than owner
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
      * }
-     * @param {Secret} feePayer?       // fee payer
-     * @return Promise<Result<Instruction, Error>>
+     * @param {Secret} feePayer?         // fee payer
+     * @param {Pubkey} freezeAuthority?  // freeze authority
+     * @return Promise<Result<MintInstruction, Error>>
      */
-    Metaplex.mint = (owner, signer, input, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Metaplex.mint = (owner, signer, input, feePayer, freezeAuthority) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             const valid = Validator.checkAll(input);
             if (valid.isErr) {
@@ -123,13 +129,16 @@ export var Metaplex;
                 collection = Collections.toConvertInfra(input.collection);
                 datav2 = Object.assign(Object.assign({}, datav2), { collection });
             }
-            //--- collection ---
             const isMutable = input.isMutable === undefined ? true : input.isMutable;
             debugLog('# input: ', input);
             debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
             debugLog('# datav2: ', datav2);
             const mint = KeypairAccount.create();
             const insts = yield Metaplex.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, payer.toKeypair().publicKey, isMutable);
+            // freezeAuthority
+            if (freezeAuthority) {
+                insts.push(Metaplex.createDeleagateInstruction(mint.toPublicKey(), owner.toPublicKey(), freezeAuthority.toPublicKey()));
+            }
             return new MintInstruction(insts, [signer.toKeypair(), mint.toKeypair()], payer.toKeypair(), mint.pubkey);
         }));
     });

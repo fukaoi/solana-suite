@@ -1,8 +1,9 @@
-import { TransactionInstruction, PublicKey } from '@solana/web3.js';
-import { Result, MintInstruction, Secret, Pubkey } from '@solana-suite/shared';
+import { PublicKey, TransactionInstruction } from '@solana/web3.js';
+import { MintInstruction, Pubkey, Result, Secret } from '@solana-suite/shared';
 import { InputNftMetadata } from '@solana-suite/shared-metaplex';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 export declare namespace Metaplex {
+    const createDeleagateInstruction: (mint: PublicKey, owner: PublicKey, delegateAuthority: PublicKey) => TransactionInstruction;
     const createMintInstructions: (mint: PublicKey, owner: PublicKey, nftMetadata: DataV2, feePayer: PublicKey, isMutable: boolean) => Promise<TransactionInstruction[]>;
     /**
      * Upload content and NFT mint
@@ -22,12 +23,13 @@ export declare namespace Metaplex {
      *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
      *   collection?: Pubkey           // collections of different colors, shapes, etc.
      *   [key: string]?: unknown       // optional param, Usually not used.
-     *   creators?: InputCreators[]          // other creators than owner
+     *   creators?: InputCreators[]    // other creators than owner
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
      * }
-     * @param {Secret} feePayer?       // fee payer
-     * @return Promise<Result<Instruction, Error>>
+     * @param {Secret} feePayer?         // fee payer
+     * @param {Pubkey} freezeAuthority?  // freeze authority
+     * @return Promise<Result<MintInstruction, Error>>
      */
-    const mint: (owner: Pubkey, signer: Secret, input: InputNftMetadata, feePayer?: Secret) => Promise<Result<MintInstruction, Error>>;
+    const mint: (owner: Pubkey, signer: Secret, input: InputNftMetadata, feePayer?: Secret, freezeAuthority?: Pubkey) => Promise<Result<MintInstruction, Error>>;
 }

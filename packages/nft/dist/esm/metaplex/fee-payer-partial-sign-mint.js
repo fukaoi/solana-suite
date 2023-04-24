@@ -14,7 +14,33 @@ import { Collections, MetaplexMetadata, Properties, Royalty, Validator, } from '
 import { Metaplex as _Mint } from './mint';
 export var Metaplex;
 (function (Metaplex) {
-    Metaplex.feePayerPartialSignMint = (owner, signer, input, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    /**
+     * Upload content and NFT mint with Partial Sign
+     *
+     * @param {Pubkey} owner          // first minted owner
+     * @param {Secret} signer         // owner's Secret
+     * @param {InputNftMetadata} input
+     * {
+     *   name: string               // nft content name
+     *   symbol: string             // nft ticker symbol
+     *   filePath: string | File    // nft ticker symbol
+     *   royalty: number            // royalty percentage
+     *   storageType: 'arweave'|'nftStorage' // royalty percentage
+     *   description?: string       // nft content description
+     *   external_url?: string      // landing page, home page uri, related url
+     *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
+     *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
+     *   collection?: Pubkey           // collections of different colors, shapes, etc.
+     *   [key: string]?: unknown       // optional param, Usually not used.
+     *   creators?: InputCreators[]          // other creators than owner
+     *   uses?: Uses                   // usage feature: burn, single, multiple
+     *   isMutable?: boolean           // enable update()
+     * }
+     * @param {Secret} feePayer?         // fee payer
+     * @param {Pubkey} freezeAuthority?  // freeze authority
+     * @return Promise<Result<PartialSignInstruction, Error>>
+     */
+    Metaplex.feePayerPartialSignMint = (owner, signer, input, feePayer, freezeAuthority) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
             const valid = Validator.checkAll(input);
             if (valid.isErr) {
@@ -54,6 +80,10 @@ export var Metaplex;
             debugLog('# datav2: ', datav2);
             const mint = KeypairAccount.create();
             const insts = yield _Mint.createMintInstructions(mint.toPublicKey(), owner.toPublicKey(), datav2, feePayer.toPublicKey(), isMutable);
+            // freezeAuthority
+            if (freezeAuthority) {
+                insts.push(_Mint.createDeleagateInstruction(mint.toPublicKey(), owner.toPublicKey(), freezeAuthority.toPublicKey()));
+            }
             const blockhashObj = yield Node.getConnection().getLatestBlockhash();
             const tx = new Transaction({
                 lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
