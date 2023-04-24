@@ -71,6 +71,7 @@ export namespace Metaplex {
             fetch(metadata.data.uri).then((response) => {
               response.json().then((json) => {
                 contentsDatas.push({ onchain: metadata, offchain: json });
+                console.log(contentsDatas);
               });
             });
           }
@@ -78,7 +79,6 @@ export namespace Metaplex {
       } catch (e) {
         console.error('# EEEEE: ', e);
       }
-      console.log(contentsDatas);
     });
   };
 }

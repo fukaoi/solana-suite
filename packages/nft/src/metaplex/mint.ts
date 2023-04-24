@@ -221,11 +221,7 @@ export namespace Metaplex {
         throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
 
-      let datav2 = NftMetadata.toConvertInfra(
-        input,
-        uri,
-        sellerFeeBasisPoints
-      );
+      let datav2 = NftMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
 
       //--- collection ---
       let collection;
