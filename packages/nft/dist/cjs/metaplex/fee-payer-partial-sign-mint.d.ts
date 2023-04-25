@@ -1,5 +1,4 @@
 import { PartialSignInstruction, Pubkey, Result, Secret } from '@solana-suite/shared';
-import { InputNftMetadata } from '@solana-suite/shared-metaplex';
 export declare namespace Metaplex {
     /**
      * Upload content and NFT mint with Partial Sign

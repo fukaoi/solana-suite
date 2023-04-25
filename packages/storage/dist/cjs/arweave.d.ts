@@ -1,6 +1,5 @@
 import { Currency } from '@metaplex-foundation/js';
 import { Result, Secret } from '@solana-suite/shared';
-import { FileContent, StorageMetadata } from '@solana-suite/shared-metaplex';
 export interface MetaplexFileOptions {
     readonly displayName: string;
     readonly uniqueName: string;

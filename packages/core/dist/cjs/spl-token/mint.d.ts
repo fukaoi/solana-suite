@@ -1,7 +1,6 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import { MintInstruction, Pubkey, Result, Secret } from '@solana-suite/shared';
-import { InputTokenMetadata } from '@solana-suite/shared-metaplex';
 export declare namespace SplToken {
     const createFreezeAuthority: (mint: PublicKey, owner: PublicKey, freezeAuthority: PublicKey) => TransactionInstruction;
     const createMintInstructions: (mint: PublicKey, owner: PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: DataV2, feePayer: PublicKey, isMutable: boolean) => Promise<TransactionInstruction[]>;
