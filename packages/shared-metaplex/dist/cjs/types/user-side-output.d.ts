@@ -1,5 +1,6 @@
-import { _Common, Option, User } from '../shared';
-export declare module UserSide.Output {
+import { Option, Shared } from './shared';
+import { Pubkey } from '@solana-suite/shared';
+export declare namespace UserSideOutput {
     type NftMetadata = {
         mint: string;
         updateAuthority: string;
@@ -9,20 +10,21 @@ export declare module UserSide.Output {
         uri: string;
         isMutable: boolean;
         primarySaleHappened: boolean;
-        creators: User.Creators[];
+        creators: Shared.Creators;
         editionNonce: Option<number>;
-        collection: User.Output.Collection;
-        uses: Option<_Common.Uses>;
+        collection: Option<{
+            address: Pubkey;
+            verified: boolean;
+        }>;
+        uses: Option<Shared.Uses>;
     };
-}
-export declare namespace UserSide.Output {
     type TokenMetadata = {
         name: string;
         symbol: string;
         uri: string;
         sellerFeeBasisPoints: number;
-        attributes?: User.Attribute[];
-        creators?: User.Creators[];
-        uses?: Option<_Common.Uses>;
+        attributes?: Shared.Attributes;
+        creators?: Shared.Creators;
+        uses?: Option<Shared.Uses>;
     };
 }

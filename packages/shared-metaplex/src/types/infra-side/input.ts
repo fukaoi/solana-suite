@@ -1,4 +1,4 @@
-import { bignum, Option, Shared } from './shared';
+import { bignum, Option, Shared } from '../shared';
 import { PublicKey } from '@solana/web3.js';
 
 export namespace InfraSideInput {

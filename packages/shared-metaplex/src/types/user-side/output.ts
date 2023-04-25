@@ -1,4 +1,4 @@
-import { Option, Shared } from './shared';
+import { Option, Shared } from '../shared';
 import { Pubkey } from '@solana-suite/shared';
 
 export namespace UserSideOutput {

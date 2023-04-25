@@ -1,9 +1,9 @@
-import { User, Infra } from './types';
+import { InfraSideInput, UserSideInput } from './types';
 
 export namespace Collections {
   export const toConvertInfra = (
-    input: User.Input.Collection | undefined
-  ): Infra.Input.Collection => {
+    input: UserSideInput.TokenMetadata | undefined
+  ): InfraSideInput.Collection => {
     if (!input) {
       return null;
     }

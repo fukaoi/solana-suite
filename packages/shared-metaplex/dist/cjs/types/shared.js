@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports._Common = void 0;
+exports.Shared = void 0;
 // Common types
-var _Common;
-(function (_Common) {
+var Shared;
+(function (Shared) {
     let UseMethod;
     (function (UseMethod) {
         UseMethod[UseMethod["Burn"] = 0] = "Burn";
         UseMethod[UseMethod["Multiple"] = 1] = "Multiple";
         UseMethod[UseMethod["Single"] = 2] = "Single";
-    })(UseMethod = _Common.UseMethod || (_Common.UseMethod = {}));
-})(_Common = exports._Common || (exports._Common = {}));
+    })(UseMethod = Shared.UseMethod || (Shared.UseMethod = {}));
+})(Shared = exports.Shared || (exports.Shared = {}));
 //# sourceMappingURL=shared.js.map

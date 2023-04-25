@@ -1,11 +1,10 @@
 /// <reference types="node" />
 import BN from 'bn.js';
-import { Pubkey } from '@solana-suite/shared';
 import { PublicKey } from '@solana/web3.js';
 export type Option<T> = T | null;
 export type bignum = number | BN;
 export type FileContent = string | Buffer | Uint8Array | ArrayBuffer;
-export declare namespace _Common {
+export declare namespace Shared {
     type Uses = {
         useMethod: UseMethod;
         remaining: bignum;
@@ -34,51 +33,19 @@ export declare namespace _Common {
         family?: string;
         [key: string]: unknown;
     };
-}
-export declare namespace Infra {
-    namespace Input {
-        type Collection = Option<{
-            verified: boolean;
-            key: PublicKey;
-        }>;
-    }
-    namespace Output {
-        type Collection = Option<{
-            address: PublicKey;
-            verified: boolean;
-        }>;
-    }
-    type Properties = _Common.Properties;
     type Creators = {
         readonly address: PublicKey;
         readonly share: number;
         readonly verified: boolean;
-    };
-    type Attribute = {
+    }[];
+    type Attributes = {
         trait_type?: string;
         value?: string;
         [key: string]: unknown;
-    };
-}
-export declare namespace User {
-    namespace Input {
-        type Collection = Option<Pubkey>;
-    }
-    namespace Output {
-        type Collection = Option<{
-            address: Pubkey;
-            verified: boolean;
-        }>;
-    }
-    type Properties = _Common.Properties;
-    type Creators = {
-        readonly address: Pubkey;
-        readonly share: number;
-        readonly verified: boolean;
-    };
-    type Attribute = {
-        trait_type?: string;
-        value?: string;
-        [key: string]: unknown;
+    }[];
+    type Options = {
+        options?: {
+            [key: string]: unknown;
+        };
     };
 }

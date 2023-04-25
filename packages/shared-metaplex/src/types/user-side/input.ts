@@ -1,5 +1,5 @@
-import { InfraSideInput } from './infra-side-input';
-import { bignum, FileContent, Option, Shared } from './shared';
+import { InfraSideInput } from '../infra-side/input';
+import { bignum, FileContent, Option, Shared } from '../shared';
 import { Pubkey } from '@solana-suite/shared';
 
 export namespace UserSideInput {
