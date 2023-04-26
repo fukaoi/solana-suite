@@ -1,8 +1,13 @@
-import { InfraSideInput, UserSideInput } from './types';
+import {
+  InfraSideInput,
+  InfraSideOutput,
+  UserSideInput,
+  UserSideOutput,
+} from './types';
 
 export namespace Collections {
   export const toConvertInfra = (
-    input: UserSideInput.TokenMetadata | undefined
+    input: UserSideInput.Collection | undefined
   ): InfraSideInput.Collection => {
     if (!input) {
       return null;
@@ -15,8 +20,8 @@ export namespace Collections {
   };
 
   export const toConvertUser = (
-    output: Infra.Output.Collection | undefined
-  ): User.Output.Collection => {
+    output: InfraSideOutput.Collection | undefined
+  ): UserSideOutput.Collection => {
     if (!output) {
       return null;
     }

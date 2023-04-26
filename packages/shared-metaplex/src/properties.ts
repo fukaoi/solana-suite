@@ -1,17 +1,17 @@
-import { overwriteObject, Secret, Result } from '@solana-suite/shared';
-import { User, StorageType, Infra, FileContent } from './types';
+import { overwriteObject, Result, Secret } from '@solana-suite/shared';
+import { FileContent, InfraSideInput, UserSideInput } from './types';
 
 export namespace Properties {
   export const toConvertInfra = async (
-    input: User.Properties | undefined,
+    input: UserSideInput.Properties | undefined,
     storageFunc: (
       data: FileContent,
-      storageType: StorageType,
+      storageType: InfraSideInput.StorageType,
       feePayer?: Secret
     ) => Promise<Result<string, Error>>,
-    storageType: StorageType,
+    storageType: InfraSideInput.StorageType,
     feePayer?: Secret
-  ): Promise<Infra.Properties> => {
+  ): Promise<InfraSideInput.Properties> => {
     if (!input || !input.files) {
       return {};
     }
@@ -33,6 +33,6 @@ export namespace Properties {
         ]);
       })
     );
-    return { ...input, files } as Infra.Properties;
+    return { ...input, files } as InfraSideInput.Properties;
   };
 }

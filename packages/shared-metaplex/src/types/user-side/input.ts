@@ -3,6 +3,14 @@ import { bignum, FileContent, Option, Shared } from '../shared';
 import { Pubkey } from '@solana-suite/shared';
 
 export namespace UserSideInput {
+  export type Collection = Option<Pubkey>;
+  export type Creator = {
+    readonly address: Pubkey;
+    readonly share: number;
+    readonly verified: boolean;
+  };
+  export type Properties = Shared.Properties;
+
   /////////// NFT //////////////
   export type NftMetadata = {
     name: string;
@@ -14,10 +22,10 @@ export namespace UserSideInput {
     isMutable?: boolean;
     description?: string;
     external_url?: string;
-    attributes?: Shared.Attributes;
-    properties?: Shared.Properties;
+    attributes?: Shared.Attribute;
+    properties?: Properties;
     maxSupply?: bignum;
-    creators?: Shared.Creators;
+    creators?: Creator[];
     uses?: Shared.Uses;
     collection?: Option<Pubkey>;
     options?: Shared.Options;
@@ -33,8 +41,8 @@ export namespace UserSideInput {
     description?: string;
     royalty?: number;
     uses?: Option<Shared.Uses>;
-    creators?: Shared.Creators;
-    attributes?: Shared.Attributes;
+    creators?: Creator[];
+    attributes?: Shared.Attribute;
     options?: Shared.Options;
   };
 }

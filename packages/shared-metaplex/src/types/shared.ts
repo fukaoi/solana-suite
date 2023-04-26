@@ -39,17 +39,17 @@ export namespace Shared {
     [key: string]: unknown;
   };
 
-  export type Creators = {
+  export type Creator = {
     readonly address: PublicKey;
     readonly share: number;
     readonly verified: boolean;
-  }[];
+  };
 
-  export type Attributes = {
+  export type Attribute = {
     trait_type?: string;
     value?: string;
     [key: string]: unknown;
-  }[];
+  };
 
   export type Options = {
     options?: { [key: string]: unknown };

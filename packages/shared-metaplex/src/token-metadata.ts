@@ -1,12 +1,12 @@
 import { Creators } from './creators';
-import { InputTokenMetadata, MetaplexDataV2 } from './types';
+import { InfraSideInput, UserSideInput } from './types';
 
 export namespace TokenMetadata {
   export const toConvertInfra = (
-    input: InputTokenMetadata,
+    input: UserSideInput.TokenMetadata,
     uri: string,
     sellerFeeBasisPoints: number
-  ): MetaplexDataV2 => {
+  ): InfraSideInput.MetaplexDataV2 => {
     return {
       name: input.name,
       symbol: input.symbol,

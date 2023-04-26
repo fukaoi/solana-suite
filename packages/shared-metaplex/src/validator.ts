@@ -1,7 +1,7 @@
 import { Result, Try } from '@solana-suite/shared';
 import { Royalty } from './royalty';
-import { InputNftMetadata, MetaplexDataV2, StorageMetadata } from './types/';
-import { Limit, Details } from './types/validator';
+import { InfraSideInput, UserSideInput } from './types/';
+import { Details, Limit } from './types/validator';
 
 export namespace Validator {
   export namespace Message {
@@ -158,15 +158,15 @@ export namespace Validator {
   };
 
   type PickNftStorage = Pick<
-    StorageMetadata,
+    InfraSideInput.Offchain,
     'name' | 'symbol' | 'image' | 'seller_fee_basis_points'
   >;
   type PickNftStorageMetaplex = Pick<
-    InputNftMetadata,
+    UserSideInput.NftMetadata,
     'name' | 'symbol' | 'royalty' | 'filePath'
   >;
   type PickMetaplex = Pick<
-    MetaplexDataV2,
+    InfraSideInput.MetaplexDataV2,
     'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'
   >;
 

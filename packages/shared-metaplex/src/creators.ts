@@ -1,9 +1,14 @@
-import { User, Infra } from './types';
+import {
+  InfraSideInput,
+  InfraSideOutput,
+  UserSideInput,
+  UserSideOutput,
+} from './types';
 
 export namespace Creators {
   export const toConvertInfra = (
-    input: User.Creators[] | undefined
-  ): Infra.Creators[] | null => {
+    input: UserSideInput.Creator[] | undefined
+  ): InfraSideInput.Creator[] | null => {
     if (!input) {
       return null;
     }
@@ -17,12 +22,14 @@ export namespace Creators {
     });
   };
 
-  export const toConvertUser = (output: Infra.Creators[]): User.Creators[] => {
+  export const toConvertUser = (
+    output: InfraSideOutput.Creator[]
+  ): UserSideOutput.Creator[] => {
     if (!output) {
       return [];
     }
     return output.map((data) => {
-      const modify: User.Creators = {
+      const modify: UserSideOutput.Creator = {
         address: data.address.toString(),
         share: data.share,
         verified: data.verified,

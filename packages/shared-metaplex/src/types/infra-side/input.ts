@@ -26,7 +26,7 @@ export namespace InfraSideInput {
     seller_fee_basis_points?: number;
     image?: string;
     external_url?: string;
-    attributes?: Shared.Attributes;
+    attributes?: Shared.Attribute[];
     properties?: Shared.Properties;
     collection?: Shared.Collection;
   };
@@ -52,7 +52,7 @@ export namespace InfraSideInput {
     symbol: string;
     uri: string;
     sellerFeeBasisPoints: number;
-    creators: Option<Shared.Creators>;
+    creators: Option<Shared.Creator[]>;
     collection: Option<{
       verified: boolean;
       key: PublicKey;
@@ -72,7 +72,7 @@ export namespace InfraSideInput {
     readonly primarySaleHappened: boolean;
     readonly sellerFeeBasisPoints: number;
     readonly editionNonce: Option<number>;
-    readonly creators: Option<Shared.Creators>;
+    readonly creators: Option<Shared.Creator[]>;
     readonly tokenStandard: Option<TokenStandard>;
     readonly collection: Option<{
       address: PublicKey;
