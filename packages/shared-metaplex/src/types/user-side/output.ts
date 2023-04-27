@@ -1,6 +1,7 @@
 import { Option } from '../shared';
 import { _Same } from '../_same';
 import { Pubkey } from '@solana-suite/shared';
+import { InfraSideOutput } from '../infra-side/output';
 
 export namespace UserSideOutput {
   export type Collection = Option<{ address: Pubkey; verified: boolean }>;
@@ -24,6 +25,7 @@ export namespace UserSideOutput {
     editionNonce: Option<number>;
     collection: Option<{ address: Pubkey; verified: boolean }>;
     uses: Option<_Same.Uses>;
+    onchain: InfraSideOutput.Offchain;
   };
 
   /////////// TOKEN //////////////

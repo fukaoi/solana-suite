@@ -73,9 +73,13 @@ export namespace Metaplex {
               connection,
               Pda.getMetadata(mint)
             );
+            if (metadata.tokenStandard !== 0) {
+              continue;
+            }
             fetch(metadata.data.uri).then((response) => {
               response.json().then((json) => {
                 contentsDatas.push({ onchain: metadata, offchain: json });
+                console.log('------------------------------');
                 console.log(contentsDatas);
               });
             });
