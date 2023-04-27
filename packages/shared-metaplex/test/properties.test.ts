@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha';
 import { Properties } from '../src/properties';
-import { User } from '../src/types';
+import { UserSideInput } from '../src/types';
 import { assert } from 'chai';
 import { RandomAsset } from '../../storage/test/randomAsset';
 import { Storage } from '../../storage/src';
@@ -8,7 +8,7 @@ import { Storage } from '../../storage/src';
 describe('Properties', () => {
   it('To input convert', async () => {
     const asset = RandomAsset.get();
-    const input: User.Properties = {
+    const input: UserSideInput.Properties = {
       files: [
         {
           type: 'image/jpeg',

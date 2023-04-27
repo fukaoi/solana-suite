@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/spl-token';
 import { RandomAsset } from '../../../storage/test/randomAsset';
-import { StorageType } from '../../../shared-metaplex';
+import { InfraSideInput } from '../../../shared-metaplex';
 import { KeypairAccount } from '../../../shared/src/keypair-account';
 import { Pubkey } from '../../../shared';
 
@@ -24,7 +24,7 @@ describe('SplToken', () => {
       name: 'solana-suite-token',
       symbol: 'SST',
       filePath: RandomAsset.get().filePath as string,
-      storageType: 'nftStorage' as StorageType,
+      storageType: 'nftStorage' as InfraSideInput.StorageType,
       royalty: 50,
     };
 
@@ -52,7 +52,7 @@ describe('SplToken', () => {
       name: 'solana-suite-token',
       symbol: 'SST',
       filePath: RandomAsset.get().filePath as string,
-      storageType: 'nftStorage' as StorageType,
+      storageType: 'nftStorage' as InfraSideInput.StorageType,
       royalty: 50,
       creators: [
         {

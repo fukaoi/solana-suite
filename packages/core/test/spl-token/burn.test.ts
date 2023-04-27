@@ -4,7 +4,7 @@ import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/';
 import { KeypairAccount, Node } from '../../../shared';
 import { RandomAsset } from '../../../storage/test/randomAsset';
-import { StorageType } from '../../../shared-metaplex';
+import { InfraSideInput } from '../../../shared-metaplex';
 
 let source: KeypairAccount;
 
@@ -15,7 +15,7 @@ const TOKEN_METADATA = {
   symbol: 'SST',
   royalty: 50,
   filePath: RandomAsset.get().filePath as string,
-  storageType: 'nftStorage' as StorageType,
+  storageType: 'nftStorage' as InfraSideInput.StorageType,
   isMutable: false,
 };
 

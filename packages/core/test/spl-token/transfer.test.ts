@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/';
 import { RandomAsset } from '../../../storage/test/randomAsset';
-import { StorageType } from '../../../shared-metaplex';
+import { InfraSideInput } from '../../../shared-metaplex';
 import { KeypairAccount } from '../../../shared/src/keypair-account';
 
 let source: KeypairAccount;
@@ -15,7 +15,7 @@ const TOKEN_METADATA = {
   symbol: 'SST',
   royalty: 50,
   filePath: RandomAsset.get().filePath as string,
-  storageType: 'nftStorage' as StorageType,
+  storageType: 'nftStorage' as InfraSideInput.StorageType,
   isMutable: false,
 };
 
