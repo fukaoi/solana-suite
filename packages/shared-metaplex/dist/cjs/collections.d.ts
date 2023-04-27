@@ -1,5 +1,5 @@
-import { User, Infra } from './types';
+import { InfraSideInput, InfraSideOutput, UserSideInput, UserSideOutput } from './types';
 export declare namespace Collections {
-    const toConvertInfra: (input: User.Input.Collection | undefined) => Infra.Input.Collection;
-    const toConvertUser: (output: Infra.Output.Collection | undefined) => User.Output.Collection;
+    const toConvertInfra: (input: UserSideInput.Collection | undefined) => InfraSideInput.Collection;
+    const toConvertUser: (output: InfraSideOutput.Collection | undefined) => UserSideOutput.Collection;
 }

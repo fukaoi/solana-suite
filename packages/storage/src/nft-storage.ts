@@ -9,7 +9,7 @@ import {
 } from '@solana-suite/shared';
 
 import { toMetaplexFile } from '@metaplex-foundation/js';
-import { StorageMetadata, FileContent } from '@solana-suite/shared-metaplex';
+import { InfraSideInput, FileContent } from '@solana-suite/shared-metaplex';
 
 export namespace NftStorage {
   let isDisplayWarning = false;
@@ -80,7 +80,7 @@ export namespace NftStorage {
    * @return Promise<Result<string, Error>>
    */
   export const uploadMetadata = async (
-    metadata: StorageMetadata
+    metadata: InfraSideInput.Offchain
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       debugLog('# upload metadata: ', metadata);

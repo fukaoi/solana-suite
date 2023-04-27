@@ -1,18 +1,18 @@
 import {
-  MetaplexFile,
   Currency,
+  MetaplexFile,
   toMetaplexFile,
 } from '@metaplex-foundation/js';
 
 import {
-  Result,
-  isNode,
-  isBrowser,
   debugLog,
-  Try,
+  isBrowser,
+  isNode,
+  Result,
   Secret,
+  Try,
 } from '@solana-suite/shared';
-import { FileContent, StorageMetadata } from '@solana-suite/shared-metaplex';
+import { FileContent, InfraSideInput } from '@solana-suite/shared-metaplex';
 import { Bundlr } from './bundlr';
 
 export interface MetaplexFileOptions {
@@ -89,7 +89,7 @@ export namespace Arweave {
   };
 
   export const uploadMetadata = async (
-    metadata: StorageMetadata,
+    metadata: InfraSideInput.Offchain,
     feePayer: Secret
   ): Promise<Result<string, Error>> => {
     return Try(async () => {

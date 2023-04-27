@@ -19,11 +19,17 @@ export namespace InfraSideInput {
   };
 
   export type Collection = Option<{
-    verified: boolean;
-    key: PublicKey;
+    key?: PublicKey;
+    verified?: boolean;
   }>;
 
-  export type Creator = _Same.Creator;
+  export type Creator = {
+    readonly address: PublicKey;
+    readonly share: number;
+    readonly verified: boolean;
+  };
+
+  export type Properties = _Same.Properties;
 
   export type Offchain = {
     name?: string;
@@ -34,7 +40,7 @@ export namespace InfraSideInput {
     external_url?: string;
     attributes?: _Same.Attribute[];
     properties?: _Same.Properties;
-    collection?: _Same.Collection;
+    collection?: Collection;
   };
 
   export declare enum UseMethod {
@@ -56,7 +62,7 @@ export namespace InfraSideInput {
     symbol: string;
     uri: string;
     sellerFeeBasisPoints: number;
-    creators: Option<_Same.Creator[]>;
+    creators: Option<Creator[]>;
     collection: Option<{
       verified: boolean;
       key: PublicKey;
@@ -76,7 +82,7 @@ export namespace InfraSideInput {
     readonly primarySaleHappened: boolean;
     readonly sellerFeeBasisPoints: number;
     readonly editionNonce: Option<number>;
-    readonly creators: Option<_Same.Creator[]>;
+    readonly creators: Option<Creator[]>;
     readonly tokenStandard: Option<TokenStandard>;
     readonly collection: Option<{
       address: PublicKey;

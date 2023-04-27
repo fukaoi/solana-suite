@@ -30,11 +30,11 @@ import { Storage } from '@solana-suite/storage';
 
 import {
   Collections,
-  InputNftMetadata,
   NftMetadata,
   Pda,
   Properties,
   Royalty,
+  UserSideInput,
   Validator,
 } from '@solana-suite/shared-metaplex';
 
@@ -132,7 +132,7 @@ export namespace Metaplex {
    *
    * @param {Pubkey} owner          // first minted owner
    * @param {Secret} signer         // owner's Secret
-   * @param {InputNftMetadata} input
+   * @param {UserSideInput.NftMetadata} input
    * {
    *   name: string               // nft content name
    *   symbol: string             // nft ticker symbol
@@ -144,10 +144,10 @@ export namespace Metaplex {
    *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
    *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
    *   collection?: Pubkey           // collections of different colors, shapes, etc.
-   *   [key: string]?: unknown       // optional param, Usually not used.
    *   creators?: InputCreators[]    // other creators than owner
    *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()
+   *   options?: [key: string]?: unknown       // optional param, Usually not used.
    * }
    * @param {Secret} feePayer?         // fee payer
    * @param {Pubkey} freezeAuthority?  // freeze authority
@@ -156,12 +156,12 @@ export namespace Metaplex {
   export const mint = async (
     owner: Pubkey,
     signer: Secret,
-    input: InputNftMetadata,
+    input: UserSideInput.NftMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<InputNftMetadata>(input);
+      const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -182,13 +182,13 @@ export namespace Metaplex {
       }
 
       // created at by unix timestamp
-      const createdAt = Math.floor(new Date().getTime() / 1000);
-      if (input.options) {
-        input.options.created_at = createdAt;
-      } else {
-        const options = { created_at: createdAt };
-        input = { ...input, options };
-      }
+      // const createdAt = Math.floor(new Date().getTime() / 1000);
+      // if (input.options) {
+      //   input.options = { created_at: createdAt };
+      // } else {
+      //   const options = { created_at: createdAt };
+      //   input = { ...input, options };
+      // }
 
       input = {
         ...input,
@@ -197,7 +197,7 @@ export namespace Metaplex {
       //--- porperties, Upload content ---
 
       const sellerFeeBasisPoints = Royalty.convert(input.royalty);
-      const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
+      const nftStorageMetadata = Storage.toConvertOffchaindata(
         input,
         sellerFeeBasisPoints
       );

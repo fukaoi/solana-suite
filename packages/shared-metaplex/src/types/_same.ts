@@ -33,7 +33,5 @@ export namespace _Same {
     [key: string]: unknown;
   };
 
-  export type Options = {
-    options?: { [key: string]: unknown };
-  };
+  export type Options = { [key: string]: unknown };
 }

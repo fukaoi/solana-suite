@@ -15,10 +15,10 @@ import { Storage } from '@solana-suite/storage';
 
 import {
   Collections,
-  InputNftMetadata,
   NftMetadata,
   Properties,
   Royalty,
+  UserSideInput,
   Validator,
 } from '@solana-suite/shared-metaplex';
 
@@ -30,7 +30,7 @@ export namespace Metaplex {
    *
    * @param {Pubkey} owner          // first minted owner
    * @param {Secret} signer         // owner's Secret
-   * @param {InputNftMetadata} input
+   * @param {UserSideInput.NftMetadata} input
    * {
    *   name: string               // nft content name
    *   symbol: string             // nft ticker symbol
@@ -54,12 +54,12 @@ export namespace Metaplex {
   export const feePayerPartialSignMint = async (
     owner: Pubkey,
     signer: Secret,
-    input: InputNftMetadata,
+    input: UserSideInput.NftMetadata,
     feePayer: Pubkey,
     freezeAuthority?: Secret
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<InputNftMetadata>(input);
+      const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -75,7 +75,7 @@ export namespace Metaplex {
           input.storageType
         );
 
-        const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
+        const nftStorageMetadata = Storage.toConvertOffchaindata(
           { ...input, properties },
           sellerFeeBasisPoints
         );

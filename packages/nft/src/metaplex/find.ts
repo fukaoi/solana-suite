@@ -2,9 +2,9 @@ import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
 import {
   Collections,
   Creators,
-  MetaplexOriginal,
-  OutputNftMetadata,
+  InfraSideInput,
   Pda,
+  UserSideOutput,
 } from '@solana-suite/shared-metaplex';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -21,7 +21,7 @@ export namespace Metaplex {
    */
   export const findByOwner = async (
     owner: Pubkey
-  ): Promise<Result<OutputNftMetadata[], Error>> => {
+  ): Promise<Result<UserSideOutput.NftMetadata[], Error>> => {
     return Try(async () => {
       const allData = await Bundlr.make()
         .nfts()
@@ -29,7 +29,7 @@ export namespace Metaplex {
 
       const res = allData.map((d) => {
         return {
-          mint: (d as MetaplexOriginal).mintAddress.toString(),
+          mint: (d as InfraSideInput.Onchain).mintAddress.toString(),
           updateAuthority: d.updateAuthorityAddress.toString(),
           royalty: d.sellerFeeBasisPoints,
           name: d.name,

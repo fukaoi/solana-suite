@@ -32,10 +32,9 @@ import {
 } from '@solana-suite/shared';
 
 import {
-  InputNftMetadata,
-  InputTokenMetadata,
   Pda,
   TokenMetadata,
+  UserSideInput,
   Validator,
 } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
@@ -135,12 +134,12 @@ export namespace SplToken {
     signer: Secret,
     totalAmount: number,
     mintDecimal: number,
-    input: InputTokenMetadata,
+    input: UserSideInput.TokenMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<InputTokenMetadata>(input);
+      const valid = Validator.checkAll<UserSideInput.TokenMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -149,8 +148,8 @@ export namespace SplToken {
       input.royalty = 0;
       const sellerFeeBasisPoints = 0;
 
-      const tokenStorageMetadata = Storage.toConvertNftStorageMetadata(
-        input as InputNftMetadata,
+      const tokenStorageMetadata = Storage.toConvertOffchaindata(
+        input as UserSideInput.NftMetadata,
         input.royalty
       );
 

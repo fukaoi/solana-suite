@@ -1,5 +1,5 @@
-import { Secret, Result } from '@solana-suite/shared';
-import { User, StorageType, Infra, FileContent } from './types';
+import { Result, Secret } from '@solana-suite/shared';
+import { FileContent, InfraSideInput, UserSideInput } from './types';
 export declare namespace Properties {
-    const toConvertInfra: (input: User.Properties | undefined, storageFunc: (data: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>, storageType: StorageType, feePayer?: Secret) => Promise<Infra.Properties>;
+    const toConvertInfra: (input: UserSideInput.Properties | undefined, storageFunc: (data: FileContent, storageType: InfraSideInput.StorageType, feePayer?: Secret) => Promise<Result<string, Error>>, storageType: InfraSideInput.StorageType, feePayer?: Secret) => Promise<InfraSideInput.Properties>;
 }

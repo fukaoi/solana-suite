@@ -3,18 +3,18 @@ import { Metaplex } from '@solana-suite/nft';
 import { Storage } from '@solana-suite/storage';
 import {
   debugLog,
+  KeypairAccount,
   Node,
   Result,
   Try,
-  KeypairAccount,
 } from '@solana-suite/shared';
 import {
+  NftMetadata,
+  Properties,
   Royalty,
+  UserSideInput,
   Validator,
   ValidatorError,
-  InputNftMetadata,
-  Properties,
-  NftMetadata,
 } from '@solana-suite/shared-metaplex';
 import { Phantom } from '../types';
 
@@ -22,17 +22,17 @@ export namespace PhantomMetaplex {
   /**
    * Upload content and NFT mint
    *
-   * @param {InputNftMetadata}  input
+   * @param {UserSideInput.NftMetadata}  input
    * @param {Phantom} phantom        phantom wallet object
    * @return Promise<Result<Instruction, Error>>
    */
   export const mint = async (
-    input: InputNftMetadata,
+    input: UserSideInput.NftMetadata,
     cluster: string,
     phantom: Phantom
   ): Promise<Result<string, Error | ValidatorError>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<InputNftMetadata>(input);
+      const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -51,7 +51,7 @@ export namespace PhantomMetaplex {
       );
 
       const sellerFeeBasisPoints = Royalty.convert(input.royalty);
-      const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
+      const nftStorageMetadata = Storage.toConvertOffchaindata(
         { ...input, properties },
         sellerFeeBasisPoints
       );
