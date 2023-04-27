@@ -1,4 +1,5 @@
-import { bignum, Option, Shared } from '../shared';
+import { bignum, Option } from '../shared';
+import { _Same } from '../_same';
 import { PublicKey } from '@solana/web3.js';
 
 export namespace InfraSideInput {
@@ -17,7 +18,12 @@ export namespace InfraSideInput {
     storageType?: 'arweave';
   };
 
-  /////////// OFFCHAIN  //////////////
+  export type Collection = Option<{
+    verified: boolean;
+    key: PublicKey;
+  }>;
+
+  export type Creator = _Same.Creator;
 
   export type Offchain = {
     name?: string;
@@ -26,12 +32,10 @@ export namespace InfraSideInput {
     seller_fee_basis_points?: number;
     image?: string;
     external_url?: string;
-    attributes?: Shared.Attribute[];
-    properties?: Shared.Properties;
-    collection?: Shared.Collection;
+    attributes?: _Same.Attribute[];
+    properties?: _Same.Properties;
+    collection?: _Same.Collection;
   };
-
-  /////////// ONCHAIN  //////////////
 
   export declare enum UseMethod {
     Burn = 0,
@@ -52,12 +56,12 @@ export namespace InfraSideInput {
     symbol: string;
     uri: string;
     sellerFeeBasisPoints: number;
-    creators: Option<Shared.Creator[]>;
+    creators: Option<_Same.Creator[]>;
     collection: Option<{
       verified: boolean;
       key: PublicKey;
     }>;
-    uses: Option<Shared.Uses>;
+    uses: Option<_Same.Uses>;
   };
 
   export type Onchain = {
@@ -72,7 +76,7 @@ export namespace InfraSideInput {
     readonly primarySaleHappened: boolean;
     readonly sellerFeeBasisPoints: number;
     readonly editionNonce: Option<number>;
-    readonly creators: Option<Shared.Creator[]>;
+    readonly creators: Option<_Same.Creator[]>;
     readonly tokenStandard: Option<TokenStandard>;
     readonly collection: Option<{
       address: PublicKey;
@@ -82,6 +86,6 @@ export namespace InfraSideInput {
       version: 'V1';
       size: bignum;
     }>;
-    readonly uses: Option<Shared.Uses>;
+    readonly uses: Option<_Same.Uses>;
   };
 }

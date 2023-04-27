@@ -1,17 +1,19 @@
 import { InfraSideInput } from '../infra-side/input';
-import { bignum, FileContent, Option, Shared } from '../shared';
+import { bignum, FileContent, Option } from '../shared';
+import { _Same } from '../_same';
 import { Pubkey } from '@solana-suite/shared';
 
 export namespace UserSideInput {
   export type Collection = Option<Pubkey>;
+  
   export type Creator = {
     readonly address: Pubkey;
     readonly share: number;
     readonly verified: boolean;
   };
-  export type Properties = Shared.Properties;
+  
+  export type Properties = _Same.Properties;
 
-  /////////// NFT //////////////
   export type NftMetadata = {
     name: string;
     symbol: string;
@@ -22,16 +24,15 @@ export namespace UserSideInput {
     isMutable?: boolean;
     description?: string;
     external_url?: string;
-    attributes?: Shared.Attribute;
+    attributes?: _Same.Attribute;
     properties?: Properties;
     maxSupply?: bignum;
     creators?: Creator[];
-    uses?: Shared.Uses;
+    uses?: _Same.Uses;
     collection?: Option<Pubkey>;
-    options?: Shared.Options;
+    options?: _Same.Options;
   };
 
-  /////////// TOKEN //////////////
   export type TokenMetadata = {
     name: string;
     symbol: string;
@@ -40,9 +41,9 @@ export namespace UserSideInput {
     storageType?: InfraSideInput.StorageType;
     description?: string;
     royalty?: number;
-    uses?: Option<Shared.Uses>;
+    uses?: Option<_Same.Uses>;
     creators?: Creator[];
-    attributes?: Shared.Attribute;
-    options?: Shared.Options;
+    attributes?: _Same.Attribute;
+    options?: _Same.Options;
   };
 }

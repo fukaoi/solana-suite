@@ -1,9 +1,15 @@
-import { Option, Shared } from '../shared';
+import { Option } from '../shared';
+import { _Same } from '../_same';
 import { Pubkey } from '@solana-suite/shared';
 
 export namespace UserSideOutput {
   export type Collection = Option<{ address: Pubkey; verified: boolean }>;
-  export type Creator = Shared.Creator;
+  export type Creator = {
+    readonly address: Pubkey;
+    readonly share: number;
+    readonly verified: boolean;
+  };
+
   /////////// NFT //////////////
   export type NftMetadata = {
     mint: string;
@@ -14,10 +20,10 @@ export namespace UserSideOutput {
     uri: string;
     isMutable: boolean;
     primarySaleHappened: boolean;
-    creators: Shared.Creator[];
+    creators: Creator[];
     editionNonce: Option<number>;
     collection: Option<{ address: Pubkey; verified: boolean }>;
-    uses: Option<Shared.Uses>;
+    uses: Option<_Same.Uses>;
   };
 
   /////////// TOKEN //////////////
@@ -26,8 +32,8 @@ export namespace UserSideOutput {
     symbol: string;
     uri: string;
     sellerFeeBasisPoints: number;
-    attributes?: Shared.Attribute;
-    creators?: Shared.Creator[];
-    uses?: Option<Shared.Uses>;
+    attributes?: _Same.Attribute;
+    creators?: Creator[];
+    uses?: Option<_Same.Uses>;
   };
 }

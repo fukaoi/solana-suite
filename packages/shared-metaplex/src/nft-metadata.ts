@@ -1,13 +1,13 @@
 import { Collections } from './collections';
 import { Creators } from './creators';
-import { InputNftMetadata, MetaplexDataV2 } from './types';
+import { InfraSideInput, UserSideInput } from './types';
 
 export namespace NftMetadata {
   export const toConvertInfra = (
-    input: InputNftMetadata,
+    input: UserSideInput.NftMetadata,
     uri: string,
     sellerFeeBasisPoints: number
-  ): MetaplexDataV2 => {
+  ): InfraSideInput.MetaplexDataV2 => {
     return {
       name: input.name,
       symbol: input.symbol,
