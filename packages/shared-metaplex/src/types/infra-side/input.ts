@@ -19,8 +19,8 @@ export namespace InfraSideInput {
   };
 
   export type Collection = Option<{
-    key?: PublicKey;
-    verified?: boolean;
+    key: PublicKey;
+    verified: boolean;
   }>;
 
   export type Creator = {
@@ -40,7 +40,11 @@ export namespace InfraSideInput {
     external_url?: string;
     attributes?: _Same.Attribute[];
     properties?: _Same.Properties;
-    collection?: Collection;
+    collection?: {
+      name?: string;
+      family?: string;
+      [key: string]: unknown;
+    };
   };
 
   export declare enum UseMethod {

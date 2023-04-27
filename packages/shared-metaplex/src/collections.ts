@@ -8,7 +8,7 @@ import {
 export namespace Collections {
   export const toConvertInfra = (
     input: UserSideInput.Collection | undefined
-  ): InfraSideInput.Collection => {
+  ): InfraSideInput.Collection | null => {
     if (!input) {
       return null;
     }
