@@ -16,32 +16,32 @@ describe('Metaplex.find', () => {
     console.log(res);
   });
 
-  it('Find owner info', async () => {
-    // const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
-    const owner = 'BAWTL3RSxNe2mN7uS6MUvyWmBDBXUDQRNQftrS1R6baS';
-    const res = await Metaplex.findByOwner(owner);
-    res.match(
-      (ok) => {
-        assert.isTrue(ok.length > 0);
-        console.log('# find owner info: ', ok);
-      },
-      (err) => {
-        assert.fail(err.message);
-      }
-    );
-  });
-
-  it('Find owner info, many info', async () => {
-    const owner = '6yVHt5qgGnGZ3rGJoX9dX5zKpWgvmz5rLgzco77HiW2H';
-    const res = await Metaplex.findByOwner(owner);
-    res.match(
-      (ok) => {
-        assert.isTrue(ok.length > 0);
-        console.log('# find owner info: ', ok);
-      },
-      (err) => {
-        assert.fail(err.message);
-      }
-    );
-  });
+  // it.skip('Find owner info', async () => {
+  //   // const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
+  //   const owner = 'BAWTL3RSxNe2mN7uS6MUvyWmBDBXUDQRNQftrS1R6baS';
+  //   const res = await Metaplex.findByOwner(owner);
+  //   res.match(
+  //     (ok) => {
+  //       assert.isTrue(ok.length > 0);
+  //       console.log('# find owner info: ', ok);
+  //     },
+  //     (err) => {
+  //       assert.fail(err.message);
+  //     }
+  //   );
+  // });
+  //
+  // it.skip('Find owner info, many info', async () => {
+  //   const owner = '6yVHt5qgGnGZ3rGJoX9dX5zKpWgvmz5rLgzco77HiW2H';
+  //   const res = await Metaplex.findByOwner(owner);
+  //   res.match(
+  //     (ok) => {
+  //       assert.isTrue(ok.length > 0);
+  //       console.log('# find owner info: ', ok);
+  //     },
+  //     (err) => {
+  //       assert.fail(err.message);
+  //     }
+  //   );
+  // });
 });

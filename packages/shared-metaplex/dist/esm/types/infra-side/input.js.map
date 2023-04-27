@@ -1,1 +1,1 @@
-{"version":3,"file":"input.js","sourceRoot":"","sources":["../../../../src/types/infra-side/input.ts"],"names":[],"mappings":"AAIA,MAAM,KAAW,cAAc,CAgG9B;AAhGD,WAAiB,cAAc;IAmD7B,IAAY,aAMX;IAND,WAAY,aAAa;QACvB,+DAAe,CAAA;QACf,mEAAiB,CAAA;QACjB,yDAAY,CAAA;QACZ,6EAAsB,CAAA;QACtB,uFAA2B,CAAA;IAC7B,CAAC,EANW,aAAa,GAAb,4BAAa,KAAb,4BAAa,QAMxB;AAuCH,CAAC,EAhGgB,cAAc,KAAd,cAAc,QAgG9B"}
+{"version":3,"file":"input.js","sourceRoot":"","sources":["../../../../src/types/infra-side/input.ts"],"names":[],"mappings":""}

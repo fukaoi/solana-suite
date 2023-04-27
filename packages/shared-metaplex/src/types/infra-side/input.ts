@@ -1,4 +1,4 @@
-import { bignum, Option } from '../shared';
+import { Option } from '../shared';
 import { _Same } from '../_same';
 import { PublicKey } from '@solana/web3.js';
 
@@ -47,20 +47,6 @@ export namespace InfraSideInput {
     };
   };
 
-  export declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2,
-  }
-
-  export enum TokenStandard {
-    NonFungible = 0,
-    FungibleAsset = 1,
-    Fungible = 2,
-    NonFungibleEdition = 3,
-    ProgrammableNonFungible = 4,
-  }
-
   export type MetaplexDataV2 = {
     name: string;
     symbol: string;
@@ -72,30 +58,5 @@ export namespace InfraSideInput {
       key: PublicKey;
     }>;
     uses: Option<_Same.Uses>;
-  };
-
-  export type Onchain = {
-    readonly model: 'metadata';
-    readonly address: PublicKey;
-    readonly mintAddress: PublicKey;
-    readonly updateAuthorityAddress: PublicKey;
-    readonly name: string;
-    readonly symbol: string;
-    readonly uri: string;
-    readonly isMutable: boolean;
-    readonly primarySaleHappened: boolean;
-    readonly sellerFeeBasisPoints: number;
-    readonly editionNonce: Option<number>;
-    readonly creators: Option<Creator[]>;
-    readonly tokenStandard: Option<TokenStandard>;
-    readonly collection: Option<{
-      address: PublicKey;
-      verified: boolean;
-    }>;
-    readonly collectionDetails: Option<{
-      version: 'V1';
-      size: bignum;
-    }>;
-    readonly uses: Option<_Same.Uses>;
   };
 }

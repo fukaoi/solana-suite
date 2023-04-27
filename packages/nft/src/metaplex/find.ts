@@ -2,54 +2,59 @@ import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
 import {
   Collections,
   Creators,
-  InfraSideInput,
+  InfraSideOutput,
   Pda,
   UserSideOutput,
 } from '@solana-suite/shared-metaplex';
+import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Bundlr } from '@solana-suite/storage';
-import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import fetch from 'cross-fetch';
 
 export namespace Metaplex {
+  // /**
+  //  * Fetch minted metadata by owner Pubkey
+  //  *
+  //  * @param {Pubkey} owner
+  //  * @return Promise<Result<OutputNftMetadata[], Error>>
+  //  */
+  // export const findByOwner = async (
+  //   owner: Pubkey
+  // ): Promise<Result<UserSideOutput.NftMetadata[], Error>> => {
+  //   return Try(async () => {
+  //     const allData = await Bundlr.make()
+  //       .nfts()
+  //       .findAllByOwner({ owner: owner.toPublicKey() });
+  //
+  //     const res = allData.map((d) => {
+  //       return {
+  //         mint: (d as InfraSideOutput.Onchain).mintAddress.toString(),
+  //         updateAuthority: d.updateAuthorityAddress.toString(),
+  //         royalty: d.sellerFeeBasisPoints,
+  //         name: d.name,
+  //         symbol: d.symbol,
+  //         uri: d.uri,
+  //         isMutable: d.isMutable,
+  //         primarySaleHappened: d.primarySaleHappened,
+  //         creators: Creators.toConvertUser(d.creators),
+  //         editionNonce: d.editionNonce,
+  //         collection: Collections.toConvertUser(d.collection),
+  //         uses: d.uses,
+  //       };
+  //     });
+  //     return res;
+  //   });
+  // };
+
   /**
    * Fetch minted metadata by owner Pubkey
    *
    * @param {Pubkey} owner
    * @return Promise<Result<OutputNftMetadata[], Error>>
    */
-  export const findByOwner = async (
-    owner: Pubkey
-  ): Promise<Result<UserSideOutput.NftMetadata[], Error>> => {
-    return Try(async () => {
-      const allData = await Bundlr.make()
-        .nfts()
-        .findAllByOwner({ owner: owner.toPublicKey() });
-
-      const res = allData.map((d) => {
-        return {
-          mint: (d as InfraSideInput.Onchain).mintAddress.toString(),
-          updateAuthority: d.updateAuthorityAddress.toString(),
-          royalty: d.sellerFeeBasisPoints,
-          name: d.name,
-          symbol: d.symbol,
-          uri: d.uri,
-          isMutable: d.isMutable,
-          primarySaleHappened: d.primarySaleHappened,
-          creators: Creators.toConvertUser(d.creators),
-          editionNonce: d.editionNonce,
-          collection: Collections.toConvertUser(d.collection),
-          uses: d.uses,
-        };
-      });
-      return res;
-    });
-  };
-
   export const findByOwner2 = async (owner: Pubkey) => {
     return Try(async () => {
-      const contentsDatas: { onchain: Metadata; offchain: any }[] = [];
+      const contentsDatas: InfraSideOutput.OnchainAndOffchain[] = [];
       try {
         const connection = Node.getConnection();
         const info = await connection.getParsedTokenAccountsByOwner(
@@ -77,7 +82,7 @@ export namespace Metaplex {
           }
         }
       } catch (e) {
-        console.error('# EEEEE: ', e);
+        console.error('# retry: ', e);
       }
     });
   };
