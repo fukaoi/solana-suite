@@ -1,4 +1,4 @@
-import { bignum, FileContent } from './shared';
+import { bignum, FileContent, Option } from './shared';
 
 export namespace _Same {
   export type Properties = {
@@ -35,11 +35,11 @@ export namespace _Same {
     ProgrammableNonFungible = 4,
   }
 
-  export type Uses = {
+  export type Uses = Option<{
     useMethod: UseMethod;
     remaining: bignum;
     total: bignum;
-  };
+  }>;
   
   export type Options = { [key: string]: unknown };
 }

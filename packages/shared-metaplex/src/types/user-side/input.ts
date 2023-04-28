@@ -4,13 +4,13 @@ import { _Same } from '../_same';
 import { Pubkey } from '@solana-suite/shared';
 
 export namespace UserSideInput {
-  export type Collection = Option<Pubkey> | undefined;
+  export type Collection = Option<Pubkey>;
 
   export type Creators = Option<{
     address: Pubkey;
     share: number;
     verified: boolean;
-  }> | undefined;
+  }>;
   export type Properties = _Same.Properties;
 
   export type NftMetadata = {
@@ -26,9 +26,9 @@ export namespace UserSideInput {
     attributes?: _Same.Attribute[];
     properties?: Properties;
     maxSupply?: bignum;
-    creators?: Option<Creators[]>;
+    creators?: Creators[];
     uses?: _Same.Uses;
-    collection?: Option<Collection>;
+    collection?: Collection;
     options?: _Same.Options;
   };
 
@@ -40,7 +40,7 @@ export namespace UserSideInput {
     storageType?: InfraSideInput.StorageType;
     description?: string;
     royalty?: number;
-    uses?: Option<_Same.Uses>;
+    uses?: _Same.Uses;
     creators?: Creators[];
     attributes?: _Same.Attribute[];
     options?: _Same.Options;

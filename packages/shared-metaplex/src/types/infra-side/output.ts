@@ -8,10 +8,9 @@ export namespace InfraSideOutput {
   export type Collection = Option<{
     verified: boolean;
     key: PublicKey;
-  }> | undefined;
+  }>;
 
-  export type Creator = InfraSideInput.Creator;
-  
+  export type Creator = InfraSideInput.Creators;
   export type Offchain = InfraSideInput.Offchain;
 
   export type OnchainAndOffchain = {
