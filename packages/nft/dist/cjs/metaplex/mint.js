@@ -106,7 +106,7 @@ var Metaplex;
             //--- porperties, Upload content ---
             let properties;
             if (input.properties && input.storageType) {
-                properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType, payer);
+                properties = yield shared_metaplex_1.Convert.Properties.intoInfra(input.properties, storage_1.Storage.uploadContent, input.storageType, payer);
             }
             else if (input.properties && !input.storageType) {
                 throw Error('Must set storageType if will use properties');
@@ -138,11 +138,11 @@ var Metaplex;
             else {
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
-            let datav2 = shared_metaplex_1.NftMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            let datav2 = shared_metaplex_1.Convert.NftMetadata.intoInfra(input, uri, sellerFeeBasisPoints);
             //--- collection ---
             let collection;
             if (input.collection && input.collection) {
-                collection = shared_metaplex_1.Collections.toConvertInfra(input.collection);
+                collection = shared_metaplex_1.Convert.Collection.intoInfra(input.collection);
                 datav2 = Object.assign(Object.assign({}, datav2), { collection });
             }
             const isMutable = input.isMutable === undefined ? true : input.isMutable;

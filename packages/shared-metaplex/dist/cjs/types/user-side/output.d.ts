@@ -1,6 +1,7 @@
 import { Option } from '../shared';
 import { _Same } from '../_same';
 import { Pubkey } from '@solana-suite/shared';
+import { InfraSideOutput } from '../infra-side/output';
 export declare namespace UserSideOutput {
     type Collection = Option<{
         address: Pubkey;
@@ -27,6 +28,7 @@ export declare namespace UserSideOutput {
             verified: boolean;
         }>;
         uses: Option<_Same.Uses>;
+        onchain: InfraSideOutput.Offchain;
     };
     type TokenMetadata = {
         name: string;

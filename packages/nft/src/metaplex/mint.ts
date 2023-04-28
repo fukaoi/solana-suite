@@ -29,10 +29,8 @@ import {
 import { Storage } from '@solana-suite/storage';
 
 import {
-  Collections,
-  NftMetadata,
+  Convert,
   Pda,
-  Properties,
   Royalty,
   UserSideInput,
   Validator,
@@ -171,7 +169,7 @@ export namespace Metaplex {
       //--- porperties, Upload content ---
       let properties;
       if (input.properties && input.storageType) {
-        properties = await Properties.toConvertInfra(
+        properties = await Convert.Properties.intoInfra(
           input.properties,
           Storage.uploadContent,
           input.storageType,
@@ -221,12 +219,16 @@ export namespace Metaplex {
         throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
 
-      let datav2 = NftMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+      let datav2 = Convert.NftMetadata.intoInfra(
+        input,
+        uri,
+        sellerFeeBasisPoints
+      );
 
       //--- collection ---
       let collection;
       if (input.collection && input.collection) {
-        collection = Collections.toConvertInfra(input.collection);
+        collection = Convert.Collection.intoInfra(input.collection);
         datav2 = { ...datav2, collection };
       }
 
