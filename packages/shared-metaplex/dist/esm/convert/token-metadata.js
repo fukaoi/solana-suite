@@ -3,13 +3,13 @@ export var Convert;
 (function (Convert) {
     var TokenMetadata;
     (function (TokenMetadata) {
-        TokenMetadata.intoInfra = (input, uri, sellerFeeBasisPoints) => {
+        TokenMetadata.intoInfraSide = (input, uri, sellerFeeBasisPoints) => {
             return {
                 name: input.name,
                 symbol: input.symbol,
                 uri,
                 sellerFeeBasisPoints,
-                creators: C1.Creators.intoInfra(input.creators),
+                creators: C1.Creators.intoInfraSide(input.creators),
                 collection: null,
                 uses: input.uses || null,
             };

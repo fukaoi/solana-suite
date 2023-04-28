@@ -38,7 +38,7 @@ export var PhantomSplToken;
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
             const isMutable = true;
-            const datav2 = Convert.TokenMetadata.intoInfra(input, uri, sellerFeeBasisPoints);
+            const datav2 = Convert.TokenMetadata.intoInfraSide(input, uri, sellerFeeBasisPoints);
             debugLog('# datav2: ', datav2);
             debugLog('# upload content url: ', uri);
             const insturctions = yield SplToken.createMintInstructions(mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, datav2, owner.toPublicKey(), isMutable);

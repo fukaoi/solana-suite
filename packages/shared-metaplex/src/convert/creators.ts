@@ -6,7 +6,7 @@ import {
 } from '../types';
 
 export namespace Convert.Creators {
-  export const intoInfra = (
+  export const intoInfraSide = (
     input: UserSideInput.Creator[] | undefined
   ): InfraSideInput.Creator[] | null => {
     if (!input) {
@@ -22,7 +22,7 @@ export namespace Convert.Creators {
     });
   };
 
-  export const intoUser = (
+  export const intoUserSide = (
     output: InfraSideOutput.Creator[]
   ): UserSideOutput.Creator[] => {
     if (!output) {

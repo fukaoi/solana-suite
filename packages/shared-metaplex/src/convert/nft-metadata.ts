@@ -3,7 +3,7 @@ import { Convert as C2 } from './creators';
 import { InfraSideInput, UserSideInput } from '../types';
 
 export namespace Convert.NftMetadata {
-  export const intoInfra = (
+  export const intoInfraSide = (
     input: UserSideInput.NftMetadata,
     uri: string,
     sellerFeeBasisPoints: number
@@ -13,8 +13,24 @@ export namespace Convert.NftMetadata {
       symbol: input.symbol,
       uri,
       sellerFeeBasisPoints,
-      creators: C2.Creators.intoInfra(input.creators),
-      collection: C1.Collection.intoInfra(input.collection),
+      creators: C2.Creators.intoInfraSide(input.creators),
+      collection: C1.Collection.intoInfraSide(input.collection),
+      uses: input.uses || null,
+    };
+  };
+
+  export const intoUserSide = (
+    input: UserSideInput.NftMetadata,
+    uri: string,
+    sellerFeeBasisPoints: number
+  ): InfraSideInput.MetaplexDataV2 => {
+    return {
+      name: input.name,
+      symbol: input.symbol,
+      uri,
+      sellerFeeBasisPoints,
+      creators: C2.Creators.intoInfraSide(input.creators),
+      collection: C1.Collection.intoInfraSide(input.collection),
       uses: input.uses || null,
     };
   };

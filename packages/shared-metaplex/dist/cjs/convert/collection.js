@@ -5,7 +5,7 @@ var Convert;
 (function (Convert) {
     var Collection;
     (function (Collection) {
-        Collection.intoInfra = (input) => {
+        Collection.intoInfraSide = (input) => {
             if (!input) {
                 return null;
             }
@@ -14,7 +14,7 @@ var Convert;
                 verified: false,
             };
         };
-        Collection.intoUser = (output) => {
+        Collection.intoUserSide = (output) => {
             if (!output) {
                 return null;
             }

@@ -169,7 +169,7 @@ export namespace Metaplex {
       //--- porperties, Upload content ---
       let properties;
       if (input.properties && input.storageType) {
-        properties = await Convert.Properties.intoInfra(
+        properties = await Convert.Properties.intoInfraSide(
           input.properties,
           Storage.uploadContent,
           input.storageType,
@@ -219,7 +219,7 @@ export namespace Metaplex {
         throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
 
-      let datav2 = Convert.NftMetadata.intoInfra(
+      let datav2 = Convert.NftMetadata.intoInfraSide(
         input,
         uri,
         sellerFeeBasisPoints
@@ -228,7 +228,7 @@ export namespace Metaplex {
       //--- collection ---
       let collection;
       if (input.collection && input.collection) {
-        collection = Convert.Collection.intoInfra(input.collection);
+        collection = Convert.Collection.intoInfraSide(input.collection);
         datav2 = { ...datav2, collection };
       }
 

@@ -2,7 +2,7 @@ import { overwriteObject, Result, Secret } from '@solana-suite/shared';
 import { FileContent, InfraSideInput, UserSideInput } from '../types';
 
 export namespace Convert.Properties {
-  export const intoInfra = async (
+  export const intoInfraSide = async (
     input: UserSideInput.Properties | undefined,
     storageFunc: (
       data: FileContent,

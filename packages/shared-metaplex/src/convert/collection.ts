@@ -6,7 +6,7 @@ import {
 } from '../types';
 
 export namespace Convert.Collection {
-  export const intoInfra = (
+  export const intoInfraSide = (
     input: UserSideInput.Collection | undefined
   ): InfraSideInput.Collection | null => {
     if (!input) {
@@ -19,7 +19,7 @@ export namespace Convert.Collection {
     };
   };
 
-  export const intoUser = (
+  export const intoUserSide = (
     output: InfraSideOutput.Collection | undefined
   ): UserSideOutput.Collection => {
     if (!output) {

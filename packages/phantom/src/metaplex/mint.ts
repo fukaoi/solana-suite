@@ -43,7 +43,7 @@ export namespace PhantomMetaplex {
       Node.changeConnection({ cluster });
 
       //Convert porperties, Upload content
-      const properties = await Convert.Properties.intoInfra(
+      const properties = await Convert.Properties.intoInfraSide(
         input.properties,
         Storage.uploadContent,
         input.storageType
@@ -65,7 +65,7 @@ export namespace PhantomMetaplex {
       }
       const uri = uploaded.value;
 
-      const datav2 = Convert.NftMetadata.intoInfra(
+      const datav2 = Convert.NftMetadata.intoInfraSide(
         input,
         uri,
         sellerFeeBasisPoints

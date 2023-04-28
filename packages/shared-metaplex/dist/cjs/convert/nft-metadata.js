@@ -7,14 +7,25 @@ var Convert;
 (function (Convert) {
     var NftMetadata;
     (function (NftMetadata) {
-        NftMetadata.intoInfra = (input, uri, sellerFeeBasisPoints) => {
+        NftMetadata.intoInfraSide = (input, uri, sellerFeeBasisPoints) => {
             return {
                 name: input.name,
                 symbol: input.symbol,
                 uri,
                 sellerFeeBasisPoints,
-                creators: creators_1.Convert.Creators.intoInfra(input.creators),
-                collection: collection_1.Convert.Collection.intoInfra(input.collection),
+                creators: creators_1.Convert.Creators.intoInfraSide(input.creators),
+                collection: collection_1.Convert.Collection.intoInfraSide(input.collection),
+                uses: input.uses || null,
+            };
+        };
+        NftMetadata.intoUserSide = (input, uri, sellerFeeBasisPoints) => {
+            return {
+                name: input.name,
+                symbol: input.symbol,
+                uri,
+                sellerFeeBasisPoints,
+                creators: creators_1.Convert.Creators.intoInfraSide(input.creators),
+                collection: collection_1.Convert.Collection.intoInfraSide(input.collection),
                 uses: input.uses || null,
             };
         };

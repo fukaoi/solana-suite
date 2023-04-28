@@ -174,7 +174,7 @@ export namespace SplToken {
 
       const isMutable = true;
 
-      const datav2 = Convert.TokenMetadata.intoInfra(
+      const datav2 = Convert.TokenMetadata.intoInfraSide(
         input,
         uri,
         sellerFeeBasisPoints

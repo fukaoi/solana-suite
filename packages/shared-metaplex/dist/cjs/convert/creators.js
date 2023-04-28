@@ -5,7 +5,7 @@ var Convert;
 (function (Convert) {
     var Creators;
     (function (Creators) {
-        Creators.intoInfra = (input) => {
+        Creators.intoInfraSide = (input) => {
             if (!input) {
                 return null;
             }
@@ -18,7 +18,7 @@ var Convert;
                 return modify;
             });
         };
-        Creators.intoUser = (output) => {
+        Creators.intoUserSide = (output) => {
             if (!output) {
                 return [];
             }

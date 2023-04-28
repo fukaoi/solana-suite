@@ -2,7 +2,7 @@ import { Convert as C1 } from './creators';
 import { InfraSideInput, UserSideInput } from '../types';
 
 export namespace Convert.TokenMetadata {
-  export const intoInfra = (
+  export const intoInfraSide = (
     input: UserSideInput.TokenMetadata,
     uri: string,
     sellerFeeBasisPoints: number
@@ -12,7 +12,7 @@ export namespace Convert.TokenMetadata {
       symbol: input.symbol,
       uri,
       sellerFeeBasisPoints,
-      creators: C1.Creators.intoInfra(input.creators),
+      creators: C1.Creators.intoInfraSide(input.creators),
       collection: null,
       uses: input.uses || null,
     };

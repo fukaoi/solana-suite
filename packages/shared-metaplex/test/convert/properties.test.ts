@@ -22,7 +22,7 @@ describe('Convert.Properties', () => {
       ],
     };
 
-    const output = await Convert.Properties.intoInfra(
+    const output = await Convert.Properties.intoInfraSide(
       input,
       Storage.uploadContent,
       'nftStorage'

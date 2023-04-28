@@ -31,7 +31,7 @@ describe('Convert.Creators', () => {
         verified: false,
       },
     ];
-    const results = Convert.Creators.intoInfra(input);
+    const results = Convert.Creators.intoInfraSide(input);
     console.log('# converted creators', results);
     if (results) {
       results.forEach((res, i) => {
@@ -44,7 +44,7 @@ describe('Convert.Creators', () => {
   });
 
   it('To un-define convert', async () => {
-    const res = Convert.Creators.intoInfra([]);
+    const res = Convert.Creators.intoInfraSide([]);
     assert.deepEqual(res, []);
   });
 });

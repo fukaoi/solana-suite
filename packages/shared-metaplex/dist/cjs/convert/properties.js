@@ -15,7 +15,7 @@ var Convert;
 (function (Convert) {
     var Properties;
     (function (Properties) {
-        Properties.intoInfra = (input, storageFunc, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
+        Properties.intoInfraSide = (input, storageFunc, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
             if (!input || !input.files) {
                 return {};
             }
