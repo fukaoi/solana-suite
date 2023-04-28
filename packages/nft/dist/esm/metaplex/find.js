@@ -79,11 +79,13 @@ export var Metaplex;
                             if (d.account.data.parsed.info.tokenAmount.uiAmount == 1) {
                                 const mint = d.account.data.parsed.info.mint;
                                 const metadata = yield Metadata.fromAccountAddress(connection, Pda.getMetadata(mint));
+                                if (metadata.tokenStandard !== 0) {
+                                    continue;
+                                }
                                 fetch(metadata.data.uri).then((response) => {
                                     response.json().then((json) => {
-                                        // console.log('#metadata:', metadata);
-                                        // console.log('#json:', json);
                                         contentsDatas.push({ onchain: metadata, offchain: json });
+                                        console.log('------------------------------');
                                         console.log(contentsDatas);
                                     });
                                 });
@@ -103,7 +105,7 @@ export var Metaplex;
                 }
             }
             catch (e) {
-                console.error('# EEEEE: ', e);
+                console.error('# retry: ', e);
             }
         }));
     });

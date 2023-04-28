@@ -9,8 +9,7 @@ import {
   Try,
 } from '@solana-suite/shared';
 import {
-  NftMetadata,
-  Properties,
+  Convert,
   Royalty,
   UserSideInput,
   Validator,
@@ -44,7 +43,7 @@ export namespace PhantomMetaplex {
       Node.changeConnection({ cluster });
 
       //Convert porperties, Upload content
-      const properties = await Properties.toConvertInfra(
+      const properties = await Convert.Properties.intoInfra(
         input.properties,
         Storage.uploadContent,
         input.storageType
@@ -66,7 +65,7 @@ export namespace PhantomMetaplex {
       }
       const uri = uploaded.value;
 
-      const datav2 = NftMetadata.toConvertInfra(
+      const datav2 = Convert.NftMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints

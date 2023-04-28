@@ -1,5 +1,5 @@
 import { Result } from '@solana-suite/shared';
-import { NftMetadata, UserSideInput, ValidatorError } from '@solana-suite/shared-metaplex';
+import { UserSideInput, ValidatorError } from '@solana-suite/shared-metaplex';
 import { Phantom } from '../types';
 export declare namespace PhantomMetaplex {
     /**

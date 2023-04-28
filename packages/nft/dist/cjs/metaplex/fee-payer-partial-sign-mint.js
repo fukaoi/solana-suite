@@ -53,7 +53,7 @@ var Metaplex;
             //--- porperties, Upload content ---
             let uri = '';
             if (input.filePath && input.storageType === 'nftStorage') {
-                const properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType);
+                const properties = yield shared_metaplex_1.Convert.Properties.intoInfra(input.properties, storage_1.Storage.uploadContent, input.storageType);
                 const nftStorageMetadata = storage_1.Storage.toConvertOffchaindata(Object.assign(Object.assign({}, input), { properties }), sellerFeeBasisPoints);
                 const uploaded = yield storage_1.Storage.uploadMetaAndContent(nftStorageMetadata, input.filePath, input.storageType);
                 if (uploaded.isErr) {
@@ -69,11 +69,11 @@ var Metaplex;
                 throw Error(`Must set 'storageType=nftStorage + filePath' or 'uri'`);
             }
             //--- porperties, Upload content ---
-            let datav2 = shared_metaplex_1.NftMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            let datav2 = shared_metaplex_1.Convert.NftMetadata.intoInfra(input, uri, sellerFeeBasisPoints);
             //--- collection ---
             let collection;
             if (input.collection && input.collection) {
-                collection = shared_metaplex_1.Collections.toConvertInfra(input.collection);
+                collection = shared_metaplex_1.Convert.Collection.intoInfra(input.collection);
                 datav2 = Object.assign(Object.assign({}, datav2), { collection });
             }
             //--- collection ---

@@ -14,9 +14,7 @@ import { Transaction } from '@solana/web3.js';
 import { Storage } from '@solana-suite/storage';
 
 import {
-  Collections,
-  NftMetadata,
-  Properties,
+  Convert,
   Royalty,
   UserSideInput,
   Validator,
@@ -69,7 +67,7 @@ export namespace Metaplex {
       //--- porperties, Upload content ---
       let uri = '';
       if (input.filePath && input.storageType === 'nftStorage') {
-        const properties = await Properties.toConvertInfra(
+        const properties = await Convert.Properties.intoInfra(
           input.properties,
           Storage.uploadContent,
           input.storageType
@@ -97,7 +95,7 @@ export namespace Metaplex {
       }
       //--- porperties, Upload content ---
 
-      let datav2 = NftMetadata.toConvertInfra(
+      let datav2 = Convert.NftMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints
@@ -106,7 +104,7 @@ export namespace Metaplex {
       //--- collection ---
       let collection;
       if (input.collection && input.collection) {
-        collection = Collections.toConvertInfra(input.collection);
+        collection = Convert.Collection.intoInfra(input.collection);
         datav2 = { ...datav2, collection };
       }
       //--- collection ---

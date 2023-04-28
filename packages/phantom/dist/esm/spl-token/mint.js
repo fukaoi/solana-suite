@@ -11,7 +11,7 @@ import { Keypair, Transaction } from '@solana/web3.js';
 import { debugLog, Node, Try } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { SplToken } from '@solana-suite/core';
-import { TokenMetadata } from '@solana-suite/shared-metaplex';
+import { Convert } from '@solana-suite/shared-metaplex';
 export var PhantomSplToken;
 (function (PhantomSplToken) {
     PhantomSplToken.mint = (input, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
@@ -38,7 +38,7 @@ export var PhantomSplToken;
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
             const isMutable = true;
-            const datav2 = TokenMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const datav2 = Convert.TokenMetadata.intoInfra(input, uri, sellerFeeBasisPoints);
             debugLog('# datav2: ', datav2);
             debugLog('# upload content url: ', uri);
             const insturctions = yield SplToken.createMintInstructions(mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, datav2, owner.toPublicKey(), isMutable);

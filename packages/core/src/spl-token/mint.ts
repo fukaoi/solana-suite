@@ -32,8 +32,8 @@ import {
 } from '@solana-suite/shared';
 
 import {
+  Convert,
   Pda,
-  TokenMetadata,
   UserSideInput,
   Validator,
 } from '@solana-suite/shared-metaplex';
@@ -174,7 +174,7 @@ export namespace SplToken {
 
       const isMutable = true;
 
-      const datav2 = TokenMetadata.toConvertInfra(
+      const datav2 = Convert.TokenMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints

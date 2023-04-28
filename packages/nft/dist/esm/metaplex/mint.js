@@ -12,7 +12,7 @@ import BN from 'bn.js';
 import { createApproveInstruction, createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, getAssociatedTokenAddressSync, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
 import { debugLog, KeypairAccount, MintInstruction, Try, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
-import { Collections, NftMetadata, Pda, Properties, Royalty, Validator, } from '@solana-suite/shared-metaplex';
+import { Convert, Pda, Royalty, Validator, } from '@solana-suite/shared-metaplex';
 import { createCreateMasterEditionV3Instruction, createCreateMetadataAccountV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
 const NFT_AMOUNT = 1;
@@ -100,7 +100,7 @@ export var Metaplex;
             //--- porperties, Upload content ---
             let properties;
             if (input.properties && input.storageType) {
-                properties = yield Properties.toConvertInfra(input.properties, Storage.uploadContent, input.storageType, payer);
+                properties = yield Convert.Properties.intoInfra(input.properties, Storage.uploadContent, input.storageType, payer);
             }
             else if (input.properties && !input.storageType) {
                 throw Error('Must set storageType if will use properties');
@@ -132,11 +132,11 @@ export var Metaplex;
             else {
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
-            let datav2 = NftMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            let datav2 = Convert.NftMetadata.intoInfra(input, uri, sellerFeeBasisPoints);
             //--- collection ---
             let collection;
             if (input.collection && input.collection) {
-                collection = Collections.toConvertInfra(input.collection);
+                collection = Convert.Collection.intoInfra(input.collection);
                 datav2 = Object.assign(Object.assign({}, datav2), { collection });
             }
             const isMutable = input.isMutable === undefined ? true : input.isMutable;

@@ -11,7 +11,7 @@ import { SystemProgram, } from '@solana/web3.js';
 import { AuthorityType, createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, createSetAuthorityInstruction, getAssociatedTokenAddressSync, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
 import { createCreateMetadataAccountV2Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 import { debugLog, KeypairAccount, MintInstruction, Node, Try, } from '@solana-suite/shared';
-import { Pda, TokenMetadata, Validator, } from '@solana-suite/shared-metaplex';
+import { Convert, Pda, Validator, } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
 import { Storage } from '@solana-suite/storage';
 export var SplToken;
@@ -85,7 +85,7 @@ export var SplToken;
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
             const isMutable = true;
-            const datav2 = TokenMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const datav2 = Convert.TokenMetadata.intoInfra(input, uri, sellerFeeBasisPoints);
             debugLog('# datav2: ', datav2);
             debugLog('# upload content url: ', uri);
             const mint = KeypairAccount.create();

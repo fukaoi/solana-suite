@@ -1,6 +1,6 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js';
 import { MintInstruction, Pubkey, Result, Secret } from '@solana-suite/shared';
-import { NftMetadata, UserSideInput } from '@solana-suite/shared-metaplex';
+import { UserSideInput } from '@solana-suite/shared-metaplex';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 export declare namespace Metaplex {
     const createDeleagateInstruction: (mint: PublicKey, owner: PublicKey, delegateAuthority: PublicKey) => TransactionInstruction;

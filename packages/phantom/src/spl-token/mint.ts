@@ -4,7 +4,7 @@ import { debugLog, Node, Pubkey, Result, Try } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { SplToken } from '@solana-suite/core';
 import { Phantom } from '../types';
-import { TokenMetadata, UserSideInput } from '@solana-suite/shared-metaplex';
+import { Convert, UserSideInput } from '@solana-suite/shared-metaplex';
 
 export namespace PhantomSplToken {
   export const mint = async (
@@ -48,7 +48,7 @@ export namespace PhantomSplToken {
 
       const isMutable = true;
 
-      const datav2 = TokenMetadata.toConvertInfra(
+      const datav2 = Convert.TokenMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints
