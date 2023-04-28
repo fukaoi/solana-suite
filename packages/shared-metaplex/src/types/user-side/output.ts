@@ -2,14 +2,11 @@ import { Option } from '../shared';
 import { _Same } from '../_same';
 import { Pubkey } from '@solana-suite/shared';
 import { InfraSideOutput } from '../infra-side/output';
+import { UserSideInput } from '../user-side/input';
 
 export namespace UserSideOutput {
-  export type Collection = Option<{ address: Pubkey; verified: boolean }>;
-  export type Creator = {
-    readonly address: Pubkey;
-    readonly share: number;
-    readonly verified: boolean;
-  };
+  export type Creators = UserSideInput.Creators;
+  export type Collection = Option<{ address: Pubkey; verified: boolean }> | undefined;
 
   /////////// NFT //////////////
   export type NftMetadata = {
@@ -21,9 +18,9 @@ export namespace UserSideOutput {
     uri: string;
     isMutable: boolean;
     primarySaleHappened: boolean;
-    creators: Creator[];
+    creators: Creators[];
     editionNonce: Option<number>;
-    collection: Option<{ address: Pubkey; verified: boolean }>;
+    collection: Collection;
     uses: Option<_Same.Uses>;
     onchain: InfraSideOutput.Offchain;
   };
@@ -35,7 +32,7 @@ export namespace UserSideOutput {
     uri: string;
     sellerFeeBasisPoints: number;
     attributes?: _Same.Attribute;
-    creators?: Creator[];
+    creators?: Creators[];
     uses?: Option<_Same.Uses>;
   };
 }

@@ -19,7 +19,7 @@ var Convert;
                 return null;
             }
             return {
-                address: output.address.toString(),
+                address: output.key.toString(),
                 verified: output.verified,
             };
         };

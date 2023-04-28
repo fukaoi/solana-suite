@@ -7,8 +7,8 @@ import {
 
 export namespace Convert.Collection {
   export const intoInfraSide = (
-    input: UserSideInput.Collection | undefined
-  ): InfraSideInput.Collection | null => {
+    input: UserSideInput.Collection
+  ): InfraSideInput.Collection => {
     if (!input) {
       return null;
     }
@@ -20,14 +20,14 @@ export namespace Convert.Collection {
   };
 
   export const intoUserSide = (
-    output: InfraSideOutput.Collection | undefined
+    output: InfraSideOutput.Collection
   ): UserSideOutput.Collection => {
     if (!output) {
       return null;
     }
 
     return {
-      address: output.address.toString(),
+      address: output.key.toString(),
       verified: output.verified,
     };
   };

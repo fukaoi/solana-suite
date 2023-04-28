@@ -1,6 +1,11 @@
-import { Convert as C1 } from './collection';
-import { Convert as C2 } from './creators';
-import { InfraSideInput, UserSideInput } from '../types';
+import { Convert as CO } from './collection';
+import { Convert as CR } from './creators';
+import {
+  InfraSideInput,
+  InfraSideOutput,
+  UserSideInput,
+  UserSideOutput,
+} from '../types';
 
 export namespace Convert.NftMetadata {
   export const intoInfraSide = (
@@ -13,25 +18,29 @@ export namespace Convert.NftMetadata {
       symbol: input.symbol,
       uri,
       sellerFeeBasisPoints,
-      creators: C2.Creators.intoInfraSide(input.creators),
-      collection: C1.Collection.intoInfraSide(input.collection),
+      creators: CR.Creators.intoInfraSide(input.creators),
+      collection: CO.Collection.intoInfraSide(input.collection),
       uses: input.uses || null,
     };
   };
 
   export const intoUserSide = (
-    input: UserSideInput.NftMetadata,
-    uri: string,
-    sellerFeeBasisPoints: number
-  ): InfraSideInput.MetaplexDataV2 => {
+    input: InfraSideOutput.OnchainAndOffchain
+  ): UserSideOutput.NftMetadata => {
     return {
-      name: input.name,
-      symbol: input.symbol,
-      uri,
-      sellerFeeBasisPoints,
-      creators: C2.Creators.intoInfraSide(input.creators),
-      collection: C1.Collection.intoInfraSide(input.collection),
-      uses: input.uses || null,
+      mint: input.onchain.mint.toString(),
+      updateAuthority: input.onchain.updateAuthority.toString(),
+      royalty: input.onchain.data.sellerFeeBasisPoints,
+      name: input.onchain.data.name,
+      symbol: input.onchain.data.symbol,
+      uri: input.onchain.data.uri,
+      isMutable: input.onchain.isMutable,
+      primarySaleHappened: input.onchain.primarySaleHappened,
+      creators: CR.Creators.intoUserSide(input.onchain.data.creators),
+      editionNonce: input.onchain.editionNonce,
+      collection: CO.Collection.intoUserSide(input.onchain.collection),
+      uses: input.onchain.uses,
+      onchain: input.offchain,
     };
   };
 }

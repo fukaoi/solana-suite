@@ -7,12 +7,15 @@ import {
 
 export namespace Convert.Creators {
   export const intoInfraSide = (
-    input: UserSideInput.Creator[] | undefined
-  ): InfraSideInput.Creator[] | null => {
+    input: UserSideInput.Creators[]
+  ): InfraSideInput.Creators[] => {
     if (!input) {
       return null;
     }
     return input.map((data) => {
+      if (!data) {
+        return null;
+      }
       const modify = {
         address: data.address.toPublicKey(),
         share: data.share,
@@ -24,12 +27,16 @@ export namespace Convert.Creators {
 
   export const intoUserSide = (
     output: InfraSideOutput.Creator[]
-  ): UserSideOutput.Creator[] => {
+  ): UserSideOutput.Creators[] => {
     if (!output) {
       return [];
     }
+
     return output.map((data) => {
-      const modify: UserSideOutput.Creator = {
+      if (!data) {
+        return null;
+      }
+      const modify = {
         address: data.address.toString(),
         share: data.share,
         verified: data.verified,

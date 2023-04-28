@@ -21,13 +21,13 @@ export namespace InfraSideInput {
   export type Collection = Option<{
     key: PublicKey;
     verified: boolean;
-  }>;
+  }> | undefined;
 
-  export type Creator = {
-    readonly address: PublicKey;
-    readonly share: number;
-    readonly verified: boolean;
-  };
+  export type Creators = Option<{
+    address: PublicKey;
+    verified: boolean;
+    share: number;
+  }> | undefined;
 
   export type Properties = _Same.Properties;
 
@@ -52,7 +52,7 @@ export namespace InfraSideInput {
     symbol: string;
     uri: string;
     sellerFeeBasisPoints: number;
-    creators: Option<Creator[]>;
+    creators: Creators[];
     collection: Option<{
       verified: boolean;
       key: PublicKey;

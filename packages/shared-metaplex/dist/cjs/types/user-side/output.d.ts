@@ -7,11 +7,11 @@ export declare namespace UserSideOutput {
         address: Pubkey;
         verified: boolean;
     }>;
-    type Creator = {
+    type Creator = Option<{
         readonly address: Pubkey;
         readonly share: number;
         readonly verified: boolean;
-    };
+    }>;
     type NftMetadata = {
         mint: string;
         updateAuthority: string;

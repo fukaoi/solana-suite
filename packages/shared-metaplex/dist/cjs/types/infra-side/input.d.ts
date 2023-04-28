@@ -17,11 +17,11 @@ export declare namespace InfraSideInput {
         key: PublicKey;
         verified: boolean;
     }>;
-    type Creator = {
+    type Creator = Option<{
         readonly address: PublicKey;
         readonly share: number;
         readonly verified: boolean;
-    };
+    }>;
     type Properties = _Same.Properties;
     type Offchain = {
         name?: string;

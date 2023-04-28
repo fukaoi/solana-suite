@@ -23,6 +23,9 @@ var Convert;
                 return [];
             }
             return output.map((data) => {
+                if (!data) {
+                    return null;
+                }
                 const modify = {
                     address: data.address.toString(),
                     share: data.share,

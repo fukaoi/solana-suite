@@ -7,8 +7,8 @@ import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 export namespace InfraSideOutput {
   export type Collection = Option<{
     verified: boolean;
-    address: PublicKey;
-  }>;
+    key: PublicKey;
+  }> | undefined;
 
   export type Creator = InfraSideInput.Creator;
   
