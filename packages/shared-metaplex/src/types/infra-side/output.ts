@@ -9,11 +9,12 @@ export namespace InfraSideOutput {
     key: PublicKey;
   };
 
-  export type Creator = InfraSideInput.Creators;
-  export type Offchain = InfraSideInput.Offchain;
-
   export type OnchainAndOffchain = {
     onchain: Metadata;
     offchain: InfraSideOutput.Offchain;
   };
+
+  export type Creator = InfraSideInput.Creators;
+  export type Offchain = InfraSideInput.Offchain;
+  export type Uses = _Same.Uses;
 }

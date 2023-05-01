@@ -22,9 +22,9 @@ export namespace Convert.Collection {
 
   export const intoUserSide = (
     output: Option<InfraSideOutput.Collection>
-  ): Option<UserSideOutput.Collection> => {
+  ): UserSideOutput.Collection | undefined => {
     if (!output) {
-      return null;
+      return undefined;
     }
 
     return {

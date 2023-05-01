@@ -27,9 +27,9 @@ export namespace Convert.Creators {
 
   export const intoUserSide = (
     output: Option<InfraSideOutput.Creator[]>
-  ): Option<UserSideOutput.Creators[]> => {
+  ): UserSideOutput.Creators[] | undefined => {
     if (!output) {
-      return [];
+      return undefined;
     }
 
     return output.map((data) => {

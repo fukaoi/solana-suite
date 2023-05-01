@@ -1,5 +1,6 @@
 import { Convert as CO } from './collection';
 import { Convert as CR } from './creators';
+import { Convert as CU } from './uses';
 import {
   InfraSideInput,
   InfraSideOutput,
@@ -31,16 +32,21 @@ export namespace Convert.NftMetadata {
       mint: input.onchain.mint.toString(),
       updateAuthority: input.onchain.updateAuthority.toString(),
       royalty: input.onchain.data.sellerFeeBasisPoints,
-      name: input.onchain.data.name,
-      symbol: input.onchain.data.symbol,
-      uri: input.onchain.data.uri,
+      name: deleteNullStrings(input.onchain.data.name),
+      symbol: deleteNullStrings(input.onchain.data.symbol),
+      uri: deleteNullStrings(input.onchain.data.uri),
       isMutable: input.onchain.isMutable,
       primarySaleHappened: input.onchain.primarySaleHappened,
       creators: CR.Creators.intoUserSide(input.onchain.data.creators),
       editionNonce: input.onchain.editionNonce,
       collection: CO.Collection.intoUserSide(input.onchain.collection),
-      uses: input.onchain.uses,
+      uses: CU.Uses.intoUserSide(input.onchain.uses),
       offchain: input.offchain,
     };
+  };
+
+  // delete NULL(0x00) strings function
+  export const deleteNullStrings = (str: string): string => {
+    return str.replace(/\0/g, '');
   };
 }

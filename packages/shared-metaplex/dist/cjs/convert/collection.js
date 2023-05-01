@@ -16,7 +16,7 @@ var Convert;
         };
         Collection.intoUserSide = (output) => {
             if (!output) {
-                return null;
+                return undefined;
             }
             return {
                 address: output.key.toString(),

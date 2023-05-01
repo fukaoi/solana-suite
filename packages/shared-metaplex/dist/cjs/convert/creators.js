@@ -21,7 +21,7 @@ var Convert;
         };
         Creators.intoUserSide = (output) => {
             if (!output) {
-                return [];
+                return undefined;
             }
             return output.map((data) => {
                 const modify = {

@@ -9,6 +9,7 @@ export declare namespace UserSideOutput {
         address: Pubkey;
         verified: boolean;
     };
+    type Uses = _Same.Uses;
     type NftMetadata = {
         mint: string;
         updateAuthority: string;
@@ -19,9 +20,9 @@ export declare namespace UserSideOutput {
         isMutable: boolean;
         primarySaleHappened: boolean;
         editionNonce: Option<number>;
-        collection?: Option<Collection>;
-        creators?: Option<Creators[]>;
-        uses?: Option<_Same.Uses>;
+        collection?: Collection | undefined;
+        creators?: Creators[] | undefined;
+        uses?: _Same.Uses | undefined;
         offchain: InfraSideOutput.Offchain;
     };
     type TokenMetadata = {
@@ -29,9 +30,9 @@ export declare namespace UserSideOutput {
         symbol: string;
         uri: string;
         sellerFeeBasisPoints: number;
-        attributes?: Option<_Same.Attribute>;
-        creators?: Option<Creators[]>;
-        uses?: Option<_Same.Uses>;
+        attributes?: _Same.Attribute | undefined;
+        creators?: Creators[] | undefined;
+        uses?: _Same.Uses | undefined;
         offchain: InfraSideOutput.Offchain;
     };
 }

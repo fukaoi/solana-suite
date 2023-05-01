@@ -1,5 +1,7 @@
 import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
 import {
+  // UserSideOutput,
+  Convert,
   InfraSideOutput,
   Pda,
   UserSideOutput,
@@ -52,7 +54,7 @@ export namespace Metaplex {
    */
   export const findByOwner2 = async (owner: Pubkey) => {
     return Try(async () => {
-      const contentsDatas: InfraSideOutput.OnchainAndOffchain[] = [];
+      const contentsDatas: UserSideOutput.NftMetadata[] = [];
       try {
         const connection = Node.getConnection();
         const info = await connection.getParsedTokenAccountsByOwner(
@@ -63,7 +65,6 @@ export namespace Metaplex {
         );
 
         // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
-
         for await (const d of info.value) {
           if (d.account.data.parsed.info.tokenAmount.uiAmount == 1) {
             const mint = d.account.data.parsed.info.mint;
@@ -76,7 +77,11 @@ export namespace Metaplex {
             }
             fetch(metadata.data.uri).then((response) => {
               response.json().then((json) => {
-                contentsDatas.push({ onchain: metadata, offchain: json });
+                const modified = Convert.NftMetadata.intoUserSide({
+                  onchain: metadata,
+                  offchain: json,
+                });
+                contentsDatas.push(modified);
                 console.log('------------------------------');
                 console.log(contentsDatas);
               });
