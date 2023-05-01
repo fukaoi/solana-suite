@@ -1,14 +1,13 @@
 import { PublicKey } from '@solana/web3.js';
 import { InfraSideInput } from './input';
-import { Option } from '../shared';
 import { _Same } from '../_same';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 export namespace InfraSideOutput {
-  export type Collection = Option<{
+  export type Collection = {
     verified: boolean;
     key: PublicKey;
-  }>;
+  };
 
   export type Creator = InfraSideInput.Creators;
   export type Offchain = InfraSideInput.Offchain;

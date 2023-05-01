@@ -1,16 +1,17 @@
 import { InfraSideInput } from '../infra-side/input';
-import { bignum, FileContent, Option } from '../shared';
+import { bignum, FileContent } from '../shared';
 import { _Same } from '../_same';
 import { Pubkey } from '@solana-suite/shared';
 
 export namespace UserSideInput {
-  export type Collection = Option<Pubkey>;
+  export type Collection = Pubkey;
 
-  export type Creators = Option<{
+  export type Creators = {
     address: Pubkey;
     share: number;
     verified: boolean;
-  }>;
+  };
+
   export type Properties = _Same.Properties;
 
   export type NftMetadata = {

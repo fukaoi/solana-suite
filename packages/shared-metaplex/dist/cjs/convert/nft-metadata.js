@@ -32,7 +32,7 @@ var Convert;
                 editionNonce: input.onchain.editionNonce,
                 collection: collection_1.Convert.Collection.intoUserSide(input.onchain.collection),
                 uses: input.onchain.uses,
-                onchain: input.offchain,
+                offchain: input.offchain,
             };
         };
     })(NftMetadata = Convert.NftMetadata || (Convert.NftMetadata = {}));

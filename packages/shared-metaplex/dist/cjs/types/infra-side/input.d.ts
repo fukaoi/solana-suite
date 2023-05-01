@@ -13,15 +13,15 @@ export declare namespace InfraSideInput {
     type StorageArweaveMetadata = {
         storageType?: 'arweave';
     };
-    type Collection = Option<{
+    type Collection = {
         key: PublicKey;
         verified: boolean;
-    }>;
-    type Creator = Option<{
-        readonly address: PublicKey;
-        readonly share: number;
-        readonly verified: boolean;
-    }>;
+    };
+    type Creators = {
+        address: PublicKey;
+        verified: boolean;
+        share: number;
+    };
     type Properties = _Same.Properties;
     type Offchain = {
         name?: string;
@@ -43,11 +43,8 @@ export declare namespace InfraSideInput {
         symbol: string;
         uri: string;
         sellerFeeBasisPoints: number;
-        creators: Option<Creator[]>;
-        collection: Option<{
-            verified: boolean;
-            key: PublicKey;
-        }>;
+        creators: Option<Creators[]>;
+        collection: Option<Collection>;
         uses: Option<_Same.Uses>;
     };
 }

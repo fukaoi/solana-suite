@@ -1,14 +1,15 @@
 import {
   InfraSideInput,
   InfraSideOutput,
+  Option,
   UserSideInput,
   UserSideOutput,
 } from '../types';
 
 export namespace Convert.Collection {
   export const intoInfraSide = (
-    input: UserSideInput.Collection
-  ): InfraSideInput.Collection => {
+    input: Option<UserSideInput.Collection> | undefined
+  ): Option<InfraSideInput.Collection> => {
     if (!input) {
       return null;
     }
@@ -20,8 +21,8 @@ export namespace Convert.Collection {
   };
 
   export const intoUserSide = (
-    output: InfraSideOutput.Collection
-  ): UserSideOutput.Collection => {
+    output: Option<InfraSideOutput.Collection>
+  ): Option<UserSideOutput.Collection> => {
     if (!output) {
       return null;
     }

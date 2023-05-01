@@ -1,5 +1,5 @@
-import { InfraSideInput, InfraSideOutput, UserSideInput, UserSideOutput } from '../types';
+import { InfraSideInput, InfraSideOutput, Option, UserSideInput, UserSideOutput } from '../types';
 export declare namespace Convert.Creators {
-    const intoInfraSide: (input: UserSideInput.Creator[] | undefined) => InfraSideInput.Creator[] | null;
-    const intoUserSide: (output: InfraSideOutput.Creator[]) => UserSideOutput.Creator[];
+    const intoInfraSide: (input: Option<UserSideInput.Creators[]> | undefined) => Option<InfraSideInput.Creators[]>;
+    const intoUserSide: (output: Option<InfraSideOutput.Creator[]>) => Option<UserSideOutput.Creators[]>;
 }

@@ -6,7 +6,7 @@ import { UserSideInput } from '../user-side/input';
 
 export namespace UserSideOutput {
   export type Creators = UserSideInput.Creators;
-  export type Collection = Option<{ address: Pubkey; verified: boolean }>;
+  export type Collection = { address: Pubkey; verified: boolean };
 
   /////////// NFT //////////////
   export type NftMetadata = {
@@ -18,11 +18,11 @@ export namespace UserSideOutput {
     uri: string;
     isMutable: boolean;
     primarySaleHappened: boolean;
-    creators: Creators[];
     editionNonce: Option<number>;
-    collection: Collection;
-    uses: _Same.Uses;
-    onchain: InfraSideOutput.Offchain;
+    collection?: Option<Collection>;
+    creators?: Option<Creators[]>;
+    uses?: Option<_Same.Uses>;
+    offchain: InfraSideOutput.Offchain;
   };
 
   /////////// TOKEN //////////////
@@ -31,8 +31,9 @@ export namespace UserSideOutput {
     symbol: string;
     uri: string;
     sellerFeeBasisPoints: number;
-    attributes?: _Same.Attribute;
-    creators?: Creators[];
-    uses?: _Same.Uses;
+    attributes?: Option<_Same.Attribute>;
+    creators?: Option<Creators[]>;
+    uses?: Option<_Same.Uses>;
+    offchain: InfraSideOutput.Offchain;
   };
 }

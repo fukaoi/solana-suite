@@ -1,41 +1,38 @@
 import {
   InfraSideInput,
   InfraSideOutput,
+  Option,
   UserSideInput,
   UserSideOutput,
 } from '../types';
 
 export namespace Convert.Creators {
   export const intoInfraSide = (
-    input: UserSideInput.Creators[]
-  ): InfraSideInput.Creators[] => {
+    input: Option<UserSideInput.Creators[]> | undefined
+  ): Option<InfraSideInput.Creators[]> => {
     if (!input) {
-      return null;
+      return [];
     }
     return input.map((data) => {
-      if (!data) {
-        return null;
-      }
-      const modify = {
+      let modify: Option<InfraSideInput.Creators> = null;
+      modify = {
         address: data.address.toPublicKey(),
         share: data.share,
         verified: data.verified,
       };
+
       return modify;
     });
   };
 
   export const intoUserSide = (
-    output: InfraSideOutput.Creator[]
-  ): UserSideOutput.Creators[] => {
+    output: Option<InfraSideOutput.Creator[]>
+  ): Option<UserSideOutput.Creators[]> => {
     if (!output) {
       return [];
     }
 
     return output.map((data) => {
-      if (!data) {
-        return null;
-      }
       const modify = {
         address: data.address.toString(),
         share: data.share,

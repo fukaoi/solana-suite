@@ -7,10 +7,11 @@ var Convert;
     (function (Creators) {
         Creators.intoInfraSide = (input) => {
             if (!input) {
-                return null;
+                return [];
             }
             return input.map((data) => {
-                const modify = {
+                let modify = null;
+                modify = {
                     address: data.address.toPublicKey(),
                     share: data.share,
                     verified: data.verified,
@@ -23,9 +24,6 @@ var Convert;
                 return [];
             }
             return output.map((data) => {
-                if (!data) {
-                    return null;
-                }
                 const modify = {
                     address: data.address.toString(),
                     share: data.share,

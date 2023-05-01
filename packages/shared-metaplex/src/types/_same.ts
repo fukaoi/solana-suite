@@ -1,4 +1,4 @@
-import { bignum, FileContent, Option } from './shared';
+import { bignum, FileContent } from './shared';
 
 export namespace _Same {
   export type Properties = {
@@ -20,7 +20,7 @@ export namespace _Same {
     value?: string;
     [key: string]: unknown;
   };
-  
+
   export enum UseMethod {
     Burn = 0,
     Multiple = 1,
@@ -35,11 +35,11 @@ export namespace _Same {
     ProgrammableNonFungible = 4,
   }
 
-  export type Uses = Option<{
+  export type Uses = {
     useMethod: UseMethod;
     remaining: bignum;
     total: bignum;
-  }>;
-  
+  };
+
   export type Options = { [key: string]: unknown };
 }

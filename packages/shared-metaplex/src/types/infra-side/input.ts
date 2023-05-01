@@ -18,19 +18,20 @@ export namespace InfraSideInput {
     storageType?: 'arweave';
   };
 
-  export type Collection = Option<{
+  export type Collection = {
     key: PublicKey;
     verified: boolean;
-  }>;
+  };
 
-  export type Creators = Option<{
+  export type Creators = {
     address: PublicKey;
     verified: boolean;
     share: number;
-  }>;
+  };
 
   export type Properties = _Same.Properties;
 
+  // Not need use Option type. bucasue Metaplex.JsonMetadata is same
   export type Offchain = {
     name?: string;
     symbol?: string;
@@ -52,8 +53,8 @@ export namespace InfraSideInput {
     symbol: string;
     uri: string;
     sellerFeeBasisPoints: number;
-    creators: Creators[];
-    collection: Collection;
-    uses: _Same.Uses;
+    creators: Option<Creators[]>;
+    collection: Option<Collection>;
+    uses: Option<_Same.Uses>;
   };
 }

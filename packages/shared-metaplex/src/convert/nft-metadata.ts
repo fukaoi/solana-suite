@@ -40,7 +40,7 @@ export namespace Convert.NftMetadata {
       editionNonce: input.onchain.editionNonce,
       collection: CO.Collection.intoUserSide(input.onchain.collection),
       uses: input.onchain.uses,
-      onchain: input.offchain,
+      offchain: input.offchain,
     };
   };
 }
