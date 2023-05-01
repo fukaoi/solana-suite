@@ -37,6 +37,7 @@ export declare namespace InfraSideInput {
             family?: string;
             [key: string]: unknown;
         };
+        created_at?: number;
     };
     type MetaplexDataV2 = {
         name: string;

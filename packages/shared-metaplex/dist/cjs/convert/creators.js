@@ -7,7 +7,7 @@ var Convert;
     (function (Creators) {
         Creators.intoInfraSide = (input) => {
             if (!input) {
-                return [];
+                return null;
             }
             return input.map((data) => {
                 let modify = null;

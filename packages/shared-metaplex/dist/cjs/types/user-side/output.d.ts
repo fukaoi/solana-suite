@@ -23,6 +23,7 @@ export declare namespace UserSideOutput {
         collection?: Collection | undefined;
         creators?: Creators[] | undefined;
         uses?: _Same.Uses | undefined;
+        created_at?: number | undefined;
         offchain: InfraSideOutput.Offchain;
     };
     type TokenMetadata = {

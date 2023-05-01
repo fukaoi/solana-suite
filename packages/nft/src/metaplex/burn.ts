@@ -8,13 +8,13 @@ export namespace Metaplex {
   export const burn = (
     mint: Pubkey,
     owner: Pubkey,
-    signers: Secret[],
+    signer: Secret,
     feePayer?: Secret
   ): Result<Instruction, Error> => {
     return SplToken.burn(
       mint,
       owner,
-      signers,
+      [signer],
       NFT_AMOUNT,
       NFT_DECIMALS,
       feePayer

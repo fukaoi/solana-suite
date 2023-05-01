@@ -179,15 +179,6 @@ export namespace Metaplex {
         throw Error('Must set storageType if will use properties');
       }
 
-      // created at by unix timestamp
-      // const createdAt = Math.floor(new Date().getTime() / 1000);
-      // if (input.options) {
-      //   input.options = { created_at: createdAt };
-      // } else {
-      //   const options = { created_at: createdAt };
-      //   input = { ...input, options };
-      // }
-
       input = {
         ...input,
         properties,
@@ -199,6 +190,10 @@ export namespace Metaplex {
         input,
         sellerFeeBasisPoints
       );
+
+      // created at by unix timestamp
+      const createdAt = Math.floor(new Date().getTime() / 1000);
+      nftStorageMetadata.created_at = createdAt;
 
       let uri!: string;
       if (input.filePath && input.storageType) {

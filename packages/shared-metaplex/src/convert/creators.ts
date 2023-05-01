@@ -11,7 +11,7 @@ export namespace Convert.Creators {
     input: Option<UserSideInput.Creators[]> | undefined
   ): Option<InfraSideInput.Creators[]> => {
     if (!input) {
-      return [];
+      return null;
     }
     return input.map((data) => {
       let modify: Option<InfraSideInput.Creators> = null;
