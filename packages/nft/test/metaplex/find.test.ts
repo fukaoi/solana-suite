@@ -9,13 +9,14 @@ describe('Metaplex.find', () => {
   it('Find owner info', async () => {
     console.log('#Normal: ');
     const owner = 'CGDRajhcFo9ysuUjBsbwCQHKJuCHiXeEUrMKSot1eyay';
-    await Metaplex.findByOwner(
-      owner,
-      (data: UserSideOutput.NftMetadata[], err?: Error) => {
-        console.log(data);
-        console.error(err);
-      }
-    );
+    await Metaplex.findByOwner(owner, (result) => {
+      result.match(
+        (ok) => {
+          console.log(ok);
+        },
+        (err) => assert.fail(err.message)
+      );
+    });
   });
 
   // it('Find owner info with Desc', async () => {

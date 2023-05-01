@@ -1,4 +1,4 @@
-import { debugLog, Node, Pubkey, Result, Try } from '@solana-suite/shared';
+import { debugLog, Node, Pubkey, Result } from '@solana-suite/shared';
 import { Convert, Pda, UserSideOutput } from '@solana-suite/shared-metaplex';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
@@ -37,6 +37,10 @@ export enum Sortable {
   Desc = 'desc',
 }
 
+export type FindByOwnerCallback = (
+  result: Result<UserSideOutput.NftMetadata[], Error>
+) => void;
+
 export namespace Metaplex {
   /**
    * Fetch minted metadata by owner Pubkey
@@ -48,7 +52,7 @@ export namespace Metaplex {
    */
   export const findByOwner = async (
     owner: Pubkey,
-    callback: (nftDatas: UserSideOutput.NftMetadata[], err?: Error) => void,
+    callback: FindByOwnerCallback,
     sortable?: Sortable
   ): Promise<void> => {
     let nftDatas: UserSideOutput.NftMetadata[] = [];
@@ -87,13 +91,11 @@ export namespace Metaplex {
                   nftDatas = nftDatas.sort(sortDescByUinixTimestamp);
                 } else if (sortable === Sortable.Asc) {
                   nftDatas = nftDatas.sort(sortAscByUinixTimestamp);
-                } else {
-                  throw Error('test');
                 }
-                callback(nftDatas);
+                callback(Result.ok(nftDatas));
               })
               .catch((e) => {
-                callback([], e);
+                callback(Result.err(e));
               });
           });
         }
@@ -101,7 +103,7 @@ export namespace Metaplex {
     } catch (e) {
       console.error('# retry: ', e);
       if (e instanceof Error) {
-        callback([], e);
+        callback(Result.err(e));
       }
     }
   };
