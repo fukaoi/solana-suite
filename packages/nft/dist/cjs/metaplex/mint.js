@@ -111,18 +111,13 @@ var Metaplex;
             else if (input.properties && !input.storageType) {
                 throw Error('Must set storageType if will use properties');
             }
-            // created at by unix timestamp
-            // const createdAt = Math.floor(new Date().getTime() / 1000);
-            // if (input.options) {
-            //   input.options = { created_at: createdAt };
-            // } else {
-            //   const options = { created_at: createdAt };
-            //   input = { ...input, options };
-            // }
             input = Object.assign(Object.assign({}, input), { properties });
             //--- porperties, Upload content ---
             const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(input.royalty);
             const nftStorageMetadata = storage_1.Storage.toConvertOffchaindata(input, sellerFeeBasisPoints);
+            // created at by unix timestamp
+            const createdAt = Math.floor(new Date().getTime() / 1000);
+            nftStorageMetadata.created_at = createdAt;
             let uri;
             if (input.filePath && input.storageType) {
                 const uploaded = yield storage_1.Storage.uploadMetaAndContent(nftStorageMetadata, input.filePath, input.storageType, payer);

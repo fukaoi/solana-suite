@@ -73,6 +73,9 @@ var SplToken;
             input.royalty = 0;
             const sellerFeeBasisPoints = 0;
             const tokenStorageMetadata = storage_1.Storage.toConvertOffchaindata(input, input.royalty);
+            // created at by unix timestamp
+            const createdAt = Math.floor(new Date().getTime() / 1000);
+            tokenStorageMetadata.created_at = createdAt;
             let uri;
             if (input.filePath && input.storageType) {
                 const uploaded = yield storage_1.Storage.uploadMetaAndContent(tokenStorageMetadata, input.filePath, input.storageType, payer);

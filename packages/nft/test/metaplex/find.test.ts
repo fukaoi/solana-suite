@@ -1,10 +1,10 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Metaplex } from '../../src/metaplex';
-import { Sortable } from '../../src/metaplex/find';
+import { Sortable } from '../../../core/src';
 
 describe('Metaplex.find', () => {
-  it.only('Find owner info', async () => {
+  it('Find owner info', async () => {
     console.log('#Normal: ');
     const owner = 'CGDRajhcFo9ysuUjBsbwCQHKJuCHiXeEUrMKSot1eyay';
     await Metaplex.findByOwner(owner, (result) => {
