@@ -14,7 +14,6 @@ describe('SplToken', () => {
 
   it('Not found token', async () => {
     await SplToken.findByOwner(notFoundTokenOwner, (result) => {
-      console.log('# Not found token', result.unwrap());
       assert.isTrue(result.isOk);
       assert.isArray(result.unwrap());
     });
@@ -22,7 +21,6 @@ describe('SplToken', () => {
 
   it('Get token info owned', async () => {
     await SplToken.findByOwner(owner, (result) => {
-      console.log('# Get token info owned', result.unwrap());
       assert.isTrue(result.isOk);
       assert.isArray(result.unwrap());
       assert.isTrue(result.unwrap().length > 0);
@@ -33,7 +31,6 @@ describe('SplToken', () => {
     await SplToken.findByOwner(
       owner,
       (result) => {
-        console.log('# Get token info owned with Desc', result.unwrap());
         assert.isTrue(result.isOk);
         assert.isArray(result.unwrap());
         assert.isTrue(result.unwrap().length > 0);
