@@ -41,6 +41,65 @@ export type FindByOwnerCallback = (
   result: Result<UserSideOutput.NftMetadata[], Error>
 ) => void;
 
+export const abstractFindByOwner = async (
+  owner: Pubkey,
+  callback: FindByOwnerCallback,
+  tokenStandard: 
+  sortable?: Sortable
+): Promise<void> => {
+  let nftDatas: UserSideOutput.NftMetadata[] = [];
+  try {
+    const connection = Node.getConnection();
+    const info = await connection.getParsedTokenAccountsByOwner(
+      owner.toPublicKey(),
+      {
+        programId: TOKEN_PROGRAM_ID,
+      }
+    );
+
+    // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
+    for await (const d of info.value) {
+      if (d.account.data.parsed.info.tokenAmount.uiAmount == 1) {
+        const mint = d.account.data.parsed.info.mint;
+        const metadata = await Metadata.fromAccountAddress(
+          connection,
+          Pda.getMetadata(mint)
+        );
+        debugLog('# findByOwner metadata: ', metadata);
+        if (metadata.tokenStandard !== 0) {
+          continue;
+        }
+        fetch(metadata.data.uri).then((response) => {
+          debugLog('# findByOwner response: ', metadata);
+          response
+            .json()
+            .then((json) => {
+              const modified = Convert.NftMetadata.intoUserSide({
+                onchain: metadata,
+                offchain: json,
+              });
+              nftDatas.push(modified);
+              if (sortable === Sortable.Desc) {
+                nftDatas = nftDatas.sort(sortDescByUinixTimestamp);
+              } else if (sortable === Sortable.Asc) {
+                nftDatas = nftDatas.sort(sortAscByUinixTimestamp);
+              }
+              callback(Result.ok(nftDatas));
+            })
+            .catch((e) => {
+              callback(Result.err(e));
+            });
+        });
+      }
+    }
+  } catch (e) {
+    console.error('# retry: ', e);
+    if (e instanceof Error) {
+      callback(Result.err(e));
+    }
+  }
+};
+
 export namespace Metaplex {
   /**
    * Fetch minted metadata by owner Pubkey

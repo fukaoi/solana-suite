@@ -1,5 +1,4 @@
-import { Option } from '../shared';
-import { _Same } from '../_same';
+import { _Shared, Option } from '../shared';
 import { Pubkey } from '@solana-suite/shared';
 import { InfraSideOutput } from '../infra-side/output';
 import { UserSideInput } from '../user-side/input';
@@ -9,7 +8,7 @@ export declare namespace UserSideOutput {
         address: Pubkey;
         verified: boolean;
     };
-    type Uses = _Same.Uses;
+    type Uses = _Shared.Uses;
     type NftMetadata = {
         mint: string;
         updateAuthority: string;
@@ -22,7 +21,7 @@ export declare namespace UserSideOutput {
         editionNonce: Option<number>;
         collection?: Collection | undefined;
         creators?: Creators[] | undefined;
-        uses?: _Same.Uses | undefined;
+        uses?: _Shared.Uses | undefined;
         created_at?: number | undefined;
         offchain: InfraSideOutput.Offchain;
     };
@@ -31,9 +30,9 @@ export declare namespace UserSideOutput {
         symbol: string;
         uri: string;
         sellerFeeBasisPoints: number;
-        attributes?: _Same.Attribute | undefined;
+        attributes?: _Shared.Attribute | undefined;
         creators?: Creators[] | undefined;
-        uses?: _Same.Uses | undefined;
+        uses?: _Shared.Uses | undefined;
         offchain: InfraSideOutput.Offchain;
     };
 }

@@ -1,6 +1,5 @@
 import { InfraSideInput } from '../infra-side/input';
-import { bignum, FileContent } from '../shared';
-import { _Same } from '../_same';
+import { _Shared, bignum, FileContent } from '../shared';
 import { Pubkey } from '@solana-suite/shared';
 
 export namespace UserSideInput {
@@ -12,7 +11,7 @@ export namespace UserSideInput {
     verified: boolean;
   };
 
-  export type Properties = _Same.Properties;
+  export type Properties = _Shared.Properties;
 
   export type NftMetadata = {
     name: string;
@@ -24,13 +23,13 @@ export namespace UserSideInput {
     isMutable?: boolean;
     description?: string;
     external_url?: string;
-    attributes?: _Same.Attribute[];
+    attributes?: _Shared.Attribute[];
     properties?: Properties;
     maxSupply?: bignum;
     creators?: Creators[];
-    uses?: _Same.Uses;
+    uses?: _Shared.Uses;
     collection?: Collection;
-    options?: _Same.Options;
+    options?: _Shared.Options;
   };
 
   export type TokenMetadata = {
@@ -41,9 +40,9 @@ export namespace UserSideInput {
     storageType?: InfraSideInput.StorageType;
     description?: string;
     royalty?: number;
-    uses?: _Same.Uses;
+    uses?: _Shared.Uses;
     creators?: Creators[];
-    attributes?: _Same.Attribute[];
-    options?: _Same.Options;
+    attributes?: _Shared.Attribute[];
+    options?: _Shared.Options;
   };
 }
