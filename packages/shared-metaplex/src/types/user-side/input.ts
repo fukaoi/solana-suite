@@ -12,6 +12,14 @@ export namespace UserSideInput {
   };
 
   export type Properties = _Shared.Properties;
+  
+  export enum TokenStandard {
+    NonFungible = 0,
+    FungibleAsset = 1,
+    Fungible = 2,
+    NonFungibleEdition = 3,
+    ProgrammableNonFungible = 4,
+  }
 
   export type NftMetadata = {
     name: string;

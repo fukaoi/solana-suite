@@ -1,6 +1,7 @@
 import { Convert as CO } from './collection';
 import { Convert as CR } from './creators';
 import { Convert as CU } from './uses';
+import { Convert as TM } from './token-metadata';
 import {
   InfraSideInput,
   InfraSideOutput,
@@ -26,27 +27,22 @@ export namespace Convert.NftMetadata {
   };
 
   export const intoUserSide = (
-    input: InfraSideOutput.OnchainAndOffchain
+    output: InfraSideOutput.OnchainAndOffchain
   ): UserSideOutput.NftMetadata => {
     return {
-      mint: input.onchain.mint.toString(),
-      updateAuthority: input.onchain.updateAuthority.toString(),
-      royalty: input.onchain.data.sellerFeeBasisPoints,
-      name: deleteNullStrings(input.onchain.data.name),
-      symbol: deleteNullStrings(input.onchain.data.symbol),
-      uri: deleteNullStrings(input.onchain.data.uri),
-      isMutable: input.onchain.isMutable,
-      primarySaleHappened: input.onchain.primarySaleHappened,
-      creators: CR.Creators.intoUserSide(input.onchain.data.creators),
-      editionNonce: input.onchain.editionNonce,
-      collection: CO.Collection.intoUserSide(input.onchain.collection),
-      uses: CU.Uses.intoUserSide(input.onchain.uses),
-      offchain: input.offchain,
+      mint: output.onchain.mint.toString(),
+      updateAuthority: output.onchain.updateAuthority.toString(),
+      royalty: output.onchain.data.sellerFeeBasisPoints,
+      name: TM.TokenMetadata.deleteNullStrings(output.onchain.data.name),
+      symbol: TM.TokenMetadata.deleteNullStrings(output.onchain.data.symbol),
+      uri: TM.TokenMetadata.deleteNullStrings(output.onchain.data.uri),
+      isMutable: output.onchain.isMutable,
+      primarySaleHappened: output.onchain.primarySaleHappened,
+      creators: CR.Creators.intoUserSide(output.onchain.data.creators),
+      editionNonce: output.onchain.editionNonce,
+      collection: CO.Collection.intoUserSide(output.onchain.collection),
+      uses: CU.Uses.intoUserSide(output.onchain.uses),
+      offchain: output.offchain,
     };
-  };
-
-  // delete NULL(0x00) strings function
-  export const deleteNullStrings = (str: string): string => {
-    return str.replace(/\0/g, '');
   };
 }

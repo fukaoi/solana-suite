@@ -1,5 +1,11 @@
 import { debugLog, Node, Pubkey, Result } from '@solana-suite/shared';
-import { Convert, Pda, UserSideOutput } from '@solana-suite/shared-metaplex';
+import {
+  Convert,
+  InfraSideOutput,
+  Pda,
+  UserSideInput,
+  UserSideOutput,
+} from '@solana-suite/shared-metaplex';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -7,8 +13,8 @@ import fetch from 'cross-fetch';
 
 // Sort by latest with unixtimestamp function
 export const sortDescByUinixTimestamp = (
-  a: UserSideOutput.NftMetadata,
-  b: UserSideOutput.NftMetadata
+  a: UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata,
+  b: UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata
 ): number => {
   if (!a.offchain.created_at) {
     a.offchain.created_at = 0;
@@ -20,8 +26,8 @@ export const sortDescByUinixTimestamp = (
 };
 
 export const sortAscByUinixTimestamp = (
-  a: UserSideOutput.NftMetadata,
-  b: UserSideOutput.NftMetadata
+  a: UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata,
+  b: UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata
 ): number => {
   if (!a.offchain.created_at) {
     a.offchain.created_at = 0;
@@ -37,17 +43,35 @@ export enum Sortable {
   Desc = 'desc',
 }
 
-export type FindByOwnerCallback = (
-  result: Result<UserSideOutput.NftMetadata[], Error>
-) => void;
+export type FindByOwnerCallback = (result: Result<[], Error>) => void;
+
+export const converter = (
+  tokenStandard: UserSideInput.TokenStandard,
+  metadata: Metadata,
+  json: InfraSideOutput.Offchain
+): UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata => {
+  if (tokenStandard === UserSideInput.TokenStandard.Fungible) {
+    return Convert.TokenMetadata.intoUserSide({
+      onchain: metadata,
+      offchain: json,
+    });
+  } else if (tokenStandard === UserSideInput.TokenStandard.NonFungible) {
+    return Convert.NftMetadata.intoUserSide({
+      onchain: metadata,
+      offchain: json,
+    });
+  } else {
+    throw Error(`No match tokenStandard: ${tokenStandard}`);
+  }
+};
 
 export const abstractFindByOwner = async (
   owner: Pubkey,
   callback: FindByOwnerCallback,
-  tokenStandard: 
+  tokenStandard: UserSideInput.TokenStandard,
   sortable?: Sortable
 ): Promise<void> => {
-  let nftDatas: UserSideOutput.NftMetadata[] = [];
+  let datas: UserSideOutput.TokenMetadata[] | UserSideOutput.NftMetadata[] = [];
   try {
     const connection = Node.getConnection();
     const info = await connection.getParsedTokenAccountsByOwner(
@@ -57,7 +81,6 @@ export const abstractFindByOwner = async (
       }
     );
 
-    // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
     for await (const d of info.value) {
       if (d.account.data.parsed.info.tokenAmount.uiAmount == 1) {
         const mint = d.account.data.parsed.info.mint;
@@ -66,7 +89,9 @@ export const abstractFindByOwner = async (
           Pda.getMetadata(mint)
         );
         debugLog('# findByOwner metadata: ', metadata);
-        if (metadata.tokenStandard !== 0) {
+
+        // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
+        if (metadata.tokenStandard !== tokenStandard) {
           continue;
         }
         fetch(metadata.data.uri).then((response) => {
@@ -74,17 +99,14 @@ export const abstractFindByOwner = async (
           response
             .json()
             .then((json) => {
-              const modified = Convert.NftMetadata.intoUserSide({
-                onchain: metadata,
-                offchain: json,
-              });
-              nftDatas.push(modified);
+              const modified = converter(tokenStandard, metadata, json);
+              datas.push(modified as UserSideOutput.NftMetadata);
               if (sortable === Sortable.Desc) {
-                nftDatas = nftDatas.sort(sortDescByUinixTimestamp);
+                datas = datas.sort(sortDescByUinixTimestamp);
               } else if (sortable === Sortable.Asc) {
-                nftDatas = nftDatas.sort(sortAscByUinixTimestamp);
+                datas = datas.sort(sortAscByUinixTimestamp);
               }
-              callback(Result.ok(nftDatas));
+              callback(Result.ok(datas));
             })
             .catch((e) => {
               callback(Result.err(e));

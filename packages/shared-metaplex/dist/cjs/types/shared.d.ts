@@ -27,13 +27,6 @@ export declare namespace _Shared {
         Multiple = 1,
         Single = 2
     }
-    enum TokenStandard {
-        NonFungible = 0,
-        FungibleAsset = 1,
-        Fungible = 2,
-        NonFungibleEdition = 3,
-        ProgrammableNonFungible = 4
-    }
     type Uses = {
         useMethod: UseMethod;
         remaining: bignum;

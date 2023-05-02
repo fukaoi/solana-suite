@@ -26,10 +26,11 @@ export declare namespace UserSideOutput {
         offchain: InfraSideOutput.Offchain;
     };
     type TokenMetadata = {
+        mint: string;
         name: string;
         symbol: string;
         uri: string;
-        sellerFeeBasisPoints: number;
+        royalty: number;
         attributes?: _Shared.Attribute | undefined;
         creators?: Creators[] | undefined;
         uses?: _Shared.Uses | undefined;

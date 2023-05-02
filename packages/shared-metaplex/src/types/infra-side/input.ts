@@ -1,5 +1,4 @@
-import { Option } from '../shared';
-import { _Same } from '../_same';
+import { _Shared, Option } from '../shared';
 import { PublicKey } from '@solana/web3.js';
 
 export namespace InfraSideInput {
@@ -29,7 +28,7 @@ export namespace InfraSideInput {
     share: number;
   };
 
-  export type Properties = _Same.Properties;
+  export type Properties = _Shared.Properties;
 
   // Not need use Option type. bucasue Metaplex.JsonMetadata is same
   export type Offchain = {
@@ -39,8 +38,8 @@ export namespace InfraSideInput {
     seller_fee_basis_points?: number;
     image?: string;
     external_url?: string;
-    attributes?: _Same.Attribute[];
-    properties?: _Same.Properties;
+    attributes?: _Shared.Attribute[];
+    properties?: _Shared.Properties;
     collection?: {
       name?: string;
       family?: string;
@@ -56,6 +55,6 @@ export namespace InfraSideInput {
     sellerFeeBasisPoints: number;
     creators: Option<Creators[]>;
     collection: Option<Collection>;
-    uses: Option<_Same.Uses>;
+    uses: Option<_Shared.Uses>;
   };
 }

@@ -1,5 +1,4 @@
-import { Option } from '../shared';
-import { _Same } from '../_same';
+import { _Shared, Option } from '../shared';
 import { PublicKey } from '@solana/web3.js';
 export declare namespace InfraSideInput {
     interface File extends Blob {
@@ -22,7 +21,7 @@ export declare namespace InfraSideInput {
         verified: boolean;
         share: number;
     };
-    type Properties = _Same.Properties;
+    type Properties = _Shared.Properties;
     type Offchain = {
         name?: string;
         symbol?: string;
@@ -30,8 +29,8 @@ export declare namespace InfraSideInput {
         seller_fee_basis_points?: number;
         image?: string;
         external_url?: string;
-        attributes?: _Same.Attribute[];
-        properties?: _Same.Properties;
+        attributes?: _Shared.Attribute[];
+        properties?: _Shared.Properties;
         collection?: {
             name?: string;
             family?: string;
@@ -46,6 +45,6 @@ export declare namespace InfraSideInput {
         sellerFeeBasisPoints: number;
         creators: Option<Creators[]>;
         collection: Option<Collection>;
-        uses: Option<_Same.Uses>;
+        uses: Option<_Shared.Uses>;
     };
 }

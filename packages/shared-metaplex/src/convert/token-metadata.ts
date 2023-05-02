@@ -1,5 +1,11 @@
 import { Convert as CR } from './creators';
-import { InfraSideInput, UserSideInput } from '../types';
+import { Convert as CU } from './uses';
+import {
+  InfraSideInput,
+  InfraSideOutput,
+  UserSideInput,
+  UserSideOutput,
+} from '../types';
 
 export namespace Convert.TokenMetadata {
   export const intoInfraSide = (
@@ -18,23 +24,22 @@ export namespace Convert.TokenMetadata {
     };
   };
 
-  // export const intoUserSide = (
-  //   input: UserSideOutput.TokenMetadata
-  // ): UserSideOutput.TokenMetadata => {
-  //   return {
-  //     mint: input.onchain.mint.toString(),
-  //     updateAuthority: input.onchain.updateAuthority.toString(),
-  //     royalty: input.onchain.data.sellerFeeBasisPoints,
-  //     name: input.onchain.data.name,
-  //     symbol: input.onchain.data.symbol,
-  //     uri: input.onchain.data.uri,
-  //     isMutable: input.onchain.isMutable,
-  //     primarySaleHappened: input.onchain.primarySaleHappened,
-  //     creators: CR.Creators.intoUserSide(input.onchain.data.creators),
-  //     editionNonce: input.onchain.editionNonce,
-  //     collection: CO.Collection.intoUserSide(input.onchain.collection),
-  //     uses: input.onchain.uses,
-  //     offchain: input.offchain,
-  //   };
-  // };
+  export const intoUserSide = (
+    output: InfraSideOutput.OnchainAndOffchain
+  ): UserSideOutput.TokenMetadata => {
+    return {
+      mint: output.onchain.mint.toString(),
+      royalty: output.onchain.data.sellerFeeBasisPoints,
+      name: deleteNullStrings(output.onchain.data.name),
+      symbol: deleteNullStrings(output.onchain.data.symbol),
+      uri: deleteNullStrings(output.onchain.data.uri),
+      creators: CR.Creators.intoUserSide(output.onchain.data.creators),
+      uses: CU.Uses.intoUserSide(output.onchain.uses),
+      offchain: output.offchain,
+    };
+  };
+  // delete NULL(0x00) strings function
+  export const deleteNullStrings = (str: string): string => {
+    return str.replace(/\0/g, '');
+  };
 }

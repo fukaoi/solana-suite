@@ -28,10 +28,11 @@ export namespace UserSideOutput {
 
   /////////// TOKEN //////////////
   export type TokenMetadata = {
+    mint: string;
     name: string;
     symbol: string;
     uri: string;
-    sellerFeeBasisPoints: number;
+    royalty: number;
     attributes?: _Shared.Attribute | undefined;
     creators?: Creators[] | undefined;
     uses?: _Shared.Uses | undefined;
