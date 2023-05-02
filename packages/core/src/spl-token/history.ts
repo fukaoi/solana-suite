@@ -1,15 +1,14 @@
 import { getAssociatedTokenAddress } from '@solana/spl-token';
-import { Result, debugLog, Try, Pubkey } from '@solana-suite/shared';
-import { TransferHistory, Filter, DirectionFilter } from '../types/history';
+import { debugLog, Pubkey, Result, Try } from '@solana-suite/shared';
+import { DirectionFilter, Filter, TransferHistory } from '../types/history';
 import { SolNative as _Get } from '../sol-native/get-by-address';
 import { SolNative as _Filter } from '../sol-native/filter-transaction';
 
 export namespace SplToken {
   export const getHistory = async (
     mint: Pubkey,
-    searchPubkey: Pubkey,
+    target: Pubkey,
     options?: {
-      limit?: number;
       actionFilter?: Filter[];
       directionFilter?: DirectionFilter;
     }
@@ -17,7 +16,6 @@ export namespace SplToken {
     return Try(async () => {
       if (options === undefined || !Object.keys(options).length) {
         options = {
-          limit: 0,
           actionFilter: [],
           directionFilter: undefined,
         };
@@ -28,51 +26,24 @@ export namespace SplToken {
           ? options.actionFilter
           : [Filter.Transfer, Filter.TransferChecked];
 
-      const searchKeyAccount = await getAssociatedTokenAddress(
+      const tokenAccount = await getAssociatedTokenAddress(
         mint.toPublicKey(),
-        searchPubkey.toPublicKey(),
+        target.toPublicKey(),
         true
       );
 
-      let bufferedLimit = 0;
-      if (options.limit && options.limit < 50) {
-        bufferedLimit = options.limit * 1.5; // To get more data, threshold
-      } else {
-        bufferedLimit = 10;
-        options.limit = 10;
-      }
-      let hist: TransferHistory[] = [];
-      let before;
+      debugLog('# searchKeyAccount: ', tokenAccount.toString());
 
-      debugLog('# searchKeyAccount: ', searchKeyAccount.toString());
-      debugLog('# bufferedLimit: ', bufferedLimit);
-      debugLog('# before: ', before);
+      const transactions = await _Get.getByAddress(tokenAccount.toString());
+      debugLog('# getTransactionHistory transactions :', transactions);
 
-      for (;;) {
-        const transactions = await _Get.getByAddress(
-          searchKeyAccount.toString(),
-          bufferedLimit,
-          before
-        );
-        debugLog(
-          '# getTransactionHistory loop transactions count:',
-          transactions.length
-        );
-        const res = _Filter.filterTransactions(
-          searchPubkey.toPublicKey(),
-          transactions,
-          actionFilter,
-          true,
-          options.directionFilter
-        );
-        hist = hist.concat(res);
-        if (hist.length >= options.limit || res.length === 0) {
-          hist = hist.slice(0, options.limit);
-          break;
-        }
-        before = hist[hist.length - 1].sig;
-      }
-      return hist;
+      return _Filter.filterTransactions(
+        target.toPublicKey(),
+        transactions,
+        actionFilter,
+        true,
+        options.directionFilter
+      );
     });
   };
 }
