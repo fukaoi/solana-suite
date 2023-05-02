@@ -153,6 +153,10 @@ export namespace SplToken {
         input.royalty
       );
 
+      // created at by unix timestamp
+      const createdAt = Math.floor(new Date().getTime() / 1000);
+      tokenStorageMetadata.created_at = createdAt;
+
       let uri!: string;
       if (input.filePath && input.storageType) {
         const uploaded = await Storage.uploadMetaAndContent(
