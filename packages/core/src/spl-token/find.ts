@@ -58,11 +58,11 @@ export namespace SplToken {
     T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata
   >(
     owner: Pubkey,
-    callback: FindByOwnerCallback,
+    callback: (result: Result<T[], Error>) => void,
     tokenStandard: UserSideInput.TokenStandard,
     sortable?: Sortable
   ): Promise<void> => {
-    let datas: T[] = [];
+    let data: T[] = [];
     try {
       const connection = Node.getConnection();
       const info = await connection.getParsedTokenAccountsByOwner(
@@ -90,15 +90,15 @@ export namespace SplToken {
           response
             .json()
             .then((json) => {
-              datas.push(converter(tokenStandard, metadata, json));
+              data.push(converter<T>(tokenStandard, metadata, json));
               const descAlgo = sortByUinixTimestamp<T>(Sortable.Desc);
               const ascAlgo = sortByUinixTimestamp<T>(Sortable.Asc);
               if (sortable === Sortable.Desc) {
-                datas = datas.sort(descAlgo);
+                data = data.sort(descAlgo);
               } else if (sortable === Sortable.Asc) {
-                datas = datas.sort(ascAlgo);
+                data = data.sort(ascAlgo);
               }
-              callback(Result.ok(datas));
+              callback(Result.ok(data));
             })
             .catch((e) => {
               callback(Result.err(e));
@@ -116,13 +116,13 @@ export namespace SplToken {
    * Fetch minted metadata by owner Pubkey
    *
    * @param {Pubkey} owner
-   * @param {Sortable} callback
+   * @param {FindByOwnerCallback} callback
    * @param {Sortable} sortable?
    * @return Promise<Result<never, Error>>
    */
   export const findByOwner = async (
     owner: Pubkey,
-    callback: FindByOwnerCallback,
+    callback: (result: Result<UserSideOutput.TokenMetadata[], Error>) => void,
     sortable?: Sortable
   ): Promise<void> => {
     await genericFindByOwner<UserSideOutput.TokenMetadata>(

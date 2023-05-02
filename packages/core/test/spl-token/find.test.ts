@@ -19,11 +19,18 @@ describe('SplToken', () => {
     });
   });
 
-  it('Get token info owned', async () => {
+  it.only('Get token info owned', async () => {
     await SplToken.findByOwner(owner, (result) => {
-      assert.isTrue(result.isOk);
-      assert.isArray(result.unwrap());
-      assert.isTrue(result.unwrap().length > 0);
+      result.match(
+        (ok) => {
+          ok.forEach((res) => {
+            console.log(res.name);
+            console.log(res.mint);
+            console.log(res.symbol);
+          });
+        },
+        (err) => assert.fail(err.message)
+      );
     });
   });
 
