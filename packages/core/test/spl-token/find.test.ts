@@ -38,4 +38,16 @@ describe('SplToken', () => {
       Sortable.Desc
     );
   });
+
+  it('Get token info owned with Asc', async () => {
+    await SplToken.findByOwner(
+      owner,
+      (result) => {
+        assert.isTrue(result.isOk);
+        assert.isArray(result.unwrap());
+        assert.isTrue(result.unwrap().length > 0);
+      },
+      Sortable.Asc
+    );
+  });
 });
