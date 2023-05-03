@@ -1,19 +1,23 @@
+import { Pubkey } from '@solana-suite/shared';
+
 export type History = {
   info: {
-    destination?: string;
-    source?: string;
-    authority?: string;
-    multisigAuthority?: string;
-    signers?: string[];
     amount?: string;
-    mint?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
     tokenAmount?: number[];
   };
-  type: string;
   date: Date;
-  innerInstruction: boolean;
+  type: string;
   sig: string;
   memo?: string;
+  innerInstruction: boolean;
 };
 
 export enum Filter {
@@ -34,6 +38,7 @@ export type MappingTokenAccount = {
   owner: string;
 };
 
-export type WithMemo = { 
-  sig: string[]; memo: string 
+export type WithMemo = {
+  sig: string[];
+  memo: string;
 };

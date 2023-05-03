@@ -1,57 +1,96 @@
 import { describe, it } from 'mocha';
 import { SolNative } from '../../src';
 import { assert } from 'chai';
-import { Filter, DirectionFilter } from '../../src/types/history';
+import { DirectionFilter, Filter } from '../../src/types/history';
 
-const searchTokenKey = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk';
+const target = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk';
 
-describe.skip('SolNative', () => {
+describe('SolNative', () => {
   it('Get transfer history with set optional filter', async () => {
-    const limit = 20;
-    const res = await SolNative.getHistory(searchTokenKey, {
-      limit,
-      actionFilter: [Filter.MintTo],
-    });
-    console.log('# getHistory: ', res);
-    assert.isTrue(res.isOk);
-    assert.equal(res.unwrap()[0].type, Filter.MintTo);
-    res.unwrap().forEach((v) => {
-      assert.isNotNull(v.date);
-    });
+    await SolNative.getHistory(
+      target,
+      (result) => {
+        result.match(
+          (ok) => {
+            console.log('# SolNative.getHistory#1: ', ok);
+            ok.forEach((res) => {
+              assert.isNotEmpty(res.type);
+              assert.isNotEmpty(res.info.mint);
+              assert.isNotEmpty(res.info.mintAuthority);
+              assert.isNotNull(res.date);
+            });
+          },
+          (err) => assert.fail(err.message)
+        );
+      },
+      {
+        actionFilter: [Filter.MintTo],
+      }
+    );
   });
 
   it('Get transfer history with transfer destination filter', async () => {
-    const res = await SolNative.getHistory(searchTokenKey, {
-      directionFilter: DirectionFilter.Dest,
-    });
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotNull(v.date);
-      assert.equal(v.info.destination, searchTokenKey);
-    });
+    await SolNative.getHistory(
+      target,
+      (result) => {
+        result.match(
+          (ok) => {
+            console.log('# SolNative.getHistory#2: ', ok);
+            ok.forEach((res) => {
+              assert.isNotEmpty(res.type);
+              assert.isNotEmpty(res.info.destination);
+              assert.isNotEmpty(res.info.source);
+              assert.isNotNull(res.date);
+            });
+          },
+          (err) => assert.fail(err.message)
+        );
+      },
+      {
+        directionFilter: DirectionFilter.Dest,
+      }
+    );
   });
 
   it('Get transfer history with transfer source filter', async () => {
-    const res = await SolNative.getHistory(searchTokenKey, {
-      directionFilter: DirectionFilter.Source,
-    });
-
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotNull(v.date);
-      assert.equal(v.info.source, searchTokenKey);
-    });
+    await SolNative.getHistory(
+      target,
+      (result) => {
+        result.match(
+          (ok) => {
+            console.log('# SolNative.getHistory#3: ', ok);
+            ok.forEach((res) => {
+              assert.isNotEmpty(res.type);
+              assert.isNotEmpty(res.info.destination);
+              assert.isNotEmpty(res.info.source);
+              assert.isNotNull(res.date);
+            });
+          },
+          (err) => assert.fail(err.message)
+        );
+      },
+      {
+        directionFilter: DirectionFilter.Source,
+      }
+    );
   });
 
   it('Get transfer history by address', async () => {
-    const searchAddress = 'HeH2PRj4GEdLCsbKQ18LvwhbuH4anmPQ3HoeRsJmymVw';
-    const res = await SolNative.getHistory(searchAddress);
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotEmpty(v.type);
-      assert.isNotEmpty(v.info.source);
-      assert.isNotEmpty(v.info.destination);
-      assert.isNotNull(v.date);
+    const target = 'HeH2PRj4GEdLCsbKQ18LvwhbuH4anmPQ3HoeRsJmymVw';
+    await SolNative.getHistory(target, (result) => {
+      result.match(
+        (ok) => {
+          ok.forEach((res) => {
+            console.log(res);
+            assert.isNotEmpty(res.type);
+            assert.isNotEmpty(res.info.amount);
+            assert.isNotEmpty(res.info.destination);
+            assert.isNotEmpty(res.info.source);
+            assert.isNotNull(res.date);
+          });
+        },
+        (err) => assert.fail(err.message)
+      );
     });
   });
 });

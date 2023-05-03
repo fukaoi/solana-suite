@@ -11,10 +11,14 @@ describe('SplToken', () => {
     await SplToken.getHistory(mint, target, (result) => {
       result.match(
         (ok) => {
+          console.log('# SplToken.getHistory#1: ', ok);
           ok.forEach((res) => {
             assert.isNotEmpty(res.type);
             assert.isNotEmpty(res.info.source);
             assert.isNotEmpty(res.info.destination);
+            assert.isNotEmpty(res.info.tokenAmount);
+            assert.isNotEmpty(res.info.signers);
+            assert.isNotEmpty(res.info.multisigAuthority);
             assert.isNotNull(res.date);
           });
         },
@@ -30,10 +34,14 @@ describe('SplToken', () => {
       (result) => {
         result.match(
           (ok) => {
+            console.log('# SplToken.getHistory#2: ', ok);
             ok.forEach((res) => {
               assert.isNotEmpty(res.type);
               assert.isNotEmpty(res.info.source);
               assert.isNotEmpty(res.info.destination);
+              assert.isNotEmpty(res.info.tokenAmount);
+              assert.isNotEmpty(res.info.signers);
+              assert.isNotEmpty(res.info.multisigAuthority);
               assert.isNotNull(res.date);
             });
           },

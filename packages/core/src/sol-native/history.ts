@@ -1,4 +1,4 @@
-import { debugLog, Pubkey, Result, Try } from '@solana-suite/shared';
+import { debugLog, Pubkey, Result } from '@solana-suite/shared';
 import { DirectionFilter, Filter, History } from '../types/history';
 import { SolNative as _Filter } from './filter-transaction';
 import { SolNative as _Get } from './get-by-address';
@@ -6,16 +6,15 @@ import { SolNative as _Get } from './get-by-address';
 export namespace SolNative {
   export const getHistory = async (
     searchPubkey: Pubkey,
+    callback: (result: Result<History[], Error>) => void,
     options?: {
-      limit?: number;
       actionFilter?: Filter[];
       directionFilter?: DirectionFilter;
     }
-  ): Promise<Result<History[], Error>> => {
-    return Try(async () => {
+  ): Promise<void> => {
+    try {
       if (options === undefined || !Object.keys(options).length) {
         options = {
-          limit: 0,
           actionFilter: [],
           directionFilter: undefined,
         };
@@ -26,38 +25,21 @@ export namespace SolNative {
           ? options.actionFilter
           : [Filter.Transfer, Filter.TransferChecked];
 
-      let bufferedLimit = 0;
-      if (options.limit && options.limit < 50) {
-        bufferedLimit = options.limit * 1.5; // To get more data, threshold
-      } else {
-        bufferedLimit = 10;
-        options.limit = 10;
-      }
-      let hist: History[] = [];
-      let before;
+      const transactions = await _Get.getByAddress(searchPubkey);
+      debugLog('# getTransactionHistory loop');
 
-      for (;;) {
-        const transactions = await _Get.getByAddress(
-          searchPubkey,
-          bufferedLimit,
-          before
-        );
-        debugLog('# getTransactionHistory loop');
-        const res = _Filter.filterTransactions(
-          searchPubkey.toPublicKey(),
-          transactions,
-          actionFilter,
-          false,
-          options.directionFilter
-        );
-        hist = hist.concat(res);
-        if (hist.length >= options.limit || res.length === 0) {
-          hist = hist.slice(0, options.limit);
-          break;
-        }
-        before = hist[hist.length - 1].sig;
+      const filtered = _Filter.filterTransactions(
+        searchPubkey.toPublicKey(),
+        transactions,
+        actionFilter,
+        false,
+        options.directionFilter
+      );
+      callback(Result.ok(filtered));
+    } catch (e) {
+      if (e instanceof Error) {
+        callback(Result.err(e));
       }
-      return hist;
-    });
+    }
   };
 }
