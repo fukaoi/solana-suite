@@ -33,7 +33,7 @@ export namespace SplToken {
         true
       );
 
-      debugLog('# searchKeyAccount: ', tokenAccount.toString());
+      debugLog('# tokenAccount: ', tokenAccount.toString());
 
       const transactions = await _Get.getByAddress(tokenAccount.toString());
 
