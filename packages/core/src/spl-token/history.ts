@@ -1,16 +1,16 @@
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { debugLog, Pubkey, Result } from '@solana-suite/shared';
-import { DirectionFilter, Filter, History } from '../types/history';
+import { DirectionFilter, FilterType, UserSideOutput } from '../types/';
 import { SolNative as _Get } from '../sol-native/get-by-address';
-import { SolNative as _Filter } from '../sol-native/filter-transaction';
+import { TransactionsFilter } from '../transactions-filter';
 
 export namespace SplToken {
   export const getHistory = async (
     mint: Pubkey,
     target: Pubkey,
-    callback: (result: Result<History[], Error>) => void,
+    callback: (result: Result<UserSideOutput.History[], Error>) => void,
     options?: {
-      actionFilter?: Filter[];
+      actionFilter?: FilterType[];
       directionFilter?: DirectionFilter;
     }
   ): Promise<void> => {
@@ -25,7 +25,7 @@ export namespace SplToken {
       const actionFilter =
         options?.actionFilter !== undefined && options.actionFilter.length > 0
           ? options.actionFilter
-          : [Filter.Transfer, Filter.TransferChecked];
+          : [FilterType.Transfer, FilterType.TransferChecked];
 
       const tokenAccount = await getAssociatedTokenAddress(
         mint.toPublicKey(),
@@ -39,7 +39,7 @@ export namespace SplToken {
 
       debugLog('# getTransactionHistory transactions :', transactions);
 
-      _Filter.filterTransactions(
+      TransactionsFilter.parse(
         target.toPublicKey(),
         transactions,
         actionFilter,

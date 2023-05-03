@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { SolNative } from '../../src';
 import { assert } from 'chai';
-import { DirectionFilter, Filter } from '../../src/types/history';
+import { DirectionFilter, FilterType } from '../../src/';
 
 const target = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk';
 
@@ -15,8 +15,8 @@ describe('SolNative', () => {
             console.log('# SolNative.getHistory#1: ', ok);
             ok.forEach((res) => {
               assert.isNotEmpty(res.type);
-              assert.isNotEmpty(res.info.mint);
-              assert.isNotEmpty(res.info.mintAuthority);
+              assert.isNotEmpty(res.mint);
+              assert.isNotEmpty(res.mintAuthority);
               assert.isNotNull(res.date);
             });
           },
@@ -24,7 +24,7 @@ describe('SolNative', () => {
         );
       },
       {
-        actionFilter: [Filter.MintTo],
+        actionFilter: [FilterType.MintTo],
       }
     );
   });
@@ -38,8 +38,8 @@ describe('SolNative', () => {
             console.log('# SolNative.getHistory#2: ', ok);
             ok.forEach((res) => {
               assert.isNotEmpty(res.type);
-              assert.isNotEmpty(res.info.destination);
-              assert.isNotEmpty(res.info.source);
+              assert.isNotEmpty(res.destination);
+              assert.isNotEmpty(res.source);
               assert.isNotNull(res.date);
             });
           },
@@ -61,8 +61,8 @@ describe('SolNative', () => {
             console.log('# SolNative.getHistory#3: ', ok);
             ok.forEach((res) => {
               assert.isNotEmpty(res.type);
-              assert.isNotEmpty(res.info.destination);
-              assert.isNotEmpty(res.info.source);
+              assert.isNotEmpty(res.destination);
+              assert.isNotEmpty(res.source);
               assert.isNotNull(res.date);
             });
           },

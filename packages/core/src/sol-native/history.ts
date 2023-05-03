@@ -1,14 +1,14 @@
 import { debugLog, Pubkey, Result } from '@solana-suite/shared';
-import { DirectionFilter, Filter, History } from '../types/history';
-import { SolNative as _Filter } from './filter-transaction';
+import { DirectionFilter, FilterType, UserSideOutput } from '../types/';
+import { TransactionsFilter } from '../transactions-filter';
 import { SolNative as _Get } from './get-by-address';
 
 export namespace SolNative {
   export const getHistory = async (
     searchPubkey: Pubkey,
-    callback: (result: Result<History[], Error>) => void,
+    callback: (result: Result<UserSideOutput.History[], Error>) => void,
     options?: {
-      actionFilter?: Filter[];
+      actionFilter?: FilterType[];
       directionFilter?: DirectionFilter;
     }
   ): Promise<void> => {
@@ -23,12 +23,12 @@ export namespace SolNative {
       const actionFilter =
         options?.actionFilter !== undefined && options.actionFilter.length > 0
           ? options.actionFilter
-          : [Filter.Transfer, Filter.TransferChecked];
+          : [FilterType.Transfer, FilterType.TransferChecked];
 
       const transactions = await _Get.getByAddress(searchPubkey);
       debugLog('# getTransactionHistory loop');
 
-      _Filter.filterTransactions(
+      TransactionsFilter.parse(
         searchPubkey.toPublicKey(),
         transactions,
         actionFilter,
