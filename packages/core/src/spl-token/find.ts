@@ -1,5 +1,5 @@
 import { debugLog, Node, Pubkey, Result } from '@solana-suite/shared';
-import { FindByOwnerCallback, Sortable } from '../types/spl-token';
+import { Sortable } from '../types/spl-token';
 import {
   Convert,
   InfraSideOutput,
