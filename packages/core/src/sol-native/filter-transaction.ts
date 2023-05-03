@@ -1,3 +1,4 @@
+import { Result } from '@solana-suite/shared';
 import {
   ParsedInstruction,
   ParsedTransactionWithMeta,
@@ -44,7 +45,7 @@ export namespace SolNative {
     }
 
     v.info.sol = v.info.lamports?.toSol();
-    delete(v.info.lamports);
+    delete v.info.lamports;
     v.date = convertTimestampToDate(meta.blockTime as number);
     v.sig = meta.transaction.signatures[0];
     v.innerInstruction = false;
@@ -111,8 +112,9 @@ export namespace SolNative {
     transactions: ParsedTransactionWithMeta[],
     filterOptions: Filter[],
     isToken = false,
+    callback: (result: Result<History[], Error>) => void,
     directionFilter?: DirectionFilter
-  ) => {
+  ): void => {
     const hist: History[] = [];
     const mappingTokenAccount: MappingTokenAccount[] = [];
     transactions.forEach((tx) => {
@@ -160,6 +162,7 @@ export namespace SolNative {
               withMemos
             );
             res && hist.push(res);
+            callback(Result.ok(hist));
           } else {
             // Only memo
             if (filterOptions.includes(Filter.OnlyMemo)) {
@@ -170,11 +173,11 @@ export namespace SolNative {
                 directionFilter
               );
               res && hist.push(res);
+              callback(Result.ok(hist));
             }
           }
         }
       });
     });
-    return hist;
   };
 }

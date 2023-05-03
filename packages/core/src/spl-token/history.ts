@@ -39,14 +39,14 @@ export namespace SplToken {
 
       debugLog('# getTransactionHistory transactions :', transactions);
 
-      const filtered = _Filter.filterTransactions(
+      _Filter.filterTransactions(
         target.toPublicKey(),
         transactions,
         actionFilter,
         true,
+        callback,
         options.directionFilter
       );
-      callback(Result.ok(filtered));
     } catch (e) {
       if (e instanceof Error) {
         callback(Result.err(e));

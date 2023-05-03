@@ -28,14 +28,14 @@ export namespace SolNative {
       const transactions = await _Get.getByAddress(searchPubkey);
       debugLog('# getTransactionHistory loop');
 
-      const filtered = _Filter.filterTransactions(
+      _Filter.filterTransactions(
         searchPubkey.toPublicKey(),
         transactions,
         actionFilter,
         false,
+        callback,
         options.directionFilter
       );
-      callback(Result.ok(filtered));
     } catch (e) {
       if (e instanceof Error) {
         callback(Result.err(e));
