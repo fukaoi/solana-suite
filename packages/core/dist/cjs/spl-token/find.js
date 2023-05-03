@@ -65,12 +65,13 @@ var SplToken;
     };
     SplToken.genericFindByOwner = (owner, callback, tokenStandard, sortable) => __awaiter(this, void 0, void 0, function* () {
         var _a, e_1, _b, _c;
-        let datas = [];
+        let data = [];
         try {
             const connection = shared_1.Node.getConnection();
             const info = yield connection.getParsedTokenAccountsByOwner(owner.toPublicKey(), {
                 programId: spl_token_2.TOKEN_PROGRAM_ID,
             });
+            info.value.length === 0 && callback(shared_1.Result.ok([]));
             try {
                 for (var _d = true, _e = __asyncValues(info.value), _f; _f = yield _e.next(), _a = _f.done, !_a;) {
                     _c = _f.value;
@@ -89,16 +90,16 @@ var SplToken;
                             response
                                 .json()
                                 .then((json) => {
-                                datas.push(converter(tokenStandard, metadata, json));
+                                data.push(converter(tokenStandard, metadata, json));
                                 const descAlgo = sortByUinixTimestamp(spl_token_1.Sortable.Desc);
                                 const ascAlgo = sortByUinixTimestamp(spl_token_1.Sortable.Asc);
                                 if (sortable === spl_token_1.Sortable.Desc) {
-                                    datas = datas.sort(descAlgo);
+                                    data = data.sort(descAlgo);
                                 }
                                 else if (sortable === spl_token_1.Sortable.Asc) {
-                                    datas = datas.sort(ascAlgo);
+                                    data = data.sort(ascAlgo);
                                 }
-                                callback(shared_1.Result.ok(datas));
+                                callback(shared_1.Result.ok(data));
                             })
                                 .catch((e) => {
                                 callback(shared_1.Result.err(e));
@@ -119,7 +120,6 @@ var SplToken;
             }
         }
         catch (e) {
-            console.error('# retry: ', e);
             if (e instanceof Error) {
                 callback(shared_1.Result.err(e));
             }
@@ -129,7 +129,7 @@ var SplToken;
      * Fetch minted metadata by owner Pubkey
      *
      * @param {Pubkey} owner
-     * @param {Sortable} callback
+     * @param {FindByOwnerCallback} callback
      * @param {Sortable} sortable?
      * @return Promise<Result<never, Error>>
      */

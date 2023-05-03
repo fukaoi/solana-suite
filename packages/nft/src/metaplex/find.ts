@@ -1,6 +1,6 @@
-import { Pubkey } from '@solana-suite/shared';
+import { Pubkey, Result } from '@solana-suite/shared';
 import { UserSideInput, UserSideOutput } from '@solana-suite/shared-metaplex';
-import { FindByOwnerCallback, Sortable, SplToken } from '@solana-suite/core';
+import { Sortable, SplToken } from '@solana-suite/core';
 
 export namespace Metaplex {
   /**
@@ -13,7 +13,7 @@ export namespace Metaplex {
    */
   export const findByOwner = async (
     owner: Pubkey,
-    callback: FindByOwnerCallback,
+    callback: (result: Result<UserSideOutput.NftMetadata[], Error>) => void,
     sortable?: Sortable
   ): Promise<void> => {
     await SplToken.genericFindByOwner<UserSideOutput.NftMetadata>(

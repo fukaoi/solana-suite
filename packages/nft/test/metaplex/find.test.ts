@@ -17,7 +17,18 @@ describe('Metaplex.find', () => {
     await Metaplex.findByOwner(owner, (result) => {
       result.match(
         (ok) => {
-          assert.isNotEmpty(ok);
+          ok.forEach((res) => {
+            assert.isNotEmpty(res.name);
+            assert.isNotEmpty(res.mint);
+            assert.isNotEmpty(res.symbol);
+            assert.isNotEmpty(res.uri);
+            assert.isNotEmpty(res.royalty);
+            assert.isNotEmpty(res.offchain);
+            assert.isNotEmpty(res.isMutable);
+            assert.isNotEmpty(res.primarySaleHappened);
+            assert.isNotEmpty(res.updateAuthority);
+            assert.isNotEmpty(res.editionNonce);
+          });
         },
         (err) => assert.fail(err.message)
       );
@@ -30,7 +41,18 @@ describe('Metaplex.find', () => {
       (result) => {
         result.match(
           (ok) => {
-            assert.isNotEmpty(ok);
+            ok.forEach((res) => {
+              assert.isNotEmpty(res.name);
+              assert.isNotEmpty(res.mint);
+              assert.isNotEmpty(res.symbol);
+              assert.isNotEmpty(res.uri);
+              assert.isNotEmpty(res.royalty);
+              assert.isNotEmpty(res.offchain);
+              assert.isNotEmpty(res.isMutable);
+              assert.isNotEmpty(res.primarySaleHappened);
+              assert.isNotEmpty(res.updateAuthority);
+              assert.isNotEmpty(res.editionNonce);
+            });
           },
           (err) => assert.fail(err.message)
         );
@@ -45,7 +67,18 @@ describe('Metaplex.find', () => {
       (result) => {
         result.match(
           (ok) => {
-            assert.isNotEmpty(ok);
+            ok.forEach((res) => {
+              assert.isNotEmpty(res.name);
+              assert.isNotEmpty(res.mint);
+              assert.isNotEmpty(res.symbol);
+              assert.isNotEmpty(res.uri);
+              assert.isNotEmpty(res.royalty);
+              assert.isNotEmpty(res.offchain);
+              assert.isNotEmpty(res.isMutable);
+              assert.isNotEmpty(res.primarySaleHappened);
+              assert.isNotEmpty(res.updateAuthority);
+              assert.isNotEmpty(res.editionNonce);
+            });
           },
           (err) => assert.fail(err.message)
         );
