@@ -62,8 +62,8 @@ export namespace SplToken {
     tokenStandard: UserSideInput.TokenStandard,
     sortable?: Sortable
   ): Promise<void> => {
-    let data: T[] = [];
     try {
+      let data: T[] = [];
       const connection = Node.getConnection();
       const info = await connection.getParsedTokenAccountsByOwner(
         owner.toPublicKey(),

@@ -1,6 +1,6 @@
 import { getAssociatedTokenAddress } from '@solana/spl-token';
-import { debugLog, Pubkey, Result, Try } from '@solana-suite/shared';
-import { DirectionFilter, Filter, TransferHistory } from '../types/history';
+import { debugLog, Pubkey, Result } from '@solana-suite/shared';
+import { DirectionFilter, Filter, History } from '../types/history';
 import { SolNative as _Get } from '../sol-native/get-by-address';
 import { SolNative as _Filter } from '../sol-native/filter-transaction';
 
@@ -8,12 +8,13 @@ export namespace SplToken {
   export const getHistory = async (
     mint: Pubkey,
     target: Pubkey,
+    callback: (result: Result<History[], Error>) => void,
     options?: {
       actionFilter?: Filter[];
       directionFilter?: DirectionFilter;
     }
-  ): Promise<Result<TransferHistory[], Error>> => {
-    return Try(async () => {
+  ): Promise<void> => {
+    try {
       if (options === undefined || !Object.keys(options).length) {
         options = {
           actionFilter: [],
@@ -35,15 +36,21 @@ export namespace SplToken {
       debugLog('# searchKeyAccount: ', tokenAccount.toString());
 
       const transactions = await _Get.getByAddress(tokenAccount.toString());
+
       debugLog('# getTransactionHistory transactions :', transactions);
 
-      return _Filter.filterTransactions(
+      const filtered = _Filter.filterTransactions(
         target.toPublicKey(),
         transactions,
         actionFilter,
         true,
         options.directionFilter
       );
-    });
+      callback(Result.ok(filtered));
+    } catch (e) {
+      if (e instanceof Error) {
+        callback(Result.err(e));
+      }
+    }
   };
 }

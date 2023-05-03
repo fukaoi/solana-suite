@@ -1,5 +1,5 @@
-import { Result, debugLog, Try, Pubkey } from '@solana-suite/shared';
-import { TransferHistory, Filter, DirectionFilter } from '../types/history';
+import { debugLog, Pubkey, Result, Try } from '@solana-suite/shared';
+import { DirectionFilter, Filter, History } from '../types/history';
 import { SolNative as _Filter } from './filter-transaction';
 import { SolNative as _Get } from './get-by-address';
 
@@ -11,7 +11,7 @@ export namespace SolNative {
       actionFilter?: Filter[];
       directionFilter?: DirectionFilter;
     }
-  ): Promise<Result<TransferHistory[], Error>> => {
+  ): Promise<Result<History[], Error>> => {
     return Try(async () => {
       if (options === undefined || !Object.keys(options).length) {
         options = {
@@ -33,7 +33,7 @@ export namespace SolNative {
         bufferedLimit = 10;
         options.limit = 10;
       }
-      let hist: TransferHistory[] = [];
+      let hist: History[] = [];
       let before;
 
       for (;;) {

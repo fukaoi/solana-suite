@@ -1,4 +1,4 @@
-export type TransferHistory = {
+export type History = {
   info: {
     destination?: string;
     source?: string;

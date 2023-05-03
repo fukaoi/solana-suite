@@ -1,5 +1,5 @@
-import { Convert as CR } from './creators';
-import { Convert as CU } from './uses';
+import { Convert as _Creators } from './creators';
+import { Convert as _Uses } from './uses';
 import {
   InfraSideInput,
   InfraSideOutput,
@@ -18,7 +18,7 @@ export namespace Convert.TokenMetadata {
       symbol: input.symbol,
       uri,
       sellerFeeBasisPoints,
-      creators: CR.Creators.intoInfraSide(input.creators),
+      creators: _Creators.Creators.intoInfraSide(input.creators),
       collection: null,
       uses: input.uses || null,
     };
@@ -33,8 +33,8 @@ export namespace Convert.TokenMetadata {
       name: deleteNullStrings(output.onchain.data.name),
       symbol: deleteNullStrings(output.onchain.data.symbol),
       uri: deleteNullStrings(output.onchain.data.uri),
-      creators: CR.Creators.intoUserSide(output.onchain.data.creators),
-      uses: CU.Uses.intoUserSide(output.onchain.uses),
+      creators: _Creators.Creators.intoUserSide(output.onchain.data.creators),
+      uses: _Uses.Uses.intoUserSide(output.onchain.uses),
       offchain: output.offchain,
     };
   };

@@ -1,7 +1,7 @@
-import { Convert as CO } from './collection';
-import { Convert as CR } from './creators';
-import { Convert as CU } from './uses';
-import { Convert as TM } from './token-metadata';
+import { Convert as _Collection } from './collection';
+import { Convert as _Creators } from './creators';
+import { Convert as _Uses } from './uses';
+import { Convert as _Token } from './token-metadata';
 import {
   InfraSideInput,
   InfraSideOutput,
@@ -20,8 +20,8 @@ export namespace Convert.NftMetadata {
       symbol: input.symbol,
       uri,
       sellerFeeBasisPoints,
-      creators: CR.Creators.intoInfraSide(input.creators),
-      collection: CO.Collection.intoInfraSide(input.collection),
+      creators: _Creators.Creators.intoInfraSide(input.creators),
+      collection: _Collection.Collection.intoInfraSide(input.collection),
       uses: input.uses || null,
     };
   };
@@ -33,15 +33,23 @@ export namespace Convert.NftMetadata {
       mint: output.onchain.mint.toString(),
       updateAuthority: output.onchain.updateAuthority.toString(),
       royalty: output.onchain.data.sellerFeeBasisPoints,
-      name: TM.TokenMetadata.deleteNullStrings(output.onchain.data.name),
-      symbol: TM.TokenMetadata.deleteNullStrings(output.onchain.data.symbol),
-      uri: TM.TokenMetadata.deleteNullStrings(output.onchain.data.uri),
+      name: _Token.TokenMetadata.deleteNullStrings(
+        output.onchain.data.name
+      ),
+      symbol: _Token.TokenMetadata.deleteNullStrings(
+        output.onchain.data.symbol
+      ),
+      uri: _Token.TokenMetadata.deleteNullStrings(
+        output.onchain.data.uri
+      ),
       isMutable: output.onchain.isMutable,
       primarySaleHappened: output.onchain.primarySaleHappened,
-      creators: CR.Creators.intoUserSide(output.onchain.data.creators),
+      creators: _Creators.Creators.intoUserSide(output.onchain.data.creators),
       editionNonce: output.onchain.editionNonce,
-      collection: CO.Collection.intoUserSide(output.onchain.collection),
-      uses: CU.Uses.intoUserSide(output.onchain.uses),
+      collection: _Collection.Collection.intoUserSide(
+        output.onchain.collection
+      ),
+      uses: _Uses.Uses.intoUserSide(output.onchain.uses),
       offchain: output.offchain,
     };
   };

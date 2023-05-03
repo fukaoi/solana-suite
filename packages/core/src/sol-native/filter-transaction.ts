@@ -5,7 +5,7 @@ import {
 } from '@solana/web3.js';
 
 import {
-  TransferHistory,
+  History,
   DirectionFilter,
   Filter,
   WithMemo,
@@ -29,7 +29,7 @@ export namespace SolNative {
     isToken?: boolean,
     withMemos?: WithMemo[]
   ) => {
-    const v: TransferHistory = instruction.parsed as TransferHistory;
+    const v: History = instruction.parsed as History;
 
     if (isToken && mappingTokenAccount && instruction.program === 'spl-token') {
       const foundSource = mappingTokenAccount.find(
@@ -76,7 +76,7 @@ export namespace SolNative {
     value: ParsedTransactionWithMeta,
     directionFilter?: DirectionFilter
   ) => {
-    const v: TransferHistory = {
+    const v: History = {
       info: {},
       type: '',
       sig: '',
@@ -111,7 +111,7 @@ export namespace SolNative {
     isToken = false,
     directionFilter?: DirectionFilter
   ) => {
-    const hist: TransferHistory[] = [];
+    const hist: History[] = [];
     const mappingTokenAccount: MappingTokenAccount[] = [];
     transactions.forEach((tx) => {
       if (!tx.transaction) return;
