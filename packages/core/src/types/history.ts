@@ -2,7 +2,8 @@ import { Pubkey } from '@solana-suite/shared';
 
 export type History = {
   info: {
-    amount?: string;
+    sol?: number;
+    lamports?: number;
     account?: string;
     destination?: Pubkey;
     source?: Pubkey;

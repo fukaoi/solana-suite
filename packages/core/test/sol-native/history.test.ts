@@ -80,10 +80,10 @@ describe('SolNative', () => {
     await SolNative.getHistory(target, (result) => {
       result.match(
         (ok) => {
+          console.log('# SolNative.getHistory#4: ', ok);
           ok.forEach((res) => {
-            console.log(res);
             assert.isNotEmpty(res.type);
-            assert.isNotEmpty(res.info.amount);
+            assert.isNotNull(res.info.sol);
             assert.isNotEmpty(res.info.destination);
             assert.isNotEmpty(res.info.source);
             assert.isNotNull(res.date);

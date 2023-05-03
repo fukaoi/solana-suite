@@ -1,15 +1,15 @@
 import {
-  PublicKey,
-  ParsedTransactionWithMeta,
   ParsedInstruction,
+  ParsedTransactionWithMeta,
+  PublicKey,
 } from '@solana/web3.js';
 
 import {
-  History,
   DirectionFilter,
   Filter,
-  WithMemo,
+  History,
   MappingTokenAccount,
+  WithMemo,
 } from '../types/history';
 
 import { SolNative as _Is } from './is-parsed-instruction';
@@ -43,6 +43,8 @@ export namespace SolNative {
       foundDest && (v.info.destination = foundDest.owner);
     }
 
+    v.info.sol = v.info.lamports?.toSol();
+    delete(v.info.lamports);
     v.date = convertTimestampToDate(meta.blockTime as number);
     v.sig = meta.transaction.signatures[0];
     v.innerInstruction = false;
