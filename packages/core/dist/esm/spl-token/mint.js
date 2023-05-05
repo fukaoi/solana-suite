@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { SystemProgram, } from '@solana/web3.js';
 import { AuthorityType, createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, createSetAuthorityInstruction, getAssociatedTokenAddressSync, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
-import { createCreateMetadataAccountV2Instruction, } from '@metaplex-foundation/mpl-token-metadata';
+import { createCreateMetadataAccountV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 import { debugLog, KeypairAccount, MintInstruction, Node, Try, } from '@solana-suite/shared';
 import { Pda, TokenMetadata, Validator, } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
@@ -34,16 +34,17 @@ export var SplToken;
         const inst2 = createInitializeMintInstruction(mint, mintDecimal, owner, owner, TOKEN_PROGRAM_ID);
         const inst3 = createAssociatedTokenAccountInstruction(feePayer, tokenAssociated, owner, mint);
         const inst4 = createMintToCheckedInstruction(mint, tokenAssociated, owner, _Calculate.calculateAmount(totalAmount, mintDecimal), mintDecimal);
-        const inst5 = createCreateMetadataAccountV2Instruction({
+        const inst5 = createCreateMetadataAccountV3Instruction({
             metadata: metadataPda,
             mint,
             mintAuthority: owner,
             payer: feePayer,
             updateAuthority: owner,
         }, {
-            createMetadataAccountArgsV2: {
+            createMetadataAccountArgsV3: {
                 data: tokenMetadata,
                 isMutable,
+                collectionDetails: null
             },
         });
         return [inst1, inst2, inst3, inst4, inst5];
