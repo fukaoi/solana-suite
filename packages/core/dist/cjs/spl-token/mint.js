@@ -37,16 +37,17 @@ var SplToken;
         const inst2 = (0, spl_token_1.createInitializeMintInstruction)(mint, mintDecimal, owner, owner, spl_token_1.TOKEN_PROGRAM_ID);
         const inst3 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(feePayer, tokenAssociated, owner, mint);
         const inst4 = (0, spl_token_1.createMintToCheckedInstruction)(mint, tokenAssociated, owner, calculate_amount_1.SplToken.calculateAmount(totalAmount, mintDecimal), mintDecimal);
-        const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV2Instruction)({
+        const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV3Instruction)({
             metadata: metadataPda,
             mint,
             mintAuthority: owner,
             payer: feePayer,
             updateAuthority: owner,
         }, {
-            createMetadataAccountArgsV2: {
+            createMetadataAccountArgsV3: {
                 data: tokenMetadata,
                 isMutable,
+                collectionDetails: null
             },
         });
         return [inst1, inst2, inst3, inst4, inst5];

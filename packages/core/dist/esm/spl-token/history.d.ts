@@ -1,8 +1,8 @@
 import { Pubkey, Result } from '@solana-suite/shared';
-import { DirectionFilter, Filter, TransferHistory } from '../types/history';
+import { DirectionFilter, FilterType, UserSideOutput } from '../types/';
 export declare namespace SplToken {
-    const getHistory: (mint: Pubkey, target: Pubkey, options?: {
-        actionFilter?: Filter[];
+    const getHistory: (mint: Pubkey, target: Pubkey, callback: (result: Result<UserSideOutput.History[], Error>) => void, options?: {
+        actionFilter?: FilterType[];
         directionFilter?: DirectionFilter;
-    }) => Promise<Result<TransferHistory[], Error>>;
+    }) => Promise<void>;
 }

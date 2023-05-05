@@ -12,13 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SplToken = void 0;
 const spl_token_1 = require("@solana/spl-token");
 const shared_1 = require("@solana-suite/shared");
-const history_1 = require("../types/history");
+const types_1 = require("../types/");
 const get_by_address_1 = require("../sol-native/get-by-address");
-const filter_transaction_1 = require("../sol-native/filter-transaction");
+const transactions_filter_1 = require("../transactions-filter");
 var SplToken;
 (function (SplToken) {
-    SplToken.getHistory = (mint, target, options) => __awaiter(this, void 0, void 0, function* () {
-        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
+    SplToken.getHistory = (mint, target, callback, options) => __awaiter(this, void 0, void 0, function* () {
+        try {
             if (options === undefined || !Object.keys(options).length) {
                 options = {
                     actionFilter: [],
@@ -27,13 +27,18 @@ var SplToken;
             }
             const actionFilter = (options === null || options === void 0 ? void 0 : options.actionFilter) !== undefined && options.actionFilter.length > 0
                 ? options.actionFilter
-                : [history_1.Filter.Transfer, history_1.Filter.TransferChecked];
+                : [types_1.FilterType.Transfer, types_1.FilterType.TransferChecked];
             const tokenAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(mint.toPublicKey(), target.toPublicKey(), true);
-            (0, shared_1.debugLog)('# searchKeyAccount: ', tokenAccount.toString());
+            (0, shared_1.debugLog)('# tokenAccount: ', tokenAccount.toString());
             const transactions = yield get_by_address_1.SolNative.getByAddress(tokenAccount.toString());
             (0, shared_1.debugLog)('# getTransactionHistory transactions :', transactions);
-            return filter_transaction_1.SolNative.filterTransactions(target.toPublicKey(), transactions, actionFilter, true, options.directionFilter);
-        }));
+            transactions_filter_1.TransactionsFilter.parse(target.toPublicKey(), transactions, actionFilter, true, callback, options.directionFilter);
+        }
+        catch (e) {
+            if (e instanceof Error) {
+                callback(shared_1.Result.err(e));
+            }
+        }
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));
 //# sourceMappingURL=history.js.map

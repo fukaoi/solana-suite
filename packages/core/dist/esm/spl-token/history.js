@@ -8,14 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { getAssociatedTokenAddress } from '@solana/spl-token';
-import { debugLog, Try } from '@solana-suite/shared';
-import { Filter } from '../types/history';
+import { debugLog, Result } from '@solana-suite/shared';
+import { FilterType } from '../types/';
 import { SolNative as _Get } from '../sol-native/get-by-address';
-import { SolNative as _Filter } from '../sol-native/filter-transaction';
+import { TransactionsFilter } from '../transactions-filter';
 export var SplToken;
 (function (SplToken) {
-    SplToken.getHistory = (mint, target, options) => __awaiter(this, void 0, void 0, function* () {
-        return Try(() => __awaiter(this, void 0, void 0, function* () {
+    SplToken.getHistory = (mint, target, callback, options) => __awaiter(this, void 0, void 0, function* () {
+        try {
             if (options === undefined || !Object.keys(options).length) {
                 options = {
                     actionFilter: [],
@@ -24,13 +24,18 @@ export var SplToken;
             }
             const actionFilter = (options === null || options === void 0 ? void 0 : options.actionFilter) !== undefined && options.actionFilter.length > 0
                 ? options.actionFilter
-                : [Filter.Transfer, Filter.TransferChecked];
+                : [FilterType.Transfer, FilterType.TransferChecked];
             const tokenAccount = yield getAssociatedTokenAddress(mint.toPublicKey(), target.toPublicKey(), true);
-            debugLog('# searchKeyAccount: ', tokenAccount.toString());
+            debugLog('# tokenAccount: ', tokenAccount.toString());
             const transactions = yield _Get.getByAddress(tokenAccount.toString());
             debugLog('# getTransactionHistory transactions :', transactions);
-            return _Filter.filterTransactions(target.toPublicKey(), transactions, actionFilter, true, options.directionFilter);
-        }));
+            TransactionsFilter.parse(target.toPublicKey(), transactions, actionFilter, true, callback, options.directionFilter);
+        }
+        catch (e) {
+            if (e instanceof Error) {
+                callback(Result.err(e));
+            }
+        }
     });
 })(SplToken || (SplToken = {}));
 //# sourceMappingURL=history.js.map

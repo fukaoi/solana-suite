@@ -15,32 +15,27 @@ export namespace Convert.MintTo {
     value: ParsedTransactionWithMeta,
     directionFilter?: DirectionFilter
   ): UserSideOutput.History | undefined => {
-    const v: UserSideOutput.History = {
-      info: {},
-      type: '',
-      sig: '',
-      date: new Date(),
-      innerInstruction: false,
-    };
-    v.memo = instruction.parsed as string;
-    v.type = instruction.program;
-    v.date = _Shared.Shared.convertTimestampToDate(value.blockTime as number);
-    v.sig = value.transaction.signatures[0];
-    v.innerInstruction = false;
+    const history: UserSideOutput.History = {};
+
+    history.memo = instruction.parsed as string;
+    history.type = instruction.program;
+    history.date = _Shared.Shared.convertTimestampToDate(value.blockTime as number);
+    history.sig = value.transaction.signatures[0];
+    history.innerInstruction = false;
     if (
       value.meta?.innerInstructions &&
       value.meta?.innerInstructions.length !== 0
     ) {
       // inner instructions
-      v.innerInstruction = true;
+      history.innerInstruction = true;
     }
 
     if (directionFilter) {
-      if (v.info[directionFilter] === searchKey.toString()) {
-        return v;
+      if (history[directionFilter] === searchKey.toString()) {
+        return history;
       }
     } else {
-      return v;
+      return history;
     }
   };
 }

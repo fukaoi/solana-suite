@@ -59,8 +59,8 @@ export var SplToken;
     };
     SplToken.genericFindByOwner = (owner, callback, tokenStandard, sortable) => __awaiter(this, void 0, void 0, function* () {
         var _a, e_1, _b, _c;
-        let data = [];
         try {
+            let data = [];
             const connection = Node.getConnection();
             const info = yield connection.getParsedTokenAccountsByOwner(owner.toPublicKey(), {
                 programId: TOKEN_PROGRAM_ID,

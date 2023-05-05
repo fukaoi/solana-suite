@@ -1,5 +1,5 @@
-import { Convert as CR } from './creators';
-import { Convert as CU } from './uses';
+import { Convert as _Creators } from './creators';
+import { Convert as _Uses } from './uses';
 export var Convert;
 (function (Convert) {
     var TokenMetadata;
@@ -10,7 +10,7 @@ export var Convert;
                 symbol: input.symbol,
                 uri,
                 sellerFeeBasisPoints,
-                creators: CR.Creators.intoInfraSide(input.creators),
+                creators: _Creators.Creators.intoInfraSide(input.creators),
                 collection: null,
                 uses: input.uses || null,
             };
@@ -22,8 +22,8 @@ export var Convert;
                 name: TokenMetadata.deleteNullStrings(output.onchain.data.name),
                 symbol: TokenMetadata.deleteNullStrings(output.onchain.data.symbol),
                 uri: TokenMetadata.deleteNullStrings(output.onchain.data.uri),
-                creators: CR.Creators.intoUserSide(output.onchain.data.creators),
-                uses: CU.Uses.intoUserSide(output.onchain.uses),
+                creators: _Creators.Creators.intoUserSide(output.onchain.data.creators),
+                uses: _Uses.Uses.intoUserSide(output.onchain.uses),
                 offchain: output.offchain,
             };
         };

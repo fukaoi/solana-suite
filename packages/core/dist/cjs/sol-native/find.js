@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SolNative = void 0;
 const shared_1 = require("@solana-suite/shared");
-const is_parsed_instruction_1 = require("./is-parsed-instruction");
+const transactions_filter_1 = require("../transactions-filter");
 var SolNative;
 (function (SolNative) {
     SolNative.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
@@ -23,7 +23,7 @@ var SolNative;
                 lamports: 0,
                 owner: owner.toString(),
             };
-            if (is_parsed_instruction_1.SolNative.isParsedInstruction((_a = res.value) === null || _a === void 0 ? void 0 : _a.data)) {
+            if (transactions_filter_1.TransactionsFilter.isParsedInstruction((_a = res.value) === null || _a === void 0 ? void 0 : _a.data)) {
                 const parsedAccountData = (_b = res.value) === null || _b === void 0 ? void 0 : _b.data;
                 info.owner = (_d = (_c = parsedAccountData.parsed) === null || _c === void 0 ? void 0 : _c.info) === null || _d === void 0 ? void 0 : _d.owner;
             }

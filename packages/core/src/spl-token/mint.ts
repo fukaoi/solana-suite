@@ -16,7 +16,7 @@ import {
 } from '@solana/spl-token';
 
 import {
-  createCreateMetadataAccountV2Instruction,
+  createCreateMetadataAccountV3Instruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 
@@ -99,7 +99,7 @@ export namespace SplToken {
       mintDecimal
     );
 
-    const inst5 = createCreateMetadataAccountV2Instruction(
+    const inst5 = createCreateMetadataAccountV3Instruction(
       {
         metadata: metadataPda,
         mint,
@@ -108,9 +108,10 @@ export namespace SplToken {
         updateAuthority: owner,
       },
       {
-        createMetadataAccountArgsV2: {
+        createMetadataAccountArgsV3: {
           data: tokenMetadata,
           isMutable,
+          collectionDetails: null
         },
       }
     );
