@@ -38,7 +38,7 @@ import {
 
 import {
   createCreateMasterEditionV3Instruction,
-  createCreateMetadataAccountV2Instruction,
+  createCreateMetadataAccountV3Instruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
@@ -91,7 +91,7 @@ export namespace Metaplex {
 
     const inst4 = createMintToCheckedInstruction(mint, ata, owner, 1, 0);
 
-    const inst5 = createCreateMetadataAccountV2Instruction(
+    const inst5 = createCreateMetadataAccountV3Instruction(
       {
         metadata: tokenMetadataPubkey,
         mint,
@@ -100,9 +100,10 @@ export namespace Metaplex {
         updateAuthority: owner,
       },
       {
-        createMetadataAccountArgsV2: {
+        createMetadataAccountArgsV3: {
           data: nftMetadata,
           isMutable,
+          collectionDetails: null
         },
       }
     );

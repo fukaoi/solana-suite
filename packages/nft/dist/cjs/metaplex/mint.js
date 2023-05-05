@@ -39,16 +39,17 @@ var Metaplex;
         const inst2 = (0, spl_token_1.createInitializeMintInstruction)(mint, 0, owner, owner);
         const inst3 = (0, spl_token_1.createAssociatedTokenAccountInstruction)(feePayer, ata, owner, mint);
         const inst4 = (0, spl_token_1.createMintToCheckedInstruction)(mint, ata, owner, 1, 0);
-        const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV2Instruction)({
+        const inst5 = (0, mpl_token_metadata_1.createCreateMetadataAccountV3Instruction)({
             metadata: tokenMetadataPubkey,
             mint,
             mintAuthority: owner,
             payer: feePayer,
             updateAuthority: owner,
         }, {
-            createMetadataAccountArgsV2: {
+            createMetadataAccountArgsV3: {
                 data: nftMetadata,
                 isMutable,
+                collectionDetails: null
             },
         });
         const inst6 = (0, mpl_token_metadata_1.createCreateMasterEditionV3Instruction)({

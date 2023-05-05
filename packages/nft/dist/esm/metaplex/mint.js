@@ -12,7 +12,7 @@ import { createApproveInstruction, createAssociatedTokenAccountInstruction, crea
 import { debugLog, KeypairAccount, MintInstruction, Try, } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { Collections, MetaplexMetadata, Pda, Properties, Royalty, Validator, } from '@solana-suite/shared-metaplex';
-import { createCreateMasterEditionV3Instruction, createCreateMetadataAccountV2Instruction, } from '@metaplex-foundation/mpl-token-metadata';
+import { createCreateMasterEditionV3Instruction, createCreateMetadataAccountV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 import { Node } from '@solana-suite/shared';
 const NFT_AMOUNT = 1;
 export var Metaplex;
@@ -36,16 +36,17 @@ export var Metaplex;
         const inst2 = createInitializeMintInstruction(mint, 0, owner, owner);
         const inst3 = createAssociatedTokenAccountInstruction(feePayer, ata, owner, mint);
         const inst4 = createMintToCheckedInstruction(mint, ata, owner, 1, 0);
-        const inst5 = createCreateMetadataAccountV2Instruction({
+        const inst5 = createCreateMetadataAccountV3Instruction({
             metadata: tokenMetadataPubkey,
             mint,
             mintAuthority: owner,
             payer: feePayer,
             updateAuthority: owner,
         }, {
-            createMetadataAccountArgsV2: {
+            createMetadataAccountArgsV3: {
                 data: nftMetadata,
                 isMutable,
+                collectionDetails: null
             },
         });
         const inst6 = createCreateMasterEditionV3Instruction({
