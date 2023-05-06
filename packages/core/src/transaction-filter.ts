@@ -15,7 +15,7 @@ import {
 } from './types';
 
 //@internal
-export namespace TransactionsFilter {
+export namespace TransactionFilter {
   export const isParsedInstruction = (
     arg: unknown
   ): arg is ParsedInstruction => {
@@ -26,13 +26,16 @@ export namespace TransactionsFilter {
     transactions: ParsedTransactionWithMeta[],
     filterOptions: FilterType[],
     isToken = false,
-    callback: (result: Result<UserSideOutput.History[], Error>) => void,
     directionFilter?: DirectionFilter
-  ): void => {
-    const hist: UserSideOutput.History[] = [];
+  ) => {
+    const history: UserSideOutput.History[] = [];
     const mappingTokenAccount: MappingTokenAccount[] = [];
+    const withMemos: WithMemo[] = [];
+
     transactions.forEach((tx) => {
-      if (!tx.transaction) return;
+      if (!tx.transaction) {
+        return [];
+      }
 
       const accountKeys = tx.transaction.message.accountKeys.map((t) =>
         t.pubkey.toString()
@@ -48,23 +51,23 @@ export namespace TransactionsFilter {
         }
       });
 
-      // set transaction with memo
-      const withMemos: WithMemo[] = [];
-      tx.transaction.message.instructions.forEach((v) => {
-        console.log('v:', v);
-        if (isParsedInstruction(v) && v.program === 'spl-memo') {
-          withMemos.push({
-            sig: tx.transaction.signatures,
-            memo: v.parsed as string,
-          });
-        }
-      });
-
-      // Transfer
+      // case: Transfer
       tx.transaction.message.instructions.forEach((instruction) => {
         if (isParsedInstruction(instruction)) {
+          console.log('TYPE:::', instruction.parsed.type, instruction.program);
           if (isToken && instruction.program !== 'spl-token') {
-            return;
+            return [];
+          }
+
+          // Set Memo data
+          if (
+            isParsedInstruction(instruction) &&
+            instruction.program === 'spl-memo'
+          ) {
+            withMemos.push({
+              sig: tx.transaction.signatures,
+              memo: instruction.parsed as string,
+            });
           }
 
           if (filterOptions.includes(instruction.parsed.type as FilterType)) {
@@ -77,9 +80,9 @@ export namespace TransactionsFilter {
               isToken,
               withMemos
             );
-            res && hist.push(res);
-            callback(Result.ok(hist));
-            // Only memo
+            res && history.push(res);
+            return Result.ok(history);
+            // case: Only memo transaction
           } else if (filterOptions.includes(FilterType.OnlyMemo)) {
             const res = _Memo.Memo.intoUserSide(
               searchKey,
@@ -87,9 +90,10 @@ export namespace TransactionsFilter {
               tx,
               directionFilter
             );
-            res && hist.push(res);
-            callback(Result.ok(hist));
+            res && history.push(res);
+            return Result.ok(history);
           }
+          return history;
         }
       });
     });

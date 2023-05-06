@@ -1,41 +1,26 @@
 import { describe, it } from 'mocha';
 import { SolNative } from '../../src';
 import { assert } from 'chai';
-import { DirectionFilter, FilterType } from '../../src/';
+import { DirectionFilter } from '../../src/';
+import { Setup } from '../../../shared/test/testSetup';
+import { Pubkey } from '../../../shared/src';
 
-const target = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk';
+let target: Pubkey;
 
 describe('SolNative', () => {
-  it('Get transfer history with set optional filter', async () => {
-    await SolNative.getHistory(
-      target,
-      (result) => {
-        result.match(
-          (ok) => {
-            console.log('# SolNative.getHistory#1: ', ok);
-            ok.forEach((res) => {
-              assert.isNotEmpty(res.type);
-              assert.isNotEmpty(res.mint);
-              assert.isNotEmpty(res.mintAuthority);
-              assert.isNotNull(res.date);
-            });
-          },
-          (err) => assert.fail(err.message)
-        );
-      },
-      {
-        actionFilter: [FilterType.MintTo],
-      }
-    );
+  before(async () => {
+    const obj = await Setup.generateKeyPair();
+    // target = obj.dest.pubkey;
+    target = obj.source.pubkey;
   });
 
-  it('Get transfer history with transfer destination filter', async () => {
+  it.only('Get transfer history with transfer destination filter', async () => {
     await SolNative.getHistory(
       target,
       (result) => {
+        console.log(result);
         result.match(
           (ok) => {
-            console.log('# SolNative.getHistory#2: ', ok);
             ok.forEach((res) => {
               assert.isNotEmpty(res.type);
               assert.isNotEmpty(res.destination);

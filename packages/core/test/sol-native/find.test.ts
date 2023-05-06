@@ -9,7 +9,7 @@ const notFoundOwner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
 describe('SolNative', () => {
   it('find owner info', async () => {
     const res = await SolNative.findByOwner(owner);
-console.log(res);
+
     console.log('SolNative.findByOwner: ', res);
 
     if (res.isErr) {

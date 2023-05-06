@@ -1,6 +1,6 @@
 import { debugLog, Pubkey, Result } from '@solana-suite/shared';
 import { DirectionFilter, FilterType, UserSideOutput } from '../types/';
-import { TransactionsFilter } from '../transactions-filter';
+import { TransactionFilter } from '../transaction-filter';
 import { SolNative as _Get } from './get-by-address';
 
 export namespace SolNative {
@@ -26,14 +26,12 @@ export namespace SolNative {
           : [FilterType.Transfer, FilterType.TransferChecked];
 
       const transactions = await _Get.getByAddress(searchPubkey);
-      debugLog('# getTransactionHistory loop');
 
-      TransactionsFilter.parse(
+      TransactionFilter.parse(
         searchPubkey.toPublicKey(),
         transactions,
         actionFilter,
         false,
-        callback,
         options.directionFilter
       );
     } catch (e) {

@@ -1,8 +1,5 @@
-import {
-  ParsedTransactionWithMeta,
-} from '@solana/web3.js';
-
-import { Node, Pubkey } from '@solana-suite/shared';
+import { ParsedTransactionWithMeta } from '@solana/web3.js';
+import { debugLog, Node, Pubkey } from '@solana-suite/shared';
 
 //@internal
 export namespace SolNative {
@@ -13,9 +10,10 @@ export namespace SolNative {
     }
     return res;
   };
- 
+
   export const getByAddress = async (
     pubkey: Pubkey,
+    parser: (transaction: ParsedTransactionWithMeta) => void,
     limit?: number | undefined,
     before?: string | undefined,
     until?: string | undefined
@@ -29,7 +27,16 @@ export namespace SolNative {
       }
     );
 
-    const signatures = transactions.map((tx) => get(tx.signature));
-    return await Promise.all(signatures);
+    debugLog('# transactions count:', transactions.length);
+
+    let results: ParsedTransactionWithMeta[] = [];
+    // don't use  Promise.all, this is sync action
+    for await (const transaction of transactions) {
+      const signature = await get(transaction.signature);
+      // parser(signature);
+      results.push(signature);
+    }
+
+    return results;
   };
 }
