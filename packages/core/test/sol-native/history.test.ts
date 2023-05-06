@@ -83,9 +83,9 @@ describe('SolNative', () => {
           console.log('# SolNative.getHistory#4: ', ok);
           ok.forEach((res) => {
             assert.isNotEmpty(res.type);
-            assert.isNotNull(res.info.sol);
-            assert.isNotEmpty(res.info.destination);
-            assert.isNotEmpty(res.info.source);
+            assert.isNotNull(res.sol);
+            assert.isNotEmpty(res.destination);
+            assert.isNotEmpty(res.source);
             assert.isNotNull(res.date);
           });
         },

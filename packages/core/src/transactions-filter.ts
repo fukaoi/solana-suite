@@ -51,6 +51,7 @@ export namespace TransactionsFilter {
       // set transaction with memo
       const withMemos: WithMemo[] = [];
       tx.transaction.message.instructions.forEach((v) => {
+        console.log('v:', v);
         if (isParsedInstruction(v) && v.program === 'spl-memo') {
           withMemos.push({
             sig: tx.transaction.signatures,
