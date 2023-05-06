@@ -13,7 +13,7 @@ export namespace SolNative {
 
   export const getByAddress = async (
     pubkey: Pubkey,
-    parser: (transaction: ParsedTransactionWithMeta) => void,
+    parser?: (transaction: ParsedTransactionWithMeta) => void,
     limit?: number | undefined,
     before?: string | undefined,
     until?: string | undefined

@@ -23,7 +23,7 @@ export namespace SolNative {
       const actionFilter =
         options?.actionFilter !== undefined && options.actionFilter.length > 0
           ? options.actionFilter
-          : [FilterType.Transfer, FilterType.TransferChecked];
+          : [FilterType.Transfer];
 
       const transactions = await _Get.getByAddress(searchPubkey);
 

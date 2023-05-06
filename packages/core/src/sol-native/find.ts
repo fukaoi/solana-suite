@@ -1,7 +1,7 @@
 import { ParsedAccountData } from '@solana/web3.js';
 import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
 import { SolNativeOwnerInfo } from '../types/sol-native';
-import { TransactionsFilter } from '../transactions-filter';
+import { TransactionFilter } from '../transaction-filter';
 
 export namespace SolNative {
   export const findByOwner = async (
@@ -18,7 +18,7 @@ export namespace SolNative {
         owner: owner.toString(),
       };
 
-      if (TransactionsFilter.isParsedInstruction(res.value?.data)) {
+      if (TransactionFilter.isParsedInstruction(res.value?.data)) {
         const parsedAccountData = res.value?.data as ParsedAccountData;
         info.owner = parsedAccountData.parsed?.info?.owner as string;
       }

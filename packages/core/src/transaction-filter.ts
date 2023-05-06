@@ -27,7 +27,7 @@ export namespace TransactionFilter {
     filterOptions: FilterType[],
     isToken = false,
     directionFilter?: DirectionFilter
-  ) => {
+  ): UserSideOutput.History[] => {
     const history: UserSideOutput.History[] = [];
     const mappingTokenAccount: MappingTokenAccount[] = [];
     const withMemos: WithMemo[] = [];
@@ -54,7 +54,6 @@ export namespace TransactionFilter {
       // case: Transfer
       tx.transaction.message.instructions.forEach((instruction) => {
         if (isParsedInstruction(instruction)) {
-          console.log('TYPE:::', instruction.parsed.type, instruction.program);
           if (isToken && instruction.program !== 'spl-token') {
             return [];
           }
@@ -70,6 +69,7 @@ export namespace TransactionFilter {
             });
           }
 
+          console.log(instruction.parsed.type);
           if (filterOptions.includes(instruction.parsed.type as FilterType)) {
             const res = _Transfer.Transfer.intoUserSide(
               searchKey,
@@ -81,9 +81,8 @@ export namespace TransactionFilter {
               withMemos
             );
             res && history.push(res);
-            return Result.ok(history);
             // case: Only memo transaction
-          } else if (filterOptions.includes(FilterType.OnlyMemo)) {
+          } else if (filterOptions.includes(FilterType.Memo)) {
             const res = _Memo.Memo.intoUserSide(
               searchKey,
               instruction,
@@ -91,11 +90,10 @@ export namespace TransactionFilter {
               directionFilter
             );
             res && history.push(res);
-            return Result.ok(history);
           }
-          return history;
         }
       });
     });
+    return history;
   };
 }

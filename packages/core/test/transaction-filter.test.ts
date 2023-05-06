@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { SolNative } from '../src/sol-native/get-by-address';
 import { assert } from 'chai';
-import { DirectionFilter } from '../src/';
+import { DirectionFilter, FilterType } from '../src/';
 import { Setup } from '../../shared/test/testSetup';
 import { Pubkey } from '../../shared/src';
 import { TransactionFilter } from '../src/transaction-filter';
@@ -17,7 +17,13 @@ describe('TransactionFilter', () => {
 
   it('Parse transfer history', async () => {
     const transactions = await SolNative.getByAddress(target, () => {}, 10);
-    const res = TransactionFilter.parse(target.toPublicKey(), transactions, []);
-    console.log(res);
+    const res = TransactionFilter.parse(
+      target.toPublicKey(),
+      transactions,
+      // [FilterType.Transfer, FilterType.TransferChecked],
+      [FilterType.Memo],
+      false
+    );
+    console.log('# response: ', res);
   });
 });
