@@ -23,6 +23,7 @@ describe('TransactionFilter', () => {
         console.log(res);
         assert.isNotEmpty(res);
       },
+      100,
       10
     );
   });

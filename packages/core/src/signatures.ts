@@ -20,28 +20,30 @@ export namespace Signatures {
       transaction: ParsedTransactionWithMeta
     ) => UserSideOutput.History | undefined,
     callback: (history: Result<UserSideOutput.History, Error>) => void,
-    limit?: number | undefined,
-    before?: string | undefined,
-    until?: string | undefined
+    narrowDown: number,
+    receiveLimit?: number
   ): Promise<void> => {
     try {
       const transactions = await Node.getConnection().getSignaturesForAddress(
         pubkey.toPublicKey(),
         {
-          limit,
-          before,
-          until,
+          limit: narrowDown,
         }
       );
 
       debugLog('# transactions count:', transactions.length);
 
       // don't use  Promise.all, this is sync action
+      let i = 1;
       for await (const transaction of transactions) {
         const signature = await parseForTransaction(transaction.signature);
         const history = parser(signature);
         if (history) {
           callback(Result.ok(history));
+          i++;
+        }
+        if (receiveLimit && i > receiveLimit) {
+          break;
         }
       }
     } catch (e) {

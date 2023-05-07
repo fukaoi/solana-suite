@@ -10,6 +10,7 @@ export namespace SplToken {
     target: Pubkey,
     filterType: FilterType,
     callback: (result: Result<UserSideOutput.History, Error>) => void,
+    receiveLimit?: number,
     narrowDown: number = 1000 // Max number
   ): Promise<void> => {
     try {
@@ -23,7 +24,8 @@ export namespace SplToken {
         tokenAccount.toString(),
         parser,
         callback,
-        narrowDown
+        narrowDown,
+        receiveLimit
       );
     } catch (e) {
       if (e instanceof Error) {
