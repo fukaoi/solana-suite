@@ -2,13 +2,8 @@ import { Convert as _Memo } from './convert/memo';
 import { Convert as _Mint } from './convert/mint';
 import { Convert as _Transfer } from './convert/transfer';
 import { Convert as _TransferChecked } from './convert/transfer-checked';
+import { ParsedInstruction, ParsedTransactionWithMeta } from '@solana/web3.js';
 import {
-  ParsedInstruction,
-  ParsedTransactionWithMeta,
-  PublicKey,
-} from '@solana/web3.js';
-import {
-  DirectionFilter,
   FilterOptions,
   FilterType,
   PostTokenAccount,
@@ -44,10 +39,8 @@ export namespace TransactionFilter {
   };
 
   export const parse = (
-    target: PublicKey,
     transactions: ParsedTransactionWithMeta[],
-    filterType: FilterType,
-    directionFilter?: DirectionFilter
+    filterType: FilterType
   ): UserSideOutput.History[] => {
     const history: UserSideOutput.History[] = [];
 
@@ -65,7 +58,7 @@ export namespace TransactionFilter {
               if (FilterOptions.Memo.program.includes(instruction.program)) {
                 let instructionTransfer: ParsedInstruction = {
                   program: '',
-                  programId: '0000000000000000000000000000000000'.toPublicKey(), //dummy
+                  programId: '1'.repeat(32).toPublicKey(), //dummy
                   parsed: '',
                 };
 
@@ -81,11 +74,9 @@ export namespace TransactionFilter {
 
                 // fetch memo only transaction
                 const res = _Memo.Memo.intoUserSide(
-                  target,
                   instruction,
                   instructionTransfer,
                   tx,
-                  directionFilter,
                   postTokenAccount
                 );
                 res && history.push(res);
@@ -97,12 +88,7 @@ export namespace TransactionFilter {
                 FilterOptions.Mint.program.includes(instruction.program) &&
                 FilterOptions.Mint.action.includes(instruction.parsed.type)
               ) {
-                const res = _Mint.Mint.intoUserSide(
-                  target,
-                  instruction,
-                  tx,
-                  directionFilter
-                );
+                const res = _Mint.Mint.intoUserSide(instruction, tx);
                 res && history.push(res);
               }
               break;
@@ -115,19 +101,12 @@ export namespace TransactionFilter {
                 let res;
                 if (instruction.parsed.type === 'transferChecked') {
                   res = _TransferChecked.TransferChecked.intoUserSide(
-                    target,
                     instruction,
                     tx,
-                    directionFilter,
                     postTokenAccount
                   );
                 } else {
-                  res = _Transfer.Transfer.intoUserSide(
-                    target,
-                    instruction,
-                    tx,
-                    directionFilter
-                  );
+                  res = _Transfer.Transfer.intoUserSide(instruction, tx);
                 }
                 res && history.push(res);
               }

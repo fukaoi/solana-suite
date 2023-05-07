@@ -1,20 +1,13 @@
-import { ParsedTransactionWithMeta, PublicKey } from '@solana/web3.js';
+import { ParsedTransactionWithMeta } from '@solana/web3.js';
 
-import {
-  DirectionFilter,
-  InfraSideOutput,
-  PostTokenAccount,
-  UserSideOutput,
-} from '../types/';
+import { InfraSideOutput, PostTokenAccount, UserSideOutput } from '../types/';
 
 import { Convert as _Shared } from './shared';
 
 export namespace Convert.TransferChecked {
   export const intoUserSide = (
-    target: PublicKey,
     output: InfraSideOutput.TransferChecked,
     meta: ParsedTransactionWithMeta,
-    directionFilter?: DirectionFilter,
     mappingTokenAccount?: PostTokenAccount[]
   ): UserSideOutput.History | undefined => {
     const history: UserSideOutput.History = {};
@@ -48,12 +41,6 @@ export namespace Convert.TransferChecked {
       history.innerInstruction = true;
     }
 
-    if (!directionFilter) {
-      return history;
-    }
-
-    if (history[directionFilter] === target.toString()) {
-      return history;
-    }
+    return history;
   };
 }

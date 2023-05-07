@@ -1,19 +1,13 @@
-import { ParsedTransactionWithMeta, PublicKey } from '@solana/web3.js';
+import { ParsedTransactionWithMeta } from '@solana/web3.js';
 
-import {
-  DirectionFilter,
-  InfraSideOutput,
-  UserSideOutput,
-} from '../types/';
+import { InfraSideOutput, UserSideOutput } from '../types/';
 
 import { Convert as _Shared } from './shared';
 
 export namespace Convert.Transfer {
   export const intoUserSide = (
-    target: PublicKey,
     output: InfraSideOutput.Transfer,
-    meta: ParsedTransactionWithMeta,
-    directionFilter?: DirectionFilter
+    meta: ParsedTransactionWithMeta
   ): UserSideOutput.History | undefined => {
     const history: UserSideOutput.History = {};
 
@@ -39,12 +33,6 @@ export namespace Convert.Transfer {
       history.innerInstruction = true;
     }
 
-    if (!directionFilter) {
-      return history;
-    }
-
-    if (history[directionFilter] === target.toString()) {
-      return history;
-    }
+    return history;
   };
 }

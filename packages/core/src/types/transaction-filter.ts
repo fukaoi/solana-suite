@@ -19,11 +19,6 @@ export const FilterOptions = {
   },
 };
 
-export enum DirectionFilter {
-  Dest = 'destination',
-  Source = 'source',
-}
-
 export type PostTokenAccount = {
   account: string;
   owner: string;

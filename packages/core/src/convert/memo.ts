@@ -1,7 +1,6 @@
-import { ParsedTransactionWithMeta, PublicKey } from '@solana/web3.js';
+import { ParsedTransactionWithMeta } from '@solana/web3.js';
 
 import {
-  DirectionFilter,
   InfraSideOutput,
   PostTokenAccount,
   UserSideOutput,
@@ -11,11 +10,9 @@ import { Convert as _Shared } from './shared';
 
 export namespace Convert.Memo {
   export const intoUserSide = (
-    target: PublicKey,
     output: InfraSideOutput.Memo,
     outputTransfer: InfraSideOutput.Transfer,
     meta: ParsedTransactionWithMeta,
-    directionFilter?: DirectionFilter,
     mappingTokenAccount?: PostTokenAccount[]
   ): UserSideOutput.History | undefined => {
     const history: UserSideOutput.History = {};
@@ -37,7 +34,7 @@ export namespace Convert.Memo {
         history.destination = outputTransfer.parsed.info.destination;
       }
     }
-    
+
     history.memo = output.parsed as string;
     history.type = output.program;
     history.date = _Shared.Shared.convertTimestampToDate(
@@ -53,13 +50,6 @@ export namespace Convert.Memo {
       // inner instructions
       history.innerInstruction = true;
     }
-
-    if (directionFilter) {
-      if (history[directionFilter] === target.toString()) {
-        return history;
-      }
-    } else {
-      return history;
-    }
+    return history;
   };
 }

@@ -1,16 +1,13 @@
-import { InfraSideInput } from '@solana-suite/shared-metaplex';
-import { ParsedTransactionWithMeta, PublicKey } from '@solana/web3.js';
+import { ParsedTransactionWithMeta } from '@solana/web3.js';
 
-import { DirectionFilter, InfraSideOutput, UserSideOutput } from '../types/';
+import { InfraSideOutput, UserSideOutput } from '../types/';
 
 import { Convert as _Shared } from './shared';
 
 export namespace Convert.Mint {
   export const intoUserSide = (
-    target: PublicKey,
     output: InfraSideOutput.MintTo,
-    value: ParsedTransactionWithMeta,
-    directionFilter?: DirectionFilter
+    value: ParsedTransactionWithMeta
   ): UserSideOutput.History | undefined => {
     const history: UserSideOutput.History = {};
 
@@ -31,13 +28,6 @@ export namespace Convert.Mint {
       // inner instructions
       history.innerInstruction = true;
     }
-
-    if (directionFilter) {
-      if (history[directionFilter] === target.toString()) {
-        return history;
-      }
-    } else {
-      return history;
-    }
+    return history;
   };
 }

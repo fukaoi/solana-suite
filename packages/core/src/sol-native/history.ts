@@ -1,5 +1,5 @@
-import { debugLog, Pubkey, Result } from '@solana-suite/shared';
-import { DirectionFilter, FilterType, UserSideOutput } from '../types/';
+import { Pubkey, Result } from '@solana-suite/shared';
+import { FilterType, UserSideOutput } from '../types/';
 import { TransactionFilter } from '../transaction-filter';
 import { Signatures } from '../signatures';
 
@@ -9,14 +9,12 @@ export namespace SolNative {
     callback: (result: Result<UserSideOutput.History[], Error>) => void,
     options?: {
       actionFilter?: FilterType[];
-      directionFilter?: DirectionFilter;
     }
   ): Promise<void> => {
     try {
       if (options === undefined || !Object.keys(options).length) {
         options = {
           actionFilter: [],
-          directionFilter: undefined,
         };
       }
 
@@ -27,12 +25,7 @@ export namespace SolNative {
 
       const transactions = await Signatures.getForAdress(searchPubkey);
 
-      TransactionFilter.parse(
-        searchPubkey.toPublicKey(),
-        transactions,
-        FilterType.Memo,
-        options.directionFilter
-      );
+      TransactionFilter.parse(transactions, FilterType.Memo);
     } catch (e) {
       if (e instanceof Error) {
         callback(Result.err(e));

@@ -1,6 +1,6 @@
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { debugLog, Pubkey, Result } from '@solana-suite/shared';
-import { DirectionFilter, FilterType, UserSideOutput } from '../types/';
+import { FilterType, UserSideOutput } from '../types/';
 import { Signatures } from '../signatures';
 import { TransactionFilter } from '../transaction-filter';
 
@@ -13,14 +13,12 @@ export namespace SplToken {
     callback: (result: Result<UserSideOutput.History[], Error>) => void,
     options?: {
       actionFilter?: FilterType[];
-      directionFilter?: DirectionFilter;
     }
   ): Promise<void> => {
     try {
       if (options === undefined || !Object.keys(options).length) {
         options = {
           actionFilter: [],
-          directionFilter: undefined,
         };
       }
 
@@ -44,10 +42,8 @@ export namespace SplToken {
       debugLog('# getTransactionHistory transactions :', transactions);
 
       TransactionFilter.parse(
-        target.toPublicKey(),
         transactions,
-        FilterType.Memo, //todo
-        options.directionFilter
+        FilterType.Memo //todo
       );
     } catch (e) {
       if (e instanceof Error) {
