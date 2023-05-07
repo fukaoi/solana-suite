@@ -3,7 +3,7 @@ import { ParsedTransactionWithMeta, PublicKey } from '@solana/web3.js';
 import {
   DirectionFilter,
   InfraSideOutput,
-  MappingTokenAccount,
+  PostTokenAccount,
   UserSideOutput,
   WithMemo,
 } from '../types/';
@@ -16,22 +16,28 @@ export namespace Convert.Transfer {
     output: InfraSideOutput.Transfer,
     meta: ParsedTransactionWithMeta,
     directionFilter?: DirectionFilter,
-    mappingTokenAccount?: MappingTokenAccount[],
-    isToken?: boolean,
+    mappingTokenAccount?: PostTokenAccount[],
     withMemos?: WithMemo[]
   ): UserSideOutput.History | undefined => {
     const history: UserSideOutput.History = {};
 
-    if (isToken && mappingTokenAccount && output.program === 'spl-token') {
+    // validation check
+    if (!output.parsed.info.destination || !output.parsed.info.lamports) {
+      return;
+    }
+
+    if (mappingTokenAccount && output.program === 'spl-token') {
       const foundSource = mappingTokenAccount.find(
         (m) => m.account === output.parsed.info.source
       );
       const foundDest = mappingTokenAccount.find(
         (m) => m.account === output.parsed.info.destination
       );
-
       foundSource && (history.source = foundSource.owner);
       foundDest && (history.destination = foundDest.owner);
+    } else {
+      history.source = output.parsed.info.source;
+      history.destination = output.parsed.info.destination;
     }
 
     history.sol = output.parsed.info.lamports?.toSol();

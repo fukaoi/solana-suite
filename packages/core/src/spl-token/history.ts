@@ -44,7 +44,7 @@ export namespace SplToken {
       TransactionFilter.parse(
         target.toPublicKey(),
         transactions,
-        actionFilter,
+        FilterType.Memo, //todo
         true,
         options.directionFilter
       );

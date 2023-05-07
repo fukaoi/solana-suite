@@ -24,7 +24,7 @@ export enum DirectionFilter {
   Source = 'source',
 }
 
-export type MappingTokenAccount = {
+export type PostTokenAccount = {
   account: string;
   owner: string;
 };

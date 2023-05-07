@@ -30,7 +30,7 @@ export namespace SolNative {
       TransactionFilter.parse(
         searchPubkey.toPublicKey(),
         transactions,
-        actionFilter,
+        FilterType.Memo,
         false,
         options.directionFilter
       );

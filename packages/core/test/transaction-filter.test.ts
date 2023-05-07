@@ -20,8 +20,8 @@ describe('TransactionFilter', () => {
     const res = TransactionFilter.parse(
       target.toPublicKey(),
       transactions,
-      // [FilterType.Transfer, FilterType.TransferChecked],
-      [FilterType.Memo],
+      // FilterType.Transfer,
+      FilterType.Memo,
       false
     );
     console.log('# response: ', res);
