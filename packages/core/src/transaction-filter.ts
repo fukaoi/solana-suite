@@ -38,20 +38,18 @@ export namespace TransactionFilter {
     return arg !== null && typeof arg === 'object' && 'parsed' in arg;
   };
 
-  export const parse = (
-    transactions: ParsedTransactionWithMeta[],
-    filterType: FilterType
-  ): UserSideOutput.History[] => {
-    const history: UserSideOutput.History[] = [];
+  export const parse =
+    (filterType: FilterType) =>
+    (txMeta: ParsedTransactionWithMeta): UserSideOutput.History | undefined => {
+      let history: UserSideOutput.History | undefined;
 
-    transactions.forEach((tx) => {
-      if (!tx.transaction) {
-        return [];
+      if (!txMeta) {
+        return history;
       }
 
-      const postTokenAccount = createPostTokenAccountList(tx);
+      const postTokenAccount = createPostTokenAccountList(txMeta);
 
-      tx.transaction.message.instructions.forEach((instruction) => {
+      txMeta.transaction.message.instructions.forEach((instruction) => {
         if (isParsedInstruction(instruction)) {
           switch (filterType) {
             case FilterType.Memo: {
@@ -63,23 +61,26 @@ export namespace TransactionFilter {
                 };
 
                 // fetch  transfer transaction for relational memo
-                tx.transaction.message.instructions.forEach((instruction) => {
-                  if (
-                    isParsedInstruction(instruction) &&
-                    FilterOptions.Transfer.program.includes(instruction.program)
-                  ) {
-                    instructionTransfer = instruction;
+                txMeta.transaction.message.instructions.forEach(
+                  (instruction) => {
+                    if (
+                      isParsedInstruction(instruction) &&
+                      FilterOptions.Transfer.program.includes(
+                        instruction.program
+                      )
+                    ) {
+                      instructionTransfer = instruction;
+                    }
                   }
-                });
+                );
 
                 // fetch memo only transaction
-                const res = _Memo.Memo.intoUserSide(
+                history = _Memo.Memo.intoUserSide(
                   instruction,
                   instructionTransfer,
-                  tx,
+                  txMeta,
                   postTokenAccount
                 );
-                res && history.push(res);
               }
               break;
             }
@@ -88,8 +89,7 @@ export namespace TransactionFilter {
                 FilterOptions.Mint.program.includes(instruction.program) &&
                 FilterOptions.Mint.action.includes(instruction.parsed.type)
               ) {
-                const res = _Mint.Mint.intoUserSide(instruction, tx);
-                res && history.push(res);
+                history = _Mint.Mint.intoUserSide(instruction, txMeta);
               }
               break;
             }
@@ -102,13 +102,15 @@ export namespace TransactionFilter {
                 if (instruction.parsed.type === 'transferChecked') {
                   res = _TransferChecked.TransferChecked.intoUserSide(
                     instruction,
-                    tx,
+                    txMeta,
                     postTokenAccount
                   );
                 } else {
-                  res = _Transfer.Transfer.intoUserSide(instruction, tx);
+                  history = _Transfer.Transfer.intoUserSide(
+                    instruction,
+                    txMeta
+                  );
                 }
-                res && history.push(res);
               }
               break;
             default:
@@ -116,7 +118,6 @@ export namespace TransactionFilter {
           }
         }
       });
-    });
-    return history;
-  };
+      return history;
+    };
 }

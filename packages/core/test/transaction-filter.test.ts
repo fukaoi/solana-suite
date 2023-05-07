@@ -15,20 +15,41 @@ describe('TransactionFilter', () => {
   });
 
   it('Parse transfer history', async () => {
-    const transactions = await Signatures.getForAdress(target, () => {}, 10);
-    const res = TransactionFilter.parse(transactions, FilterType.Transfer);
-    assert.isNotEmpty(res);
+    const parser = TransactionFilter.parse(FilterType.Transfer);
+    await Signatures.getForAdress(
+      target,
+      parser,
+      (res) => {
+        console.log(res);
+        assert.isNotEmpty(res);
+      },
+      10
+    );
   });
 
   it('Parse memo history', async () => {
-    const transactions = await Signatures.getForAdress(target, () => {}, 10);
-    const res = TransactionFilter.parse(transactions, FilterType.Memo);
-    assert.isNotEmpty(res);
+    const parser = TransactionFilter.parse(FilterType.Memo);
+    await Signatures.getForAdress(
+      target,
+      parser,
+      (res) => {
+        console.log(res);
+        assert.isNotEmpty(res);
+      },
+      10
+    );
   });
 
   it('Parse Mint history', async () => {
-    const transactions = await Signatures.getForAdress(target, () => {}, 10);
-    const res = TransactionFilter.parse(transactions, FilterType.Mint);
-    assert.isNotEmpty(res);
+    const parser = TransactionFilter.parse(FilterType.Mint);
+    await Signatures.getForAdress(
+      target,
+      parser,
+      (res) => {
+        console.log(res);
+        assert.isNotEmpty(res);
+      },
+      10
+    );
   });
 });

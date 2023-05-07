@@ -5,27 +5,14 @@ import { Signatures } from '../signatures';
 
 export namespace SolNative {
   export const getHistory = async (
-    searchPubkey: Pubkey,
-    callback: (result: Result<UserSideOutput.History[], Error>) => void,
-    options?: {
-      actionFilter?: FilterType[];
-    }
+    target: Pubkey,
+    filterType: FilterType,
+    callback: (result: Result<UserSideOutput.History, Error>) => void,
+    narrowDown: number = 1000 // Max number
   ): Promise<void> => {
     try {
-      if (options === undefined || !Object.keys(options).length) {
-        options = {
-          actionFilter: [],
-        };
-      }
-
-      const actionFilter =
-        options?.actionFilter !== undefined && options.actionFilter.length > 0
-          ? options.actionFilter
-          : [FilterType.Transfer];
-
-      const transactions = await Signatures.getForAdress(searchPubkey);
-
-      TransactionFilter.parse(transactions, FilterType.Memo);
+      const parser = TransactionFilter.parse(filterType);
+      await Signatures.getForAdress(target, parser, callback, narrowDown);
     } catch (e) {
       if (e instanceof Error) {
         callback(Result.err(e));

@@ -1,5 +1,6 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
-import { debugLog, Node, Pubkey } from '@solana-suite/shared';
+import { debugLog, Node, Pubkey, Result } from '@solana-suite/shared';
+import { UserSideOutput } from './types/';
 
 //@internal
 export namespace Signatures {
@@ -15,30 +16,38 @@ export namespace Signatures {
 
   export const getForAdress = async (
     pubkey: Pubkey,
-    parser?: (transaction: ParsedTransactionWithMeta) => void,
+    parser: (
+      transaction: ParsedTransactionWithMeta
+    ) => UserSideOutput.History | undefined,
+    callback: (history: Result<UserSideOutput.History, Error>) => void,
     limit?: number | undefined,
     before?: string | undefined,
     until?: string | undefined
-  ): Promise<ParsedTransactionWithMeta[]> => {
-    const transactions = await Node.getConnection().getSignaturesForAddress(
-      pubkey.toPublicKey(),
-      {
-        limit,
-        before,
-        until,
+  ): Promise<void> => {
+    try {
+      const transactions = await Node.getConnection().getSignaturesForAddress(
+        pubkey.toPublicKey(),
+        {
+          limit,
+          before,
+          until,
+        }
+      );
+
+      debugLog('# transactions count:', transactions.length);
+
+      // don't use  Promise.all, this is sync action
+      for await (const transaction of transactions) {
+        const signature = await parseForTransaction(transaction.signature);
+        const history = parser(signature);
+        if (history) {
+          callback(Result.ok(history));
+        }
       }
-    );
-
-    debugLog('# transactions count:', transactions.length);
-
-    let results: ParsedTransactionWithMeta[] = [];
-    // don't use  Promise.all, this is sync action
-    for await (const transaction of transactions) {
-      const signature = await parseForTransaction(transaction.signature);
-      // parser(signature);
-      results.push(signature);
+    } catch (e) {
+      if (e instanceof Error) {
+        callback(Result.err(e));
+      }
     }
-
-    return results;
   };
 }
