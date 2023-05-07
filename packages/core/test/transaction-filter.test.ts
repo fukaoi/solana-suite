@@ -1,5 +1,5 @@
 import { describe, it } from 'mocha';
-import { SolNative } from '../src/sol-native/get-by-address';
+import { Signatures } from '../src/signatures';
 import { assert } from 'chai';
 import { DirectionFilter, FilterType } from '../src/';
 import { Setup } from '../../shared/test/testSetup';
@@ -16,14 +16,13 @@ describe('TransactionFilter', () => {
   });
 
   it('Parse transfer history', async () => {
-    const transactions = await SolNative.getByAddress(target, () => {}, 10);
+    const transactions = await Signatures.getForAdress(target, () => {}, 10);
     const res = TransactionFilter.parse(
       target.toPublicKey(),
       transactions,
-      // FilterType.Transfer,
-      FilterType.Mint,
+      FilterType.Transfer
+      // FilterType.Mint
       // FilterType.Memo,
-      false
     );
     console.log('# response: ', res);
   });

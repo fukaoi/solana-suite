@@ -41,7 +41,7 @@ export namespace InfraSideOutput {
       info: {
         destination: Pubkey;
         mint: Pubkey;
-        mintAuthority: Pubkey;
+        multisigAuthority: Pubkey;
         signers: Pubkey[];
         source: Pubkey;
         tokenAmount: {

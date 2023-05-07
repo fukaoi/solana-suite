@@ -1,7 +1,7 @@
-import { Result } from '@solana-suite/shared';
 import { Convert as _Memo } from './convert/memo';
 import { Convert as _Mint } from './convert/mint';
 import { Convert as _Transfer } from './convert/transfer';
+import { Convert as _TransferChecked } from './convert/transfer-checked';
 import {
   ParsedInstruction,
   ParsedTransactionWithMeta,
@@ -42,6 +42,7 @@ export namespace TransactionFilter {
   ): arg is ParsedInstruction => {
     return arg !== null && typeof arg === 'object' && 'parsed' in arg;
   };
+
   export const parse = (
     target: PublicKey,
     transactions: ParsedTransactionWithMeta[],
@@ -96,7 +97,6 @@ export namespace TransactionFilter {
                 FilterOptions.Mint.program.includes(instruction.program) &&
                 FilterOptions.Mint.action.includes(instruction.parsed.type)
               ) {
-                console.log(instruction);
                 const res = _Mint.Mint.intoUserSide(
                   target,
                   instruction,
@@ -108,20 +108,32 @@ export namespace TransactionFilter {
               break;
             }
             case FilterType.Transfer:
-            default:
               if (
-                FilterOptions.Transfer.program.includes(instruction.program)
+                FilterOptions.Transfer.program.includes(instruction.program) &&
+                FilterOptions.Transfer.action.includes(instruction.parsed.type)
               ) {
-                const res = _Transfer.Transfer.intoUserSide(
-                  target,
-                  instruction,
-                  tx,
-                  directionFilter,
-                  postTokenAccount
-                );
+                let res;
+                if (instruction.parsed.type === 'transferChecked') {
+                  res = _TransferChecked.TransferChecked.intoUserSide(
+                    target,
+                    instruction,
+                    tx,
+                    directionFilter,
+                    postTokenAccount
+                  );
+                } else {
+                  res = _Transfer.Transfer.intoUserSide(
+                    target,
+                    instruction,
+                    tx,
+                    directionFilter
+                  );
+                }
                 res && history.push(res);
               }
               break;
+            default:
+              throw Error(`No match FilterType: ${filterType}`);
           }
         }
       });

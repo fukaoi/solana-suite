@@ -3,28 +3,37 @@ import { ParsedTransactionWithMeta, PublicKey } from '@solana/web3.js';
 import {
   DirectionFilter,
   InfraSideOutput,
+  PostTokenAccount,
   UserSideOutput,
 } from '../types/';
 
 import { Convert as _Shared } from './shared';
 
-export namespace Convert.Transfer {
+export namespace Convert.TransferChecked {
   export const intoUserSide = (
     target: PublicKey,
-    output: InfraSideOutput.Transfer,
+    output: InfraSideOutput.TransferChecked,
     meta: ParsedTransactionWithMeta,
-    directionFilter?: DirectionFilter
+    directionFilter?: DirectionFilter,
+    mappingTokenAccount?: PostTokenAccount[]
   ): UserSideOutput.History | undefined => {
     const history: UserSideOutput.History = {};
 
-    // validation check
-    if (!output.parsed.info.destination || !output.parsed.info.lamports) {
-      return;
+    if (mappingTokenAccount) {
+      const foundSource = mappingTokenAccount.find(
+        (m) => m.account === output.parsed.info.source
+      );
+      const foundDest = mappingTokenAccount.find(
+        (m) => m.account === output.parsed.info.destination
+      );
+      foundSource && (history.source = foundSource.owner);
+      foundDest && (history.destination = foundDest.owner);
     }
 
-    history.source = output.parsed.info.source;
-    history.destination = output.parsed.info.destination;
-    history.sol = output.parsed.info.lamports?.toSol().toString();
+    history.tokenAmount = output.parsed.info.tokenAmount;
+    history.mint = output.parsed.info.mint;
+    history.multisigAuthority = output.parsed.info.multisigAuthority;
+    history.signers = output.parsed.info.signers;
     history.date = _Shared.Shared.convertTimestampToDate(
       meta.blockTime as number
     );

@@ -31,7 +31,6 @@ export namespace SolNative {
         searchPubkey.toPublicKey(),
         transactions,
         FilterType.Memo,
-        false,
         options.directionFilter
       );
     } catch (e) {

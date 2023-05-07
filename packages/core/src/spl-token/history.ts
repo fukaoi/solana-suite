@@ -47,7 +47,6 @@ export namespace SplToken {
         target.toPublicKey(),
         transactions,
         FilterType.Memo, //todo
-        true,
         options.directionFilter
       );
     } catch (e) {

@@ -7,7 +7,7 @@ export enum FilterType {
 export const FilterOptions = {
   Transfer: {
     program: ['system', 'spl-token'],
-    action: ['transfer', 'transfer-checked'],
+    action: ['transfer', 'transferChecked'],
   },
   Memo: {
     program: ['spl-memo'],
