@@ -11,7 +11,7 @@ import { Convert as _Shared } from './shared';
 
 export namespace Convert.Memo {
   export const intoUserSide = (
-    searchKey: PublicKey,
+    target: PublicKey,
     output: InfraSideOutput.Memo,
     outputTransfer: InfraSideOutput.Transfer,
     meta: ParsedTransactionWithMeta,
@@ -55,7 +55,7 @@ export namespace Convert.Memo {
     }
 
     if (directionFilter) {
-      if (history[directionFilter] === searchKey.toString()) {
+      if (history[directionFilter] === target.toString()) {
         return history;
       }
     } else {

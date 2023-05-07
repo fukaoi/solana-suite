@@ -1,5 +1,6 @@
 import { Result } from '@solana-suite/shared';
 import { Convert as _Memo } from './convert/memo';
+import { Convert as _Mint } from './convert/mint';
 import { Convert as _Transfer } from './convert/transfer';
 import {
   ParsedInstruction,
@@ -45,7 +46,6 @@ export namespace TransactionFilter {
     target: PublicKey,
     transactions: ParsedTransactionWithMeta[],
     filterType: FilterType,
-    isToken = false,
     directionFilter?: DirectionFilter
   ): UserSideOutput.History[] => {
     const history: UserSideOutput.History[] = [];
@@ -92,6 +92,20 @@ export namespace TransactionFilter {
               break;
             }
             case FilterType.Mint: {
+              if (
+                FilterOptions.Mint.program.includes(instruction.program) &&
+                FilterOptions.Mint.action.includes(instruction.parsed.type)
+              ) {
+                console.log(instruction);
+                const res = _Mint.Mint.intoUserSide(
+                  target,
+                  instruction,
+                  tx,
+                  directionFilter
+                );
+                res && history.push(res);
+              }
+              break;
             }
             case FilterType.Transfer:
             default:

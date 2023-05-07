@@ -11,7 +11,7 @@ import { Convert as _Shared } from './shared';
 
 export namespace Convert.Transfer {
   export const intoUserSide = (
-    searchKey: PublicKey,
+    target: PublicKey,
     output: InfraSideOutput.Transfer,
     meta: ParsedTransactionWithMeta,
     directionFilter?: DirectionFilter,
@@ -38,7 +38,7 @@ export namespace Convert.Transfer {
       history.destination = output.parsed.info.destination;
     }
 
-    history.sol = output.parsed.info.lamports?.toSol();
+    history.sol = output.parsed.info.lamports?.toSol().toString();
     history.date = _Shared.Shared.convertTimestampToDate(
       meta.blockTime as number
     );
@@ -57,7 +57,7 @@ export namespace Convert.Transfer {
       return history;
     }
 
-    if (history[directionFilter] === searchKey.toString()) {
+    if (history[directionFilter] === target.toString()) {
       return history;
     }
   };

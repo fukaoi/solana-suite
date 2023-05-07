@@ -11,8 +11,8 @@ let target: Pubkey;
 describe('TransactionFilter', () => {
   before(async () => {
     const obj = await Setup.generateKeyPair();
-    target = obj.dest.pubkey;
-    // target = obj.source.pubkey;
+    // target = obj.dest.pubkey;
+    target = obj.source.pubkey;
   });
 
   it('Parse transfer history', async () => {
@@ -20,7 +20,8 @@ describe('TransactionFilter', () => {
     const res = TransactionFilter.parse(
       target.toPublicKey(),
       transactions,
-      FilterType.Transfer,
+      // FilterType.Transfer,
+      FilterType.Mint,
       // FilterType.Memo,
       false
     );
