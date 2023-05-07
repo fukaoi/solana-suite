@@ -12,7 +12,6 @@ import {
   FilterType,
   PostTokenAccount,
   UserSideOutput,
-  WithMemo,
 } from './types';
 
 //@internal
@@ -50,7 +49,6 @@ export namespace TransactionFilter {
     directionFilter?: DirectionFilter
   ): UserSideOutput.History[] => {
     const history: UserSideOutput.History[] = [];
-    const withMemos: WithMemo[] = [];
 
     transactions.forEach((tx) => {
       if (!tx.transaction) {
@@ -59,66 +57,60 @@ export namespace TransactionFilter {
 
       const postTokenAccount = createPostTokenAccountList(tx);
 
-      switch (filterType) {
-        case FilterType.Memo: {
-          tx.transaction.message.instructions.forEach((instruction) => {
-            if (
-              isParsedInstruction(instruction) &&
-              FilterOptions.Memo.program.includes(instruction.program)
-            ) {
-              let instructionTransfer: ParsedInstruction = {
-                program: '',
-                programId: target, //dummy
-                parsed: '',
-              };
+      tx.transaction.message.instructions.forEach((instruction) => {
+        if (isParsedInstruction(instruction)) {
+          switch (filterType) {
+            case FilterType.Memo: {
+              if (FilterOptions.Memo.program.includes(instruction.program)) {
+                let instructionTransfer: ParsedInstruction = {
+                  program: '',
+                  programId: '0000000000000000000000000000000000'.toPublicKey(), //dummy
+                  parsed: '',
+                };
 
-              // fetch  transfer transaction for relational memo
-              tx.transaction.message.instructions.forEach((instruction) => {
-                if (
-                  isParsedInstruction(instruction) &&
-                  FilterOptions.Transfer.program.includes(instruction.program)
-                ) {
-                  instructionTransfer = instruction;
-                }
-              });
+                // fetch  transfer transaction for relational memo
+                tx.transaction.message.instructions.forEach((instruction) => {
+                  if (
+                    isParsedInstruction(instruction) &&
+                    FilterOptions.Transfer.program.includes(instruction.program)
+                  ) {
+                    instructionTransfer = instruction;
+                  }
+                });
 
-              // fetch memo only transaction
-              const res = _Memo.Memo.intoUserSide(
-                target,
-                instruction,
-                instructionTransfer,
-                tx,
-                directionFilter,
-                postTokenAccount
-              );
-              res && history.push(res);
+                // fetch memo only transaction
+                const res = _Memo.Memo.intoUserSide(
+                  target,
+                  instruction,
+                  instructionTransfer,
+                  tx,
+                  directionFilter,
+                  postTokenAccount
+                );
+                res && history.push(res);
+              }
+              break;
             }
-          });
-          break;
-        }
-        case FilterType.Mint: {
-        }
-        case FilterType.Transfer:
-        default:
-          tx.transaction.message.instructions.forEach((instruction) => {
-            if (
-              isParsedInstruction(instruction) &&
-              FilterOptions.Transfer.program.includes(instruction.program)
-            ) {
-              // console.log(tx.transaction.message.instructions);
-              const res = _Transfer.Transfer.intoUserSide(
-                target,
-                instruction,
-                tx,
-                directionFilter,
-                postTokenAccount,
-                withMemos
-              );
-              res && history.push(res);
+            case FilterType.Mint: {
             }
-          });
-          break;
-      }
+            case FilterType.Transfer:
+            default:
+              if (
+                FilterOptions.Transfer.program.includes(instruction.program)
+              ) {
+                const res = _Transfer.Transfer.intoUserSide(
+                  target,
+                  instruction,
+                  tx,
+                  directionFilter,
+                  postTokenAccount
+                );
+                res && history.push(res);
+              }
+              break;
+          }
+        }
+      });
     });
     return history;
   };

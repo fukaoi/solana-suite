@@ -5,7 +5,6 @@ import {
   InfraSideOutput,
   PostTokenAccount,
   UserSideOutput,
-  WithMemo,
 } from '../types/';
 
 import { Convert as _Shared } from './shared';
@@ -16,8 +15,7 @@ export namespace Convert.Transfer {
     output: InfraSideOutput.Transfer,
     meta: ParsedTransactionWithMeta,
     directionFilter?: DirectionFilter,
-    mappingTokenAccount?: PostTokenAccount[],
-    withMemos?: WithMemo[]
+    mappingTokenAccount?: PostTokenAccount[]
   ): UserSideOutput.History | undefined => {
     const history: UserSideOutput.History = {};
 
@@ -46,12 +44,6 @@ export namespace Convert.Transfer {
     );
     history.sig = meta.transaction.signatures[0];
     history.innerInstruction = false;
-    if (withMemos && withMemos.length > 0) {
-      const finded = withMemos.find(
-        (obj) => obj.sig === meta.transaction.signatures
-      );
-      finded && (history.memo = finded.memo);
-    }
 
     // inner instructions
     if (
