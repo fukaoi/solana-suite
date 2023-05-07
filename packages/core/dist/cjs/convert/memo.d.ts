@@ -1,5 +1,5 @@
-import { ParsedTransactionWithMeta, PublicKey } from '@solana/web3.js';
-import { DirectionFilter, InfraSideOutput, UserSideOutput } from '../types/';
+import { ParsedTransactionWithMeta } from '@solana/web3.js';
+import { InfraSideOutput, PostTokenAccount, UserSideOutput } from '../types/';
 export declare namespace Convert.Memo {
-    const intoUserSide: (searchKey: PublicKey, output: InfraSideOutput.Memo, value: ParsedTransactionWithMeta, directionFilter?: DirectionFilter) => UserSideOutput.History | undefined;
+    const intoUserSide: (output: InfraSideOutput.Memo, outputTransfer: InfraSideOutput.Transfer, meta: ParsedTransactionWithMeta, mappingTokenAccount?: PostTokenAccount[]) => UserSideOutput.History | undefined;
 }

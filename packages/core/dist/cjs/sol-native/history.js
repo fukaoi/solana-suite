@@ -11,25 +11,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SolNative = void 0;
 const shared_1 = require("@solana-suite/shared");
-const types_1 = require("../types/");
-const transactions_filter_1 = require("../transactions-filter");
-const get_by_address_1 = require("./get-by-address");
+const transaction_filter_1 = require("../transaction-filter");
+const signatures_1 = require("../signatures");
 var SolNative;
 (function (SolNative) {
-    SolNative.getHistory = (searchPubkey, callback, options) => __awaiter(this, void 0, void 0, function* () {
+    SolNative.getHistory = (target, filterType, callback, narrowDown = 1000 // Max number
+    ) => __awaiter(this, void 0, void 0, function* () {
         try {
-            if (options === undefined || !Object.keys(options).length) {
-                options = {
-                    actionFilter: [],
-                    directionFilter: undefined,
-                };
-            }
-            const actionFilter = (options === null || options === void 0 ? void 0 : options.actionFilter) !== undefined && options.actionFilter.length > 0
-                ? options.actionFilter
-                : [types_1.FilterType.Transfer, types_1.FilterType.TransferChecked];
-            const transactions = yield get_by_address_1.SolNative.getByAddress(searchPubkey);
-            (0, shared_1.debugLog)('# getTransactionHistory loop');
-            transactions_filter_1.TransactionsFilter.parse(searchPubkey.toPublicKey(), transactions, actionFilter, false, callback, options.directionFilter);
+            const parser = transaction_filter_1.TransactionFilter.parse(filterType);
+            yield signatures_1.Signatures.getForAdress(target, parser, callback, narrowDown);
         }
         catch (e) {
             if (e instanceof Error) {

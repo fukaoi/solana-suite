@@ -8,28 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { getAssociatedTokenAddress } from '@solana/spl-token';
-import { debugLog, Result } from '@solana-suite/shared';
-import { FilterType } from '../types/';
-import { SolNative as _Get } from '../sol-native/get-by-address';
-import { TransactionsFilter } from '../transactions-filter';
+import { Result } from '@solana-suite/shared';
+import { Signatures } from '../signatures';
+import { TransactionFilter } from '../transaction-filter';
 export var SplToken;
 (function (SplToken) {
-    SplToken.getHistory = (mint, target, callback, options) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.getHistory = (mint, target, filterType, callback, narrowDown = 1000 // Max number
+    ) => __awaiter(this, void 0, void 0, function* () {
         try {
-            if (options === undefined || !Object.keys(options).length) {
-                options = {
-                    actionFilter: [],
-                    directionFilter: undefined,
-                };
-            }
-            const actionFilter = (options === null || options === void 0 ? void 0 : options.actionFilter) !== undefined && options.actionFilter.length > 0
-                ? options.actionFilter
-                : [FilterType.Transfer, FilterType.TransferChecked];
             const tokenAccount = yield getAssociatedTokenAddress(mint.toPublicKey(), target.toPublicKey(), true);
-            debugLog('# tokenAccount: ', tokenAccount.toString());
-            const transactions = yield _Get.getByAddress(tokenAccount.toString());
-            debugLog('# getTransactionHistory transactions :', transactions);
-            TransactionsFilter.parse(target.toPublicKey(), transactions, actionFilter, true, callback, options.directionFilter);
+            const parser = TransactionFilter.parse(filterType);
+            yield Signatures.getForAdress(tokenAccount.toString(), parser, callback, narrowDown);
         }
         catch (e) {
             if (e instanceof Error) {

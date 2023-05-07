@@ -17,9 +17,14 @@ export declare namespace InfraSideOutput {
         parsed: {
             info: {
                 account: Pubkey;
-                amount: string;
                 mint: Pubkey;
                 mintAuthority: Pubkey;
+                tokenAmount: {
+                    amount: string;
+                    decimals: number;
+                    uiAmount: number;
+                    uiAmountString: string;
+                };
             };
             type: string;
         };
@@ -32,7 +37,7 @@ export declare namespace InfraSideOutput {
             info: {
                 destination: Pubkey;
                 mint: Pubkey;
-                mintAuthority: Pubkey;
+                multisigAuthority: Pubkey;
                 signers: Pubkey[];
                 source: Pubkey;
                 tokenAmount: {

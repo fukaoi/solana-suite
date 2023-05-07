@@ -1,7 +1,7 @@
 import { Pubkey } from '@solana-suite/shared';
 export declare namespace UserSideOutput {
     type History = {
-        sol?: number;
+        sol?: string;
         account?: string;
         destination?: Pubkey;
         source?: Pubkey;
@@ -10,7 +10,12 @@ export declare namespace UserSideOutput {
         signers?: Pubkey[];
         mint?: Pubkey;
         mintAuthority?: Pubkey;
-        tokenAmount?: number[];
+        tokenAmount?: {
+            amount: string;
+            decimals: number;
+            uiAmount: number;
+            uiAmountString: string;
+        };
         memo?: string;
         date?: Date;
         type?: string;
