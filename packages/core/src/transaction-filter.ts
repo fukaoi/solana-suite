@@ -43,7 +43,7 @@ export namespace TransactionFilter {
     return arg !== null && typeof arg === 'object' && 'parsed' in arg;
   };
   export const parse = (
-    searchKey: PublicKey,
+    target: PublicKey,
     transactions: ParsedTransactionWithMeta[],
     filterType: FilterType,
     isToken = false,
@@ -66,22 +66,27 @@ export namespace TransactionFilter {
               isParsedInstruction(instruction) &&
               FilterOptions.Memo.program.includes(instruction.program)
             ) {
-              console.log('######', tx.transaction.message.instructions);
-              console.log('$$$$$$', instruction);
+              let instructionTransfer: ParsedInstruction = {
+                program: '',
+                programId: target, //dummy
+                parsed: '',
+              };
 
-              let instructionTransfer;
-              const index =
-                tx.transaction.message.instructions.indexOf(instruction);
-              if (index > -1) {
-                instructionTransfer =
-                  tx.transaction.message.instructions.splice(index, 1);
-              }
+              // fetch  transfer transaction for relational memo
+              tx.transaction.message.instructions.forEach((instruction) => {
+                if (
+                  isParsedInstruction(instruction) &&
+                  FilterOptions.Transfer.program.includes(instruction.program)
+                ) {
+                  instructionTransfer = instruction;
+                }
+              });
 
               // fetch memo only transaction
               const res = _Memo.Memo.intoUserSide(
-                searchKey,
+                target,
                 instruction,
-                instructionTransfer as ParsedTransactionWithMeta,
+                instructionTransfer,
                 tx,
                 directionFilter,
                 postTokenAccount
@@ -102,7 +107,7 @@ export namespace TransactionFilter {
             ) {
               // console.log(tx.transaction.message.instructions);
               const res = _Transfer.Transfer.intoUserSide(
-                searchKey,
+                target,
                 instruction,
                 tx,
                 directionFilter,

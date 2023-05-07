@@ -19,21 +19,25 @@ export namespace Convert.Memo {
     mappingTokenAccount?: PostTokenAccount[]
   ): UserSideOutput.History | undefined => {
     const history: UserSideOutput.History = {};
-    
-    if (mappingTokenAccount && outputTransfer.program === 'spl-token') {
-      const foundSource = mappingTokenAccount.find(
-        (m) => m.account === outputTransfer.parsed.info.source
-      );
-      const foundDest = mappingTokenAccount.find(
-        (m) => m.account === outputTransfer.parsed.info.destination
-      );
 
-      foundSource && (history.source = foundSource.owner);
-      foundDest && (history.destination = foundDest.owner);
-    } else {
-      history.source = outputTransfer.parsed.info.source;
-      history.destination = outputTransfer.parsed.info.destination;
+    // case: transfer with memo
+    if (outputTransfer.program !== '') {
+      if (mappingTokenAccount && outputTransfer.program === 'spl-token') {
+        const foundSource = mappingTokenAccount.find(
+          (m) => m.account === outputTransfer.parsed.info.source
+        );
+        const foundDest = mappingTokenAccount.find(
+          (m) => m.account === outputTransfer.parsed.info.destination
+        );
+
+        foundSource && (history.source = foundSource.owner);
+        foundDest && (history.destination = foundDest.owner);
+      } else {
+        history.source = outputTransfer.parsed.info.source;
+        history.destination = outputTransfer.parsed.info.destination;
+      }
     }
+    
     history.memo = output.parsed as string;
     history.type = output.program;
     history.date = _Shared.Shared.convertTimestampToDate(
