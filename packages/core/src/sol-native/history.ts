@@ -1,7 +1,7 @@
 import { debugLog, Pubkey, Result } from '@solana-suite/shared';
 import { DirectionFilter, FilterType, UserSideOutput } from '../types/';
 import { TransactionFilter } from '../transaction-filter';
-import { SolNative as _Get } from './get-by-address';
+import { Signatures } from '../signatures';
 
 export namespace SolNative {
   export const getHistory = async (
@@ -25,7 +25,7 @@ export namespace SolNative {
           ? options.actionFilter
           : [FilterType.Transfer];
 
-      const transactions = await _Get.getByAddress(searchPubkey);
+      const transactions = await Signatures.getForAdress(searchPubkey);
 
       TransactionFilter.parse(
         searchPubkey.toPublicKey(),

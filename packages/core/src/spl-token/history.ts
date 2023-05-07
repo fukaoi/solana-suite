@@ -1,7 +1,7 @@
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { debugLog, Pubkey, Result } from '@solana-suite/shared';
 import { DirectionFilter, FilterType, UserSideOutput } from '../types/';
-import { SolNative as _Get } from '../sol-native/get-by-address';
+import { Signatures } from '../signatures';
 import { TransactionFilter } from '../transaction-filter';
 
 export namespace SplToken {
@@ -37,7 +37,9 @@ export namespace SplToken {
 
       debugLog('# tokenAccount: ', tokenAccount.toString());
 
-      const transactions = await _Get.getByAddress(tokenAccount.toString());
+      const transactions = await Signatures.getForAdress(
+        tokenAccount.toString()
+      );
 
       debugLog('# getTransactionHistory transactions :', transactions);
 

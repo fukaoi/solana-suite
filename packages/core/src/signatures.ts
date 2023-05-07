@@ -2,8 +2,10 @@ import { ParsedTransactionWithMeta } from '@solana/web3.js';
 import { debugLog, Node, Pubkey } from '@solana-suite/shared';
 
 //@internal
-export namespace SolNative {
-  const get = async (signature: string): Promise<ParsedTransactionWithMeta> => {
+export namespace Signatures {
+  const parseForTransaction = async (
+    signature: string
+  ): Promise<ParsedTransactionWithMeta> => {
     const res = await Node.getConnection().getParsedTransaction(signature);
     if (!res) {
       return {} as ParsedTransactionWithMeta;
@@ -11,7 +13,7 @@ export namespace SolNative {
     return res;
   };
 
-  export const getByAddress = async (
+  export const getForAdress = async (
     pubkey: Pubkey,
     parser?: (transaction: ParsedTransactionWithMeta) => void,
     limit?: number | undefined,
@@ -32,7 +34,7 @@ export namespace SolNative {
     let results: ParsedTransactionWithMeta[] = [];
     // don't use  Promise.all, this is sync action
     for await (const transaction of transactions) {
-      const signature = await get(transaction.signature);
+      const signature = await parseForTransaction(transaction.signature);
       // parser(signature);
       results.push(signature);
     }
