@@ -15,7 +15,7 @@ describe('Metaplex', () => {
     source = obj.source;
   });
 
-  it.only('[Arweave] mint nft', async () => {
+  it('[Arweave] mint nft', async () => {
     const asset = RandomAsset.get();
     const res = await Metaplex.mint(source.pubkey, source.secret, {
       filePath: asset.filePath as string,

@@ -19,7 +19,7 @@ describe('SplToken', () => {
     });
   });
 
-  it.only('Get token info owned', async () => {
+  it('Get token info owned', async () => {
     await SplToken.findByOwner(owner, (result) => {
       result.match(
         (ok) => {

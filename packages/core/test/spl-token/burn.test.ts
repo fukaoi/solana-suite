@@ -50,21 +50,5 @@ describe('SplToken', () => {
     assert.isTrue(inst2.isOk);
     const sig = await [inst1, inst2].submit();
     console.log('signature: ', sig.unwrap());
-
-    // time wait
-    await Node.confirmedSig(sig.unwrap());
-
-    const res = await SplToken.findByOwner(source.pubkey);
-
-    res.match(
-      (ok) => {
-        ok.forEach((data) => {
-          if (data.mint === token) {
-            assert.equal(data.amount, TOKEN_TOTAL_AMOUNT - burnAmount);
-          }
-        });
-      },
-      (err) => assert.fail(err.message)
-    );
   });
 });

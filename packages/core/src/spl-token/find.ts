@@ -100,7 +100,6 @@ export namespace SplToken {
                 data.push(
                   converter<T>(tokenStandard, metadata, json, tokenAmount)
                 );
-                console.log(data);
                 const descAlgo = sortByUinixTimestamp<T>(Sortable.Desc);
                 const ascAlgo = sortByUinixTimestamp<T>(Sortable.Asc);
                 if (sortable === Sortable.Desc) {

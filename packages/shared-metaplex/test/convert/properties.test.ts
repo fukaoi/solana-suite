@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { Convert } from '../../src/convert/properties';
 import { UserSideInput } from '../../src/types';
-import { _Same } from '../../src/types/_same';
+import { _Shared } from '../../src/types/';
 import { assert } from 'chai';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { Storage } from '../../../storage/src';
@@ -31,7 +31,7 @@ describe('Convert.Properties', () => {
     if (!output || !output.files) {
       assert.fail('Miss match output.files');
     }
-    output.files.forEach(async (file: _Same.Properties) => {
+    output.files.forEach(async (file: _Shared.Properties) => {
       console.log('# uploade content', file);
       assert.isNotNull(file);
     });
