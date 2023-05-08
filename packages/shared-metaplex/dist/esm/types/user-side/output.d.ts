@@ -9,6 +9,12 @@ export declare namespace UserSideOutput {
         verified: boolean;
     };
     type Uses = _Shared.Uses;
+    type TokenAmount = {
+        amount: string;
+        decimals: number;
+        uiAmount: number;
+        uiAmountString: string;
+    };
     type NftMetadata = {
         mint: string;
         updateAuthority: string;
@@ -19,11 +25,11 @@ export declare namespace UserSideOutput {
         isMutable: boolean;
         primarySaleHappened: boolean;
         editionNonce: Option<number>;
+        offchain: InfraSideOutput.Offchain;
         collection?: Collection | undefined;
         creators?: Creators[] | undefined;
         uses?: _Shared.Uses | undefined;
         created_at?: number | undefined;
-        offchain: InfraSideOutput.Offchain;
     };
     type TokenMetadata = {
         mint: string;
@@ -31,9 +37,10 @@ export declare namespace UserSideOutput {
         symbol: string;
         uri: string;
         royalty: number;
+        offchain: InfraSideOutput.Offchain;
+        tokenAmount?: TokenAmount;
         attributes?: _Shared.Attribute | undefined;
         creators?: Creators[] | undefined;
         uses?: _Shared.Uses | undefined;
-        offchain: InfraSideOutput.Offchain;
     };
 }

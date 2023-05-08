@@ -16,7 +16,7 @@ const signatures_1 = require("../signatures");
 const transaction_filter_1 = require("../transaction-filter");
 var SplToken;
 (function (SplToken) {
-    SplToken.getHistory = (mint, target, filterType, callback, narrowDown = 1000 // Max number
+    SplToken.getHistory = (mint, target, filterType, callback, narrowDown = 1000 // Max number: 1000
     ) => __awaiter(this, void 0, void 0, function* () {
         try {
             const tokenAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(mint.toPublicKey(), target.toPublicKey(), true);

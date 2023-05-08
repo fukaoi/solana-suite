@@ -12,7 +12,7 @@ import { TransactionFilter } from '../transaction-filter';
 import { Signatures } from '../signatures';
 export var SolNative;
 (function (SolNative) {
-    SolNative.getHistory = (target, filterType, callback, narrowDown = 1000 // Max number
+    SolNative.getHistory = (target, filterType, callback, narrowDown = 1000 // Max number: 1000
     ) => __awaiter(this, void 0, void 0, function* () {
         try {
             const parser = TransactionFilter.parse(filterType);

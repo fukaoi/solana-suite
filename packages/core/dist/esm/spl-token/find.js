@@ -40,12 +40,12 @@ export var SplToken;
             throw Error(`No match sortable: ${sortable}`);
         }
     };
-    const converter = (tokenStandard, metadata, json) => {
+    const converter = (tokenStandard, metadata, json, tokenAmount) => {
         if (tokenStandard === UserSideInput.TokenStandard.Fungible) {
             return Convert.TokenMetadata.intoUserSide({
                 onchain: metadata,
                 offchain: json,
-            });
+            }, tokenAmount);
         }
         else if (tokenStandard === UserSideInput.TokenStandard.NonFungible) {
             return Convert.NftMetadata.intoUserSide({
@@ -73,32 +73,43 @@ export var SplToken;
                     try {
                         const d = _c;
                         const mint = d.account.data.parsed.info.mint;
-                        const metadata = yield Metadata.fromAccountAddress(connection, Pda.getMetadata(mint));
-                        debugLog('# findByOwner metadata: ', metadata);
-                        // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
-                        if (metadata.tokenStandard !== tokenStandard) {
-                            continue;
-                        }
-                        fetch(metadata.data.uri).then((response) => {
-                            debugLog('# findByOwner response: ', metadata);
-                            response
-                                .json()
-                                .then((json) => {
-                                data.push(converter(tokenStandard, metadata, json));
-                                const descAlgo = sortByUinixTimestamp(Sortable.Desc);
-                                const ascAlgo = sortByUinixTimestamp(Sortable.Asc);
-                                if (sortable === Sortable.Desc) {
-                                    data = data.sort(descAlgo);
-                                }
-                                else if (sortable === Sortable.Asc) {
-                                    data = data.sort(ascAlgo);
-                                }
-                                callback(Result.ok(data));
-                            })
-                                .catch((e) => {
-                                callback(Result.err(e));
+                        const tokenAmount = d.account.data.parsed.info.tokenAmount;
+                        try {
+                            const metadata = yield Metadata.fromAccountAddress(connection, Pda.getMetadata(mint));
+                            debugLog('# findByOwner metadata: ', metadata);
+                            // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
+                            if (metadata.tokenStandard !== tokenStandard) {
+                                continue;
+                            }
+                            fetch(metadata.data.uri).then((response) => {
+                                debugLog('# findByOwner response: ', metadata);
+                                response
+                                    .json()
+                                    .then((json) => {
+                                    data.push(converter(tokenStandard, metadata, json, tokenAmount));
+                                    console.log(data);
+                                    const descAlgo = sortByUinixTimestamp(Sortable.Desc);
+                                    const ascAlgo = sortByUinixTimestamp(Sortable.Asc);
+                                    if (sortable === Sortable.Desc) {
+                                        data = data.sort(descAlgo);
+                                    }
+                                    else if (sortable === Sortable.Asc) {
+                                        data = data.sort(ascAlgo);
+                                    }
+                                    callback(Result.ok(data));
+                                })
+                                    .catch((e) => {
+                                    callback(Result.err(e));
+                                });
                             });
-                        });
+                        }
+                        catch (e) {
+                            if (e instanceof Error &&
+                                e.message === 'Unable to find Metadata account') {
+                                debugLog('# skip error for old SPL-TOKEN: ', mint);
+                                continue;
+                            }
+                        }
                     }
                     finally {
                         _d = true;

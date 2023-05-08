@@ -15,7 +15,7 @@ const transaction_filter_1 = require("../transaction-filter");
 const signatures_1 = require("../signatures");
 var SolNative;
 (function (SolNative) {
-    SolNative.getHistory = (target, filterType, callback, narrowDown = 1000 // Max number
+    SolNative.getHistory = (target, filterType, callback, narrowDown = 1000 // Max number: 1000
     ) => __awaiter(this, void 0, void 0, function* () {
         try {
             const parser = transaction_filter_1.TransactionFilter.parse(filterType);

@@ -25,13 +25,15 @@ export namespace Convert.TokenMetadata {
   };
 
   export const intoUserSide = (
-    output: InfraSideOutput.OnchainAndOffchain
+    output: InfraSideOutput.OnchainAndOffchain,
+    tokenAmount: any
   ): UserSideOutput.TokenMetadata => {
     return {
       mint: output.onchain.mint.toString(),
       royalty: output.onchain.data.sellerFeeBasisPoints,
       name: deleteNullStrings(output.onchain.data.name),
       symbol: deleteNullStrings(output.onchain.data.symbol),
+      tokenAmount: tokenAmount,
       uri: deleteNullStrings(output.onchain.data.uri),
       creators: _Creators.Creators.intoUserSide(output.onchain.data.creators),
       uses: _Uses.Uses.intoUserSide(output.onchain.uses),

@@ -7,14 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __asyncValues = (this && this.__asyncValues) || function (o) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var m = o[Symbol.asyncIterator], i;
-    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
-    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
-    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
-};
-import { debugLog, Node, Result } from '@solana-suite/shared';
+import { debugLog, Node, Result, sleep } from '@solana-suite/shared';
 //@internal
 export var Signatures;
 (function (Signatures) {
@@ -25,39 +18,36 @@ export var Signatures;
         }
         return res;
     });
-    Signatures.getForAdress = (pubkey, parser, callback, limit, before, until) => __awaiter(this, void 0, void 0, function* () {
-        var _a, e_1, _b, _c;
+    Signatures.getForAdress = (pubkey, parser, callback, narrowDown = 1000) => __awaiter(this, void 0, void 0, function* () {
         try {
             const transactions = yield Node.getConnection().getSignaturesForAddress(pubkey.toPublicKey(), {
-                limit,
-                before,
-                until,
+                limit: narrowDown,
             });
             debugLog('# transactions count:', transactions.length);
-            try {
-                // don't use  Promise.all, this is sync action
-                for (var _d = true, transactions_1 = __asyncValues(transactions), transactions_1_1; transactions_1_1 = yield transactions_1.next(), _a = transactions_1_1.done, !_a;) {
-                    _c = transactions_1_1.value;
-                    _d = false;
-                    try {
-                        const transaction = _c;
-                        const signature = yield parseForTransaction(transaction.signature);
-                        const history = parser(signature);
-                        if (history) {
-                            callback(Result.ok(history));
-                        }
+            let histories = [];
+            // don't use  Promise.all, this is sync action
+            // let i = 1;
+            // for (const transaction of transactions) {
+            //   const signature = await parseForTransaction(transaction.signature);
+            //   const history = parser(signature);
+            //   if (history) {
+            //     histories.push(history);
+            //     callback(Result.ok(histories));
+            //     i++;
+            //   }
+            //   if (receiveLimit && i > receiveLimit) {
+            //     break;
+            //   }
+            // }
+            for (const transaction of transactions) {
+                parseForTransaction(transaction.signature).then((signature) => {
+                    const history = parser(signature);
+                    if (history) {
+                        histories.push(history);
+                        callback(Result.ok(histories));
                     }
-                    finally {
-                        _d = true;
-                    }
-                }
-            }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
-                try {
-                    if (!_d && !_a && (_b = transactions_1.return)) yield _b.call(transactions_1);
-                }
-                finally { if (e_1) throw e_1.error; }
+                });
+                yield sleep(0.05); // avoid 429 error
             }
         }
         catch (e) {

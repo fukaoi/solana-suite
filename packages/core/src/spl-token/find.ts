@@ -1,4 +1,4 @@
-import { debugLog, Node, Pubkey, Result } from '@solana-suite/shared';
+import { debugLog, Node, Pubkey, Result, Try } from '@solana-suite/shared';
 import { Sortable } from '../types/spl-token';
 import {
   Convert,
@@ -37,13 +37,17 @@ export namespace SplToken {
   const converter = <T>(
     tokenStandard: UserSideInput.TokenStandard,
     metadata: Metadata,
-    json: InfraSideOutput.Offchain
+    json: InfraSideOutput.Offchain,
+    tokenAmount?: any
   ): T => {
     if (tokenStandard === UserSideInput.TokenStandard.Fungible) {
-      return Convert.TokenMetadata.intoUserSide({
-        onchain: metadata,
-        offchain: json,
-      }) as T;
+      return Convert.TokenMetadata.intoUserSide(
+        {
+          onchain: metadata,
+          offchain: json,
+        },
+        tokenAmount
+      ) as T;
     } else if (tokenStandard === UserSideInput.TokenStandard.NonFungible) {
       return Convert.NftMetadata.intoUserSide({
         onchain: metadata,
@@ -76,34 +80,49 @@ export namespace SplToken {
 
       for await (const d of info.value) {
         const mint = d.account.data.parsed.info.mint;
-        const metadata = await Metadata.fromAccountAddress(
-          connection,
-          Pda.getMetadata(mint)
-        );
-        debugLog('# findByOwner metadata: ', metadata);
-        // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
-        if (metadata.tokenStandard !== tokenStandard) {
-          continue;
+        const tokenAmount = d.account.data.parsed.info.tokenAmount;
+
+        try {
+          const metadata = await Metadata.fromAccountAddress(
+            connection,
+            Pda.getMetadata(mint)
+          );
+          debugLog('# findByOwner metadata: ', metadata);
+          // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
+          if (metadata.tokenStandard !== tokenStandard) {
+            continue;
+          }
+          fetch(metadata.data.uri).then((response) => {
+            debugLog('# findByOwner response: ', metadata);
+            response
+              .json()
+              .then((json) => {
+                data.push(
+                  converter<T>(tokenStandard, metadata, json, tokenAmount)
+                );
+                console.log(data);
+                const descAlgo = sortByUinixTimestamp<T>(Sortable.Desc);
+                const ascAlgo = sortByUinixTimestamp<T>(Sortable.Asc);
+                if (sortable === Sortable.Desc) {
+                  data = data.sort(descAlgo);
+                } else if (sortable === Sortable.Asc) {
+                  data = data.sort(ascAlgo);
+                }
+                callback(Result.ok(data));
+              })
+              .catch((e) => {
+                callback(Result.err(e));
+              });
+          });
+        } catch (e) {
+          if (
+            e instanceof Error &&
+            e.message === 'Unable to find Metadata account'
+          ) {
+            debugLog('# skip error for old SPL-TOKEN: ', mint);
+            continue;
+          }
         }
-        fetch(metadata.data.uri).then((response) => {
-          debugLog('# findByOwner response: ', metadata);
-          response
-            .json()
-            .then((json) => {
-              data.push(converter<T>(tokenStandard, metadata, json));
-              const descAlgo = sortByUinixTimestamp<T>(Sortable.Desc);
-              const ascAlgo = sortByUinixTimestamp<T>(Sortable.Asc);
-              if (sortable === Sortable.Desc) {
-                data = data.sort(descAlgo);
-              } else if (sortable === Sortable.Asc) {
-                data = data.sort(ascAlgo);
-              }
-              callback(Result.ok(data));
-            })
-            .catch((e) => {
-              callback(Result.err(e));
-            });
-        });
       }
     } catch (e) {
       if (e instanceof Error) {
