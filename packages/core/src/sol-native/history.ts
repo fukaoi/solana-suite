@@ -8,18 +8,11 @@ export namespace SolNative {
     target: Pubkey,
     filterType: FilterType,
     callback: (result: Result<UserSideOutput.History[], Error>) => void,
-    receiveLimit?: number,
-    narrowDown: number = 1000 // Max number
+    narrowDown: number = 1000 // Max number: 1000
   ): Promise<void> => {
     try {
       const parser = TransactionFilter.parse(filterType);
-      await Signatures.getForAdress(
-        target,
-        parser,
-        callback,
-        narrowDown,
-        receiveLimit
-      );
+      await Signatures.getForAdress(target, parser, callback, narrowDown);
     } catch (e) {
       if (e instanceof Error) {
         callback(Result.err(e));

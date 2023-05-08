@@ -21,10 +21,10 @@ describe('TransactionFilter', () => {
       parser,
       (res) => {
         console.log(res);
+        console.log('# response size:', res.unwrap().length);
         assert.isNotEmpty(res);
       },
-      100,
-      10
+      100
     );
   });
 
@@ -37,7 +37,7 @@ describe('TransactionFilter', () => {
         console.log(res);
         assert.isNotEmpty(res);
       },
-      10
+      100
     );
   });
 
@@ -50,7 +50,7 @@ describe('TransactionFilter', () => {
         console.log(res);
         assert.isNotEmpty(res);
       },
-      10
+      100
     );
   });
 });

@@ -1,7 +1,6 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
-import { debugLog, Node, Pubkey, Result } from '@solana-suite/shared';
+import { debugLog, Node, Pubkey, Result, sleep } from '@solana-suite/shared';
 import { UserSideOutput } from './types/';
-import { UserSideInput } from '@solana-suite/shared-metaplex';
 
 //@internal
 export namespace Signatures {
@@ -21,8 +20,7 @@ export namespace Signatures {
       transaction: ParsedTransactionWithMeta
     ) => UserSideOutput.History | undefined,
     callback: (history: Result<UserSideOutput.History[], Error>) => void,
-    narrowDown: number,
-    receiveLimit?: number
+    narrowDown: number = 1000
   ): Promise<void> => {
     try {
       const transactions = await Node.getConnection().getSignaturesForAddress(
@@ -50,7 +48,6 @@ export namespace Signatures {
       //   }
       // }
 
-      let i = 1;
       for (const transaction of transactions) {
         parseForTransaction(transaction.signature).then((signature) => {
           const history = parser(signature);
@@ -59,9 +56,7 @@ export namespace Signatures {
             callback(Result.ok(histories));
           }
         });
-        if (receiveLimit && i > receiveLimit) {
-          break;
-        }
+        await sleep(0.05); // avoid 429 error
       }
     } catch (e) {
       if (e instanceof Error) {
