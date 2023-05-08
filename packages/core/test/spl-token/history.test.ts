@@ -13,16 +13,18 @@ describe('SplToken', () => {
       FilterType.Transfer,
       (result) => {
         result.match(
-          (res) => {
-            console.log(res);
-            assert.isNotEmpty(res.source);
-            assert.isNotEmpty(res.destination);
-            assert.isNotEmpty(res.tokenAmount);
-            assert.isNotEmpty(res.signers);
-            assert.isNotEmpty(res.multisigAuthority);
-            assert.isNotNull(res.date);
+          (result) => {
+            result.forEach((res) => {
+              console.log(res);
+              assert.isNotEmpty(res.source);
+              assert.isNotEmpty(res.destination);
+              assert.isNotEmpty(res.tokenAmount);
+              assert.isNotEmpty(res.signers);
+              assert.isNotEmpty(res.multisigAuthority);
+              assert.isNotNull(res.date);
+            });
           },
-          (err) => assert.fail(err.message)
+          (err: Error) => assert.fail(err.message)
         );
       },
       100

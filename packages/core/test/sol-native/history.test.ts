@@ -18,12 +18,14 @@ describe('SolNative', () => {
       FilterType.Transfer,
       (result) => {
         result.match(
-          (res) => {
-            console.log(res);
-            assert.isNotEmpty(res.sol);
-            assert.isNotEmpty(res.destination);
-            assert.isNotEmpty(res.source);
-            assert.isNotNull(res.date);
+          (result) => {
+            result.forEach((res) => {
+              console.log(res);
+              assert.isNotEmpty(res.sol);
+              assert.isNotEmpty(res.destination);
+              assert.isNotEmpty(res.source);
+              assert.isNotNull(res.date);
+            });
           },
           (err) => assert.fail(err.message)
         );

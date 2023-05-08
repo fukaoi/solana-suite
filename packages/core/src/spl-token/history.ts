@@ -9,7 +9,7 @@ export namespace SplToken {
     mint: Pubkey,
     target: Pubkey,
     filterType: FilterType,
-    callback: (result: Result<UserSideOutput.History, Error>) => void,
+    callback: (result: Result<UserSideOutput.History[], Error>) => void,
     receiveLimit?: number,
     narrowDown: number = 1000 // Max number
   ): Promise<void> => {
