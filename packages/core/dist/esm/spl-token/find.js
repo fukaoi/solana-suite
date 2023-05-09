@@ -37,7 +37,7 @@ export var SplToken;
             return a.offchain.created_at - b.offchain.created_at;
         }
         else {
-            throw Error(`No match sortable: ${sortable}`);
+            return b.offchain.created_at - a.offchain.created_at;
         }
     };
     const converter = (tokenStandard, metadata, json, tokenAmount) => {
@@ -73,7 +73,8 @@ export var SplToken;
                     try {
                         const d = _c;
                         const mint = d.account.data.parsed.info.mint;
-                        const tokenAmount = d.account.data.parsed.info.tokenAmount;
+                        const tokenAmount = d.account.data.parsed.info
+                            .tokenAmount;
                         try {
                             const metadata = yield Metadata.fromAccountAddress(connection, Pda.getMetadata(mint));
                             debugLog('# findByOwner metadata: ', metadata);
@@ -81,7 +82,8 @@ export var SplToken;
                             if (metadata.tokenStandard !== tokenStandard) {
                                 continue;
                             }
-                            fetch(metadata.data.uri).then((response) => {
+                            fetch(metadata.data.uri)
+                                .then((response) => {
                                 debugLog('# findByOwner response: ', metadata);
                                 response
                                     .json()
@@ -100,6 +102,9 @@ export var SplToken;
                                     .catch((e) => {
                                     callback(Result.err(e));
                                 });
+                            })
+                                .catch((e) => {
+                                callback(Result.err(e));
                             });
                         }
                         catch (e) {

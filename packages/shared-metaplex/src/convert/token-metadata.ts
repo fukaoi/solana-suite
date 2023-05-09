@@ -26,7 +26,7 @@ export namespace Convert.TokenMetadata {
 
   export const intoUserSide = (
     output: InfraSideOutput.OnchainAndOffchain,
-    tokenAmount: InfraSideOutput.TokeAmount
+    tokenAmount?: InfraSideOutput.TokeAmount
   ): UserSideOutput.TokenMetadata => {
     return {
       mint: output.onchain.mint.toString(),
