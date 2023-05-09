@@ -32,10 +32,9 @@ import {
 } from '@solana-suite/shared';
 
 import {
-  InputNftMetadata,
-  InputTokenMetadata,
+  Convert,
   Pda,
-  TokenMetadata,
+  UserSideInput,
   Validator,
 } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
@@ -66,7 +65,7 @@ export namespace SplToken {
   ): Promise<TransactionInstruction[]> => {
     const connection = Node.getConnection();
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
-    const metadataPda = Pda.getMetadata(mint);
+    const metadataPda = Pda.getMetadata(mint.toString());
     const tokenAssociated = getAssociatedTokenAddressSync(mint, owner);
 
     const inst1 = SystemProgram.createAccount({
@@ -136,12 +135,12 @@ export namespace SplToken {
     signer: Secret,
     totalAmount: number,
     mintDecimal: number,
-    input: InputTokenMetadata,
+    input: UserSideInput.TokenMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<InputTokenMetadata>(input);
+      const valid = Validator.checkAll<UserSideInput.TokenMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -150,10 +149,14 @@ export namespace SplToken {
       input.royalty = 0;
       const sellerFeeBasisPoints = 0;
 
-      const tokenStorageMetadata = Storage.toConvertNftStorageMetadata(
-        input as InputNftMetadata,
+      const tokenStorageMetadata = Storage.toConvertOffchaindata(
+        input as UserSideInput.NftMetadata,
         input.royalty
       );
+
+      // created at by unix timestamp
+      const createdAt = Math.floor(new Date().getTime() / 1000);
+      tokenStorageMetadata.created_at = createdAt;
 
       let uri!: string;
       if (input.filePath && input.storageType) {
@@ -176,7 +179,7 @@ export namespace SplToken {
 
       const isMutable = true;
 
-      const datav2 = TokenMetadata.toConvertInfra(
+      const datav2 = Convert.TokenMetadata.intoInfraSide(
         input,
         uri,
         sellerFeeBasisPoints

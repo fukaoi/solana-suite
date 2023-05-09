@@ -1,18 +1,14 @@
-import { Transaction, TransactionInstruction, Keypair } from '@solana/web3.js';
+import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 
-import { Node, Result, Try, debugLog, Pubkey } from '@solana-suite/shared';
+import { debugLog, Node, Pubkey, Result, Try } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { SplToken } from '@solana-suite/core';
 import { Phantom } from '../types';
-import {
-  TokenMetadata,
-  InputTokenMetadata,
-  InputNftMetadata,
-} from '@solana-suite/shared-metaplex';
+import { Convert, UserSideInput } from '@solana-suite/shared-metaplex';
 
 export namespace PhantomSplToken {
   export const mint = async (
-    input: InputTokenMetadata,
+    input: UserSideInput.TokenMetadata,
     owner: Pubkey,
     cluster: string,
     totalAmount: number,
@@ -27,8 +23,8 @@ export namespace PhantomSplToken {
 
       input.royalty = 0;
       const sellerFeeBasisPoints = 0;
-      const tokenStorageMetadata = Storage.toConvertNftStorageMetadata(
-        input as InputNftMetadata,
+      const tokenStorageMetadata = Storage.toConvertOffchaindata(
+        input as UserSideInput.NftMetadata,
         input.royalty
       );
 
@@ -52,7 +48,7 @@ export namespace PhantomSplToken {
 
       const isMutable = true;
 
-      const datav2 = TokenMetadata.toConvertInfra(
+      const datav2 = Convert.TokenMetadata.intoInfraSide(
         input,
         uri,
         sellerFeeBasisPoints

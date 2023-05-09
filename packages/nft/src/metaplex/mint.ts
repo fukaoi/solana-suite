@@ -4,6 +4,8 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 
+import BN from 'bn.js';
+
 import {
   createApproveInstruction,
   createAssociatedTokenAccountInstruction,
@@ -27,12 +29,10 @@ import {
 import { Storage } from '@solana-suite/storage';
 
 import {
-  Collections,
-  InputNftMetadata,
-  MetaplexMetadata,
+  Convert,
   Pda,
-  Properties,
   Royalty,
+  UserSideInput,
   Validator,
 } from '@solana-suite/shared-metaplex';
 
@@ -67,9 +67,8 @@ export namespace Metaplex {
     isMutable: boolean
   ): Promise<TransactionInstruction[]> => {
     const ata = getAssociatedTokenAddressSync(mint, owner);
-    const tokenMetadataPubkey = Pda.getMetadata(mint);
-    const masterEditionPubkey = Pda.getMasterEdition(mint);
-
+    const tokenMetadataPubkey = Pda.getMetadata(mint.toString());
+    const masterEditionPubkey = Pda.getMasterEdition(mint.toString());
     const connection = Node.getConnection();
 
     const inst1 = SystemProgram.createAccount({
@@ -103,7 +102,7 @@ export namespace Metaplex {
         createMetadataAccountArgsV3: {
           data: nftMetadata,
           isMutable,
-          collectionDetails: null
+          collectionDetails: { __kind: 'V1', size: new BN(1) },
         },
       }
     );
@@ -131,7 +130,7 @@ export namespace Metaplex {
    *
    * @param {Pubkey} owner          // first minted owner
    * @param {Secret} signer         // owner's Secret
-   * @param {InputNftMetadata} input
+   * @param {UserSideInput.NftMetadata} input
    * {
    *   name: string               // nft content name
    *   symbol: string             // nft ticker symbol
@@ -143,10 +142,10 @@ export namespace Metaplex {
    *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
    *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
    *   collection?: Pubkey           // collections of different colors, shapes, etc.
-   *   [key: string]?: unknown       // optional param, Usually not used.
    *   creators?: InputCreators[]    // other creators than owner
    *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()
+   *   options?: [key: string]?: unknown       // optional param, Usually not used.
    * }
    * @param {Secret} feePayer?         // fee payer
    * @param {Pubkey} freezeAuthority?  // freeze authority
@@ -155,12 +154,12 @@ export namespace Metaplex {
   export const mint = async (
     owner: Pubkey,
     signer: Secret,
-    input: InputNftMetadata,
+    input: UserSideInput.NftMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<InputNftMetadata>(input);
+      const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -170,7 +169,7 @@ export namespace Metaplex {
       //--- porperties, Upload content ---
       let properties;
       if (input.properties && input.storageType) {
-        properties = await Properties.toConvertInfra(
+        properties = await Convert.Properties.intoInfraSide(
           input.properties,
           Storage.uploadContent,
           input.storageType,
@@ -187,10 +186,14 @@ export namespace Metaplex {
       //--- porperties, Upload content ---
 
       const sellerFeeBasisPoints = Royalty.convert(input.royalty);
-      const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
+      const nftStorageMetadata = Storage.toConvertOffchaindata(
         input,
         sellerFeeBasisPoints
       );
+
+      // created at by unix timestamp
+      const createdAt = Math.floor(new Date().getTime() / 1000);
+      nftStorageMetadata.created_at = createdAt;
 
       let uri!: string;
       if (input.filePath && input.storageType) {
@@ -211,7 +214,7 @@ export namespace Metaplex {
         throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
 
-      let datav2 = MetaplexMetadata.toConvertInfra(
+      let datav2 = Convert.NftMetadata.intoInfraSide(
         input,
         uri,
         sellerFeeBasisPoints
@@ -220,7 +223,7 @@ export namespace Metaplex {
       //--- collection ---
       let collection;
       if (input.collection && input.collection) {
-        collection = Collections.toConvertInfra(input.collection);
+        collection = Convert.Collection.intoInfraSide(input.collection);
         datav2 = { ...datav2, collection };
       }
 

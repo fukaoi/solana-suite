@@ -1,12 +1,12 @@
 import { PartialSignInstruction, Pubkey, Result, Secret } from '@solana-suite/shared';
-import { InputNftMetadata } from '@solana-suite/shared-metaplex';
+import { UserSideInput } from '@solana-suite/shared-metaplex';
 export declare namespace Metaplex {
     /**
      * Upload content and NFT mint with Partial Sign
      *
      * @param {Pubkey} owner          // first minted owner
      * @param {Secret} signer         // owner's Secret
-     * @param {InputNftMetadata} input
+     * @param {UserSideInput.NftMetadata} input
      * {
      *   name: string               // nft content name
      *   symbol: string             // nft ticker symbol
@@ -27,5 +27,5 @@ export declare namespace Metaplex {
      * @param {Pubkey} freezeAuthority?  // freeze authority
      * @return Promise<Result<PartialSignInstruction, Error>>
      */
-    const feePayerPartialSignMint: (owner: Pubkey, signer: Secret, input: InputNftMetadata, feePayer: Pubkey, freezeAuthority?: Secret) => Promise<Result<PartialSignInstruction, Error>>;
+    const feePayerPartialSignMint: (owner: Pubkey, signer: Secret, input: UserSideInput.NftMetadata, feePayer: Pubkey, freezeAuthority?: Secret) => Promise<Result<PartialSignInstruction, Error>>;
 }

@@ -1,41 +1,83 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { SplToken } from '../../src/';
-const owner = 'Hc3FoHMo3Von8by8oKxx9nqTWkjQuGxM1sgyDQCLEMA9';
+import { Setup } from '../../../shared/test/testSetup';
+import { Pubkey } from '../../../shared';
+import { Sortable, SplToken } from '../../src/';
+
+let owner: Pubkey;
 const notFoundTokenOwner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT';
-const tokenAccount = 'GxGHgYQ9Ko3cjQu3zVmu93QcSY1puH3CkDTGzdrHK2VW';
-
 describe('SplToken', () => {
+  before(async () => {
+    const obj = await Setup.generateKeyPair();
+    owner = obj.source.pubkey;
+  });
+
   it('Not found token', async () => {
-    const res = await SplToken.findByOwner(notFoundTokenOwner);
-
-    assert.isTrue(res.isOk, `${res.unwrap()}`);
-
-    res.unwrap().forEach((r) => {
-      assert.isEmpty(r.mint);
-      assert.isEmpty(r.amount);
-      assert.isEmpty(r.owner);
-      assert.isEmpty(r.tokenAccount);
+    await SplToken.findByOwner(notFoundTokenOwner, (result) => {
+      assert.isTrue(result.isOk);
+      assert.isArray(result.unwrap());
     });
   });
 
   it('Get token info owned', async () => {
-    const res = await SplToken.findByOwner(owner);
-
-    console.log(res);
-    assert.isTrue(res.isOk, `${res.unwrap()}`);
-
-    res.unwrap().forEach((r) => {
-      assert.isNotEmpty(r.mint);
-      assert.isString(r.mint);
-      assert.isString(r.owner);
-      assert.isString(r.tokenAccount);
+    await SplToken.findByOwner(owner, (result) => {
+      result.match(
+        (ok) => {
+          ok.forEach((res) => {
+            assert.isNotEmpty(res.name);
+            assert.isNotEmpty(res.mint);
+            assert.isNotEmpty(res.symbol);
+            assert.isNotEmpty(res.uri);
+            assert.isNotEmpty(res.royalty);
+            assert.isNotEmpty(res.offchain);
+          });
+        },
+        (err) => assert.fail(err.message)
+      );
     });
   });
 
-  it('Find by token account', async () => {
-    const res = await SplToken.findByOwner(tokenAccount);
-    assert.isTrue(res.isOk, `${res.unwrap()}`);
-    assert.isEmpty(res.unwrap());
+  it('Get token info owned with Desc', async () => {
+    await SplToken.findByOwner(
+      owner,
+      (result) => {
+        result.match(
+          (ok) => {
+            ok.forEach((res) => {
+              assert.isNotEmpty(res.name);
+              assert.isNotEmpty(res.mint);
+              assert.isNotEmpty(res.symbol);
+              assert.isNotEmpty(res.uri);
+              assert.isNotEmpty(res.royalty);
+              assert.isNotEmpty(res.offchain);
+            });
+          },
+          (err) => assert.fail(err.message)
+        );
+      },
+      Sortable.Desc
+    );
+  });
+
+  it('Get token info owned with Asc', async () => {
+    await SplToken.findByOwner(
+      owner,
+      (result) => {
+        result.match(
+          (ok) => {
+            ok.forEach((res) => {
+              assert.isNotEmpty(res.name);
+              assert.isNotEmpty(res.mint);
+              assert.isNotEmpty(res.symbol);
+              assert.isNotEmpty(res.uri);
+              assert.isNotEmpty(res.royalty);
+              assert.isNotEmpty(res.offchain);
+            });
+          },
+          (err) => assert.fail(err.message)
+        );
+      },
+      Sortable.Asc
+    );
   });
 });

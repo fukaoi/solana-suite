@@ -10,34 +10,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metaplex = void 0;
-const shared_1 = require("@solana-suite/shared");
 const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
-const storage_1 = require("@solana-suite/storage");
+const core_1 = require("@solana-suite/core");
 var Metaplex;
 (function (Metaplex) {
-    Metaplex.findByOwner = (owner) => __awaiter(this, void 0, void 0, function* () {
-        return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            const allData = yield storage_1.Bundlr.make()
-                .nfts()
-                .findAllByOwner({ owner: owner.toPublicKey() });
-            const res = allData.map((d) => {
-                return {
-                    mint: d.mintAddress.toString(),
-                    updateAuthority: d.updateAuthorityAddress.toString(),
-                    royalty: d.sellerFeeBasisPoints,
-                    name: d.name,
-                    symbol: d.symbol,
-                    uri: d.uri,
-                    isMutable: d.isMutable,
-                    primarySaleHappened: d.primarySaleHappened,
-                    creators: shared_metaplex_1.Creators.toConvertUser(d.creators),
-                    editionNonce: d.editionNonce,
-                    collection: shared_metaplex_1.Collections.toConvertUser(d.collection),
-                    uses: d.uses,
-                };
-            });
-            return res;
-        }));
+    /**
+     * Fetch minted metadata by owner Pubkey
+     *
+     * @param {Pubkey} owner
+     * @param {Sortable} callback
+     * @param {Sortable} sortable?
+     * @return Promise<Result<never, Error>>
+     */
+    Metaplex.findByOwner = (owner, callback, sortable) => __awaiter(this, void 0, void 0, function* () {
+        yield core_1.SplToken.genericFindByOwner(owner, callback, shared_metaplex_1.UserSideInput.TokenStandard.NonFungible, sortable);
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));
 //# sourceMappingURL=find.js.map

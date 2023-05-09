@@ -45,7 +45,7 @@ describe('Metaplex', () => {
     const inst2 = Metaplex.burn(
       mint!,
       owner.pubkey,
-      [owner.secret],
+      owner.secret,
       source.secret
     );
     (await inst2.submit()).match(
@@ -63,7 +63,7 @@ describe('Metaplex', () => {
       pubkey: '',
       secret: '',
     });
-    const res = Metaplex.burn(mint, owner.pubkey, [owner.secret]);
+    const res = Metaplex.burn(mint, owner.pubkey, owner.secret);
     (await res.submit()).match(
       (ok: string) => {
         console.log('# sig:', ok);

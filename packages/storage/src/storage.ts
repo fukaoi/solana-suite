@@ -1,19 +1,19 @@
 import { Result, Secret } from '@solana-suite/shared';
 import {
-  StorageMetadata,
-  StorageType,
-  InputNftMetadata,
   FileContent,
+  InfraSideInput,
+  StorageType,
+  UserSideInput,
 } from '@solana-suite/shared-metaplex';
 
 import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
 
 export namespace Storage {
-  export const toConvertNftStorageMetadata = (
-    input: InputNftMetadata,
+  export const toConvertOffchaindata = (
+    input: UserSideInput.NftMetadata,
     sellerFeeBasisPoints: number
-  ): StorageMetadata => {
+  ): InfraSideInput.Offchain => {
     const data = {
       name: input.name,
       symbol: input.symbol,
@@ -46,7 +46,7 @@ export namespace Storage {
   };
 
   export const uploadMetaAndContent = async (
-    input: StorageMetadata,
+    input: InfraSideInput.Offchain,
     filePath: FileContent,
     storageType: StorageType,
     feePayer?: Secret

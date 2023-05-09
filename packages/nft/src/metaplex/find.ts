@@ -1,39 +1,26 @@
-import { Pubkey, Result, Try } from '@solana-suite/shared';
-import {
-  OutputNftMetadata,
-  Creators,
-  Collections,
-  MetaplexOriginal,
-} from '@solana-suite/shared-metaplex';
-
-import { Bundlr } from '@solana-suite/storage';
+import { Pubkey, Result } from '@solana-suite/shared';
+import { UserSideInput, UserSideOutput } from '@solana-suite/shared-metaplex';
+import { Sortable, SplToken } from '@solana-suite/core';
 
 export namespace Metaplex {
+  /**
+   * Fetch minted metadata by owner Pubkey
+   *
+   * @param {Pubkey} owner
+   * @param {Sortable} callback
+   * @param {Sortable} sortable?
+   * @return Promise<Result<never, Error>>
+   */
   export const findByOwner = async (
-    owner: Pubkey
-  ): Promise<Result<OutputNftMetadata[], Error>> => {
-    return Try(async () => {
-      const allData = await Bundlr.make()
-        .nfts()
-        .findAllByOwner({ owner: owner.toPublicKey() });
-
-      const res = allData.map((d) => {
-        return {
-          mint: (d as MetaplexOriginal).mintAddress.toString(),
-          updateAuthority: d.updateAuthorityAddress.toString(),
-          royalty: d.sellerFeeBasisPoints,
-          name: d.name,
-          symbol: d.symbol,
-          uri: d.uri,
-          isMutable: d.isMutable,
-          primarySaleHappened: d.primarySaleHappened,
-          creators: Creators.toConvertUser(d.creators),
-          editionNonce: d.editionNonce,
-          collection: Collections.toConvertUser(d.collection),
-          uses: d.uses,
-        };
-      });
-      return res;
-    });
+    owner: Pubkey,
+    callback: (result: Result<UserSideOutput.NftMetadata[], Error>) => void,
+    sortable?: Sortable
+  ): Promise<void> => {
+    await SplToken.genericFindByOwner<UserSideOutput.NftMetadata>(
+      owner,
+      callback,
+      UserSideInput.TokenStandard.NonFungible,
+      sortable
+    );
   };
 }

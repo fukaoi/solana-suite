@@ -25,7 +25,7 @@ var SplToken;
     SplToken.createMintInstructions = (mint, owner, totalAmount, mintDecimal, tokenMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
         const connection = shared_1.Node.getConnection();
         const lamports = yield (0, spl_token_1.getMinimumBalanceForRentExemptMint)(connection);
-        const metadataPda = shared_metaplex_1.Pda.getMetadata(mint);
+        const metadataPda = shared_metaplex_1.Pda.getMetadata(mint.toString());
         const tokenAssociated = (0, spl_token_1.getAssociatedTokenAddressSync)(mint, owner);
         const inst1 = web3_js_1.SystemProgram.createAccount({
             fromPubkey: feePayer,
@@ -73,7 +73,10 @@ var SplToken;
             const payer = feePayer ? feePayer : signer;
             input.royalty = 0;
             const sellerFeeBasisPoints = 0;
-            const tokenStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(input, input.royalty);
+            const tokenStorageMetadata = storage_1.Storage.toConvertOffchaindata(input, input.royalty);
+            // created at by unix timestamp
+            const createdAt = Math.floor(new Date().getTime() / 1000);
+            tokenStorageMetadata.created_at = createdAt;
             let uri;
             if (input.filePath && input.storageType) {
                 const uploaded = yield storage_1.Storage.uploadMetaAndContent(tokenStorageMetadata, input.filePath, input.storageType, payer);
@@ -89,7 +92,7 @@ var SplToken;
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
             const isMutable = true;
-            const datav2 = shared_metaplex_1.TokenMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const datav2 = shared_metaplex_1.Convert.TokenMetadata.intoInfraSide(input, uri, sellerFeeBasisPoints);
             (0, shared_1.debugLog)('# datav2: ', datav2);
             (0, shared_1.debugLog)('# upload content url: ', uri);
             const mint = shared_1.KeypairAccount.create();

@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metaplex = void 0;
 const web3_js_1 = require("@solana/web3.js");
+const bn_js_1 = __importDefault(require("bn.js"));
 const spl_token_1 = require("@solana/spl-token");
 const shared_1 = require("@solana-suite/shared");
 const storage_1 = require("@solana-suite/storage");
@@ -26,8 +30,8 @@ var Metaplex;
     };
     Metaplex.createMintInstructions = (mint, owner, nftMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
         const ata = (0, spl_token_1.getAssociatedTokenAddressSync)(mint, owner);
-        const tokenMetadataPubkey = shared_metaplex_1.Pda.getMetadata(mint);
-        const masterEditionPubkey = shared_metaplex_1.Pda.getMasterEdition(mint);
+        const tokenMetadataPubkey = shared_metaplex_1.Pda.getMetadata(mint.toString());
+        const masterEditionPubkey = shared_metaplex_1.Pda.getMasterEdition(mint.toString());
         const connection = shared_2.Node.getConnection();
         const inst1 = web3_js_1.SystemProgram.createAccount({
             fromPubkey: feePayer,
@@ -49,7 +53,7 @@ var Metaplex;
             createMetadataAccountArgsV3: {
                 data: nftMetadata,
                 isMutable,
-                collectionDetails: null
+                collectionDetails: { __kind: 'V1', size: new bn_js_1.default(1) },
             },
         });
         const inst6 = (0, mpl_token_metadata_1.createCreateMasterEditionV3Instruction)({
@@ -71,7 +75,7 @@ var Metaplex;
      *
      * @param {Pubkey} owner          // first minted owner
      * @param {Secret} signer         // owner's Secret
-     * @param {InputNftMetadata} input
+     * @param {UserSideInput.NftMetadata} input
      * {
      *   name: string               // nft content name
      *   symbol: string             // nft ticker symbol
@@ -83,10 +87,10 @@ var Metaplex;
      *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
      *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
      *   collection?: Pubkey           // collections of different colors, shapes, etc.
-     *   [key: string]?: unknown       // optional param, Usually not used.
      *   creators?: InputCreators[]    // other creators than owner
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
+     *   options?: [key: string]?: unknown       // optional param, Usually not used.
      * }
      * @param {Secret} feePayer?         // fee payer
      * @param {Pubkey} freezeAuthority?  // freeze authority
@@ -102,7 +106,7 @@ var Metaplex;
             //--- porperties, Upload content ---
             let properties;
             if (input.properties && input.storageType) {
-                properties = yield shared_metaplex_1.Properties.toConvertInfra(input.properties, storage_1.Storage.uploadContent, input.storageType, payer);
+                properties = yield shared_metaplex_1.Convert.Properties.intoInfraSide(input.properties, storage_1.Storage.uploadContent, input.storageType, payer);
             }
             else if (input.properties && !input.storageType) {
                 throw Error('Must set storageType if will use properties');
@@ -110,7 +114,10 @@ var Metaplex;
             input = Object.assign(Object.assign({}, input), { properties });
             //--- porperties, Upload content ---
             const sellerFeeBasisPoints = shared_metaplex_1.Royalty.convert(input.royalty);
-            const nftStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(input, sellerFeeBasisPoints);
+            const nftStorageMetadata = storage_1.Storage.toConvertOffchaindata(input, sellerFeeBasisPoints);
+            // created at by unix timestamp
+            const createdAt = Math.floor(new Date().getTime() / 1000);
+            nftStorageMetadata.created_at = createdAt;
             let uri;
             if (input.filePath && input.storageType) {
                 const uploaded = yield storage_1.Storage.uploadMetaAndContent(nftStorageMetadata, input.filePath, input.storageType, payer);
@@ -126,11 +133,11 @@ var Metaplex;
             else {
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
-            let datav2 = shared_metaplex_1.MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            let datav2 = shared_metaplex_1.Convert.NftMetadata.intoInfraSide(input, uri, sellerFeeBasisPoints);
             //--- collection ---
             let collection;
             if (input.collection && input.collection) {
-                collection = shared_metaplex_1.Collections.toConvertInfra(input.collection);
+                collection = shared_metaplex_1.Convert.Collection.intoInfraSide(input.collection);
                 datav2 = Object.assign(Object.assign({}, datav2), { collection });
             }
             const isMutable = input.isMutable === undefined ? true : input.isMutable;

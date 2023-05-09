@@ -31,7 +31,7 @@ export namespace Metaplex {
         mint.toPublicKey(),
         owner.toPublicKey()
       );
-      const editionAddress = Pda.getMasterEdition(mint.toPublicKey());
+      const editionAddress = Pda.getMasterEdition(mint);
 
       const inst = createFreezeDelegatedAccountInstruction({
         delegate: new KeypairAccount({ secret: freezeAuthority }).toPublicKey(),

@@ -5,7 +5,7 @@ import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { KeypairAccount } from '../../../shared';
 import { Storage } from '../../../storage';
-import { Royalty, StorageMetadata } from '../../../shared-metaplex';
+import { Royalty, InfraSideInput } from '../../../shared-metaplex';
 
 let source: KeypairAccount;
 describe('Metaplex', () => {
@@ -52,7 +52,7 @@ describe('Metaplex', () => {
     const asset = RandomAsset.get();
     const sellerFeeBasisPoints = Royalty.convert(royalty);
 
-    const nftStorageMetadata: StorageMetadata = {
+    const offchaindata: InfraSideInput.Offchain = {
       name: asset.name,
       symbol: asset.symbol,
       description: 'upload meta and content',
@@ -60,7 +60,7 @@ describe('Metaplex', () => {
     };
 
     const uploaded = await Storage.uploadMetaAndContent(
-      nftStorageMetadata,
+      offchaindata,
       asset.filePath,
       'arweave',
       source.secret

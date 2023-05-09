@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { toMetaplexFile, } from '@metaplex-foundation/js';
-import { isNode, isBrowser, debugLog, Try, } from '@solana-suite/shared';
+import { debugLog, isBrowser, isNode, Try, } from '@solana-suite/shared';
 import { Bundlr } from './bundlr';
 export var Arweave;
 (function (Arweave) {

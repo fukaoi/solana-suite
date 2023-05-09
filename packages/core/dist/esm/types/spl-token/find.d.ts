@@ -1,7 +1,4 @@
-export type SplTokenOwnerInfo = {
-    owner: string;
-    mint: string;
-    mintDecimal: number;
-    amount: number;
-    tokenAccount: string;
-};
+export declare enum Sortable {
+    Asc = "asc",
+    Desc = "desc"
+}

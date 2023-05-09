@@ -7,11 +7,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Transaction, Keypair } from '@solana/web3.js';
-import { Node, Try, debugLog } from '@solana-suite/shared';
+import { Keypair, Transaction } from '@solana/web3.js';
+import { debugLog, Node, Try } from '@solana-suite/shared';
 import { Storage } from '@solana-suite/storage';
 import { SplToken } from '@solana-suite/core';
-import { TokenMetadata, } from '@solana-suite/shared-metaplex';
+import { Convert } from '@solana-suite/shared-metaplex';
 export var PhantomSplToken;
 (function (PhantomSplToken) {
     PhantomSplToken.mint = (input, owner, cluster, totalAmount, mintDecimal, phantom) => __awaiter(this, void 0, void 0, function* () {
@@ -22,7 +22,7 @@ export var PhantomSplToken;
             const mint = Keypair.generate();
             input.royalty = 0;
             const sellerFeeBasisPoints = 0;
-            const tokenStorageMetadata = Storage.toConvertNftStorageMetadata(input, input.royalty);
+            const tokenStorageMetadata = Storage.toConvertOffchaindata(input, input.royalty);
             let uri;
             if (input.filePath && input.storageType) {
                 const uploaded = yield Storage.uploadMetaAndContent(tokenStorageMetadata, input.filePath, input.storageType);
@@ -38,7 +38,7 @@ export var PhantomSplToken;
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
             const isMutable = true;
-            const datav2 = TokenMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const datav2 = Convert.TokenMetadata.intoInfraSide(input, uri, sellerFeeBasisPoints);
             debugLog('# datav2: ', datav2);
             debugLog('# upload content url: ', uri);
             const insturctions = yield SplToken.createMintInstructions(mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, datav2, owner.toPublicKey(), isMutable);

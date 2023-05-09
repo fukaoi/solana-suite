@@ -25,7 +25,7 @@ var PhantomSplToken;
             const mint = web3_js_1.Keypair.generate();
             input.royalty = 0;
             const sellerFeeBasisPoints = 0;
-            const tokenStorageMetadata = storage_1.Storage.toConvertNftStorageMetadata(input, input.royalty);
+            const tokenStorageMetadata = storage_1.Storage.toConvertOffchaindata(input, input.royalty);
             let uri;
             if (input.filePath && input.storageType) {
                 const uploaded = yield storage_1.Storage.uploadMetaAndContent(tokenStorageMetadata, input.filePath, input.storageType);
@@ -41,7 +41,7 @@ var PhantomSplToken;
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
             const isMutable = true;
-            const datav2 = shared_metaplex_1.TokenMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const datav2 = shared_metaplex_1.Convert.TokenMetadata.intoInfraSide(input, uri, sellerFeeBasisPoints);
             (0, shared_1.debugLog)('# datav2: ', datav2);
             (0, shared_1.debugLog)('# upload content url: ', uri);
             const insturctions = yield core_1.SplToken.createMintInstructions(mint.publicKey, owner.toPublicKey(), totalAmount, mintDecimal, datav2, owner.toPublicKey(), isMutable);

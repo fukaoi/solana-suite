@@ -1,5 +1,5 @@
 import { Result } from '@solana-suite/shared';
-import { StorageMetadata, FileContent } from '@solana-suite/shared-metaplex';
+import { InfraSideInput, FileContent } from '@solana-suite/shared-metaplex';
 export declare namespace NftStorage {
     const uploadContent: (filePath: FileContent) => Promise<Result<string, Error>>;
     /**
@@ -20,5 +20,5 @@ export declare namespace NftStorage {
      * }
      * @return Promise<Result<string, Error>>
      */
-    const uploadMetadata: (metadata: StorageMetadata) => Promise<Result<string, Error>>;
+    const uploadMetadata: (metadata: InfraSideInput.Offchain) => Promise<Result<string, Error>>;
 }

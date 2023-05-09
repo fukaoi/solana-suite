@@ -16,7 +16,7 @@ export var Metaplex;
         const payer = feePayer ? feePayer : freezeAuthority;
         return Try(() => {
             const tokenAccount = getAssociatedTokenAddressSync(mint.toPublicKey(), owner.toPublicKey());
-            const editionAddress = Pda.getMasterEdition(mint.toPublicKey());
+            const editionAddress = Pda.getMasterEdition(mint);
             const inst = createFreezeDelegatedAccountInstruction({
                 delegate: new KeypairAccount({ secret: freezeAuthority }).toPublicKey(),
                 tokenAccount: tokenAccount,

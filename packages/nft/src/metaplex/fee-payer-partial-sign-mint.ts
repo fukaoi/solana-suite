@@ -14,11 +14,9 @@ import { Transaction } from '@solana/web3.js';
 import { Storage } from '@solana-suite/storage';
 
 import {
-  Collections,
-  InputNftMetadata,
-  MetaplexMetadata,
-  Properties,
+  Convert,
   Royalty,
+  UserSideInput,
   Validator,
 } from '@solana-suite/shared-metaplex';
 
@@ -30,7 +28,7 @@ export namespace Metaplex {
    *
    * @param {Pubkey} owner          // first minted owner
    * @param {Secret} signer         // owner's Secret
-   * @param {InputNftMetadata} input
+   * @param {UserSideInput.NftMetadata} input
    * {
    *   name: string               // nft content name
    *   symbol: string             // nft ticker symbol
@@ -54,12 +52,12 @@ export namespace Metaplex {
   export const feePayerPartialSignMint = async (
     owner: Pubkey,
     signer: Secret,
-    input: InputNftMetadata,
+    input: UserSideInput.NftMetadata,
     feePayer: Pubkey,
     freezeAuthority?: Secret
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<InputNftMetadata>(input);
+      const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -69,13 +67,13 @@ export namespace Metaplex {
       //--- porperties, Upload content ---
       let uri = '';
       if (input.filePath && input.storageType === 'nftStorage') {
-        const properties = await Properties.toConvertInfra(
+        const properties = await Convert.Properties.intoInfraSide(
           input.properties,
           Storage.uploadContent,
           input.storageType
         );
 
-        const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
+        const nftStorageMetadata = Storage.toConvertOffchaindata(
           { ...input, properties },
           sellerFeeBasisPoints
         );
@@ -97,7 +95,7 @@ export namespace Metaplex {
       }
       //--- porperties, Upload content ---
 
-      let datav2 = MetaplexMetadata.toConvertInfra(
+      let datav2 = Convert.NftMetadata.intoInfraSide(
         input,
         uri,
         sellerFeeBasisPoints
@@ -106,7 +104,7 @@ export namespace Metaplex {
       //--- collection ---
       let collection;
       if (input.collection && input.collection) {
-        collection = Collections.toConvertInfra(input.collection);
+        collection = Convert.Collection.intoInfraSide(input.collection);
         datav2 = { ...datav2, collection };
       }
       //--- collection ---

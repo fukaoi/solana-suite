@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
 import { RandomAsset } from '../../../storage/test/randomAsset';
-import { User, ValidatorError } from '../../../shared-metaplex/';
+import { UserSideInput, ValidatorError } from '../../../shared-metaplex/';
 import { KeypairAccount } from '../../../shared';
 import { Pubkey } from '../../../shared/src';
 
@@ -66,7 +66,7 @@ describe('Metaplex', () => {
 
   it('[Nft Storage] mint nft with many optional datas', async () => {
     const asset = RandomAsset.get();
-    const creators: User.Creators[] = [];
+    const creators: UserSideInput.Creators[] = [];
     const owner = KeypairAccount.create();
     const freezeAuthority = KeypairAccount.create();
 
@@ -92,7 +92,7 @@ describe('Metaplex', () => {
       ],
     };
 
-    const collection = '2XgApg3pcPkyNxoHr8N6bWtZ4gG5W6iV3MksJ3brLmRZ';
+    const collection = 'F2g4RRH4J7DiZd17idZcBkuTDonVeJEveTdzwXdGHUue';
 
     const attributes = [
       {

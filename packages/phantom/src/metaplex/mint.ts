@@ -3,18 +3,17 @@ import { Metaplex } from '@solana-suite/nft';
 import { Storage } from '@solana-suite/storage';
 import {
   debugLog,
+  KeypairAccount,
   Node,
   Result,
   Try,
-  KeypairAccount,
 } from '@solana-suite/shared';
 import {
+  Convert,
   Royalty,
+  UserSideInput,
   Validator,
   ValidatorError,
-  InputNftMetadata,
-  Properties,
-  MetaplexMetadata,
 } from '@solana-suite/shared-metaplex';
 import { Phantom } from '../types';
 
@@ -22,17 +21,17 @@ export namespace PhantomMetaplex {
   /**
    * Upload content and NFT mint
    *
-   * @param {InputNftMetadata}  input
+   * @param {UserSideInput.NftMetadata}  input
    * @param {Phantom} phantom        phantom wallet object
    * @return Promise<Result<Instruction, Error>>
    */
   export const mint = async (
-    input: InputNftMetadata,
+    input: UserSideInput.NftMetadata,
     cluster: string,
     phantom: Phantom
   ): Promise<Result<string, Error | ValidatorError>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<InputNftMetadata>(input);
+      const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -44,14 +43,14 @@ export namespace PhantomMetaplex {
       Node.changeConnection({ cluster });
 
       //Convert porperties, Upload content
-      const properties = await Properties.toConvertInfra(
+      const properties = await Convert.Properties.intoInfraSide(
         input.properties,
         Storage.uploadContent,
         input.storageType
       );
 
       const sellerFeeBasisPoints = Royalty.convert(input.royalty);
-      const nftStorageMetadata = Storage.toConvertNftStorageMetadata(
+      const nftStorageMetadata = Storage.toConvertOffchaindata(
         { ...input, properties },
         sellerFeeBasisPoints
       );
@@ -66,7 +65,7 @@ export namespace PhantomMetaplex {
       }
       const uri = uploaded.value;
 
-      const datav2 = MetaplexMetadata.toConvertInfra(
+      const datav2 = Convert.NftMetadata.intoInfraSide(
         input,
         uri,
         sellerFeeBasisPoints

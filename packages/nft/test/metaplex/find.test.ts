@@ -1,33 +1,89 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Metaplex } from '../../src/metaplex';
+import { Sortable } from '../../../core/src';
 
+const owner = 'CGDRajhcFo9ysuUjBsbwCQHKJuCHiXeEUrMKSot1eyay';
+const notFoundTokenOwner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT';
 describe('Metaplex.find', () => {
+  it('Not found nft', async () => {
+    await Metaplex.findByOwner(notFoundTokenOwner, (result) => {
+      assert.isTrue(result.isOk);
+      assert.isArray(result.unwrap());
+    });
+  });
+
   it('Find owner info', async () => {
-    const owner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
-    const res = await Metaplex.findByOwner(owner);
-    res.match(
-      (ok) => {
-        assert.isTrue(ok.length > 0);
-        console.log('# find owner info: ', ok);
+    await Metaplex.findByOwner(owner, (result) => {
+      result.match(
+        (ok) => {
+          ok.forEach((res) => {
+            assert.isNotEmpty(res.name);
+            assert.isNotEmpty(res.mint);
+            assert.isNotEmpty(res.symbol);
+            assert.isNotEmpty(res.uri);
+            assert.isNotEmpty(res.royalty);
+            assert.isNotEmpty(res.offchain);
+            assert.isNotEmpty(res.isMutable);
+            assert.isNotEmpty(res.primarySaleHappened);
+            assert.isNotEmpty(res.updateAuthority);
+            assert.isNotEmpty(res.editionNonce);
+          });
+        },
+        (err) => assert.fail(err.message)
+      );
+    });
+  });
+
+  it('Find owner info with Desc', async () => {
+    await Metaplex.findByOwner(
+      owner,
+      (result) => {
+        result.match(
+          (ok) => {
+            ok.forEach((res) => {
+              assert.isNotEmpty(res.name);
+              assert.isNotEmpty(res.mint);
+              assert.isNotEmpty(res.symbol);
+              assert.isNotEmpty(res.uri);
+              assert.isNotEmpty(res.royalty);
+              assert.isNotEmpty(res.offchain);
+              assert.isNotEmpty(res.isMutable);
+              assert.isNotEmpty(res.primarySaleHappened);
+              assert.isNotEmpty(res.updateAuthority);
+              assert.isNotEmpty(res.editionNonce);
+            });
+          },
+          (err) => assert.fail(err.message)
+        );
       },
-      (err) => {
-        assert.fail(err.message);
-      }
+      Sortable.Desc
     );
   });
 
-  it('Find owner info, many info', async () => {
-    const owner = '6yVHt5qgGnGZ3rGJoX9dX5zKpWgvmz5rLgzco77HiW2H';
-    const res = await Metaplex.findByOwner(owner);
-    res.match(
-      (ok) => {
-        assert.isTrue(ok.length > 0);
-        console.log('# find owner info: ', ok);
+  it('Find owner info with Asc', async () => {
+    await Metaplex.findByOwner(
+      owner,
+      (result) => {
+        result.match(
+          (ok) => {
+            ok.forEach((res) => {
+              assert.isNotEmpty(res.name);
+              assert.isNotEmpty(res.mint);
+              assert.isNotEmpty(res.symbol);
+              assert.isNotEmpty(res.uri);
+              assert.isNotEmpty(res.royalty);
+              assert.isNotEmpty(res.offchain);
+              assert.isNotEmpty(res.isMutable);
+              assert.isNotEmpty(res.primarySaleHappened);
+              assert.isNotEmpty(res.updateAuthority);
+              assert.isNotEmpty(res.editionNonce);
+            });
+          },
+          (err) => assert.fail(err.message)
+        );
       },
-      (err) => {
-        assert.fail(err.message);
-      }
+      Sortable.Asc
     );
   });
 });

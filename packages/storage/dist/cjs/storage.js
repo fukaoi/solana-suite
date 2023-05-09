@@ -14,7 +14,7 @@ const arweave_1 = require("./arweave");
 const nft_storage_1 = require("./nft-storage");
 var Storage;
 (function (Storage) {
-    Storage.toConvertNftStorageMetadata = (input, sellerFeeBasisPoints) => {
+    Storage.toConvertOffchaindata = (input, sellerFeeBasisPoints) => {
         const data = {
             name: input.name,
             symbol: input.symbol,

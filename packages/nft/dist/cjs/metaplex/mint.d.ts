@@ -1,6 +1,6 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js';
 import { MintInstruction, Pubkey, Result, Secret } from '@solana-suite/shared';
-import { InputNftMetadata } from '@solana-suite/shared-metaplex';
+import { UserSideInput } from '@solana-suite/shared-metaplex';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 export declare namespace Metaplex {
     const createDeleagateInstruction: (mint: PublicKey, owner: PublicKey, delegateAuthority: PublicKey) => TransactionInstruction;
@@ -10,7 +10,7 @@ export declare namespace Metaplex {
      *
      * @param {Pubkey} owner          // first minted owner
      * @param {Secret} signer         // owner's Secret
-     * @param {InputNftMetadata} input
+     * @param {UserSideInput.NftMetadata} input
      * {
      *   name: string               // nft content name
      *   symbol: string             // nft ticker symbol
@@ -22,14 +22,14 @@ export declare namespace Metaplex {
      *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
      *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
      *   collection?: Pubkey           // collections of different colors, shapes, etc.
-     *   [key: string]?: unknown       // optional param, Usually not used.
      *   creators?: InputCreators[]    // other creators than owner
      *   uses?: Uses                   // usage feature: burn, single, multiple
      *   isMutable?: boolean           // enable update()
+     *   options?: [key: string]?: unknown       // optional param, Usually not used.
      * }
      * @param {Secret} feePayer?         // fee payer
      * @param {Pubkey} freezeAuthority?  // freeze authority
      * @return Promise<Result<MintInstruction, Error>>
      */
-    const mint: (owner: Pubkey, signer: Secret, input: InputNftMetadata, feePayer?: Secret, freezeAuthority?: Pubkey) => Promise<Result<MintInstruction, Error>>;
+    const mint: (owner: Pubkey, signer: Secret, input: UserSideInput.NftMetadata, feePayer?: Secret, freezeAuthority?: Pubkey) => Promise<Result<MintInstruction, Error>>;
 }

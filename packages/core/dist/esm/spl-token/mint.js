@@ -11,7 +11,7 @@ import { SystemProgram, } from '@solana/web3.js';
 import { AuthorityType, createAssociatedTokenAccountInstruction, createInitializeMintInstruction, createMintToCheckedInstruction, createSetAuthorityInstruction, getAssociatedTokenAddressSync, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
 import { createCreateMetadataAccountV3Instruction, } from '@metaplex-foundation/mpl-token-metadata';
 import { debugLog, KeypairAccount, MintInstruction, Node, Try, } from '@solana-suite/shared';
-import { Pda, TokenMetadata, Validator, } from '@solana-suite/shared-metaplex';
+import { Convert, Pda, Validator, } from '@solana-suite/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
 import { Storage } from '@solana-suite/storage';
 export var SplToken;
@@ -22,7 +22,7 @@ export var SplToken;
     SplToken.createMintInstructions = (mint, owner, totalAmount, mintDecimal, tokenMetadata, feePayer, isMutable) => __awaiter(this, void 0, void 0, function* () {
         const connection = Node.getConnection();
         const lamports = yield getMinimumBalanceForRentExemptMint(connection);
-        const metadataPda = Pda.getMetadata(mint);
+        const metadataPda = Pda.getMetadata(mint.toString());
         const tokenAssociated = getAssociatedTokenAddressSync(mint, owner);
         const inst1 = SystemProgram.createAccount({
             fromPubkey: feePayer,
@@ -70,7 +70,10 @@ export var SplToken;
             const payer = feePayer ? feePayer : signer;
             input.royalty = 0;
             const sellerFeeBasisPoints = 0;
-            const tokenStorageMetadata = Storage.toConvertNftStorageMetadata(input, input.royalty);
+            const tokenStorageMetadata = Storage.toConvertOffchaindata(input, input.royalty);
+            // created at by unix timestamp
+            const createdAt = Math.floor(new Date().getTime() / 1000);
+            tokenStorageMetadata.created_at = createdAt;
             let uri;
             if (input.filePath && input.storageType) {
                 const uploaded = yield Storage.uploadMetaAndContent(tokenStorageMetadata, input.filePath, input.storageType, payer);
@@ -86,7 +89,7 @@ export var SplToken;
                 throw Error(`Must set 'storageType + filePath' or 'uri'`);
             }
             const isMutable = true;
-            const datav2 = TokenMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const datav2 = Convert.TokenMetadata.intoInfraSide(input, uri, sellerFeeBasisPoints);
             debugLog('# datav2: ', datav2);
             debugLog('# upload content url: ', uri);
             const mint = KeypairAccount.create();

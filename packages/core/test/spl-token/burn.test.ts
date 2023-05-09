@@ -2,9 +2,8 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/';
-import { KeypairAccount, Node } from '../../../shared';
+import { KeypairAccount } from '../../../shared';
 import { RandomAsset } from '../../../storage/test/randomAsset';
-import { StorageType } from '../../../shared-metaplex';
 
 let source: KeypairAccount;
 
@@ -15,7 +14,7 @@ const TOKEN_METADATA = {
   symbol: 'SST',
   royalty: 50,
   filePath: RandomAsset.get().filePath as string,
-  storageType: 'nftStorage' as StorageType,
+  storageType: 'nftStorage',
   isMutable: false,
 };
 
@@ -50,21 +49,5 @@ describe('SplToken', () => {
     assert.isTrue(inst2.isOk);
     const sig = await [inst1, inst2].submit();
     console.log('signature: ', sig.unwrap());
-
-    // time wait
-    await Node.confirmedSig(sig.unwrap());
-
-    const res = await SplToken.findByOwner(source.pubkey);
-
-    res.match(
-      (ok) => {
-        ok.forEach((data) => {
-          if (data.mint === token) {
-            assert.equal(data.amount, TOKEN_TOTAL_AMOUNT - burnAmount);
-          }
-        });
-      },
-      (err) => assert.fail(err.message)
-    );
   });
 });

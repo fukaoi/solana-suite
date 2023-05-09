@@ -1,57 +1,36 @@
 import { describe, it } from 'mocha';
-import { SolNative } from '../../src';
+import { FilterType, SolNative } from '../../src';
 import { assert } from 'chai';
-import { Filter, DirectionFilter } from '../../src/types/history';
+import { Setup } from '../../../shared/test/testSetup';
+import { Pubkey } from '../../../shared/src';
 
-const searchTokenKey = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk';
+let target: Pubkey;
 
-describe.skip('SolNative', () => {
-  it('Get transfer history with set optional filter', async () => {
-    const limit = 20;
-    const res = await SolNative.getHistory(searchTokenKey, {
-      limit,
-      actionFilter: [Filter.MintTo],
-    });
-    console.log('# getHistory: ', res);
-    assert.isTrue(res.isOk);
-    assert.equal(res.unwrap()[0].type, Filter.MintTo);
-    res.unwrap().forEach((v) => {
-      assert.isNotNull(v.date);
-    });
+describe('SolNative', () => {
+  before(async () => {
+    const obj = await Setup.generateKeyPair();
+    target = obj.source.pubkey;
   });
 
-  it('Get transfer history with transfer destination filter', async () => {
-    const res = await SolNative.getHistory(searchTokenKey, {
-      directionFilter: DirectionFilter.Dest,
-    });
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotNull(v.date);
-      assert.equal(v.info.destination, searchTokenKey);
-    });
-  });
-
-  it('Get transfer history with transfer source filter', async () => {
-    const res = await SolNative.getHistory(searchTokenKey, {
-      directionFilter: DirectionFilter.Source,
-    });
-
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotNull(v.date);
-      assert.equal(v.info.source, searchTokenKey);
-    });
-  });
-
-  it('Get transfer history by address', async () => {
-    const searchAddress = 'HeH2PRj4GEdLCsbKQ18LvwhbuH4anmPQ3HoeRsJmymVw';
-    const res = await SolNative.getHistory(searchAddress);
-    assert.isTrue(res.isOk);
-    res.unwrap().forEach((v) => {
-      assert.isNotEmpty(v.type);
-      assert.isNotEmpty(v.info.source);
-      assert.isNotEmpty(v.info.destination);
-      assert.isNotNull(v.date);
-    });
+  it('Get transfer history', async () => {
+    await SolNative.getHistory(
+      target,
+      FilterType.Transfer,
+      (result) => {
+        result.match(
+          (result) => {
+            result.forEach((res) => {
+              console.log(res);
+              assert.isNotEmpty(res.sol);
+              assert.isNotEmpty(res.destination);
+              assert.isNotEmpty(res.source);
+              assert.isNotNull(res.date);
+            });
+          },
+          (err) => assert.fail(err.message)
+        );
+      },
+      10
+    );
   });
 });

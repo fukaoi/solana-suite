@@ -1,5 +1,14 @@
 import { Pubkey, Result } from '@solana-suite/shared';
-import { OutputNftMetadata } from '@solana-suite/shared-metaplex';
+import { UserSideOutput } from '@solana-suite/shared-metaplex';
+import { Sortable } from '@solana-suite/core';
 export declare namespace Metaplex {
-    const findByOwner: (owner: Pubkey) => Promise<Result<OutputNftMetadata[], Error>>;
+    /**
+     * Fetch minted metadata by owner Pubkey
+     *
+     * @param {Pubkey} owner
+     * @param {Sortable} callback
+     * @param {Sortable} sortable?
+     * @return Promise<Result<never, Error>>
+     */
+    const findByOwner: (owner: Pubkey, callback: (result: Result<UserSideOutput.NftMetadata[], Error>) => void, sortable?: Sortable) => Promise<void>;
 }

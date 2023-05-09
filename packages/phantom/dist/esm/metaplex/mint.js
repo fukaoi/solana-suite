@@ -10,14 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Transaction } from '@solana/web3.js';
 import { Metaplex } from '@solana-suite/nft';
 import { Storage } from '@solana-suite/storage';
-import { debugLog, Node, Try, KeypairAccount, } from '@solana-suite/shared';
-import { Royalty, Validator, Properties, MetaplexMetadata, } from '@solana-suite/shared-metaplex';
+import { debugLog, KeypairAccount, Node, Try, } from '@solana-suite/shared';
+import { Convert, Royalty, Validator, } from '@solana-suite/shared-metaplex';
 export var PhantomMetaplex;
 (function (PhantomMetaplex) {
     /**
      * Upload content and NFT mint
      *
-     * @param {InputNftMetadata}  input
+     * @param {UserSideInput.NftMetadata}  input
      * @param {Phantom} phantom        phantom wallet object
      * @return Promise<Result<Instruction, Error>>
      */
@@ -32,15 +32,15 @@ export var PhantomMetaplex;
             }
             Node.changeConnection({ cluster });
             //Convert porperties, Upload content
-            const properties = yield Properties.toConvertInfra(input.properties, Storage.uploadContent, input.storageType);
+            const properties = yield Convert.Properties.intoInfraSide(input.properties, Storage.uploadContent, input.storageType);
             const sellerFeeBasisPoints = Royalty.convert(input.royalty);
-            const nftStorageMetadata = Storage.toConvertNftStorageMetadata(Object.assign(Object.assign({}, input), { properties }), sellerFeeBasisPoints);
+            const nftStorageMetadata = Storage.toConvertOffchaindata(Object.assign(Object.assign({}, input), { properties }), sellerFeeBasisPoints);
             const uploaded = yield Storage.uploadMetaAndContent(nftStorageMetadata, input.filePath, input.storageType);
             if (uploaded.isErr) {
                 throw uploaded;
             }
             const uri = uploaded.value;
-            const datav2 = MetaplexMetadata.toConvertInfra(input, uri, sellerFeeBasisPoints);
+            const datav2 = Convert.NftMetadata.intoInfraSide(input, uri, sellerFeeBasisPoints);
             const connection = Node.getConnection();
             const mint = KeypairAccount.create();
             const isMutable = true;
