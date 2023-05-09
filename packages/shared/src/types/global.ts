@@ -1,4 +1,5 @@
 import { Keypair, PublicKey, TransactionSignature } from '@solana/web3.js';
+import { Instruction, MintInstruction } from '..';
 import { Result } from '../result';
 
 declare global {
@@ -14,8 +15,8 @@ declare global {
     toLamports(): number;
   }
 
-
-  interface Array<T> {
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  interface Array<T extends Instruction | MintInstruction> {
     submit(): Promise<Result<TransactionSignature, Error>>;
   }
 

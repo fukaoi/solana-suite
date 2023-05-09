@@ -1,4 +1,4 @@
-import { debugLog, Node, Pubkey, Result, Try } from '@solana-suite/shared';
+import { debugLog, Node, Pubkey, Result } from '@solana-suite/shared';
 import { Sortable } from '../types/spl-token';
 import {
   Convert,
@@ -30,7 +30,7 @@ export namespace SplToken {
       } else if (sortable === Sortable.Asc) {
         return a.offchain.created_at - b.offchain.created_at;
       } else {
-        throw Error(`No match sortable: ${sortable}`);
+        return b.offchain.created_at - a.offchain.created_at;
       }
     };
 
@@ -38,7 +38,7 @@ export namespace SplToken {
     tokenStandard: UserSideInput.TokenStandard,
     metadata: Metadata,
     json: InfraSideOutput.Offchain,
-    tokenAmount?: any
+    tokenAmount?: UserSideOutput.TokenAmount
   ): T => {
     if (tokenStandard === UserSideInput.TokenStandard.Fungible) {
       return Convert.TokenMetadata.intoUserSide(
@@ -79,8 +79,9 @@ export namespace SplToken {
       info.value.length === 0 && callback(Result.ok([]));
 
       for await (const d of info.value) {
-        const mint = d.account.data.parsed.info.mint;
-        const tokenAmount = d.account.data.parsed.info.tokenAmount;
+        const mint = d.account.data.parsed.info.mint as Pubkey;
+        const tokenAmount = d.account.data.parsed.info
+          .tokenAmount as UserSideOutput.TokenAmount;
 
         try {
           const metadata = await Metadata.fromAccountAddress(
@@ -92,27 +93,31 @@ export namespace SplToken {
           if (metadata.tokenStandard !== tokenStandard) {
             continue;
           }
-          fetch(metadata.data.uri).then((response) => {
-            debugLog('# findByOwner response: ', metadata);
-            response
-              .json()
-              .then((json) => {
-                data.push(
-                  converter<T>(tokenStandard, metadata, json, tokenAmount)
-                );
-                const descAlgo = sortByUinixTimestamp<T>(Sortable.Desc);
-                const ascAlgo = sortByUinixTimestamp<T>(Sortable.Asc);
-                if (sortable === Sortable.Desc) {
-                  data = data.sort(descAlgo);
-                } else if (sortable === Sortable.Asc) {
-                  data = data.sort(ascAlgo);
-                }
-                callback(Result.ok(data));
-              })
-              .catch((e) => {
-                callback(Result.err(e));
-              });
-          });
+          fetch(metadata.data.uri)
+            .then((response) => {
+              debugLog('# findByOwner response: ', metadata);
+              response
+                .json()
+                .then((json: InfraSideOutput.Offchain) => {
+                  data.push(
+                    converter<T>(tokenStandard, metadata, json, tokenAmount)
+                  );
+                  const descAlgo = sortByUinixTimestamp<T>(Sortable.Desc);
+                  const ascAlgo = sortByUinixTimestamp<T>(Sortable.Asc);
+                  if (sortable === Sortable.Desc) {
+                    data = data.sort(descAlgo);
+                  } else if (sortable === Sortable.Asc) {
+                    data = data.sort(ascAlgo);
+                  }
+                  callback(Result.ok(data));
+                })
+                .catch((e) => {
+                  callback(Result.err(e));
+                });
+            })
+            .catch((e) => {
+              callback(Result.err(e));
+            });
         } catch (e) {
           if (
             e instanceof Error &&
