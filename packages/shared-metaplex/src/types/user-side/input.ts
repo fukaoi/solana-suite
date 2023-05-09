@@ -1,4 +1,4 @@
-import { InfraSideInput } from '../infra-side/input';
+import { InfraSideInput, StorageType } from '../../types';
 import { _Shared, bignum, FileContent } from '../shared';
 import { Pubkey } from '@solana-suite/shared';
 
@@ -25,7 +25,7 @@ export namespace UserSideInput {
     name: string;
     symbol: string;
     royalty: number;
-    storageType?: InfraSideInput.StorageType;
+    storageType?: StorageType;
     filePath?: FileContent;
     uri?: string;
     isMutable?: boolean;
@@ -45,7 +45,7 @@ export namespace UserSideInput {
     symbol: string;
     filePath?: FileContent;
     uri?: string;
-    storageType?: InfraSideInput.StorageType;
+    storageType?: StorageType;
     description?: string;
     royalty?: number;
     uses?: _Shared.Uses;

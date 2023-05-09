@@ -7,8 +7,6 @@ export namespace InfraSideInput {
     readonly name: string;
   }
 
-  export type StorageType = 'nftStorage' | 'arweave';
-
   export type StorageNftStorageMetadata = {
     storageType?: 'nftStorage';
   };

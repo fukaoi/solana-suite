@@ -5,7 +5,6 @@ export declare namespace InfraSideInput {
         readonly lastModified: number;
         readonly name: string;
     }
-    type StorageType = 'nftStorage' | 'arweave';
     type StorageNftStorageMetadata = {
         storageType?: 'nftStorage';
     };

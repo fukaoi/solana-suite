@@ -19,5 +19,6 @@ __exportStar(require("./infra-side/output"), exports);
 __exportStar(require("./user-side/input"), exports);
 __exportStar(require("./user-side/output"), exports);
 __exportStar(require("./shared"), exports);
+__exportStar(require("./storage-type"), exports);
 __exportStar(require("./validator"), exports);
 //# sourceMappingURL=index.js.map
