@@ -12,7 +12,6 @@ import {
 } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
-import { StorageType } from '@solana-suite/shared-metaplex';
 
 (async () => {
   // random create
@@ -82,7 +81,7 @@ import { StorageType } from '@solana-suite/shared-metaplex';
     symbol: 'SST',
     royalty: 50,
     filePath: RandomAsset.get().filePath as string,
-    storageType: 'nftStorage' as StorageType,
+    storageType: 'nftStorage',
     isMutable: false,
   };
 

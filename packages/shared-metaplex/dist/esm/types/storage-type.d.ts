@@ -1,1 +1,1 @@
-export type StorageType = 'nftStorage' | 'arweave';
+export type StorageType = 'nftStorage' | 'arweave' | string;
