@@ -87,7 +87,6 @@ export var SplToken;
                                     .json()
                                     .then((json) => {
                                     data.push(converter(tokenStandard, metadata, json, tokenAmount));
-                                    console.log(data);
                                     const descAlgo = sortByUinixTimestamp(Sortable.Desc);
                                     const ascAlgo = sortByUinixTimestamp(Sortable.Asc);
                                     if (sortable === Sortable.Desc) {

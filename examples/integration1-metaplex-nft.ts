@@ -5,7 +5,7 @@
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/core';
 import { Metaplex } from '@solana-suite/nft';
-import { Node, KeypairAccount, Pubkey } from '@solana-suite/shared';
+import { KeypairAccount, Node, Pubkey } from '@solana-suite/shared';
 import { RandomAsset } from '../packages/storage/test/randomAsset';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 
@@ -67,12 +67,12 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // Display metadata from blockchain(optional)
   //////////////////////////////////////////////
 
-  const metadata = await Metaplex.findByOwner(owner.pubkey);
-
-  metadata.match(
-    (value) => console.log('# metadata: ', value),
-    (error) => assert.fail(error)
-  );
+  await Metaplex.findByOwner(owner.pubkey, (metadata) => {
+    metadata.match(
+      (value) => console.log('# metadata: ', value),
+      (error) => assert.fail(error)
+    );
+  });
 
   //////////////////////////////////////////////
   // TRANSFER RECEIPTS USER FROM THIS LINE

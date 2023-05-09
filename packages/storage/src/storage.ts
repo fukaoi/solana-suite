@@ -1,5 +1,10 @@
 import { Result, Secret } from '@solana-suite/shared';
-import { FileContent, InfraSideInput, UserSideInput } from '@solana-suite/shared-metaplex';
+import {
+  FileContent,
+  InfraSideInput,
+  StorageType,
+  UserSideInput,
+} from '@solana-suite/shared-metaplex';
 
 import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
@@ -25,7 +30,7 @@ export namespace Storage {
 
   export const uploadContent = async (
     filePath: FileContent,
-    storageType: InfraSideInput.StorageType,
+    storageType: StorageType,
     feePayer?: Secret
   ): Promise<Result<string, Error>> => {
     if (storageType === 'arweave') {
@@ -43,7 +48,7 @@ export namespace Storage {
   export const uploadMetaAndContent = async (
     input: InfraSideInput.Offchain,
     filePath: FileContent,
-    storageType: InfraSideInput.StorageType,
+    storageType: StorageType,
     feePayer?: Secret
   ): Promise<Result<string, Error>> => {
     let storage;

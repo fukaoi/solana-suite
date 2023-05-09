@@ -2,10 +2,10 @@
 // $ npx ts-node examples/integration2-transaction-history
 //////////////////////////////////////////////
 
-import assert from 'assert';
-import { SplToken, Airdrop, DirectionFilter } from '@solana-suite/core';
+import assert  from 'assert';
+import { Airdrop, FilterType, SplToken } from '@solana-suite/core';
 
-import { Node, Pubkey, KeypairAccount } from '@solana-suite/shared';
+import { KeypairAccount, Node, Pubkey, sleep } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
 import { StorageType } from '@solana-suite/shared-metaplex';
@@ -80,6 +80,7 @@ import { StorageType } from '@solana-suite/shared-metaplex';
     async (value) => {
       console.log('# Transfer nft sig: ', value.toExplorerUrl());
       await Node.confirmedSig(value);
+      await sleep(10);
     },
     (error) => assert.fail(error)
   );
@@ -88,17 +89,19 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   // GET TRANSACTION HISTORY
   //////////////////////////////////////////////
 
-  const hist1 = await SplToken.getHistory(
+  await SplToken.getHistory(
     mint, // used mint
-    owner.pubkey // search key
-  );
-  console.log('# token history by publish: ', hist1.unwrap());
-
-  const hist2 = await SplToken.getHistory(mint, receipt.pubkey, {
-    directionFilter: DirectionFilter.Dest, // Dest or Source
-  });
-  console.log(
-    '# token history result by destination filter : ',
-    hist2.unwrap()
+    owner.pubkey, // search key
+    FilterType.Transfer,
+    (histories) => {
+      histories.match(
+        (ok) => {
+          ok.forEach((history) => {
+            console.log(history);
+          });
+        },
+        (err) => assert.fail(err.message)
+      );
+    }
   );
 })();
