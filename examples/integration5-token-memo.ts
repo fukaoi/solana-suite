@@ -73,6 +73,14 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
     owner.secret // signer or feePayer
   );
 
+  (await [inst1, inst2].submit()).match(
+    async (value) => {
+      console.log('# nft sig: ', value.toExplorerUrl());
+      await Node.confirmedSig(value);
+    },
+    (error) => assert.fail(error)
+  );
+
   //////////////////////////////////////////////
   // TRANSFER RECEIPT USER FROM THIS LINE
   //////////////////////////////////////////////
@@ -87,9 +95,9 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
     decimals
   );
 
-  (await [inst1, inst2, inst3].submit()).match(
+  (await inst3.submit()).match(
     async (value) => {
-      console.log('# Transfer nft sig: ', value.toExplorerUrl());
+      console.log('# Transfer sig: ', value.toExplorerUrl());
       await Node.confirmedSig(value);
     },
     (error) => assert.fail(error)
