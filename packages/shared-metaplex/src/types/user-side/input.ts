@@ -1,4 +1,4 @@
-import { InfraSideInput, StorageType } from '../../types';
+import { StorageType } from '../../types';
 import { _Shared, bignum, FileContent } from '../shared';
 import { Pubkey } from '@solana-suite/shared';
 
@@ -12,7 +12,7 @@ export namespace UserSideInput {
   };
 
   export type Properties = _Shared.Properties;
-  
+
   export enum TokenStandard {
     NonFungible = 0,
     FungibleAsset = 1,

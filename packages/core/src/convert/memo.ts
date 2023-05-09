@@ -35,7 +35,7 @@ export namespace Convert.Memo {
       }
     }
 
-    history.memo = output.parsed as string;
+    history.memo = output.parsed ;
     history.type = output.program;
     history.date = _Shared.Shared.convertTimestampToDate(
       meta.blockTime as number

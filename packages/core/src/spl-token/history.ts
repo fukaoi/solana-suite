@@ -10,7 +10,7 @@ export namespace SplToken {
     target: Pubkey,
     filterType: FilterType,
     callback: (result: Result<UserSideOutput.History[], Error>) => void,
-    narrowDown: number = 1000 // Max number: 1000
+    narrowDown = 1000 // Max number: 1000
   ): Promise<void> => {
     try {
       const tokenAccount = await getAssociatedTokenAddress(

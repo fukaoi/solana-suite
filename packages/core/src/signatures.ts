@@ -20,7 +20,7 @@ export namespace Signatures {
       transaction: ParsedTransactionWithMeta
     ) => UserSideOutput.History | undefined,
     callback: (history: Result<UserSideOutput.History[], Error>) => void,
-    narrowDown: number = 1000
+    narrowDown = 1000
   ): Promise<void> => {
     try {
       const transactions = await Node.getConnection().getSignaturesForAddress(
@@ -31,7 +31,7 @@ export namespace Signatures {
       );
 
       debugLog('# transactions count:', transactions.length);
-      let histories: UserSideOutput.History[] = [];
+      const histories: UserSideOutput.History[] = [];
 
       // don't use  Promise.all, this is sync action
       // let i = 1;
@@ -49,13 +49,15 @@ export namespace Signatures {
       // }
 
       for (const transaction of transactions) {
-        parseForTransaction(transaction.signature).then((signature) => {
-          const history = parser(signature);
-          if (history) {
-            histories.push(history);
-            callback(Result.ok(histories));
-          }
-        });
+        parseForTransaction(transaction.signature)
+          .then((signature) => {
+            const history = parser(signature);
+            if (history) {
+              histories.push(history);
+              callback(Result.ok(histories));
+            }
+          })
+          .catch((e) => callback(Result.err(e)));
         await sleep(0.05); // avoid 429 error
       }
     } catch (e) {

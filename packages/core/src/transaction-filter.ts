@@ -87,7 +87,9 @@ export namespace TransactionFilter {
             case FilterType.Mint: {
               if (
                 FilterOptions.Mint.program.includes(instruction.program) &&
-                FilterOptions.Mint.action.includes(instruction.parsed.type)
+                FilterOptions.Mint.action.includes(
+                  instruction.parsed.type as string
+                )
               ) {
                 history = _Mint.Mint.intoUserSide(instruction, txMeta);
               }
@@ -96,11 +98,12 @@ export namespace TransactionFilter {
             case FilterType.Transfer:
               if (
                 FilterOptions.Transfer.program.includes(instruction.program) &&
-                FilterOptions.Transfer.action.includes(instruction.parsed.type)
+                FilterOptions.Transfer.action.includes(
+                  instruction.parsed.type as string
+                )
               ) {
-                let res;
                 if (instruction.parsed.type === 'transferChecked') {
-                  res = _TransferChecked.TransferChecked.intoUserSide(
+                  history = _TransferChecked.TransferChecked.intoUserSide(
                     instruction,
                     txMeta,
                     postTokenAccount
@@ -112,9 +115,6 @@ export namespace TransactionFilter {
                   );
                 }
               }
-              break;
-            default:
-              throw Error(`No match FilterType: ${filterType}`);
           }
         }
       });
