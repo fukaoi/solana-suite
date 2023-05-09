@@ -43,7 +43,7 @@ var SplToken;
             return a.offchain.created_at - b.offchain.created_at;
         }
         else {
-            throw Error(`No match sortable: ${sortable}`);
+            return b.offchain.created_at - a.offchain.created_at;
         }
     };
     const converter = (tokenStandard, metadata, json, tokenAmount) => {
@@ -79,7 +79,8 @@ var SplToken;
                     try {
                         const d = _c;
                         const mint = d.account.data.parsed.info.mint;
-                        const tokenAmount = d.account.data.parsed.info.tokenAmount;
+                        const tokenAmount = d.account.data.parsed.info
+                            .tokenAmount;
                         try {
                             const metadata = yield mpl_token_metadata_1.Metadata.fromAccountAddress(connection, shared_metaplex_1.Pda.getMetadata(mint));
                             (0, shared_1.debugLog)('# findByOwner metadata: ', metadata);
@@ -87,7 +88,8 @@ var SplToken;
                             if (metadata.tokenStandard !== tokenStandard) {
                                 continue;
                             }
-                            (0, cross_fetch_1.default)(metadata.data.uri).then((response) => {
+                            (0, cross_fetch_1.default)(metadata.data.uri)
+                                .then((response) => {
                                 (0, shared_1.debugLog)('# findByOwner response: ', metadata);
                                 response
                                     .json()
@@ -106,6 +108,9 @@ var SplToken;
                                     .catch((e) => {
                                     callback(shared_1.Result.err(e));
                                 });
+                            })
+                                .catch((e) => {
+                                callback(shared_1.Result.err(e));
                             });
                         }
                         catch (e) {

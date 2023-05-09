@@ -24,7 +24,7 @@ export var Signatures;
                 limit: narrowDown,
             });
             debugLog('# transactions count:', transactions.length);
-            let histories = [];
+            const histories = [];
             // don't use  Promise.all, this is sync action
             // let i = 1;
             // for (const transaction of transactions) {
@@ -40,13 +40,15 @@ export var Signatures;
             //   }
             // }
             for (const transaction of transactions) {
-                parseForTransaction(transaction.signature).then((signature) => {
+                parseForTransaction(transaction.signature)
+                    .then((signature) => {
                     const history = parser(signature);
                     if (history) {
                         histories.push(history);
                         callback(Result.ok(histories));
                     }
-                });
+                })
+                    .catch((e) => callback(Result.err(e)));
                 yield sleep(0.05); // avoid 429 error
             }
         }

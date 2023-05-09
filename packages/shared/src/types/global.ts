@@ -16,7 +16,7 @@ declare global {
   }
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
-  interface Array<T extends Instruction | MintInstruction> {
+  interface Array<T> {
     submit(): Promise<Result<TransactionSignature, Error>>;
   }
 

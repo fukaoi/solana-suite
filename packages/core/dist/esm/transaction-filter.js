@@ -62,17 +62,13 @@ export var TransactionFilter;
                     case FilterType.Transfer:
                         if (FilterOptions.Transfer.program.includes(instruction.program) &&
                             FilterOptions.Transfer.action.includes(instruction.parsed.type)) {
-                            let res;
                             if (instruction.parsed.type === 'transferChecked') {
-                                res = _TransferChecked.TransferChecked.intoUserSide(instruction, txMeta, postTokenAccount);
+                                history = _TransferChecked.TransferChecked.intoUserSide(instruction, txMeta, postTokenAccount);
                             }
                             else {
                                 history = _Transfer.Transfer.intoUserSide(instruction, txMeta);
                             }
                         }
-                        break;
-                    default:
-                        throw Error(`No match FilterType: ${filterType}`);
                 }
             }
         });
