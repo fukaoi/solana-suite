@@ -2,10 +2,10 @@
 // $ npx ts-node examples/integration2-transaction-history
 //////////////////////////////////////////////
 
-import assert  from 'assert';
+import assert from 'assert';
 import { Airdrop, FilterType, SplToken } from '@solana-suite/core';
 
-import { KeypairAccount, Node, Pubkey, sleep } from '@solana-suite/shared';
+import { KeypairAccount, Node, Pubkey } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
 import { StorageType } from '@solana-suite/shared-metaplex';
@@ -80,7 +80,6 @@ import { StorageType } from '@solana-suite/shared-metaplex';
     async (value) => {
       console.log('# Transfer nft sig: ', value.toExplorerUrl());
       await Node.confirmedSig(value);
-      await sleep(10);
     },
     (error) => assert.fail(error)
   );

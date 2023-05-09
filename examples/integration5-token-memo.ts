@@ -3,12 +3,11 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { SplToken, Memo, Airdrop } from '@solana-suite/core';
+import { Airdrop, FilterType, Memo, SplToken } from '@solana-suite/core';
 
-import { Node, Pubkey, KeypairAccount } from '@solana-suite/shared';
+import { KeypairAccount, Node, Pubkey } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
-import { StorageType } from '@solana-suite/shared-metaplex';
 
 (async () => {
   //////////////////////////////////////////////
@@ -41,7 +40,7 @@ import { StorageType } from '@solana-suite/shared-metaplex';
     symbol: 'SST',
     royalty: 50,
     filePath: RandomAsset.get().filePath as string,
-    storageType: 'nftStorage' as StorageType,
+    storageType: 'nftStorage',
     isMutable: false,
   };
 
@@ -100,7 +99,19 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   // GET MEMO DATA
   //////////////////////////////////////////////
 
-  const res = await SplToken.getHistory(mint, receipt.pubkey);
-
-  res.isOk && console.log('# Transfer Memo: ', res.value[0].memo);
+  await SplToken.getHistory(
+    mint,
+    receipt.pubkey,
+    FilterType.Transfer,
+    (histories) => {
+      histories.match(
+        (ok) => {
+          ok.forEach((history) => {
+            console.log(history);
+          });
+        },
+        (err) => assert.fail(err.message)
+      );
+    }
+  );
 })();

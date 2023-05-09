@@ -16,7 +16,7 @@ const LOCAL_KEYPAIR_FILE = './solana-localhost-devnet-keypair';
 
 export const requestTransferByKeypair = async (
   pubkey: Pubkey,
-  sol: number = 0.1
+  sol: number = 0.5
 ) => {
   console.log('Now load...please wait');
   const keypair: { pubkey: Pubkey; secret: Secret } = JSON.parse(

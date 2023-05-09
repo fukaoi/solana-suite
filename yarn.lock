@@ -727,18 +727,18 @@
     "@randlabs/communication-bridge" "1.0.1"
 
 "@solana-suite/core@latest":
-  version "0.5.12"
-  resolved "https://registry.yarnpkg.com/@solana-suite/core/-/core-0.5.12.tgz#1006d728e06bac8526f8f6ebbdcaad3a25ccbc9c"
-  integrity sha512-cpBXY81+0M2yU5euJS5RhKkZSX/FQ+Kb7qj2bCUSpA6rTcckmSIJJMUxsBKBjRtcaYmz+s0XuPWzNqbEiMp6+w==
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@solana-suite/core/-/core-0.6.0.tgz#274a63932818b4d92067a24c13a081111ecc23ee"
+  integrity sha512-ITfrWGXRLj2DOhnLTX+z9CvGzCmCQ5AIKAePPJmIA9kbvo05lIigfh9/0/DxgqrECqc/lBogYxAAN0c5ArkUJg==
   dependencies:
     "@solana-suite/shared" latest
     "@solana-suite/shared-metaplex" latest
     "@solana-suite/storage" latest
 
 "@solana-suite/nft@latest":
-  version "0.5.12"
-  resolved "https://registry.yarnpkg.com/@solana-suite/nft/-/nft-0.5.12.tgz#49ce6a0459bb6c1709d6a923175a15fe43aeb160"
-  integrity sha512-zLFOy0cK8py9AHtOVgQq5UrPZiNYrW9aLiP+lpKgm17ORQtDUluVWywDFZB5xyjnWKXfgrM2+bYRjE0k62A4vA==
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@solana-suite/nft/-/nft-0.6.0.tgz#fea0184a4a0663afc8aca00f742878b36212e7b4"
+  integrity sha512-WCHjHI4sq+On1j/aFDfHe98KYbF5O/EwthKH0cIgCh8MywC0GA8gZZrlAldlHcCRf1k6nKys15X7VT0r60CPxQ==
   dependencies:
     "@metaplex-foundation/js" "0.19.1"
     "@solana-suite/core" latest
@@ -746,32 +746,29 @@
     "@solana-suite/storage" latest
 
 "@solana-suite/shared-metaplex@latest":
-  version "0.5.12"
-  resolved "https://registry.yarnpkg.com/@solana-suite/shared-metaplex/-/shared-metaplex-0.5.12.tgz#baaebd10098d442d759b8e53cd8ab89520679381"
-  integrity sha512-IVHo3hiELbcAsq7NfjXCGtPkiK/E5W4MNjHGixgPIkmeAMYUyw9ZW2bfC0QN86K1rRIdEsJxvwiisv9WLIn0ZQ==
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@solana-suite/shared-metaplex/-/shared-metaplex-0.6.0.tgz#2450ea7abee3583f14fbc083097f6dcbb4faf4a7"
+  integrity sha512-ZKfLfRsr16xV3wml6VQiYht4jXFyx031JgZwfBPX8FQUtSbf2Wx1FMNR5xcrStSDO1fyClb3hVpplMWEqjvasQ==
   dependencies:
     "@metaplex-foundation/mpl-token-metadata" "^2.9.1"
     "@solana-suite/shared" latest
 
 "@solana-suite/shared@latest":
-  version "0.5.12"
-  resolved "https://registry.yarnpkg.com/@solana-suite/shared/-/shared-0.5.12.tgz#897d933c8b7dc96864b41792b0dc0657e29198cf"
-  integrity sha512-3FckzLH2JXTvNHtLEO2hYDKZBHSfgLrr0O2RIlEwDv4Xgi9o5T/SZhDIn6ewjKh26tRTdTsufZWsDApLPz0QzQ==
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@solana-suite/shared/-/shared-0.6.0.tgz#4ec33fff72a41d08759d913cfbc8f27d512962a4"
+  integrity sha512-qDZMAXXg9spa0+1/+fg771U3fhZpz7pOVxTCppJb4wcdG/2s+pGLNAN9ZG5TGjiTtnybGOcwg5vA6pLe3n1Yfg==
   dependencies:
     "@solana/web3.js" "^1.73.2"
     commander "9.3.0"
 
 "@solana-suite/storage@latest":
-  version "0.5.12"
-  resolved "https://registry.yarnpkg.com/@solana-suite/storage/-/storage-0.5.12.tgz#10d9b138a8f9ac98a45387fb8877118b9af042ab"
-  integrity sha512-Fny3vCR7HkXwBHlYUWA20BCWcbVFUAcZfl0t414nvDsFu0qVjT4oy6/RaDWfp39+8yfUUslLyHMzknfwfLbuiA==
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@solana-suite/storage/-/storage-0.6.0.tgz#44ec5bd3e0f06128242925153930bf52de06c4f6"
+  integrity sha512-A0910cPTgx8AjJn0sSRkXGyOL2gPM4EVhKNE/x6PdIQoOC3WPT/PObHVoByohjLBcrK9hmfafkiuWP5W9PBrrg==
   dependencies:
     "@metaplex-foundation/js" "0.18.0"
     "@solana-suite/shared-metaplex" latest
-    cross-fetch "^3.1.4"
-    form-data "^3.0.1"
     nft.storage "^3.3.0"
-    node-fetch "^3.0.0"
 
 "@solana/buffer-layout-utils@^0.2.0":
   version "0.2.0"
@@ -1842,7 +1839,7 @@ create-require@^1.1.0:
   resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
 
-cross-fetch@^3.1.4, cross-fetch@^3.1.5:
+cross-fetch@^3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.5.tgz#e1389f44d9e7ba767907f7af8454787952ab534f"
   integrity sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==
@@ -1899,11 +1896,6 @@ data-uri-to-buffer@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-3.0.1.tgz#594b8973938c5bc2c33046535785341abc4f3636"
   integrity sha512-WboRycPNsVw3B3TL559F7kuBUM4d8CgMEvk6xEJlOp7OBPjt6G7z8WMWlD2rOFZLk6OYfFIUGsCOWzcQH9K2og==
-
-data-uri-to-buffer@^4.0.0:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-4.0.1.tgz#d8feb2b2881e6a4f58c2e08acfd0e2834e26222e"
-  integrity sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==
 
 data-urls@^4.0.0:
   version "4.0.0"
@@ -2347,14 +2339,6 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
-fetch-blob@^3.1.2, fetch-blob@^3.1.4:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/fetch-blob/-/fetch-blob-3.2.0.tgz#f09b8d4bbd45adc6f0c20b7e787e793e309dcce9"
-  integrity sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==
-  dependencies:
-    node-domexception "^1.0.0"
-    web-streams-polyfill "^3.0.3"
-
 figures@^3.0.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/figures/-/figures-3.2.0.tgz#625c18bd293c604dc4a8ddb2febf0c88341746af"
@@ -2419,15 +2403,6 @@ for-each@^0.3.3:
   dependencies:
     is-callable "^1.1.3"
 
-form-data@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/form-data/-/form-data-3.0.1.tgz#ebd53791b78356a99af9a300d4282c4d5eb9755f"
-  integrity sha512-RHkBKtLWUVwd7SqRIvCZMEvAMoGUp0XU+seQiZejj0COz3RI3hWP4sCv3gZWWLjJTd7rGwcsF5eKZGii0r/hbg==
-  dependencies:
-    asynckit "^0.4.0"
-    combined-stream "^1.0.8"
-    mime-types "^2.1.12"
-
 form-data@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
@@ -2436,13 +2411,6 @@ form-data@^4.0.0:
     asynckit "^0.4.0"
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
-
-formdata-polyfill@^4.0.10:
-  version "4.0.10"
-  resolved "https://registry.yarnpkg.com/formdata-polyfill/-/formdata-polyfill-4.0.10.tgz#24807c31c9d402e002ab3d8c720144ceb8848423"
-  integrity sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==
-  dependencies:
-    fetch-blob "^3.1.2"
 
 fs.realpath@^1.0.0:
   version "1.0.0"
@@ -3248,11 +3216,6 @@ node-addon-api@^2.0.0:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-2.0.2.tgz#432cfa82962ce494b132e9d72a15b29f71ff5d32"
   integrity sha512-Ntyt4AIXyaLIuMHF6IOoTakB3K+RWxwtsHNRxllEoA6vPwP9o4866g6YWDLUdnucilZhmkxiHwHr11gAENw+QA==
 
-node-domexception@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/node-domexception/-/node-domexception-1.0.0.tgz#6888db46a1f71c0b76b3f7555016b63fe64766e5"
-  integrity sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==
-
 node-fetch@2.6.7:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
@@ -3266,15 +3229,6 @@ node-fetch@^2.6.1, node-fetch@^2.6.7:
   integrity sha512-5YytjUVbwzjE/BX4N62vnPPkGNxlJPwdA9/ArUc4pcM6cYS4Hinuv4VazzwjMGgnWuiQqcemOanib/5PpcsGug==
   dependencies:
     whatwg-url "^5.0.0"
-
-node-fetch@^3.0.0:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.3.1.tgz#b3eea7b54b3a48020e46f4f88b9c5a7430d20b2e"
-  integrity sha512-cRVc/kyto/7E5shrWca1Wsea4y6tL9iYJE5FBCius3JQfb/4P4I295PfhgbJQBLTx6lATE4z+wK0rPM4VS2uow==
-  dependencies:
-    data-uri-to-buffer "^4.0.0"
-    fetch-blob "^3.1.4"
-    formdata-polyfill "^4.0.10"
 
 node-gyp-build@^4.2.0, node-gyp-build@^4.3.0:
   version "4.6.0"
@@ -4030,7 +3984,7 @@ web-streams-polyfill@3.0.3:
   resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.0.3.tgz#f49e487eedeca47a207c1aee41ee5578f884b42f"
   integrity sha512-d2H/t0eqRNM4w2WvmTdoeIvzAUSpK7JmATB8Nr2lb7nQ9BTIJVjbQ/TRFVEh2gUH1HwclPdoPtfMoFfetXaZnA==
 
-web-streams-polyfill@^3.0.3, web-streams-polyfill@^3.1.1:
+web-streams-polyfill@^3.1.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.2.1.tgz#71c2718c52b45fd49dbeee88634b3a60ceab42a6"
   integrity sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==
