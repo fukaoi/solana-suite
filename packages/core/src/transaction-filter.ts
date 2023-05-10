@@ -6,9 +6,11 @@ import { ParsedInstruction, ParsedTransactionWithMeta } from '@solana/web3.js';
 import {
   FilterOptions,
   FilterType,
+  ModuleName,
   PostTokenAccount,
   UserSideOutput,
 } from './types';
+import { debugLog } from '@solana-suite/shared';
 
 //@internal
 export namespace TransactionFilter {
@@ -39,9 +41,18 @@ export namespace TransactionFilter {
   };
 
   export const parse =
-    (filterType: FilterType) =>
+    (filterType: FilterType, moduleName: ModuleName) =>
     (txMeta: ParsedTransactionWithMeta): UserSideOutput.History | undefined => {
       let history: UserSideOutput.History | undefined;
+
+      if (
+        filterType === FilterType.Mint &&
+        moduleName === ModuleName.SolNative
+      ) {
+        throw Error(
+          `This filterType('FilterType.Mint') can not use from SolNative module`
+        );
+      }
 
       if (!txMeta) {
         return history;
@@ -54,6 +65,7 @@ export namespace TransactionFilter {
           switch (filterType) {
             case FilterType.Memo: {
               if (FilterOptions.Memo.program.includes(instruction.program)) {
+                // console.log(txMeta.transaction.message.instructions);
                 let instructionTransfer: ParsedInstruction = {
                   program: '',
                   programId: '1'.repeat(32).toPublicKey(), //dummy
@@ -73,6 +85,18 @@ export namespace TransactionFilter {
                     }
                   }
                 );
+
+                // spl-token or system
+                if (
+                  instructionTransfer &&
+                  moduleName !== instructionTransfer.program
+                ) {
+                  debugLog(
+                    '# FilterType.Memo break instruction: ',
+                    instructionTransfer
+                  );
+                  break;
+                }
 
                 // fetch memo only transaction
                 history = _Memo.Memo.intoUserSide(
@@ -97,7 +121,7 @@ export namespace TransactionFilter {
             }
             case FilterType.Transfer:
               if (
-                FilterOptions.Transfer.program.includes(instruction.program) &&
+                moduleName === instruction.program &&
                 FilterOptions.Transfer.action.includes(
                   instruction.parsed.type as string
                 )

@@ -1,17 +1,13 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
 
-import {
-  InfraSideOutput,
-  PostTokenAccount,
-  UserSideOutput,
-} from '../types/';
+import { InfraSideOutput, PostTokenAccount, UserSideOutput } from '../types/';
 
 import { Convert as _Shared } from './shared';
 
 export namespace Convert.Memo {
   export const intoUserSide = (
     output: InfraSideOutput.Memo,
-    outputTransfer: InfraSideOutput.Transfer,
+    outputTransfer: InfraSideOutput.TransferChecked,
     meta: ParsedTransactionWithMeta,
     mappingTokenAccount?: PostTokenAccount[]
   ): UserSideOutput.History | undefined => {
@@ -27,6 +23,7 @@ export namespace Convert.Memo {
           (m) => m.account === outputTransfer.parsed.info.destination
         );
 
+        history.mint = outputTransfer.parsed.info.mint;
         foundSource && (history.source = foundSource.owner);
         foundDest && (history.destination = foundDest.owner);
       } else {
@@ -35,7 +32,7 @@ export namespace Convert.Memo {
       }
     }
 
-    history.memo = output.parsed ;
+    history.memo = output.parsed;
     history.type = output.program;
     history.date = _Shared.Shared.convertTimestampToDate(
       meta.blockTime as number

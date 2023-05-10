@@ -27,6 +27,7 @@ export namespace Convert.TransferChecked {
     history.mint = output.parsed.info.mint;
     history.multisigAuthority = output.parsed.info.multisigAuthority;
     history.signers = output.parsed.info.signers;
+    history.type = output.program;
     history.date = _Shared.Shared.convertTimestampToDate(
       meta.blockTime as number
     );

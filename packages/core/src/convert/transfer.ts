@@ -19,6 +19,7 @@ export namespace Convert.Transfer {
     history.source = output.parsed.info.source;
     history.destination = output.parsed.info.destination;
     history.sol = output.parsed.info.lamports?.toSol().toString();
+    history.type = output.program;
     history.date = _Shared.Shared.convertTimestampToDate(
       meta.blockTime as number
     );

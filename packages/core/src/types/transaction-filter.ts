@@ -4,6 +4,11 @@ export enum FilterType {
   Mint = 'mint',
 }
 
+export enum ModuleName {
+  SolNative = 'system',
+  SplToken = 'spl-token',
+}
+
 export const FilterOptions = {
   Transfer: {
     program: ['system', 'spl-token'],
