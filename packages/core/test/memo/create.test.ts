@@ -38,7 +38,7 @@ describe('Memo', () => {
     assert.isObject(res);
   });
 
-  it.only('send memo by owner with fee payer', async () => {
+  it('send memo by owner with fee payer', async () => {
     const inst = Memo.create(
       `{"memo": "send memo by owner", "datetime": ${datetime}}`,
       MEMO_STOCK.pubkey,
