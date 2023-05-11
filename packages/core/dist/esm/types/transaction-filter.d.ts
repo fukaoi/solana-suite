@@ -1,7 +1,12 @@
 export declare enum FilterType {
-    Transfer = "transfer",
     Memo = "memo",
-    Mint = "mint"
+    Mint = "mint",
+    OnlyMemo = "only-memo",
+    Transfer = "transfer"
+}
+export declare enum ModuleName {
+    SolNative = "system",
+    SplToken = "spl-token"
 }
 export declare const FilterOptions: {
     Transfer: {

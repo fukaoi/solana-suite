@@ -1,9 +1,15 @@
 export var FilterType;
 (function (FilterType) {
-    FilterType["Transfer"] = "transfer";
     FilterType["Memo"] = "memo";
     FilterType["Mint"] = "mint";
+    FilterType["OnlyMemo"] = "only-memo";
+    FilterType["Transfer"] = "transfer";
 })(FilterType || (FilterType = {}));
+export var ModuleName;
+(function (ModuleName) {
+    ModuleName["SolNative"] = "system";
+    ModuleName["SplToken"] = "spl-token";
+})(ModuleName || (ModuleName = {}));
 export const FilterOptions = {
     Transfer: {
         program: ['system', 'spl-token'],

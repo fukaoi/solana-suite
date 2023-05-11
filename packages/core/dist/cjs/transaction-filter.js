@@ -6,6 +6,7 @@ const mint_1 = require("./convert/mint");
 const transfer_1 = require("./convert/transfer");
 const transfer_checked_1 = require("./convert/transfer-checked");
 const types_1 = require("./types");
+const shared_1 = require("@solana-suite/shared");
 //@internal
 var TransactionFilter;
 (function (TransactionFilter) {
@@ -27,8 +28,12 @@ var TransactionFilter;
     TransactionFilter.isParsedInstruction = (arg) => {
         return arg !== null && typeof arg === 'object' && 'parsed' in arg;
     };
-    TransactionFilter.parse = (filterType) => (txMeta) => {
+    TransactionFilter.parse = (filterType, moduleName) => (txMeta) => {
         let history;
+        if (filterType === types_1.FilterType.Mint &&
+            moduleName === types_1.ModuleName.SolNative) {
+            throw Error(`This filterType('FilterType.Mint') can not use from SolNative module`);
+        }
         if (!txMeta) {
             return history;
         }
@@ -38,11 +43,8 @@ var TransactionFilter;
                 switch (filterType) {
                     case types_1.FilterType.Memo: {
                         if (types_1.FilterOptions.Memo.program.includes(instruction.program)) {
-                            let instructionTransfer = {
-                                program: '',
-                                programId: '1'.repeat(32).toPublicKey(),
-                                parsed: '',
-                            };
+                            // console.log(txMeta.transaction.message.instructions);
+                            let instructionTransfer;
                             // fetch  transfer transaction for relational memo
                             txMeta.transaction.message.instructions.forEach((instruction) => {
                                 if (TransactionFilter.isParsedInstruction(instruction) &&
@@ -50,8 +52,21 @@ var TransactionFilter;
                                     instructionTransfer = instruction;
                                 }
                             });
+                            // spl-token or system
+                            if (instructionTransfer &&
+                                moduleName !== instructionTransfer['program']) {
+                                (0, shared_1.debugLog)('# FilterType.Memo break instruction: ', instructionTransfer);
+                                break;
+                            }
                             // fetch memo only transaction
-                            history = memo_1.Convert.Memo.intoUserSide(instruction, instructionTransfer, txMeta, postTokenAccount);
+                            history = memo_1.Convert.Memo.intoUserSide(instruction, txMeta, instructionTransfer, postTokenAccount);
+                        }
+                        break;
+                    }
+                    case types_1.FilterType.OnlyMemo: {
+                        if (types_1.FilterOptions.Memo.program.includes(instruction.program)) {
+                            let instructionTransfer;
+                            history = memo_1.Convert.Memo.intoUserSide(instruction, txMeta, instructionTransfer, postTokenAccount);
                         }
                         break;
                     }
@@ -63,7 +78,7 @@ var TransactionFilter;
                         break;
                     }
                     case types_1.FilterType.Transfer:
-                        if (types_1.FilterOptions.Transfer.program.includes(instruction.program) &&
+                        if (moduleName === instruction.program &&
                             types_1.FilterOptions.Transfer.action.includes(instruction.parsed.type)) {
                             if (instruction.parsed.type === 'transferChecked') {
                                 history = transfer_checked_1.Convert.TransferChecked.intoUserSide(instruction, txMeta, postTokenAccount);

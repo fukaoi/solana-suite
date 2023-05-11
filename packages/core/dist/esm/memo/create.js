@@ -5,12 +5,12 @@ export var Memo;
 (function (Memo) {
     Memo.decode = (encoded) => bs.decode(encoded).toString();
     Memo.encode = (data) => Buffer.from(data);
-    Memo.create = (data, owner, signer) => {
+    Memo.create = (data, owner, signer, feePayer) => {
         const key = owner.toPublicKey()
             ? [
                 {
                     pubkey: owner.toPublicKey(),
-                    isSigner: false,
+                    isSigner: true,
                     isWritable: true,
                 },
             ]
@@ -20,7 +20,8 @@ export var Memo;
             data: Memo.encode(data),
             keys: key,
         });
-        return new Instruction([instruction], [signer.toKeypair()], signer.toKeypair());
+        const payer = feePayer || signer;
+        return new Instruction([instruction], [signer.toKeypair()], payer.toKeypair());
     };
 })(Memo || (Memo = {}));
-//# sourceMappingURL=memo.js.map
+//# sourceMappingURL=create.js.map

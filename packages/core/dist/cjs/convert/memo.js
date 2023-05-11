@@ -6,14 +6,15 @@ var Convert;
 (function (Convert) {
     var Memo;
     (function (Memo) {
-        Memo.intoUserSide = (output, outputTransfer, meta, mappingTokenAccount) => {
+        Memo.intoUserSide = (output, meta, outputTransfer, mappingTokenAccount) => {
             var _a, _b;
             const history = {};
             // case: transfer with memo
-            if (outputTransfer.program !== '') {
+            if (outputTransfer && outputTransfer.program !== '') {
                 if (mappingTokenAccount && outputTransfer.program === 'spl-token') {
                     const foundSource = mappingTokenAccount.find((m) => m.account === outputTransfer.parsed.info.source);
                     const foundDest = mappingTokenAccount.find((m) => m.account === outputTransfer.parsed.info.destination);
+                    history.mint = outputTransfer.parsed.info.mint;
                     foundSource && (history.source = foundSource.owner);
                     foundDest && (history.destination = foundDest.owner);
                 }

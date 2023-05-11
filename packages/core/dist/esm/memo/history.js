@@ -8,15 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Result } from '@solana-suite/shared';
-import { ModuleName } from '../types/';
+import { FilterType, ModuleName } from '../types/';
 import { TransactionFilter } from '../transaction-filter';
 import { Signatures } from '../signatures';
-export var SolNative;
-(function (SolNative) {
-    SolNative.getHistory = (target, filterType, callback, narrowDown = 1000 // Max number: 1000
+export var Memo;
+(function (Memo) {
+    Memo.getHistory = (target, callback, narrowDown = 1000 // Max number: 1000
     ) => __awaiter(this, void 0, void 0, function* () {
         try {
-            const parser = TransactionFilter.parse(filterType, ModuleName.SolNative);
+            const parser = TransactionFilter.parse(FilterType.OnlyMemo, ModuleName.SolNative);
             yield Signatures.getForAdress(target, parser, callback, narrowDown);
         }
         catch (e) {
@@ -25,5 +25,5 @@ export var SolNative;
             }
         }
     });
-})(SolNative || (SolNative = {}));
+})(Memo || (Memo = {}));
 //# sourceMappingURL=history.js.map
