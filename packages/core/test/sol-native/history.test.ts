@@ -34,7 +34,7 @@ describe('SolNative', () => {
     );
   });
 
-  it.only('Get Memo history', async () => {
+  it('Get Memo history', async () => {
     await SolNative.getHistory(
       target,
       FilterType.Memo,

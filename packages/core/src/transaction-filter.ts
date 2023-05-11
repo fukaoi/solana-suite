@@ -66,11 +66,7 @@ export namespace TransactionFilter {
             case FilterType.Memo: {
               if (FilterOptions.Memo.program.includes(instruction.program)) {
                 // console.log(txMeta.transaction.message.instructions);
-                let instructionTransfer: ParsedInstruction = {
-                  program: '',
-                  programId: '1'.repeat(32).toPublicKey(), //dummy
-                  parsed: '',
-                };
+                let instructionTransfer;
 
                 // fetch  transfer transaction for relational memo
                 txMeta.transaction.message.instructions.forEach(
@@ -89,7 +85,7 @@ export namespace TransactionFilter {
                 // spl-token or system
                 if (
                   instructionTransfer &&
-                  moduleName !== instructionTransfer.program
+                  moduleName !== instructionTransfer['program']
                 ) {
                   debugLog(
                     '# FilterType.Memo break instruction: ',
@@ -101,8 +97,21 @@ export namespace TransactionFilter {
                 // fetch memo only transaction
                 history = _Memo.Memo.intoUserSide(
                   instruction,
-                  instructionTransfer,
                   txMeta,
+                  instructionTransfer,
+                  postTokenAccount
+                );
+              }
+              break;
+            }
+            case FilterType.OnlyMemo: {
+              if (FilterOptions.Memo.program.includes(instruction.program)) {
+                let instructionTransfer;
+
+                history = _Memo.Memo.intoUserSide(
+                  instruction,
+                  txMeta,
+                  instructionTransfer,
                   postTokenAccount
                 );
               }

@@ -11,13 +11,14 @@ export namespace Memo {
   export const create = (
     data: string,
     owner: Pubkey,
-    signer: Secret
+    signer: Secret,
+    feePayer?: Secret
   ): Instruction => {
     const key = owner.toPublicKey()
       ? [
           {
             pubkey: owner.toPublicKey(),
-            isSigner: false,
+            isSigner: true,
             isWritable: true,
           },
         ]
@@ -28,10 +29,13 @@ export namespace Memo {
       data: encode(data),
       keys: key,
     });
+
+    const payer = feePayer || signer;
+
     return new Instruction(
       [instruction],
       [signer.toKeypair()],
-      signer.toKeypair()
+      payer.toKeypair()
     );
   };
 }

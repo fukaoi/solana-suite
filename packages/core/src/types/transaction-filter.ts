@@ -1,7 +1,8 @@
 export enum FilterType {
-  Transfer = 'transfer',
   Memo = 'memo',
   Mint = 'mint',
+  OnlyMemo = 'only-memo',
+  Transfer = 'transfer',
 }
 
 export enum ModuleName {

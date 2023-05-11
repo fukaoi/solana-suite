@@ -1,19 +1,29 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { Setup } from '../../shared/test/testSetup';
-import { Memo, SolNative, SplToken } from '../src';
-import { KeypairAccount, Node } from '../../shared/src/';
-import { Pubkey } from '@solana-suite/shared';
+import { Setup } from '../../../shared/test/testSetup';
+import { Memo, SolNative, SplToken } from '../../src';
+import { KeypairAccount, Node, Pubkey } from '../../../shared/src/';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
+let datetime: Date;
+
 const DUMMY_DATA = 'dummy memo data';
+const MEMO_STOCK = new KeypairAccount({
+  pubkey: 'Ebq72X3i8ug6AX2G3v2ZoLA4ZcxHurvMuJYorqJ6sALD',
+  secret:
+    '5f8pvPDETk4tGMN3takiXkty17UBba9xPr3coXEzUi6431UP9hrjDPmi7qhFJz49saKNUaDuWYk51xD924xSrDiD',
+});
 
 describe('Memo', () => {
   before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
     dest = obj.dest;
+  });
+
+  beforeEach(function () {
+    datetime = new Date();
   });
 
   it('encode', async () => {
@@ -28,10 +38,11 @@ describe('Memo', () => {
     assert.isObject(res);
   });
 
-  it('send memo by own', async () => {
+  it.only('send memo by owner with fee payer', async () => {
     const inst = Memo.create(
-      '{"memo": "send memo by own"}',
-      source.pubkey,
+      `{"memo": "send memo by owner", "datetime": ${datetime}}`,
+      MEMO_STOCK.pubkey,
+      MEMO_STOCK.secret,
       source.secret
     );
 
@@ -42,9 +53,10 @@ describe('Memo', () => {
 
   it('send memo and sol transfer by owner', async () => {
     const inst1 = Memo.create(
-      `send memo and sol transfer: ${new Date()}`,
-      dest.pubkey,
-      source.secret
+      `send memo and sol transfer: ${datetime}`,
+      MEMO_STOCK.pubkey,
+      MEMO_STOCK.secret,
+      dest.secret
     );
 
     const inst2 = SolNative.transfer(
@@ -70,9 +82,9 @@ describe('Memo', () => {
     await Node.confirmedSig(sig.unwrap());
 
     const inst1 = Memo.create(
-      `send memo and spl-token transfer: ${new Date()}`,
+      `send memo and spl-token transfer: ${datetime}`,
       dest.pubkey,
-      source.secret
+      dest.secret
     );
 
     const inst2 = await SplToken.transfer(
