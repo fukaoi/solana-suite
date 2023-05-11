@@ -16,6 +16,7 @@ var Convert;
             history.source = output.parsed.info.source;
             history.destination = output.parsed.info.destination;
             history.sol = (_a = output.parsed.info.lamports) === null || _a === void 0 ? void 0 : _a.toSol().toString();
+            history.type = output.program;
             history.date = shared_1.Convert.Shared.convertTimestampToDate(meta.blockTime);
             history.sig = meta.transaction.signatures[0];
             history.innerInstruction = false;

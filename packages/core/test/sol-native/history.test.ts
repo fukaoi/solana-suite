@@ -30,7 +30,42 @@ describe('SolNative', () => {
           (err) => assert.fail(err.message)
         );
       },
-      10
+      100
     );
+  });
+
+  it('Get Memo history', async () => {
+    await SolNative.getHistory(
+      target,
+      FilterType.Memo,
+      (result) => {
+        result.match(
+          (result) => {
+            result.forEach((res) => {
+              assert.isNotEmpty(res.memo);
+              assert.isNotEmpty(res.destination);
+              assert.isNotEmpty(res.source);
+              assert.isNotNull(res.date);
+            });
+          },
+          (err) => assert.fail(err.message)
+        );
+      },
+      100
+    );
+
+    it('[Error]Get Mint history', async () => {
+      await SolNative.getHistory(
+        target,
+        FilterType.Mint,
+        (result) => {
+          result.match(
+            (_) => assert.fail('Dont go through here'),
+            (err) => assert.isOk(err.message)
+          );
+        },
+        100
+      );
+    });
   });
 });

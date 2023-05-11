@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Result } from '@solana-suite/shared';
+import { ModuleName } from '../types/';
 import { TransactionFilter } from '../transaction-filter';
 import { Signatures } from '../signatures';
 export var SolNative;
@@ -15,7 +16,7 @@ export var SolNative;
     SolNative.getHistory = (target, filterType, callback, narrowDown = 1000 // Max number: 1000
     ) => __awaiter(this, void 0, void 0, function* () {
         try {
-            const parser = TransactionFilter.parse(filterType);
+            const parser = TransactionFilter.parse(filterType, ModuleName.SolNative);
             yield Signatures.getForAdress(target, parser, callback, narrowDown);
         }
         catch (e) {

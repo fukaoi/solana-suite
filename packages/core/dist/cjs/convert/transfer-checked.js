@@ -19,6 +19,7 @@ var Convert;
             history.mint = output.parsed.info.mint;
             history.multisigAuthority = output.parsed.info.multisigAuthority;
             history.signers = output.parsed.info.signers;
+            history.type = output.program;
             history.date = shared_1.Convert.Shared.convertTimestampToDate(meta.blockTime);
             history.sig = meta.transaction.signatures[0];
             history.innerInstruction = false;

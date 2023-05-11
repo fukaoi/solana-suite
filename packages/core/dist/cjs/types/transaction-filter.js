@@ -1,12 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FilterOptions = exports.FilterType = void 0;
+exports.FilterOptions = exports.ModuleName = exports.FilterType = void 0;
 var FilterType;
 (function (FilterType) {
-    FilterType["Transfer"] = "transfer";
     FilterType["Memo"] = "memo";
     FilterType["Mint"] = "mint";
+    FilterType["OnlyMemo"] = "only-memo";
+    FilterType["Transfer"] = "transfer";
 })(FilterType = exports.FilterType || (exports.FilterType = {}));
+var ModuleName;
+(function (ModuleName) {
+    ModuleName["SolNative"] = "system";
+    ModuleName["SplToken"] = "spl-token";
+})(ModuleName = exports.ModuleName || (exports.ModuleName = {}));
 exports.FilterOptions = {
     Transfer: {
         program: ['system', 'spl-token'],
