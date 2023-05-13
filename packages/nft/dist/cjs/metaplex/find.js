@@ -19,11 +19,13 @@ var Metaplex;
      *
      * @param {Pubkey} owner
      * @param {Sortable} callback
-     * @param {Sortable} sortable?
+     * @param {{sortable?: Sortable, isHolder?: boolean}} options?
      * @return Promise<Result<never, Error>>
      */
-    Metaplex.findByOwner = (owner, callback, sortable) => __awaiter(this, void 0, void 0, function* () {
-        yield core_1.SplToken.genericFindByOwner(owner, callback, shared_metaplex_1.UserSideInput.TokenStandard.NonFungible, sortable);
+    Metaplex.findByOwner = (owner, callback, options) => __awaiter(this, void 0, void 0, function* () {
+        const sortable = !(options === null || options === void 0 ? void 0 : options.sortable) ? core_1.Sortable.Desc : options === null || options === void 0 ? void 0 : options.sortable;
+        const isHolder = !(options === null || options === void 0 ? void 0 : options.isHolder) ? true : false;
+        yield core_1.SplToken.genericFindByOwner(owner, callback, shared_metaplex_1.UserSideInput.TokenStandard.NonFungible, sortable, isHolder);
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));
 //# sourceMappingURL=find.js.map

@@ -5,6 +5,7 @@ const collection_1 = require("./collection");
 const creators_1 = require("./creators");
 const uses_1 = require("./uses");
 const token_metadata_1 = require("./token-metadata");
+const shared_1 = require("@solana-suite/shared");
 var Convert;
 (function (Convert) {
     var NftMetadata;
@@ -34,6 +35,7 @@ var Convert;
                 editionNonce: output.onchain.editionNonce,
                 collection: collection_1.Convert.Collection.intoUserSide(output.onchain.collection),
                 uses: uses_1.Convert.Uses.intoUserSide(output.onchain.uses),
+                dateTime: (0, shared_1.convertTimestampToDateTime)(output.offchain.created_at),
                 offchain: output.offchain,
             };
         };

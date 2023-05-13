@@ -249,3 +249,18 @@ export function Try<T, E extends Error>(
     }
   }
 }
+
+/**
+ * argument is promise or other
+ *
+ * @param {number|undefined} created_at
+ * @returns Date | undefined
+ */
+export const convertTimestampToDateTime = (
+  created_at: number | undefined
+): Date | undefined => {
+  if (created_at) {
+    return new Date(created_at * 1000);
+  }
+  return;
+};

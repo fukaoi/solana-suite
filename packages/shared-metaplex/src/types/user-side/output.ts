@@ -29,7 +29,7 @@ export namespace UserSideOutput {
     collection?: Collection | undefined;
     creators?: Creators[] | undefined;
     uses?: _Shared.Uses | undefined;
-    created_at?: number | undefined;
+    dateTime?: Date | undefined;
   };
 
   /////////// TOKEN //////////////
@@ -40,9 +40,10 @@ export namespace UserSideOutput {
     uri: string;
     royalty: number;
     offchain: InfraSideOutput.Offchain;
-    tokenAmount?: TokenAmount; 
+    tokenAmount?: TokenAmount;
     attributes?: _Shared.Attribute | undefined;
     creators?: Creators[] | undefined;
     uses?: _Shared.Uses | undefined;
+    dateTime?: Date | undefined;
   };
 }

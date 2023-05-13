@@ -24,7 +24,7 @@ describe('SplToken', () => {
               assert.isNotEmpty(res.tokenAmount);
               assert.isNotEmpty(res.signers);
               assert.isNotEmpty(res.multisigAuthority);
-              assert.isNotNull(res.date);
+              assert.isNotNull(res.dateTime);
             });
           },
           (err: Error) => assert.fail(err.message)
@@ -47,7 +47,7 @@ describe('SplToken', () => {
               assert.isNotEmpty(res.tokenAmount);
               assert.isNotEmpty(res.signers);
               assert.isNotEmpty(res.multisigAuthority);
-              assert.isNotNull(res.date);
+              assert.isNotNull(res.dateTime);
             });
           },
           (err: Error) => assert.fail(err.message)
@@ -70,7 +70,7 @@ describe('SplToken', () => {
               assert.isNotEmpty(res.tokenAmount);
               assert.isNotEmpty(res.signers);
               assert.isNotEmpty(res.multisigAuthority);
-              assert.isNotNull(res.date);
+              assert.isNotNull(res.dateTime);
             });
           },
           (err: Error) => assert.fail(err.message)

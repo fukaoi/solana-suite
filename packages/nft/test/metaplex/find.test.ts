@@ -2,10 +2,17 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Metaplex } from '../../src/metaplex';
 import { Sortable } from '../../../core/src';
+import { Setup } from '../../../shared/test/testSetup';
+import { Pubkey } from '../../../shared';
 
-const owner = 'CGDRajhcFo9ysuUjBsbwCQHKJuCHiXeEUrMKSot1eyay';
+let owner: Pubkey;
 const notFoundTokenOwner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT';
 describe('Metaplex.find', () => {
+  before(async () => {
+    const obj = await Setup.generateKeyPair();
+    owner = obj.source.pubkey;
+  });
+
   it('Not found nft', async () => {
     await Metaplex.findByOwner(notFoundTokenOwner, (result) => {
       assert.isTrue(result.isOk);
@@ -35,32 +42,6 @@ describe('Metaplex.find', () => {
     });
   });
 
-  it('Find owner info with Desc', async () => {
-    await Metaplex.findByOwner(
-      owner,
-      (result) => {
-        result.match(
-          (ok) => {
-            ok.forEach((res) => {
-              assert.isNotEmpty(res.name);
-              assert.isNotEmpty(res.mint);
-              assert.isNotEmpty(res.symbol);
-              assert.isNotEmpty(res.uri);
-              assert.isNotEmpty(res.royalty);
-              assert.isNotEmpty(res.offchain);
-              assert.isNotEmpty(res.isMutable);
-              assert.isNotEmpty(res.primarySaleHappened);
-              assert.isNotEmpty(res.updateAuthority);
-              assert.isNotEmpty(res.editionNonce);
-            });
-          },
-          (err) => assert.fail(err.message)
-        );
-      },
-      Sortable.Desc
-    );
-  });
-
   it('Find owner info with Asc', async () => {
     await Metaplex.findByOwner(
       owner,
@@ -83,7 +64,33 @@ describe('Metaplex.find', () => {
           (err) => assert.fail(err.message)
         );
       },
-      Sortable.Asc
+      { sortable: Sortable.Asc }
+    );
+  });
+
+  it('Find owner info with no Hold', async () => {
+    await Metaplex.findByOwner(
+      owner,
+      (result) => {
+        result.match(
+          (ok) => {
+            ok.forEach((res) => {
+              assert.isNotEmpty(res.name);
+              assert.isNotEmpty(res.mint);
+              assert.isNotEmpty(res.symbol);
+              assert.isNotEmpty(res.uri);
+              assert.isNotEmpty(res.royalty);
+              assert.isNotEmpty(res.offchain);
+              assert.isNotEmpty(res.isMutable);
+              assert.isNotEmpty(res.primarySaleHappened);
+              assert.isNotEmpty(res.updateAuthority);
+              assert.isNotEmpty(res.editionNonce);
+            });
+          },
+          (err) => assert.fail(err.message)
+        );
+      },
+      { isHolder: true }
     );
   });
 });

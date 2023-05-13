@@ -64,7 +64,8 @@ export namespace SplToken {
     owner: Pubkey,
     callback: (result: Result<T[], Error>) => void,
     tokenStandard: UserSideInput.TokenStandard,
-    sortable?: Sortable
+    sortable?: Sortable,
+    isHolder?: boolean
   ): Promise<void> => {
     try {
       let data: T[] = [];
@@ -79,6 +80,13 @@ export namespace SplToken {
       info.value.length === 0 && callback(Result.ok([]));
 
       for await (const d of info.value) {
+        if (isHolder && d.account.data.parsed.info.tokenAmount.uiAmount < 1) {
+          debugLog(
+            '# findByOwner no hold metadata: ',
+            d.account.data.parsed.info
+          );
+          continue;
+        }
         const mint = d.account.data.parsed.info.mint as Pubkey;
         const tokenAmount = d.account.data.parsed.info
           .tokenAmount as UserSideOutput.TokenAmount;
@@ -102,6 +110,12 @@ export namespace SplToken {
                   data.push(
                     converter<T>(tokenStandard, metadata, json, tokenAmount)
                   );
+                  callback(Result.ok(data)); // need this call ?
+                })
+                .catch((e) => {
+                  callback(Result.err(e));
+                })
+                .finally(() => {
                   const descAlgo = sortByUinixTimestamp<T>(Sortable.Desc);
                   const ascAlgo = sortByUinixTimestamp<T>(Sortable.Asc);
                   if (sortable === Sortable.Desc) {
@@ -110,9 +124,6 @@ export namespace SplToken {
                     data = data.sort(ascAlgo);
                   }
                   callback(Result.ok(data));
-                })
-                .catch((e) => {
-                  callback(Result.err(e));
                 });
             })
             .catch((e) => {
@@ -140,19 +151,22 @@ export namespace SplToken {
    *
    * @param {Pubkey} owner
    * @param {FindByOwnerCallback} callback
-   * @param {Sortable} sortable?
+   * @param {{sortable?: Sortable, isHolder?: boolean}} options?
    * @return Promise<Result<never, Error>>
    */
   export const findByOwner = async (
     owner: Pubkey,
     callback: (result: Result<UserSideOutput.TokenMetadata[], Error>) => void,
-    sortable?: Sortable
+    options?: { sortable?: Sortable; isHolder?: boolean }
   ): Promise<void> => {
+    const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
+    const isHolder = !options?.isHolder ? true : false;
     await genericFindByOwner<UserSideOutput.TokenMetadata>(
       owner,
       callback,
       UserSideInput.TokenStandard.Fungible,
-      sortable
+      sortable,
+      isHolder
     );
   };
 }

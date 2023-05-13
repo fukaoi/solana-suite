@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Try = exports.isPromise = exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = exports.overwriteObject = void 0;
+exports.convertTimestampToDateTime = exports.Try = exports.isPromise = exports.isNode = exports.isBrowser = exports.sleep = exports.debugLog = exports.overwriteObject = void 0;
 const bs58_1 = __importDefault(require("bs58"));
 const web3_js_1 = require("@solana/web3.js");
 const constants_1 = require("./constants");
@@ -230,4 +230,17 @@ function Try(input, finallyInput) {
     }
 }
 exports.Try = Try;
+/**
+ * argument is promise or other
+ *
+ * @param {number|undefined} created_at
+ * @returns Date | undefined
+ */
+const convertTimestampToDateTime = (created_at) => {
+    if (created_at) {
+        return new Date(created_at * 1000);
+    }
+    return;
+};
+exports.convertTimestampToDateTime = convertTimestampToDateTime;
 //# sourceMappingURL=global.js.map

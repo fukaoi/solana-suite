@@ -7,8 +7,11 @@ export declare namespace Metaplex {
      *
      * @param {Pubkey} owner
      * @param {Sortable} callback
-     * @param {Sortable} sortable?
+     * @param {{sortable?: Sortable, isHolder?: boolean}} options?
      * @return Promise<Result<never, Error>>
      */
-    const findByOwner: (owner: Pubkey, callback: (result: Result<UserSideOutput.NftMetadata[], Error>) => void, sortable?: Sortable) => Promise<void>;
+    const findByOwner: (owner: Pubkey, callback: (result: Result<UserSideOutput.NftMetadata[], Error>) => void, options?: {
+        sortable?: Sortable;
+        isHolder?: boolean;
+    }) => Promise<void>;
 }

@@ -8,19 +8,22 @@ export namespace Metaplex {
    *
    * @param {Pubkey} owner
    * @param {Sortable} callback
-   * @param {Sortable} sortable?
+   * @param {{sortable?: Sortable, isHolder?: boolean}} options?
    * @return Promise<Result<never, Error>>
    */
   export const findByOwner = async (
     owner: Pubkey,
     callback: (result: Result<UserSideOutput.NftMetadata[], Error>) => void,
-    sortable?: Sortable
+    options?: { sortable?: Sortable; isHolder?: boolean }
   ): Promise<void> => {
+    const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
+    const isHolder = !options?.isHolder ? true : false;
     await SplToken.genericFindByOwner<UserSideOutput.NftMetadata>(
       owner,
       callback,
       UserSideInput.TokenStandard.NonFungible,
-      sortable
+      sortable,
+      isHolder
     );
   };
 }
