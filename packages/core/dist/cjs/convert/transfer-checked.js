@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Convert = void 0;
-const shared_1 = require("./shared");
+const shared_1 = require("@solana-suite/shared");
 var Convert;
 (function (Convert) {
     var TransferChecked;
@@ -20,7 +20,7 @@ var Convert;
             history.multisigAuthority = output.parsed.info.multisigAuthority;
             history.signers = output.parsed.info.signers;
             history.type = output.program;
-            history.date = shared_1.Convert.Shared.convertTimestampToDate(meta.blockTime);
+            history.dateTime = (0, shared_1.convertTimestampToDateTime)(meta.blockTime);
             history.sig = meta.transaction.signatures[0];
             history.innerInstruction = false;
             // inner instructions

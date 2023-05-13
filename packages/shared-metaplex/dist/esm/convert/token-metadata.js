@@ -1,5 +1,6 @@
 import { Convert as _Creators } from './creators';
 import { Convert as _Uses } from './uses';
+import { convertTimestampToDateTime } from '@solana-suite/shared';
 export var Convert;
 (function (Convert) {
     var TokenMetadata;
@@ -25,6 +26,7 @@ export var Convert;
                 uri: TokenMetadata.deleteNullStrings(output.onchain.data.uri),
                 creators: _Creators.Creators.intoUserSide(output.onchain.data.creators),
                 uses: _Uses.Uses.intoUserSide(output.onchain.uses),
+                dateTime: convertTimestampToDateTime(output.offchain.created_at),
                 offchain: output.offchain,
             };
         };

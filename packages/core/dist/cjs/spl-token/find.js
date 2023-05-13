@@ -63,7 +63,7 @@ var SplToken;
             throw Error(`No match tokenStandard: ${tokenStandard}`);
         }
     };
-    SplToken.genericFindByOwner = (owner, callback, tokenStandard, sortable) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.genericFindByOwner = (owner, callback, tokenStandard, sortable, isHolder) => __awaiter(this, void 0, void 0, function* () {
         var _a, e_1, _b, _c;
         try {
             let data = [];
@@ -78,6 +78,10 @@ var SplToken;
                     _d = false;
                     try {
                         const d = _c;
+                        if (isHolder && d.account.data.parsed.info.tokenAmount.uiAmount < 1) {
+                            (0, shared_1.debugLog)('# findByOwner no hold metadata: ', d.account.data.parsed.info);
+                            continue;
+                        }
                         const mint = d.account.data.parsed.info.mint;
                         const tokenAmount = d.account.data.parsed.info
                             .tokenAmount;
@@ -95,6 +99,12 @@ var SplToken;
                                     .json()
                                     .then((json) => {
                                     data.push(converter(tokenStandard, metadata, json, tokenAmount));
+                                    callback(shared_1.Result.ok(data)); // need this call ?
+                                })
+                                    .catch((e) => {
+                                    callback(shared_1.Result.err(e));
+                                })
+                                    .finally(() => {
                                     const descAlgo = sortByUinixTimestamp(spl_token_1.Sortable.Desc);
                                     const ascAlgo = sortByUinixTimestamp(spl_token_1.Sortable.Asc);
                                     if (sortable === spl_token_1.Sortable.Desc) {
@@ -104,9 +114,6 @@ var SplToken;
                                         data = data.sort(ascAlgo);
                                     }
                                     callback(shared_1.Result.ok(data));
-                                })
-                                    .catch((e) => {
-                                    callback(shared_1.Result.err(e));
                                 });
                             })
                                 .catch((e) => {
@@ -145,11 +152,13 @@ var SplToken;
      *
      * @param {Pubkey} owner
      * @param {FindByOwnerCallback} callback
-     * @param {Sortable} sortable?
+     * @param {{sortable?: Sortable, isHolder?: boolean}} options?
      * @return Promise<Result<never, Error>>
      */
-    SplToken.findByOwner = (owner, callback, sortable) => __awaiter(this, void 0, void 0, function* () {
-        yield SplToken.genericFindByOwner(owner, callback, shared_metaplex_1.UserSideInput.TokenStandard.Fungible, sortable);
+    SplToken.findByOwner = (owner, callback, options) => __awaiter(this, void 0, void 0, function* () {
+        const sortable = !(options === null || options === void 0 ? void 0 : options.sortable) ? spl_token_1.Sortable.Desc : options === null || options === void 0 ? void 0 : options.sortable;
+        const isHolder = !(options === null || options === void 0 ? void 0 : options.isHolder) ? true : false;
+        yield SplToken.genericFindByOwner(owner, callback, shared_metaplex_1.UserSideInput.TokenStandard.Fungible, sortable, isHolder);
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));
 //# sourceMappingURL=find.js.map

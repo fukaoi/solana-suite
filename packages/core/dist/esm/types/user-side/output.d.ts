@@ -13,7 +13,7 @@ export declare namespace UserSideOutput {
         mintAuthority?: Pubkey;
         tokenAmount?: _TokenAmount.TokenAmount;
         memo?: string;
-        date?: Date;
+        dateTime?: Date;
         type?: string;
         sig?: string;
         innerInstruction?: boolean;

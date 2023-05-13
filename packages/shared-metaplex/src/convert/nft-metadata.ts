@@ -9,6 +9,8 @@ import {
   UserSideOutput,
 } from '../types';
 
+import { convertTimestampToDateTime } from '@solana-suite/shared';
+
 export namespace Convert.NftMetadata {
   export const intoInfraSide = (
     input: UserSideInput.NftMetadata,
@@ -33,15 +35,11 @@ export namespace Convert.NftMetadata {
       mint: output.onchain.mint.toString(),
       updateAuthority: output.onchain.updateAuthority.toString(),
       royalty: output.onchain.data.sellerFeeBasisPoints,
-      name: _Token.TokenMetadata.deleteNullStrings(
-        output.onchain.data.name
-      ),
+      name: _Token.TokenMetadata.deleteNullStrings(output.onchain.data.name),
       symbol: _Token.TokenMetadata.deleteNullStrings(
         output.onchain.data.symbol
       ),
-      uri: _Token.TokenMetadata.deleteNullStrings(
-        output.onchain.data.uri
-      ),
+      uri: _Token.TokenMetadata.deleteNullStrings(output.onchain.data.uri),
       isMutable: output.onchain.isMutable,
       primarySaleHappened: output.onchain.primarySaleHappened,
       creators: _Creators.Creators.intoUserSide(output.onchain.data.creators),
@@ -50,6 +48,7 @@ export namespace Convert.NftMetadata {
         output.onchain.collection
       ),
       uses: _Uses.Uses.intoUserSide(output.onchain.uses),
+      dateTime: convertTimestampToDateTime(output.offchain.created_at),
       offchain: output.offchain,
     };
   };

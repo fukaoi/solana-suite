@@ -217,4 +217,16 @@ export function Try(input, finallyInput) {
         }
     }
 }
+/**
+ * argument is promise or other
+ *
+ * @param {number|undefined} created_at
+ * @returns Date | undefined
+ */
+export const convertTimestampToDateTime = (created_at) => {
+    if (created_at) {
+        return new Date(created_at * 1000);
+    }
+    return;
+};
 //# sourceMappingURL=global.js.map

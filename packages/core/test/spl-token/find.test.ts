@@ -37,7 +37,7 @@ describe('SplToken', () => {
     });
   });
 
-  it('Get token info owned with Desc', async () => {
+  it('Get token info owned with no Hold', async () => {
     await SplToken.findByOwner(
       owner,
       (result) => {
@@ -55,7 +55,7 @@ describe('SplToken', () => {
           (err) => assert.fail(err.message)
         );
       },
-      Sortable.Desc
+      { isHolder: false }
     );
   });
 
@@ -77,7 +77,7 @@ describe('SplToken', () => {
           (err) => assert.fail(err.message)
         );
       },
-      Sortable.Asc
+      { sortable: Sortable.Asc }
     );
   });
 });

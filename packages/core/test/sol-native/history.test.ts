@@ -24,7 +24,7 @@ describe('SolNative', () => {
               assert.isNotEmpty(res.sol);
               assert.isNotEmpty(res.destination);
               assert.isNotEmpty(res.source);
-              assert.isNotNull(res.date);
+              assert.isNotNull(res.dateTime);
             });
           },
           (err) => assert.fail(err.message)
@@ -45,7 +45,7 @@ describe('SolNative', () => {
               assert.isNotEmpty(res.memo);
               assert.isNotEmpty(res.destination);
               assert.isNotEmpty(res.source);
-              assert.isNotNull(res.date);
+              assert.isNotNull(res.dateTime);
             });
           },
           (err) => assert.fail(err.message)

@@ -56,3 +56,10 @@ export declare const isPromise: (obj: unknown) => obj is Promise<unknown>;
  */
 export declare function Try<T, E extends Error>(asyncblock: () => Promise<T>, finallyInput?: () => void): Promise<Result<T, E>>;
 export declare function Try<T, E extends Error>(block: () => T): Result<T, E>;
+/**
+ * argument is promise or other
+ *
+ * @param {number|undefined} created_at
+ * @returns Date | undefined
+ */
+export declare const convertTimestampToDateTime: (created_at: number | undefined) => Date | undefined;

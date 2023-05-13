@@ -2,6 +2,7 @@ import { Convert as _Collection } from './collection';
 import { Convert as _Creators } from './creators';
 import { Convert as _Uses } from './uses';
 import { Convert as _Token } from './token-metadata';
+import { convertTimestampToDateTime } from '@solana-suite/shared';
 export var Convert;
 (function (Convert) {
     var NftMetadata;
@@ -31,6 +32,7 @@ export var Convert;
                 editionNonce: output.onchain.editionNonce,
                 collection: _Collection.Collection.intoUserSide(output.onchain.collection),
                 uses: _Uses.Uses.intoUserSide(output.onchain.uses),
+                dateTime: convertTimestampToDateTime(output.offchain.created_at),
                 offchain: output.offchain,
             };
         };

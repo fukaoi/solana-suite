@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { UserSideInput } from '@solana-suite/shared-metaplex';
-import { SplToken } from '@solana-suite/core';
+import { Sortable, SplToken } from '@solana-suite/core';
 export var Metaplex;
 (function (Metaplex) {
     /**
@@ -16,11 +16,13 @@ export var Metaplex;
      *
      * @param {Pubkey} owner
      * @param {Sortable} callback
-     * @param {Sortable} sortable?
+     * @param {{sortable?: Sortable, isHolder?: boolean}} options?
      * @return Promise<Result<never, Error>>
      */
-    Metaplex.findByOwner = (owner, callback, sortable) => __awaiter(this, void 0, void 0, function* () {
-        yield SplToken.genericFindByOwner(owner, callback, UserSideInput.TokenStandard.NonFungible, sortable);
+    Metaplex.findByOwner = (owner, callback, options) => __awaiter(this, void 0, void 0, function* () {
+        const sortable = !(options === null || options === void 0 ? void 0 : options.sortable) ? Sortable.Desc : options === null || options === void 0 ? void 0 : options.sortable;
+        const isHolder = !(options === null || options === void 0 ? void 0 : options.isHolder) ? true : false;
+        yield SplToken.genericFindByOwner(owner, callback, UserSideInput.TokenStandard.NonFungible, sortable, isHolder);
     });
 })(Metaplex || (Metaplex = {}));
 //# sourceMappingURL=find.js.map

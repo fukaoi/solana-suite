@@ -1,8 +1,6 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
-
 import { InfraSideOutput, PostTokenAccount, UserSideOutput } from '../types/';
-
-import { Convert as _Shared } from './shared';
+import { convertTimestampToDateTime } from '@solana-suite/shared';
 
 export namespace Convert.TransferChecked {
   export const intoUserSide = (
@@ -28,9 +26,7 @@ export namespace Convert.TransferChecked {
     history.multisigAuthority = output.parsed.info.multisigAuthority;
     history.signers = output.parsed.info.signers;
     history.type = output.program;
-    history.date = _Shared.Shared.convertTimestampToDate(
-      meta.blockTime as number
-    );
+    history.dateTime = convertTimestampToDateTime(meta.blockTime as number);
     history.sig = meta.transaction.signatures[0];
     history.innerInstruction = false;
 

@@ -1,4 +1,4 @@
-import { Convert as _Shared } from './shared';
+import { convertTimestampToDateTime } from '@solana-suite/shared';
 export var Convert;
 (function (Convert) {
     var Memo;
@@ -22,7 +22,7 @@ export var Convert;
             }
             history.memo = output.parsed;
             history.type = output.program;
-            history.date = _Shared.Shared.convertTimestampToDate(meta.blockTime);
+            history.dateTime = convertTimestampToDateTime(meta.blockTime);
             history.sig = meta.transaction.signatures[0];
             history.innerInstruction = false;
             if (((_a = meta.meta) === null || _a === void 0 ? void 0 : _a.innerInstructions) &&

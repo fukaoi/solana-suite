@@ -29,7 +29,7 @@ export declare namespace UserSideOutput {
         collection?: Collection | undefined;
         creators?: Creators[] | undefined;
         uses?: _Shared.Uses | undefined;
-        created_at?: number | undefined;
+        dateTime?: Date | undefined;
     };
     type TokenMetadata = {
         mint: string;
@@ -42,5 +42,6 @@ export declare namespace UserSideOutput {
         attributes?: _Shared.Attribute | undefined;
         creators?: Creators[] | undefined;
         uses?: _Shared.Uses | undefined;
+        dateTime?: Date | undefined;
     };
 }

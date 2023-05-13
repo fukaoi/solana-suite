@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Convert = void 0;
 const creators_1 = require("./creators");
 const uses_1 = require("./uses");
+const shared_1 = require("@solana-suite/shared");
 var Convert;
 (function (Convert) {
     var TokenMetadata;
@@ -28,6 +29,7 @@ var Convert;
                 uri: TokenMetadata.deleteNullStrings(output.onchain.data.uri),
                 creators: creators_1.Convert.Creators.intoUserSide(output.onchain.data.creators),
                 uses: uses_1.Convert.Uses.intoUserSide(output.onchain.uses),
+                dateTime: (0, shared_1.convertTimestampToDateTime)(output.offchain.created_at),
                 offchain: output.offchain,
             };
         };
