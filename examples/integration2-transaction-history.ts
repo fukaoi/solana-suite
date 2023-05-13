@@ -89,7 +89,6 @@ import { StorageType } from '@solana-suite/shared-metaplex';
   //////////////////////////////////////////////
 
   await SplToken.getHistory(
-    mint, // used mint
     owner.pubkey, // search key
     FilterType.Transfer,
     (histories) => {
