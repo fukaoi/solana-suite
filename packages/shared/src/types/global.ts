@@ -33,3 +33,8 @@ export type OverwriteObject = {
   existsKey: string;
   will: { key: string; value: unknown };
 };
+
+export enum Explorer {
+  Solscan = 'solscan',
+  SolanaFM = 'solanafm',
+}

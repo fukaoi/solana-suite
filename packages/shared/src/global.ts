@@ -7,7 +7,7 @@ import { Instruction as _Instruction } from './instruction';
 import { Instruction as _Batch } from './instruction/batch-submit';
 import { KeypairAccount } from './keypair-account';
 import { BigNumber } from 'bignumber.js';
-import { AnyObject } from './types/global';
+import { AnyObject, Explorer } from './types/global';
 
 /**
  * senTransaction() TransactionInstruction
@@ -72,7 +72,9 @@ String.prototype.toKeypair = function () {
  * @see {@link types/global.ts}
  * @returns string
  */
-String.prototype.toExplorerUrl = function () {
+String.prototype.toExplorerUrl = function (
+  explorer: Explorer = Explorer.Solscan
+) {
   const endPointUrl = Node.getConnection().rpcEndpoint;
   debugLog('# toExplorerUrl rpcEndpoint:', endPointUrl);
   let cluster = '';
@@ -87,14 +89,21 @@ String.prototype.toExplorerUrl = function () {
   }
 
   const address: string = this.toString();
-
-  try {
-    /* tslint:disable-next-line */
-    new PublicKey(address);
-    return `https://solscan.io/account/${address}?cluster=${cluster}`;
-  } catch (_) {
-    return `https://solscan.io/tx/${address}?cluster=${cluster}`;
+  let url: string = '';
+  if (KeypairAccount.isPubkey(address)) {
+    if (explorer === Explorer.Solscan) {
+      url = `https://solscan.io/account/${address}?cluster=${cluster}`;
+    } else if (explorer === Explorer.SolanaFM) {
+      url = `https://solscan.fm/address/${address}?cluster=${cluster}`;
+    }
+  } else {
+    if (explorer === Explorer.Solscan) {
+      url = `https://solscan.io/tx/${address}?cluster=${cluster}`;
+    } else if (explorer === Explorer.SolanaFM) {
+      url = `https://solana.fm/tx/${address}?cluster=${cluster}`;
+    }
   }
+  return url;
 };
 
 /**
