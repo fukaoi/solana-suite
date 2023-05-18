@@ -28,3 +28,7 @@ export type OverwriteObject = {
         value: unknown;
     };
 };
+export declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm"
+}

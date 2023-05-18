@@ -6,7 +6,7 @@ declare global {
   interface String {
     toPublicKey(): PublicKey;
     toKeypair(): Keypair;
-    toExplorerUrl(): string;
+    toExplorerUrl(explorer?: Explorer): string;
     toAddressUrl(): string;
   }
 

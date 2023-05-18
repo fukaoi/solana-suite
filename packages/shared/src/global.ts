@@ -89,18 +89,18 @@ String.prototype.toExplorerUrl = function (
   }
 
   const address: string = this.toString();
-  let url: string = '';
+  let url: string;
   if (KeypairAccount.isPubkey(address)) {
-    if (explorer === Explorer.Solscan) {
+    if (explorer === Explorer.SolanaFM) {
+      url = `https://solana.fm/address/${address}?cluster=${cluster}`;
+    } else {
       url = `https://solscan.io/account/${address}?cluster=${cluster}`;
-    } else if (explorer === Explorer.SolanaFM) {
-      url = `https://solscan.fm/address/${address}?cluster=${cluster}`;
     }
   } else {
-    if (explorer === Explorer.Solscan) {
-      url = `https://solscan.io/tx/${address}?cluster=${cluster}`;
-    } else if (explorer === Explorer.SolanaFM) {
+    if (explorer === Explorer.SolanaFM) {
       url = `https://solana.fm/tx/${address}?cluster=${cluster}`;
+    } else {
+      url = `https://solscan.io/tx/${address}?cluster=${cluster}`;
     }
   }
   return url;
