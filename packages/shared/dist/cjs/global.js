@@ -101,22 +101,25 @@ String.prototype.toExplorerUrl = function (explorer = global_1.Explorer.Solscan)
     else {
         cluster = constants_1.Constants.Cluster.dev;
     }
-    const address = this.toString();
-    let url;
-    if (keypair_account_1.KeypairAccount.isPubkey(address)) {
+    const addressOrSignature = this.toString();
+    let url = '';
+    if (keypair_account_1.KeypairAccount.isPubkey(addressOrSignature)) {
+        // address
         if (explorer === global_1.Explorer.SolanaFM) {
-            url = `https://solana.fm/address/${address}?cluster=${cluster}`;
+            url = `https://solana.fm/address/${addressOrSignature}?cluster=${cluster}`;
         }
         else {
-            url = `https://solscan.io/account/${address}?cluster=${cluster}`;
+            url = `https://solscan.io/account/${addressOrSignature}?cluster=${cluster}`;
         }
+        // signature
     }
     else {
+        // for Invalid type "never" of addressOrSignature, so `as string`
         if (explorer === global_1.Explorer.SolanaFM) {
-            url = `https://solana.fm/tx/${address}?cluster=${cluster}`;
+            url = `https://solana.fm/tx/${addressOrSignature}?cluster=${cluster}`;
         }
         else {
-            url = `https://solscan.io/tx/${address}?cluster=${cluster}`;
+            url = `https://solscan.io/tx/${addressOrSignature}?cluster=${cluster}`;
         }
     }
     return url;
