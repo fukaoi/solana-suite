@@ -88,19 +88,26 @@ String.prototype.toExplorerUrl = function (
     cluster = Constants.Cluster.dev;
   }
 
-  const address: string = this.toString();
-  let url: string;
-  if (KeypairAccount.isPubkey(address)) {
+  const addressOrSignature: string = this.toString();
+  let url = '';
+  if (KeypairAccount.isPubkey(addressOrSignature)) {
+    // address
     if (explorer === Explorer.SolanaFM) {
-      url = `https://solana.fm/address/${address}?cluster=${cluster}`;
+      url = `https://solana.fm/address/${addressOrSignature}?cluster=${cluster}`;
     } else {
-      url = `https://solscan.io/account/${address}?cluster=${cluster}`;
+      url = `https://solscan.io/account/${addressOrSignature}?cluster=${cluster}`;
     }
+    // signature
   } else {
+    // for Invalid type "never" of addressOrSignature, so `as string`
     if (explorer === Explorer.SolanaFM) {
-      url = `https://solana.fm/tx/${address}?cluster=${cluster}`;
+      url = `https://solana.fm/tx/${
+        addressOrSignature as string
+      }?cluster=${cluster}`;
     } else {
-      url = `https://solscan.io/tx/${address}?cluster=${cluster}`;
+      url = `https://solscan.io/tx/${
+        addressOrSignature as string
+      }?cluster=${cluster}`;
     }
   }
   return url;
