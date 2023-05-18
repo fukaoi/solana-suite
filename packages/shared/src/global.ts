@@ -99,10 +99,15 @@ String.prototype.toExplorerUrl = function (
     }
     // signature
   } else {
+    // for Invalid type "never" of addressOrSignature, so `as string`
     if (explorer === Explorer.SolanaFM) {
-      url = `https://solana.fm/tx/${addressOrSignature}?cluster=${cluster}`;
+      url = `https://solana.fm/tx/${
+        addressOrSignature as string
+      }?cluster=${cluster}`;
     } else {
-      url = `https://solscan.io/tx/${addressOrSignature}?cluster=${cluster}`;
+      url = `https://solscan.io/tx/${
+        addressOrSignature as string
+      }?cluster=${cluster}`;
     }
   }
   return url;
