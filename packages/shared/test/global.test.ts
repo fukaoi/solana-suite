@@ -1,21 +1,22 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import {
-  sleep,
-  isNode,
-  isBrowser,
-  debugLog,
-  Try,
-  Node,
   Constants,
+  debugLog,
+  Explorer,
+  isBrowser,
+  isNode,
   isPromise,
+  Node,
   overwriteObject,
+  sleep,
+  Try,
 } from '../src';
 import { JSDOM } from 'jsdom';
 
 const PUBKEY = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
 const SIG =
-  '47KcZGxPayz3cJ3Vy6mKCFmz6N4kGkKm3TDnb9VVJ4krrgdu3WznRKyweh4n6KfWgXTm2LzdVqf8sPmjV1H2u6YR';
+  '3Gs7pb8C9aZ8vkS5k1HrRB24TU4vofCZWM9JtUbMipof1hBmD6rT11css4gYGrgLZ1bp7chyqD7W7Gm8ZdvF9pF8';
 
 describe('Global', () => {
   it('Create explorer url by address', async () => {
@@ -59,6 +60,51 @@ describe('Global', () => {
     });
     console.log('# update clsuter url: ', Node.getConnection().rpcEndpoint);
     const url = SIG.toExplorerUrl();
+    const res = /devnet/.test(url);
+    assert.isTrue(res);
+  });
+
+  it('[SolanaFM]Create explorer url by address', async () => {
+    const res = PUBKEY.toExplorerUrl(Explorer.SolanaFM);
+    assert.isNotEmpty(res);
+  });
+
+  it('[SolanaFM][Mainnet-Beta]Create explorer url', async () => {
+    Node.changeConnection({ cluster: Constants.Cluster.prd });
+    const url = SIG.toExplorerUrl(Explorer.SolanaFM);
+    const res = /mainnet-beta/.test(url);
+    assert.isTrue(res);
+  });
+
+  it('[SolanaFM][Testnet]Create explorer url', async () => {
+    Node.changeConnection({ cluster: Constants.Cluster.test });
+    const url = SIG.toExplorerUrl(Explorer.SolanaFM);
+    const res = /testnet/.test(url);
+    assert.isTrue(res);
+  });
+
+  it('[SolanaFM][Devnet]Create explorer url', async () => {
+    Node.changeConnection({ cluster: Constants.Cluster.dev });
+    const url = SIG.toExplorerUrl(Explorer.SolanaFM);
+    const res = /devnet/.test(url);
+    assert.isTrue(res);
+  });
+
+  it('[SolanaFM][Devnet, localhost]Create explorer url', async () => {
+    Node.changeConnection({ cluster: Constants.Cluster.localhost });
+    const url = SIG.toExplorerUrl(Explorer.SolanaFM);
+    const res = /devnet/.test(url);
+    assert.isTrue(res);
+  });
+
+  it('[SolanaFM][Devnet, custom]Create explorer url', async () => {
+    console.log('# default clsuter url: ', Node.getConnection().rpcEndpoint);
+    Node.changeConnection({
+      cluster: Constants.Cluster.dev,
+      customClusterUrl: ['https://dummy-solana-devnet.url'],
+    });
+    console.log('# update clsuter url: ', Node.getConnection().rpcEndpoint);
+    const url = SIG.toExplorerUrl(Explorer.SolanaFM);
     const res = /devnet/.test(url);
     assert.isTrue(res);
   });

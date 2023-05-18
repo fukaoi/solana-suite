@@ -6,7 +6,7 @@ declare global {
   interface String {
     toPublicKey(): PublicKey;
     toKeypair(): Keypair;
-    toExplorerUrl(): string;
+    toExplorerUrl(explorer?: Explorer): string;
     toAddressUrl(): string;
   }
 
@@ -33,3 +33,8 @@ export type OverwriteObject = {
   existsKey: string;
   will: { key: string; value: unknown };
 };
+
+export enum Explorer {
+  Solscan = 'solscan',
+  SolanaFM = 'solanafm',
+}

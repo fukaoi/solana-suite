@@ -4,7 +4,7 @@ declare global {
     interface String {
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
-        toExplorerUrl(): string;
+        toExplorerUrl(explorer?: Explorer): string;
         toAddressUrl(): string;
     }
     interface Number {
@@ -28,3 +28,7 @@ export type OverwriteObject = {
         value: unknown;
     };
 };
+export declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm"
+}
