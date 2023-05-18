@@ -1,5 +1,4 @@
 import { Keypair, PublicKey, TransactionSignature } from '@solana/web3.js';
-import { Instruction, MintInstruction } from '..';
 import { Result } from '../result';
 
 declare global {

@@ -1,9 +1,8 @@
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Node, Pubkey, Result, sleep } from '@solana-suite/shared';
+import { Node, Pubkey, Result } from '@solana-suite/shared';
 import { FilterType, ModuleName, UserSideOutput } from '../types/';
 import { Signatures } from '../signatures';
 import { TransactionFilter } from '../transaction-filter';
-import { SplToken as _Find } from './find';
 
 export namespace SplToken {
   export const getHistory = async (
