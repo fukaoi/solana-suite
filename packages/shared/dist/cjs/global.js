@@ -105,7 +105,7 @@ String.prototype.toExplorerUrl = function (explorer = global_1.Explorer.Solscan)
     let url;
     if (keypair_account_1.KeypairAccount.isPubkey(address)) {
         if (explorer === global_1.Explorer.SolanaFM) {
-            url = `https://solscan.fm/address/${address}?cluster=${cluster}`;
+            url = `https://solana.fm/address/${address}?cluster=${cluster}`;
         }
         else {
             url = `https://solscan.io/account/${address}?cluster=${cluster}`;
