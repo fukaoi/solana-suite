@@ -3,3 +3,4 @@ import { InfraSideOutput, UserSideOutput } from '../types/';
 export declare namespace Convert.Mint {
     const intoUserSide: (output: InfraSideOutput.MintTo, meta: ParsedTransactionWithMeta) => UserSideOutput.History | undefined;
 }
+//# sourceMappingURL=mint.d.ts.map

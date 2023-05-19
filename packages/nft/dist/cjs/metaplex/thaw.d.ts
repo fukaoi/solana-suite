@@ -11,3 +11,4 @@ export declare namespace Metaplex {
      */
     const thaw: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, feePayer?: Secret) => Result<Instruction, Error>;
 }
+//# sourceMappingURL=thaw.d.ts.map

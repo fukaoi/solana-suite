@@ -8,3 +8,4 @@ export declare class Instruction {
     constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
+//# sourceMappingURL=index.d.ts.map

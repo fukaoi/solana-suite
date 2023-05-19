@@ -32,3 +32,4 @@ export declare class ValidatorError extends Error {
     details: Details[];
     constructor(message: string, details: Details[]);
 }
+//# sourceMappingURL=validator.d.ts.map

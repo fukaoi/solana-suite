@@ -4,3 +4,4 @@ export declare namespace Pda {
     const getMetadata: (mint: Pubkey) => PublicKey;
     const getMasterEdition: (mint: Pubkey) => PublicKey;
 }
+//# sourceMappingURL=pda.d.ts.map

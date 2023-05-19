@@ -49,3 +49,4 @@ export declare namespace InfraSideOutput {
         programId: PublicKey;
     };
 }
+//# sourceMappingURL=output.d.ts.map

@@ -202,3 +202,4 @@ export type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T,
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 export {};
+//# sourceMappingURL=result.d.ts.map

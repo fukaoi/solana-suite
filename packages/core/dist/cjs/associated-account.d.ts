@@ -34,3 +34,4 @@ export declare namespace AssociatedAccount {
         inst: TransactionInstruction | undefined;
     }>;
 }
+//# sourceMappingURL=associated-account.d.ts.map

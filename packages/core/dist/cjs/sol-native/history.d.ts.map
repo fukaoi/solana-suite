@@ -1,0 +1,1 @@
+{"version":3,"file":"history.d.ts","sourceRoot":"","sources":["../../../src/sol-native/history.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,EAAE,MAAM,sBAAsB,CAAC;AACtD,OAAO,EAAE,UAAU,EAAc,cAAc,EAAE,MAAM,WAAW,CAAC;AAInE,yBAAiB,SAAS,CAAC;IAClB,MAAM,UAAU,WACb,MAAM,cACF,UAAU,qBACH,OAAO,sBAAsB,EAAE,EAAE,KAAK,CAAC,KAAK,IAAI,0BAElE,QAAQ,IAAI,CASd,CAAC;CACH"}

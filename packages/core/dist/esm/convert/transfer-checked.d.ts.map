@@ -1,0 +1,1 @@
+{"version":3,"file":"transfer-checked.d.ts","sourceRoot":"","sources":["../../../src/convert/transfer-checked.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,yBAAyB,EAAE,MAAM,iBAAiB,CAAC;AAC5D,OAAO,EAAE,eAAe,EAAE,gBAAgB,EAAE,cAAc,EAAE,MAAM,WAAW,CAAC;AAG9E,yBAAiB,OAAO,CAAC,eAAe,CAAC;IAChC,MAAM,YAAY,WACf,+BAA+B,QACjC,yBAAyB,wBACT,gBAAgB,EAAE,KACvC,sBAAsB,GAAG,SAgC3B,CAAC;CACH"}

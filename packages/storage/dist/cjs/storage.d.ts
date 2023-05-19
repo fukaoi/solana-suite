@@ -5,3 +5,4 @@ export declare namespace Storage {
     const uploadContent: (filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
     const uploadMetaAndContent: (input: InfraSideInput.Offchain, filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
 }
+//# sourceMappingURL=storage.d.ts.map

@@ -4,3 +4,4 @@ export declare namespace Bundlr {
     const make: (feePayer?: BundlrSigner) => MetaplexFoundation;
     const useStorage: (feePayer: BundlrSigner) => BundlrStorageDriver;
 }
+//# sourceMappingURL=bundlr.d.ts.map

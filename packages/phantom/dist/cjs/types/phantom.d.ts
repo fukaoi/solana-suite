@@ -18,3 +18,4 @@ export type Phantom = {
     disconnect(): Promise<void>;
     _handleDisconnect(...args: unknown[]): unknown;
 };
+//# sourceMappingURL=phantom.d.ts.map

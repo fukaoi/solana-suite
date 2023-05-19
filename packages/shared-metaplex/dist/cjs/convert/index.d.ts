@@ -12,3 +12,4 @@ export declare const Convert: {
     Creators: typeof Creators.Creators;
     Collection: typeof Collection.Collection;
 };
+//# sourceMappingURL=index.d.ts.map

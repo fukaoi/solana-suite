@@ -22,3 +22,4 @@ export declare namespace NftStorage {
      */
     const uploadMetadata: (metadata: InfraSideInput.Offchain) => Promise<Result<string, Error>>;
 }
+//# sourceMappingURL=nft-storage.d.ts.map

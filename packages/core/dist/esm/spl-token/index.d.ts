@@ -16,3 +16,4 @@ export declare const SplToken: {
     burn: (mint: import("@solana-suite/shared").Pubkey, owner: import("@solana-suite/shared").Pubkey, signers: import("@solana-suite/shared").Secret[], burnAmount: number, tokenDecimals: number, feePayer?: import("@solana-suite/shared").Secret | undefined) => import("@solana-suite/shared").Result<import("@solana-suite/shared").Instruction, Error>;
     add: (token: import("@solana-suite/shared").Pubkey, owner: import("@solana-suite/shared").Pubkey, signers: import("@solana-suite/shared").Secret[], totalAmount: number, mintDecimal: number, feePayer?: import("@solana-suite/shared").Secret | undefined) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").Instruction, Error>>;
 };
+//# sourceMappingURL=index.d.ts.map

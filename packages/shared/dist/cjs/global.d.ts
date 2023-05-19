@@ -63,3 +63,4 @@ export declare function Try<T, E extends Error>(block: () => T): Result<T, E>;
  * @returns Date | undefined
  */
 export declare const convertTimestampToDateTime: (created_at: number | undefined) => Date | undefined;
+//# sourceMappingURL=global.d.ts.map

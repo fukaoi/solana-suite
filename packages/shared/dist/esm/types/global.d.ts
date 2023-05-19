@@ -32,3 +32,4 @@ export declare enum Explorer {
     Solscan = "solscan",
     SolanaFM = "solanafm"
 }
+//# sourceMappingURL=global.d.ts.map

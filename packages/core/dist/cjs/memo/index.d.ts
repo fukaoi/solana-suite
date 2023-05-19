@@ -5,3 +5,4 @@ export declare const Memo: {
     encode: (data: string) => Buffer;
     create: (data: string, owner: import("@solana-suite/shared").Pubkey, signer: import("@solana-suite/shared").Secret, feePayer?: import("@solana-suite/shared").Secret | undefined) => import("@solana-suite/shared").Instruction;
 };
+//# sourceMappingURL=index.d.ts.map

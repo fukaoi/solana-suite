@@ -1,0 +1,1 @@
+{"version":3,"file":"transfer.d.ts","sourceRoot":"","sources":["../../../src/metaplex/transfer.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,EAAE,MAAM,EAAE,MAAM,EAAE,MAAM,sBAAsB,CAAC;AAG3E,yBAAiB,QAAQ,CAAC;IAIjB,MAAM,QAAQ,SACb,MAAM,SACL,MAAM,QACP,MAAM,WACH,MAAM,EAAE,aACN,MAAM,KAChB,QAAQ,OAAO,WAAW,EAAE,KAAK,CAAC,CAUpC,CAAC;CACH"}

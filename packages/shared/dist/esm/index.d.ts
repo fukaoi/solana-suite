@@ -7,3 +7,4 @@ export * from './mint-instruction';
 export * from './partial-signInstruction';
 export * from './result';
 export * from './types';
+//# sourceMappingURL=index.d.ts.map

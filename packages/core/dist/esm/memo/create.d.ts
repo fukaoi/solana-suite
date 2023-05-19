@@ -5,3 +5,4 @@ export declare namespace Memo {
     const encode: (data: string) => Buffer;
     const create: (data: string, owner: Pubkey, signer: Secret, feePayer?: Secret) => Instruction;
 }
+//# sourceMappingURL=create.d.ts.map

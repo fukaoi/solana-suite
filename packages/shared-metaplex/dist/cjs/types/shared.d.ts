@@ -36,3 +36,4 @@ export declare namespace _Shared {
         [key: string]: unknown;
     };
 }
+//# sourceMappingURL=shared.d.ts.map
