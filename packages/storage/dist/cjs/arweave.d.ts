@@ -19,3 +19,4 @@ export declare namespace Arweave {
     const uploadContent: (filePath: FileContent, feePayer: Secret, fileOptions?: MetaplexFileOptions) => Promise<Result<string, Error>>;
     const uploadMetadata: (metadata: InfraSideInput.Offchain, feePayer: Secret) => Promise<Result<string, Error>>;
 }
+//# sourceMappingURL=arweave.d.ts.map

@@ -4,3 +4,4 @@ export declare namespace Convert.TokenMetadata {
     const intoUserSide: (output: InfraSideOutput.OnchainAndOffchain, tokenAmount?: InfraSideOutput.TokeAmount) => UserSideOutput.TokenMetadata;
     const deleteNullStrings: (str: string) => string;
 }
+//# sourceMappingURL=token-metadata.d.ts.map

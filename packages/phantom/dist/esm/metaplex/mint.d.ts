@@ -11,3 +11,4 @@ export declare namespace PhantomMetaplex {
      */
     const mint: (input: UserSideInput.NftMetadata, cluster: string, phantom: Phantom) => Promise<Result<string, Error | ValidatorError>>;
 }
+//# sourceMappingURL=mint.d.ts.map

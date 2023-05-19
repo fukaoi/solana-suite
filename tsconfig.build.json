@@ -9,6 +9,7 @@
     "target": "ES6",
     "allowJs": true,
     "declaration": true,
+    "declarationMap": true,
     "sourceMap": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,

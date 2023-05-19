@@ -14,3 +14,4 @@ export declare const Metaplex: {
     } | undefined) => Promise<void>;
     burn: (mint: import("@solana-suite/shared").Pubkey, owner: import("@solana-suite/shared").Pubkey, signer: import("@solana-suite/shared").Secret, feePayer?: import("@solana-suite/shared").Secret | undefined) => import("@solana-suite/shared").Result<import("@solana-suite/shared").Instruction, Error>;
 };
+//# sourceMappingURL=index.d.ts.map

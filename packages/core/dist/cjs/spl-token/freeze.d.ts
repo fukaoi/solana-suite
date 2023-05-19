@@ -10,3 +10,4 @@ export declare namespace SplToken {
      */
     const freeze: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, feePayer?: Secret) => Result<Instruction, Error>;
 }
+//# sourceMappingURL=freeze.d.ts.map

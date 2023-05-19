@@ -3,3 +3,4 @@ export type SolNativeOwnerInfo = {
     lamports: number;
     owner: string;
 };
+//# sourceMappingURL=find.d.ts.map

@@ -3,3 +3,4 @@ export type BundlrSigner = Keypair | Phantom | undefined;
 export type Phantom = {
     publicKey: PublicKey;
 };
+//# sourceMappingURL=bundlr.d.ts.map

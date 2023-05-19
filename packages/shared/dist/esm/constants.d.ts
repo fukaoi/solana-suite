@@ -31,3 +31,4 @@ export declare namespace Constants {
     const NFT_STORAGE_GATEWAY_URL = "https://ipfs.io/ipfs";
     const BUNDLR_NETWORK_URL: string;
 }
+//# sourceMappingURL=constants.d.ts.map

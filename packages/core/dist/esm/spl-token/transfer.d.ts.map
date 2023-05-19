@@ -1,0 +1,1 @@
+{"version":3,"file":"transfer.d.ts","sourceRoot":"","sources":["../../../src/spl-token/transfer.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,MAAM,EAAE,WAAW,EAAO,MAAM,EAAE,MAAM,EAAE,MAAM,sBAAsB,CAAC;AAIhF,yBAAiB,QAAQ,CAAC;IACjB,MAAM,QAAQ,SACb,MAAM,SACL,MAAM,QACP,MAAM,WACH,MAAM,EAAE,UACT,MAAM,eACD,MAAM,aACR,MAAM,KAChB,QAAQ,OAAO,WAAW,EAAE,KAAK,CAAC,CA6BpC,CAAC;CACH"}

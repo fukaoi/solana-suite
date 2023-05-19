@@ -29,3 +29,4 @@ export declare namespace Metaplex {
      */
     const feePayerPartialSignMint: (owner: Pubkey, signer: Secret, input: UserSideInput.NftMetadata, feePayer: Pubkey, freezeAuthority?: Secret) => Promise<Result<PartialSignInstruction, Error>>;
 }
+//# sourceMappingURL=fee-payer-partial-sign-mint.d.ts.map

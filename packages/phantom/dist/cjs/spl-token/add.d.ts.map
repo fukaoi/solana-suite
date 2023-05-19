@@ -1,0 +1,1 @@
+{"version":3,"file":"add.d.ts","sourceRoot":"","sources":["../../../src/spl-token/add.ts"],"names":[],"mappings":"AAOA,OAAO,EAAQ,MAAM,EAAE,MAAM,EAAO,MAAM,sBAAsB,CAAC;AAGjE,OAAO,EAAE,OAAO,EAAE,MAAM,UAAU,CAAC;AAEnC,yBAAiB,eAAe,CAAC;IACxB,MAAM,GAAG,aACJ,MAAM,SACT,MAAM,WACJ,MAAM,eACF,MAAM,eACN,MAAM,WACV,OAAO,KACf,QAAQ,OAAO,MAAM,EAAE,KAAK,CAAC,CAoC/B,CAAC;CACH"}

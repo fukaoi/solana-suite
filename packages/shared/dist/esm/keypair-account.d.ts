@@ -14,3 +14,4 @@ export declare class KeypairAccount {
     static create: () => KeypairAccount;
     static toKeyPair: (keypair: Keypair) => KeypairAccount;
 }
+//# sourceMappingURL=keypair-account.d.ts.map

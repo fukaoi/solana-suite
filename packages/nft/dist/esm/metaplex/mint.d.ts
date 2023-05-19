@@ -33,3 +33,4 @@ export declare namespace Metaplex {
      */
     const mint: (owner: Pubkey, signer: Secret, input: UserSideInput.NftMetadata, feePayer?: Secret, freezeAuthority?: Pubkey) => Promise<Result<MintInstruction, Error>>;
 }
+//# sourceMappingURL=mint.d.ts.map

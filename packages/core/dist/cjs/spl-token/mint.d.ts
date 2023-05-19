@@ -19,3 +19,4 @@ export declare namespace SplToken {
      */
     const mint: (owner: Pubkey, signer: Secret, totalAmount: number, mintDecimal: number, input: UserSideInput.TokenMetadata, feePayer?: Secret, freezeAuthority?: Pubkey) => Promise<Result<MintInstruction, Error>>;
 }
+//# sourceMappingURL=mint.d.ts.map

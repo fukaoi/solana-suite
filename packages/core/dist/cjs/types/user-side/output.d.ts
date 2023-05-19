@@ -19,3 +19,4 @@ export declare namespace UserSideOutput {
         innerInstruction?: boolean;
     };
 }
+//# sourceMappingURL=output.d.ts.map

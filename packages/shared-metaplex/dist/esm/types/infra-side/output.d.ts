@@ -17,3 +17,4 @@ export declare namespace InfraSideOutput {
     type Uses = _Shared.Uses;
     type TokeAmount = UserSideOutput.TokenAmount;
 }
+//# sourceMappingURL=output.d.ts.map

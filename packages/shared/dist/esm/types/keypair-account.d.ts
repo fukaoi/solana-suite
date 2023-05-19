@@ -7,3 +7,4 @@ export type Secret = string & {
     [secretNominality]: never;
 } | string;
 export {};
+//# sourceMappingURL=keypair-account.d.ts.map

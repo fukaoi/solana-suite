@@ -7,3 +7,4 @@ export declare class PartialSignInstruction {
     constructor(instructions: string, mint?: Pubkey);
     submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
 }
+//# sourceMappingURL=partial-signInstruction.d.ts.map

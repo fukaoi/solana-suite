@@ -9,3 +9,4 @@ export interface Details {
     actual: string | number;
     limit?: Limit;
 }
+//# sourceMappingURL=validator.d.ts.map

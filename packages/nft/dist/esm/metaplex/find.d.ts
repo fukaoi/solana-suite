@@ -15,3 +15,4 @@ export declare namespace Metaplex {
         isHolder?: boolean;
     }) => Promise<void>;
 }
+//# sourceMappingURL=find.d.ts.map
