@@ -21,13 +21,14 @@ var Convert;
                 uses: input.uses || null,
             };
         };
-        NftMetadata.intoUserSide = (output) => {
+        NftMetadata.intoUserSide = (output, tokenAmount) => {
             return {
                 mint: output.onchain.mint.toString(),
                 updateAuthority: output.onchain.updateAuthority.toString(),
                 royalty: output.onchain.data.sellerFeeBasisPoints,
                 name: token_metadata_1.Convert.TokenMetadata.deleteNullStrings(output.onchain.data.name),
                 symbol: token_metadata_1.Convert.TokenMetadata.deleteNullStrings(output.onchain.data.symbol),
+                tokenAmount: tokenAmount,
                 uri: token_metadata_1.Convert.TokenMetadata.deleteNullStrings(output.onchain.data.uri),
                 isMutable: output.onchain.isMutable,
                 primarySaleHappened: output.onchain.primarySaleHappened,

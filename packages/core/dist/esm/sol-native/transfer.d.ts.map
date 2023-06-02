@@ -1,1 +1,0 @@
-{"version":3,"file":"transfer.d.ts","sourceRoot":"","sources":["../../../src/sol-native/transfer.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,MAAM,EAAE,WAAW,EAAO,MAAM,EAAE,MAAM,EAAE,MAAM,sBAAsB,CAAC;AAEhF,yBAAiB,SAAS,CAAC;IAElB,MAAM,QAAQ,WACX,MAAM,QACR,MAAM,WACH,MAAM,EAAE,UACT,MAAM,aACH,MAAM,KAChB,OAAO,WAAW,EAAE,KAAK,CAgB3B,CAAC;CACH"}

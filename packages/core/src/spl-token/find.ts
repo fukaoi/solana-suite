@@ -52,10 +52,13 @@ export namespace SplToken {
         tokenAmount
       ) as T;
     } else if (tokenStandard === UserSideInput.TokenStandard.NonFungible) {
-      return Convert.NftMetadata.intoUserSide({
-        onchain: metadata,
-        offchain: json,
-      }) as T;
+      return Convert.NftMetadata.intoUserSide(
+        {
+          onchain: metadata,
+          offchain: json,
+        },
+        tokenAmount
+      ) as T;
     } else {
       throw Error(`No match tokenStandard: ${tokenStandard}`);
     }

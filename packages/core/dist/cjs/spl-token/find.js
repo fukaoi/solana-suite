@@ -28,6 +28,7 @@ const spl_token_2 = require("@solana/spl-token");
 const cross_fetch_1 = __importDefault(require("cross-fetch"));
 var SplToken;
 (function (SplToken) {
+    const UNABLE_ERROR_REGEX = /Unable to find Metadata account/;
     // Sort by latest with unixtimestamp function
     const sortByUinixTimestamp = (sortable) => (a, b) => {
         if (!a.offchain.created_at) {
@@ -57,7 +58,7 @@ var SplToken;
             return shared_metaplex_1.Convert.NftMetadata.intoUserSide({
                 onchain: metadata,
                 offchain: json,
-            });
+            }, tokenAmount);
         }
         else {
             throw Error(`No match tokenStandard: ${tokenStandard}`);
@@ -83,8 +84,7 @@ var SplToken;
                             continue;
                         }
                         const mint = d.account.data.parsed.info.mint;
-                        const tokenAmount = d.account.data.parsed.info
-                            .tokenAmount;
+                        const tokenAmount = d.account.data.parsed.info.tokenAmount.amount;
                         try {
                             const metadata = yield mpl_token_metadata_1.Metadata.fromAccountAddress(connection, shared_metaplex_1.Pda.getMetadata(mint));
                             (0, shared_1.debugLog)('# findByOwner metadata: ', metadata);
@@ -94,7 +94,6 @@ var SplToken;
                             }
                             (0, cross_fetch_1.default)(metadata.data.uri)
                                 .then((response) => {
-                                (0, shared_1.debugLog)('# findByOwner response: ', metadata);
                                 response
                                     .json()
                                     .then((json) => {
@@ -121,8 +120,7 @@ var SplToken;
                             });
                         }
                         catch (e) {
-                            if (e instanceof Error &&
-                                e.message === 'Unable to find Metadata account') {
+                            if (e instanceof Error && UNABLE_ERROR_REGEX.test(e.message)) {
                                 (0, shared_1.debugLog)('# skip error for old SPL-TOKEN: ', mint);
                                 continue;
                             }
@@ -147,6 +145,50 @@ var SplToken;
             }
         }
     });
+    SplToken.genericFindByMint = (mint, callback, tokenStandard) => __awaiter(this, void 0, void 0, function* () {
+        var _g;
+        try {
+            let data;
+            const connection = shared_1.Node.getConnection();
+            try {
+                const metadata = yield mpl_token_metadata_1.Metadata.fromAccountAddress(connection, shared_metaplex_1.Pda.getMetadata(mint));
+                (0, shared_1.debugLog)('# findByMint metadata: ', metadata);
+                const info = yield connection.getParsedAccountInfo(mint.toPublicKey());
+                const tokenAmount = ((_g = info.value) === null || _g === void 0 ? void 0 : _g.data).parsed.info
+                    .supply;
+                // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
+                if (metadata.tokenStandard !== tokenStandard) {
+                    callback(shared_1.Result.ok(data));
+                }
+                (0, cross_fetch_1.default)(metadata.data.uri)
+                    .then((response) => {
+                    response
+                        .json()
+                        .then((json) => {
+                        data = converter(tokenStandard, metadata, json, tokenAmount);
+                        callback(shared_1.Result.ok(data));
+                    })
+                        .catch((e) => {
+                        callback(shared_1.Result.err(e));
+                    });
+                })
+                    .catch((e) => {
+                    callback(shared_1.Result.err(e));
+                });
+            }
+            catch (e) {
+                if (e instanceof Error && UNABLE_ERROR_REGEX.test(e.message)) {
+                    (0, shared_1.debugLog)('# skip error for old SPL-TOKEN: ', mint);
+                    callback(shared_1.Result.err(e));
+                }
+            }
+        }
+        catch (e) {
+            if (e instanceof Error) {
+                callback(shared_1.Result.err(e));
+            }
+        }
+    });
     /**
      * Fetch minted metadata by owner Pubkey
      *
@@ -159,6 +201,16 @@ var SplToken;
         const sortable = !(options === null || options === void 0 ? void 0 : options.sortable) ? spl_token_1.Sortable.Desc : options === null || options === void 0 ? void 0 : options.sortable;
         const isHolder = !(options === null || options === void 0 ? void 0 : options.isHolder) ? true : false;
         yield SplToken.genericFindByOwner(owner, callback, shared_metaplex_1.UserSideInput.TokenStandard.Fungible, sortable, isHolder);
+    });
+    /**
+     * Fetch minted metadata by mint address
+     *
+     * @param {Pubkey} mint
+     * @param {FindByOwnerCallback} callback
+     * @return Promise<Result<never, Error>>
+     */
+    SplToken.findByMint = (mint, callback) => __awaiter(this, void 0, void 0, function* () {
+        yield SplToken.genericFindByMint(mint, callback, shared_metaplex_1.UserSideInput.TokenStandard.Fungible);
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));
 //# sourceMappingURL=find.js.map

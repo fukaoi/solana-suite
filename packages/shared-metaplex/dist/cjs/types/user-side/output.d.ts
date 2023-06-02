@@ -20,6 +20,7 @@ export declare namespace UserSideOutput {
         primarySaleHappened: boolean;
         editionNonce: Option<number>;
         offchain: InfraSideOutput.Offchain;
+        tokenAmount: string;
         collection?: Collection | undefined;
         creators?: Creators[] | undefined;
         uses?: _Shared.Uses | undefined;

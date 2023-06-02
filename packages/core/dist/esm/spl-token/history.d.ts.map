@@ -1,1 +1,0 @@
-{"version":3,"file":"history.d.ts","sourceRoot":"","sources":["../../../src/spl-token/history.ts"],"names":[],"mappings":"AACA,OAAO,EAAQ,MAAM,EAAE,MAAM,EAAE,MAAM,sBAAsB,CAAC;AAC5D,OAAO,EAAE,UAAU,EAAc,cAAc,EAAE,MAAM,WAAW,CAAC;AAInE,yBAAiB,QAAQ,CAAC;IACjB,MAAM,UAAU,WACb,MAAM,cACF,UAAU,qBACH,OAAO,sBAAsB,EAAE,EAAE,KAAK,CAAC,KAAK,IAAI,0BAElE,QAAQ,IAAI,CAqCd,CAAC;CACH"}
