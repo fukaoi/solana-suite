@@ -12,6 +12,7 @@ import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ParsedAccountData } from '@solana/web3.js';
 import fetch from 'cross-fetch';
+import { resourceUsage } from 'process';
 
 export namespace SplToken {
   const UNABLE_ERROR_REGEX = /Unable to find Metadata account/;
@@ -151,53 +152,30 @@ export namespace SplToken {
     T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata
   >(
     mint: Pubkey,
-    callback: (result: Result<T, Error>) => void,
     tokenStandard: UserSideInput.TokenStandard
-  ): Promise<void> => {
+  ): Promise<Result<UserSideOutput.TokenMetadata, Error>> => {
     try {
       let data: T;
       const connection = Node.getConnection();
 
-      try {
-        const metadata = await Metadata.fromAccountAddress(
-          connection,
-          Pda.getMetadata(mint)
-        );
-        debugLog('# findByMint metadata: ', metadata);
-        const info = await connection.getParsedAccountInfo(mint.toPublicKey());
-        const tokenAmount = (info.value?.data as ParsedAccountData).parsed.info
-          .supply as string;
-
-        // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
-        if (metadata.tokenStandard !== tokenStandard) {
-          callback(Result.ok(data!));
-        }
-
-        fetch(metadata.data.uri)
-          .then((response) => {
-            response
-              .json()
-              .then((json: InfraSideOutput.Offchain) => {
-                data = converter<T>(tokenStandard, metadata, json, tokenAmount);
-                callback(Result.ok(data));
-              })
-              .catch((e) => {
-                callback(Result.err(e));
-              });
-          })
-          .catch((e) => {
-            callback(Result.err(e));
-          });
-      } catch (e) {
-        if (e instanceof Error && UNABLE_ERROR_REGEX.test(e.message)) {
-          debugLog('# skip error for old SPL-TOKEN: ', mint);
-          callback(Result.err(e));
-        }
+      const metadata = await Metadata.fromAccountAddress(
+        connection,
+        Pda.getMetadata(mint)
+      );
+      debugLog('# findByMint metadata: ', metadata);
+      // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
+      if (metadata.tokenStandard !== tokenStandard) {
+        throw Error('token standards are different');
       }
-    } catch (e) {
-      if (e instanceof Error) {
-        callback(Result.err(e));
-      }
+      const info = await connection.getParsedAccountInfo(mint.toPublicKey());
+      const tokenAmount = (info.value?.data as ParsedAccountData).parsed.info
+        .supply as string;
+
+      const response = await (await fetch(metadata.data.uri)).json();
+      data = converter<T>(tokenStandard, metadata, response, tokenAmount);
+      return Result.ok(data);
+    } catch (e: any) {
+      return Result.err(e);
     }
   };
 
@@ -229,16 +207,13 @@ export namespace SplToken {
    * Fetch minted metadata by mint address
    *
    * @param {Pubkey} mint
-   * @param {FindByOwnerCallback} callback
-   * @return Promise<Result<never, Error>>
+   * @return Promise<Result<UserSideOutput.TokenMetadata, Error>>
    */
   export const findByMint = async (
-    mint: Pubkey,
-    callback: (result: Result<UserSideOutput.TokenMetadata, Error>) => void
-  ): Promise<void> => {
-    await genericFindByMint<UserSideOutput.TokenMetadata>(
+    mint: Pubkey
+  ): Promise<Result<UserSideOutput.TokenMetadata, Error>> => {
+    return await genericFindByMint<UserSideOutput.TokenMetadata>(
       mint,
-      callback,
       UserSideInput.TokenStandard.Fungible
     );
   };

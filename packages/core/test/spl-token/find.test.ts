@@ -1,12 +1,12 @@
 import { describe, it } from 'mocha';
-import { assert } from 'chai';
+import { assert, expect } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Pubkey } from '../../../shared';
 import { Sortable, SplToken } from '../../src/';
 
 let owner: Pubkey;
-let mint = '5cjaV2QxSrZ3qESwsH49JmQqrcakThBZ9uZ5NVCcqzHt'; // nft
-// let mint = 'EFgwtsm4azvQcnRPhDZ8yV9we1A12PgecpJ3im79o4x3'; // token
+const nftMint = '5cjaV2QxSrZ3qESwsH49JmQqrcakThBZ9uZ5NVCcqzHt'; // nft
+const mint = 'EFgwtsm4azvQcnRPhDZ8yV9we1A12PgecpJ3im79o4x3'; // token
 const notFoundTokenOwner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT';
 describe('SplToken', () => {
   before(async () => {
@@ -15,14 +15,14 @@ describe('SplToken', () => {
   });
 
   it('Not found token', async () => {
-    await SplToken.findByOwner(notFoundTokenOwner, (result) => {
+    SplToken.findByOwner(notFoundTokenOwner, (result) => {
       assert.isTrue(result.isOk);
       assert.isArray(result.unwrap());
     });
   });
 
   it('Get token info owned', async () => {
-    await SplToken.findByOwner(owner, (result) => {
+    SplToken.findByOwner(owner, (result) => {
       result.match(
         (ok) => {
           ok.forEach((res) => {
@@ -30,7 +30,7 @@ describe('SplToken', () => {
             assert.isNotEmpty(res.mint);
             assert.isNotEmpty(res.symbol);
             assert.isNotEmpty(res.uri);
-            assert.isNotEmpty(res.royalty);
+            assert.isNumber(res.royalty);
             assert.isNotEmpty(res.offchain);
           });
         },
@@ -40,7 +40,7 @@ describe('SplToken', () => {
   });
 
   it('Get token info owned with no Hold', async () => {
-    await SplToken.findByOwner(
+    SplToken.findByOwner(
       owner,
       (result) => {
         result.match(
@@ -50,7 +50,7 @@ describe('SplToken', () => {
               assert.isNotEmpty(res.mint);
               assert.isNotEmpty(res.symbol);
               assert.isNotEmpty(res.uri);
-              assert.isNotEmpty(res.royalty);
+              assert.isNumber(res.royalty);
               assert.isNotEmpty(res.offchain);
             });
           },
@@ -62,7 +62,7 @@ describe('SplToken', () => {
   });
 
   it('Get token info owned with Asc', async () => {
-    await SplToken.findByOwner(
+    SplToken.findByOwner(
       owner,
       (result) => {
         result.match(
@@ -72,7 +72,7 @@ describe('SplToken', () => {
               assert.isNotEmpty(res.mint);
               assert.isNotEmpty(res.symbol);
               assert.isNotEmpty(res.uri);
-              assert.isNotEmpty(res.royalty);
+              assert.isNumber(res.royalty);
               assert.isNotEmpty(res.offchain);
             });
           },
@@ -83,14 +83,25 @@ describe('SplToken', () => {
     );
   });
 
-  it.only('Get token info by mint address', async () => {
-    await SplToken.findByMint(mint, (result) => {
-      result.match(
-        (ok) => {
-          console.log(ok);
-        },
-        (err) => assert.fail(err.message)
-      );
-    });
+  it('Get token info by mint address', async () => {
+    (await SplToken.findByMint(mint)).match(
+      (ok) => {
+        assert.isNotEmpty(ok.name);
+        assert.isNotEmpty(ok.mint);
+        assert.isNotEmpty(ok.symbol);
+        assert.isNotEmpty(ok.uri);
+        assert.isNumber(ok.royalty);
+        assert.isNotEmpty(ok.tokenAmount);
+        assert.isNotEmpty(ok.offchain);
+      },
+      (err) => assert.fail(err.message)
+    );
+  });
+
+  it('[Error]Get token info by mint address, but token standard is difierent', async () => {
+    (await SplToken.findByMint(nftMint)).match(
+      (ok) => assert.fail(`${ok}`),
+      (err) => assert.isNotEmpty(err.message)
+    );
   });
 });
