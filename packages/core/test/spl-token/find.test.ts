@@ -5,6 +5,8 @@ import { Pubkey } from '../../../shared';
 import { Sortable, SplToken } from '../../src/';
 
 let owner: Pubkey;
+// let mint = '5cjaV2QxSrZ3qESwsH49JmQqrcakThBZ9uZ5NVCcqzHt'; // nft
+let mint = '5Wo6itTaQUsZhPrQh1EDgsZa3ynQcfjxj8TpEf1QX3QF'; // token
 const notFoundTokenOwner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT';
 describe('SplToken', () => {
   before(async () => {
@@ -79,5 +81,23 @@ describe('SplToken', () => {
       },
       { sortable: Sortable.Asc }
     );
+  });
+
+  it.only('Get token info by mint address', async () => {
+    await SplToken.findByMint(mint, (result) => {
+      result.match(
+        (ok) => {
+          ok.forEach((res) => {
+            assert.isNotEmpty(res.name);
+            assert.isNotEmpty(res.mint);
+            assert.isNotEmpty(res.symbol);
+            assert.isNotEmpty(res.uri);
+            assert.isNotEmpty(res.royalty);
+            assert.isNotEmpty(res.offchain);
+          });
+        },
+        (err) => assert.fail(err.message)
+      );
+    });
   });
 });
