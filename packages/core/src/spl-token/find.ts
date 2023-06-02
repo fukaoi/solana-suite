@@ -169,4 +169,28 @@ export namespace SplToken {
       isHolder
     );
   };
+
+  /**
+   * Fetch minted metadata by mint address
+   *
+   * @param {Pubkey} mint
+   * @param {FindByOwnerCallback} callback
+   * @param {{sortable?: Sortable, isHolder?: boolean}} options?
+   * @return Promise<Result<never, Error>>
+   */
+  export const findByMint = async (
+    mint: Pubkey,
+    callback: (result: Result<UserSideOutput.TokenMetadata[], Error>) => void,
+    options?: { sortable?: Sortable; isHolder?: boolean }
+  ): Promise<void> => {
+    const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
+    const isHolder = !options?.isHolder ? true : false;
+    await genericFindByOwner<UserSideOutput.TokenMetadata>(
+      mint,
+      callback,
+      UserSideInput.TokenStandard.Fungible,
+      sortable,
+      isHolder
+    );
+  };
 }
