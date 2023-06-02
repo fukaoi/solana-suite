@@ -10,6 +10,7 @@ import {
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { ParsedAccountData } from '@solana/web3.js';
 import fetch from 'cross-fetch';
 
 export namespace SplToken {
@@ -40,7 +41,7 @@ export namespace SplToken {
     tokenStandard: UserSideInput.TokenStandard,
     metadata: Metadata,
     json: InfraSideOutput.Offchain,
-    tokenAmount?: UserSideOutput.TokenAmount
+    tokenAmount: string
   ): T => {
     if (tokenStandard === UserSideInput.TokenStandard.Fungible) {
       return Convert.TokenMetadata.intoUserSide(
@@ -90,8 +91,7 @@ export namespace SplToken {
           continue;
         }
         const mint = d.account.data.parsed.info.mint as Pubkey;
-        const tokenAmount = d.account.data.parsed.info
-          .tokenAmount as UserSideOutput.TokenAmount;
+        const tokenAmount = d.account.data.parsed.info.tokenAmount.amount;
 
         try {
           const metadata = await Metadata.fromAccountAddress(
@@ -148,12 +148,11 @@ export namespace SplToken {
     T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata
   >(
     mint: Pubkey,
-    callback: (result: Result<T[], Error>) => void,
-    tokenStandard: UserSideInput.TokenStandard,
-    sortable?: Sortable
+    callback: (result: Result<T, Error>) => void,
+    tokenStandard: UserSideInput.TokenStandard
   ): Promise<void> => {
     try {
-      let data: T[] = [];
+      let data: T;
       const connection = Node.getConnection();
 
       try {
@@ -162,46 +161,25 @@ export namespace SplToken {
           Pda.getMetadata(mint)
         );
         debugLog('# findByMint metadata: ', metadata);
-        const info = await connection.getParsedAccountInfo(
-          mint.toPublicKey()
-          // Pda.getMetadata(mint)
-        );
-        console.log('### info:::', info.value?.data);
+        const info = await connection.getParsedAccountInfo(mint.toPublicKey());
+        const tokenAmount = (info.value?.data as ParsedAccountData).parsed.info
+          .supply as string;
 
         // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
         if (metadata.tokenStandard !== tokenStandard) {
-          callback(Result.ok(data));
+          callback(Result.ok(data!));
         }
-
-        let tokenAmount = {
-          amount: '',
-          decimals: 0,
-          uiAmount: 0,
-          uiAmountString: '',
-        };
 
         fetch(metadata.data.uri)
           .then((response) => {
             response
               .json()
               .then((json: InfraSideOutput.Offchain) => {
-                data.push(
-                  converter<T>(tokenStandard, metadata, json, tokenAmount)
-                );
-                callback(Result.ok(data)); // need this call ?
+                data = converter<T>(tokenStandard, metadata, json, tokenAmount);
+                callback(Result.ok(data));
               })
               .catch((e) => {
                 callback(Result.err(e));
-              })
-              .finally(() => {
-                const descAlgo = sortByUinixTimestamp<T>(Sortable.Desc);
-                const ascAlgo = sortByUinixTimestamp<T>(Sortable.Asc);
-                if (sortable === Sortable.Desc) {
-                  data = data.sort(descAlgo);
-                } else if (sortable === Sortable.Asc) {
-                  data = data.sort(ascAlgo);
-                }
-                callback(Result.ok(data));
               });
           })
           .catch((e) => {
@@ -249,20 +227,16 @@ export namespace SplToken {
    *
    * @param {Pubkey} mint
    * @param {FindByOwnerCallback} callback
-   * @param {{sortable?: Sortable}} options?
    * @return Promise<Result<never, Error>>
    */
   export const findByMint = async (
     mint: Pubkey,
-    callback: (result: Result<UserSideOutput.TokenMetadata[], Error>) => void,
-    options?: { sortable?: Sortable }
+    callback: (result: Result<UserSideOutput.TokenMetadata, Error>) => void
   ): Promise<void> => {
-    const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
     await genericFindByMint<UserSideOutput.TokenMetadata>(
       mint,
       callback,
-      UserSideInput.TokenStandard.Fungible,
-      sortable
+      UserSideInput.TokenStandard.Fungible
     );
   };
 }

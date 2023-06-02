@@ -1,5 +1,4 @@
 import { Pubkey } from '@solana-suite/shared';
-import { UserSideOutput } from '@solana-suite/shared-metaplex';
 import { PublicKey } from '@solana/web3.js';
 
 export namespace InfraSideOutput {
@@ -22,7 +21,7 @@ export namespace InfraSideOutput {
         account: Pubkey;
         mint: Pubkey;
         mintAuthority: Pubkey;
-        tokenAmount: UserSideOutput.TokenAmount;
+        tokenAmount: string;
       };
       type: string;
     };
@@ -40,7 +39,7 @@ export namespace InfraSideOutput {
         multisigAuthority: Pubkey;
         signers: Pubkey[];
         source: Pubkey;
-        tokenAmount: UserSideOutput.TokenAmount;
+        tokenAmount: string;
       };
       type: string;
     };

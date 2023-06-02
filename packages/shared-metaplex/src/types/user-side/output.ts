@@ -7,12 +7,6 @@ export namespace UserSideOutput {
   export type Creators = UserSideInput.Creators;
   export type Collection = { address: Pubkey; verified: boolean };
   export type Uses = _Shared.Uses;
-  export type TokenAmount = {
-    amount: string;
-    decimals: number;
-    uiAmount: number;
-    uiAmountString: string;
-  };
 
   /////////// NFT //////////////
   export type NftMetadata = {
@@ -40,7 +34,7 @@ export namespace UserSideOutput {
     uri: string;
     royalty: number;
     offchain: InfraSideOutput.Offchain;
-    tokenAmount?: TokenAmount;
+    tokenAmount: string;
     attributes?: _Shared.Attribute | undefined;
     creators?: Creators[] | undefined;
     uses?: _Shared.Uses | undefined;
