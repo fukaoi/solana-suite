@@ -186,7 +186,7 @@ export namespace SplToken {
    * @param {OnOk} onOk callback function
    * @param {OnErr} onErr callback function
    * @param {{sortable?: Sortable, isHolder?: boolean}} options?
-   * @return Promise<Result<never, Error>>
+   * @return Promise<void>
    */
   export const findByOwner = (
     owner: Pubkey,
