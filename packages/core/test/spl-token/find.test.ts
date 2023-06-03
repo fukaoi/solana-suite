@@ -2,14 +2,14 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Pubkey } from '../../../shared';
-import { OnErr, OnOk, Sortable, SplToken } from '../../src/';
+import { Find, Sortable, SplToken } from '../../src/';
 
 let owner: Pubkey;
 const nftMint = '5cjaV2QxSrZ3qESwsH49JmQqrcakThBZ9uZ5NVCcqzHt'; // nft
 const mint = 'EFgwtsm4azvQcnRPhDZ8yV9we1A12PgecpJ3im79o4x3'; // token
 const notFoundTokenOwner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT';
 
-const onOk: OnOk = (ok) => {
+const onOk: Find.OnOk = (ok) => {
   ok.forEach((res) => {
     assert.isNotEmpty(res.name);
     assert.isNotEmpty(res.mint);
@@ -21,7 +21,7 @@ const onOk: OnOk = (ok) => {
   });
 };
 
-const onErr = (err: Error) => assert.fail(err.message);
+const onErr: Find.OnErr = (err: Error) => assert.fail(err.message);
 
 describe('SplToken', () => {
   before(async () => {
@@ -30,8 +30,8 @@ describe('SplToken', () => {
   });
 
   it('Not found token', (done) => {
-    const onOk: OnOk = (ok) => assert.isArray(ok);
-    const onErr: OnErr = (err) => assert.fail(err.message);
+    const onOk: Find.OnOk = (ok) => assert.isArray(ok);
+    const onErr: Find.OnErr = (err) => assert.fail(err.message);
     SplToken.findByOwner(notFoundTokenOwner, onOk, onErr);
     done();
   });

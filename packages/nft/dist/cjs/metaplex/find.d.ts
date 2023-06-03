@@ -1,6 +1,6 @@
 import { Pubkey, Result } from '@solana-suite/shared';
 import { UserSideOutput } from '@solana-suite/shared-metaplex';
-import { OnErr, OnOk, Sortable } from '@solana-suite/core';
+import { Find, Sortable } from '@solana-suite/core';
 export declare namespace Metaplex {
     /**
      * Fetch minted metadata by owner Pubkey
@@ -11,7 +11,7 @@ export declare namespace Metaplex {
      * @param {{sortable?: Sortable, isHolder?: boolean}} options?
      * @return Promise<void>
      */
-    const findByOwner: (owner: Pubkey, onOk: OnOk, onErr: OnErr, options?: {
+    const findByOwner: (owner: Pubkey, onOk: Find.OnOk, onErr: Find.OnErr, options?: {
         sortable?: Sortable;
         isHolder?: boolean;
     }) => Promise<void>;

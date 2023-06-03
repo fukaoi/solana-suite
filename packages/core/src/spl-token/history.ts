@@ -1,6 +1,6 @@
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Node, Pubkey, Result } from '@solana-suite/shared';
-import { FilterType, ModuleName, UserSideOutput } from '../types/';
+import { FilterType, History, ModuleName, UserSideOutput } from '../types/';
 import { Signatures } from '../signatures';
 import { TransactionFilter } from '../transaction-filter';
 
@@ -8,7 +8,8 @@ export namespace SplToken {
   export const getHistory = async (
     target: Pubkey,
     filterType: FilterType,
-    callback: (result: Result<UserSideOutput.History[], Error>) => void,
+    onOk: History.OnOk,
+    onErr: History.OnErr,
     narrowDown = 1000 // Max number: 1000
   ): Promise<void> => {
     try {
@@ -17,7 +18,7 @@ export namespace SplToken {
         await Signatures.getForAdress(
           target,
           parser,
-          callback,
+          (result) => result.match(onOk, onErr),
           narrowDown
         );
       } else {
@@ -37,14 +38,14 @@ export namespace SplToken {
           await Signatures.getForAdress(
             account.pubkey.toString(),
             parser,
-            callback,
+            (result) => result.match(onOk, onErr),
             narrowDown
           );
         }
       }
     } catch (e) {
       if (e instanceof Error) {
-        callback(Result.err(e));
+        onErr(e);
       }
     }
   };

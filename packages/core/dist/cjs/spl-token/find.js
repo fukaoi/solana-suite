@@ -21,10 +21,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SplToken = void 0;
 const shared_1 = require("@solana-suite/shared");
-const spl_token_1 = require("../types/spl-token");
+const types_1 = require("../types/");
 const shared_metaplex_1 = require("@solana-suite/shared-metaplex");
 const mpl_token_metadata_1 = require("@metaplex-foundation/mpl-token-metadata");
-const spl_token_2 = require("@solana/spl-token");
+const spl_token_1 = require("@solana/spl-token");
 const cross_fetch_1 = __importDefault(require("cross-fetch"));
 var SplToken;
 (function (SplToken) {
@@ -37,10 +37,10 @@ var SplToken;
         if (!b.offchain.created_at) {
             b.offchain.created_at = 0;
         }
-        if (sortable === spl_token_1.Sortable.Desc) {
+        if (sortable === types_1.Sortable.Desc) {
             return b.offchain.created_at - a.offchain.created_at;
         }
-        else if (sortable === spl_token_1.Sortable.Asc) {
+        else if (sortable === types_1.Sortable.Asc) {
             return a.offchain.created_at - b.offchain.created_at;
         }
         else {
@@ -70,7 +70,7 @@ var SplToken;
             let data = [];
             const connection = shared_1.Node.getConnection();
             const info = yield connection.getParsedTokenAccountsByOwner(owner.toPublicKey(), {
-                programId: spl_token_2.TOKEN_PROGRAM_ID,
+                programId: spl_token_1.TOKEN_PROGRAM_ID,
             });
             info.value.length === 0 && callback(shared_1.Result.ok([]));
             try {
@@ -104,12 +104,12 @@ var SplToken;
                                     callback(shared_1.Result.err(e));
                                 })
                                     .finally(() => {
-                                    const descAlgo = sortByUinixTimestamp(spl_token_1.Sortable.Desc);
-                                    const ascAlgo = sortByUinixTimestamp(spl_token_1.Sortable.Asc);
-                                    if (sortable === spl_token_1.Sortable.Desc) {
+                                    const descAlgo = sortByUinixTimestamp(types_1.Sortable.Desc);
+                                    const ascAlgo = sortByUinixTimestamp(types_1.Sortable.Asc);
+                                    if (sortable === types_1.Sortable.Desc) {
                                         data = data.sort(descAlgo);
                                     }
-                                    else if (sortable === spl_token_1.Sortable.Asc) {
+                                    else if (sortable === types_1.Sortable.Asc) {
                                         data = data.sort(ascAlgo);
                                     }
                                     callback(shared_1.Result.ok(data));
@@ -174,17 +174,13 @@ var SplToken;
      * @param {OnOk} onOk callback function
      * @param {OnErr} onErr callback function
      * @param {{sortable?: Sortable, isHolder?: boolean}} options?
-     * @return Promise<Result<never, Error>>
+     * @return Promise<void>
      */
     SplToken.findByOwner = (owner, onOk, onErr, options) => {
-        const sortable = !(options === null || options === void 0 ? void 0 : options.sortable) ? spl_token_1.Sortable.Desc : options === null || options === void 0 ? void 0 : options.sortable;
+        const sortable = !(options === null || options === void 0 ? void 0 : options.sortable) ? types_1.Sortable.Desc : options === null || options === void 0 ? void 0 : options.sortable;
         const isHolder = !(options === null || options === void 0 ? void 0 : options.isHolder) ? true : false;
         SplToken.genericFindByOwner(owner, (result) => {
-            result.match((ok) => {
-                onOk(ok);
-            }, (err) => {
-                onErr(err);
-            });
+            result.match(onOk, onErr);
         }, shared_metaplex_1.UserSideInput.TokenStandard.Fungible, sortable, isHolder);
     };
     /**

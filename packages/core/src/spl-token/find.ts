@@ -1,5 +1,5 @@
 import { debugLog, Node, Pubkey, Result } from '@solana-suite/shared';
-import { OnErr, OnOk, Sortable } from '../types/spl-token';
+import { Find, Sortable } from '../types/';
 import {
   Convert,
   InfraSideOutput,
@@ -12,7 +12,6 @@ import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ParsedAccountData } from '@solana/web3.js';
 import fetch from 'cross-fetch';
-import { resourceUsage } from 'process';
 
 export namespace SplToken {
   const UNABLE_ERROR_REGEX = /Unable to find Metadata account/;
@@ -190,8 +189,8 @@ export namespace SplToken {
    */
   export const findByOwner = (
     owner: Pubkey,
-    onOk: OnOk,
-    onErr: OnErr,
+    onOk: Find.OnOk,
+    onErr: Find.OnErr,
     options?: { sortable?: Sortable; isHolder?: boolean }
   ): void => {
     const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
@@ -199,14 +198,7 @@ export namespace SplToken {
     genericFindByOwner<UserSideOutput.TokenMetadata>(
       owner,
       (result) => {
-        result.match(
-          (ok) => {
-            onOk(ok);
-          },
-          (err) => {
-            onErr(err);
-          }
-        );
+        result.match(onOk, onErr);
       },
       UserSideInput.TokenStandard.Fungible,
       sortable,

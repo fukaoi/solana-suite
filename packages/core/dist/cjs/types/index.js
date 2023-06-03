@@ -14,9 +14,10 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(require("./find"), exports);
+__exportStar(require("./history"), exports);
 __exportStar(require("./infra-side/output"), exports);
 __exportStar(require("./user-side/output"), exports);
 __exportStar(require("./sol-native"), exports);
-__exportStar(require("./spl-token"), exports);
 __exportStar(require("./transaction-filter"), exports);
 //# sourceMappingURL=index.js.map

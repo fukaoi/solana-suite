@@ -1,4 +1,4 @@
-export type SolNativeOwnerInfo = {
+export type OwnerInfo = {
     sol: number;
     lamports: number;
     owner: string;

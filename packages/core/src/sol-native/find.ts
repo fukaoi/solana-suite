@@ -1,12 +1,12 @@
 import { ParsedAccountData } from '@solana/web3.js';
 import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
-import { SolNativeOwnerInfo } from '../types/sol-native';
+import { OwnerInfo } from '../types/sol-native';
 import { TransactionFilter } from '../transaction-filter';
 
 export namespace SolNative {
   export const findByOwner = async (
     owner: Pubkey
-  ): Promise<Result<SolNativeOwnerInfo, Error>> => {
+  ): Promise<Result<OwnerInfo, Error>> => {
     return Try(async () => {
       const res = await Node.getConnection().getParsedAccountInfo(
         owner.toPublicKey()

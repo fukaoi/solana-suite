@@ -26,13 +26,7 @@ var Metaplex;
     Metaplex.findByOwner = (owner, onOk, onErr, options) => __awaiter(this, void 0, void 0, function* () {
         const sortable = !(options === null || options === void 0 ? void 0 : options.sortable) ? core_1.Sortable.Desc : options === null || options === void 0 ? void 0 : options.sortable;
         const isHolder = !(options === null || options === void 0 ? void 0 : options.isHolder) ? true : false;
-        yield core_1.SplToken.genericFindByOwner(owner, (result) => {
-            result.match((ok) => {
-                onOk(ok);
-            }, (err) => {
-                onErr(err);
-            });
-        }, shared_metaplex_1.UserSideInput.TokenStandard.NonFungible, sortable, isHolder);
+        yield core_1.SplToken.genericFindByOwner(owner, (result) => result.match(onOk, onErr), shared_metaplex_1.UserSideInput.TokenStandard.NonFungible, sortable, isHolder);
     });
     /**
      * Fetch minted metadata by mint address
