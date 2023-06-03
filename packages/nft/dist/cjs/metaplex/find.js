@@ -18,14 +18,30 @@ var Metaplex;
      * Fetch minted metadata by owner Pubkey
      *
      * @param {Pubkey} owner
-     * @param {Sortable} callback
+     * @param {OnOk} onOk callback function
+     * @param {OnErr} onErr callback function
      * @param {{sortable?: Sortable, isHolder?: boolean}} options?
-     * @return Promise<Result<never, Error>>
+     * @return Promise<void>
      */
-    Metaplex.findByOwner = (owner, callback, options) => __awaiter(this, void 0, void 0, function* () {
+    Metaplex.findByOwner = (owner, onOk, onErr, options) => __awaiter(this, void 0, void 0, function* () {
         const sortable = !(options === null || options === void 0 ? void 0 : options.sortable) ? core_1.Sortable.Desc : options === null || options === void 0 ? void 0 : options.sortable;
         const isHolder = !(options === null || options === void 0 ? void 0 : options.isHolder) ? true : false;
-        yield core_1.SplToken.genericFindByOwner(owner, callback, shared_metaplex_1.UserSideInput.TokenStandard.NonFungible, sortable, isHolder);
+        yield core_1.SplToken.genericFindByOwner(owner, (result) => {
+            result.match((ok) => {
+                onOk(ok);
+            }, (err) => {
+                onErr(err);
+            });
+        }, shared_metaplex_1.UserSideInput.TokenStandard.NonFungible, sortable, isHolder);
+    });
+    /**
+     * Fetch minted metadata by mint address
+     *
+     * @param {Pubkey} mint
+     * @return Promise<Result<UserSideOutput.NftMetadata, Error>>
+     */
+    Metaplex.findByMint = (mint) => __awaiter(this, void 0, void 0, function* () {
+        return yield core_1.SplToken.genericFindByMint(mint, shared_metaplex_1.UserSideInput.TokenStandard.NonFungible);
     });
 })(Metaplex = exports.Metaplex || (exports.Metaplex = {}));
 //# sourceMappingURL=find.js.map
