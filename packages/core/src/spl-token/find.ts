@@ -1,5 +1,5 @@
 import { debugLog, Node, Pubkey, Result } from '@solana-suite/shared';
-import { Sortable } from '../types/spl-token';
+import { OnErr, OnOk, Sortable } from '../types/spl-token';
 import {
   Convert,
   InfraSideOutput,
@@ -183,20 +183,31 @@ export namespace SplToken {
    * Fetch minted metadata by owner Pubkey
    *
    * @param {Pubkey} owner
-   * @param {FindByOwnerCallback} callback
+   * @param {OnOk} onOk callback function
+   * @param {OnErr} onErr callback function
    * @param {{sortable?: Sortable, isHolder?: boolean}} options?
    * @return Promise<Result<never, Error>>
    */
-  export const findByOwner = async (
+  export const findByOwner = (
     owner: Pubkey,
-    callback: (result: Result<UserSideOutput.TokenMetadata[], Error>) => void,
+    onOk: OnOk,
+    onErr: OnErr,
     options?: { sortable?: Sortable; isHolder?: boolean }
-  ): Promise<void> => {
+  ): void => {
     const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
     const isHolder = !options?.isHolder ? true : false;
-    await genericFindByOwner<UserSideOutput.TokenMetadata>(
+    genericFindByOwner<UserSideOutput.TokenMetadata>(
       owner,
-      callback,
+      (result) => {
+        result.match(
+          (ok) => {
+            onOk(ok);
+          },
+          (err) => {
+            onErr(err);
+          }
+        );
+      },
       UserSideInput.TokenStandard.Fungible,
       sortable,
       isHolder

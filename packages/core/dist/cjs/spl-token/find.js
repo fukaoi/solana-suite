@@ -145,72 +145,56 @@ var SplToken;
             }
         }
     });
-    SplToken.genericFindByMint = (mint, callback, tokenStandard) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.genericFindByMint = (mint, tokenStandard) => __awaiter(this, void 0, void 0, function* () {
         var _g;
         try {
             let data;
             const connection = shared_1.Node.getConnection();
-            try {
-                const metadata = yield mpl_token_metadata_1.Metadata.fromAccountAddress(connection, shared_metaplex_1.Pda.getMetadata(mint));
-                (0, shared_1.debugLog)('# findByMint metadata: ', metadata);
-                const info = yield connection.getParsedAccountInfo(mint.toPublicKey());
-                const tokenAmount = ((_g = info.value) === null || _g === void 0 ? void 0 : _g.data).parsed.info
-                    .supply;
-                // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
-                if (metadata.tokenStandard !== tokenStandard) {
-                    callback(shared_1.Result.ok(data));
-                }
-                (0, cross_fetch_1.default)(metadata.data.uri)
-                    .then((response) => {
-                    response
-                        .json()
-                        .then((json) => {
-                        data = converter(tokenStandard, metadata, json, tokenAmount);
-                        callback(shared_1.Result.ok(data));
-                    })
-                        .catch((e) => {
-                        callback(shared_1.Result.err(e));
-                    });
-                })
-                    .catch((e) => {
-                    callback(shared_1.Result.err(e));
-                });
+            const metadata = yield mpl_token_metadata_1.Metadata.fromAccountAddress(connection, shared_metaplex_1.Pda.getMetadata(mint));
+            (0, shared_1.debugLog)('# findByMint metadata: ', metadata);
+            // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
+            if (metadata.tokenStandard !== tokenStandard) {
+                throw Error('token standards are different');
             }
-            catch (e) {
-                if (e instanceof Error && UNABLE_ERROR_REGEX.test(e.message)) {
-                    (0, shared_1.debugLog)('# skip error for old SPL-TOKEN: ', mint);
-                    callback(shared_1.Result.err(e));
-                }
-            }
+            const info = yield connection.getParsedAccountInfo(mint.toPublicKey());
+            const tokenAmount = ((_g = info.value) === null || _g === void 0 ? void 0 : _g.data).parsed.info
+                .supply;
+            const response = yield (yield (0, cross_fetch_1.default)(metadata.data.uri)).json();
+            data = converter(tokenStandard, metadata, response, tokenAmount);
+            return shared_1.Result.ok(data);
         }
         catch (e) {
-            if (e instanceof Error) {
-                callback(shared_1.Result.err(e));
-            }
+            return shared_1.Result.err(e);
         }
     });
     /**
      * Fetch minted metadata by owner Pubkey
      *
      * @param {Pubkey} owner
-     * @param {FindByOwnerCallback} callback
+     * @param {OnOk} onOk callback function
+     * @param {OnErr} onErr callback function
      * @param {{sortable?: Sortable, isHolder?: boolean}} options?
      * @return Promise<Result<never, Error>>
      */
-    SplToken.findByOwner = (owner, callback, options) => __awaiter(this, void 0, void 0, function* () {
+    SplToken.findByOwner = (owner, onOk, onErr, options) => {
         const sortable = !(options === null || options === void 0 ? void 0 : options.sortable) ? spl_token_1.Sortable.Desc : options === null || options === void 0 ? void 0 : options.sortable;
         const isHolder = !(options === null || options === void 0 ? void 0 : options.isHolder) ? true : false;
-        yield SplToken.genericFindByOwner(owner, callback, shared_metaplex_1.UserSideInput.TokenStandard.Fungible, sortable, isHolder);
-    });
+        SplToken.genericFindByOwner(owner, (result) => {
+            result.match((ok) => {
+                onOk(ok);
+            }, (err) => {
+                onErr(err);
+            });
+        }, shared_metaplex_1.UserSideInput.TokenStandard.Fungible, sortable, isHolder);
+    };
     /**
      * Fetch minted metadata by mint address
      *
      * @param {Pubkey} mint
-     * @param {FindByOwnerCallback} callback
-     * @return Promise<Result<never, Error>>
+     * @return Promise<Result<UserSideOutput.TokenMetadata, Error>>
      */
-    SplToken.findByMint = (mint, callback) => __awaiter(this, void 0, void 0, function* () {
-        yield SplToken.genericFindByMint(mint, callback, shared_metaplex_1.UserSideInput.TokenStandard.Fungible);
+    SplToken.findByMint = (mint) => __awaiter(this, void 0, void 0, function* () {
+        return yield SplToken.genericFindByMint(mint, shared_metaplex_1.UserSideInput.TokenStandard.Fungible);
     });
 })(SplToken = exports.SplToken || (exports.SplToken = {}));
 //# sourceMappingURL=find.js.map
