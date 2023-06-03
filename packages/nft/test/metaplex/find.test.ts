@@ -31,8 +31,8 @@ describe('Metaplex.find', () => {
   });
 
   it('Not found nft', (done) => {
-    const onOk: OnOk = (ok) => assert.isArray(ok);
-    const onErr: OnErr = (err) => assert.fail(err.message);
+    const onOk: Find.OnOk = (ok) => assert.isArray(ok);
+    const onErr: Find.OnErr = (err) => assert.fail(err.message);
     Metaplex.findByOwner(notFoundTokenOwner, onOk, onErr);
     done();
   });
