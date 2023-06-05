@@ -84,7 +84,8 @@ var SplToken;
                             continue;
                         }
                         const mint = d.account.data.parsed.info.mint;
-                        const tokenAmount = d.account.data.parsed.info.tokenAmount.amount;
+                        const tokenAmount = d.account.data.parsed.info.tokenAmount
+                            .amount;
                         try {
                             const metadata = yield mpl_token_metadata_1.Metadata.fromAccountAddress(connection, shared_metaplex_1.Pda.getMetadata(mint));
                             (0, shared_1.debugLog)('# findByOwner metadata: ', metadata);
@@ -148,7 +149,6 @@ var SplToken;
     SplToken.genericFindByMint = (mint, tokenStandard) => __awaiter(this, void 0, void 0, function* () {
         var _g;
         try {
-            let data;
             const connection = shared_1.Node.getConnection();
             const metadata = yield mpl_token_metadata_1.Metadata.fromAccountAddress(connection, shared_metaplex_1.Pda.getMetadata(mint));
             (0, shared_1.debugLog)('# findByMint metadata: ', metadata);
@@ -159,9 +159,8 @@ var SplToken;
             const info = yield connection.getParsedAccountInfo(mint.toPublicKey());
             const tokenAmount = ((_g = info.value) === null || _g === void 0 ? void 0 : _g.data).parsed.info
                 .supply;
-            const response = yield (yield (0, cross_fetch_1.default)(metadata.data.uri)).json();
-            data = converter(tokenStandard, metadata, response, tokenAmount);
-            return shared_1.Result.ok(data);
+            const response = (yield (yield (0, cross_fetch_1.default)(metadata.data.uri)).json());
+            return shared_1.Result.ok(converter(tokenStandard, metadata, response, tokenAmount));
         }
         catch (e) {
             return shared_1.Result.err(e);
@@ -179,9 +178,12 @@ var SplToken;
     SplToken.findByOwner = (owner, onOk, onErr, options) => {
         const sortable = !(options === null || options === void 0 ? void 0 : options.sortable) ? types_1.Sortable.Desc : options === null || options === void 0 ? void 0 : options.sortable;
         const isHolder = !(options === null || options === void 0 ? void 0 : options.isHolder) ? true : false;
+        /* eslint-disable @typescript-eslint/no-floating-promises */
         SplToken.genericFindByOwner(owner, (result) => {
-            result.match(onOk, onErr);
-        }, shared_metaplex_1.UserSideInput.TokenStandard.Fungible, sortable, isHolder);
+            result.match((ok) => onOk(ok), onErr);
+        }, shared_metaplex_1.UserSideInput.TokenStandard.Fungible, sortable, isHolder)
+            .then(console.log)
+            .catch(console.log);
     };
     /**
      * Fetch minted metadata by mint address

@@ -67,12 +67,11 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // Display metadata from blockchain(optional)
   //////////////////////////////////////////////
 
-  await Metaplex.findByOwner(owner.pubkey, (metadata) => {
-    metadata.match(
-      (value) => console.log('# metadata: ', value),
-      (error) => assert.fail(error)
-    );
-  });
+  await Metaplex.findByOwner(
+    owner.pubkey,
+    (value) => console.log('# metadata: ', value),
+    (error) => assert.fail(error)
+  );
 
   //////////////////////////////////////////////
   // TRANSFER RECEIPTS USER FROM THIS LINE

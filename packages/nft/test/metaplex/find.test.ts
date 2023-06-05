@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Metaplex } from '../../src/metaplex';
-import { Find, Sortable } from '../../../core/src';
+import { Find, OnErr, OnOk, Sortable } from '../../../core/src';
 import { Setup } from '../../../shared/test/testSetup';
 import { Pubkey } from '../../../shared';
 
@@ -10,7 +10,7 @@ const notFoundTokenOwner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT';
 const nftMint = '5cjaV2QxSrZ3qESwsH49JmQqrcakThBZ9uZ5NVCcqzHt'; // nft
 const mint = 'EFgwtsm4azvQcnRPhDZ8yV9we1A12PgecpJ3im79o4x3'; // token
 
-const onOk: Find.OnOk = (ok) => {
+const onOk: OnOk<Find> = (ok) => {
   ok.forEach((res) => {
     assert.isNotEmpty(res.name);
     assert.isNotEmpty(res.mint);
@@ -22,7 +22,7 @@ const onOk: Find.OnOk = (ok) => {
   });
 };
 
-const onErr: Find.OnErr = (err: Error) => assert.fail(err.message);
+const onErr: OnErr = (err: Error) => assert.fail(err.message);
 
 describe('Metaplex.find', () => {
   before(async () => {
@@ -31,8 +31,8 @@ describe('Metaplex.find', () => {
   });
 
   it('Not found nft', (done) => {
-    const onOk: Find.OnOk = (ok) => assert.isArray(ok);
-    const onErr: Find.OnErr = (err) => assert.fail(err.message);
+    const onOk: OnOk<Find> = (ok) => assert.isArray(ok);
+    const onErr: OnErr = (err) => assert.fail(err.message);
     Metaplex.findByOwner(notFoundTokenOwner, onOk, onErr);
     done();
   });

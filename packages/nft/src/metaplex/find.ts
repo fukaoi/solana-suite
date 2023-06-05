@@ -1,6 +1,6 @@
 import { Pubkey, Result } from '@solana-suite/shared';
 import { UserSideInput, UserSideOutput } from '@solana-suite/shared-metaplex';
-import { Find, Sortable, SplToken } from '@solana-suite/core';
+import { Find, OnErr, OnOk, Sortable, SplToken } from '@solana-suite/core';
 
 export namespace Metaplex {
   /**
@@ -14,8 +14,8 @@ export namespace Metaplex {
    */
   export const findByOwner = async (
     owner: Pubkey,
-    onOk: Find.OnOk,
-    onErr: Find.OnErr,
+    onOk: OnOk<Find>,
+    onErr: OnErr,
     options?: { sortable?: Sortable; isHolder?: boolean }
   ): Promise<void> => {
     const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;

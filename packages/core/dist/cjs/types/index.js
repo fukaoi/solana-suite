@@ -15,7 +15,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./find"), exports);
-__exportStar(require("./history"), exports);
 __exportStar(require("./infra-side/output"), exports);
 __exportStar(require("./user-side/output"), exports);
 __exportStar(require("./sol-native"), exports);

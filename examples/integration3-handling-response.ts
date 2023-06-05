@@ -3,7 +3,7 @@
 //////////////////////////////////////////////
 
 import {
-  SolNative, SolNativeOwnerInfo,
+  SolNative, OwnerInfo,
 } from '@solana-suite/core';
 
 
@@ -39,7 +39,7 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   const ex4 = await SolNative.findByOwner(DEMO_ADDRESS);
 
   const mapped = ex4.map(
-    (value: SolNativeOwnerInfo) => value.sol * 100,
+    (value: OwnerInfo) => value.sol * 100,
     (error: Error) => new Error(error.message)
   ).unwrap();
   console.log('# ex4: ', mapped);
@@ -51,7 +51,7 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   const ex5 = await SolNative.findByOwner(DEMO_ADDRESS);
 
   ex5.match(
-    (value: SolNativeOwnerInfo) => console.log('# ex5: ', value),
+    (value: OwnerInfo) => console.log('# ex5: ', value),
     (error: Error) => console.error(error)
   );
 

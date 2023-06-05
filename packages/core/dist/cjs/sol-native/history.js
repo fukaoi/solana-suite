@@ -19,7 +19,7 @@ var SolNative;
     ) => __awaiter(this, void 0, void 0, function* () {
         try {
             const parser = transaction_filter_1.TransactionFilter.parse(filterType, types_1.ModuleName.SolNative);
-            yield signatures_1.Signatures.getForAdress(target, parser, (result) => result.match(onOk, onErr), narrowDown);
+            yield signatures_1.Signatures.getForAdress(target, parser, (result) => __awaiter(this, void 0, void 0, function* () { return yield result.match(onOk, onErr); }), narrowDown);
         }
         catch (e) {
             if (e instanceof Error) {

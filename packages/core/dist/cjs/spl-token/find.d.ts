@@ -1,5 +1,5 @@
 import { Pubkey, Result } from '@solana-suite/shared';
-import { Find, Sortable } from '../types/';
+import { Find, OnErr, OnOk, Sortable } from '../types/';
 import { UserSideInput, UserSideOutput } from '@solana-suite/shared-metaplex';
 export declare namespace SplToken {
     const genericFindByOwner: <T extends UserSideOutput.TokenMetadata | UserSideOutput.NftMetadata>(owner: Pubkey, callback: (result: Result<T[], Error>) => void, tokenStandard: UserSideInput.TokenStandard, sortable?: Sortable, isHolder?: boolean) => Promise<void>;
@@ -13,7 +13,7 @@ export declare namespace SplToken {
      * @param {{sortable?: Sortable, isHolder?: boolean}} options?
      * @return Promise<void>
      */
-    const findByOwner: (owner: Pubkey, onOk: Find.OnOk, onErr: Find.OnErr, options?: {
+    const findByOwner: (owner: Pubkey, onOk: OnOk<Find>, onErr: OnErr, options?: {
         sortable?: Sortable;
         isHolder?: boolean;
     }) => void;

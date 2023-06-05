@@ -109,17 +109,12 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
 
   await SplToken.getHistory(
     mint,
-    receipt.pubkey,
     FilterType.Transfer,
     (histories) => {
-      histories.match(
-        (ok) => {
-          ok.forEach((history) => {
-            console.log(history);
-          });
-        },
-        (err) => assert.fail(err.message)
-      );
-    }
+      histories.forEach((history) => {
+        console.log(history);
+      });
+    },
+    (err) => assert.fail(err.message)
   );
 })();
