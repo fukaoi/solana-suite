@@ -1,11 +1,11 @@
 import { describe, it } from 'mocha';
-import { FilterType, History, SolNative } from '../../src';
+import { FilterType, History, SolNative, OnErr, OnOk } from '../../src';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Pubkey } from '../../../shared/src';
 
 let target: Pubkey;
-const onOk: History.OnOk = (ok) => {
+const onOk: OnOk<History> = (ok) => {
   ok.forEach((res) => {
     assert.isNotEmpty(res.source);
     assert.isNotEmpty(res.destination);
@@ -16,7 +16,7 @@ const onOk: History.OnOk = (ok) => {
   });
 };
 
-const onErr: History.OnErr = (err: Error) => assert.fail(err.message);
+const onErr: OnErr = (err: Error) => assert.fail(err.message);
 
 describe('SolNative', () => {
   before(async () => {

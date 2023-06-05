@@ -1,6 +1,6 @@
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Node, Pubkey, Result } from '@solana-suite/shared';
-import { FilterType, History, ModuleName, UserSideOutput } from '../types/';
+import { Node, Pubkey } from '@solana-suite/shared';
+import { FilterType, History, ModuleName, OnErr, OnOk } from '../types/';
 import { Signatures } from '../signatures';
 import { TransactionFilter } from '../transaction-filter';
 
@@ -8,8 +8,8 @@ export namespace SplToken {
   export const getHistory = async (
     target: Pubkey,
     filterType: FilterType,
-    onOk: History.OnOk,
-    onErr: History.OnErr,
+    onOk: OnOk<History>,
+    onErr: OnErr,
     narrowDown = 1000 // Max number: 1000
   ): Promise<void> => {
     try {

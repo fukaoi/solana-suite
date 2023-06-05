@@ -1,5 +1,5 @@
 import { debugLog, Node, Pubkey, Result } from '@solana-suite/shared';
-import { Find, Sortable } from '../types/';
+import { Find, OnErr, OnOk, Sortable } from '../types/';
 import {
   Convert,
   InfraSideOutput,
@@ -94,7 +94,8 @@ export namespace SplToken {
           continue;
         }
         const mint = d.account.data.parsed.info.mint as Pubkey;
-        const tokenAmount = d.account.data.parsed.info.tokenAmount.amount;
+        const tokenAmount = d.account.data.parsed.info.tokenAmount
+          .amount as string;
 
         try {
           const metadata = await Metadata.fromAccountAddress(
@@ -154,7 +155,6 @@ export namespace SplToken {
     tokenStandard: UserSideInput.TokenStandard
   ): Promise<Result<UserSideOutput.TokenMetadata, Error>> => {
     try {
-      let data: T;
       const connection = Node.getConnection();
 
       const metadata = await Metadata.fromAccountAddress(
@@ -170,11 +170,14 @@ export namespace SplToken {
       const tokenAmount = (info.value?.data as ParsedAccountData).parsed.info
         .supply as string;
 
-      const response = await (await fetch(metadata.data.uri)).json();
-      data = converter<T>(tokenStandard, metadata, response, tokenAmount);
-      return Result.ok(data);
-    } catch (e: any) {
-      return Result.err(e);
+      const response = (await (
+        await fetch(metadata.data.uri)
+      ).json()) as InfraSideOutput.Offchain;
+      return Result.ok(
+        converter<T>(tokenStandard, metadata, response, tokenAmount)
+      );
+    } catch (e) {
+      return Result.err(e as Error);
     }
   };
 
@@ -189,21 +192,25 @@ export namespace SplToken {
    */
   export const findByOwner = (
     owner: Pubkey,
-    onOk: Find.OnOk,
-    onErr: Find.OnErr,
+    onOk: OnOk<Find>,
+    onErr: OnErr,
     options?: { sortable?: Sortable; isHolder?: boolean }
   ): void => {
     const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
     const isHolder = !options?.isHolder ? true : false;
+
+    /* eslint-disable @typescript-eslint/no-floating-promises */
     genericFindByOwner<UserSideOutput.TokenMetadata>(
       owner,
       (result) => {
-        result.match(onOk, onErr);
+        result.match((ok) => onOk(ok), onErr);
       },
       UserSideInput.TokenStandard.Fungible,
       sortable,
       isHolder
-    );
+    )
+      .then(console.log)
+      .catch(console.log);
   };
 
   /**
