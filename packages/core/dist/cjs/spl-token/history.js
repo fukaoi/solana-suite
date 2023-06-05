@@ -17,12 +17,12 @@ const signatures_1 = require("../signatures");
 const transaction_filter_1 = require("../transaction-filter");
 var SplToken;
 (function (SplToken) {
-    SplToken.getHistory = (target, filterType, callback, narrowDown = 1000 // Max number: 1000
+    SplToken.getHistory = (target, filterType, onOk, onErr, narrowDown = 1000 // Max number: 1000
     ) => __awaiter(this, void 0, void 0, function* () {
         try {
             if (filterType === types_1.FilterType.Memo) {
                 const parser = transaction_filter_1.TransactionFilter.parse(filterType, types_1.ModuleName.SplToken);
-                yield signatures_1.Signatures.getForAdress(target, parser, callback, narrowDown);
+                yield signatures_1.Signatures.getForAdress(target, parser, (result) => result.match(onOk, onErr), narrowDown);
             }
             else {
                 const tokenAccounts = yield shared_1.Node.getConnection().getParsedTokenAccountsByOwner(target.toPublicKey(), {
@@ -30,13 +30,13 @@ var SplToken;
                 });
                 for (const account of tokenAccounts.value) {
                     const parser = transaction_filter_1.TransactionFilter.parse(filterType, types_1.ModuleName.SplToken);
-                    yield signatures_1.Signatures.getForAdress(account.pubkey.toString(), parser, callback, narrowDown);
+                    yield signatures_1.Signatures.getForAdress(account.pubkey.toString(), parser, (result) => result.match(onOk, onErr), narrowDown);
                 }
             }
         }
         catch (e) {
             if (e instanceof Error) {
-                callback(shared_1.Result.err(e));
+                onErr(e);
             }
         }
     });

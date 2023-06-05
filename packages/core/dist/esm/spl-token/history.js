@@ -8,18 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Node, Result } from '@solana-suite/shared';
+import { Node } from '@solana-suite/shared';
 import { FilterType, ModuleName } from '../types/';
 import { Signatures } from '../signatures';
 import { TransactionFilter } from '../transaction-filter';
 export var SplToken;
 (function (SplToken) {
-    SplToken.getHistory = (target, filterType, callback, narrowDown = 1000 // Max number: 1000
+    SplToken.getHistory = (target, filterType, onOk, onErr, narrowDown = 1000 // Max number: 1000
     ) => __awaiter(this, void 0, void 0, function* () {
         try {
             if (filterType === FilterType.Memo) {
                 const parser = TransactionFilter.parse(filterType, ModuleName.SplToken);
-                yield Signatures.getForAdress(target, parser, callback, narrowDown);
+                yield Signatures.getForAdress(target, parser, (result) => result.match(onOk, onErr), narrowDown);
             }
             else {
                 const tokenAccounts = yield Node.getConnection().getParsedTokenAccountsByOwner(target.toPublicKey(), {
@@ -27,13 +27,13 @@ export var SplToken;
                 });
                 for (const account of tokenAccounts.value) {
                     const parser = TransactionFilter.parse(filterType, ModuleName.SplToken);
-                    yield Signatures.getForAdress(account.pubkey.toString(), parser, callback, narrowDown);
+                    yield Signatures.getForAdress(account.pubkey.toString(), parser, (result) => result.match(onOk, onErr), narrowDown);
                 }
             }
         }
         catch (e) {
             if (e instanceof Error) {
-                callback(Result.err(e));
+                onErr(e);
             }
         }
     });

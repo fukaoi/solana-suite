@@ -29,7 +29,8 @@ export namespace Convert.NftMetadata {
   };
 
   export const intoUserSide = (
-    output: InfraSideOutput.OnchainAndOffchain
+    output: InfraSideOutput.OnchainAndOffchain,
+    tokenAmount: string
   ): UserSideOutput.NftMetadata => {
     return {
       mint: output.onchain.mint.toString(),
@@ -39,6 +40,7 @@ export namespace Convert.NftMetadata {
       symbol: _Token.TokenMetadata.deleteNullStrings(
         output.onchain.data.symbol
       ),
+      tokenAmount: tokenAmount,
       uri: _Token.TokenMetadata.deleteNullStrings(output.onchain.data.uri),
       isMutable: output.onchain.isMutable,
       primarySaleHappened: output.onchain.primarySaleHappened,

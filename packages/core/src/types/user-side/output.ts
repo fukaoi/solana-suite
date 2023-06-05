@@ -1,5 +1,4 @@
 import { Pubkey } from '@solana-suite/shared';
-import { UserSideOutput as _TokenAmount } from '@solana-suite/shared-metaplex';
 
 export namespace UserSideOutput {
   export type History = {
@@ -12,7 +11,7 @@ export namespace UserSideOutput {
     signers?: Pubkey[];
     mint?: Pubkey;
     mintAuthority?: Pubkey;
-    tokenAmount?: _TokenAmount.TokenAmount;
+    tokenAmount?: string; 
     memo?: string;
     dateTime?: Date;
     type?: string;

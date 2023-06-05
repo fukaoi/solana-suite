@@ -1,8 +1,8 @@
 export declare const SolNative: {
     transferWithMultisig: (owner: import("@solana-suite/shared").Pubkey, dest: import("@solana-suite/shared").Pubkey, signers: import("@solana-suite/shared").Secret[], amount: number, feePayer?: import("@solana-suite/shared").Secret | undefined) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").Instruction, Error>>;
     transfer: (source: import("@solana-suite/shared").Pubkey, dest: import("@solana-suite/shared").Pubkey, signers: import("@solana-suite/shared").Secret[], amount: number, feePayer?: import("@solana-suite/shared").Secret | undefined) => import("@solana-suite/shared").Result<import("@solana-suite/shared").Instruction, Error>;
-    getHistory: (target: import("@solana-suite/shared").Pubkey, filterType: import("..").FilterType, callback: (result: import("@solana-suite/shared").Result<import("..").UserSideOutput.History[], Error>) => void, narrowDown?: number) => Promise<void>;
+    getHistory: (target: import("@solana-suite/shared").Pubkey, filterType: import("..").FilterType, onOk: import("..").OnOk<import("..").UserSideOutput.History>, onErr: import("..").OnErr, narrowDown?: number) => Promise<void>;
     feePayerPartialSignTransfer: (owner: import("@solana-suite/shared").Pubkey, dest: import("@solana-suite/shared").Pubkey, signers: import("@solana-suite/shared").Secret[], amount: number, feePayer: import("@solana-suite/shared").Pubkey) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared").PartialSignInstruction, Error>>;
-    findByOwner: (owner: import("@solana-suite/shared").Pubkey) => Promise<import("@solana-suite/shared").Result<import("..").SolNativeOwnerInfo, Error>>;
+    findByOwner: (owner: import("@solana-suite/shared").Pubkey) => Promise<import("@solana-suite/shared").Result<import("..").OwnerInfo, Error>>;
 };
 //# sourceMappingURL=index.d.ts.map

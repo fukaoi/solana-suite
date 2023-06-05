@@ -92,14 +92,8 @@ import { StorageType } from '@solana-suite/shared-metaplex';
     owner.pubkey, // search key
     FilterType.Transfer,
     (histories) => {
-      histories.match(
-        (ok) => {
-          ok.forEach((history) => {
-            console.log(history);
-          });
-        },
-        (err) => assert.fail(err.message)
-      );
-    }
+      histories.forEach((history) => console.log(history));
+    },
+    (err) => assert.fail(err.message)
   );
 })();
