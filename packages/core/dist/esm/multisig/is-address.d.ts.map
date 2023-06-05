@@ -1,0 +1,1 @@
+{"version":3,"file":"is-address.d.ts","sourceRoot":"","sources":["../../../src/multisig/is-address.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,EAAO,MAAM,sBAAsB,CAAC;AAG3D,yBAAiB,QAAQ,CAAC;IACjB,MAAM,SAAS,aACV,MAAM,KACf,QAAQ,OAAO,OAAO,EAAE,KAAK,CAAC,CAQhC,CAAC;CACH"}

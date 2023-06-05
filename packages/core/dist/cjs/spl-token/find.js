@@ -173,7 +173,7 @@ var SplToken;
      * @param {OnOk} onOk callback function
      * @param {OnErr} onErr callback function
      * @param {{sortable?: Sortable, isHolder?: boolean}} options?
-     * @return Promise<void>
+     * @return void
      */
     SplToken.findByOwner = (owner, onOk, onErr, options) => {
         const sortable = !(options === null || options === void 0 ? void 0 : options.sortable) ? types_1.Sortable.Desc : options === null || options === void 0 ? void 0 : options.sortable;
@@ -181,9 +181,7 @@ var SplToken;
         /* eslint-disable @typescript-eslint/no-floating-promises */
         SplToken.genericFindByOwner(owner, (result) => {
             result.match((ok) => onOk(ok), onErr);
-        }, shared_metaplex_1.UserSideInput.TokenStandard.Fungible, sortable, isHolder)
-            .then(console.log)
-            .catch(console.log);
+        }, shared_metaplex_1.UserSideInput.TokenStandard.Fungible, sortable, isHolder);
     };
     /**
      * Fetch minted metadata by mint address

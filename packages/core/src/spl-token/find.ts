@@ -188,7 +188,7 @@ export namespace SplToken {
    * @param {OnOk} onOk callback function
    * @param {OnErr} onErr callback function
    * @param {{sortable?: Sortable, isHolder?: boolean}} options?
-   * @return Promise<void>
+   * @return void
    */
   export const findByOwner = (
     owner: Pubkey,
@@ -208,9 +208,7 @@ export namespace SplToken {
       UserSideInput.TokenStandard.Fungible,
       sortable,
       isHolder
-    )
-      .then(console.log)
-      .catch(console.log);
+    );
   };
 
   /**
