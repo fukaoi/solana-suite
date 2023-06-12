@@ -32,7 +32,7 @@ var Metaplex;
      * Fetch minted metadata by mint address
      *
      * @param {Pubkey} mint
-     * @return Promise<Result<UserSideOutput.NftMetadata, Error>>
+     * @return Promise<Result<NftMetadata, Error>>
      */
     Metaplex.findByMint = (mint) => __awaiter(this, void 0, void 0, function* () {
         return yield core_1.SplToken.genericFindByMint(mint, shared_metaplex_1.UserSideInput.TokenStandard.NonFungible);

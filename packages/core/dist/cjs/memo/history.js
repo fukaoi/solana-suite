@@ -10,21 +10,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Memo = void 0;
-const shared_1 = require("@solana-suite/shared");
 const types_1 = require("../types/");
 const transaction_filter_1 = require("../transaction-filter");
 const signatures_1 = require("../signatures");
 var Memo;
 (function (Memo) {
-    Memo.getHistory = (target, callback, narrowDown = 1000 // Max number: 1000
+    Memo.getHistory = (target, onOk, onErr, narrowDown = 1000 // Max number: 1000
     ) => __awaiter(this, void 0, void 0, function* () {
         try {
             const parser = transaction_filter_1.TransactionFilter.parse(types_1.FilterType.OnlyMemo, types_1.ModuleName.SolNative);
-            yield signatures_1.Signatures.getForAdress(target, parser, callback, narrowDown);
+            yield signatures_1.Signatures.getForAdress(target, parser, (result) => result.match(onOk, onErr), narrowDown);
         }
         catch (e) {
             if (e instanceof Error) {
-                callback(shared_1.Result.err(e));
+                onErr(e);
             }
         }
     });

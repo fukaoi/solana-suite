@@ -1,9 +1,9 @@
 import { Pubkey, Result } from '@solana-suite/shared';
-import { Find, OnErr, OnOk, Sortable } from '../types/';
+import { Find, OnErr, OnOk, Sortable, TokenMetadata } from '../types/';
 import { UserSideInput, UserSideOutput } from '@solana-suite/shared-metaplex';
 export declare namespace SplToken {
     const genericFindByOwner: <T extends UserSideOutput.TokenMetadata | UserSideOutput.NftMetadata>(owner: Pubkey, callback: (result: Result<T[], Error>) => void, tokenStandard: UserSideInput.TokenStandard, sortable?: Sortable, isHolder?: boolean) => Promise<void>;
-    const genericFindByMint: <T extends UserSideOutput.TokenMetadata | UserSideOutput.NftMetadata>(mint: Pubkey, tokenStandard: UserSideInput.TokenStandard) => Promise<Result<UserSideOutput.TokenMetadata, Error>>;
+    const genericFindByMint: <T extends UserSideOutput.TokenMetadata | UserSideOutput.NftMetadata>(mint: Pubkey, tokenStandard: UserSideInput.TokenStandard) => Promise<Result<T, Error>>;
     /**
      * Fetch minted metadata by owner Pubkey
      *
@@ -23,6 +23,6 @@ export declare namespace SplToken {
      * @param {Pubkey} mint
      * @return Promise<Result<UserSideOutput.TokenMetadata, Error>>
      */
-    const findByMint: (mint: Pubkey) => Promise<Result<UserSideOutput.TokenMetadata, Error>>;
+    const findByMint: (mint: Pubkey) => Promise<Result<TokenMetadata, Error>>;
 }
 //# sourceMappingURL=find.d.ts.map

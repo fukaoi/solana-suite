@@ -12,7 +12,7 @@ export declare const Metaplex: {
         sortable?: import("@solana-suite/core").Sortable | undefined;
         isHolder?: boolean | undefined;
     } | undefined) => Promise<void>;
-    findByMint: (mint: import("@solana-suite/shared").Pubkey) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared-metaplex").UserSideOutput.TokenMetadata, Error>>;
+    findByMint: (mint: import("@solana-suite/shared").Pubkey) => Promise<import("@solana-suite/shared").Result<import("@solana-suite/shared-metaplex").UserSideOutput.NftMetadata, Error>>;
     burn: (mint: import("@solana-suite/shared").Pubkey, owner: import("@solana-suite/shared").Pubkey, signer: import("@solana-suite/shared").Secret, feePayer?: import("@solana-suite/shared").Secret | undefined) => import("@solana-suite/shared").Result<import("@solana-suite/shared").Instruction, Error>;
 };
 //# sourceMappingURL=index.d.ts.map

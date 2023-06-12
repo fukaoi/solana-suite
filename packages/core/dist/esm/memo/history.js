@@ -7,21 +7,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Result } from '@solana-suite/shared';
 import { FilterType, ModuleName } from '../types/';
 import { TransactionFilter } from '../transaction-filter';
 import { Signatures } from '../signatures';
 export var Memo;
 (function (Memo) {
-    Memo.getHistory = (target, callback, narrowDown = 1000 // Max number: 1000
+    Memo.getHistory = (target, onOk, onErr, narrowDown = 1000 // Max number: 1000
     ) => __awaiter(this, void 0, void 0, function* () {
         try {
             const parser = TransactionFilter.parse(FilterType.OnlyMemo, ModuleName.SolNative);
-            yield Signatures.getForAdress(target, parser, callback, narrowDown);
+            yield Signatures.getForAdress(target, parser, (result) => result.match(onOk, onErr), narrowDown);
         }
         catch (e) {
             if (e instanceof Error) {
-                callback(Result.err(e));
+                onErr(e);
             }
         }
     });

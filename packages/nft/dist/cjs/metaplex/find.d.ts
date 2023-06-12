@@ -1,6 +1,6 @@
 import { Pubkey, Result } from '@solana-suite/shared';
-import { UserSideOutput } from '@solana-suite/shared-metaplex';
 import { Find, OnErr, OnOk, Sortable } from '@solana-suite/core';
+import { NftMetadata } from '../types/';
 export declare namespace Metaplex {
     /**
      * Fetch minted metadata by owner Pubkey
@@ -19,8 +19,8 @@ export declare namespace Metaplex {
      * Fetch minted metadata by mint address
      *
      * @param {Pubkey} mint
-     * @return Promise<Result<UserSideOutput.NftMetadata, Error>>
+     * @return Promise<Result<NftMetadata, Error>>
      */
-    const findByMint: (mint: Pubkey) => Promise<Result<UserSideOutput.TokenMetadata, Error>>;
+    const findByMint: (mint: Pubkey) => Promise<Result<NftMetadata, Error>>;
 }
 //# sourceMappingURL=find.d.ts.map

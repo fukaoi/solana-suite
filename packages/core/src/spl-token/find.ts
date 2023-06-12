@@ -1,5 +1,5 @@
 import { debugLog, Node, Pubkey, Result } from '@solana-suite/shared';
-import { Find, OnErr, OnOk, Sortable } from '../types/';
+import { Find, OnErr, OnOk, Sortable, TokenMetadata } from '../types/';
 import {
   Convert,
   InfraSideOutput,
@@ -153,7 +153,7 @@ export namespace SplToken {
   >(
     mint: Pubkey,
     tokenStandard: UserSideInput.TokenStandard
-  ): Promise<Result<UserSideOutput.TokenMetadata, Error>> => {
+  ): Promise<Result<T, Error>> => {
     try {
       const connection = Node.getConnection();
 
@@ -200,7 +200,7 @@ export namespace SplToken {
     const isHolder = !options?.isHolder ? true : false;
 
     /* eslint-disable @typescript-eslint/no-floating-promises */
-    genericFindByOwner<UserSideOutput.TokenMetadata>(
+    genericFindByOwner<TokenMetadata>(
       owner,
       (result) => {
         result.match((ok) => onOk(ok), onErr);
@@ -219,8 +219,8 @@ export namespace SplToken {
    */
   export const findByMint = async (
     mint: Pubkey
-  ): Promise<Result<UserSideOutput.TokenMetadata, Error>> => {
-    return await genericFindByMint<UserSideOutput.TokenMetadata>(
+  ): Promise<Result<TokenMetadata, Error>> => {
+    return await genericFindByMint<TokenMetadata>(
       mint,
       UserSideInput.TokenStandard.Fungible
     );
