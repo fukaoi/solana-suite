@@ -1,6 +1,7 @@
 import { Pubkey, Result } from '@solana-suite/shared';
-import { UserSideInput, UserSideOutput } from '@solana-suite/shared-metaplex';
+import { UserSideInput } from '@solana-suite/shared-metaplex';
 import { Find, OnErr, OnOk, Sortable, SplToken } from '@solana-suite/core';
+import { NftMetadata } from '../types/';
 
 export namespace Metaplex {
   /**
@@ -20,7 +21,7 @@ export namespace Metaplex {
   ): Promise<void> => {
     const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
     const isHolder = !options?.isHolder ? true : false;
-    await SplToken.genericFindByOwner<UserSideOutput.NftMetadata>(
+    await SplToken.genericFindByOwner<NftMetadata>(
       owner,
       (result) => result.match(onOk, onErr),
       UserSideInput.TokenStandard.NonFungible,
@@ -33,12 +34,12 @@ export namespace Metaplex {
    * Fetch minted metadata by mint address
    *
    * @param {Pubkey} mint
-   * @return Promise<Result<UserSideOutput.NftMetadata, Error>>
+   * @return Promise<Result<NftMetadata, Error>>
    */
   export const findByMint = async (
     mint: Pubkey
-  ): Promise<Result<UserSideOutput.TokenMetadata, Error>> => {
-    return await SplToken.genericFindByMint<UserSideOutput.NftMetadata>(
+  ): Promise<Result<NftMetadata, Error>> => {
+    return await SplToken.genericFindByMint<NftMetadata>(
       mint,
       UserSideInput.TokenStandard.NonFungible
     );

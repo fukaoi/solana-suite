@@ -2,8 +2,14 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Pubkey } from '../../../shared';
-import { Find, OnErr, OnOk, Sortable, SplToken } from '../../src/';
-import { UserSideOutput } from '@solana-suite/shared-metaplex';
+import {
+  Find,
+  OnErr,
+  OnOk,
+  Sortable,
+  SplToken,
+  TokenMetadata,
+} from '../../src/';
 
 let owner: Pubkey;
 const nftMint = '5cjaV2QxSrZ3qESwsH49JmQqrcakThBZ9uZ5NVCcqzHt'; // nft
@@ -39,7 +45,7 @@ describe('SplToken', () => {
   it('Get token info owned', (done) => {
     SplToken.findByOwner(
       owner,
-      (ok: UserSideOutput.TokenMetadata[]) => {
+      (ok: TokenMetadata[]) => {
         ok.forEach((res) => {
           assert.isNotEmpty(res.name);
           assert.isNotEmpty(res.mint);
