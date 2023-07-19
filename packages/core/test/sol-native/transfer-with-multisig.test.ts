@@ -35,7 +35,7 @@ describe('SolNative', () => {
     const inst2 = await SolNative.transferWithMultisig(
       multisig,
       dest.pubkey,
-      [source.secret, signer1.secret, signer2.secret],
+      [signer1.secret, signer2.secret],
       0.01,
       source.secret
     );
