@@ -5,7 +5,7 @@
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/core';
 import { Metaplex } from '@solana-suite/nft';
-import { KeypairAccount, Node, Pubkey } from '@solana-suite/shared';
+import { KeypairAccount, Pubkey } from '@solana-suite/shared';
 import { RandomAsset } from '../packages/storage/test/randomAsset';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 
@@ -53,12 +53,6 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     freeze.pubkey // Pubkey !!
   );
 
-  // todo: ??? need?
-  (await inst1.submit()).match(
-    async (value) => await Node.confirmedSig(value, 'finalized'),
-    (error) => assert.fail(error)
-  );
-
   // this is NFT ID
   const mint = inst1.unwrap().data as Pubkey;
   console.log('# mint: ', mint);
@@ -66,7 +60,6 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
   // CHANGE STATE TO SBT
   //////////////////////////////////////////////
-
   const inst2 = Metaplex.freeze(
     mint,
     owner.pubkey,
@@ -74,8 +67,8 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     feePayer.secret
   );
 
-  (await inst2.submit()).match(
-    async (value) => await Node.confirmedSig(value, 'finalized'),
+  (await [inst1, inst2].submit()).match(
+    (value) => console.log(value.toExplorerUrl()),
     (error) => assert.fail(error)
   );
 })();
