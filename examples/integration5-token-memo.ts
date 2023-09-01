@@ -49,7 +49,7 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
     owner.secret,
     totalAmount,
     decimals,
-    tokenMetadata
+    tokenMetadata,
   );
 
   const mint = inst1.unwrap().data as Pubkey;
@@ -67,18 +67,14 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
   how much progress we have made over the past two years — and
   how much work remains
   `;
-  const inst2 = Memo.create(
-    memoData,
-    receipt.pubkey, // memo's owner
-    owner.secret // signer or feePayer
-  );
+  const inst2 = Memo.create(memoData, owner.pubkey, owner.secret);
 
   (await [inst1, inst2].submit()).match(
     async (value) => {
-      console.log('# nft sig: ', value.toExplorerUrl());
+      console.log('# memo sig: ', value.toExplorerUrl());
       await Node.confirmedSig(value);
     },
-    (error) => assert.fail(error)
+    (error) => assert.fail(error),
   );
 
   //////////////////////////////////////////////
@@ -92,7 +88,7 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
     receipt.pubkey,
     [owner.secret],
     10,
-    decimals
+    decimals,
   );
 
   (await inst3.submit()).match(
@@ -100,7 +96,7 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
       console.log('# Transfer sig: ', value.toExplorerUrl());
       await Node.confirmedSig(value);
     },
-    (error) => assert.fail(error)
+    (error) => assert.fail(error),
   );
 
   //////////////////////////////////////////////
@@ -115,6 +111,6 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
         console.log(history);
       });
     },
-    (err) => assert.fail(err.message)
+    (err) => assert.fail(err.message),
   );
 })();
