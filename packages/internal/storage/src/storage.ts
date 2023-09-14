@@ -4,7 +4,7 @@ import {
   InfraSideInput,
   StorageType,
   UserSideInput,
-} from '@solana-suite/shared-metaplex';
+} from '../../shared-metaplex';
 
 import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';

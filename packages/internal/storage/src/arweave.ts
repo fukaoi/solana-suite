@@ -12,7 +12,7 @@ import {
   Secret,
   Try,
 } from '@solana-suite/shared';
-import { FileContent, InfraSideInput } from '@solana-suite/shared-metaplex';
+import { FileContent, InfraSideInput } from '../../shared-metaplex/';
 import { Bundlr } from './bundlr';
 
 export interface MetaplexFileOptions {
@@ -26,7 +26,7 @@ export interface MetaplexFileOptions {
 export namespace Arweave {
   export const getUploadPrice = async (
     filePath: FileContent,
-    feePayer: Secret
+    feePayer: Secret,
   ): Promise<Result<{ price: number; currency: Currency }, Error>> => {
     return Try(async () => {
       let buffer!: Buffer;
@@ -41,14 +41,14 @@ export namespace Arweave {
       }
 
       const res = await Bundlr.useStorage(feePayer.toKeypair()).getUploadPrice(
-        buffer.length
+        buffer.length,
       );
 
       const basisPoints: string = res.basisPoints.toString();
       debugLog(
         '# buffer length, price',
         buffer.length,
-        parseInt(basisPoints).toSol()
+        parseInt(basisPoints).toSol(),
       );
       return {
         price: parseInt(basisPoints).toSol(),
@@ -60,7 +60,7 @@ export namespace Arweave {
   export const uploadContent = async (
     filePath: FileContent,
     feePayer: Secret,
-    fileOptions?: MetaplexFileOptions // only arweave, not nft-storage
+    fileOptions?: MetaplexFileOptions, // only arweave, not nft-storage
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       debugLog('# upload content: ', filePath);
@@ -90,7 +90,7 @@ export namespace Arweave {
 
   export const uploadMetadata = async (
     metadata: InfraSideInput.Offchain,
-    feePayer: Secret
+    feePayer: Secret,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       debugLog('# upload meta data: ', metadata);

@@ -1,13 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "ts-config/base.json",
+  "extends": "build-config/tsconfig/base.json",
 
-  "display": "internal-storage",
+  "display": "internal/storage",
   "compilerOptions": {
-    "baseUrl": "./src",
-    "paths": {
-      "~/*": ["../../*/src/"]
-    }
   },
   "include": ["**/*.ts"],
   "exclude": ["**/*.test.ts", "node_modules", "dist"]
