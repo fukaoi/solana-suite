@@ -1,9 +1,14 @@
 {
-    "extends": "../../tsconfig.build.json",
-    "compilerOptions": {
-        "outDir": "./dist/cjs/"
-    },
-    "include": [
-        "src/**/*.ts"
-    ]
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "build-config/tsconfig/base.json",
+
+  "display": "@solana-suite/core",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "internal/*": ["../internal/*"]
+    }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["**/*.test.ts", "node_modules", "dist"]
 }

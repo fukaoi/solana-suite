@@ -1,5 +1,8 @@
 {
   "name": "internal/storage",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "private": true,
   "scripts": {
     "build": "tsup --config build-config/tsup/internal.ts",

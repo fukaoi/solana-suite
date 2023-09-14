@@ -2,9 +2,9 @@
   "name": "@solana-suite/core",
   "version": "0.6.5",
   "description": "Easy use of Solana APIs such as solana-web3.js, spl-token, metaplex nft, decentralized storage, etc.",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/cjs/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "keywords": [
     "api",
     "blockchain",
@@ -33,15 +33,19 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf dist/ node_modules/",
-    "compile": "tsc -p tsconfig.json",
-    "compile:esm": "tsc -p tsconfig.esm.json",
-    "test": "mocha -t 300000 --require ts-node/register -- ",
-    "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
+    "build": "tsup --config build-config/tsup/base.ts",
+    "clean": "rm -rf dist/ && rm -rf node_modules",
+    "test": "jest -c node_modules/build-config/jest/base.ts --rootDir .",
+    "lint": "eslint -c node_modules/build-config/eslint/base.json ./src/*",
+    "style:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
-    "@solana-suite/shared": "latest",
-    "@solana-suite/shared-metaplex": "latest",
-    "@solana-suite/storage": "latest"
+    "@metaplex-foundation/mpl-token-metadata": "^2.9.1",
+    "@solana-suite/shared": "workspace:^",
+    "@solana/buffer-layout": "^4.0.1",
+    "@solana/spl-token": "^0.3.8",
+    "@solana/web3.js": "^1.73.2",
+    "bs58": "^5.0.0",
+    "cross-fetch": "^4.0.0"
   }
 }

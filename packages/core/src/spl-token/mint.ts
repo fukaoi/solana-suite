@@ -36,9 +36,9 @@ import {
   Pda,
   UserSideInput,
   Validator,
-} from '@solana-suite/shared-metaplex';
+} from 'internal/shared-metaplex';
 import { SplToken as _Calculate } from './calculate-amount';
-import { Storage } from '@solana-suite/storage';
+import { Storage } from 'internal/storage';
 
 export namespace SplToken {
   export const createFreezeAuthority = (

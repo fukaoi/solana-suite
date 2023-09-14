@@ -6,7 +6,7 @@ import {
   Pda,
   UserSideInput,
   UserSideOutput,
-} from '@solana-suite/shared-metaplex';
+} from 'internal/shared-metaplex';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -19,7 +19,7 @@ export namespace SplToken {
   // Sort by latest with unixtimestamp function
   const sortByUinixTimestamp =
     <T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata>(
-      sortable: Sortable
+      sortable: Sortable,
     ) =>
     (a: T, b: T): number => {
       if (!a.offchain.created_at) {
@@ -41,7 +41,7 @@ export namespace SplToken {
     tokenStandard: UserSideInput.TokenStandard,
     metadata: Metadata,
     json: InfraSideOutput.Offchain,
-    tokenAmount: string
+    tokenAmount: string,
   ): T => {
     if (tokenStandard === UserSideInput.TokenStandard.Fungible) {
       return Convert.TokenMetadata.intoUserSide(
@@ -49,7 +49,7 @@ export namespace SplToken {
           onchain: metadata,
           offchain: json,
         },
-        tokenAmount
+        tokenAmount,
       ) as T;
     } else if (tokenStandard === UserSideInput.TokenStandard.NonFungible) {
       return Convert.NftMetadata.intoUserSide(
@@ -57,7 +57,7 @@ export namespace SplToken {
           onchain: metadata,
           offchain: json,
         },
-        tokenAmount
+        tokenAmount,
       ) as T;
     } else {
       throw Error(`No match tokenStandard: ${tokenStandard}`);
@@ -65,13 +65,13 @@ export namespace SplToken {
   };
 
   export const genericFindByOwner = async <
-    T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata
+    T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata,
   >(
     owner: Pubkey,
     callback: (result: Result<T[], Error>) => void,
     tokenStandard: UserSideInput.TokenStandard,
     sortable?: Sortable,
-    isHolder?: boolean
+    isHolder?: boolean,
   ): Promise<void> => {
     try {
       let data: T[] = [];
@@ -80,7 +80,7 @@ export namespace SplToken {
         owner.toPublicKey(),
         {
           programId: TOKEN_PROGRAM_ID,
-        }
+        },
       );
 
       info.value.length === 0 && callback(Result.ok([]));
@@ -89,7 +89,7 @@ export namespace SplToken {
         if (isHolder && d.account.data.parsed.info.tokenAmount.uiAmount < 1) {
           debugLog(
             '# findByOwner no hold metadata: ',
-            d.account.data.parsed.info
+            d.account.data.parsed.info,
           );
           continue;
         }
@@ -100,7 +100,7 @@ export namespace SplToken {
         try {
           const metadata = await Metadata.fromAccountAddress(
             connection,
-            Pda.getMetadata(mint)
+            Pda.getMetadata(mint),
           );
           debugLog('# findByOwner metadata: ', metadata);
           // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
@@ -113,7 +113,7 @@ export namespace SplToken {
                 .json()
                 .then((json: InfraSideOutput.Offchain) => {
                   data.push(
-                    converter<T>(tokenStandard, metadata, json, tokenAmount)
+                    converter<T>(tokenStandard, metadata, json, tokenAmount),
                   );
                   callback(Result.ok(data)); // need this call ?
                 })
@@ -149,17 +149,17 @@ export namespace SplToken {
   };
 
   export const genericFindByMint = async <
-    T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata
+    T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata,
   >(
     mint: Pubkey,
-    tokenStandard: UserSideInput.TokenStandard
+    tokenStandard: UserSideInput.TokenStandard,
   ): Promise<Result<T, Error>> => {
     try {
       const connection = Node.getConnection();
 
       const metadata = await Metadata.fromAccountAddress(
         connection,
-        Pda.getMetadata(mint)
+        Pda.getMetadata(mint),
       );
       debugLog('# findByMint metadata: ', metadata);
       // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
@@ -174,7 +174,7 @@ export namespace SplToken {
         await fetch(metadata.data.uri)
       ).json()) as InfraSideOutput.Offchain;
       return Result.ok(
-        converter<T>(tokenStandard, metadata, response, tokenAmount)
+        converter<T>(tokenStandard, metadata, response, tokenAmount),
       );
     } catch (e) {
       return Result.err(e as Error);
@@ -194,7 +194,7 @@ export namespace SplToken {
     owner: Pubkey,
     onOk: OnOk<Find>,
     onErr: OnErr,
-    options?: { sortable?: Sortable; isHolder?: boolean }
+    options?: { sortable?: Sortable; isHolder?: boolean },
   ): void => {
     const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
     const isHolder = !options?.isHolder ? true : false;
@@ -207,7 +207,7 @@ export namespace SplToken {
       },
       UserSideInput.TokenStandard.Fungible,
       sortable,
-      isHolder
+      isHolder,
     );
   };
 
@@ -218,11 +218,11 @@ export namespace SplToken {
    * @return Promise<Result<UserSideOutput.TokenMetadata, Error>>
    */
   export const findByMint = async (
-    mint: Pubkey
+    mint: Pubkey,
   ): Promise<Result<TokenMetadata, Error>> => {
     return await genericFindByMint<TokenMetadata>(
       mint,
-      UserSideInput.TokenStandard.Fungible
+      UserSideInput.TokenStandard.Fungible,
     );
   };
 }
