@@ -1,4 +1,48 @@
-import { TransactionSignature } from '@solana/web3.js';
+import * as _solana_web3_js from '@solana/web3.js';
+import { PublicKey, Commitment, TransactionInstruction, Keypair, TransactionSignature, Connection } from '@solana/web3.js';
+
+declare namespace Constants {
+    const currentCluster: string;
+    const customClusterUrl: never[];
+    const isDebugging: string;
+    const nftStorageApiKey: string;
+    enum Cluster {
+        prd = "mainnet-beta",
+        prdMetaplex = "mainnet-beta-metaplex",
+        dev = "devnet",
+        test = "testnet",
+        localhost = "localhost-devnet"
+    }
+    enum EndPointUrl {
+        prd = "https://api.mainnet-beta.solana.com",
+        prdMetaplex = "https://api.metaplex.solana.com",
+        dev = "https://api.devnet.solana.com",
+        test = "https://api.testnet.solana.com",
+        localhost = "http://api.devnet.solana.com"
+    }
+    const switchCluster: (param: {
+        cluster?: string;
+        customClusterUrl?: string[];
+    }) => string;
+    const switchBundlr: (env: string) => string;
+    const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;
+    const MEMO_PROGRAM_ID: PublicKey;
+    const METAPLEX_PROGRAM_ID: PublicKey;
+    const COMMITMENT: Commitment;
+    const NFT_STORAGE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE";
+    const NFT_STORAGE_GATEWAY_URL = "https://ipfs.io/ipfs";
+    const BUNDLR_NETWORK_URL: string;
+}
+
+declare class Instruction {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: unknown;
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    submit: () => Promise<Result<TransactionSignature, Error>>;
+}
+
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
@@ -26,7 +70,7 @@ declare class InternalErr<T, E extends Error> extends AbstractResult<T, E> {
     constructor(error: E);
     protected _chain<X, U extends Error>(_ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
 }
-export declare namespace Result {
+declare namespace Result {
     export type Ok<T, E extends Error> = InternalOk<T, E>;
     export type Err<T, E extends Error> = InternalErr<T, E>;
     export function ok<T, E extends Error>(value: T): Result<T, E>;
@@ -198,8 +242,152 @@ export declare namespace Result {
     }[keyof T]>;
     export {};
 }
-export type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
+type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
-export {};
-//# sourceMappingURL=result.d.ts.map
+
+/**
+ * Overwrite JS Object
+ *
+ * @param {unknown} object
+ * @param {OverwriteObject[]} targets
+ * @returns Object
+ */
+declare const overwriteObject: (object: unknown, targets: {
+    existsKey: string;
+    will: {
+        key: string;
+        value: unknown;
+    };
+}[]) => unknown;
+/**
+ * Display log for solana-suite-config.js
+ *
+ * @param {unknown} data1
+ * @param {unknown} data2
+ * @param {unknown} data3
+ * @param {unknown} data4
+ * @returns void
+ */
+declare const debugLog: (data1: unknown, data2?: unknown, data3?: unknown, data4?: unknown) => void;
+/**
+ * sleep timer
+ *
+ * @param {number} sec
+ * @returns Promise<number>
+ */
+declare const sleep: (sec: number) => Promise<number>;
+/**
+ * Node.js or Browser js
+ *
+ * @returns boolean
+ */
+declare const isBrowser: () => boolean;
+/**
+ * Node.js or Browser js
+ *
+ * @returns boolean
+ */
+declare const isNode: () => boolean;
+/**
+ * argument is promise or other
+ *
+ * @param {unknown} obj
+ * @returns boolean
+ */
+declare const isPromise: (obj: unknown) => obj is Promise<unknown>;
+/**
+ * Try async monad
+ *
+ * @returns Promise<Result<T, E>>
+ */
+declare function Try<T, E extends Error>(asyncblock: () => Promise<T>, finallyInput?: () => void): Promise<Result<T, E>>;
+declare function Try<T, E extends Error>(block: () => T): Result<T, E>;
+/**
+ * argument is promise or other
+ *
+ * @param {number|undefined} created_at
+ * @returns Date | undefined
+ */
+declare const convertTimestampToDateTime: (created_at: number | undefined) => Date | undefined;
+
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = string & {
+    [pubKeyNominality]: never;
+} | string;
+type Secret = string & {
+    [secretNominality]: never;
+} | string;
+
+declare class KeypairAccount {
+    secret: Secret;
+    pubkey: Pubkey;
+    constructor(params: {
+        pubkey?: Pubkey;
+        secret: Secret;
+    });
+    toPublicKey(): PublicKey;
+    toKeypair(): Keypair;
+    static isPubkey: (value: string) => value is Pubkey;
+    static isSecret: (value: string) => value is Secret;
+    static create: () => KeypairAccount;
+    static toKeyPair: (keypair: Keypair) => KeypairAccount;
+}
+
+declare namespace Node {
+    const getConnection: () => Connection;
+    const changeConnection: (param: {
+        cluster?: string;
+        commitment?: Commitment;
+        customClusterUrl?: string[];
+    }) => void;
+    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
+}
+
+declare class MintInstruction extends Instruction {
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    submit: () => Promise<Result<TransactionSignature, Error>>;
+}
+
+declare global {
+    interface String {
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        toExplorerUrl(explorer?: Explorer): string;
+        toAddressUrl(): string;
+    }
+    interface Number {
+        toSol(): number;
+        toLamports(): number;
+    }
+    interface Array<T> {
+        submit(): Promise<Result<TransactionSignature, Error>>;
+    }
+    interface Console {
+        debug(data: unknown, data2?: unknown, data3?: unknown): void;
+    }
+}
+type AnyObject = {
+    [key: string]: unknown;
+};
+type OverwriteObject = {
+    existsKey: string;
+    will: {
+        key: string;
+        value: unknown;
+    };
+};
+declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm"
+}
+
+declare class PartialSignInstruction {
+    hexInstruction: string;
+    data?: Pubkey;
+    constructor(instructions: string, mint?: Pubkey);
+    submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
+}
+
+export { AnyObject, Constants, Explorer, Instruction, KeypairAccount, MintInstruction, Node, OverwriteObject, PartialSignInstruction, Pubkey, Result, Secret, Try, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep };
