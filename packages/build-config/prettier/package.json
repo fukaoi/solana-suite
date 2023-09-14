@@ -1,5 +1,5 @@
 {
-  "name": "config-ts",
+  "name": "build-config/prettier",
   "private": true,
   "devDependencies": {}
 }

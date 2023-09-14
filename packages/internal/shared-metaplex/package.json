@@ -1,16 +1,23 @@
 {
-  "name": "internal-shared-metaplex",
+  "name": "internal/shared-metaplex",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "build": "tsup --config build-config/tsup/internal.ts",
+    "clean": "rm -rf dist/ && rm -rf node_modules",
+    "test": "jest -c node_modules/build-config/jest/base.ts --rootDir .",
+    "lint": "eslint -c node_modules/build-config/eslint/base.json ./src/*",
+    "style:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
+  },
   "dependencies": {
+    "@solana/web3.js": "^1.73.2",
     "@metaplex-foundation/mpl-token-metadata": "^2.9.1",
     "@solana-suite/shared": "latest"
   },
   "devDependencies": {
-    "config-ts": "workspace:*",
-    "config-jest": "workspace:*",
-    "config-tsup": "workspace:*",
-    "config-eslint": "workspace:*",
-    "config-prettier": "workspace:*"
+    "build-config/tsconfig": "workspace:*",
+    "build-config/jest": "workspace:*",
+    "build-config/tsup": "workspace:*",
+    "build-config/eslint": "workspace:*",
+    "build-config/prettier": "workspace:*"
   }
 }

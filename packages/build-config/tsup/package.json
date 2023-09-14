@@ -1,5 +1,5 @@
 {
-  "name": "config-tsup",
+  "name": "build-config/tsup",
   "private": true,
   "devDependencies": {}
 }

@@ -1,19 +1,12 @@
 {
-  "name": "internal-storage",
+  "name": "internal/storage",
   "private": true,
   "scripts": {},
   "dependencies": {
     "@metaplex-foundation/js": "0.18.0",
-    "nft.storage": "^7.1.1",
-    "shared-metaplex": "latest"
+    "nft.storage": "^7.1.1"
   },
-  "devDependencies": {
-    "config-ts": "workspace:*",
-    "config-jest": "workspace:*",
-    "config-tsup": "workspace:*",
-    "config-eslint": "workspace:*",
-    "config-prettier": "workspace:*"
-  },
+  "devDependencies": {},
   "browser": {
     "fs": false
   },

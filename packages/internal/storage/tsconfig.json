@@ -1,9 +1,14 @@
 {
-  "extends": "../../tsconfig.build.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "ts-config/base.json",
+
+  "display": "internal-storage",
   "compilerOptions": {
-    "outDir": "./dist/cjs/"
+    "baseUrl": "./src",
+    "paths": {
+      "~/*": ["../../*/src/"]
+    }
   },
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["**/*.ts"],
+  "exclude": ["**/*.test.ts", "node_modules", "dist"]
 }
