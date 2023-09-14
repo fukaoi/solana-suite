@@ -1,1 +1,0 @@
-{"version":3,"file":"bundlr.d.ts","sourceRoot":"","sources":["../../../src/types/bundlr.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,SAAS,EAAE,MAAM,iBAAiB,CAAC;AAErD,MAAM,MAAM,YAAY,GAAG,OAAO,GAAG,OAAO,GAAG,SAAS,CAAC;AAEzD,MAAM,MAAM,OAAO,GAAG;IACpB,SAAS,EAAE,SAAS,CAAA;CAErB,CAAC"}

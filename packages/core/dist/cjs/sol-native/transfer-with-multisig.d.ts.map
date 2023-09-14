@@ -1,1 +1,0 @@
-{"version":3,"file":"transfer-with-multisig.d.ts","sourceRoot":"","sources":["../../../src/sol-native/transfer-with-multisig.ts"],"names":[],"mappings":"AAOA,OAAO,EACL,MAAM,EAEN,WAAW,EAGX,MAAM,EACN,MAAM,EACP,MAAM,sBAAsB,CAAC;AAG9B,yBAAiB,SAAS,CAAC;IAKlB,MAAM,oBAAoB,UACxB,MAAM,QACP,MAAM,WACH,MAAM,EAAE,UACT,MAAM,aACH,MAAM,KAChB,QAAQ,OAAO,WAAW,EAAE,KAAK,CAAC,CA2DpC,CAAC;CACH"}

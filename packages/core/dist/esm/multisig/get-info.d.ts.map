@@ -1,1 +1,0 @@
-{"version":3,"file":"get-info.d.ts","sourceRoot":"","sources":["../../../src/multisig/get-info.ts"],"names":[],"mappings":"AAAA,OAAO,EAAQ,MAAM,EAAE,MAAM,EAAO,MAAM,sBAAsB,CAAC;AACjE,OAAO,EAAE,YAAY,EAAE,MAAM,uBAAuB,CAAC;AAKrD,yBAAiB,QAAQ,CAAC;IACjB,MAAM,OAAO,aACR,MAAM,KACf,QAAQ,OAAO,YAAY,EAAE,KAAK,CAAC,CA4BrC,CAAC;CACH"}
