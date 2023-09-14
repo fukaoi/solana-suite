@@ -184,14 +184,20 @@ importers:
   packages/phantom:
     dependencies:
       '@solana-suite/core':
-        specifier: latest
+        specifier: '*'
         version: link:../core
       '@solana-suite/nft':
-        specifier: latest
+        specifier: '*'
         version: link:../nft
-      '@solana-suite/shared-metaplex':
-        specifier: latest
-        version: 0.6.5
+      '@solana-suite/shared':
+        specifier: '*'
+        version: link:../shared
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.78.5)
+      '@solana/web3.js':
+        specifier: ^1.73.2
+        version: 1.78.5
 
   packages/shared:
     dependencies:
@@ -1238,49 +1244,6 @@ packages:
       slash: 3.0.0
     dev: true
 
-  /@jest/core@29.7.0:
-    resolution: {integrity: sha512-n7aeXWKMnGtDA48y8TLWJPJmLmmZ642Ceo78cYWEpiD7FzDgmNDV/GCVRorPABdXLJZ/9wzzgZAlHjXjxDHGsg==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    peerDependencies:
-      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-    peerDependenciesMeta:
-      node-notifier:
-        optional: true
-    dependencies:
-      '@jest/console': 29.7.0
-      '@jest/reporters': 29.7.0
-      '@jest/test-result': 29.7.0
-      '@jest/transform': 29.7.0
-      '@jest/types': 29.6.3
-      '@types/node': 16.11.7
-      ansi-escapes: 4.3.2
-      chalk: 4.1.2
-      ci-info: 3.8.0
-      exit: 0.1.2
-      graceful-fs: 4.2.11
-      jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@16.11.7)
-      jest-haste-map: 29.7.0
-      jest-message-util: 29.7.0
-      jest-regex-util: 29.6.3
-      jest-resolve: 29.7.0
-      jest-resolve-dependencies: 29.7.0
-      jest-runner: 29.7.0
-      jest-runtime: 29.7.0
-      jest-snapshot: 29.7.0
-      jest-util: 29.7.0
-      jest-validate: 29.7.0
-      jest-watcher: 29.7.0
-      micromatch: 4.0.5
-      pretty-format: 29.7.0
-      slash: 3.0.0
-      strip-ansi: 6.0.1
-    transitivePeerDependencies:
-      - babel-plugin-macros
-      - supports-color
-      - ts-node
-    dev: true
-
   /@jest/core@29.7.0(ts-node@10.9.1):
     resolution: {integrity: sha512-n7aeXWKMnGtDA48y8TLWJPJmLmmZ642Ceo78cYWEpiD7FzDgmNDV/GCVRorPABdXLJZ/9wzzgZAlHjXjxDHGsg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -1886,31 +1849,6 @@ packages:
     dependencies:
       '@sinonjs/commons': 3.0.0
     dev: true
-
-  /@solana-suite/shared-metaplex@0.6.5:
-    resolution: {integrity: sha512-IrjDGN0hhePxSto8D5v7LDDhf8s0lo/Ilv3gAxVZ9Nxu1h0fbeV6QmR4A2pql+/258WfAZGp2Mf8w2xJcIugxA==}
-    engines: {node: '>=16.*'}
-    dependencies:
-      '@metaplex-foundation/mpl-token-metadata': 2.13.0
-      '@solana-suite/shared': 0.6.5
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - supports-color
-      - utf-8-validate
-    dev: false
-
-  /@solana-suite/shared@0.6.5:
-    resolution: {integrity: sha512-dgsGr9PeF0Gv+u4ggLvkyQZw9o2mq/Me6X+8sI3+FGfAguw3fKJ7EH+ZSB6VnwI/cmpdKTUJYC8JFCWO8Trceg==}
-    engines: {node: '>=16.*'}
-    dependencies:
-      '@solana/web3.js': 1.78.5
-      commander: 9.3.0
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - utf-8-validate
-    dev: false
 
   /@solana/buffer-layout-utils@0.2.0:
     resolution: {integrity: sha512-szG4sxgJGktbuZYDg2FfNmkMi0DYQoVjN2h7ta1W1hPrwzarcFLBq9UpX1UjNXsNpT9dn+chgprtWGioUAr4/g==}
@@ -5220,7 +5158,7 @@ packages:
       node-notifier:
         optional: true
     dependencies:
-      '@jest/core': 29.7.0
+      '@jest/core': 29.7.0(ts-node@10.9.1)
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
@@ -5663,7 +5601,7 @@ packages:
       node-notifier:
         optional: true
     dependencies:
-      '@jest/core': 29.7.0
+      '@jest/core': 29.7.0(ts-node@10.9.1)
       '@jest/types': 29.6.3
       import-local: 3.1.0
       jest-cli: 29.7.0(@types/node@16.11.7)

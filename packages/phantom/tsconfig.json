@@ -1,9 +1,14 @@
 {
-  "extends": "../../tsconfig.build.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "build-config/tsconfig/base.json",
+
+  "display": "@solana-suite/phantom",
   "compilerOptions": {
-    "outDir": "./dist/cjs/"
+    "baseUrl": ".",
+    "paths": {
+      "internal/*": ["../internal/*"]
+    }
   },
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["**/*.ts"],
+  "exclude": ["**/*.test.ts", "node_modules", "dist"]
 }

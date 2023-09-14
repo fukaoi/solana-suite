@@ -1,6 +1,6 @@
 import { Transaction, TransactionInstruction } from '@solana/web3.js';
 import { Metaplex } from '@solana-suite/nft';
-import { Storage } from '@solana-suite/storage';
+import { Storage } from 'internal/storage';
 import {
   debugLog,
   KeypairAccount,
@@ -14,7 +14,7 @@ import {
   UserSideInput,
   Validator,
   ValidatorError,
-} from '@solana-suite/shared-metaplex';
+} from 'internal/shared-metaplex';
 import { Phantom } from '../types';
 
 export namespace PhantomMetaplex {
@@ -28,7 +28,7 @@ export namespace PhantomMetaplex {
   export const mint = async (
     input: UserSideInput.NftMetadata,
     cluster: string,
-    phantom: Phantom
+    phantom: Phantom,
   ): Promise<Result<string, Error | ValidatorError>> => {
     return Try(async () => {
       const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
@@ -46,18 +46,18 @@ export namespace PhantomMetaplex {
       const properties = await Convert.Properties.intoInfraSide(
         input.properties,
         Storage.uploadContent,
-        input.storageType
+        input.storageType,
       );
 
       const sellerFeeBasisPoints = Royalty.convert(input.royalty);
       const nftStorageMetadata = Storage.toConvertOffchaindata(
         { ...input, properties },
-        sellerFeeBasisPoints
+        sellerFeeBasisPoints,
       );
       const uploaded = await Storage.uploadMetaAndContent(
         nftStorageMetadata,
         input.filePath,
-        input.storageType
+        input.storageType,
       );
 
       if (uploaded.isErr) {
@@ -68,7 +68,7 @@ export namespace PhantomMetaplex {
       const datav2 = Convert.NftMetadata.intoInfraSide(
         input,
         uri,
-        sellerFeeBasisPoints
+        sellerFeeBasisPoints,
       );
 
       const connection = Node.getConnection();
@@ -86,7 +86,7 @@ export namespace PhantomMetaplex {
         phantom.publicKey,
         datav2,
         phantom.publicKey,
-        isMutable
+        isMutable,
       );
 
       insts.forEach((inst: TransactionInstruction) => {
@@ -100,7 +100,7 @@ export namespace PhantomMetaplex {
       debugLog(
         '# signed, signed.signatures: ',
         signed,
-        signed.signatures.map((sig) => sig.publicKey.toString())
+        signed.signatures.map((sig) => sig.publicKey.toString()),
       );
       const sig = await connection.sendRawTransaction(signed.serialize());
       await Node.confirmedSig(sig);

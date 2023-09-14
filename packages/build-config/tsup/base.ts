@@ -3,8 +3,6 @@ import { defineConfig } from 'tsup';
 export default defineConfig({
   entry: {
     index: 'src/index.ts',
-    // 'internal/shared-metaplex': '../internal/shared-metaplex/src/index.ts',
-    // 'internal/storage': '../internal/storage/src/index.ts',
   },
   format: ['cjs', 'esm'],
   tsconfig: './tsconfig.json',

@@ -1,5 +1,3 @@
 import { PhantomMetaplex as Mint } from './mint';
 
-export const PhantomMetaplex = {
-  ...Mint,
-};
+export const Metaplex = Object.assign({}, Mint);

@@ -1,10 +1,10 @@
 import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 
 import { debugLog, Node, Pubkey, Result, Try } from '@solana-suite/shared';
-import { Storage } from '@solana-suite/storage';
+import { Storage } from 'internal/storage';
 import { SplToken } from '@solana-suite/core';
 import { Phantom } from '../types';
-import { Convert, UserSideInput } from '@solana-suite/shared-metaplex';
+import { Convert, UserSideInput } from 'internal/shared-metaplex';
 
 export namespace PhantomSplToken {
   export const mint = async (
@@ -13,7 +13,7 @@ export namespace PhantomSplToken {
     cluster: string,
     totalAmount: number,
     mintDecimal: number,
-    phantom: Phantom
+    phantom: Phantom,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       Node.changeConnection({ cluster });
@@ -25,7 +25,7 @@ export namespace PhantomSplToken {
       const sellerFeeBasisPoints = 0;
       const tokenStorageMetadata = Storage.toConvertOffchaindata(
         input as UserSideInput.NftMetadata,
-        input.royalty
+        input.royalty,
       );
 
       let uri!: string;
@@ -33,7 +33,7 @@ export namespace PhantomSplToken {
         const uploaded = await Storage.uploadMetaAndContent(
           tokenStorageMetadata,
           input.filePath,
-          input.storageType
+          input.storageType,
         );
 
         if (uploaded.isErr) {
@@ -51,7 +51,7 @@ export namespace PhantomSplToken {
       const datav2 = Convert.TokenMetadata.intoInfraSide(
         input,
         uri,
-        sellerFeeBasisPoints
+        sellerFeeBasisPoints,
       );
 
       debugLog('# datav2: ', datav2);
@@ -64,11 +64,11 @@ export namespace PhantomSplToken {
         mintDecimal,
         datav2,
         owner.toPublicKey(),
-        isMutable
+        isMutable,
       );
 
       insturctions.forEach((inst: TransactionInstruction) =>
-        transaction.add(inst)
+        transaction.add(inst),
       );
       transaction.feePayer = owner.toPublicKey();
       const blockhashObj = await connection.getLatestBlockhashAndContext();
@@ -78,7 +78,7 @@ export namespace PhantomSplToken {
       debugLog(
         '# signed, signed.signatures: ',
         signed,
-        signed.signatures.map((sig) => sig.publicKey.toString())
+        signed.signatures.map((sig) => sig.publicKey.toString()),
       );
       const sig = await connection.sendRawTransaction(signed.serialize());
       await Node.confirmedSig(sig);

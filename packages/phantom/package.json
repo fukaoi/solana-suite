@@ -2,9 +2,8 @@
   "name": "@solana-suite/phantom",
   "version": "0.6.5",
   "description": "Library spl-token/nft mint for phantom wallet",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/cjs/index.d.ts",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "keywords": [
     "api",
     "blockchain",
@@ -21,7 +20,7 @@
     "dist"
   ],
   "license": "MIT",
-  "author": "Akira Takachi <a.takachi@atonoy.co>",
+  "author": "fukaoi <usapyon2022@gmail.com>",
   "homepage": "https://atonoy.github.io/solana-suite",
   "repository": {
     "type": "git",
@@ -34,15 +33,17 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf dist/ node_modules/",
-    "compile": "tsc -p tsconfig.json",
-    "compile:esm": "tsc -p tsconfig.esm.json",
-    "test": "mocha -t 300000 --require ts-node/register -- ",
-    "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
+    "build": "tsup --config build-config/tsup/esm.ts",
+    "clean": "rm -rf dist/ && rm -rf node_modules",
+    "test": "jest -c node_modules/build-config/jest/base.ts --rootDir .",
+    "lint": "eslint -c node_modules/build-config/eslint/base.json ./src/*",
+    "style:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
-    "@solana-suite/core": "latest",
-    "@solana-suite/nft": "latest",
-    "@solana-suite/shared-metaplex": "latest"
+    "@solana-suite/shared": "*",
+    "@solana-suite/core": "*",
+    "@solana-suite/nft": "*",
+    "@solana/spl-token": "^0.3.8",
+    "@solana/web3.js": "^1.73.2"
   }
 }
