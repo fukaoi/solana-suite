@@ -1,3 +1,3 @@
-import { UserSideOutput } from '@solana-suite/shared-metaplex';
+import { UserSideOutput } from 'internal/shared-metaplex';
 
 export type NftMetadata = UserSideOutput.NftMetadata;

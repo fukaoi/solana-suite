@@ -6,7 +6,7 @@ import {
   Secret,
   Try,
 } from '@solana-suite/shared';
-import { Pda } from '@solana-suite/shared-metaplex';
+import { Pda } from 'internal/shared-metaplex';
 import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createFreezeDelegatedAccountInstruction } from '@metaplex-foundation/mpl-token-metadata';
 

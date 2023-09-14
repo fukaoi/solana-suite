@@ -108,7 +108,7 @@ importers:
         specifier: ^2.9.1
         version: 2.13.0
       '@solana-suite/shared':
-        specifier: ^0.6.5
+        specifier: '*'
         version: link:../shared
       '@solana/buffer-layout':
         specifier: ^4.0.1
@@ -162,15 +162,24 @@ importers:
       '@metaplex-foundation/js':
         specifier: 0.19.1
         version: 0.19.1
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.9.1
+        version: 2.13.0
       '@solana-suite/core':
-        specifier: latest
+        specifier: '*'
         version: link:../core
-      '@solana-suite/shared-metaplex':
-        specifier: latest
-        version: 0.6.5
-      '@solana-suite/storage':
-        specifier: latest
-        version: 0.6.5(node-fetch@3.3.2)
+      '@solana-suite/shared':
+        specifier: '*'
+        version: link:../shared
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.78.5)
+      '@solana/web3.js':
+        specifier: ^1.73.2
+        version: 1.78.5
+      bn.js:
+        specifier: ^5.2.1
+        version: 5.2.1
 
   packages/phantom:
     dependencies:
@@ -1900,21 +1909,6 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - encoding
-      - utf-8-validate
-    dev: false
-
-  /@solana-suite/storage@0.6.5(node-fetch@3.3.2):
-    resolution: {integrity: sha512-A/P7FTOpNnZjtp4p+yPyfSqv2IiQWUDuHIiwK9U26pKznBfhLgeFVFqCv6U4CguEfu662zGEAoz3mCwe9K4W7A==}
-    engines: {node: '>=16.*'}
-    dependencies:
-      '@metaplex-foundation/js': 0.18.0
-      '@solana-suite/shared-metaplex': 0.6.5
-      nft.storage: 7.1.1(node-fetch@3.3.2)
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - node-fetch
-      - supports-color
       - utf-8-validate
     dev: false
 

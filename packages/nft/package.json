@@ -2,9 +2,9 @@
   "name": "@solana-suite/nft",
   "version": "0.6.5",
   "description": "nft module for solana-suite",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/cjs/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "keywords": [
     "api",
     "blockchain",
@@ -20,7 +20,7 @@
     "dist"
   ],
   "license": "MIT",
-  "author": "Akira Takachi <a.takachi@atonoy.co>",
+  "author": "fukaoi <usapyon2022@gmail.com>",
   "homepage": "https://atonoy.github.io/solana-suite",
   "repository": {
     "type": "git",
@@ -33,16 +33,19 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf dist/ node_modules/",
-    "compile": "tsc -p tsconfig.json",
-    "compile:esm": "tsc -p tsconfig.esm.json",
-    "test": "mocha -t 300000 --require ts-node/register -- ",
-    "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
+    "build": "tsup --config build-config/tsup/base-extend.ts",
+    "clean": "rm -rf dist/ && rm -rf node_modules",
+    "test": "jest -c node_modules/build-config/jest/base.ts --rootDir .",
+    "lint": "eslint -c node_modules/build-config/eslint/base.json ./src/*",
+    "style:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
     "@metaplex-foundation/js": "0.19.1",
-    "@solana-suite/core": "latest",
-    "@solana-suite/storage": "latest",
-    "@solana-suite/shared-metaplex": "latest"
+    "@metaplex-foundation/mpl-token-metadata": "^2.9.1",
+    "@solana-suite/core": "*",
+    "@solana-suite/shared": "*",
+    "@solana/spl-token": "^0.3.8",
+    "@solana/web3.js": "^1.73.2",
+    "bn.js": "^5.2.1"
   }
 }

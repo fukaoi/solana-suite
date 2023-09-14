@@ -26,7 +26,7 @@ import {
   Try,
 } from '@solana-suite/shared';
 
-import { Storage } from '@solana-suite/storage';
+import { Storage } from 'internal/storage';
 
 import {
   Convert,
@@ -34,7 +34,7 @@ import {
   Royalty,
   UserSideInput,
   Validator,
-} from '@solana-suite/shared-metaplex';
+} from 'internal/shared-metaplex';
 
 import {
   createCreateMasterEditionV3Instruction,
@@ -47,7 +47,7 @@ export namespace Metaplex {
   export const createDeleagateInstruction = (
     mint: PublicKey,
     owner: PublicKey,
-    delegateAuthority: PublicKey
+    delegateAuthority: PublicKey,
   ): TransactionInstruction => {
     const tokenAccount = getAssociatedTokenAddressSync(mint, owner);
 
@@ -55,7 +55,7 @@ export namespace Metaplex {
       tokenAccount,
       delegateAuthority,
       owner,
-      NFT_AMOUNT
+      NFT_AMOUNT,
     );
   };
 
@@ -64,7 +64,7 @@ export namespace Metaplex {
     owner: PublicKey,
     nftMetadata: DataV2,
     feePayer: PublicKey,
-    isMutable: boolean
+    isMutable: boolean,
   ): Promise<TransactionInstruction[]> => {
     const ata = getAssociatedTokenAddressSync(mint, owner);
     const tokenMetadataPubkey = Pda.getMetadata(mint.toString());
@@ -85,7 +85,7 @@ export namespace Metaplex {
       feePayer,
       ata,
       owner,
-      mint
+      mint,
     );
 
     const inst4 = createMintToCheckedInstruction(mint, ata, owner, 1, 0);
@@ -104,7 +104,7 @@ export namespace Metaplex {
           isMutable,
           collectionDetails: { __kind: 'V1', size: new BN(1) },
         },
-      }
+      },
     );
 
     const inst6 = createCreateMasterEditionV3Instruction(
@@ -120,7 +120,7 @@ export namespace Metaplex {
         createMasterEditionArgs: {
           maxSupply: 0,
         },
-      }
+      },
     );
     return [inst1, inst2, inst3, inst4, inst5, inst6];
   };
@@ -156,7 +156,7 @@ export namespace Metaplex {
     signer: Secret,
     input: UserSideInput.NftMetadata,
     feePayer?: Secret,
-    freezeAuthority?: Pubkey
+    freezeAuthority?: Pubkey,
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
@@ -173,7 +173,7 @@ export namespace Metaplex {
           input.properties,
           Storage.uploadContent,
           input.storageType,
-          payer
+          payer,
         );
       } else if (input.properties && !input.storageType) {
         throw Error('Must set storageType if will use properties');
@@ -188,7 +188,7 @@ export namespace Metaplex {
       const sellerFeeBasisPoints = Royalty.convert(input.royalty);
       const nftStorageMetadata = Storage.toConvertOffchaindata(
         input,
-        sellerFeeBasisPoints
+        sellerFeeBasisPoints,
       );
 
       // created at by unix timestamp
@@ -201,7 +201,7 @@ export namespace Metaplex {
           nftStorageMetadata,
           input.filePath,
           input.storageType,
-          payer
+          payer,
         );
         debugLog('# upload content url: ', uploaded);
         if (uploaded.isErr) {
@@ -217,7 +217,7 @@ export namespace Metaplex {
       let datav2 = Convert.NftMetadata.intoInfraSide(
         input,
         uri,
-        sellerFeeBasisPoints
+        sellerFeeBasisPoints,
       );
 
       //--- collection ---
@@ -240,7 +240,7 @@ export namespace Metaplex {
         owner.toPublicKey(),
         datav2,
         payer.toKeypair().publicKey,
-        isMutable
+        isMutable,
       );
 
       // freezeAuthority
@@ -249,8 +249,8 @@ export namespace Metaplex {
           createDeleagateInstruction(
             mint.toPublicKey(),
             owner.toPublicKey(),
-            freezeAuthority.toPublicKey()
-          )
+            freezeAuthority.toPublicKey(),
+          ),
         );
       }
 
@@ -258,7 +258,7 @@ export namespace Metaplex {
         insts,
         [signer.toKeypair(), mint.toKeypair()],
         payer.toKeypair(),
-        mint.pubkey
+        mint.pubkey,
       );
     });
   };

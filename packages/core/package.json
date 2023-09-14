@@ -20,7 +20,7 @@
     "dist"
   ],
   "license": "MIT",
-  "author": "Akira Takachi <a.takachi@atonoy.co>",
+  "author": "fukaoi <usapyon2022@gmail.com>",
   "homepage": "https://atonoy.github.io/solana-suite",
   "repository": {
     "type": "git",
@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^2.9.1",
-    "@solana-suite/shared": "^0.6.5",
+    "@solana-suite/shared": "*",
     "@solana/buffer-layout": "^4.0.1",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.73.2",
