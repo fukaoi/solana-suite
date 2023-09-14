@@ -1,8 +1,10 @@
 {
-  "extends": "../../tsconfig.build.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "build-config/tsconfig/base.json",
+
+  "display": "@solana-suite/shared",
   "compilerOptions": {
-    "outDir": "./dist/cjs/"
   },
-  "include": ["src/**/*.ts"],
-  "lib": ["DOM", "ESNext"]
+  "include": ["**/*.ts"],
+  "exclude": ["**/*.test.ts", "node_modules", "dist"]
 }

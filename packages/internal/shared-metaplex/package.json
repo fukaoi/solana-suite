@@ -9,15 +9,17 @@
     "style:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
-    "@solana/web3.js": "^1.73.2",
     "@metaplex-foundation/mpl-token-metadata": "^2.9.1",
-    "@solana-suite/shared": "latest"
+    "@solana-suite/shared": "workspace:^",
+    "@solana/web3.js": "^1.73.2",
+    "bn.js": "^5.2.1"
   },
   "devDependencies": {
-    "build-config/tsconfig": "workspace:*",
-    "build-config/jest": "workspace:*",
-    "build-config/tsup": "workspace:*",
+    "@types/bn.js": "^5.1.1",
     "build-config/eslint": "workspace:*",
-    "build-config/prettier": "workspace:*"
+    "build-config/jest": "workspace:*",
+    "build-config/prettier": "workspace:*",
+    "build-config/tsconfig": "workspace:*",
+    "build-config/tsup": "workspace:*"
   }
 }

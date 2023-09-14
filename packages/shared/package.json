@@ -35,14 +35,21 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf dist/ node_modules/",
-    "compile": "tsc -p tsconfig.json",
-    "compile:esm": "tsc -p tsconfig.esm.json",
-    "test": "mocha -t 300000 --require ts-node/register -- ",
-    "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
+    "build": "tsup --config build-config/tsup/base.ts",
+    "clean": "rm -rf dist/ && rm -rf node_modules",
+    "test": "jest -c node_modules/build-config/jest/base.ts --rootDir .",
+    "lint": "eslint -c node_modules/build-config/eslint/base.json ./src/*",
+    "style:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
     "@solana/web3.js": "^1.73.2",
     "commander": "9.3.0"
+  },
+  "devDependencies": {
+    "build-config/eslint": "workspace:*",
+    "build-config/jest": "workspace:*",
+    "build-config/prettier": "workspace:*",
+    "build-config/tsconfig": "workspace:*",
+    "build-config/tsup": "workspace:*"
   }
 }
