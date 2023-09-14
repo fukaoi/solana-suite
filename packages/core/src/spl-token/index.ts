@@ -8,14 +8,15 @@ import { SplToken as Mint } from './mint';
 import { SplToken as Thaw } from './thaw';
 import { SplToken as Transfer } from './transfer';
 
-export const SplToken = {
-  ...Add,
-  ...Burn,
-  ...Find,
-  ...Freeze,
-  ...FeePayer,
-  ...History,
-  ...Mint,
-  ...Thaw,
-  ...Transfer,
-};
+export const SplToken = Object.assign(
+  {},
+  Add,
+  Burn,
+  Find,
+  Freeze,
+  FeePayer,
+  History,
+  Mint,
+  Thaw,
+  Transfer,
+);

@@ -4,10 +4,11 @@ import { SolNative as History } from './history';
 import { SolNative as Transfer } from './transfer';
 import { SolNative as TransferWithMultisig } from './transfer-with-multisig';
 
-export const SolNative = {
-  ...Find,
-  ...FeePayer,
-  ...History,
-  ...Transfer,
-  ...TransferWithMultisig,
-};
+export const SolNative = Object.assign(
+  {},
+  Find,
+  FeePayer,
+  History,
+  Transfer,
+  TransferWithMultisig,
+);

@@ -1,4 +1,4 @@
-import { UserSideOutput as SharendMetaplex } from '@solana-suite/shared-metaplex';
+import { UserSideOutput as SharendMetaplex } from 'internal/shared-metaplex';
 import { UserSideOutput as Internal } from './user-side/output';
 
 export * from './find';

@@ -1,4 +1,4 @@
-import { UserSideOutput } from "@solana-suite/shared-metaplex";
+import { UserSideOutput } from "internal/shared-metaplex";
 
 export enum Sortable {
   Asc = 'asc',
