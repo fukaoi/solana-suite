@@ -6,8 +6,10 @@ export default defineConfig({
   },
   format: ['cjs', 'esm'],
   tsconfig: './tsconfig.json',
-  splitting: false,
+  splitting: true,
   sourcemap: 'inline',
   clean: true,
   dts: true,
+  // minify: true,
+  bundle: false
 });
