@@ -1,5 +1,5 @@
 {
-  "name": "ts-config",
+  "name": "config-tsup",
   "private": true,
   "devDependencies": {}
 }

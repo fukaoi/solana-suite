@@ -1,5 +1,5 @@
 {
-  "name": "storage",
+  "name": "internal-storage",
   "private": true,
   "scripts": {},
   "dependencies": {
@@ -8,11 +8,11 @@
     "shared-metaplex": "latest"
   },
   "devDependencies": {
-    "ts-config": "workspace:*",
-    "jest-config": "workspace:*",
-    "tsup-config": "workspace:*",
-    "eslint-config": "workspace:*",
-    "prettier-config": "workspace:*"
+    "config-ts": "workspace:*",
+    "config-jest": "workspace:*",
+    "config-tsup": "workspace:*",
+    "config-eslint": "workspace:*",
+    "config-prettier": "workspace:*"
   },
   "browser": {
     "fs": false

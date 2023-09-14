@@ -1,5 +1,5 @@
 {
-  "name": "eslint-config",
+  "name": "config-eslint",
   "private": true,
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.7.0",

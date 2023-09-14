@@ -1,0 +1,16 @@
+{
+  "name": "internal-shared-metaplex",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^2.9.1",
+    "@solana-suite/shared": "latest"
+  },
+  "devDependencies": {
+    "config-ts": "workspace:*",
+    "config-jest": "workspace:*",
+    "config-tsup": "workspace:*",
+    "config-eslint": "workspace:*",
+    "config-prettier": "workspace:*"
+  }
+}
