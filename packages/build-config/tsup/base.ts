@@ -1,14 +1,13 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from 'tsup';
 
 export default defineConfig({
   entry: {
-    index: "src/index.ts",
-    // "internal/shared-metaplex": "../internal/shared-metaplex/src/index.ts",
+    index: 'src/index.ts',
   },
-  format: ["cjs", "esm"],
-  tsconfig: "./tsconfig.json",
+  format: ['cjs', 'esm'],
+  tsconfig: './tsconfig.json',
   splitting: false,
-  sourcemap: "inline",
+  sourcemap: 'inline',
   clean: true,
   dts: true,
 });

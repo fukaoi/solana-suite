@@ -12,7 +12,7 @@ import {
   Secret,
   Try,
 } from '@solana-suite/shared';
-import { FileContent, InfraSideInput } from '../../shared-metaplex/';
+import { FileContent, InfraSideInput } from 'internal/shared-metaplex/';
 import { Bundlr } from './bundlr';
 
 export interface MetaplexFileOptions {

@@ -2,9 +2,9 @@
   "name": "@solana-suite/shared",
   "version": "0.6.5",
   "description": "shared module for solana-suite",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/cjs/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "keywords": [
     "api",
     "blockchain",
