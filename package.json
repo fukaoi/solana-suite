@@ -24,5 +24,6 @@
   "packageManager": "pnpm@8.5.1",
   "engines": {
     "npm": "Only pnpm"
-  }
+  },
+  "version": "0.0.1"
 }
