@@ -1,8 +1,11 @@
 import { defineConfig } from 'tsup';
 
+const env = process.env.NODE_ENV;
+
 export default defineConfig({
   entry: {
-    index: 'src/index.ts',
+    // index: 'src/index.ts',
+    index: 'src/**/*.ts',
   },
   format: ['cjs', 'esm'],
   tsconfig: './tsconfig.json',
@@ -10,6 +13,8 @@ export default defineConfig({
   sourcemap: 'inline',
   clean: true,
   dts: true,
-  // minify: true,
-  bundle: false
+  skipNodeModulesBundle: true,
+  minify: env === 'production',
+  // watch: env !== 'production',
+  // bundle: env === 'production',
 });
