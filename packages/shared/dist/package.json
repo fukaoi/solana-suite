@@ -1,0 +1,50 @@
+{
+  "name": "@solana-suite/shared",
+  "version": "0.6.5",
+  "description": "shared module for solana-suite",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "api",
+    "blockchain",
+    "solana",
+    "sdk",
+    "web3.js",
+    "nft"
+  ],
+  "engines": {
+    "node": ">=16.*"
+  },
+  "files": [
+    "dist",
+    "solana-suite-config.js",
+    "package.json"
+  ],
+  "license": "MIT",
+  "author": "Akira Takachi <a.takachi@atonoy.co>",
+  "homepage": "https://atonoy.github.io/solana-suite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atonoy/solana-suite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/atonoy/solana-suite/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup --config build-config/tsup/base.ts",
+    "clean": "rm -rf dist/ && rm -rf node_modules",
+    "test": "jest -c node_modules/build-config/jest/base.ts --rootDir .",
+    "lint": "eslint -c node_modules/build-config/eslint/base.json ./src/*",
+    "style:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.73.2",
+    "bignumber.js": "^9.1.2",
+    "bs58": "^5.0.0",
+    "commander": "9.3.0"
+  }
+}
