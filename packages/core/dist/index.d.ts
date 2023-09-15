@@ -1,9 +1,7 @@
 import { Pubkey, Result, Secret, Instruction } from '@solana-suite/shared';
 import { TransactionInstruction, PublicKey } from '@solana/web3.js';
-import { U as UserSideOutput$1 } from './index.d-b3d5ad75.js';
+import { UserSideOutput as UserSideOutput$1 } from 'internal/shared-metaplex';
 import { LayoutObject } from '@solana/buffer-layout';
-import 'bn.js';
-import '@metaplex-foundation/mpl-token-metadata';
 
 declare namespace Airdrop {
     const request: (pubkey: Pubkey, airdropAmount?: number) => Promise<Result<string, Error>>;

@@ -1,9 +1,8 @@
 import { Currency, Metaplex, BundlrStorageDriver } from '@metaplex-foundation/js';
 import { Secret, Result } from '@solana-suite/shared';
-import { F as FileContent, I as InfraSideInput, a as UserSideInput, S as StorageType } from '../index.d-b3d5ad75.js';
+import { FileContent, InfraSideInput } from 'internal/shared-metaplex/';
 import { Keypair, PublicKey } from '@solana/web3.js';
-import 'bn.js';
-import '@metaplex-foundation/mpl-token-metadata';
+import { FileContent as FileContent$1, InfraSideInput as InfraSideInput$1, UserSideInput, StorageType } from 'internal/shared-metaplex';
 
 interface MetaplexFileOptions {
     readonly displayName: string;
@@ -35,7 +34,7 @@ declare namespace Bundlr {
 }
 
 declare namespace NftStorage {
-    const uploadContent: (filePath: FileContent) => Promise<Result<string, Error>>;
+    const uploadContent: (filePath: FileContent$1) => Promise<Result<string, Error>>;
     /**
      * Upload content
      *
@@ -54,13 +53,13 @@ declare namespace NftStorage {
      * }
      * @return Promise<Result<string, Error>>
      */
-    const uploadMetadata: (metadata: InfraSideInput.Offchain) => Promise<Result<string, Error>>;
+    const uploadMetadata: (metadata: InfraSideInput$1.Offchain) => Promise<Result<string, Error>>;
 }
 
 declare namespace Storage {
-    const toConvertOffchaindata: (input: UserSideInput.NftMetadata, sellerFeeBasisPoints: number) => InfraSideInput.Offchain;
-    const uploadContent: (filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
-    const uploadMetaAndContent: (input: InfraSideInput.Offchain, filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const toConvertOffchaindata: (input: UserSideInput.NftMetadata, sellerFeeBasisPoints: number) => InfraSideInput$1.Offchain;
+    const uploadContent: (filePath: FileContent$1, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const uploadMetaAndContent: (input: InfraSideInput$1.Offchain, filePath: FileContent$1, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
 }
 
 export { Arweave, Bundlr, MetaplexFileOptions, NftStorage, Storage };

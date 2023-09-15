@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@metaplex-foundation/js": "0.18.0",
+    "internal/shared-metaplex": "workspace:^",
     "@solana-suite/shared": "workspace:^",
     "nft.storage": "^7.1.1"
   },

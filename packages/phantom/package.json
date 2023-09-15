@@ -40,9 +40,9 @@
     "style:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
-    "@solana-suite/shared": "*",
-    "@solana-suite/core": "*",
-    "@solana-suite/nft": "*",
+    "@solana-suite/shared": "workspace:^",
+    "@solana-suite/core": "workspace:^",
+    "@solana-suite/nft": "workspace:^",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.73.2"
   }

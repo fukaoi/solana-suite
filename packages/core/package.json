@@ -40,8 +40,10 @@
     "style:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
+    "internal/shared-metaplex": "workspace:^",
+    "internal/storage": "workspace:^",
+    "@solana-suite/shared": "workspace:^",
     "@metaplex-foundation/mpl-token-metadata": "^2.9.1",
-    "@solana-suite/shared": "*",
     "@solana/buffer-layout": "^4.0.1",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.73.2",

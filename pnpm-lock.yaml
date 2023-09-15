@@ -108,7 +108,7 @@ importers:
         specifier: ^2.9.1
         version: 2.13.0
       '@solana-suite/shared':
-        specifier: '*'
+        specifier: workspace:^
         version: link:../shared
       '@solana/buffer-layout':
         specifier: ^4.0.1
@@ -125,6 +125,12 @@ importers:
       cross-fetch:
         specifier: ^4.0.0
         version: 4.0.0
+      internal/shared-metaplex:
+        specifier: workspace:^
+        version: link:../internal/shared-metaplex
+      internal/storage:
+        specifier: workspace:^
+        version: link:../internal/storage
 
   packages/internal/shared-metaplex:
     dependencies:
@@ -153,6 +159,9 @@ importers:
       '@solana-suite/shared':
         specifier: workspace:^
         version: link:../../shared
+      internal/shared-metaplex:
+        specifier: workspace:^
+        version: link:../shared-metaplex
       nft.storage:
         specifier: ^7.1.1
         version: 7.1.1(node-fetch@3.3.2)
@@ -166,10 +175,10 @@ importers:
         specifier: ^2.9.1
         version: 2.13.0
       '@solana-suite/core':
-        specifier: '*'
+        specifier: workspace:^
         version: link:../core
       '@solana-suite/shared':
-        specifier: '*'
+        specifier: workspace:^
         version: link:../shared
       '@solana/spl-token':
         specifier: ^0.3.8
@@ -184,13 +193,13 @@ importers:
   packages/phantom:
     dependencies:
       '@solana-suite/core':
-        specifier: '*'
+        specifier: workspace:^
         version: link:../core
       '@solana-suite/nft':
-        specifier: '*'
+        specifier: workspace:^
         version: link:../nft
       '@solana-suite/shared':
-        specifier: '*'
+        specifier: workspace:^
         version: link:../shared
       '@solana/spl-token':
         specifier: ^0.3.8
@@ -2081,7 +2090,7 @@ packages:
   /@types/graceful-fs@4.1.6:
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}
     dependencies:
-      '@types/node': 20.6.0
+      '@types/node': 16.11.7
     dev: true
 
   /@types/istanbul-lib-coverage@2.0.4:
