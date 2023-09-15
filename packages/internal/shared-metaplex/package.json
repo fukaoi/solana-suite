@@ -5,7 +5,7 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup --config build-config/tsup/internal.ts",
+    "build": "tsup --config build-config/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "test": "jest -c node_modules/build-config/jest/base.ts --rootDir .",
     "lint": "eslint -c node_modules/build-config/eslint/base.json ./src/*",
