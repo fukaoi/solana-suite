@@ -33,11 +33,11 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup --config build-config/tsup/publish.ts",
+    "build": "tsup --config build-configs/tsup/publish.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
-    "test": "jest -c node_modules/build-config/jest/base.ts --rootDir .",
-    "lint": "eslint -c node_modules/build-config/eslint/base.json ./src/*",
-    "style:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
+    "test": "jest -c node_modules/build-configs/jest/base.ts --rootDir .",
+    "lint": "eslint -c node_modules/build-configs/eslint/base.json ./src/*",
+    "style:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
     "@metaplex-foundation/js": "0.19.1",

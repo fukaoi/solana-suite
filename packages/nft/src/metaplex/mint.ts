@@ -26,7 +26,7 @@ import {
   Try,
 } from '@solana-suite/shared';
 
-import { Storage } from 'internal/storage';
+import { Storage } from 'internals/storage';
 
 import {
   Convert,
@@ -34,7 +34,7 @@ import {
   Royalty,
   UserSideInput,
   Validator,
-} from 'internal/shared-metaplex';
+} from 'internals/shared-metaplex';
 
 import {
   createCreateMasterEditionV3Instruction,

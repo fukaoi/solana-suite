@@ -1,10 +1,10 @@
 import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 
 import { debugLog, Node, Pubkey, Result, Try } from '@solana-suite/shared';
-import { Storage } from 'internal/storage';
+import { Storage } from 'internals/storage';
 import { SplToken } from '@solana-suite/core';
 import { Phantom } from '../types';
-import { Convert, UserSideInput } from 'internal/shared-metaplex';
+import { Convert, UserSideInput } from 'internals/shared-metaplex';
 
 export namespace PhantomSplToken {
   export const mint = async (

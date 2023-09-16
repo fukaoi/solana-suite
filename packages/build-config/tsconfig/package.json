@@ -1,6 +1,0 @@
-{
-  "name": "build-config/tsconfig",
-  "version": "0.0.0",
-  "private": true,
-  "devDependencies": {}
-}

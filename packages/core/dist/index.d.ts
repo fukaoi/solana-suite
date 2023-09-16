@@ -1,6 +1,6 @@
 import { Pubkey, Result, Secret, Instruction } from '@solana-suite/shared';
 import { TransactionInstruction, PublicKey } from '@solana/web3.js';
-import { UserSideOutput as UserSideOutput$1 } from 'internal/shared-metaplex';
+import { UserSideOutput as UserSideOutput$1 } from 'internals/shared-metaplex';
 import { LayoutObject } from '@solana/buffer-layout';
 
 declare namespace Airdrop {

@@ -14,7 +14,7 @@ import {
   UserSideInput,
   Validator,
   ValidatorError,
-} from 'internal/shared-metaplex';
+} from 'internals/shared-metaplex';
 import { Phantom } from '../types';
 
 export namespace PhantomMetaplex {
