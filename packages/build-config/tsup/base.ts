@@ -14,7 +14,7 @@ export default defineConfig({
   dts: true,
   skipNodeModulesBundle: true,
   minify: env === 'production',
-  onSuccess: 'cp package.json dist/',
+  // onSuccess: 'cp package.json dist/',
   // watch: env !== 'production',
   // bundle: env === 'production',
 });
