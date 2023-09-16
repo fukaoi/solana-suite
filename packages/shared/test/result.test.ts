@@ -1,4 +1,4 @@
-import { describe, it } from 'mocha';
+import { describe, it } from '@jest/globals';
 import { Result } from '../src/result';
 
 describe('Result', () => {

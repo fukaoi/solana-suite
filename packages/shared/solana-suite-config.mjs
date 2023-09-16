@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const { Command } = require('commander');
+import fs from 'fs';
+import { Command } from 'commander';
 const program = new Command();
 
 let cjs;
@@ -82,7 +82,7 @@ const showCurrentConfigFile = () => {
 
 const clearCache = () => {
   const dir = '../../node_modules/.cache';
-  if (fs.existsSync(dir)) {
+  if (dir !== undefined && fs.existsSync(dir)) {
     fs.rmdir(dir);
     showMessage(`# clear cache`);
   }
@@ -99,19 +99,19 @@ program
 program
   .option(
     '-c --cluster <cluster type>',
-    'connect to cluster type. "prd", "dev", "test", "localhost"'
+    'connect to cluster type. "prd", "dev", "test", "localhost"',
   )
   .option(
     '-cc --custom-cluster <cluster url...>',
-    'connect to cluster url. "https://...", if you set more than one url, please separate them with a space'
+    'connect to cluster url. "https://...", if you set more than one url, please separate them with a space',
   )
   .option(
     '-d --debug <true or false>',
-    'display debug log on terminal. defalut "false" '
+    'display debug log on terminal. defalut "false" ',
   )
   .option(
     '-n --nftstorage <apikey>',
-    'Set apikey of nft.storage. "eyJhbGciO..."'
+    'Set apikey of nft.storage. "eyJhbGciO..."',
   )
   .option('-s --show', 'Show value current solana-suite.json');
 
@@ -138,7 +138,7 @@ const execCluser = (type) => {
       break;
     default:
       warnMessage(
-        `No match parameter: need parameter is\n"prd", "dev", "test", "localhost", any one of them`
+        `No match parameter: need parameter is\n"prd", "dev", "test", "localhost", any one of them`,
       );
   }
   updateClusterConfigFile(convertedType);
@@ -152,7 +152,7 @@ const execCustomCluster = (url) => {
   url.forEach((element) => {
     if (!validation(element)) {
       warnMessage(
-        `Not found custom cluster url: ${element}. e.g: custom https://...`
+        `Not found custom cluster url: ${element}. e.g: custom https://...`,
       );
       process.exit(0);
     }
@@ -164,7 +164,7 @@ const execCustomCluster = (url) => {
 const execDebug = (bool) => {
   if (bool != 'true' && bool != 'false') {
     warnMessage(
-      `No match parameter: need parameter is "true", "false". any one of them`
+      `No match parameter: need parameter is "true", "false". any one of them`,
     );
     process.exit(0);
   }

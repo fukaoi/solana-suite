@@ -1,5 +1,4 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
+import { describe, expect, it } from '@jest/globals';
 import {
   Constants,
   debugLog,
@@ -21,35 +20,35 @@ const SIG =
 describe('Global', () => {
   it('Create explorer url by address', async () => {
     const res = PUBKEY.toExplorerUrl();
-    assert.isNotEmpty(res);
+    expect(res).toBeDefined();
   });
 
   it('[Mainnet-Beta]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.prd });
     const url = SIG.toExplorerUrl();
     const res = /mainnet-beta/.test(url);
-    assert.isTrue(res);
+    expect(res).toBe(true);
   });
 
   it('[Testnet]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.test });
     const url = SIG.toExplorerUrl();
     const res = /testnet/.test(url);
-    assert.isTrue(res);
+    expect(res).toBe(true);
   });
 
   it('[Devnet]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.dev });
     const url = SIG.toExplorerUrl();
     const res = /devnet/.test(url);
-    assert.isTrue(res);
+    expect(res).toBe(true);
   });
 
   it('[Devnet, localhost]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.localhost });
     const url = SIG.toExplorerUrl();
     const res = /devnet/.test(url);
-    assert.isTrue(res);
+    expect(res).toBe(true);
   });
 
   it('[Devnet, custom]Create explorer url', async () => {
@@ -61,40 +60,40 @@ describe('Global', () => {
     console.log('# update clsuter url: ', Node.getConnection().rpcEndpoint);
     const url = SIG.toExplorerUrl();
     const res = /devnet/.test(url);
-    assert.isTrue(res);
+    expect(res).toBe(true);
   });
 
   it('[SolanaFM]Create explorer url by address', async () => {
     const res = PUBKEY.toExplorerUrl(Explorer.SolanaFM);
-    assert.isNotEmpty(res);
+    expect(res).toBeDefined();
   });
 
   it('[SolanaFM][Mainnet-Beta]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.prd });
     const url = SIG.toExplorerUrl(Explorer.SolanaFM);
     const res = /mainnet-beta/.test(url);
-    assert.isTrue(res);
+    expect(res).toBe(true);
   });
 
   it('[SolanaFM][Testnet]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.test });
     const url = SIG.toExplorerUrl(Explorer.SolanaFM);
     const res = /testnet/.test(url);
-    assert.isTrue(res);
+    expect(res).toBe(true);
   });
 
   it('[SolanaFM][Devnet]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.dev });
     const url = SIG.toExplorerUrl(Explorer.SolanaFM);
     const res = /devnet/.test(url);
-    assert.isTrue(res);
+    expect(res).toBe(true);
   });
 
   it('[SolanaFM][Devnet, localhost]Create explorer url', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.localhost });
     const url = SIG.toExplorerUrl(Explorer.SolanaFM);
     const res = /devnet/.test(url);
-    assert.isTrue(res);
+    expect(res).toBe(true);
   });
 
   it('[SolanaFM][Devnet, custom]Create explorer url', async () => {
@@ -106,7 +105,7 @@ describe('Global', () => {
     console.log('# update clsuter url: ', Node.getConnection().rpcEndpoint);
     const url = SIG.toExplorerUrl(Explorer.SolanaFM);
     const res = /devnet/.test(url);
-    assert.isTrue(res);
+    expect(res).toBe(true);
   });
 
   it('debugLog', async () => {
@@ -117,7 +116,7 @@ describe('Global', () => {
   it('sleep', async () => {
     const id = setInterval(console.log, 990, 'sleep count');
     await sleep(3);
-    assert.isOk(id);
+    expect(id).toBeTruthy();
     clearInterval(id);
   });
 
@@ -125,35 +124,35 @@ describe('Global', () => {
     const jsdom = new JSDOM('<html></html>');
     // @ts-expect-error
     global.window = jsdom.window;
-    assert.isTrue(isBrowser());
+    expect(isBrowser()).toBe(true);
   });
 
   it('is Node', async () => {
-    assert.isTrue(isNode());
+    expect(isNode()).toBe(true);
   });
 
   it('to sol', async () => {
     const lamports = 100000;
     const res = lamports.toSol();
-    assert.equal(res, 0.0001);
+    expect(res).toEqual(0.0001);
   });
 
   it('to sol part2', async () => {
     const lamports = 0.02;
     const res = lamports.toSol();
-    assert.equal(res, 2e-11);
+    expect(res).toEqual(2e-11);
   });
 
   it('to lamports', async () => {
     const sol = 0.0001;
     const res = sol.toLamports();
-    assert.equal(res, 100000);
+    expect(res).toEqual(100000);
   });
 
   it('to lamports part2', async () => {
     const sol = 0.00000000000009;
     const res = sol.toLamports();
-    assert.equal(res, 0.00009);
+    expect(res).toEqual(0.00009);
   });
 
   it('Object overwrite', () => {
@@ -172,7 +171,7 @@ describe('Global', () => {
       },
     ];
     const res = overwriteObject(original, targets);
-    assert.deepEqual(res, {
+    expect(res).toEqual({
       word: targets[0].will.value,
       price: targets[1].will.value,
     });
@@ -199,7 +198,7 @@ describe('Global', () => {
     ];
 
     const res = overwriteObject(original, targets);
-    assert.deepEqual(res, { creators: value });
+    expect(res).toEqual({ creators: value });
   });
 
   it('promise isPromise()', () => {
@@ -211,19 +210,19 @@ describe('Global', () => {
         }, 2000);
       });
     const res = isPromise(promise());
-    assert.isTrue(res);
+    expect(res).toBe(true);
   });
 
   it('object isPromise()', () => {
     const res = isPromise({ test: 10 });
-    assert.isFalse(res);
+    expect(res).toBe(false);
   });
 
   it('throw isPromise()', () => {
     const res = isPromise(() => {
       throw Error('throw');
     });
-    assert.isFalse(res);
+    expect(res).toBe(false);
   });
 
   it('Result in try()', () => {
@@ -231,7 +230,7 @@ describe('Global', () => {
     const res = Try(() => {
       return mess;
     });
-    res.isOk && assert.equal(res.value, mess);
+    res.isOk && expect(res.value).toEqual(mess);
   });
 
   it('Call function that return Result type in try()', () => {
@@ -253,7 +252,7 @@ describe('Global', () => {
     const res = await Try(() => {
       throw Error(errorMess);
     });
-    res.isErr && assert.equal(res.error.message, errorMess);
+    res.isErr && expect(res.error.message).toEqual(errorMess);
   });
 
   it('Catch string in Try()', async () => {
@@ -261,7 +260,7 @@ describe('Global', () => {
     const res2 = await Try(() => {
       throw errorMess2;
     });
-    res2.isErr && assert.equal(res2.error.message, errorMess2);
+    res2.isErr && expect(res2.error.message).toEqual(errorMess2);
   });
 
   it('Promise Try()', async () => {
@@ -275,7 +274,7 @@ describe('Global', () => {
     const res = await Try(async () => {
       return await promise();
     });
-    res.isOk && assert.equal(res.value, mess);
+    res.isOk && expect(res.value).toEqual(mess);
   });
 
   it('Promise Try() with finally', async () => {
@@ -290,8 +289,8 @@ describe('Global', () => {
       async () => {
         return await promise();
       },
-      () => console.log('Step into finllaly logic')
+      () => console.log('Step into finllaly logic'),
     );
-    res.isOk && assert.equal(res.value, mess);
+    res.isOk && expect(res.value).toEqual(mess);
   });
 });
