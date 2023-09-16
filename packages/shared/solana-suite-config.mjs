@@ -1,21 +1,17 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
+import {
+  existsSync,
+  readFileSync,
+  rmdirSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
 import { Command } from 'commander';
 const program = new Command();
 
-let cjs;
-let CJS_JSON = './dist/cjs/solana-suite.json';
-let ESM_JSON = './dist/esm/solana-suite.json';
-
-////////////////////////////////////////////////////////////////
-// for debug
-////////////////////////////////////////////////////////////////
-
-if (process.env.NODE_ENV === 'standalone') {
-  CJS_JSON = './src/solana-suite.json';
-  ESM_JSON = './src/solana-suite.json';
-}
+let config;
+const JSON_PATH = './dist/solana-suite.json';
 
 ////////////////////////////////////////////////////////////////
 // local functions
@@ -23,12 +19,10 @@ if (process.env.NODE_ENV === 'standalone') {
 
 (() => {
   try {
-    fs.statSync(CJS_JSON);
-    fs.statSync(ESM_JSON);
-    JSON.stringify(require(CJS_JSON));
-    cjs = JSON.stringify(require(CJS_JSON));
+    statSync(JSON_PATH);
+    config = readFileSync(JSON_PATH).toString();
   } catch (e) {
-    console.error(e.message);
+    console.error('# Error dont read solana-suite-config.json', e.message);
     process.exit(0);
   }
 })();
@@ -38,52 +32,46 @@ const warnMessage = (mess) => console.error(mess);
 const showMessage = (mess) => console.log(mess);
 
 const updateConfigFile = (key, value) => {
-  const parsed = JSON.parse(cjs);
+  const parsed = JSON.parse(config);
   parsed[key] = value;
-  fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
-  fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
+  writeFileSync(JSON_PATH, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
 
 const updateClusterConfigFile = (type) => {
-  const parsed = JSON.parse(cjs);
+  const parsed = JSON.parse(config);
   parsed['cluster'].type = type;
-  fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
-  fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
+  writeFileSync(JSON_PATH, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
 
 const updateClusterUrlConfigFile = (customClusterUrl) => {
-  const parsed = JSON.parse(cjs);
+  const parsed = JSON.parse(config);
   parsed['cluster'].customClusterUrl = customClusterUrl;
-  fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
-  fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
+  writeFileSync(JSON_PATH, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
 
 const updateNftStorageConfigFile = (key, value) => {
-  const parsed = JSON.parse(cjs);
+  const parsed = JSON.parse(config);
   parsed.nftstorage[key] = value;
-  fs.writeFileSync(CJS_JSON, JSON.stringify(parsed));
-  fs.writeFileSync(ESM_JSON, JSON.stringify(parsed));
+  writeFileSync(JSON_PATH, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
 
 const showCurrentConfigFile = () => {
-  const cjs = fs.readFileSync(CJS_JSON);
-  const esm = fs.readFileSync(ESM_JSON);
+  const cjs = readFileSync(JSON_PATH);
   showMessage(`# Current cjs\n${cjs.toString()}\n`);
-  showMessage(`# Current esm\n${esm.toString()}\n`);
 };
 
 const clearCache = () => {
   const dir = '../../node_modules/.cache';
-  if (dir !== undefined && fs.existsSync(dir)) {
-    fs.rmdir(dir);
+  if (dir !== undefined && existsSync(dir)) {
+    rmdirSync(dir);
     showMessage(`# clear cache`);
   }
 };
@@ -158,6 +146,7 @@ const execCustomCluster = (url) => {
     }
   });
 
+  console.log('aaa url: ', url);
   updateClusterUrlConfigFile(url);
 };
 

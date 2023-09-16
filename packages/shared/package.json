@@ -35,7 +35,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup --config build-configs/tsup/base.ts",
+    "build": "tsup --config build-configs/tsup/base.ts && cp src/solana-suite.json dist/",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "test": "jest -c node_modules/build-configs/jest/base.ts --rootDir . -- ",
     "lint": "eslint -c node_modules/build-configs/eslint/base.json ./src/*",

@@ -8,7 +8,7 @@ describe('Constants', () => {
     console.log('# PWD: ', process.env.PWD);
     // add custom cluster url
     const buffer = execSync(
-      `NODE_ENV=standalone ./solana-suite-config.mjs -cc ${customClusterUrl.join(
+      `./solana-suite-config.mjs -cc ${customClusterUrl.join(
         ' ',
       )}`,
     );
@@ -17,7 +17,7 @@ describe('Constants', () => {
 
   afterAll(() => {
     // revert file
-    execSync('git checkout src/solana-suite.json');
+    execSync('git checkout dist/solana-suite.json');
   });
 
   it('Constants use multiple customUrls', async () => {
