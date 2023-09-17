@@ -30,7 +30,7 @@ describe('KeypairStr', () => {
 
   it('Create KeyPair Object', async () => {
     const obj = new KeypairAccount({ pubkey: PUBKEY, secret: SECRET });
-    expect(obj).toBeDefined()
+    expect(obj).toBeDefined();
   });
 
   it('is Pubkey', async () => {

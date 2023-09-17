@@ -29,7 +29,7 @@ export namespace Constants {
     customClusterUrl?: string[];
   }): string => {
     const { cluster: env, customClusterUrl } = param;
-    
+
     // if setted custom url, most priority
     if (customClusterUrl && customClusterUrl.length > 0) {
       const index = Date.now() % customClusterUrl.length;
@@ -68,13 +68,13 @@ export namespace Constants {
   };
 
   export const WRAPPED_TOKEN_PROGRAM_ID = new PublicKey(
-    'So11111111111111111111111111111111111111112'
+    'So11111111111111111111111111111111111111112',
   );
   export const MEMO_PROGRAM_ID = new PublicKey(
-    'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo'
+    'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo',
   );
   export const METAPLEX_PROGRAM_ID = new PublicKey(
-    'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'
+    'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
   );
   export const COMMITMENT: Commitment = 'confirmed';
   export const NFT_STORAGE_API_KEY =

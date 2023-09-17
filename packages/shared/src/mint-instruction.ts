@@ -15,7 +15,7 @@ export class MintInstruction extends Instruction {
     instructions: TransactionInstruction[],
     signers: Keypair[],
     feePayer?: Keypair,
-    data?: unknown
+    data?: unknown,
   ) {
     super(instructions, signers, feePayer, data);
   }
@@ -51,7 +51,7 @@ export class MintInstruction extends Instruction {
         Node.getConnection(),
         transaction,
         finalSigners,
-        options
+        options,
       );
     });
   };

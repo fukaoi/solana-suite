@@ -17,7 +17,7 @@ export class Instruction {
       if (!a.instructions && !a.signers) {
         throw Error(
           `only Instruction object that can use batchSubmit().
-            Index: ${i}, Set value: ${JSON.stringify(a)}`
+            Index: ${i}, Set value: ${JSON.stringify(a)}`,
         );
       }
       i++;
@@ -47,7 +47,7 @@ export class Instruction {
       Node.getConnection(),
       transaction,
       finalSigners,
-      options
+      options,
     );
   };
 }

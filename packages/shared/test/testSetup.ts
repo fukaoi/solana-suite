@@ -49,7 +49,7 @@ export namespace Setup {
     console.log('Now airdropping...please wait');
     const sig = await Node.getConnection().requestAirdrop(
       pubkey,
-      LAMPORTS_PER_SOL
+      LAMPORTS_PER_SOL,
     );
     await Node.confirmedSig(sig);
     console.log('Confirmed !!');

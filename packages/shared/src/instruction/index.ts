@@ -20,7 +20,7 @@ export class Instruction {
     instructions: TransactionInstruction[],
     signers: Keypair[],
     feePayer?: Keypair,
-    data?: unknown
+    data?: unknown,
   ) {
     this.instructions = instructions;
     this.signers = signers;
@@ -55,7 +55,7 @@ export class Instruction {
         Node.getConnection(),
         transaction,
         finalSigners,
-        options
+        options,
       );
     });
   };

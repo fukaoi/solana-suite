@@ -8,9 +8,7 @@ describe('Constants', () => {
     console.log('# PWD: ', process.env.PWD);
     // add custom cluster url
     const buffer = execSync(
-      `./solana-suite-config.mjs -cc ${customClusterUrl.join(
-        ' ',
-      )}`,
+      `./solana-suite-config.mjs -cc ${customClusterUrl.join(' ')}`,
     );
     console.log('# buffer: ', buffer.toString());
   });

@@ -20,7 +20,7 @@ export class PartialSignInstruction {
   }
 
   submit = async (
-    feePayer: Secret
+    feePayer: Secret,
   ): Promise<Result<TransactionSignature, Error>> => {
     return Try(async () => {
       if (!(this instanceof PartialSignInstruction)) {
@@ -37,7 +37,7 @@ export class PartialSignInstruction {
       const wireTransaction = transactionFromJson.serialize();
       return await Node.getConnection().sendRawTransaction(
         wireTransaction,
-        options
+        options,
       );
     });
   };

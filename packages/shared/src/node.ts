@@ -15,7 +15,7 @@ export namespace Node {
     debugLog('# [Before] setted:', setted);
     debugLog(
       '# [Before] Constants.customClusterUrl:',
-      Constants.customClusterUrl
+      Constants.customClusterUrl,
     );
 
     if (setted.customClusterUrl.length > 0) {
@@ -71,14 +71,14 @@ export namespace Node {
       setted.customClusterUrl = customClusterUrl;
       debugLog(
         '# Node change cluster, custom cluster url: ',
-        setted.clusterUrl
+        setted.clusterUrl,
       );
     }
   };
 
   export const confirmedSig = async (
     signature: string,
-    commitment: Commitment = Constants.COMMITMENT
+    commitment: Commitment = Constants.COMMITMENT,
   ) => {
     const connection = Node.getConnection();
     const latestBlockhash = await connection.getLatestBlockhash();
@@ -89,7 +89,7 @@ export namespace Node {
           lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
           signature,
         },
-        commitment
+        commitment,
       )
       .then(Result.ok)
       .catch(Result.err);

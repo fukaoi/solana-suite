@@ -37,7 +37,7 @@ describe('Result', () => {
       },
       (err) => {
         console.log(err);
-      }
+      },
     );
   });
 
@@ -49,7 +49,7 @@ describe('Result', () => {
       },
       (err) => {
         console.log(err.message);
-      }
+      },
     );
   });
 });
