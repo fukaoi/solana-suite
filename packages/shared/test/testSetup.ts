@@ -4,7 +4,7 @@ import { Keypair, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { Constants } from '../src/constants';
 import { Node, debugLog, KeypairAccount, Pubkey, Secret } from '../src/';
 
-console.log(`\u001b[33m === TEST START ===`);
+console.log('\u001b[33m === TEST START ===');
 console.log(`\u001b[33m solana-network: ${Constants.currentCluster}`);
 
 export namespace Setup {
@@ -26,10 +26,10 @@ export namespace Setup {
   };
 
   const log = (source: KeypairAccount, dest: KeypairAccount) => {
-    debugLog(`# source.pubkey:`, source.pubkey);
-    debugLog(`# source.secret: `, source.secret);
-    debugLog(`# destination.pubkey:`, dest.pubkey);
-    debugLog(`# destination.secret: `, dest.secret);
+    debugLog('# source.pubkey:', source.pubkey);
+    debugLog('# source.secret: ', source.secret);
+    debugLog('# destination.pubkey:', dest.pubkey);
+    debugLog('# destination.secret: ', dest.secret);
   };
 
   const fetchSourceAndDest = async () => {

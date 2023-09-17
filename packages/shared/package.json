@@ -38,8 +38,8 @@
     "build": "tsup --config build-configs/tsup/base.ts && cp src/solana-suite.json dist/",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "test": "jest -c node_modules/build-configs/jest/base.ts --rootDir . -- ",
-    "lint": "eslint -c node_modules/build-configs/eslint/base.json ./src/*",
-    "style:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
+    "lint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
+    "style:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix && prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
     "@solana/web3.js": "^1.78.5",
