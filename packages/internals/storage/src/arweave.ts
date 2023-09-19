@@ -13,7 +13,7 @@ import {
   Try,
 } from '@solana-suite/shared';
 import { FileContent, InfraSideInput } from 'internals/shared-metaplex/';
-import { Bundlr } from './bundlr';
+import { Bundlr } from '~/bundlr';
 
 export interface MetaplexFileOptions {
   readonly displayName: string;

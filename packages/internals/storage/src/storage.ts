@@ -6,13 +6,13 @@ import {
   UserSideInput,
 } from 'internals/shared-metaplex';
 
-import { Arweave } from './arweave';
-import { NftStorage } from './nft-storage';
+import { Arweave } from '~/arweave';
+import { NftStorage } from '~/nft-storage';
 
 export namespace Storage {
   export const toConvertOffchaindata = (
     input: UserSideInput.NftMetadata,
-    sellerFeeBasisPoints: number
+    sellerFeeBasisPoints: number,
   ): InfraSideInput.Offchain => {
     const data = {
       name: input.name,
@@ -31,7 +31,7 @@ export namespace Storage {
   export const uploadContent = async (
     filePath: FileContent,
     storageType: StorageType,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Promise<Result<string, Error>> => {
     if (storageType === 'arweave') {
       if (!feePayer) {
@@ -49,7 +49,7 @@ export namespace Storage {
     input: InfraSideInput.Offchain,
     filePath: FileContent,
     storageType: StorageType,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Promise<Result<string, Error>> => {
     let storage;
     if (storageType === 'arweave') {
@@ -65,7 +65,7 @@ export namespace Storage {
         },
         (err: Error) => {
           throw err;
-        }
+        },
       );
     } else if (storageType === 'nftStorage') {
       storage = await (
@@ -77,7 +77,7 @@ export namespace Storage {
         },
         (err: Error) => {
           throw err;
-        }
+        },
       );
     } else {
       throw Error('No match storageType');

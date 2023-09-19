@@ -24,7 +24,7 @@ export namespace NftStorage {
         your need to update nftStorage.apiKey define parameter in solana-suite.json.
         can get apiKey from https://nft.storage/
         --------------------------------------
-        `
+        `,
         );
         isDisplayWarning = true;
       }
@@ -40,7 +40,7 @@ export namespace NftStorage {
   const connect = () => new NFTStorage({ token: getNftStorageApiKey() });
 
   export const uploadContent = async (
-    filePath: FileContent
+    filePath: FileContent,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       debugLog('# upload content: ', filePath);
@@ -80,7 +80,7 @@ export namespace NftStorage {
    * @return Promise<Result<string, Error>>
    */
   export const uploadMetadata = async (
-    metadata: InfraSideInput.Offchain
+    metadata: InfraSideInput.Offchain,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       debugLog('# upload metadata: ', metadata);

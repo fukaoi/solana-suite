@@ -1,14 +1,13 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
-import { KeypairAccount } from '../../shared';
-import { Setup } from '../../shared/test/testSetup';
+import { beforeAll, describe, expect, it } from '@jest/globals';
+import { KeypairAccount } from '@solana-suite/shared';
+import { Setup } from '../../../shared/test/testSetup';
 import { RandomAsset } from './randomAsset';
-import { Arweave } from '../src/arweave';
+import { Arweave } from '~/arweave';
 
 let source: KeypairAccount;
 
 describe('StorageArweave', () => {
-  before(async () => {
+  beforeAll(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
   });
@@ -18,7 +17,7 @@ describe('StorageArweave', () => {
     const res = await Arweave.uploadContent(asset.filePath!, source.secret);
     res.match(
       (ok: string) => console.log('# arweave content upload url: ', ok),
-      (err: Error) => assert.fail(err.message)
+      (_: Error) => expect(false).toBe(true),
     );
   });
 
@@ -26,14 +25,14 @@ describe('StorageArweave', () => {
     const asset = RandomAsset.get();
     const res = await Arweave.uploadContent(asset.filePath!, source.secret, {
       displayName: 'NFT test image',
-      uniqueName: `randomAsset`,
+      uniqueName: 'randomAsset',
       contentType: 'image/jpeg',
       extension: 'jpg',
       tags: [{ name: 'demo', value: 'test' }],
     });
     res.match(
       (ok: string) => console.log('# arweave content upload url: ', ok),
-      (err: Error) => assert.fail(err.message)
+      (_: Error) => expect(false).toBe(true),
     );
   });
 
@@ -48,11 +47,11 @@ describe('StorageArweave', () => {
         image:
           'https://arweave.net/mVT6g3X99bZG0oMlTBB8fdbH7arnQ9lKWMUR9jMTXbQ',
       },
-      source.secret
+      source.secret,
     );
     res.match(
       (ok: string) => console.log('# arweave metadata url: ', ok),
-      (err: Error) => assert.fail(err.message)
+      (_: Error) => expect(false).toBe(true),
     );
   });
 
@@ -60,9 +59,9 @@ describe('StorageArweave', () => {
     const asset = RandomAsset.get();
     const res = await Arweave.getUploadPrice(asset.filePath!, source.secret);
     res.match(
-      (ok: { price: number; currency: any }) =>
+      (ok: { price: number; currency: string }) =>
         console.log('# upload cost, currency: ', ok.price, ok.currency),
-      (err: Error) => assert.fail(err.message)
+      (_: Error) => expect(false).toBe(true),
     );
   });
 });
