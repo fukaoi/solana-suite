@@ -1,4 +1,4 @@
-import { describe, it } from 'mocha';
+import { describe, expect, it } from '@jest/globals';
 import { Validator } from '~/validator';
 
 describe('Validator', () => {
@@ -22,7 +22,9 @@ describe('Validator', () => {
 
   it('[Error]isRoyalty: too big number', async () => {
     const res = Validator.isRoyalty(200);
-    expect(res.isErr && res.error.message).toContain(Validator.Message.BIG_NUMBER);
+    expect(res.isErr && res.error.message).toContain(
+      Validator.Message.BIG_NUMBER,
+    );
   });
 
   it('[Error]isRoyalty: empty value', async () => {
@@ -50,7 +52,9 @@ describe('Validator', () => {
 
   it('[Error]isSellerFeeBasisPoints: too big number', async () => {
     const res = Validator.isSellerFeeBasisPoints(20000);
-    expect(res.isErr && res.error.message).toContain(Validator.Message.BIG_NUMBER);
+    expect(res.isErr && res.error.message).toContain(
+      Validator.Message.BIG_NUMBER,
+    );
   });
 
   it('[Error]isSellerFeeBasisPoints: empty value', async () => {
@@ -65,9 +69,11 @@ describe('Validator', () => {
 
   it('[Error]isName: too long length', async () => {
     const res = Validator.isName(
-      'long-long-name-long-long-name-long-long-name'
+      'long-long-name-long-long-name-long-long-name',
     );
-    expect(res.isErr && res.error.message).toContain(Validator.Message.LONG_LENGTH);
+    expect(res.isErr && res.error.message).toContain(
+      Validator.Message.LONG_LENGTH,
+    );
   });
 
   it('[Error]isName: empty value', async () => {
@@ -82,7 +88,9 @@ describe('Validator', () => {
 
   it('[Error]isSymbol: too long length', async () => {
     const res = Validator.isSymbol('LONG-LONG-SYMBOL');
-    expect(res.isErr && res.error.message).toContain(Validator.Message.LONG_LENGTH);
+    expect(res.isErr && res.error.message).toContain(
+      Validator.Message.LONG_LENGTH,
+    );
   });
 
   it('[Error]isSymbol: empty value', async () => {
@@ -92,7 +100,7 @@ describe('Validator', () => {
 
   it('[Success]isImageUrl', async () => {
     const res = Validator.isImageUrl(
-      'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50'
+      'https://arweave.net/KYJ1UZ2X0WF9wake1YyiJXKxiek2B_lnuHtn5R1zD50',
     );
     expect(res.isOk).toBeTruthy();
   });
@@ -104,12 +112,16 @@ describe('Validator', () => {
 
   it('[Error]isImageUrl: invalid value', async () => {
     const res = Validator.isImageUrl('invalid url');
-    expect(res.isErr && res.error.message).toContain(Validator.Message.INVALID_URL);
+    expect(res.isErr && res.error.message).toContain(
+      Validator.Message.INVALID_URL,
+    );
   });
 
   it('[Error]isImageUrl: too long length', async () => {
     const res = Validator.isImageUrl(`https://example.com/${'x'.repeat(200)}`);
-    expect(res.isErr && res.error.message).toContain(Validator.Message.LONG_LENGTH);
+    expect(res.isErr && res.error.message).toContain(
+      Validator.Message.LONG_LENGTH,
+    );
   });
 
   it('[Success]checkAll', async () => {
@@ -138,7 +150,7 @@ describe('Validator', () => {
     const res = Validator.checkAll(data);
     res.match(
       (_) => expect(false).toBe(true),
-      (err) => console.log(err.details)
+      (err) => console.log(err.details),
     );
   });
 });
