@@ -1,7 +1,7 @@
-import { _Shared, Option } from '../shared';
+import { _Shared, Option } from '~/types/shared';
 import { Pubkey } from '@solana-suite/shared';
-import { InfraSideOutput } from '../infra-side/output';
-import { UserSideInput } from '../user-side/input';
+import { InfraSideOutput } from '~/types/infra-side/output';
+import { UserSideInput } from '~/types/user-side/input';
 
 export namespace UserSideOutput {
   export type Creators = UserSideInput.Creators;

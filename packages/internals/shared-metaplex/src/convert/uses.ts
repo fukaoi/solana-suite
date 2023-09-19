@@ -1,4 +1,4 @@
-import { InfraSideOutput, Option, UserSideOutput } from '../types';
+import { InfraSideOutput, Option, UserSideOutput } from '~/types';
 
 export namespace Convert {
   export namespace Uses {

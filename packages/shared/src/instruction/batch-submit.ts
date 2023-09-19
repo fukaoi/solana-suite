@@ -1,8 +1,8 @@
 import {
-  sendAndConfirmTransaction,
-  TransactionSignature,
-  Transaction,
   ConfirmOptions,
+  sendAndConfirmTransaction,
+  Transaction,
+  TransactionSignature,
 } from '@solana/web3.js';
 
 import { Node } from '~/node';

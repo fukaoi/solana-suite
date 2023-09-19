@@ -1,5 +1,5 @@
-import { StorageType } from '../../types';
-import { _Shared, bignum, FileContent } from '../shared';
+import { StorageType } from '~/types';
+import { _Shared, bignum, FileContent } from '~/types/shared';
 import { Pubkey } from '@solana-suite/shared';
 
 export namespace UserSideInput {

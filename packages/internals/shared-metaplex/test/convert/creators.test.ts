@@ -1,7 +1,6 @@
-import { describe, it } from 'mocha';
-import { KeypairAccount } from '../../../shared/';
-import { Convert } from '../../src/convert/creators';
-import { assert } from 'chai';
+import { describe, it } from '@jest/globals';
+import { KeypairAccount } from '@solana-suite/shared';
+import { Convert } from '~/convert/creators';
 
 describe('Convert.Creators', () => {
   it('To input convert', async () => {

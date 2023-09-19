@@ -1,4 +1,4 @@
-import { Convert as Collection } from './collection';
+import { Convert as Collection } from 'collection';
 import { Convert as Creators } from './creators';
 import { Convert as NftMetadata } from './nft-metadata';
 import { Convert as Properties } from './properties';

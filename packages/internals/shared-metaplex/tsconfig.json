@@ -4,7 +4,13 @@
 
   "display": "internals/shared-metaplex",
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~*": [
+        "./src/*"
+      ]
+    }
   },
   "include": ["**/*.ts"],
-  "exclude": ["**/*.test.ts", "node_modules", "dist"]
+  "exclude": ["node_modules", "dist"]
 }

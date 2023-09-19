@@ -7,7 +7,7 @@ import {
   InfraSideOutput,
   UserSideInput,
   UserSideOutput,
-} from '../types';
+} from '~/types';
 
 import { convertTimestampToDateTime } from '@solana-suite/shared';
 
