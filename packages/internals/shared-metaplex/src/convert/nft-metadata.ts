@@ -1,7 +1,7 @@
-import { Convert as _Collection } from './collection';
-import { Convert as _Creators } from './creators';
-import { Convert as _Uses } from './uses';
-import { Convert as _Token } from './token-metadata';
+import { Convert as _Collection } from '~/convert/collection';
+import { Convert as _Creators } from '~/convert/creators';
+import { Convert as _Uses } from '~/convert/uses';
+import { Convert as _Token } from '~/convert/token-metadata';
 import {
   InfraSideInput,
   InfraSideOutput,

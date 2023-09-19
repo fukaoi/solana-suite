@@ -1,5 +1,5 @@
 import { Result, Try } from '@solana-suite/shared';
-import { Royalty } from './royalty';
+import { Royalty } from '~/royalty';
 import { InfraSideInput, UserSideInput } from '~/types/';
 import { Details, Limit } from '~/types/validator';
 
@@ -22,7 +22,7 @@ export namespace Validator {
   export const ROYALTY_MIN = -1;
 
   export const isRoyalty = (
-    royalty: number
+    royalty: number,
   ): Result<string, ValidatorError> => {
     return Try(() => {
       const key = 'royalty';
@@ -45,7 +45,7 @@ export namespace Validator {
   };
 
   export const isSellerFeeBasisPoints = (
-    royalty: number
+    royalty: number,
   ): Result<string, ValidatorError> => {
     return Try(() => {
       const key = 'sellerFeeBasisPoints/seller_fee_basis_points';
@@ -103,9 +103,9 @@ export namespace Validator {
     isUriOrImage(image, 'image');
 
   export const checkAll = <
-    T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex
+    T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex,
   >(
-    metadata: T
+    metadata: T,
   ): Result<string, ValidatorError> => {
     return Try(() => {
       const keys = Object.keys(metadata);
@@ -179,7 +179,7 @@ export namespace Validator {
     key: string,
     message: string,
     actual: string | number,
-    limit?: Limit
+    limit?: Limit,
   ): ValidatorError => {
     let error: ValidatorError;
     if (limit) {
@@ -192,7 +192,7 @@ export namespace Validator {
 
   const isUriOrImage = (
     imageOrUri: string,
-    key: string
+    key: string,
   ): Result<string, ValidatorError> => {
     return Try(() => {
       if (!imageOrUri) {

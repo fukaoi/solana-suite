@@ -1,5 +1,5 @@
-import { Convert as _Creators } from './creators';
-import { Convert as _Uses } from './uses';
+import { Convert as _Creators } from '~/convert/creators';
+import { Convert as _Uses } from '~/convert/uses';
 import {
   InfraSideInput,
   InfraSideOutput,
