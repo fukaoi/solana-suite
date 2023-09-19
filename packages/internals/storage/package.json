@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "private": true,
   "scripts": {
-    "build": "tsup --config build-configs/tsup/internal.ts",
+    "build": "tsup --config build-configs/tsup/internals.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "test": "jest -c node_modules/build-configs/jest/base.ts --rootDir .",
     "lint": "eslint -c node_modules/build-configs/eslint/base.json ./src/*",

@@ -5,7 +5,11 @@ import { Pubkey } from '@solana-suite/shared';
 export namespace Pda {
   export const getMetadata = (mint: Pubkey): PublicKey => {
     const [publicKey] = PublicKey.findProgramAddressSync(
-      [Buffer.from('metadata'), PROGRAM_ID.toBuffer(), mint.toPublicKey().toBuffer()],
+      [
+        Buffer.from('metadata'),
+        PROGRAM_ID.toBuffer(),
+        mint.toPublicKey().toBuffer(),
+      ],
       PROGRAM_ID,
     );
     return publicKey;
