@@ -49,6 +49,7 @@ const updateClusterConfigFile = (type) => {
 
 const updateClusterUrlConfigFile = (customClusterUrl) => {
   const parsed = JSON.parse(config);
+  console.log('parsed: ', parsed, config);
   parsed['cluster'].customClusterUrl = customClusterUrl;
   writeFileSync(JSON_PATH, JSON.stringify(parsed));
   successMessage();
@@ -69,11 +70,11 @@ const showCurrentConfigFile = () => {
 };
 
 const clearCache = () => {
-  // const dir = '../../node_modules/.cache';
-  // if (dir !== undefined && existsSync(dir)) {
-  //   rmdirSync(dir);
-  //   showMessage(`# clear cache`);
-  // }
+  const dir = '../../node_modules/.cache';
+  if (dir !== undefined && existsSync(dir)) {
+    rmdirSync(dir, { recursive: true, force: true });
+    showMessage(`# clear cache`);
+  }
 };
 
 ////////////////////////////////////////////////////////////////
