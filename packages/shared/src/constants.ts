@@ -37,33 +37,33 @@ export namespace Constants {
     }
 
     switch (env) {
-      case Constants.Cluster.prd:
-        return Constants.EndPointUrl.prd;
-      case Constants.Cluster.prdMetaplex:
-        return Constants.EndPointUrl.prdMetaplex;
-      case Constants.Cluster.test:
-        return Constants.EndPointUrl.test;
-      case Constants.Cluster.dev:
-        return Constants.EndPointUrl.dev;
-      default:
-        return Constants.EndPointUrl.localhost;
+    case Constants.Cluster.prd:
+      return Constants.EndPointUrl.prd;
+    case Constants.Cluster.prdMetaplex:
+      return Constants.EndPointUrl.prdMetaplex;
+    case Constants.Cluster.test:
+      return Constants.EndPointUrl.test;
+    case Constants.Cluster.dev:
+      return Constants.EndPointUrl.dev;
+    default:
+      return Constants.EndPointUrl.localhost;
     }
   };
 
   export const switchBundlr = (env: string): string => {
     switch (env) {
-      case Constants.Cluster.dev:
-      case Constants.Cluster.test:
-      case Constants.Cluster.localhost:
-        return 'https://devnet.bundlr.network';
-      default: {
-        const index = Date.now() % 2;
-        const clusters = [
-          'https://node1.bundlr.network',
-          'https://node2.bundlr.network',
-        ];
-        return clusters[index];
-      }
+    case Constants.Cluster.dev:
+    case Constants.Cluster.test:
+    case Constants.Cluster.localhost:
+      return 'https://devnet.bundlr.network';
+    default: {
+      const index = Date.now() % 2;
+      const clusters = [
+        'https://node1.bundlr.network',
+        'https://node2.bundlr.network',
+      ];
+      return clusters[index];
+    }
     }
   };
 

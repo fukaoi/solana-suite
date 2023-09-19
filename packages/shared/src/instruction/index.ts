@@ -8,7 +8,7 @@ import {
 } from '@solana/web3.js';
 
 import { Node, Result, Try } from '~/index';
-import { MAX_RETRIES } from './define';
+import { MAX_RETRIES } from '~/instruction/define';
 
 export class Instruction {
   instructions: TransactionInstruction[];
