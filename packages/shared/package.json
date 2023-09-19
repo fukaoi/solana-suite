@@ -38,10 +38,12 @@
     "build": "tsup --config build-configs/tsup/base.ts && cp src/solana-suite.json dist/",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "test": "jest -c node_modules/build-configs/jest/base.ts --rootDir . -- ",
-    "lint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
-    "lint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
+    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
+    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
-    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
+    "style": "pnpm prettier && pnpm eslint",
+    "style:fix": "pnpm prettier:fix && pnpm eslint:fix"
   },
   "dependencies": {
     "@solana/web3.js": "^1.78.5",

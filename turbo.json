@@ -13,7 +13,7 @@
       "dependsOn": [
         "build",
         "test",
-        "lint"
+        "style"
       ]
     },
     "test": {
@@ -25,12 +25,7 @@
         "test/**/*.ts"
       ]
     },
-    "lint": {
-      "inputs": [
-        "src/**/*.ts"
-      ]
-    },
-    "style:fix": {},
+    "tyle": {},
     "clean": {},
     "dev": {
       "cache": false,
