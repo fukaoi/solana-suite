@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "private": true,
   "scripts": {
-    "build": "tsup --config build-configs/tsup/internals.ts",
+    "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "test": "jest -c node_modules/build-configs/jest/base.ts --rootDir .",
     "lint": "eslint -c node_modules/build-configs/eslint/base.json ./src/*",
@@ -17,6 +17,13 @@
     "internals/shared-metaplex": "workspace:^",
     "@solana-suite/shared": "workspace:^",
     "nft.storage": "^7.1.1"
+  },
+  "devDependencies": {
+    "build-configs/eslint": "workspace:*",
+    "build-configs/jest": "workspace:*",
+    "build-configs/prettier": "workspace:*",
+    "build-configs/tsconfig": "workspace:*",
+    "build-configs/tsup": "workspace:*"
   },
   "browser": {
     "fs": false

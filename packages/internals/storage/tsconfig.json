@@ -6,9 +6,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "internal/*": ["../*"]
+      "internal/*": ["../*"],
+      "~*": [
+        "./src/*"
+      ]
     }
   },
-  "include": ["**/*.ts"],
-  "exclude": ["**/*.test.ts", "node_modules", "dist"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
