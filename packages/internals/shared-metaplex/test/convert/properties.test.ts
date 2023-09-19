@@ -29,10 +29,11 @@ describe('Convert.Properties', () => {
 
     if (!output || !output.files) {
       expect(false).toBe(true);
+    } else {
+      output.files.forEach(async (file: _Shared.Properties) => {
+        console.log('# uploade content', file);
+        expect(file).not.toBeNull();
+      });
     }
-    output.files.forEach(async (file: _Shared.Properties) => {
-      console.log('# uploade content', file);
-      expect(file).not.toBeNull();
-    });
   });
 });

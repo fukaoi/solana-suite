@@ -1,4 +1,4 @@
-import { describe, it } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 import { KeypairAccount } from '@solana-suite/shared';
 import { Convert } from '~/convert/creators';
 
@@ -34,16 +34,14 @@ describe('Convert.Creators', () => {
     console.log('# converted creators', results);
     if (results) {
       results.forEach((res, i) => {
-        assert.equal(res.address.toString(), input[i].address);
-        assert.equal(res.share, input[i].share);
+        expect(res.address.toString()).toBe(input[i].address);
+        expect(res.share).toBe(input[i].share);
       });
-    } else {
-      assert.fail('`results` is null, empty');
     }
   });
 
   it('To un-define convert', async () => {
     const res = Convert.Creators.intoInfraSide([]);
-    assert.deepEqual(res, []);
+    expect(res).toStrictEqual([]);
   });
 });

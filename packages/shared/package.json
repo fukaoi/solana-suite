@@ -39,11 +39,9 @@
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "test": "jest -c node_modules/build-configs/jest/base.ts --rootDir . -- ",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
-    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
-    "style": "pnpm prettier && pnpm eslint",
-    "style:fix": "pnpm prettier:fix && pnpm eslint:fix"
+    "style": "pnpm prettier && pnpm eslint"
   },
   "dependencies": {
     "@solana/web3.js": "^1.78.5",
