@@ -350,6 +350,13 @@ declare class MintInstruction extends Instruction {
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
+declare class PartialSignInstruction {
+    hexInstruction: string;
+    data?: Pubkey;
+    constructor(instructions: string, mint?: Pubkey);
+    submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
+}
+
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -381,13 +388,6 @@ type OverwriteObject = {
 declare enum Explorer {
     Solscan = "solscan",
     SolanaFM = "solanafm"
-}
-
-declare class PartialSignInstruction {
-    hexInstruction: string;
-    data?: Pubkey;
-    constructor(instructions: string, mint?: Pubkey);
-    submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
 }
 
 export { AnyObject, Constants, Explorer, Instruction, KeypairAccount, MintInstruction, Node, OverwriteObject, PartialSignInstruction, Pubkey, Result, Secret, Try, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep };

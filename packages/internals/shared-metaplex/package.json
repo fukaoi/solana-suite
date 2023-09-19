@@ -6,7 +6,7 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup --config build-configs/tsup/base.ts",
+    "build": "tsup --config build-configs/tsup/internals.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "test": "jest -c node_modules/build-configs/jest/base.ts --rootDir . -- ",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
@@ -23,6 +23,13 @@
     "bn.js": "^5.2.1"
   },
   "devDependencies": {
-    "@types/bn.js": "^5.1.1"
+    "@types/bn.js": "^5.1.1",
+    "@types/jsdom": "^21.1.3",
+    "build-configs/eslint": "workspace:*",
+    "build-configs/jest": "workspace:*",
+    "build-configs/prettier": "workspace:*",
+    "build-configs/tsconfig": "workspace:*",
+    "build-configs/tsup": "workspace:*",
+    "jsdom": "^22.1.0"
   }
 }

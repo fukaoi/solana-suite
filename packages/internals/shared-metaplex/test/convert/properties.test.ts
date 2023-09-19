@@ -1,8 +1,7 @@
-import { describe, it } from 'mocha';
-import { Convert } from '../../src/convert/properties';
-import { UserSideInput } from '../../src/types';
-import { _Shared } from '../../src/types/';
-import { assert } from 'chai';
+import { describe, expect, it } from '@jest/globals';
+import { Convert } from '~/convert/properties';
+import { UserSideInput } from '~/types';
+import { _Shared } from '~/types/';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { Storage } from '../../../storage/src';
 
@@ -25,15 +24,15 @@ describe('Convert.Properties', () => {
     const output = await Convert.Properties.intoInfraSide(
       input,
       Storage.uploadContent,
-      'nftStorage'
+      'nftStorage',
     );
 
     if (!output || !output.files) {
-      assert.fail('Miss match output.files');
+      expect(false).toBe(true);
     }
     output.files.forEach(async (file: _Shared.Properties) => {
       console.log('# uploade content', file);
-      assert.isNotNull(file);
+      expect(file).not.toBeNull();
     });
   });
 });
