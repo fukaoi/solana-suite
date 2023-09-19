@@ -105,8 +105,8 @@ export namespace Validator {
   export const checkAll = <
     T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex,
   >(
-      metadata: T,
-    ): Result<string, ValidatorError> => {
+    metadata: T,
+  ): Result<string, ValidatorError> => {
     return Try(() => {
       const keys = Object.keys(metadata);
       const results: Details[] = [];
