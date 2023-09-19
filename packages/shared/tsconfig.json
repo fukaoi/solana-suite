@@ -6,9 +6,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "~/*": [
+      "~*": [
         "./src/*"
       ]
+      // "*": [
+      //   "./src/*"
+      // ]
     }
   },
   "include": ["**/*.ts"],

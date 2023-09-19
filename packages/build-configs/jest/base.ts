@@ -11,7 +11,7 @@ const config: Config = {
   },
   testTimeout: 30000,
   moduleNameMapper: {
-    '^~(.*)$': '../../$1/src/',
+    '^~/(.*)$': '<rootDir>/src/$1/',
   },
 };
 

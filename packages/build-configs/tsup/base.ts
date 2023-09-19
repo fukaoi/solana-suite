@@ -4,9 +4,7 @@ const env = process.env.NODE_ENV;
 
 export default defineConfig({
   entry: {
-    // index: 'src/index.ts',
-    index: 'src/*',
-    // '~/': 'src/',
+    index: 'src/index.ts',
   },
   format: ['cjs', 'esm'],
   tsconfig: './tsconfig.json',

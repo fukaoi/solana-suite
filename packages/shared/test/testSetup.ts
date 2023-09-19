@@ -1,8 +1,14 @@
 import fs from 'fs';
 import bs from 'bs58';
-import { Keypair, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { Constants } from '../src/constants';
-import { Node, debugLog, KeypairAccount, Pubkey, Secret } from '../src/';
+import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import {
+  Constants,
+  debugLog,
+  KeypairAccount,
+  Node,
+  Pubkey,
+  Secret,
+} from '~/index';
 
 console.log('\u001b[33m === TEST START ===');
 console.log(`\u001b[33m solana-network: ${Constants.currentCluster}`);

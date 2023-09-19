@@ -5,7 +5,7 @@ import {
   ConfirmOptions,
 } from '@solana/web3.js';
 
-import { Node } from '../';
+import { Node } from '~/node';
 import { MAX_RETRIES } from './define';
 import { Instruction as _Index } from './index';
 

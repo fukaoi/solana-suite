@@ -1,7 +1,7 @@
 // forked: https://github.com/badrap/result, thank you advice  @jviide
 
 import { TransactionSignature } from '@solana/web3.js';
-import { Instruction } from './instruction';
+import { Instruction } from '~/instruction';
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(

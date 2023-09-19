@@ -69,11 +69,11 @@ const showCurrentConfigFile = () => {
 };
 
 const clearCache = () => {
-  const dir = '../../node_modules/.cache';
-  if (dir !== undefined && existsSync(dir)) {
-    rmdirSync(dir);
-    showMessage(`# clear cache`);
-  }
+  // const dir = '../../node_modules/.cache';
+  // if (dir !== undefined && existsSync(dir)) {
+  //   rmdirSync(dir);
+  //   showMessage(`# clear cache`);
+  // }
 };
 
 ////////////////////////////////////////////////////////////////

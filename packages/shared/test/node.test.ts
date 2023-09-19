@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
-import { Node } from '../src/node';
-import { Constants } from '../src/constants';
+import { Node } from '~/node';
+import { Constants } from '~/constants';
 
 describe('Node', () => {
   it('Connect devnet', async () => {

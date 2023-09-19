@@ -1,8 +1,5 @@
-import { debugLog } from './global';
-import { Result } from './result';
-import { Constants } from './constants';
-
-import { Connection, Commitment } from '@solana/web3.js';
+import { Constants, debugLog, Result } from '~/index';
+import { Commitment, Connection } from '@solana/web3.js';
 
 export namespace Node {
   const setted = {
