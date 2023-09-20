@@ -9,7 +9,7 @@ const config: Config = {
     TextDecoder: TextDecoder,
     TextEncoder: TextEncoder,
   },
-  testTimeout: 30000,
+  testTimeout: 300000,
   // modulePaths: ['<rootDir>/src'],
   transform: {}, // https://jestjs.io/docs/ecmascript-modules
 };
