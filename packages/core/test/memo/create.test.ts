@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, beforeEach } from '@jest/globals';
+import { beforeAll, beforeEach, describe, expect, it } from '@jest/globals';
 import { Setup } from '../../../shared/test/testSetup';
 import { Memo, SolNative, SplToken } from '../../src';
 import { KeypairAccount, Node, Pubkey } from '../../../shared/src/';
@@ -97,7 +97,10 @@ describe('Memo', () => {
 
     (await [inst1, inst2].submit()).match(
       (ok) => console.log('# tx signature: ', ok),
-      (err) => expect(false).toBe(true),
+      (err) => {
+        console.log('# error: ', err);
+        expect(false).toBe(true);
+      },
     );
   });
 
