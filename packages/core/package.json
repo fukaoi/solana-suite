@@ -39,8 +39,7 @@
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
-    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
-    "style": "pnpm prettier && pnpm eslint"
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",

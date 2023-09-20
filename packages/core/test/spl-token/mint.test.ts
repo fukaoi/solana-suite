@@ -97,7 +97,7 @@ describe('SplToken', () => {
       (_: unknown) => expect(false).toBe(true),
       (err: Error) => {
         expect(err.message).toEqual(
-          'Must set \'storageType + filePath\' or \'uri\'',
+          "Must set 'storageType + filePath' or 'uri'",
         );
       },
     );

@@ -50,7 +50,7 @@ export namespace TransactionFilter {
         moduleName === ModuleName.SolNative
       ) {
         throw Error(
-          'This filterType(\'FilterType.Mint\') can not use from SolNative module',
+          "This filterType('FilterType.Mint') can not use from SolNative module",
         );
       }
 

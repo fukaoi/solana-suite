@@ -174,7 +174,7 @@ export namespace SplToken {
       } else if (input.uri) {
         uri = input.uri;
       } else {
-        throw Error('Must set \'storageType + filePath\' or \'uri\'');
+        throw Error("Must set 'storageType + filePath' or 'uri'");
       }
 
       const isMutable = true;

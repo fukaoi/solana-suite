@@ -13,7 +13,8 @@
       "dependsOn": [
         "build",
         "test",
-        "style"
+        "eslint",
+        "prettier"
       ]
     },
     "test": {
@@ -25,7 +26,6 @@
         "test/**/*.ts"
       ]
     },
-    "tyle": {},
     "clean": {},
     "dev": {
       "cache": false,
