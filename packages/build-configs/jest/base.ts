@@ -11,6 +11,7 @@ const config: Config = {
   },
   testTimeout: 30000,
   // modulePaths: ['<rootDir>/src'],
+  transform: {}, // https://jestjs.io/docs/ecmascript-modules
 };
 
 export default config;

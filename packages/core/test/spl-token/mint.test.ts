@@ -1,8 +1,7 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
+import { beforeAll, describe, expect, it } from '@jest/globals';
 import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/spl-token';
-import { RandomAsset } from '../../../storage/test/randomAsset';
+import { RandomAsset } from '../../../internals/storage/test/randomAsset';
 import { KeypairAccount } from '../../../shared/src/keypair-account';
 import { Pubkey } from '../../../shared';
 
@@ -13,7 +12,7 @@ const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
 
 describe('SplToken', () => {
-  before(async () => {
+  beforeAll(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
   });
@@ -32,14 +31,12 @@ describe('SplToken', () => {
       source.secret,
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
-      tokenMetadata
+      tokenMetadata,
     );
 
-    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
-    assert.isTrue(KeypairAccount.isPubkey(inst.unwrap().data as Pubkey));
+    expect(KeypairAccount.isPubkey(inst.unwrap().data as Pubkey)).toBe(true);
 
-    const res = await inst.submit();
-    assert.isTrue(res.isOk, res.unwrap());
+    await inst.submit();
     mintStr = inst.unwrap().data as string;
     console.log('# mint: ', mintStr);
   });
@@ -73,14 +70,12 @@ describe('SplToken', () => {
       MINT_DECIMAL,
       tokenMetadata,
       undefined,
-      freezeAuthority.pubkey
+      freezeAuthority.pubkey,
     );
 
-    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
-    assert.isTrue(KeypairAccount.isPubkey(inst.unwrap().data as Pubkey));
+    expect(KeypairAccount.isPubkey(inst.unwrap().data as Pubkey)).toBe(true);
 
-    const res = await inst.submit();
-    assert.isTrue(res.isOk, res.unwrap());
+    await inst.submit();
     mintStr = inst.unwrap().data as string;
     console.log('# mint: ', mintStr);
   });
@@ -96,13 +91,15 @@ describe('SplToken', () => {
       {
         name: asset.name!,
         symbol: asset.symbol!,
-      }
+      },
     );
     res.match(
-      (_: unknown) => assert.fail('Unrecognized error'),
-      (err) => {
-        assert.equal(err.message, `Must set 'storageType + filePath' or 'uri'`);
-      }
+      (_: unknown) => expect(false).toBe(true),
+      (err: Error) => {
+        expect(err.message).toEqual(
+          'Must set \'storageType + filePath\' or \'uri\'',
+        );
+      },
     );
   });
 });

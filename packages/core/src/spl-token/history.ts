@@ -10,7 +10,7 @@ export namespace SplToken {
     filterType: FilterType,
     onOk: OnOk<History>,
     onErr: OnErr,
-    narrowDown = 1000 // Max number: 1000
+    narrowDown = 1000, // Max number: 1000
   ): Promise<void> => {
     try {
       if (filterType === FilterType.Memo) {
@@ -19,7 +19,7 @@ export namespace SplToken {
           target,
           parser,
           (result) => result.match(onOk, onErr),
-          narrowDown
+          narrowDown,
         );
       } else {
         const tokenAccounts =
@@ -27,19 +27,19 @@ export namespace SplToken {
             target.toPublicKey(),
             {
               programId: TOKEN_PROGRAM_ID,
-            }
+            },
           );
 
         for (const account of tokenAccounts.value) {
           const parser = TransactionFilter.parse(
             filterType,
-            ModuleName.SplToken
+            ModuleName.SplToken,
           );
           await Signatures.getForAdress(
             account.pubkey.toString(),
             parser,
             (result) => result.match(onOk, onErr),
-            narrowDown
+            narrowDown,
           );
         }
       }

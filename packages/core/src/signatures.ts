@@ -5,7 +5,7 @@ import { UserSideOutput } from './types/';
 //@internal
 export namespace Signatures {
   const parseForTransaction = async (
-    signature: string
+    signature: string,
   ): Promise<ParsedTransactionWithMeta> => {
     const res = await Node.getConnection().getParsedTransaction(signature);
     if (!res) {
@@ -17,17 +17,17 @@ export namespace Signatures {
   export const getForAdress = async (
     pubkey: Pubkey,
     parser: (
-      transaction: ParsedTransactionWithMeta
+      transaction: ParsedTransactionWithMeta,
     ) => UserSideOutput.History | undefined,
     callback: (history: Result<UserSideOutput.History[], Error>) => void,
-    narrowDown = 1000
+    narrowDown = 1000,
   ): Promise<void> => {
     try {
       const transactions = await Node.getConnection().getSignaturesForAddress(
         pubkey.toPublicKey(),
         {
           limit: narrowDown,
-        }
+        },
       );
 
       debugLog('# transactions count:', transactions.length);

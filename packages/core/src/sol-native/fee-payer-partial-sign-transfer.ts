@@ -16,7 +16,7 @@ export namespace SolNative {
     dest: Pubkey,
     signers: Secret[],
     amount: number,
-    feePayer: Pubkey
+    feePayer: Pubkey,
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
       const blockHashObj = await Node.getConnection().getLatestBlockhash();
@@ -29,7 +29,7 @@ export namespace SolNative {
           fromPubkey: owner.toPublicKey(),
           toPubkey: dest.toPublicKey(),
           lamports: parseInt(`${amount.toLamports()}`, RADIX),
-        })
+        }),
       );
 
       signers.forEach((signer) => {

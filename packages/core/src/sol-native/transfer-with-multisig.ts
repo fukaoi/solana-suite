@@ -26,7 +26,7 @@ export namespace SolNative {
     dest: Pubkey,
     signers: Secret[],
     amount: number,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
       const connection = Node.getConnection();
@@ -36,7 +36,7 @@ export namespace SolNative {
         connection,
         payer.toKeypair(),
         owner.toPublicKey(),
-        parseInt(`${amount.toLamports()}`, RADIX)
+        parseInt(`${amount.toLamports()}`, RADIX),
       );
 
       debugLog('# wrapped sol: ', wrapped.toBase58());
@@ -46,13 +46,13 @@ export namespace SolNative {
         payer.toKeypair(),
         owner.toPublicKey(),
         owner.toPublicKey(),
-        0
+        0,
       );
 
       const sourceToken = await AssociatedAccount.retryGetOrCreate(
         token.toString(),
         owner,
-        payer
+        payer,
       );
 
       debugLog('# sourceToken: ', sourceToken);
@@ -60,7 +60,7 @@ export namespace SolNative {
       const destToken = await AssociatedAccount.retryGetOrCreate(
         token.toString(),
         wrapped.toString(),
-        payer
+        payer,
       );
 
       debugLog('# destToken: ', destToken);
@@ -70,20 +70,20 @@ export namespace SolNative {
         destToken.toPublicKey(),
         owner.toPublicKey(),
         parseInt(`${amount}`, RADIX), // No lamports, its sol
-        keypairs
+        keypairs,
       );
 
       const inst2 = createCloseAccountInstruction(
         wrapped,
         dest.toPublicKey(),
         owner.toPublicKey(),
-        keypairs
+        keypairs,
       );
 
       return new Instruction(
         [inst1, inst2],
         signers.map((s) => s.toKeypair()),
-        feePayer?.toKeypair()
+        feePayer?.toKeypair(),
       );
     });
   };

@@ -12,7 +12,7 @@ export namespace Memo {
     data: string,
     owner: Pubkey,
     signer: Secret,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Instruction => {
     const key = owner.toPublicKey()
       ? [
@@ -35,7 +35,7 @@ export namespace Memo {
     return new Instruction(
       [instruction],
       [signer.toKeypair()],
-      payer.toKeypair()
+      payer.toKeypair(),
     );
   };
 }

@@ -6,10 +6,12 @@ import { Multisig as _Instruction } from './instruction';
 
 export namespace Multisig {
   export const getInfo = async (
-    multisig: Pubkey
+    multisig: Pubkey,
   ): Promise<Result<LayoutObject, Error>> => {
     return Try(async () => {
-      const info = await Node.getConnection().getAccountInfo(multisig.toPublicKey());
+      const info = await Node.getConnection().getAccountInfo(
+        multisig.toPublicKey(),
+      );
       if (info === null) {
         throw Error('Failed to find multisig');
       }

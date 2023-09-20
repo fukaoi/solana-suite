@@ -5,7 +5,7 @@ import { convertTimestampToDateTime } from '@solana-suite/shared';
 export namespace Convert.Mint {
   export const intoUserSide = (
     output: InfraSideOutput.MintTo,
-    meta: ParsedTransactionWithMeta
+    meta: ParsedTransactionWithMeta,
   ): UserSideOutput.History | undefined => {
     const history: UserSideOutput.History = {};
 

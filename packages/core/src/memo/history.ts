@@ -8,18 +8,18 @@ export namespace Memo {
     target: Pubkey,
     onOk: OnOk<History>,
     onErr: OnErr,
-    narrowDown = 1000 // Max number: 1000
+    narrowDown = 1000, // Max number: 1000
   ): Promise<void> => {
     try {
       const parser = TransactionFilter.parse(
         FilterType.OnlyMemo,
-        ModuleName.SolNative
+        ModuleName.SolNative,
       );
       await Signatures.getForAdress(
         target,
         parser,
         (result) => result.match(onOk, onErr),
-        narrowDown
+        narrowDown,
       );
     } catch (e) {
       if (e instanceof Error) {

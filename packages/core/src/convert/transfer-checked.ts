@@ -6,16 +6,16 @@ export namespace Convert.TransferChecked {
   export const intoUserSide = (
     output: InfraSideOutput.TransferChecked,
     meta: ParsedTransactionWithMeta,
-    mappingTokenAccount?: PostTokenAccount[]
+    mappingTokenAccount?: PostTokenAccount[],
   ): UserSideOutput.History | undefined => {
     const history: UserSideOutput.History = {};
 
     if (mappingTokenAccount) {
       const foundSource = mappingTokenAccount.find(
-        (m) => m.account === output.parsed.info.source
+        (m) => m.account === output.parsed.info.source,
       );
       const foundDest = mappingTokenAccount.find(
-        (m) => m.account === output.parsed.info.destination
+        (m) => m.account === output.parsed.info.destination,
       );
       foundSource && (history.source = foundSource.owner);
       foundDest && (history.destination = foundDest.owner);

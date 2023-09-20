@@ -1,9 +1,8 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
+import { describe, it, beforeAll, expect } from '@jest/globals';
 import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/';
 import { KeypairAccount } from '../../../shared';
-import { RandomAsset } from '../../../storage/test/randomAsset';
+import { RandomAsset } from '../../../internals/storage/test/randomAsset';
 
 let source: KeypairAccount;
 
@@ -19,7 +18,7 @@ const TOKEN_METADATA = {
 };
 
 describe('SplToken', () => {
-  before(async () => {
+  beforeAll(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
   });
@@ -30,10 +29,10 @@ describe('SplToken', () => {
       source.secret,
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
-      TOKEN_METADATA
+      TOKEN_METADATA,
     );
 
-    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
+    expect(inst1.isOk).toBe(true);
     const token = inst1.unwrap().data as string;
     console.log('# mint: ', token);
 
@@ -43,10 +42,10 @@ describe('SplToken', () => {
       source.pubkey,
       [source.secret],
       burnAmount,
-      MINT_DECIMAL
+      MINT_DECIMAL,
     );
 
-    assert.isTrue(inst2.isOk);
+    expect(inst2.isOk).toBe(true);
     const sig = await [inst1, inst2].submit();
     console.log('signature: ', sig.unwrap());
   });

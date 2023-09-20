@@ -8,7 +8,7 @@ export namespace SolNative {
     dest: Pubkey,
     signers: Secret[],
     amount: number,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Result<Instruction, Error> => {
     return Try(() => {
       const inst = SystemProgram.transfer({
@@ -22,7 +22,7 @@ export namespace SolNative {
       return new Instruction(
         [inst],
         signers.map((s) => s.toKeypair()),
-        payer
+        payer,
       );
     });
   };

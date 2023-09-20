@@ -10,7 +10,7 @@ export namespace SplToken {
     signers: Secret[],
     totalAmount: number,
     mintDecimal: number,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
       const payer = !feePayer ? signers[0] : feePayer;
@@ -19,7 +19,7 @@ export namespace SplToken {
       const tokenAssociated = await AssociatedAccount.retryGetOrCreate(
         token,
         owner,
-        payer
+        payer,
       );
 
       const inst = createMintToCheckedInstruction(
@@ -28,7 +28,7 @@ export namespace SplToken {
         owner.toPublicKey(),
         _Calculate.calculateAmount(totalAmount, mintDecimal),
         mintDecimal,
-        keypairs
+        keypairs,
       );
 
       return new Instruction([inst], keypairs, payer.toKeypair(), token);

@@ -5,11 +5,11 @@ import { TransactionFilter } from '../transaction-filter';
 
 export namespace SolNative {
   export const findByOwner = async (
-    owner: Pubkey
+    owner: Pubkey,
   ): Promise<Result<OwnerInfo, Error>> => {
     return Try(async () => {
       const res = await Node.getConnection().getParsedAccountInfo(
-        owner.toPublicKey()
+        owner.toPublicKey(),
       );
 
       const info = {

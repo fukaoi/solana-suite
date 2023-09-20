@@ -12,12 +12,12 @@ export namespace SplToken {
     signers: Secret[],
     burnAmount: number,
     tokenDecimals: number,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Result<Instruction, Error> => {
     return Try(() => {
       const tokenAccount = getAssociatedTokenAddressSync(
         mint.toPublicKey(),
-        owner.toPublicKey()
+        owner.toPublicKey(),
       );
       const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
       const keypairs = signers.map((s) => s.toKeypair());
@@ -28,7 +28,7 @@ export namespace SplToken {
         owner.toPublicKey(),
         _Calculate.calculateAmount(burnAmount, tokenDecimals),
         tokenDecimals,
-        keypairs
+        keypairs,
       );
 
       return new Instruction([inst], keypairs, payer);

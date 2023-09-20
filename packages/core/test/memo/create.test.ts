@@ -33,7 +33,7 @@ describe('Memo', () => {
 
   it('create instruction', async () => {
     const res = Memo.create(DUMMY_DATA, source.pubkey, source.secret);
-    console.log(`# create: `, res);
+    console.log('# create: ', res);
     expect(typeof res).toBe('object');
   });
 
@@ -42,7 +42,7 @@ describe('Memo', () => {
       `{"memo": "send memo by owner", "datetime": ${datetime}}`,
       MEMO_STOCK.pubkey,
       MEMO_STOCK.secret,
-      source.secret
+      source.secret,
     );
 
     const res = await inst.submit();
@@ -55,14 +55,14 @@ describe('Memo', () => {
       `send memo and sol transfer: ${datetime}`,
       MEMO_STOCK.pubkey,
       MEMO_STOCK.secret,
-      dest.secret
+      dest.secret,
     );
 
     const inst2 = SolNative.transfer(
       source.pubkey,
       dest.pubkey,
       [source.secret],
-      0.01 // Too low lamports, but  error occurs
+      0.01, // Too low lamports, but  error occurs
     );
 
     const res = await [inst1, inst2].submit();
@@ -83,7 +83,7 @@ describe('Memo', () => {
     const inst1 = Memo.create(
       `send memo and spl-token transfer: ${datetime}`,
       dest.pubkey,
-      dest.secret
+      dest.secret,
     );
 
     const inst2 = await SplToken.transfer(
@@ -92,12 +92,12 @@ describe('Memo', () => {
       dest.pubkey,
       [source.secret],
       7777,
-      4
+      4,
     );
 
     (await [inst1, inst2].submit()).match(
       (ok) => console.log('# tx signature: ', ok),
-      (err) => expect(false).toBe(true)
+      (err) => expect(false).toBe(true),
     );
   });
 

@@ -13,7 +13,7 @@ export namespace Multisig {
   export const create = async (
     m: number,
     feePayer: Secret,
-    signerPubkeys: Pubkey[]
+    signerPubkeys: Pubkey[],
   ): Promise<Result<Instruction, Error>> => {
     return Try(async () => {
       if (m > signerPubkeys.length) {
@@ -23,26 +23,26 @@ export namespace Multisig {
       const account = Keypair.generate();
       const connection = Node.getConnection();
       const balanceNeeded = await connection.getMinimumBalanceForRentExemption(
-        _Instruction.Layout.span
+        _Instruction.Layout.span,
       );
 
       const inst1 = _Instruction.account(
         account,
         feePayer.toKeypair(),
-        balanceNeeded
+        balanceNeeded,
       );
 
       const inst2 = _Instruction.multisig(
         m,
         account,
-        signerPubkeys.map((pubkey: Pubkey) => pubkey.toPublicKey())
+        signerPubkeys.map((pubkey: Pubkey) => pubkey.toPublicKey()),
       );
 
       return new Instruction(
         [inst1, inst2],
         [account],
         feePayer.toKeypair(),
-        account.publicKey.toString()
+        account.publicKey.toString(),
       );
     });
   };

@@ -20,7 +20,7 @@ export namespace SplToken {
     signers: Secret[],
     amount: number,
     mintDecimal: number,
-    feePayer: Pubkey
+    feePayer: Pubkey,
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
       const keypairs = signers.map((s) => s.toKeypair());
@@ -28,13 +28,13 @@ export namespace SplToken {
       const sourceToken = await AssociatedAccount.makeOrCreateInstruction(
         mint,
         owner,
-        feePayer
+        feePayer,
       );
 
       const destToken = await AssociatedAccount.makeOrCreateInstruction(
         mint,
         dest,
-        feePayer
+        feePayer,
       );
 
       let inst2;
@@ -55,7 +55,7 @@ export namespace SplToken {
           owner.toPublicKey(),
           _Calculator.calculateAmount(amount, mintDecimal),
           mintDecimal,
-          keypairs
+          keypairs,
         );
         tx.add(inst2);
       } else {
@@ -67,7 +67,7 @@ export namespace SplToken {
           owner.toPublicKey(),
           _Calculator.calculateAmount(amount, mintDecimal),
           mintDecimal,
-          keypairs
+          keypairs,
         );
         tx.add(destToken.inst).add(inst2);
       }

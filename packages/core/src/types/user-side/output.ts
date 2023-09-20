@@ -11,7 +11,7 @@ export namespace UserSideOutput {
     signers?: Pubkey[];
     mint?: Pubkey;
     mintAuthority?: Pubkey;
-    tokenAmount?: string; 
+    tokenAmount?: string;
     memo?: string;
     dateTime?: Date;
     type?: string;

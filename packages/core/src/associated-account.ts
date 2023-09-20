@@ -35,13 +35,13 @@ export namespace AssociatedAccount {
     mint: Pubkey,
     owner: Pubkey,
     feePayer: Secret,
-    allowOwnerOffCurve = false
+    allowOwnerOffCurve = false,
   ): Promise<string | Instruction> => {
     const res = await makeOrCreateInstruction(
       mint,
       owner,
       new KeypairAccount({ secret: feePayer }).pubkey,
-      allowOwnerOffCurve
+      allowOwnerOffCurve,
     );
 
     if (!res.inst) {
@@ -52,7 +52,7 @@ export namespace AssociatedAccount {
       [res.inst],
       [],
       feePayer.toKeypair(),
-      res.tokenAccount
+      res.tokenAccount,
     );
   };
 
@@ -67,7 +67,7 @@ export namespace AssociatedAccount {
   export const retryGetOrCreate = async (
     mint: Pubkey,
     owner: Pubkey,
-    feePayer: Secret
+    feePayer: Secret,
   ): Promise<string> => {
     let counter = 1;
     while (counter < RETRY_OVER_LIMIT) {
@@ -86,7 +86,7 @@ export namespace AssociatedAccount {
             (err) => {
               debugLog('# Error submit retryGetOrCreate: ', err);
               throw err;
-            }
+            },
           );
         }
       } catch (e) {
@@ -112,7 +112,7 @@ export namespace AssociatedAccount {
     mint: Pubkey,
     owner: Pubkey,
     feePayer?: Pubkey,
-    allowOwnerOffCurve = false
+    allowOwnerOffCurve = false,
   ): Promise<{
     tokenAccount: string;
     inst: TransactionInstruction | undefined;
@@ -122,7 +122,7 @@ export namespace AssociatedAccount {
       owner.toPublicKey(),
       allowOwnerOffCurve,
       TOKEN_PROGRAM_ID,
-      ASSOCIATED_TOKEN_PROGRAM_ID
+      ASSOCIATED_TOKEN_PROGRAM_ID,
     );
 
     debugLog('# associatedTokenAccount: ', associatedTokenAccount.toString());
@@ -133,7 +133,7 @@ export namespace AssociatedAccount {
         Node.getConnection(),
         associatedTokenAccount,
         Node.getConnection().commitment,
-        TOKEN_PROGRAM_ID
+        TOKEN_PROGRAM_ID,
       );
       return {
         tokenAccount: associatedTokenAccount.toString(),
@@ -155,7 +155,7 @@ export namespace AssociatedAccount {
         owner.toPublicKey(),
         mint.toPublicKey(),
         TOKEN_PROGRAM_ID,
-        ASSOCIATED_TOKEN_PROGRAM_ID
+        ASSOCIATED_TOKEN_PROGRAM_ID,
       );
 
       return {

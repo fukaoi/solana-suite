@@ -44,13 +44,13 @@ export namespace SplToken {
   export const createFreezeAuthority = (
     mint: PublicKey,
     owner: PublicKey,
-    freezeAuthority: PublicKey
+    freezeAuthority: PublicKey,
   ): TransactionInstruction => {
     return createSetAuthorityInstruction(
       mint,
       owner,
       AuthorityType.FreezeAccount,
-      freezeAuthority
+      freezeAuthority,
     );
   };
 
@@ -61,7 +61,7 @@ export namespace SplToken {
     mintDecimal: number,
     tokenMetadata: DataV2,
     feePayer: PublicKey,
-    isMutable: boolean
+    isMutable: boolean,
   ): Promise<TransactionInstruction[]> => {
     const connection = Node.getConnection();
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
@@ -81,14 +81,14 @@ export namespace SplToken {
       mintDecimal,
       owner,
       owner,
-      TOKEN_PROGRAM_ID
+      TOKEN_PROGRAM_ID,
     );
 
     const inst3 = createAssociatedTokenAccountInstruction(
       feePayer,
       tokenAssociated,
       owner,
-      mint
+      mint,
     );
 
     const inst4 = createMintToCheckedInstruction(
@@ -96,7 +96,7 @@ export namespace SplToken {
       tokenAssociated,
       owner,
       _Calculate.calculateAmount(totalAmount, mintDecimal),
-      mintDecimal
+      mintDecimal,
     );
 
     const inst5 = createCreateMetadataAccountV3Instruction(
@@ -111,9 +111,9 @@ export namespace SplToken {
         createMetadataAccountArgsV3: {
           data: tokenMetadata,
           isMutable,
-          collectionDetails: null
+          collectionDetails: null,
         },
-      }
+      },
     );
     return [inst1, inst2, inst3, inst4, inst5];
   };
@@ -137,7 +137,7 @@ export namespace SplToken {
     mintDecimal: number,
     input: UserSideInput.TokenMetadata,
     feePayer?: Secret,
-    freezeAuthority?: Pubkey
+    freezeAuthority?: Pubkey,
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<UserSideInput.TokenMetadata>(input);
@@ -151,7 +151,7 @@ export namespace SplToken {
 
       const tokenStorageMetadata = Storage.toConvertOffchaindata(
         input as UserSideInput.NftMetadata,
-        input.royalty
+        input.royalty,
       );
 
       // created at by unix timestamp
@@ -164,7 +164,7 @@ export namespace SplToken {
           tokenStorageMetadata,
           input.filePath,
           input.storageType,
-          payer
+          payer,
         );
 
         if (uploaded.isErr) {
@@ -174,7 +174,7 @@ export namespace SplToken {
       } else if (input.uri) {
         uri = input.uri;
       } else {
-        throw Error(`Must set 'storageType + filePath' or 'uri'`);
+        throw Error('Must set \'storageType + filePath\' or \'uri\'');
       }
 
       const isMutable = true;
@@ -182,7 +182,7 @@ export namespace SplToken {
       const datav2 = Convert.TokenMetadata.intoInfraSide(
         input,
         uri,
-        sellerFeeBasisPoints
+        sellerFeeBasisPoints,
       );
 
       debugLog('# datav2: ', datav2);
@@ -196,7 +196,7 @@ export namespace SplToken {
         mintDecimal,
         datav2,
         payer.toKeypair().publicKey,
-        isMutable
+        isMutable,
       );
 
       // freezeAuthority
@@ -205,8 +205,8 @@ export namespace SplToken {
           createFreezeAuthority(
             mint.toPublicKey(),
             owner.toPublicKey(),
-            freezeAuthority.toPublicKey()
-          )
+            freezeAuthority.toPublicKey(),
+          ),
         );
       }
 
@@ -214,7 +214,7 @@ export namespace SplToken {
         insts,
         [signer.toKeypair(), mint.toKeypair()],
         payer.toKeypair(),
-        mint.pubkey
+        mint.pubkey,
       );
     });
   };

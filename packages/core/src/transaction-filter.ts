@@ -15,11 +15,11 @@ import { debugLog } from '@solana-suite/shared';
 //@internal
 export namespace TransactionFilter {
   const createPostTokenAccountList = (
-    transaction: ParsedTransactionWithMeta
+    transaction: ParsedTransactionWithMeta,
   ): PostTokenAccount[] => {
     const postTokenAccount: PostTokenAccount[] = [];
     const accountKeys = transaction.transaction.message.accountKeys.map((t) =>
-      t.pubkey.toString()
+      t.pubkey.toString(),
     );
 
     transaction.meta?.postTokenBalances?.forEach((t) => {
@@ -35,7 +35,7 @@ export namespace TransactionFilter {
   };
 
   export const isParsedInstruction = (
-    arg: unknown
+    arg: unknown,
   ): arg is ParsedInstruction => {
     return arg !== null && typeof arg === 'object' && 'parsed' in arg;
   };
@@ -50,7 +50,7 @@ export namespace TransactionFilter {
         moduleName === ModuleName.SolNative
       ) {
         throw Error(
-          `This filterType('FilterType.Mint') can not use from SolNative module`
+          'This filterType(\'FilterType.Mint\') can not use from SolNative module',
         );
       }
 
@@ -74,12 +74,12 @@ export namespace TransactionFilter {
                     if (
                       isParsedInstruction(instruction) &&
                       FilterOptions.Transfer.program.includes(
-                        instruction.program
+                        instruction.program,
                       )
                     ) {
                       instructionTransfer = instruction;
                     }
-                  }
+                  },
                 );
 
                 // spl-token or system
@@ -89,7 +89,7 @@ export namespace TransactionFilter {
                 ) {
                   debugLog(
                     '# FilterType.Memo break instruction: ',
-                    instructionTransfer
+                    instructionTransfer,
                   );
                   break;
                 }
@@ -99,7 +99,7 @@ export namespace TransactionFilter {
                   instruction,
                   txMeta,
                   instructionTransfer,
-                  postTokenAccount
+                  postTokenAccount,
                 );
               }
               break;
@@ -112,7 +112,7 @@ export namespace TransactionFilter {
                   instruction,
                   txMeta,
                   instructionTransfer,
-                  postTokenAccount
+                  postTokenAccount,
                 );
               }
               break;
@@ -121,7 +121,7 @@ export namespace TransactionFilter {
               if (
                 FilterOptions.Mint.program.includes(instruction.program) &&
                 FilterOptions.Mint.action.includes(
-                  instruction.parsed.type as string
+                  instruction.parsed.type as string,
                 )
               ) {
                 history = _Mint.Mint.intoUserSide(instruction, txMeta);
@@ -132,19 +132,19 @@ export namespace TransactionFilter {
               if (
                 moduleName === instruction.program &&
                 FilterOptions.Transfer.action.includes(
-                  instruction.parsed.type as string
+                  instruction.parsed.type as string,
                 )
               ) {
                 if (instruction.parsed.type === 'transferChecked') {
                   history = _TransferChecked.TransferChecked.intoUserSide(
                     instruction,
                     txMeta,
-                    postTokenAccount
+                    postTokenAccount,
                   );
                 } else {
                   history = _Transfer.Transfer.intoUserSide(
                     instruction,
-                    txMeta
+                    txMeta,
                   );
                 }
               }

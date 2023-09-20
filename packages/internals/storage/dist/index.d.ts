@@ -1,6 +1,6 @@
-import { Currency, Metaplex, BundlrStorageDriver } from '@metaplex-foundation/js';
 import { Secret, Result } from '@solana-suite/shared';
 import { FileContent, InfraSideInput } from 'internals/shared-metaplex/';
+import { Metaplex, BundlrStorageDriver } from '@metaplex-foundation/js';
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { FileContent as FileContent$1, InfraSideInput as InfraSideInput$1, UserSideInput, StorageType } from 'internals/shared-metaplex';
 
@@ -15,10 +15,6 @@ interface MetaplexFileOptions {
     }[];
 }
 declare namespace Arweave {
-    const getUploadPrice: (filePath: FileContent, feePayer: Secret) => Promise<Result<{
-        price: number;
-        currency: Currency;
-    }, Error>>;
     const uploadContent: (filePath: FileContent, feePayer: Secret, fileOptions?: MetaplexFileOptions) => Promise<Result<string, Error>>;
     const uploadMetadata: (metadata: InfraSideInput.Offchain, feePayer: Secret) => Promise<Result<string, Error>>;
 }

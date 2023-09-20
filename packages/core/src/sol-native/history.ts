@@ -9,7 +9,7 @@ export namespace SolNative {
     filterType: FilterType,
     onOk: OnOk<History>,
     onErr: OnErr,
-    narrowDown = 1000 // Max number: 1000
+    narrowDown = 1000, // Max number: 1000
   ): Promise<void> => {
     try {
       const parser = TransactionFilter.parse(filterType, ModuleName.SolNative);
@@ -17,7 +17,7 @@ export namespace SolNative {
         target,
         parser,
         async (result) => await result.match(onOk, onErr),
-        narrowDown
+        narrowDown,
       );
     } catch (e) {
       if (e instanceof Error) {

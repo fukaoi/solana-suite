@@ -90,7 +90,7 @@ importers:
   packages/core:
     dependencies:
       '@metaplex-foundation/mpl-token-metadata':
-        specifier: ^2.9.1
+        specifier: ^2.13.0
         version: 2.13.0
       '@solana-suite/shared':
         specifier: workspace:^
@@ -102,11 +102,26 @@ importers:
         specifier: ^0.3.8
         version: 0.3.8(@solana/web3.js@1.78.5)
       '@solana/web3.js':
-        specifier: ^1.73.2
+        specifier: ^1.78.5
         version: 1.78.5
       bs58:
         specifier: ^5.0.0
         version: 5.0.0
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/jest:
+        specifier: workspace:*
+        version: link:../build-configs/jest
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
       cross-fetch:
         specifier: ^4.0.0
         version: 4.0.0

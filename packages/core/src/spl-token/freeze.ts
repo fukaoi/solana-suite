@@ -24,24 +24,24 @@ export namespace SplToken {
     mint: Pubkey,
     owner: Pubkey,
     freezeAuthority: Secret,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Result<Instruction, Error> => {
     const payer = feePayer ? feePayer : freezeAuthority;
     return Try(() => {
       const tokenAccount = getAssociatedTokenAddressSync(
         mint.toPublicKey(),
-        owner.toPublicKey()
+        owner.toPublicKey(),
       );
       const inst = createFreezeAccountInstruction(
         tokenAccount,
         mint.toPublicKey(),
-        new KeypairAccount({ secret: freezeAuthority }).toPublicKey()
+        new KeypairAccount({ secret: freezeAuthority }).toPublicKey(),
       );
 
       return new Instruction(
         [inst],
         [freezeAuthority.toKeypair()],
-        payer.toKeypair()
+        payer.toKeypair(),
       );
     });
   };

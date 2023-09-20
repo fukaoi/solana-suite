@@ -6,7 +6,7 @@ export namespace Airdrop {
 
   export const request = async (
     pubkey: Pubkey,
-    airdropAmount?: number
+    airdropAmount?: number,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       debugLog('Now airdropping...please wait');
@@ -17,13 +17,13 @@ export namespace Airdrop {
 
       if (airdropAmount > MAX_AIRDROP_SOL.toLamports()) {
         throw Error(
-          `Over max airdrop amount: ${airdropAmount}, max: ${MAX_AIRDROP_SOL.toLamports()}`
+          `Over max airdrop amount: ${airdropAmount}, max: ${MAX_AIRDROP_SOL.toLamports()}`,
         );
       }
 
       const sig = await Node.getConnection().requestAirdrop(
         pubkey.toPublicKey(),
-        airdropAmount
+        airdropAmount,
       );
       await Node.confirmedSig(sig);
       return 'success';

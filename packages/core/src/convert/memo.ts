@@ -7,7 +7,7 @@ export namespace Convert.Memo {
     output: InfraSideOutput.Memo,
     meta: ParsedTransactionWithMeta,
     outputTransfer?: InfraSideOutput.TransferChecked,
-    mappingTokenAccount?: PostTokenAccount[]
+    mappingTokenAccount?: PostTokenAccount[],
   ): UserSideOutput.History | undefined => {
     const history: UserSideOutput.History = {};
 
@@ -15,10 +15,10 @@ export namespace Convert.Memo {
     if (outputTransfer && outputTransfer.program !== '') {
       if (mappingTokenAccount && outputTransfer.program === 'spl-token') {
         const foundSource = mappingTokenAccount.find(
-          (m) => m.account === outputTransfer.parsed.info.source
+          (m) => m.account === outputTransfer.parsed.info.source,
         );
         const foundDest = mappingTokenAccount.find(
-          (m) => m.account === outputTransfer.parsed.info.destination
+          (m) => m.account === outputTransfer.parsed.info.destination,
         );
 
         history.mint = outputTransfer.parsed.info.mint;

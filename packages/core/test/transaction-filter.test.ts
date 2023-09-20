@@ -1,16 +1,14 @@
-import { describe, it } from 'mocha';
+import { beforeAll, describe, expect, it } from '@jest/globals';
 import { Signatures } from '../src/signatures';
-import { assert } from 'chai';
 import { FilterType, ModuleName } from '../src/';
 import { Setup } from '../../shared/test/testSetup';
 import { Pubkey } from '../../shared/src';
 import { TransactionFilter } from '../src/transaction-filter';
-import { ok } from 'assert';
 
 let target: Pubkey;
 
 describe('TransactionFilter', () => {
-  before(async () => {
+  beforeAll(async () => {
     const obj = await Setup.generateKeyPair();
     target = obj.source.pubkey;
   });
@@ -18,7 +16,7 @@ describe('TransactionFilter', () => {
   it('Parse transfer history by SolNative', async () => {
     const parser = TransactionFilter.parse(
       FilterType.Transfer,
-      ModuleName.SolNative
+      ModuleName.SolNative,
     );
     await Signatures.getForAdress(
       target,
@@ -26,58 +24,58 @@ describe('TransactionFilter', () => {
       (res) => {
         console.log(res);
         console.log('# response size:', res.unwrap().length);
-        assert.isNotEmpty(res);
+        expect(res).not.toBe('');
       },
-      100
+      100,
     );
   });
 
   it('Parse memo history by SplToken', async () => {
     const parser = TransactionFilter.parse(
       FilterType.Memo,
-      ModuleName.SplToken
+      ModuleName.SplToken,
     );
     await Signatures.getForAdress(
       target,
       parser,
       (res) => {
         console.log(res);
-        assert.isNotEmpty(res);
+        expect(res).not.toBe('');
       },
-      100
+      100,
     );
   });
 
   it('Parse Mint history', async () => {
     const parser = TransactionFilter.parse(
       FilterType.Mint,
-      ModuleName.SplToken
+      ModuleName.SplToken,
     );
     await Signatures.getForAdress(
       target,
       parser,
       (res) => {
         console.log(res);
-        assert.isNotEmpty(res);
+        expect(res).not.toBe('');
       },
-      100
+      100,
     );
   });
-it('[Error]Parse Mint history by SolNative', async () => {
+  it('[Error]Parse Mint history by SolNative', async () => {
     const parser = TransactionFilter.parse(
       FilterType.Mint,
-      ModuleName.SolNative
+      ModuleName.SolNative,
     );
     await Signatures.getForAdress(
       target,
       parser,
       (histories) => {
         histories.match(
-          (_) => assert.fail('Dont go through here'),
-          (err) => assert.isOk(err.message)
+          (_) => expect(false).toBe(true),
+          (err) => expect(err.message).toBeTruthy(),
         );
       },
-      100
+      100,
     );
   });
 });

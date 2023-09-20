@@ -52,7 +52,7 @@ export namespace Multisig {
   export const account = (
     newAccount: Keypair,
     feePayer: Keypair,
-    balanceNeeded: number
+    balanceNeeded: number,
   ): TransactionInstruction => {
     return SystemProgram.createAccount({
       fromPubkey: feePayer.publicKey,
@@ -66,7 +66,7 @@ export namespace Multisig {
   export const multisig = (
     m: number,
     feePayer: Keypair,
-    signerPubkey: PublicKey[]
+    signerPubkey: PublicKey[],
   ): TransactionInstruction => {
     const keys = [
       {
@@ -85,7 +85,7 @@ export namespace Multisig {
         pubkey,
         isSigner: false,
         isWritable: false,
-      })
+      }),
     );
 
     const dataLayout = struct<{ instruction: number; m: number }>([
@@ -100,7 +100,7 @@ export namespace Multisig {
         instruction: 2,
         m,
       },
-      data
+      data,
     );
 
     return new TransactionInstruction({
