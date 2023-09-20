@@ -48,13 +48,15 @@
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
     "bs58": "^5.0.0",
+    "cross-fetch": "^4.0.0",
+    "internals/shared-metaplex": "workspace:^",
+    "internals/storage": "workspace:^"
+  },
+  "devDependencies": {
     "build-configs/eslint": "workspace:*",
     "build-configs/jest": "workspace:*",
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
-    "build-configs/tsup": "workspace:*",
-    "cross-fetch": "^4.0.0",
-    "internals/shared-metaplex": "workspace:^",
-    "internals/storage": "workspace:^"
+    "build-configs/tsup": "workspace:*"
   }
 }

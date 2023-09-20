@@ -36,8 +36,10 @@
     "build": "tsup --config build-configs/tsup/esm.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "test": "jest -c node_modules/build-configs/jest/base.ts --rootDir .",
-    "lint": "eslint -c node_modules/build-configs/eslint/base.json ./src/*",
-    "style:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
+    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
+    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
+    "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
     "internals/shared-metaplex": "workspace:^",
@@ -47,5 +49,12 @@
     "@solana-suite/nft": "workspace:^",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.73.2"
+  },
+  "devDependencies": {
+    "build-configs/eslint": "workspace:*",
+    "build-configs/jest": "workspace:*",
+    "build-configs/prettier": "workspace:*",
+    "build-configs/tsconfig": "workspace:*",
+    "build-configs/tsup": "workspace:*"
   }
 }
