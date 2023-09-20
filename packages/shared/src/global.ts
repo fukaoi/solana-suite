@@ -1,13 +1,13 @@
 import bs from 'bs58';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { Constants } from '~/constants';
-import { Node } from '~/node';
-import { Result } from '~/result';
-import { Instruction as _Instruction } from '~/instruction';
-import { Instruction as _Batch } from '~/instruction/batch-submit';
-import { KeypairAccount } from '~/keypair-account';
+import { Constants } from './constants';
+import { Node } from './node';
+import { Result } from './result';
+import { Instruction as _Instruction } from './instruction';
+import { Instruction as _Batch } from './instruction/batch-submit';
+import { KeypairAccount } from './keypair-account';
 import { BigNumber } from 'bignumber.js';
-import { AnyObject, Explorer } from '~/types/global';
+import { AnyObject, Explorer } from './types/global';
 
 /**
  * senTransaction() TransactionInstruction

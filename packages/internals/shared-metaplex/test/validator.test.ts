@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import { Validator } from '~/validator';
+import { Validator } from '../src/validator';
 
 describe('Validator', () => {
   it('[Success]isRoyalty', async () => {

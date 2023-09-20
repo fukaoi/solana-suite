@@ -4,8 +4,9 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import { Node, Pubkey, Result, Secret, Try } from '~/index';
-import { MAX_RETRIES } from '~/instruction/define';
+import { Node, Result, Try } from './';
+import { Pubkey, Secret } from './types';
+import { MAX_RETRIES } from './instruction/define';
 
 export class PartialSignInstruction {
   hexInstruction: string;

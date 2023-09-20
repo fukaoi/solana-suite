@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 import { KeypairAccount } from '@solana-suite/shared';
-import { Convert } from '~/convert/creators';
+import { Convert } from '../../src/convert/creators';
 
 describe('Convert.Creators', () => {
   it('To input convert', async () => {

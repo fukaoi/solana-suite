@@ -1,9 +1,9 @@
-import { Convert as Collection } from './collection';
-import { Convert as Creators } from './creators';
-import { Convert as NftMetadata } from './nft-metadata';
-import { Convert as Properties } from './properties';
-import { Convert as TokenMetadata } from './token-metadata';
-import { Convert as Uses } from './uses';
+import { Convert as Collection } from '../convert/collection';
+import { Convert as Creators } from '../convert/creators';
+import { Convert as NftMetadata } from '../convert/nft-metadata';
+import { Convert as Properties } from '../convert/properties';
+import { Convert as TokenMetadata } from '../convert/token-metadata';
+import { Convert as Uses } from '../convert/uses';
 
 export const Convert = Object.assign(
   {},

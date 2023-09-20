@@ -8,7 +8,7 @@ import {
 
 import { Keypair } from '@solana/web3.js';
 import { Node, Constants } from '@solana-suite/shared';
-import { BundlrSigner, Phantom } from '~/types/bundlr';
+import { BundlrSigner, Phantom } from './types/bundlr';
 
 export namespace Bundlr {
   const BUNDLR_CONNECT_TIMEOUT = 60000;

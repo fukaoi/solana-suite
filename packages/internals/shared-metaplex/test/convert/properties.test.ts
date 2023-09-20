@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
-import { Convert } from '~/convert/properties';
-import { UserSideInput } from '~/types';
-import { _Shared } from '~/types/';
+import { Convert } from '../../src/convert/properties';
+import { UserSideInput } from '../../src/types';
+import { _Shared } from '../../src/types/';
 import { RandomAsset } from '../../../storage/test/randomAsset';
 import { Storage } from '../../../storage/src';
 

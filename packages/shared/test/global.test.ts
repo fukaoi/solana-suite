@@ -10,7 +10,7 @@ import {
   overwriteObject,
   sleep,
   Try,
-} from '~/index';
+} from '../src';
 import { JSDOM } from 'jsdom';
 
 const PUBKEY = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';

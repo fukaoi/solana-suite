@@ -1,1 +1,1 @@
-export * from '~/bundlr';
+export * from './bundlr';

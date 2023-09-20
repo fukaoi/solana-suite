@@ -1,14 +1,16 @@
 import {
-  sendAndConfirmTransaction,
-  TransactionSignature,
-  Keypair,
-  TransactionInstruction,
-  Transaction,
   ConfirmOptions,
+  Keypair,
+  sendAndConfirmTransaction,
+  Transaction,
+  TransactionInstruction,
+  TransactionSignature,
 } from '@solana/web3.js';
 
-import { Node, Result, Try } from '~/index';
-import { MAX_RETRIES } from '~/instruction/define';
+import { Node } from '../node';
+import { Result } from '../result';
+import { Try } from '../global';
+import { MAX_RETRIES } from './define';
 
 export class Instruction {
   instructions: TransactionInstruction[];

@@ -10,9 +10,7 @@ const config: Config = {
     TextEncoder: TextEncoder,
   },
   testTimeout: 30000,
-  moduleNameMapper: {
-    '^~/(.*)$': '<rootDir>/src/$1/',
-  },
+  // modulePaths: ['<rootDir>/src'],
 };
 
 export default config;

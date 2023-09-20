@@ -8,7 +8,7 @@ import {
   Node,
   Pubkey,
   Secret,
-} from '~/index';
+} from '../src';
 
 console.log('\u001b[33m === TEST START ===');
 console.log(`\u001b[33m solana-network: ${Constants.currentCluster}`);

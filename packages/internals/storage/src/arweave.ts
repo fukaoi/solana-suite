@@ -1,8 +1,4 @@
-import {
-  Currency,
-  MetaplexFile,
-  toMetaplexFile,
-} from '@metaplex-foundation/js';
+import { MetaplexFile, toMetaplexFile } from '@metaplex-foundation/js';
 
 import {
   debugLog,
@@ -13,7 +9,7 @@ import {
   Try,
 } from '@solana-suite/shared';
 import { FileContent, InfraSideInput } from 'internals/shared-metaplex/';
-import { Bundlr } from '~/bundlr';
+import { Bundlr } from './bundlr';
 
 export interface MetaplexFileOptions {
   readonly displayName: string;
@@ -24,39 +20,6 @@ export interface MetaplexFileOptions {
 }
 
 export namespace Arweave {
-  export const getUploadPrice = async (
-    filePath: FileContent,
-    feePayer: Secret,
-  ): Promise<Result<{ price: number; currency: Currency }, Error>> => {
-    return Try(async () => {
-      let buffer!: Buffer;
-      if (isNode()) {
-        const filepath = filePath as string;
-        buffer = (await import('fs')).readFileSync(filepath);
-      } else if (isBrowser()) {
-        const filepath = filePath;
-        buffer = toMetaplexFile(filepath, '').buffer;
-      } else {
-        throw Error('Supported environment: only Node.js and Browser js');
-      }
-
-      const res = await Bundlr.useStorage(feePayer.toKeypair()).getUploadPrice(
-        buffer.length,
-      );
-
-      const basisPoints: string = res.basisPoints.toString();
-      debugLog(
-        '# buffer length, price',
-        buffer.length,
-        parseInt(basisPoints).toSol(),
-      );
-      return {
-        price: parseInt(basisPoints).toSol(),
-        currency: res.currency,
-      };
-    });
-  };
-
   export const uploadContent = async (
     filePath: FileContent,
     feePayer: Secret,

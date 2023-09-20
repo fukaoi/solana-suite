@@ -4,7 +4,7 @@ import {
   InfraSideInput,
   StorageType,
   UserSideInput,
-} from '~/types';
+} from '../types';
 
 export namespace Convert {
   export namespace Properties {

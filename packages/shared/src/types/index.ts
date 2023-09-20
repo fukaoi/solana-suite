@@ -1,2 +1,2 @@
-export * from '~/types/global';
-export * from '~/types/keypair-account';
+export * from './global';
+export * from './keypair-account';

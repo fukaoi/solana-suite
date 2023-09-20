@@ -5,9 +5,9 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import { Node } from '~/node';
-import { MAX_RETRIES } from '~/instruction/define';
-import { Instruction as _Index } from '~/instruction/index';
+import { Node } from '../node';
+import { MAX_RETRIES } from './define';
+import { Instruction as _Index } from './';
 
 //@internals
 export class Instruction {

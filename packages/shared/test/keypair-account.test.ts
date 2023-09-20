@@ -1,8 +1,8 @@
 import { describe, expect, it } from '@jest/globals';
 import { Keypair, PublicKey } from '@solana/web3.js';
-import { KeypairAccount } from '~/keypair-account';
-import { Pubkey } from '~/types/keypair-account';
-import '~/global';
+import { KeypairAccount } from '../src/keypair-account';
+import { Pubkey } from '../src/types/keypair-account';
+import '../src/global';
 import bs from 'bs58';
 
 const PUBKEY = '6KJBDz6qPZZyJ9gAWXSgHufqAzU8pnhQmVdTitfusYS5';

@@ -1,7 +1,7 @@
 import { expect, beforeAll, describe, it } from '@jest/globals';
 import { Setup } from '../../../shared/test/testSetup';
 import { KeypairAccount } from '@solana-suite/shared';
-import { Bundlr } from '~/bundlr';
+import { Bundlr } from '../src/bundlr';
 import {
   BundlrStorageDriver,
   Metaplex as MetaplexFoundation,

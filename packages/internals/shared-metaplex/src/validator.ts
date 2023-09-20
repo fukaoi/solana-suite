@@ -1,7 +1,7 @@
 import { Result, Try } from '@solana-suite/shared';
-import { Royalty } from '~/royalty';
-import { InfraSideInput, UserSideInput } from '~/types/';
-import { Details, Limit } from '~/types/validator';
+import { Royalty } from './royalty';
+import { InfraSideInput, UserSideInput } from './types';
+import { Details, Limit } from './types/validator';
 
 export namespace Validator {
   export namespace Message {

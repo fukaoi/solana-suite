@@ -1,6 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
-import { InfraSideInput } from '~/types/infra-side/input';
-import { _Shared } from '~/types/shared';
+import { InfraSideInput } from '../infra-side/input';
+import { _Shared } from '../shared';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 export namespace InfraSideOutput {

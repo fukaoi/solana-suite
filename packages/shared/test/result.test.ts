@@ -1,5 +1,5 @@
 import { describe, it } from '@jest/globals';
-import { Result } from '~/result';
+import { Result } from '../src/result';
 
 describe('Result', () => {
   it('conditions', () => {

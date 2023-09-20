@@ -1,11 +1,11 @@
-import { Convert as _Creators } from '~/convert/creators';
-import { Convert as _Uses } from '~/convert/uses';
+import { Convert as _Creators } from '../convert/creators';
+import { Convert as _Uses } from '../convert/uses';
 import {
   InfraSideInput,
   InfraSideOutput,
   UserSideInput,
   UserSideOutput,
-} from '~/types';
+} from '../types';
 
 import { convertTimestampToDateTime } from '@solana-suite/shared';
 export namespace Convert {

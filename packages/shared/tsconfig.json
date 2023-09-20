@@ -4,13 +4,7 @@
 
   "display": "@solana-suite/shared",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "~/*": [
-        "./src/*"
-      ]
-    }
   },
-  "include": ["**/*.ts"],
+  "include": ["src/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

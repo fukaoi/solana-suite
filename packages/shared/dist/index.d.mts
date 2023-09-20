@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { PublicKey, Commitment, TransactionInstruction, Keypair, TransactionSignature, Connection } from '@solana/web3.js';
+import { PublicKey, Commitment, TransactionSignature, TransactionInstruction, Keypair, Connection } from '@solana/web3.js';
 
 declare namespace Constants {
     const currentCluster: string;
@@ -32,15 +32,6 @@ declare namespace Constants {
     const NFT_STORAGE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE";
     const NFT_STORAGE_GATEWAY_URL = "https://ipfs.io/ipfs";
     const BUNDLR_NETWORK_URL: string;
-}
-
-declare class Instruction {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    data?: unknown;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
-    submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
 declare abstract class AbstractResult<T, E extends Error> {
@@ -246,6 +237,15 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+declare class Instruction {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: unknown;
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    submit: () => Promise<Result<TransactionSignature, Error>>;
+}
+
 /**
  * Overwrite JS Object
  *
@@ -350,13 +350,6 @@ declare class MintInstruction extends Instruction {
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
-declare class PartialSignInstruction {
-    hexInstruction: string;
-    data?: Pubkey;
-    constructor(instructions: string, mint?: Pubkey);
-    submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
-}
-
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -388,6 +381,13 @@ type OverwriteObject = {
 declare enum Explorer {
     Solscan = "solscan",
     SolanaFM = "solanafm"
+}
+
+declare class PartialSignInstruction {
+    hexInstruction: string;
+    data?: Pubkey;
+    constructor(instructions: string, mint?: Pubkey);
+    submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
 }
 
 export { AnyObject, Constants, Explorer, Instruction, KeypairAccount, MintInstruction, Node, OverwriteObject, PartialSignInstruction, Pubkey, Result, Secret, Try, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep };

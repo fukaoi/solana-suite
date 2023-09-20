@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 import { RandomAsset } from './randomAsset';
-import { NftStorage } from '~/nft-storage';
+import { NftStorage } from '../src/nft-storage';
 
 describe('StorageNftStorage', () => {
   it('Upload content data', async () => {

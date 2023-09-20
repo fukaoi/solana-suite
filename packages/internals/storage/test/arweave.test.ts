@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import { KeypairAccount } from '@solana-suite/shared';
 import { Setup } from '../../../shared/test/testSetup';
 import { RandomAsset } from './randomAsset';
-import { Arweave } from '~/arweave';
+import { Arweave } from '../src/arweave';
 
 let source: KeypairAccount;
 
@@ -51,16 +51,6 @@ describe('StorageArweave', () => {
     );
     res.match(
       (ok: string) => console.log('# arweave metadata url: ', ok),
-      (_: Error) => expect(false).toBe(true),
-    );
-  });
-
-  it('Get file upload price', async () => {
-    const asset = RandomAsset.get();
-    const res = await Arweave.getUploadPrice(asset.filePath!, source.secret);
-    res.match(
-      (ok: { price: number; currency: string }) =>
-        console.log('# upload cost, currency: ', ok.price, ok.currency),
       (_: Error) => expect(false).toBe(true),
     );
   });

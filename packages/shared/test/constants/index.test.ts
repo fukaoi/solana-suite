@@ -1,5 +1,5 @@
-import { describe, it, expect } from '@jest/globals';
-import { Constants } from '~/constants';
+import { describe, expect, it } from '@jest/globals';
+import { Constants } from '../../src/constants';
 
 describe('Constants', () => {
   it('Fetch nft.storage api key in solana-suite.json', () => {

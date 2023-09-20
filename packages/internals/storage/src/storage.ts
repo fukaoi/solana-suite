@@ -6,8 +6,8 @@ import {
   UserSideInput,
 } from 'internals/shared-metaplex';
 
-import { Arweave } from '~/arweave';
-import { NftStorage } from '~/nft-storage';
+import { Arweave } from './arweave';
+import { NftStorage } from './nft-storage';
 
 export namespace Storage {
   export const toConvertOffchaindata = (

@@ -1,13 +1,13 @@
-import { Convert as _Collection } from '~/convert/collection';
-import { Convert as _Creators } from '~/convert/creators';
-import { Convert as _Uses } from '~/convert/uses';
-import { Convert as _Token } from '~/convert/token-metadata';
+import { Convert as _Collection } from '../convert/collection';
+import { Convert as _Creators } from '../convert/creators';
+import { Convert as _Uses } from '../convert/uses';
+import { Convert as _Token } from '../convert/token-metadata';
 import {
   InfraSideInput,
   InfraSideOutput,
   UserSideInput,
   UserSideOutput,
-} from '~/types';
+} from '../types';
 
 import { convertTimestampToDateTime } from '@solana-suite/shared';
 
