@@ -1,6 +1,5 @@
-import { describe, it } from 'mocha';
+import { describe, expect, it } from '@jest/globals';
 import { SolNative } from '../../src';
-import { assert } from 'chai';
 
 const owner = '6bo6UqEZ2D7C4oMpycxBzY5eLeHdmUkCrFXozhqUd4sp';
 const tokenAccount = '2QSBPixtfHP2JGYfwGaxeLYji9F4NfemCvCJCXe5kMdt';
@@ -13,14 +12,14 @@ describe('SolNative', () => {
     console.log('SolNative.findByOwner: ', res);
 
     if (res.isErr) {
-      assert(res.error.message);
+      expect(res.error.message).toBeTruthy();
     }
 
     if (res.isOk) {
       const info = res.value;
-      assert.isNumber(info.sol);
-      assert.isNumber(info.lamports);
-      assert.isString(info.owner);
+      expect(typeof info.sol).toBe('number');
+      expect(typeof info.lamports).toBe('number');
+      expect(typeof info.owner).toBe('string');
     }
   });
 
@@ -30,14 +29,14 @@ describe('SolNative', () => {
     console.log('SolNative.findByOwner: ', res);
 
     if (res.isErr) {
-      assert(res.error.message);
+      expect(res.error.message).toBeTruthy();
     }
 
     if (res.isOk) {
       const info = res.value;
-      assert.isNumber(info.sol);
-      assert.isNumber(info.lamports);
-      assert.isString(info.owner);
+      expect(typeof info.sol).toBe('number');
+      expect(typeof info.lamports).toBe('number');
+      expect(typeof info.owner).toBe('string');
     }
   });
 
@@ -47,14 +46,14 @@ describe('SolNative', () => {
     console.log('SolNative.findByOwner: ', res);
 
     if (res.isErr) {
-      assert(res.error.message);
+      expect(res.error.message).toBeTruthy();
     }
 
     if (res.isOk) {
       const info = res.value;
-      assert.isNumber(info.sol);
-      assert.isNumber(info.lamports);
-      assert.isString(info.owner);
+      expect(typeof info.sol).toBe('number');
+      expect(typeof info.lamports).toBe('number');
+      expect(typeof info.owner).toBe('string');
     }
   });
 });

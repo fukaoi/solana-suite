@@ -1,6 +1,5 @@
-import { describe, it, before } from 'mocha';
-import { SolNative, Airdrop } from '../../src';
-import { assert } from 'chai';
+import { expect, beforeAll, describe, it } from '@jest/globals';
+import { Airdrop, SolNative } from '../../src';
 import { Setup } from '../../../shared/test/testSetup';
 import { KeypairAccount } from '../../../shared/src/keypair-account';
 
@@ -8,7 +7,7 @@ let source: KeypairAccount;
 let dest: KeypairAccount;
 
 describe('SolNative', () => {
-  before(async () => {
+  beforeAll(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
     dest = obj.dest;
@@ -20,12 +19,12 @@ describe('SolNative', () => {
       source.pubkey,
       dest.pubkey,
       [source.secret],
-      solAmount
+      solAmount,
     );
 
-    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
+    expect(inst.isOk).toBe(true);
     const res = await inst.submit();
-    assert.isTrue(res.isOk, `${res.unwrap()}`);
+    expect(res.isOk).toBe(true);
     console.log('# tx signature: ', res.unwrap());
   });
 
@@ -45,16 +44,13 @@ describe('SolNative', () => {
       dest.pubkey,
       [owner.secret],
       solAmount,
-      feePayer.secret
+      feePayer.secret,
     );
 
     const res = await inst.submit();
-    assert.isTrue(res.isOk, `${res.unwrap()}`);
+    expect(res.isOk).toBe(true);
     console.log('# tx signature: ', res.unwrap());
     const after = (await SolNative.findByOwner(feePayer.pubkey)).unwrap();
-    assert.isTrue(
-      before.sol > after.sol,
-      `before fee: ${before}, after fee: ${after}`
-    );
+    expect(before.sol > after.sol).toBe(true);
   });
 });

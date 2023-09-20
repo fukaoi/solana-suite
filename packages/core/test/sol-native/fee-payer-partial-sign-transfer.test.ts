@@ -1,5 +1,4 @@
-import { describe, it, before } from 'mocha';
-import { assert } from 'chai';
+import { beforeAll, describe, expect, it } from '@jest/globals';
 import { Setup } from '../../../shared/test/testSetup';
 import { KeypairAccount } from '../../../shared/src/keypair-account';
 import { SolNative } from '../../src/';
@@ -8,7 +7,7 @@ let source: KeypairAccount;
 let dest: KeypairAccount;
 
 describe('SolNative', () => {
-  before(async () => {
+  beforeAll(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
     dest = obj.dest;
@@ -21,14 +20,14 @@ describe('SolNative', () => {
       dest.pubkey,
       [source.secret],
       solAmount,
-      source.pubkey
+      source.pubkey,
     );
 
-    assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
+    expect(serialized.isOk).toBe(true);
     if (serialized.isOk) {
       console.log(serialized.value);
       const res = await serialized.value.submit(source.secret);
-      assert.isTrue(res.isOk, `${res.unwrap()}`);
+      expect(res.isOk).toBe(true);
       console.log('# tx signature: ', res.unwrap());
     }
   });
