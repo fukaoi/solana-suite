@@ -1,5 +1,4 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
+import { describe, it, expect, beforeAll, beforeEach } from '@jest/globals';
 import { Setup } from '../../../shared/test/testSetup';
 import { Memo, SolNative, SplToken } from '../../src';
 import { KeypairAccount, Node, Pubkey } from '../../../shared/src/';
@@ -16,7 +15,7 @@ const MEMO_STOCK = new KeypairAccount({
 });
 
 describe('Memo', () => {
-  before(async () => {
+  beforeAll(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
     dest = obj.dest;
@@ -29,13 +28,13 @@ describe('Memo', () => {
   it('encode', async () => {
     const res = Memo.encode(DUMMY_DATA);
     console.log(`# encoded: ${res}`, res);
-    assert.equal(res.length, 15);
+    expect(res.length).toEqual(15);
   });
 
   it('create instruction', async () => {
     const res = Memo.create(DUMMY_DATA, source.pubkey, source.secret);
     console.log(`# create: `, res);
-    assert.isObject(res);
+    expect(typeof res).toBe('object');
   });
 
   it('send memo by owner with fee payer', async () => {
@@ -47,7 +46,7 @@ describe('Memo', () => {
     );
 
     const res = await inst.submit();
-    assert.isTrue(res.isOk, res.unwrap());
+    expect(res.isOk).toBe(true);
     console.log('# tx signature: ', res.unwrap());
   });
 
@@ -67,7 +66,7 @@ describe('Memo', () => {
     );
 
     const res = await [inst1, inst2].submit();
-    assert.isTrue(res.isOk);
+    expect(res.isOk).toBe(true);
     console.log('# tx signature: ', res.unwrap());
   });
 
@@ -98,7 +97,7 @@ describe('Memo', () => {
 
     (await [inst1, inst2].submit()).match(
       (ok) => console.log('# tx signature: ', ok),
-      (err) => assert.fail(err.message)
+      (err) => expect(false).toBe(true)
     );
   });
 
@@ -107,6 +106,6 @@ describe('Memo', () => {
     const inst = Memo.create(overData, source.pubkey, source.secret);
 
     const res = await inst.submit();
-    assert.isTrue(res.isErr);
+    expect(res.isErr).toBe(true);
   });
 });
