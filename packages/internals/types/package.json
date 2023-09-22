@@ -1,36 +1,29 @@
 {
-  "name": "internals/storage",
+  "name": "internals/types",
   "version": "0.7.0",
+  "private": true,
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "private": true,
   "scripts": {
     "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
-    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
-    "test": "mocha -t 300000 --require ts-node/register -- ",
-    "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
-    "@metaplex-foundation/js": "0.18.0",
-    "internals/shared-metaplex": "workspace:^",
-    "@solana-suite/shared": "workspace:^",
-    "nft.storage": "^7.1.1"
+    "@solana-suite/shared": "workspace:*",
+    "@solana/web3.js": "^1.78.5",
+    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
+    "bn.js": "^5.2.1"
   },
   "devDependencies": {
+    "@types/bn.js": "^5.1.1",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
     "build-configs/tsup": "workspace:*"
-  },
-  "browser": {
-    "fs": false
-  },
-  "node": {
-    "File": false
   }
 }

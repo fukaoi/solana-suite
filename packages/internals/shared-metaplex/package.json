@@ -1,6 +1,6 @@
 {
   "name": "internals/shared-metaplex",
-  "version": "0.6.5",
+  "version": "0.7.0",
   "private": true,
   "main": "dist/index.js",
   "module": "dist/index.mjs",
