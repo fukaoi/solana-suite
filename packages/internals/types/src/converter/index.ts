@@ -1,5 +1,3 @@
-export * from './infra-side/input';
-export * from './infra-side/output';
-export * from './user-side/input';
-export * from './user-side/output';
+export * from './infra-side';
+export * from './user-side';
 export * from './shared';
