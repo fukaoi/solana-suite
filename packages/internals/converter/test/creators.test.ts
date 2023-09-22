@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha';
 import { KeypairAccount } from '@solana-suite/shared';
-import { Convert } from '../../src/convert/creators';
+import { Convert } from '../src/creators';
 import { assert } from 'chai';
 
 describe('Convert.Creators', () => {

@@ -1,10 +1,9 @@
 import { describe, it } from 'mocha';
-import { Convert } from '../../src/convert/properties';
-import { UserSideInput } from '../../src/types';
-import { _Shared } from '../../src/types/';
+import { Convert } from '../src/properties';
+import { UserSideInput, _Shared } from 'internals/types';
 import { assert } from 'chai';
-import { RandomAsset } from '../../../storage/test/randomAsset';
-import { Storage } from '../../../storage/src';
+import { RandomAsset } from '../../storage/test/randomAsset';
+import { Storage } from '../../storage/src';
 
 describe('Convert.Properties', () => {
   it('To input convert', async () => {

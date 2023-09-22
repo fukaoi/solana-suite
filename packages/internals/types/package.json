@@ -25,5 +25,11 @@
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
     "build-configs/tsup": "workspace:*"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts"
+    },
+    "./package.json": "./package.json"
   }
 }
