@@ -30,7 +30,7 @@ export var SplToken;
                     programId: TOKEN_PROGRAM_ID,
                 });
                 const storedHistories = [];
-                debugLog('# tokenAccounts size: ', tokenAccounts.value.length);
+                debugLog("# tokenAccounts size: ", tokenAccounts.value.length);
                 for (const account of tokenAccounts.value) {
                     const parser = TransactionFilter.parse(filterType, ModuleName.SplToken);
                     yield Signatures.getForAdress(account.pubkey.toString(), parser, (result) => result.match(onOk, onErr), mergedOptions, storedHistories);
