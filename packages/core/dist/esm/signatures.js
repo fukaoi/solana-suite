@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { debugLog, Node, Result, sleep } from '@solana-suite/shared';
+import { debugLog, Node, Result, sleep } from "@solana-suite/shared";
 //@internal
 export var Signatures;
 (function (Signatures) {
@@ -18,27 +18,13 @@ export var Signatures;
         }
         return res;
     });
-    Signatures.getForAdress = (pubkey, parser, callback, narrowDown = 1000) => __awaiter(this, void 0, void 0, function* () {
+    Signatures.getForAdress = (pubkey, parser, callback, options, histories = []) => __awaiter(this, void 0, void 0, function* () {
         try {
+            debugLog("# options: ", options);
             const transactions = yield Node.getConnection().getSignaturesForAddress(pubkey.toPublicKey(), {
-                limit: narrowDown,
+                limit: options.narrowDown,
             });
-            debugLog('# transactions count:', transactions.length);
-            const histories = [];
-            // don't use  Promise.all, this is sync action
-            // let i = 1;
-            // for (const transaction of transactions) {
-            //   const signature = await parseForTransaction(transaction.signature);
-            //   const history = parser(signature);
-            //   if (history) {
-            //     histories.push(history);
-            //     callback(Result.ok(histories));
-            //     i++;
-            //   }
-            //   if (receiveLimit && i > receiveLimit) {
-            //     break;
-            //   }
-            // }
+            debugLog("# transactions count:", transactions.length);
             for (const transaction of transactions) {
                 parseForTransaction(transaction.signature)
                     .then((signature) => {
@@ -49,7 +35,7 @@ export var Signatures;
                     }
                 })
                     .catch((e) => callback(Result.err(e)));
-                yield sleep(0.05); // avoid 429 error
+                yield sleep(options.waitTime); // avoid 429 error
             }
         }
         catch (e) {

@@ -15,11 +15,10 @@ const transaction_filter_1 = require("../transaction-filter");
 const signatures_1 = require("../signatures");
 var Memo;
 (function (Memo) {
-    Memo.getHistory = (target, onOk, onErr, narrowDown = 1000 // Max number: 1000
-    ) => __awaiter(this, void 0, void 0, function* () {
+    Memo.getHistory = (target, onOk, onErr, option) => __awaiter(this, void 0, void 0, function* () {
         try {
             const parser = transaction_filter_1.TransactionFilter.parse(types_1.FilterType.OnlyMemo, types_1.ModuleName.SolNative);
-            yield signatures_1.Signatures.getForAdress(target, parser, (result) => result.match(onOk, onErr), narrowDown);
+            yield signatures_1.Signatures.getForAdress(target, parser, (result) => result.match(onOk, onErr), option);
         }
         catch (e) {
             if (e instanceof Error) {

@@ -7,16 +7,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { ModuleName } from '../types/';
-import { TransactionFilter } from '../transaction-filter';
-import { Signatures } from '../signatures';
+import { ModuleName, } from "../types/";
+import { TransactionFilter } from "../transaction-filter";
+import { Signatures } from "../signatures";
 export var SolNative;
 (function (SolNative) {
-    SolNative.getHistory = (target, filterType, onOk, onErr, narrowDown = 1000 // Max number: 1000
-    ) => __awaiter(this, void 0, void 0, function* () {
+    SolNative.getHistory = (target, filterType, onOk, onErr, options = {}) => __awaiter(this, void 0, void 0, function* () {
         try {
+            const defaultValues = {
+                waitTime: 0.03,
+                narrowDown: 100,
+            };
+            const mergedOptions = Object.assign(Object.assign({}, defaultValues), options);
             const parser = TransactionFilter.parse(filterType, ModuleName.SolNative);
-            yield Signatures.getForAdress(target, parser, (result) => __awaiter(this, void 0, void 0, function* () { return yield result.match(onOk, onErr); }), narrowDown);
+            yield Signatures.getForAdress(target, parser, (result) => __awaiter(this, void 0, void 0, function* () { return yield result.match(onOk, onErr); }), mergedOptions);
         }
         catch (e) {
             if (e instanceof Error) {

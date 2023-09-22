@@ -21,27 +21,13 @@ var Signatures;
         }
         return res;
     });
-    Signatures.getForAdress = (pubkey, parser, callback, narrowDown = 1000) => __awaiter(this, void 0, void 0, function* () {
+    Signatures.getForAdress = (pubkey, parser, callback, options, histories = []) => __awaiter(this, void 0, void 0, function* () {
         try {
+            (0, shared_1.debugLog)("# options: ", options);
             const transactions = yield shared_1.Node.getConnection().getSignaturesForAddress(pubkey.toPublicKey(), {
-                limit: narrowDown,
+                limit: options.narrowDown,
             });
-            (0, shared_1.debugLog)('# transactions count:', transactions.length);
-            const histories = [];
-            // don't use  Promise.all, this is sync action
-            // let i = 1;
-            // for (const transaction of transactions) {
-            //   const signature = await parseForTransaction(transaction.signature);
-            //   const history = parser(signature);
-            //   if (history) {
-            //     histories.push(history);
-            //     callback(Result.ok(histories));
-            //     i++;
-            //   }
-            //   if (receiveLimit && i > receiveLimit) {
-            //     break;
-            //   }
-            // }
+            (0, shared_1.debugLog)("# transactions count:", transactions.length);
             for (const transaction of transactions) {
                 parseForTransaction(transaction.signature)
                     .then((signature) => {
@@ -52,7 +38,7 @@ var Signatures;
                     }
                 })
                     .catch((e) => callback(shared_1.Result.err(e)));
-                yield (0, shared_1.sleep)(0.05); // avoid 429 error
+                yield (0, shared_1.sleep)(options.waitTime); // avoid 429 error
             }
         }
         catch (e) {
