@@ -1,6 +1,7 @@
-import { expect, beforeAll, describe, it } from '@jest/globals';
+import { describe, it } from 'mocha';
 import { Setup } from '../../../shared/test/testSetup';
 import { KeypairAccount } from '@solana-suite/shared';
+import { assert } from 'chai';
 import { Bundlr } from '../src/bundlr';
 import {
   BundlrStorageDriver,
@@ -10,20 +11,20 @@ import {
 let source: KeypairAccount;
 
 describe('Bundlr', () => {
-  beforeAll(async () => {
+  before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
   });
 
   it('Call MetaplexFoundation', async () => {
     const res = Bundlr.make(source.toKeypair());
-    expect(typeof res).toBe('object');
-    expect(res instanceof MetaplexFoundation).toBe(true);
+    assert.isObject(res);
+    assert.isTrue(res instanceof MetaplexFoundation);
   });
 
   it('Call storage driver', async () => {
     const res = Bundlr.useStorage(source.toKeypair());
-    expect(typeof res).toBe('object');
-    expect(res instanceof BundlrStorageDriver).toBe(true);
+    assert.isObject(res);
+    assert.isTrue(res instanceof BundlrStorageDriver);
   });
 });

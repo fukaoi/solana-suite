@@ -1,8 +1,9 @@
-import { describe, it, beforeAll, expect } from '@jest/globals';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/';
 import { RandomAsset } from '../../../internals/storage/test/randomAsset';
-import { KeypairAccount, Pubkey } from '../../../shared';
+import { KeypairAccount, Pubkey } from '@solana-suite/shared';
 
 let source: KeypairAccount;
 
@@ -18,7 +19,7 @@ const TOKEN_METADATA = {
 };
 
 describe('SplToken', () => {
-  beforeAll(async () => {
+  before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
   });
@@ -35,10 +36,10 @@ describe('SplToken', () => {
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
       TOKEN_METADATA,
-      source.secret,
+      source.secret
     );
 
-    expect(inst1.isOk).toBe(true);
+    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
     await inst1.submit();
     const token = inst1.unwrap().data as Pubkey;
     console.log('# mint: ', token);
@@ -50,14 +51,14 @@ describe('SplToken', () => {
       [tokenOwner.secret],
       100,
       MINT_DECIMAL,
-      source.pubkey,
+      source.pubkey
     );
 
-    expect(serialized.isOk).toBe(true);
+    assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
 
     if (serialized.isOk) {
       const res = await serialized.value.submit(source.secret);
-      expect(res.isOk).toBe(true);
+      assert.isTrue(res.isOk, `${res.unwrap()}`);
       console.log('# tx signature: ', res.unwrap());
     }
   });

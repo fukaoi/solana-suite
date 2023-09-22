@@ -1,16 +1,28 @@
-import { Pubkey } from '@solana-suite/shared';
-import { FilterType, History, ModuleName, OnErr, OnOk } from '../types/';
-import { TransactionFilter } from '../transaction-filter';
-import { Signatures } from '../signatures';
+import { Pubkey } from "@solana-suite/shared";
+import {
+  FilterType,
+  History,
+  HistoryOptions,
+  ModuleName,
+  OnErr,
+  OnOk,
+} from "../types/";
+import { TransactionFilter } from "../transaction-filter";
+import { Signatures } from "../signatures";
 
 export namespace Memo {
   export const getHistory = async (
     target: Pubkey,
     onOk: OnOk<History>,
     onErr: OnErr,
-    narrowDown = 1000, // Max number: 1000
+    options: Partial<HistoryOptions> = {},
   ): Promise<void> => {
     try {
+      const defaultValues: HistoryOptions = {
+        waitTime: 0.03,
+        narrowDown: 100,
+      };
+      const mergedOptions = { ...defaultValues, ...options };
       const parser = TransactionFilter.parse(
         FilterType.OnlyMemo,
         ModuleName.SolNative,
@@ -19,7 +31,7 @@ export namespace Memo {
         target,
         parser,
         (result) => result.match(onOk, onErr),
-        narrowDown,
+        mergedOptions
       );
     } catch (e) {
       if (e instanceof Error) {

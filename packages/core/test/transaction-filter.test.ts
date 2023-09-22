@@ -1,19 +1,25 @@
-import { beforeAll, describe, expect, it } from '@jest/globals';
-import { Signatures } from '../src/signatures';
-import { FilterType, ModuleName } from '../src/';
-import { Setup } from '../../shared/test/testSetup';
-import { Pubkey } from '../../shared/src';
-import { TransactionFilter } from '../src/transaction-filter';
+import { describe, it } from "mocha";
+import { Signatures } from "../src/signatures";
+import { assert } from "chai";
+import { FilterType, ModuleName } from "../src/";
+import { Setup } from "../../shared/test/testSetup";
+import { Pubkey } from "@solana-suite/shared";
+import { TransactionFilter } from "../src/transaction-filter";
 
 let target: Pubkey;
 
-describe('TransactionFilter', () => {
-  beforeAll(async () => {
+const options = {
+  waitTime: 0,
+  narrowDown: 100,
+};
+
+describe("TransactionFilter", () => {
+  before(async () => {
     const obj = await Setup.generateKeyPair();
     target = obj.source.pubkey;
   });
 
-  it('Parse transfer history by SolNative', async () => {
+  it("Parse transfer history by SolNative", async () => {
     const parser = TransactionFilter.parse(
       FilterType.Transfer,
       ModuleName.SolNative,
@@ -23,14 +29,14 @@ describe('TransactionFilter', () => {
       parser,
       (res) => {
         console.log(res);
-        console.log('# response size:', res.unwrap().length);
-        expect(res).not.toBe('');
+        console.log("# response size:", res.unwrap().length);
+        assert.isNotEmpty(res);
       },
-      100,
+      options,
     );
   });
 
-  it('Parse memo history by SplToken', async () => {
+  it("Parse memo history by SplToken", async () => {
     const parser = TransactionFilter.parse(
       FilterType.Memo,
       ModuleName.SplToken,
@@ -40,13 +46,13 @@ describe('TransactionFilter', () => {
       parser,
       (res) => {
         console.log(res);
-        expect(res).not.toBe('');
+        assert.isNotEmpty(res);
       },
-      100,
+      options,
     );
   });
 
-  it('Parse Mint history', async () => {
+  it("Parse Mint history", async () => {
     const parser = TransactionFilter.parse(
       FilterType.Mint,
       ModuleName.SplToken,
@@ -56,12 +62,12 @@ describe('TransactionFilter', () => {
       parser,
       (res) => {
         console.log(res);
-        expect(res).not.toBe('');
+        assert.isNotEmpty(res);
       },
-      100,
+      options,
     );
   });
-  it('[Error]Parse Mint history by SolNative', async () => {
+  it("[Error]Parse Mint history by SolNative", async () => {
     const parser = TransactionFilter.parse(
       FilterType.Mint,
       ModuleName.SolNative,
@@ -71,11 +77,11 @@ describe('TransactionFilter', () => {
       parser,
       (histories) => {
         histories.match(
-          (_) => expect(false).toBe(true),
-          (err) => expect(err.message).toBeTruthy(),
+          (_) => assert.fail("Dont go through here"),
+          (err) => assert.isOk(err.message),
         );
       },
-      100,
+      options,
     );
   });
 });

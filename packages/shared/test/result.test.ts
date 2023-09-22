@@ -1,4 +1,4 @@
-import { describe, it } from '@jest/globals';
+import { describe, it } from 'mocha';
 import { Result } from '../src/result';
 
 describe('Result', () => {
@@ -37,7 +37,7 @@ describe('Result', () => {
       },
       (err) => {
         console.log(err);
-      },
+      }
     );
   });
 
@@ -49,7 +49,7 @@ describe('Result', () => {
       },
       (err) => {
         console.log(err.message);
-      },
+      }
     );
   });
 });

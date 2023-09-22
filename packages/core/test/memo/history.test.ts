@@ -1,21 +1,24 @@
-import { describe, expect, it } from '@jest/globals';
-import { History, Memo, OnErr, OnOk } from '../../src/';
+import { describe, it } from "mocha";
+import { assert } from "chai";
+import { History, Memo, OnErr, OnOk } from "../../src/";
 
-const target = 'Ebq72X3i8ug6AX2G3v2ZoLA4ZcxHurvMuJYorqJ6sALD';
+const target = "Ebq72X3i8ug6AX2G3v2ZoLA4ZcxHurvMuJYorqJ6sALD";
 const onOk: OnOk<History> = (ok) => {
+  console.log("# hisory size: ", ok.length);
   ok.forEach((res) => {
-    expect(JSON.stringify(res)).not.toBe('{}');
-    expect(res.dateTime).not.toBeNull();
+    assert.isNotEmpty(res.source);
+    assert.isNotEmpty(res.destination);
+    assert.isNotEmpty(res.tokenAmount);
+    assert.isNotEmpty(res.signers);
+    assert.isNotEmpty(res.multisigAuthority);
+    assert.isNotNull(res.dateTime);
   });
 };
 
-const onErr: OnErr = (err: Error) => {
-  console.error('# error: ', err);
-  expect(false).toBe(true);
-};
+const onErr: OnErr = (err: Error) => assert.fail(err.message);
 
-describe('Memo', () => {
-  it('Get Only memo history', async () => {
-    await Memo.getHistory(target, onOk, onErr, 100);
+describe("Memo", () => {
+  it("Get Only memo history", async () => {
+    await Memo.getHistory(target, onOk, onErr);
   });
 });

@@ -1,18 +1,14 @@
-import { beforeAll, describe, expect, it } from '@jest/globals';
-import { Multisig, SolNative, OnErr } from '../../src';
+import { describe, it, before } from 'mocha';
+import { SolNative, Multisig } from '../../src';
+import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { KeypairAccount } from '../../../shared/src/keypair-account';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
 
-const onErr: OnErr = (err: Error) => {
-  console.log('# error: ', err);
-  expect(false).toBe(true);
-};
-
 describe('SolNative', () => {
-  beforeAll(async () => {
+  before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
     dest = obj.dest;
@@ -28,22 +24,25 @@ describe('SolNative', () => {
 
     let multisig!: string;
 
-    (await inst1.submit()).match((_) => {
-      multisig = inst1.unwrap().data as string;
-      console.log('# multisig: ', multisig);
-    }, onErr);
+    (await inst1.submit()).match(
+      (_) => {
+        multisig = inst1.unwrap().data as string;
+        console.log('# multisig: ', multisig);
+      },
+      (err) => assert.fail(err.message)
+    );
 
     const inst2 = await SolNative.transferWithMultisig(
       multisig,
       dest.pubkey,
       [signer1.secret, signer2.secret],
       0.01,
-      source.secret,
+      source.secret
     );
 
     (await inst2.submit()).match(
       (sig: string) => console.log('# signature: ', sig),
-      onErr,
+      (err: Error) => assert.fail(err.message)
     );
   });
 });

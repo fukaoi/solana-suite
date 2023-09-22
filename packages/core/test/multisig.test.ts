@@ -1,13 +1,13 @@
-import { describe, it, expect, beforeAll } from '@jest/globals';
+import { assert } from 'chai';
 import { Multisig } from '../src/';
 import { Setup } from '../../shared/test/testSetup';
-import { KeypairAccount, Pubkey } from '../../shared';
+import { KeypairAccount, Pubkey } from '@solana-suite/shared';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
 
 describe('Multisig', () => {
-  beforeAll(async () => {
+  before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
     dest = obj.dest;
@@ -21,14 +21,14 @@ describe('Multisig', () => {
       signer2.pubkey,
     ]);
 
-    expect(inst.isOk).toBe(true);
+    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     const res = await inst.submit();
-    expect(res.isOk).toBe(true);
+    assert.isTrue(res.isOk, `${res.unwrap()}`);
     const address = inst.unwrap().data as string;
     console.log('# multisig address: ', address);
     const isAddress = await Multisig.isAddress(address);
-    expect(isAddress.isOk).toBe(true);
-    expect(isAddress.unwrap()).toBe(true);
+    assert.isTrue(isAddress.isOk);
+    assert.isTrue(isAddress.unwrap());
   });
 
   it('[Err]Invalid multisig address', async () => {
@@ -41,8 +41,8 @@ describe('Multisig', () => {
 
     const address = inst.unwrap().data as string;
     const res = await Multisig.isAddress(address);
-    expect(res.isOk).toBe(true);
-    expect(res.unwrap()).toBe(false);
+    assert.isTrue(res.isOk);
+    assert.isFalse(res.unwrap());
   });
 
   it('Create account 2 of 2', async () => {
@@ -53,9 +53,9 @@ describe('Multisig', () => {
       signer2.pubkey,
     ]);
 
-    expect(inst.isOk).toBe(true);
+    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     const res = await inst.submit();
-    expect(res.isOk).toBe(true);
+    assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# multisig account: ', inst.unwrap().data);
   });
 
@@ -69,16 +69,16 @@ describe('Multisig', () => {
       signer3.pubkey,
     ]);
 
-    expect(inst.isOk).toBe(true);
+    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     const res = await inst.submit();
-    expect(res.isOk).toBe(true);
+    assert.isTrue(res.isOk, `${res.unwrap()}`);
     console.log('# multisig account: ', inst.unwrap().data);
   });
 
   it('[Err] m number less than signers number', async () => {
     const signer1 = KeypairAccount.create();
     const res = await Multisig.create(2, source.secret, [signer1.pubkey]);
-    expect(res.isErr).toBe(true);
+    assert.isTrue(res.isErr);
   });
 
   it('Get multisig info', async () => {
@@ -88,11 +88,11 @@ describe('Multisig', () => {
       signer1.pubkey,
       signer2.pubkey,
     ]);
-    expect(inst.isOk).toBe(true);
+    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
     await inst.submit();
     const res = await Multisig.getInfo(inst.unwrap().data as Pubkey);
-    expect(res.unwrap().signer1.toString()).toEqual(signer1.pubkey);
-    expect(res.unwrap().signer2.toString()).toEqual(signer2.pubkey);
-    expect(res.isOk).toBe(true);
+    assert.equal(res.unwrap().signer1.toString(), signer1.pubkey);
+    assert.equal(res.unwrap().signer2.toString(), signer2.pubkey);
+    assert.isTrue(res.isOk, `${res.unwrap()}`);
   });
 });

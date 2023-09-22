@@ -1,4 +1,5 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
 import { RandomAsset } from './randomAsset';
 import { NftStorage } from '../src/nft-storage';
 
@@ -8,8 +9,8 @@ describe('StorageNftStorage', () => {
     const res = await NftStorage.uploadContent(asset.filePath!);
 
     res.match(
-      (ok: string) => console.log('# nft.storage content url: ', ok),
-      (_) => expect(false).toBe(true),
+      (ok) => console.log('# nft.storage content url: ', ok),
+      (err) => assert.fail(err.message)
     );
   });
 
@@ -22,8 +23,8 @@ describe('StorageNftStorage', () => {
     const res = await NftStorage.uploadMetadata(meta);
 
     res.match(
-      (ok: string) => console.log('# nft.storage metadata url: ', ok),
-      (_) => expect(false).toBe(true),
+      (ok) => console.log('# nft.storage metadata url: ', ok),
+      (err) => assert.fail(err.message)
     );
   });
 });

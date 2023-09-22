@@ -1,4 +1,4 @@
-import { readdirSync } from 'node:fs';
+import fs from 'fs';
 
 export namespace RandomAsset {
   const ASSET_DIR = `${__dirname}/assets/`;
@@ -21,7 +21,7 @@ export namespace RandomAsset {
   };
 
   export const get = () => {
-    const files = readdirSync(ASSET_DIR);
+    const files = fs.readdirSync(ASSET_DIR);
     const index = Math.floor(Math.random() * files.length);
     const asset = files[index];
     const filePath = `${ASSET_DIR}${asset}`;

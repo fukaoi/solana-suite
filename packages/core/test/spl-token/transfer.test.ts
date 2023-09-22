@@ -1,8 +1,9 @@
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/';
 import { RandomAsset } from '../../../internals/storage/test/randomAsset';
-import { KeypairAccount } from '../../../shared/src/keypair-account';
+import { KeypairAccount } from '@solana-suite/shared';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
@@ -17,13 +18,8 @@ const TOKEN_METADATA = {
   isMutable: false,
 };
 
-const onErr = (err: Error) => {
-  console.error(err);
-  expect(false).toBe(true);
-};
-
 describe('SplToken', () => {
-  beforeAll(async () => {
+  before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
     dest = obj.dest;
@@ -35,15 +31,20 @@ describe('SplToken', () => {
       source.secret,
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
-      TOKEN_METADATA,
+      TOKEN_METADATA
     );
 
-    expect(inst1.isOk).toBe(true);
+    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
     const token = inst1.unwrap().data as string;
-    (await inst1.submit()).match((ok: string) => {
-      console.log('# mint: ', token);
-      console.log('# mint signature: ', ok);
-    });
+    (await inst1.submit()).match(
+      (ok: string) => {
+        console.log('# mint: ', token);
+        console.log('# mint signature: ', ok);
+      },
+      (err: Error) => {
+        assert.fail(err.message);
+      }
+    );
 
     const inst2 = await SplToken.transfer(
       token,
@@ -52,7 +53,7 @@ describe('SplToken', () => {
       [source.secret],
       1,
       MINT_DECIMAL,
-      source.secret,
+      source.secret
     );
 
     const inst3 = await SplToken.transfer(
@@ -62,11 +63,16 @@ describe('SplToken', () => {
       [source.secret],
       1,
       MINT_DECIMAL,
-      source.secret,
+      source.secret
     );
 
-    (await [inst2, inst3].submit()).match((ok) => {
-      console.log('# transfer signature: ', ok);
-    }, onErr);
+    (await [inst2, inst3].submit()).match(
+      (ok) => {
+        console.log('# transfer signature: ', ok);
+      },
+      (err) => {
+        assert.fail(err.message);
+      }
+    );
   });
 });

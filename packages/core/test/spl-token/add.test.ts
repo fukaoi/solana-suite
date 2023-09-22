@@ -1,8 +1,9 @@
-import { beforeAll, describe, it, expect } from '@jest/globals';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/';
 import { RandomAsset } from '../../../internals/storage/test/randomAsset';
-import { KeypairAccount, Pubkey } from '../../../shared/src/';
+import { KeypairAccount, Pubkey } from '@solana-suite/shared';
 
 let source: KeypairAccount;
 let mint: Pubkey;
@@ -19,7 +20,7 @@ const TOKEN_METADATA = {
 };
 
 describe('SplToken', () => {
-  beforeAll(async () => {
+  before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
   });
@@ -31,13 +32,13 @@ describe('SplToken', () => {
       source.secret,
       TOKEN_TOTAL_AMOUNT,
       MINT_DECIMAL,
-      TOKEN_METADATA,
+      TOKEN_METADATA
     );
 
-    expect(inst.isOk).toBe(true);
+    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
     const res = await inst.submit();
-    expect(res.isOk).toBe(true);
+    assert.isTrue(res.isOk, res.unwrap());
     mint = inst.unwrap().data as Pubkey;
     console.log('# mint: ', mint);
 
@@ -47,13 +48,13 @@ describe('SplToken', () => {
       source.pubkey,
       [source.secret],
       TOKEN_TOTAL_AMOUNT,
-      MINT_DECIMAL,
+      MINT_DECIMAL
     );
 
-    expect(inst.isOk).toBe(true);
+    assert.isTrue(inst.isOk, `${inst.unwrap()}`);
 
     const res2 = await inst2.submit();
-    expect(res2.isOk).toBe(true);
+    assert.isTrue(res2.isOk, res2.unwrap());
     mint = inst2.unwrap().data as Pubkey;
     console.log('# sig: ', res2);
   });

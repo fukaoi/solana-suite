@@ -1,5 +1,6 @@
-import { describe, expect, it } from '@jest/globals';
-import { Keypair, PublicKey } from '@solana/web3.js';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
+import { PublicKey, Keypair } from '@solana/web3.js';
 import { KeypairAccount } from '../src/keypair-account';
 import { Pubkey } from '../src/types/keypair-account';
 import '../src/global';
@@ -12,40 +13,36 @@ const SECRET =
 describe('KeypairStr', () => {
   it('Pubkey to PublicKey', async () => {
     const res = PUBKEY.toPublicKey();
-    expect(res).toEqual(new PublicKey(PUBKEY));
+    assert.deepEqual(res, new PublicKey(PUBKEY));
   });
 
   it('Secret to SecretKey', async () => {
     const res = SECRET.toKeypair();
-    expect(res).toEqual(Keypair.fromSecretKey(bs.decode(SECRET)));
+    assert.deepEqual(res, Keypair.fromSecretKey(bs.decode(SECRET)));
   });
 
   it('Failed convert string to PublicKey', async () => {
-    expect(() => 'failed-publickey'.toPublicKey()).toThrow();
+    assert.throws(() => 'failed-publickey'.toPublicKey());
   });
 
   it('Failed convert string to SecretKey', async () => {
-    expect(() => 'failed-secretKey'.toKeypair()).toThrow();
+    assert.throws(() => 'failed-secretKey'.toKeypair());
   });
 
   it('Create KeyPair Object', async () => {
     const obj = new KeypairAccount({ pubkey: PUBKEY, secret: SECRET });
-    expect(obj).toBeDefined();
+    assert.isNotEmpty(obj);
   });
 
   it('is Pubkey', async () => {
     for (let index = 0; index < 50; index++) {
-      expect(KeypairAccount.isPubkey(KeypairAccount.create().pubkey)).toBe(
-        true,
-      );
+      assert.isTrue(KeypairAccount.isPubkey(KeypairAccount.create().pubkey));
     }
   });
 
   it('is Secret', async () => {
     for (let index = 0; index < 50; index++) {
-      expect(KeypairAccount.isSecret(KeypairAccount.create().secret)).toBe(
-        true,
-      );
+      assert.isTrue(KeypairAccount.isSecret(KeypairAccount.create().secret));
     }
   });
 
@@ -56,7 +53,7 @@ describe('KeypairStr', () => {
       secret: bs.encode(keypair.secretKey).toString(),
     };
     const res = KeypairAccount.toKeyPair(keypair);
-    expect(res).toEqual(expeted);
+    assert.deepEqual(res, expeted);
   });
 
   it('Pubkey', async () => {

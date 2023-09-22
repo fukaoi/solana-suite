@@ -35,7 +35,6 @@
   "scripts": {
     "build": "tsup --config build-configs/tsup/esm.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
-    "test": "jest -c node_modules/build-configs/jest/base.ts --rootDir .",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
@@ -52,7 +51,6 @@
   },
   "devDependencies": {
     "build-configs/eslint": "workspace:*",
-    "build-configs/jest": "workspace:*",
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
     "build-configs/tsup": "workspace:*"

@@ -1,16 +1,10 @@
 import fs from 'fs';
 import bs from 'bs58';
-import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import {
-  Constants,
-  debugLog,
-  KeypairAccount,
-  Node,
-  Pubkey,
-  Secret,
-} from '../src';
+import { Keypair, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { Constants } from '../src/constants';
+import { Node, debugLog, KeypairAccount, Pubkey, Secret } from '../src/';
 
-console.log('\u001b[33m === TEST START ===');
+console.log(`\u001b[33m === TEST START ===`);
 console.log(`\u001b[33m solana-network: ${Constants.currentCluster}`);
 
 export namespace Setup {
@@ -32,10 +26,10 @@ export namespace Setup {
   };
 
   const log = (source: KeypairAccount, dest: KeypairAccount) => {
-    debugLog('# source.pubkey:', source.pubkey);
-    debugLog('# source.secret: ', source.secret);
-    debugLog('# destination.pubkey:', dest.pubkey);
-    debugLog('# destination.secret: ', dest.secret);
+    debugLog(`# source.pubkey:`, source.pubkey);
+    debugLog(`# source.secret: `, source.secret);
+    debugLog(`# destination.pubkey:`, dest.pubkey);
+    debugLog(`# destination.secret: `, dest.secret);
   };
 
   const fetchSourceAndDest = async () => {
@@ -55,7 +49,7 @@ export namespace Setup {
     console.log('Now airdropping...please wait');
     const sig = await Node.getConnection().requestAirdrop(
       pubkey,
-      LAMPORTS_PER_SOL,
+      LAMPORTS_PER_SOL
     );
     await Node.confirmedSig(sig);
     console.log('Confirmed !!');

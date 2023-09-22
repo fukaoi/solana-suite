@@ -129,6 +129,11 @@ type OwnerInfo = {
     owner: string;
 };
 
+type HistoryOptions = {
+    waitTime: number;
+    narrowDown: number;
+};
+
 declare enum FilterType {
     Memo = "memo",
     Mint = "mint",
@@ -168,7 +173,7 @@ type OnOk<T extends Find | History> = (ok: T[]) => void;
 type OnErr = (err: Error) => void;
 
 declare namespace Memo$1 {
-    const getHistory: (target: Pubkey, onOk: OnOk<History>, onErr: OnErr, narrowDown?: number) => Promise<void>;
+    const getHistory: (target: Pubkey, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
 }
 
 declare const Memo: typeof Memo$2 & typeof Memo$1;
@@ -191,4 +196,4 @@ declare const SolNative: any;
 
 declare const SplToken: any;
 
-export { Airdrop, AssociatedAccount, FilterOptions, FilterType, Find, History, InfraSideOutput, Memo, ModuleName, Multisig, OnErr, OnOk, OwnerInfo, PostTokenAccount, SolNative, Sortable, SplToken, TokenMetadata, UserSideOutput, WithMemo };
+export { Airdrop, AssociatedAccount, FilterOptions, FilterType, Find, History, HistoryOptions, InfraSideOutput, Memo, ModuleName, Multisig, OnErr, OnOk, OwnerInfo, PostTokenAccount, SolNative, Sortable, SplToken, TokenMetadata, UserSideOutput, WithMemo };

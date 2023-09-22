@@ -1,19 +1,14 @@
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { SplToken } from '../../src/spl-token';
 import { RandomAsset } from '../../../internals/storage/test/randomAsset';
-import { KeypairAccount, Node } from '../../../shared';
-import { Pubkey } from '../../../shared/src';
+import { KeypairAccount, Node, Pubkey } from '@solana-suite/shared';
 
 let feePayer: KeypairAccount;
 
-const onErr = (err: Error) => {
-  console.error('# error: ', err);
-  expect(false).toBe(true);
-};
-
 describe('SplToken', () => {
-  beforeAll(async () => {
+  before(async () => {
     const obj = await Setup.generateKeyPair();
     feePayer = obj.source;
   });
@@ -35,40 +30,49 @@ describe('SplToken', () => {
         royalty: 50,
       },
       feePayer.secret,
-      freezeAuthority.pubkey,
+      freezeAuthority.pubkey
     );
 
     const mint = inst1.unwrap().data as Pubkey;
-    expect(KeypairAccount.isPubkey(mint)).toBe(true);
+    assert.isTrue(KeypairAccount.isPubkey(mint));
 
-    (await inst1.submit()).match(async (ok: string) => {
-      await Node.confirmedSig(ok);
-      console.log('# mint:', mint);
-      console.log('# mint sig:', ok);
-    }, onErr);
+    (await inst1.submit()).match(
+      async (ok: string) => {
+        await Node.confirmedSig(ok);
+        console.log('# mint:', mint);
+        console.log('# mint sig:', ok);
+      },
+      (ng: Error) => assert.fail(ng.message)
+    );
 
     // freeze
     const inst2 = SplToken.freeze(
       mint,
       owner.pubkey,
       freezeAuthority.secret,
-      feePayer.secret,
+      feePayer.secret
     );
-    (await inst2.submit()).match(async (ok: string) => {
-      await Node.confirmedSig(ok);
-      console.log('# freeze sig:', ok);
-    }, onErr);
+    (await inst2.submit()).match(
+      async (ok: string) => {
+        await Node.confirmedSig(ok);
+        console.log('# freeze sig:', ok);
+      },
+      (ng: Error) => assert.fail(ng.message)
+    );
 
     // thaw
     const inst3 = SplToken.thaw(
       mint,
       owner.pubkey,
       freezeAuthority.secret,
-      feePayer.secret,
+      feePayer.secret
     );
-    (await inst3.submit()).match(async (ok: string) => {
-      await Node.confirmedSig(ok);
-      console.log('# thaw sig:', ok);
-    }, onErr);
+    (await inst3.submit()).match(
+      async (ok: string) => {
+        await Node.confirmedSig(ok);
+        console.log('# thaw sig:', ok);
+      },
+      (ng: Error) => assert.fail(ng.message)
+    );
   });
 });

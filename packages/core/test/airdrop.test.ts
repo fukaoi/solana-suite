@@ -1,21 +1,22 @@
-import { describe, it, expect, beforeAll } from '@jest/globals';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
 import { Setup } from '../../shared/test/testSetup';
 import { Airdrop } from '../src/airdrop';
 import { SolNative } from '../src/';
-import { KeypairAccount } from '../../shared';
+import { KeypairAccount } from '@solana-suite/shared';
 
 let source: KeypairAccount;
 
 describe.skip('Airdrop', () => {
-  beforeAll(async () => {
+  before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
   });
 
   it('Request airdrop with 1 SOL', async () => {
     const res = await Airdrop.request(source.pubkey, 1);
-    expect(res.isOk).toBe(true);
+    assert.isTrue(res.isOk, res.unwrap());
     const info = await SolNative.findByOwner(source.pubkey);
-    expect(typeof info.unwrap().sol).toBe('number');
+    assert.isNumber(info.unwrap().sol);
   });
 });

@@ -1,6 +1,7 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, it } from 'mocha';
 import { KeypairAccount } from '@solana-suite/shared';
 import { Convert } from '../../src/convert/creators';
+import { assert } from 'chai';
 
 describe('Convert.Creators', () => {
   it('To input convert', async () => {
@@ -34,14 +35,16 @@ describe('Convert.Creators', () => {
     console.log('# converted creators', results);
     if (results) {
       results.forEach((res, i) => {
-        expect(res.address.toString()).toBe(input[i].address);
-        expect(res.share).toBe(input[i].share);
+        assert.equal(res.address.toString(), input[i].address);
+        assert.equal(res.share, input[i].share);
       });
+    } else {
+      assert.fail('`results` is null, empty');
     }
   });
 
   it('To un-define convert', async () => {
     const res = Convert.Creators.intoInfraSide([]);
-    expect(res).toStrictEqual([]);
+    assert.deepEqual(res, []);
   });
 });

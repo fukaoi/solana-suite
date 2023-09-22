@@ -1,7 +1,8 @@
-import { beforeAll, beforeEach, describe, expect, it } from '@jest/globals';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Memo, SolNative, SplToken } from '../../src';
-import { KeypairAccount, Node, Pubkey } from '../../../shared/src/';
+import { KeypairAccount, Node, Pubkey } from '@solana-suite/shared';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
@@ -15,7 +16,7 @@ const MEMO_STOCK = new KeypairAccount({
 });
 
 describe('Memo', () => {
-  beforeAll(async () => {
+  before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
     dest = obj.dest;
@@ -28,13 +29,13 @@ describe('Memo', () => {
   it('encode', async () => {
     const res = Memo.encode(DUMMY_DATA);
     console.log(`# encoded: ${res}`, res);
-    expect(res.length).toEqual(15);
+    assert.equal(res.length, 15);
   });
 
   it('create instruction', async () => {
     const res = Memo.create(DUMMY_DATA, source.pubkey, source.secret);
-    console.log('# create: ', res);
-    expect(typeof res).toBe('object');
+    console.log(`# create: `, res);
+    assert.isObject(res);
   });
 
   it('send memo by owner with fee payer', async () => {
@@ -42,11 +43,11 @@ describe('Memo', () => {
       `{"memo": "send memo by owner", "datetime": ${datetime}}`,
       MEMO_STOCK.pubkey,
       MEMO_STOCK.secret,
-      source.secret,
+      source.secret
     );
 
     const res = await inst.submit();
-    expect(res.isOk).toBe(true);
+    assert.isTrue(res.isOk, res.unwrap());
     console.log('# tx signature: ', res.unwrap());
   });
 
@@ -55,18 +56,18 @@ describe('Memo', () => {
       `send memo and sol transfer: ${datetime}`,
       MEMO_STOCK.pubkey,
       MEMO_STOCK.secret,
-      dest.secret,
+      dest.secret
     );
 
     const inst2 = SolNative.transfer(
       source.pubkey,
       dest.pubkey,
       [source.secret],
-      0.01, // Too low lamports, but  error occurs
+      0.01 // Too low lamports, but  error occurs
     );
 
     const res = await [inst1, inst2].submit();
-    expect(res.isOk).toBe(true);
+    assert.isTrue(res.isOk);
     console.log('# tx signature: ', res.unwrap());
   });
 
@@ -83,7 +84,7 @@ describe('Memo', () => {
     const inst1 = Memo.create(
       `send memo and spl-token transfer: ${datetime}`,
       dest.pubkey,
-      dest.secret,
+      dest.secret
     );
 
     const inst2 = await SplToken.transfer(
@@ -92,15 +93,12 @@ describe('Memo', () => {
       dest.pubkey,
       [source.secret],
       7777,
-      4,
+      4
     );
 
     (await [inst1, inst2].submit()).match(
       (ok) => console.log('# tx signature: ', ok),
-      (err) => {
-        console.log('# error: ', err);
-        expect(false).toBe(true);
-      },
+      (err) => assert.fail(err.message)
     );
   });
 
@@ -109,6 +107,6 @@ describe('Memo', () => {
     const inst = Memo.create(overData, source.pubkey, source.secret);
 
     const res = await inst.submit();
-    expect(res.isErr).toBe(true);
+    assert.isTrue(res.isErr);
   });
 });

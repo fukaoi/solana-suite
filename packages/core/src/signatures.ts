@@ -1,6 +1,6 @@
-import { ParsedTransactionWithMeta } from '@solana/web3.js';
-import { debugLog, Node, Pubkey, Result, sleep } from '@solana-suite/shared';
-import { UserSideOutput } from './types/';
+import { ParsedTransactionWithMeta } from "@solana/web3.js";
+import { debugLog, Node, Pubkey, Result, sleep } from "@solana-suite/shared";
+import { UserSideOutput } from "./types/";
 
 //@internal
 export namespace Signatures {
@@ -20,33 +20,22 @@ export namespace Signatures {
       transaction: ParsedTransactionWithMeta,
     ) => UserSideOutput.History | undefined,
     callback: (history: Result<UserSideOutput.History[], Error>) => void,
-    narrowDown = 1000,
+    options: {
+      waitTime: number;
+      narrowDown: number;
+    },
+    histories: UserSideOutput.History[] = [],
   ): Promise<void> => {
     try {
+      debugLog("# options: ", options);
       const transactions = await Node.getConnection().getSignaturesForAddress(
         pubkey.toPublicKey(),
         {
-          limit: narrowDown,
+          limit: options.narrowDown,
         },
       );
 
-      debugLog('# transactions count:', transactions.length);
-      const histories: UserSideOutput.History[] = [];
-
-      // don't use  Promise.all, this is sync action
-      // let i = 1;
-      // for (const transaction of transactions) {
-      //   const signature = await parseForTransaction(transaction.signature);
-      //   const history = parser(signature);
-      //   if (history) {
-      //     histories.push(history);
-      //     callback(Result.ok(histories));
-      //     i++;
-      //   }
-      //   if (receiveLimit && i > receiveLimit) {
-      //     break;
-      //   }
-      // }
+      debugLog("# transactions count:", transactions.length);
 
       for (const transaction of transactions) {
         parseForTransaction(transaction.signature)
@@ -58,7 +47,7 @@ export namespace Signatures {
             }
           })
           .catch((e) => callback(Result.err(e)));
-        await sleep(0.05); // avoid 429 error
+        await sleep(options.waitTime); // avoid 429 error
       }
     } catch (e) {
       if (e instanceof Error) {

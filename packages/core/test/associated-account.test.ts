@@ -1,9 +1,10 @@
-import { describe, it, expect, beforeAll } from '@jest/globals';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
 import { AssociatedAccount } from '../src/associated-account';
 import { SplToken } from '../src';
 import { Setup } from '../../shared/test/testSetup';
 import { RandomAsset } from '../../internals/storage/test/randomAsset';
-import { KeypairAccount } from '../../shared/src/keypair-account';
+import { KeypairAccount } from '@solana-suite/shared';
 
 let source: KeypairAccount;
 const TOKEN_METADATA = {
@@ -11,11 +12,11 @@ const TOKEN_METADATA = {
   symbol: 'SST',
   royalty: 50,
   filePath: RandomAsset.get().filePath as string,
-  storageType: 'nftStorage',
+  storageType: 'nftStorage' 
 };
 
 describe('AssociatedAccount', () => {
-  beforeAll(async () => {
+  before(async () => {
     const obj = await Setup.generateKeyPair();
     source = obj.source;
   });
@@ -26,21 +27,21 @@ describe('AssociatedAccount', () => {
       source.secret,
       10000,
       1,
-      TOKEN_METADATA,
+      TOKEN_METADATA
     );
 
     await mintInst.submit();
 
-    expect(mintInst.isOk).toBe(true);
+    assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
     const mint = mintInst.unwrap().data as string;
 
     const res = await AssociatedAccount.retryGetOrCreate(
       mint,
       source.pubkey,
-      source.secret,
+      source.secret
     );
 
     console.log('# associated token account: ', res);
-    expect(typeof res).toBe('string');
+    assert.isString(res);
   });
 });

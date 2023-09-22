@@ -1,43 +1,60 @@
-import { describe, expect, it } from '@jest/globals';
-import { Constants, Node } from '../src';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
+import { Node } from '../src/node';
+import { Constants } from '../src/constants';
 
 describe('Node', () => {
   it('Connect devnet', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.dev });
     const res = Node.getConnection();
-    expect(res['rpcEndpoint']).toBe(
-      Constants.switchCluster({ cluster: Constants.Cluster.dev }),
+    assert.isNotEmpty(res);
+    assert.propertyVal(
+      res,
+      '_rpcEndpoint',
+      Constants.switchCluster({ cluster: Constants.Cluster.dev })
     );
   });
 
   it('Connect testnet', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.test });
     const res = Node.getConnection();
-    expect(res['rpcEndpoint']).toBe(
-      Constants.switchCluster({ cluster: Constants.Cluster.test }),
+    assert.isNotEmpty(res);
+    assert.propertyVal(
+      res,
+      '_rpcEndpoint',
+      Constants.switchCluster({ cluster: Constants.Cluster.test })
     );
   });
 
   it('Connect mainnet', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.prd });
     const res = Node.getConnection();
-    expect(res['rpcEndpoint']).toBe(
-      Constants.switchCluster({ cluster: Constants.Cluster.prd }),
+    assert.isNotEmpty(res);
+    assert.propertyVal(
+      res,
+      '_rpcEndpoint',
+      Constants.switchCluster({ cluster: Constants.Cluster.prd })
     );
   });
 
   it('Connect devnet for localhost', async () => {
     Node.changeConnection({ cluster: Constants.Cluster.localhost });
     const res = Node.getConnection();
-    expect(res['rpcEndpoint']).toBe(
-      Constants.switchCluster({ cluster: Constants.Cluster.localhost }),
+    assert.isNotEmpty(res);
+    assert.propertyVal(
+      res,
+      '_rpcEndpoint',
+      Constants.switchCluster({ cluster: Constants.Cluster.localhost })
     );
   });
 
   it('Connect devnet for localhost by default no parameter', async () => {
     const res = Node.getConnection();
-    expect(res['rpcEndpoint']).toBe(
-      Constants.switchCluster({ cluster: Constants.Cluster.localhost }),
+    assert.isNotEmpty(res);
+    assert.propertyVal(
+      res,
+      '_rpcEndpoint',
+      Constants.switchCluster({ cluster: Constants.Cluster.localhost })
     );
   });
 
@@ -47,9 +64,11 @@ describe('Node', () => {
       commitment: 'processed',
     });
     const res = Node.getConnection();
-    expect(res['commitment']).toBe('processed');
-    expect(res.rpcEndpoint).toEqual(
-      Constants.switchCluster({ cluster: Constants.Cluster.dev }),
+    assert.isNotEmpty(res);
+    assert.propertyVal(res, '_commitment', 'processed');
+    assert.equal(
+      res.rpcEndpoint,
+      Constants.switchCluster({ cluster: Constants.Cluster.dev })
     );
   });
 
@@ -57,9 +76,9 @@ describe('Node', () => {
     const res = Node.getConnection().rpcEndpoint;
     Node.changeConnection({ cluster: Constants.Cluster.prd });
     const res2nd = Node.getConnection().rpcEndpoint;
-    expect(res).not.toEqual(res2nd);
+    assert.notEqual(res, res2nd);
     const res3rd = Node.getConnection().rpcEndpoint;
-    expect(res2nd).toEqual(res3rd);
+    assert.equal(res2nd, res3rd);
   });
 
   it('Change custom cluster url', async () => {
@@ -71,7 +90,7 @@ describe('Node', () => {
     });
     const after = Node.getConnection().rpcEndpoint;
     console.log('# default clsuter url: ', after);
-    expect(after).toEqual(customClusterUrl[0]);
+    assert.equal(after, customClusterUrl[0]);
   });
 
   it('Change custom cluster urls', async () => {
@@ -87,7 +106,7 @@ describe('Node', () => {
     });
     const after = Node.getConnection().rpcEndpoint;
     console.log('# default clsuter url: ', after);
-    expect(customClusterUrl.join('')).toContain(after);
+    assert.include(customClusterUrl.join(''), after);
   });
 
   it('Change commitment, check singleton object', async () => {
@@ -96,9 +115,9 @@ describe('Node', () => {
       commitment: 'finalized',
     });
     const res2nd = Node.getConnection().commitment;
-    expect(res).not.toEqual(res2nd);
+    assert.notEqual(res, res2nd);
     const res3rd = Node.getConnection().commitment;
-    expect(res2nd).toEqual(res3rd);
+    assert.equal(res2nd, res3rd);
   });
 
   it('Change commitment destination, check singleton object', async () => {
@@ -108,8 +127,8 @@ describe('Node', () => {
       commitment: 'processed',
     });
     const res2nd = Node.getConnection().commitment;
-    expect(res).not.toEqual(res2nd);
+    assert.notEqual(res, res2nd);
     const res3rd = Node.getConnection().commitment;
-    expect(res2nd).toEqual(res3rd);
+    assert.equal(res2nd, res3rd);
   });
 });
