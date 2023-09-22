@@ -1,7 +1,11 @@
-import { Pubkey, Result, Secret, Instruction } from '@solana-suite/shared';
+import * as _solana_suite_shared from '@solana-suite/shared';
+import { Pubkey, Result, Secret } from '@solana-suite/shared';
+import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionInstruction, PublicKey } from '@solana/web3.js';
+import * as internals_shared_metaplex from 'internals/shared-metaplex';
 import { UserSideOutput as UserSideOutput$1 } from 'internals/shared-metaplex';
-import { LayoutObject } from '@solana/buffer-layout';
+import * as _solana_buffer_layout from '@solana/buffer-layout';
+import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
 
 declare namespace Airdrop {
     const request: (pubkey: Pubkey, airdropAmount?: number) => Promise<Result<string, Error>>;
@@ -42,11 +46,46 @@ declare namespace AssociatedAccount {
     }>;
 }
 
-declare namespace Memo$2 {
-    const decode: (encoded: string) => string;
-    const encode: (data: string) => Buffer;
-    const create: (data: string, owner: Pubkey, signer: Secret, feePayer?: Secret) => Instruction;
-}
+declare const Memo: {
+    getHistory: (target: _solana_suite_shared.Pubkey, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    decode: (encoded: string) => string;
+    encode: (data: string) => Buffer;
+    create: (data: string, owner: _solana_suite_shared.Pubkey, signer: _solana_suite_shared.Secret, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Instruction;
+};
+
+declare const Multisig: {
+    isAddress: (multisig: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<boolean, Error>>;
+    getInfo: (multisig: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<_solana_buffer_layout.LayoutObject, Error>>;
+    create: (m: number, feePayer: _solana_suite_shared.Secret, signerPubkeys: _solana_suite_shared.Pubkey[]) => Promise<_solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>>;
+};
+
+declare const SolNative: {
+    transferWithMultisig: (owner: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], amount: number, feePayer?: _solana_suite_shared.Secret | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>>;
+    transfer: (source: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], amount: number, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
+    getHistory: (target: _solana_suite_shared.Pubkey, filterType: FilterType, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    feePayerPartialSignTransfer: (owner: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], amount: number, feePayer: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<_solana_suite_shared.PartialSignInstruction, Error>>;
+    findByOwner: (owner: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<OwnerInfo, Error>>;
+};
+
+declare const SplToken: {
+    transfer: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], amount: number, mintDecimal: number, feePayer?: _solana_suite_shared.Secret | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>>;
+    thaw: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, freezeAuthority: _solana_suite_shared.Secret, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
+    createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
+    createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
+    mint: (owner: _solana_suite_shared.Pubkey, signer: _solana_suite_shared.Secret, totalAmount: number, mintDecimal: number, input: internals_shared_metaplex.UserSideInput.TokenMetadata, feePayer?: _solana_suite_shared.Secret | undefined, freezeAuthority?: _solana_suite_shared.Pubkey | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.MintInstruction, Error>>;
+    getHistory: (target: _solana_suite_shared.Pubkey, filterType: FilterType, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    feePayerPartialSignTransfer: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], amount: number, mintDecimal: number, feePayer: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<_solana_suite_shared.PartialSignInstruction, Error>>;
+    freeze: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, freezeAuthority: _solana_suite_shared.Secret, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
+    genericFindByOwner: <T extends internals_shared_metaplex.UserSideOutput.TokenMetadata | internals_shared_metaplex.UserSideOutput.NftMetadata>(owner: _solana_suite_shared.Pubkey, callback: (result: _solana_suite_shared.Result<T[], Error>) => void, tokenStandard: internals_shared_metaplex.UserSideInput.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
+    genericFindByMint: <T_1 extends internals_shared_metaplex.UserSideOutput.TokenMetadata | internals_shared_metaplex.UserSideOutput.NftMetadata>(mint: _solana_suite_shared.Pubkey, tokenStandard: internals_shared_metaplex.UserSideInput.TokenStandard) => Promise<_solana_suite_shared.Result<T_1, Error>>;
+    findByOwner: (owner: _solana_suite_shared.Pubkey, onOk: OnOk<internals_shared_metaplex.UserSideOutput.TokenMetadata>, onErr: OnErr, options?: {
+        sortable?: Sortable | undefined;
+        isHolder?: boolean | undefined;
+    } | undefined) => void;
+    findByMint: (mint: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<internals_shared_metaplex.UserSideOutput.TokenMetadata, Error>>;
+    burn: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], burnAmount: number, tokenDecimals: number, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
+    add: (token: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], totalAmount: number, mintDecimal: number, feePayer?: _solana_suite_shared.Secret | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>>;
+};
 
 declare namespace UserSideOutput {
     type History = {
@@ -171,29 +210,5 @@ type Find = UserSideOutput$1.TokenMetadata;
 type History = UserSideOutput.History;
 type OnOk<T extends Find | History> = (ok: T[]) => void;
 type OnErr = (err: Error) => void;
-
-declare namespace Memo$1 {
-    const getHistory: (target: Pubkey, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
-}
-
-declare const Memo: typeof Memo$2 & typeof Memo$1;
-
-declare namespace Multisig$3 {
-    const create: (m: number, feePayer: Secret, signerPubkeys: Pubkey[]) => Promise<Result<Instruction, Error>>;
-}
-
-declare namespace Multisig$2 {
-    const getInfo: (multisig: Pubkey) => Promise<Result<LayoutObject, Error>>;
-}
-
-declare namespace Multisig$1 {
-    const isAddress: (multisig: Pubkey) => Promise<Result<boolean, Error>>;
-}
-
-declare const Multisig: typeof Multisig$3 & typeof Multisig$2 & typeof Multisig$1;
-
-declare const SolNative: any;
-
-declare const SplToken: any;
 
 export { Airdrop, AssociatedAccount, FilterOptions, FilterType, Find, History, HistoryOptions, InfraSideOutput, Memo, ModuleName, Multisig, OnErr, OnOk, OwnerInfo, PostTokenAccount, SolNative, Sortable, SplToken, TokenMetadata, UserSideOutput, WithMemo };

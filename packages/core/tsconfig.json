@@ -4,10 +4,6 @@
 
   "display": "@solana-suite/core",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "internal/*": ["../internal/*"]
-    }
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules", "dist"]

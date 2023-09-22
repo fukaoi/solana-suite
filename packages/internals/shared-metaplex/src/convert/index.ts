@@ -5,12 +5,11 @@ import { Convert as Properties } from '../convert/properties';
 import { Convert as TokenMetadata } from '../convert/token-metadata';
 import { Convert as Uses } from '../convert/uses';
 
-export const Convert = Object.assign(
-  {},
-  Collection,
-  Creators,
-  NftMetadata,
-  Properties,
-  TokenMetadata,
-  Uses,
-);
+export const Convert = {
+  ...Collection,
+  ...Creators,
+  ...NftMetadata,
+  ...Properties,
+  ...TokenMetadata,
+  ...Uses,
+};

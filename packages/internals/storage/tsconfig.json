@@ -4,10 +4,6 @@
 
   "display": "internals/storage",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "internal/*": ["../*"]
-    }
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules", "dist"]

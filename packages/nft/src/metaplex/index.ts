@@ -7,14 +7,13 @@ import { Metaplex as Mint } from './mint';
 import { Metaplex as Thaw } from './thaw';
 import { Metaplex as Transfer } from './transfer';
 
-export const Metaplex = Object.assign(
-  {},
-  Burn,
-  Find,
-  Freeze,
-  FeePayer,
-  FeePayerTransfer,
-  Mint,
-  Thaw,
-  Transfer,
-);
+export const Metaplex = {
+  ...Burn,
+  ...Find,
+  ...Freeze,
+  ...FeePayer,
+  ...FeePayerTransfer,
+  ...Mint,
+  ...Thaw,
+  ...Transfer,
+};

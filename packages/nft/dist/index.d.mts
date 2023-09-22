@@ -1,197 +1,26 @@
-import BN from 'bn.js';
-import { PublicKey } from '@solana/web3.js';
-import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
-import { Pubkey } from '@solana-suite/shared';
+import * as _solana_suite_core from '@solana-suite/core';
+import * as internals_shared_metaplex from 'internals/shared-metaplex';
+import { UserSideOutput } from 'internals/shared-metaplex';
+import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
+import * as _solana_web3_js from '@solana/web3.js';
+import * as _solana_suite_shared from '@solana-suite/shared';
 
-declare const Metaplex: any;
-
-type Option<T> = T | null;
-type bignum = number | BN;
-type FileContent = string | Buffer | Uint8Array | ArrayBuffer;
-declare namespace _Shared {
-    type Properties = {
-        creators?: {
-            address?: string;
-            share?: number;
-            [key: string]: unknown;
-        }[];
-        files?: {
-            type?: string;
-            filePath?: FileContent;
-            [key: string]: unknown;
-        }[];
-        [key: string]: unknown;
-    };
-    type Attribute = {
-        trait_type?: string;
-        value?: string;
-        [key: string]: unknown;
-    };
-    enum UseMethod {
-        Burn = 0,
-        Multiple = 1,
-        Single = 2
-    }
-    type Uses = {
-        useMethod: UseMethod;
-        remaining: bignum;
-        total: bignum;
-    };
-    type Options = {
-        [key: string]: unknown;
-    };
-}
-
-declare namespace InfraSideInput {
-    interface File extends Blob {
-        readonly lastModified: number;
-        readonly name: string;
-    }
-    type StorageNftStorageMetadata = {
-        storageType?: 'nftStorage';
-    };
-    type StorageArweaveMetadata = {
-        storageType?: 'arweave';
-    };
-    type Collection = {
-        key: PublicKey;
-        verified: boolean;
-    };
-    type Creators = {
-        address: PublicKey;
-        verified: boolean;
-        share: number;
-    };
-    type Properties = _Shared.Properties;
-    type Offchain = {
-        name?: string;
-        symbol?: string;
-        description?: string;
-        seller_fee_basis_points?: number;
-        image?: string;
-        external_url?: string;
-        attributes?: _Shared.Attribute[];
-        properties?: _Shared.Properties;
-        collection?: {
-            name?: string;
-            family?: string;
-            [key: string]: unknown;
-        };
-        created_at?: number;
-    };
-    type MetaplexDataV2 = {
-        name: string;
-        symbol: string;
-        uri: string;
-        sellerFeeBasisPoints: number;
-        creators: Option<Creators[]>;
-        collection: Option<Collection>;
-        uses: Option<_Shared.Uses>;
-    };
-}
-
-declare namespace InfraSideOutput {
-    type Collection = {
-        verified: boolean;
-        key: PublicKey;
-    };
-    type OnchainAndOffchain = {
-        onchain: Metadata;
-        offchain: InfraSideOutput.Offchain;
-    };
-    type Creator = InfraSideInput.Creators;
-    type Offchain = InfraSideInput.Offchain;
-    type Uses = _Shared.Uses;
-}
-
-declare namespace UserSideInput {
-    type Collection = Pubkey;
-    type Creators = {
-        address: Pubkey;
-        share: number;
-        verified: boolean;
-    };
-    type Properties = _Shared.Properties;
-    enum TokenStandard {
-        NonFungible = 0,
-        FungibleAsset = 1,
-        Fungible = 2,
-        NonFungibleEdition = 3,
-        ProgrammableNonFungible = 4
-    }
-    type NftMetadata = {
-        name: string;
-        symbol: string;
-        royalty: number;
-        storageType?: StorageType;
-        filePath?: FileContent;
-        uri?: string;
-        isMutable?: boolean;
-        description?: string;
-        external_url?: string;
-        attributes?: _Shared.Attribute[];
-        properties?: Properties;
-        maxSupply?: bignum;
-        creators?: Creators[];
-        uses?: _Shared.Uses;
-        collection?: Collection;
-        options?: _Shared.Options;
-    };
-    type TokenMetadata = {
-        name: string;
-        symbol: string;
-        filePath?: FileContent;
-        uri?: string;
-        storageType?: StorageType;
-        description?: string;
-        royalty?: number;
-        uses?: _Shared.Uses;
-        creators?: Creators[];
-        attributes?: _Shared.Attribute[];
-        options?: _Shared.Options;
-    };
-}
-
-declare namespace UserSideOutput {
-    type Creators = UserSideInput.Creators;
-    type Collection = {
-        address: Pubkey;
-        verified: boolean;
-    };
-    type Uses = _Shared.Uses;
-    type NftMetadata = {
-        mint: string;
-        updateAuthority: string;
-        royalty: number;
-        name: string;
-        symbol: string;
-        uri: string;
-        isMutable: boolean;
-        primarySaleHappened: boolean;
-        editionNonce: Option<number>;
-        offchain: InfraSideOutput.Offchain;
-        tokenAmount: string;
-        collection?: Collection | undefined;
-        creators?: Creators[] | undefined;
-        uses?: _Shared.Uses | undefined;
-        dateTime?: Date | undefined;
-    };
-    type TokenMetadata = {
-        mint: string;
-        name: string;
-        symbol: string;
-        uri: string;
-        royalty: number;
-        offchain: InfraSideOutput.Offchain;
-        tokenAmount: string;
-        attributes?: _Shared.Attribute | undefined;
-        creators?: Creators[] | undefined;
-        uses?: _Shared.Uses | undefined;
-        dateTime?: Date | undefined;
-    };
-}
-
-type StorageType = 'nftStorage' | 'arweave' | string;
+declare const Metaplex: {
+    transfer: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], feePayer?: _solana_suite_shared.Secret | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>>;
+    thaw: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, freezeAuthority: _solana_suite_shared.Secret, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
+    createDeleagateInstruction: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, delegateAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
+    createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, nftMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
+    mint: (owner: _solana_suite_shared.Pubkey, signer: _solana_suite_shared.Secret, input: internals_shared_metaplex.UserSideInput.NftMetadata, feePayer?: _solana_suite_shared.Secret | undefined, freezeAuthority?: _solana_suite_shared.Pubkey | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.MintInstruction, Error>>;
+    feePayerPartialSignTransferNft: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], feePayer: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<_solana_suite_shared.PartialSignInstruction, Error>>;
+    feePayerPartialSignMint: (owner: _solana_suite_shared.Pubkey, signer: _solana_suite_shared.Secret, input: internals_shared_metaplex.UserSideInput.NftMetadata, feePayer: _solana_suite_shared.Pubkey, freezeAuthority?: _solana_suite_shared.Secret | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.PartialSignInstruction, Error>>;
+    freeze: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, freezeAuthority: _solana_suite_shared.Secret, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
+    findByOwner: (owner: _solana_suite_shared.Pubkey, onOk: _solana_suite_core.OnOk<internals_shared_metaplex.UserSideOutput.TokenMetadata>, onErr: _solana_suite_core.OnErr, options?: {
+        sortable?: _solana_suite_core.Sortable | undefined;
+        isHolder?: boolean | undefined;
+    } | undefined) => Promise<void>;
+    findByMint: (mint: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<internals_shared_metaplex.UserSideOutput.NftMetadata, Error>>;
+    burn: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, signer: _solana_suite_shared.Secret, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
+};
 
 type NftMetadata = UserSideOutput.NftMetadata;
 

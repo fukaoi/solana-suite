@@ -1,6 +1,15 @@
-import { Result, Pubkey } from '@solana-suite/shared';
-import { UserSideInput, ValidatorError } from 'internals/shared-metaplex';
+import * as _solana_suite_shared from '@solana-suite/shared';
+import * as internals_shared_metaplex from 'internals/shared-metaplex';
 import { Keypair, Transaction, PublicKey, SendOptions, TransactionSignature } from '@solana/web3.js';
+
+declare const Metaplex: {
+    mint: (input: internals_shared_metaplex.UserSideInput.NftMetadata, cluster: string, phantom: Phantom) => Promise<_solana_suite_shared.Result<string, Error | internals_shared_metaplex.ValidatorError>>;
+};
+
+declare const PhantomSplToken: {
+    mint: (input: internals_shared_metaplex.UserSideInput.TokenMetadata, owner: _solana_suite_shared.Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<_solana_suite_shared.Result<string, Error>>;
+    add: (tokenKey: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<_solana_suite_shared.Result<string, Error>>;
+};
 
 type InitializeMint = {
     mint: Keypair;
@@ -26,28 +35,5 @@ type Phantom = {
     disconnect(): Promise<void>;
     _handleDisconnect(...args: unknown[]): unknown;
 };
-
-declare namespace PhantomMetaplex {
-    /**
-     * Upload content and NFT mint
-     *
-     * @param {UserSideInput.NftMetadata}  input
-     * @param {Phantom} phantom        phantom wallet object
-     * @return Promise<Result<Instruction, Error>>
-     */
-    const mint: (input: UserSideInput.NftMetadata, cluster: string, phantom: Phantom) => Promise<Result<string, Error | ValidatorError>>;
-}
-
-declare const Metaplex: typeof PhantomMetaplex;
-
-declare namespace PhantomSplToken$2 {
-    const add: (tokenKey: Pubkey, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<Result<string, Error>>;
-}
-
-declare namespace PhantomSplToken$1 {
-    const mint: (input: UserSideInput.TokenMetadata, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<Result<string, Error>>;
-}
-
-declare const PhantomSplToken: typeof PhantomSplToken$2 & typeof PhantomSplToken$1;
 
 export { InitializeMint, Metaplex, Phantom, PhantomSplToken, connectOption };
