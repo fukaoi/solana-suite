@@ -18,5 +18,6 @@ __exportStar(require("./find"), exports);
 __exportStar(require("./infra-side/output"), exports);
 __exportStar(require("./user-side/output"), exports);
 __exportStar(require("./sol-native"), exports);
+__exportStar(require("./spl-token"), exports);
 __exportStar(require("./transaction-filter"), exports);
 //# sourceMappingURL=index.js.map

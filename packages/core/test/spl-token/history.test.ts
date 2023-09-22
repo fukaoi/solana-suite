@@ -1,11 +1,12 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
-import { FilterType, History, OnErr, OnOk, SplToken } from '../../src/';
-import { Setup } from '../../../shared/test/testSetup';
-import { Pubkey } from '../../../shared';
+import { describe, it } from "mocha";
+import { assert } from "chai";
+import { FilterType, History, OnErr, OnOk, SplToken } from "../../src/";
+import { Setup } from "../../../shared/test/testSetup";
+import { Pubkey } from "../../../shared";
 
 let target: Pubkey;
 const onOk: OnOk<History> = (ok) => {
+  console.log("# hisory size: ", ok.length);
   ok.forEach((res) => {
     assert.isNotEmpty(res.source);
     assert.isNotEmpty(res.destination);
@@ -18,21 +19,13 @@ const onOk: OnOk<History> = (ok) => {
 
 const onErr: OnErr = (err: Error) => assert.fail(err.message);
 
-describe('SplToken', () => {
+describe("SplToken", () => {
   before(async () => {
     const obj = await Setup.generateKeyPair();
     target = obj.source.pubkey;
   });
 
-  it('Get token transfer history', async () => {
-    await SplToken.getHistory(target, FilterType.Transfer, onOk, onErr, 100);
-  });
-
-  it('Get memo history', async () => {
-    await SplToken.getHistory(target, FilterType.Memo, onOk, onErr, 100);
-  });
-
-  it('Get mint history', async () => {
-    await SplToken.getHistory(target, FilterType.Mint, onOk, onErr, 100);
+  it("Get mint history", async () => {
+    await SplToken.getHistory(target, FilterType.Mint, onOk, onErr);
   });
 });

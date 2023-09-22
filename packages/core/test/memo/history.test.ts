@@ -1,9 +1,10 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
-import { History, Memo, OnErr, OnOk } from '../../src/';
+import { describe, it } from "mocha";
+import { assert } from "chai";
+import { History, Memo, OnErr, OnOk } from "../../src/";
 
-const target = 'Ebq72X3i8ug6AX2G3v2ZoLA4ZcxHurvMuJYorqJ6sALD';
+const target = "Ebq72X3i8ug6AX2G3v2ZoLA4ZcxHurvMuJYorqJ6sALD";
 const onOk: OnOk<History> = (ok) => {
+  console.log("# hisory size: ", ok.length);
   ok.forEach((res) => {
     assert.isNotEmpty(res.source);
     assert.isNotEmpty(res.destination);
@@ -16,8 +17,8 @@ const onOk: OnOk<History> = (ok) => {
 
 const onErr: OnErr = (err: Error) => assert.fail(err.message);
 
-describe('Memo', () => {
-  it('Get Only memo history', async () => {
-    await Memo.getHistory(target, onOk, onErr, 100);
+describe("Memo", () => {
+  it("Get Only memo history", async () => {
+    await Memo.getHistory(target, onOk, onErr);
   });
 });
