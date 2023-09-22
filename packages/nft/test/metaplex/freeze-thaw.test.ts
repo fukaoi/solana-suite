@@ -2,9 +2,8 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
-import { RandomAsset } from '../../../storage/test/randomAsset';
-import { KeypairAccount, Node } from '../../../shared';
-import { Pubkey } from '../../../shared/src';
+import { RandomAsset } from '../../../internals/storage/test/randomAsset';
+import { KeypairAccount, Node, Pubkey } from '@solana-suite/shared';
 
 let feePayer: KeypairAccount;
 
@@ -30,7 +29,7 @@ describe('Metaplex', () => {
         royalty: 0,
       },
       feePayer.secret,
-      freezeAuthority.pubkey
+      freezeAuthority.pubkey,
     );
 
     const mint = inst1.unwrap().data as Pubkey;
@@ -42,7 +41,7 @@ describe('Metaplex', () => {
         console.log('# mint:', mint);
         console.log('# mint sig:', ok);
       },
-      (ng: Error) => assert.fail(ng.message)
+      (ng: Error) => assert.fail(ng.message),
     );
 
     // freeze
@@ -50,14 +49,14 @@ describe('Metaplex', () => {
       mint,
       owner.pubkey,
       freezeAuthority.secret,
-      feePayer.secret
+      feePayer.secret,
     );
     (await inst2.submit()).match(
       async (ok: string) => {
         await Node.confirmedSig(ok);
         console.log('# freeze sig:', ok);
       },
-      (ng: Error) => assert.fail(ng.message)
+      (ng: Error) => assert.fail(ng.message),
     );
 
     // thaw
@@ -65,14 +64,14 @@ describe('Metaplex', () => {
       mint,
       owner.pubkey,
       freezeAuthority.secret,
-      feePayer.secret
+      feePayer.secret,
     );
     (await inst3.submit()).match(
       async (ok: string) => {
         await Node.confirmedSig(ok);
         console.log('# thaw sig:', ok);
       },
-      (ng: Error) => assert.fail(ng.message)
+      (ng: Error) => assert.fail(ng.message),
     );
   });
 });

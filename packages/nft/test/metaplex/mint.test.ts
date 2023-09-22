@@ -2,10 +2,9 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
-import { RandomAsset } from '../../../storage/test/randomAsset';
-import { UserSideInput, ValidatorError } from '../../../shared-metaplex/';
-import { KeypairAccount } from '../../../shared';
-import { Pubkey } from '../../../shared/src';
+import { RandomAsset } from '../../../internals/storage/test/randomAsset';
+import { UserSideInput, ValidatorError } from '../../../internals/shared-metaplex/';
+import { KeypairAccount, Pubkey } from '@solana-suite/shared';
 
 let source: KeypairAccount;
 
@@ -172,7 +171,7 @@ describe('Metaplex', () => {
     });
     res.match(
       (_: unknown) => assert.fail('Unrecognized error'),
-      (err) => {
+      (err: Error) => {
         assert.equal(err.message, `Must set 'storageType + filePath' or 'uri'`);
       }
     );

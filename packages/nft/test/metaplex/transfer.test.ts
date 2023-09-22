@@ -1,9 +1,9 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
-import { KeypairAccount, Pubkey } from '../../../shared';
+import { KeypairAccount, Pubkey } from '@solana-suite/shared';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
-import { RandomAsset } from '../../../storage/test/randomAsset';
+import { RandomAsset } from '../../../internals/storage/test/randomAsset';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;

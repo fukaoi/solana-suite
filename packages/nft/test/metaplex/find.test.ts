@@ -1,9 +1,10 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Metaplex } from '../../src/metaplex';
-import { Find, OnErr, OnOk, Sortable } from '../../../core/src';
+import { Find, OnErr, OnOk, Sortable } from '@solana-suite/core';
 import { Setup } from '../../../shared/test/testSetup';
-import { Pubkey } from '../../../shared';
+import { Pubkey } from '@solana-suite/shared';
+import { NftMetadata } from 'src';
 
 let owner: Pubkey;
 const notFoundTokenOwner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT';
@@ -54,7 +55,7 @@ describe('Metaplex.find', () => {
 
   it('Get token info by mint address', async () => {
     (await Metaplex.findByMint(nftMint)).match(
-      (ok) => {
+      (ok: NftMetadata) => {
         assert.isNotEmpty(ok.name);
         assert.isNotEmpty(ok.mint);
         assert.isNotEmpty(ok.symbol);
@@ -63,14 +64,14 @@ describe('Metaplex.find', () => {
         assert.isNotEmpty(ok.tokenAmount);
         assert.isNotEmpty(ok.offchain);
       },
-      (err) => assert.fail(err.message)
+      (err: Error) => assert.fail(err.message),
     );
   });
 
   it('[Error]Get token info by mint address, but token standard is difierent', async () => {
     (await Metaplex.findByMint(mint)).match(
-      (ok) => assert.fail(`${ok}`),
-      (err) => assert.isNotEmpty(err.message)
+      (ok: string) => assert.fail(`${ok}`),
+      (err: Error) => assert.isNotEmpty(err.message),
     );
   });
 });

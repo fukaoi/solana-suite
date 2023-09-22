@@ -21,9 +21,9 @@ export namespace Metaplex {
   ): Promise<void> => {
     const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
     const isHolder = !options?.isHolder ? true : false;
-    await SplToken.genericFindByOwner<NftMetadata>(
+    await SplToken.genericFindByOwner(
       owner,
-      (result) => result.match(onOk, onErr),
+      (result: Result<[], Error>) => result.match(onOk, onErr),
       UserSideInput.TokenStandard.NonFungible,
       sortable,
       isHolder
@@ -39,7 +39,8 @@ export namespace Metaplex {
   export const findByMint = async (
     mint: Pubkey
   ): Promise<Result<NftMetadata, Error>> => {
-    return await SplToken.genericFindByMint<NftMetadata>(
+    // return await SplToken.genericFindByMint<NftMetadata>(
+    return await SplToken.genericFindByMint(
       mint,
       UserSideInput.TokenStandard.NonFungible
     );

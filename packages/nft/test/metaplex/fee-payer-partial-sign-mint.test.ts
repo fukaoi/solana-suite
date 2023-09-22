@@ -2,10 +2,10 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { Setup } from '../../../shared/test/testSetup';
 import { Metaplex } from '../../src/metaplex';
-import { RandomAsset } from '../../../storage/test/randomAsset';
-import { KeypairAccount } from '../../../shared';
-import { Storage } from '../../../storage';
-import { Royalty, InfraSideInput } from '../../../shared-metaplex';
+import { RandomAsset } from '../../../internals/storage/test/randomAsset';
+import { KeypairAccount } from '@solana-suite/shared';
+import { Storage } from '../../../internals/storage';
+import { InfraSideInput, Royalty } from '../../../internals/shared-metaplex';
 
 let source: KeypairAccount;
 describe('Metaplex', () => {
@@ -30,7 +30,7 @@ describe('Metaplex', () => {
         isMutable: true,
       },
       source.pubkey,
-      freezeAuthority.pubkey
+      freezeAuthority.pubkey,
     );
 
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
@@ -41,7 +41,7 @@ describe('Metaplex', () => {
           console.log('# mint:', serialized.value.data);
           console.log('# sig:', ok);
         },
-        (ng: Error) => assert.fail(ng.message)
+        (ng: Error) => assert.fail(ng.message),
       );
     }
   });
@@ -63,7 +63,7 @@ describe('Metaplex', () => {
       offchaindata,
       asset.filePath,
       'arweave',
-      source.secret
+      source.secret,
     );
     if (uploaded.isErr) {
       throw uploaded;
@@ -80,7 +80,7 @@ describe('Metaplex', () => {
         royalty,
         isMutable: true,
       },
-      source.pubkey
+      source.pubkey,
     );
 
     assert.isTrue(serialized.isOk, `${serialized.unwrap()}`);
@@ -91,7 +91,7 @@ describe('Metaplex', () => {
           console.log('# mint:', serialized.value.data);
           console.log('# sig:', ok);
         },
-        (ng: Error) => assert.fail(ng.message)
+        (ng: Error) => assert.fail(ng.message),
       );
     }
   });
@@ -108,16 +108,16 @@ describe('Metaplex', () => {
         royalty: 50,
         isMutable: true,
       },
-      source.pubkey
+      source.pubkey,
     );
     res.match(
       (_: unknown) => assert.fail('Unrecognized error'),
       (err: Error) => {
         assert.equal(
           err.message,
-          `Must set 'storageType=nftStorage + filePath' or 'uri'`
+          `Must set 'storageType=nftStorage + filePath' or 'uri'`,
         );
-      }
+      },
     );
   });
 });
