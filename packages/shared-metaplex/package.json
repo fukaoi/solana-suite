@@ -1,0 +1,33 @@
+{
+  "name": "internal-shared-metaplex",
+  "version": "0.7.0",
+  "private": true,
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup --config build-config/tsup/base.ts",
+    "clean": "rm -rf dist/ && rm -rf node_modules",
+    "eslint": "eslint -c node_modules/build-config/eslint/base.json ./src ./test",
+    "eslint:fix": "eslint -c node_modules/build-config/eslint/base.json ./src ./test --fix",
+    "prettier": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c",
+    "prettier:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write",
+    "test": "mocha -t 300000 --require ts-node/register -- ",
+    "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
+  },
+  "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^2.9.1",
+    "@solana-suite/shared": "workspace:^",
+    "@solana/web3.js": "^1.73.2",
+    "bn.js": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.1",
+    "@types/jsdom": "^21.1.3",
+    "build-config/eslint": "workspace:*",
+    "build-config/prettier": "workspace:*",
+    "build-config/tsconfig": "workspace:*",
+    "build-config/tsup": "workspace:*",
+    "jsdom": "^22.1.0"
+  }
+}

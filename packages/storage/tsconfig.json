@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "build-config/tsconfig/base.json",
+
+  "display": "internal-storage",
+  "compilerOptions": {
+    // "moduleResolution": "NodeNext",
+    // "target": "ESNext",
+    // "module": "NodeNext"
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

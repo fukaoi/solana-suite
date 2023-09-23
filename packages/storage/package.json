@@ -1,0 +1,36 @@
+{
+  "name": "internal-storage",
+  "version": "0.7.0",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {
+    "build": "tsup --config build-config/tsup/base.ts",
+    "clean": "rm -rf dist/ && rm -rf node_modules",
+    "eslint": "eslint -c node_modules/build-config/eslint/base.json ./src ./test",
+    "eslint:fix": "eslint -c node_modules/build-config/eslint/base.json ./src ./test --fix",
+    "prettier": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c",
+    "prettier:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write",
+    "test": "mocha -t 300000 --require ts-node/register -- ",
+    "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
+  },
+  "dependencies": {
+    "@metaplex-foundation/js": "0.19.1",
+    "@solana-suite/shared": "workspace:^",
+    "internal-shared-metaplex": "workspace:^",
+    "nft.storage": "^7.1.1"
+  },
+  "devDependencies": {
+    "build-config/eslint": "workspace:*",
+    "build-config/prettier": "workspace:*",
+    "build-config/tsconfig": "workspace:*",
+    "build-config/tsup": "workspace:*"
+  },
+  "browser": {
+    "fs": false
+  },
+  "node": {
+    "File": false
+  }
+}
