@@ -4,7 +4,7 @@ import {
   Option,
   UserSideInput,
   UserSideOutput,
-} from 'internals/types';
+} from '^types/converter';
 
 export namespace Convert {
   export namespace Creators {
