@@ -5,9 +5,6 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": [
-    "./dist/"
-  ],
   "scripts": {
     "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
@@ -17,8 +14,9 @@
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
-    "@solana/web3.js": "^1.78.5",
-    "shared": "workspace:*"
+    "shared": "workspace:*",
+    "converter": "workspace:*",
+    "types": "workspace:*"
   },
   "devDependencies": {
     "build-configs/eslint": "workspace:*",
