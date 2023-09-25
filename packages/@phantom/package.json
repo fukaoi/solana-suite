@@ -41,13 +41,15 @@
     "prettier:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
-    "types": "workspace:^",
-    "storage": "workspace:^",
-    "@solana-suite/shared": "workspace:^",
     "@solana-suite/core": "workspace:^",
     "@solana-suite/nft": "workspace:^",
+    "@solana-suite/shared": "workspace:^",
     "@solana/spl-token": "^0.3.8",
-    "@solana/web3.js": "^1.73.2"
+    "@solana/web3.js": "^1.78.5",
+    "converter": "workspace:^",
+    "storage": "workspace:^",
+    "types": "workspace:^",
+    "validator": "workspace:^"
   },
   "devDependencies": {
     "build-config/eslint": "workspace:*",

@@ -8,13 +8,9 @@ import {
   Result,
   Try,
 } from '@solana-suite/shared';
-import {
-  Convert,
-  Royalty,
-  UserSideInput,
-  Validator,
-  ValidatorError,
-} from 'shared-metaplex';
+import { UserSideInput } from 'types/converter';
+import { Validator, ValidatorError } from 'validator';
+import { Converter } from 'converter';
 import { Phantom } from '../types';
 
 export namespace PhantomMetaplex {
@@ -43,13 +39,13 @@ export namespace PhantomMetaplex {
       Node.changeConnection({ cluster });
 
       //Convert porperties, Upload content
-      const properties = await Convert.Properties.intoInfraSide(
+      const properties = await Converter.Properties.intoInfraSide(
         input.properties,
         Storage.uploadContent,
         input.storageType,
       );
 
-      const sellerFeeBasisPoints = Royalty.convert(input.royalty);
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfraSide(input.royalty);
       const nftStorageMetadata = Storage.toConvertOffchaindata(
         { ...input, properties },
         sellerFeeBasisPoints,
@@ -65,7 +61,7 @@ export namespace PhantomMetaplex {
       }
       const uri = uploaded.value;
 
-      const datav2 = Convert.NftMetadata.intoInfraSide(
+      const datav2 = Converter.NftMetadata.intoInfraSide(
         input,
         uri,
         sellerFeeBasisPoints,

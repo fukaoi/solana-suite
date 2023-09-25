@@ -1,4 +1,3 @@
-// @ts-expect-error moduleResolution:nodenext issue 54523
 import { NFTStorage, Blob } from 'nft.storage';
 import {
   Constants,

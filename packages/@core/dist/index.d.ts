@@ -2,8 +2,8 @@ import * as _solana_suite_shared from '@solana-suite/shared';
 import { Pubkey, Result, Secret } from '@solana-suite/shared';
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionInstruction, PublicKey } from '@solana/web3.js';
-import * as shared_metaplex from 'shared-metaplex';
-import { UserSideOutput as UserSideOutput$1 } from 'shared-metaplex';
+import * as types_converter from 'types/converter';
+import { UserSideOutput as UserSideOutput$1 } from 'types/converter';
 import * as _solana_buffer_layout from '@solana/buffer-layout';
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
 
@@ -72,17 +72,17 @@ declare const SplToken: {
     thaw: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, freezeAuthority: _solana_suite_shared.Secret, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
     createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
-    mint: (owner: _solana_suite_shared.Pubkey, signer: _solana_suite_shared.Secret, totalAmount: number, mintDecimal: number, input: UserSideInput.TokenMetadata, feePayer?: _solana_suite_shared.Secret | undefined, freezeAuthority?: _solana_suite_shared.Pubkey | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.MintInstruction, Error>>;
+    mint: (owner: _solana_suite_shared.Pubkey, signer: _solana_suite_shared.Secret, totalAmount: number, mintDecimal: number, input: types_converter.UserSideInput.TokenMetadata, feePayer?: _solana_suite_shared.Secret | undefined, freezeAuthority?: _solana_suite_shared.Pubkey | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.MintInstruction, Error>>;
     getHistory: (target: _solana_suite_shared.Pubkey, filterType: FilterType, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
     feePayerPartialSignTransfer: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], amount: number, mintDecimal: number, feePayer: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<_solana_suite_shared.PartialSignInstruction, Error>>;
     freeze: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, freezeAuthority: _solana_suite_shared.Secret, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
-    genericFindByOwner: <T extends shared_metaplex.UserSideOutput.TokenMetadata | shared_metaplex.UserSideOutput.NftMetadata>(owner: _solana_suite_shared.Pubkey, callback: (result: _solana_suite_shared.Result<T[], Error>) => void, tokenStandard: shared_metaplex.UserSideInput.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
-    genericFindByMint: <T_1 extends shared_metaplex.UserSideOutput.TokenMetadata | shared_metaplex.UserSideOutput.NftMetadata>(mint: _solana_suite_shared.Pubkey, tokenStandard: shared_metaplex.UserSideInput.TokenStandard) => Promise<_solana_suite_shared.Result<T_1, Error>>;
-    findByOwner: (owner: _solana_suite_shared.Pubkey, onOk: OnOk<shared_metaplex.UserSideOutput.TokenMetadata>, onErr: OnErr, options?: {
+    genericFindByOwner: <T extends unknown>(owner: _solana_suite_shared.Pubkey, callback: (result: _solana_suite_shared.Result<T[], Error>) => void, tokenStandard: UserSideInput.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
+    genericFindByMint: <T_1 extends unknown>(mint: _solana_suite_shared.Pubkey, tokenStandard: UserSideInput.TokenStandard) => Promise<_solana_suite_shared.Result<T_1, Error>>;
+    findByOwner: (owner: _solana_suite_shared.Pubkey, onOk: OnOk<types_converter.UserSideOutput.TokenMetadata>, onErr: OnErr, options?: {
         sortable?: Sortable | undefined;
         isHolder?: boolean | undefined;
     } | undefined) => void;
-    findByMint: (mint: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<shared_metaplex.UserSideOutput.TokenMetadata, Error>>;
+    findByMint: (mint: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<types_converter.UserSideOutput.TokenMetadata, Error>>;
     burn: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], burnAmount: number, tokenDecimals: number, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
     add: (token: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], totalAmount: number, mintDecimal: number, feePayer?: _solana_suite_shared.Secret | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>>;
 };

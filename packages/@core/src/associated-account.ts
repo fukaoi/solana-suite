@@ -8,6 +8,7 @@ import {
   Secret,
   sleep,
 } from '@solana-suite/shared';
+
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   createAssociatedTokenAccountInstruction,

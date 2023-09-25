@@ -31,14 +31,12 @@ import {
   Try,
 } from '@solana-suite/shared';
 
-import {
-  Convert,
-  Pda,
-  UserSideInput,
-  Validator,
-} from 'internals/shared-metaplex';
+import { UserSideInput } from 'types/converter';
+import { Pda } from 'account';
+import { Converter } from 'converter';
+import { Validator } from 'validator';
 import { SplToken as _Calculate } from './calculate-amount';
-import { Storage } from 'internals/storage';
+import { Storage } from 'storage';
 
 export namespace SplToken {
   export const createFreezeAuthority = (
@@ -179,7 +177,7 @@ export namespace SplToken {
 
       const isMutable = true;
 
-      const datav2 = Convert.TokenMetadata.intoInfraSide(
+      const datav2 = Converter.TokenMetadata.intoInfraSide(
         input,
         uri,
         sellerFeeBasisPoints,

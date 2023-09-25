@@ -32,7 +32,7 @@ declare namespace Converter$4 {
 declare namespace Converter$3 {
     namespace Royalty {
         const THRESHOLD = 100;
-        const convert: (percentage: number) => number;
+        const intoInfraSide: (percentage: number) => number;
     }
 }
 

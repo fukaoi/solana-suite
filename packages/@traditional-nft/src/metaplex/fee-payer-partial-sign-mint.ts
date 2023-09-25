@@ -13,12 +13,9 @@ import { Transaction } from '@solana/web3.js';
 
 import { Storage } from 'storage';
 
-import {
-  Convert,
-  Royalty,
-  UserSideInput,
-  Validator,
-} from 'shared-metaplex';
+import { Converter } from 'converter';
+import { UserSideInput } from 'types/converter';
+import { Validator } from 'validator';
 
 import { Metaplex as _Mint } from './mint';
 
@@ -54,7 +51,7 @@ export namespace Metaplex {
     signer: Secret,
     input: UserSideInput.NftMetadata,
     feePayer: Pubkey,
-    freezeAuthority?: Secret
+    freezeAuthority?: Secret,
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
@@ -62,26 +59,26 @@ export namespace Metaplex {
         throw valid.error;
       }
 
-      const sellerFeeBasisPoints = Royalty.convert(input.royalty);
+      const sellerFeeBasisPoints = Converter.Royalty.convert(input.royalty);
 
       //--- porperties, Upload content ---
       let uri = '';
       if (input.filePath && input.storageType === 'nftStorage') {
-        const properties = await Convert.Properties.intoInfraSide(
+        const properties = await Converter.Properties.intoInfraSide(
           input.properties,
           Storage.uploadContent,
-          input.storageType
+          input.storageType,
         );
 
         const nftStorageMetadata = Storage.toConvertOffchaindata(
           { ...input, properties },
-          sellerFeeBasisPoints
+          sellerFeeBasisPoints,
         );
 
         const uploaded = await Storage.uploadMetaAndContent(
           nftStorageMetadata,
           input.filePath,
-          input.storageType
+          input.storageType,
         );
         if (uploaded.isErr) {
           throw uploaded;
@@ -95,16 +92,16 @@ export namespace Metaplex {
       }
       //--- porperties, Upload content ---
 
-      let datav2 = Convert.NftMetadata.intoInfraSide(
+      let datav2 = Converter.NftMetadata.intoInfraSide(
         input,
         uri,
-        sellerFeeBasisPoints
+        sellerFeeBasisPoints,
       );
 
       //--- collection ---
       let collection;
       if (input.collection && input.collection) {
-        collection = Convert.Collection.intoInfraSide(input.collection);
+        collection = Converter.Collection.intoInfraSide(input.collection);
         datav2 = { ...datav2, collection };
       }
       //--- collection ---
@@ -121,7 +118,7 @@ export namespace Metaplex {
         owner.toPublicKey(),
         datav2,
         feePayer.toPublicKey(),
-        isMutable
+        isMutable,
       );
 
       // freezeAuthority
@@ -130,8 +127,8 @@ export namespace Metaplex {
           _Mint.createDeleagateInstruction(
             mint.toPublicKey(),
             owner.toPublicKey(),
-            freezeAuthority.toPublicKey()
-          )
+            freezeAuthority.toPublicKey(),
+          ),
         );
       }
 

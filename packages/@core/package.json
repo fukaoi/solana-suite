@@ -51,7 +51,10 @@
     "bs58": "^5.0.0",
     "cross-fetch": "^4.0.0",
     "types": "workspace:^",
-    "storage": "workspace:^"
+    "storage": "workspace:^",
+    "validator": "workspace:^",
+    "account": "workspace:^",
+    "converter": "workspace:^"
   },
   "devDependencies": {
     "build-config/eslint": "workspace:*",

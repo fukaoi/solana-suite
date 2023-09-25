@@ -59,9 +59,15 @@ importers:
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
+      account:
+        specifier: workspace:^
+        version: link:../account
       bs58:
         specifier: ^5.0.0
         version: 5.0.0
+      converter:
+        specifier: workspace:^
+        version: link:../converter
       cross-fetch:
         specifier: ^4.0.0
         version: 4.0.0
@@ -71,6 +77,9 @@ importers:
       types:
         specifier: workspace:^
         version: link:../types
+      validator:
+        specifier: workspace:^
+        version: link:../validator
     devDependencies:
       build-config/eslint:
         specifier: workspace:*
@@ -100,14 +109,20 @@ importers:
         specifier: ^0.3.8
         version: 0.3.8(@solana/web3.js@1.78.5)
       '@solana/web3.js':
-        specifier: ^1.73.2
+        specifier: ^1.78.5
         version: 1.78.5
+      converter:
+        specifier: workspace:^
+        version: link:../converter
       storage:
         specifier: workspace:^
         version: link:../storage
       types:
         specifier: workspace:^
         version: link:../types
+      validator:
+        specifier: workspace:^
+        version: link:../validator
     devDependencies:
       build-config/eslint:
         specifier: workspace:*
@@ -179,12 +194,18 @@ importers:
       bn.js:
         specifier: ^5.2.1
         version: 5.2.1
+      converter:
+        specifier: workspace:^
+        version: link:../converter
       storage:
         specifier: workspace:^
         version: link:../storage
       types:
         specifier: workspace:^
         version: link:../types
+      validator:
+        specifier: workspace:^
+        version: link:../validator
     devDependencies:
       '@types/bn.js':
         specifier: ^5.1.2
