@@ -1,5 +1,5 @@
 {
-  "name": "~types",
+  "name": "types",
   "version": "0.7.0",
   "private": true,
   "main": "dist/index.js",
@@ -34,6 +34,11 @@
       "require": "./dist/converter.js",
       "import": "./dist/converter.mjs",
       "types": "./dist/converter.d.ts"
+    },
+    "./storage": {
+      "require": "./dist/storage.js",
+      "import": "./dist/storage.mjs",
+      "types": "./dist/storage.d.ts"
     }
   }
 }

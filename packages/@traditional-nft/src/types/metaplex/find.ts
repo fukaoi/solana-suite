@@ -1,3 +1,3 @@
-import { UserSideOutput } from 'internals/shared-metaplex';
+import { UserSideOutput } from 'shared-metaplex';
 
 export type NftMetadata = UserSideOutput.NftMetadata;

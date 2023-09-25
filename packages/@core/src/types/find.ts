@@ -1,4 +1,4 @@
-import { UserSideOutput } from 'internals/shared-metaplex';
+import { UserSideOutput } from 'shared-metaplex';
 
 export enum Sortable {
   Asc = 'asc',

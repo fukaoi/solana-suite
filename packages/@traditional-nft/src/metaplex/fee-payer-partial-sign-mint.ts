@@ -11,14 +11,14 @@ import {
 
 import { Transaction } from '@solana/web3.js';
 
-import { Storage } from 'internals/storage';
+import { Storage } from 'storage';
 
 import {
   Convert,
   Royalty,
   UserSideInput,
   Validator,
-} from 'internals/shared-metaplex';
+} from 'shared-metaplex';
 
 import { Metaplex as _Mint } from './mint';
 

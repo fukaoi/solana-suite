@@ -33,7 +33,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup --config build-config/tsup/publish.ts",
+    "build": "tsup --config build-config/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-config/eslint/base.json ./src ./test",
     "eslint:fix": "eslint -c node_modules/build-config/eslint/base.json ./src ./test --fix",
@@ -50,8 +50,8 @@
     "@solana/web3.js": "^1.78.5",
     "bs58": "^5.0.0",
     "cross-fetch": "^4.0.0",
-    "~shared-metaplex": "workspace:^",
-    "~storage": "workspace:^"
+    "shared-metaplex": "workspace:^",
+    "storage": "workspace:^"
   },
   "devDependencies": {
     "build-config/eslint": "workspace:*",

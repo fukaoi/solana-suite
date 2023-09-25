@@ -5,7 +5,7 @@ import {
   InfraSideOutput,
   UserSideInput,
   UserSideOutput,
-} from 'internals/types';
+} from 'types/converter';
 
 import { convertTimestampToDateTime } from '@solana-suite/shared';
 export namespace Convert {

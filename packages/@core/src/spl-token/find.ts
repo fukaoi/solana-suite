@@ -6,7 +6,7 @@ import {
   Pda,
   UserSideInput,
   UserSideOutput,
-} from 'internals/shared-metaplex';
+} from 'shared-metaplex';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';

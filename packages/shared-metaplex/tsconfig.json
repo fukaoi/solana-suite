@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "build-config/tsconfig/base.json",
 
-  "display": "~shared-metaplex",
+  "display": "shared-metaplex",
   "compilerOptions": {
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],

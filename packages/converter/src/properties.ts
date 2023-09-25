@@ -2,9 +2,12 @@ import { overwriteObject, Result, Secret } from '@solana-suite/shared';
 import {
   FileContent,
   InfraSideInput,
-  StorageType,
   UserSideInput,
-} from 'internals/types';
+} from 'types/converter';
+
+import {
+  StorageType,
+} from 'types/storage';
 
 export namespace Convert {
   export namespace Properties {

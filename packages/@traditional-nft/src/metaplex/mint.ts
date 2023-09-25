@@ -26,7 +26,7 @@ import {
   Try,
 } from '@solana-suite/shared';
 
-import { Storage } from 'internals/storage';
+import { Storage } from 'storage';
 
 import {
   Convert,

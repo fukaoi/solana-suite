@@ -42,6 +42,172 @@ importers:
         specifier: ^1.10.14
         version: 1.10.14
 
+  packages/@core:
+    dependencies:
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0
+      '@solana-suite/shared':
+        specifier: workspace:^
+        version: link:../@shared
+      '@solana/buffer-layout':
+        specifier: ^4.0.1
+        version: 4.0.1
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.78.5)
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      bs58:
+        specifier: ^5.0.0
+        version: 5.0.0
+      cross-fetch:
+        specifier: ^4.0.0
+        version: 4.0.0
+      shared-metaplex:
+        specifier: workspace:^
+        version: link:../shared-metaplex
+      storage:
+        specifier: workspace:^
+        version: link:../storage
+    devDependencies:
+      build-config/eslint:
+        specifier: workspace:*
+        version: link:../build-config/eslint
+      build-config/prettier:
+        specifier: workspace:*
+        version: link:../build-config/prettier
+      build-config/tsconfig:
+        specifier: workspace:*
+        version: link:../build-config/tsconfig
+      build-config/tsup:
+        specifier: workspace:*
+        version: link:../build-config/tsup
+
+  packages/@phantom:
+    dependencies:
+      '@solana-suite/core':
+        specifier: workspace:^
+        version: link:../@core
+      '@solana-suite/nft':
+        specifier: workspace:^
+        version: link:../@traditional-nft
+      '@solana-suite/shared':
+        specifier: workspace:^
+        version: link:../@shared
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.78.5)
+      '@solana/web3.js':
+        specifier: ^1.73.2
+        version: 1.78.5
+      shared-metaplex:
+        specifier: workspace:^
+        version: link:../shared-metaplex
+      storage:
+        specifier: workspace:^
+        version: link:../storage
+    devDependencies:
+      build-config/eslint:
+        specifier: workspace:*
+        version: link:../build-config/eslint
+      build-config/prettier:
+        specifier: workspace:*
+        version: link:../build-config/prettier
+      build-config/tsconfig:
+        specifier: workspace:*
+        version: link:../build-config/tsconfig
+      build-config/tsup:
+        specifier: workspace:*
+        version: link:../build-config/tsup
+
+  packages/@shared:
+    dependencies:
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
+      bs58:
+        specifier: ^5.0.0
+        version: 5.0.0
+      commander:
+        specifier: 9.3.0
+        version: 9.3.0
+    devDependencies:
+      '@types/jsdom':
+        specifier: ^21.1.3
+        version: 21.1.3
+      build-config/eslint:
+        specifier: workspace:*
+        version: link:../build-config/eslint
+      build-config/prettier:
+        specifier: workspace:*
+        version: link:../build-config/prettier
+      build-config/tsconfig:
+        specifier: workspace:*
+        version: link:../build-config/tsconfig
+      build-config/tsup:
+        specifier: workspace:*
+        version: link:../build-config/tsup
+      jsdom:
+        specifier: ^22.1.0
+        version: 22.1.0
+
+  packages/@traditional-nft:
+    dependencies:
+      '@metaplex-foundation/js':
+        specifier: 0.19.1
+        version: 0.19.1
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0
+      '@solana-suite/core':
+        specifier: workspace:^
+        version: link:../@core
+      '@solana-suite/shared':
+        specifier: workspace:^
+        version: link:../@shared
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.78.5)
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      bn.js:
+        specifier: ^5.2.1
+        version: 5.2.1
+      shared-metaplex:
+        specifier: workspace:^
+        version: link:../shared-metaplex
+      storage:
+        specifier: workspace:^
+        version: link:../storage
+    devDependencies:
+      '@types/bn.js':
+        specifier: ^5.1.2
+        version: 5.1.2
+      '@types/jsdom':
+        specifier: ^21.1.3
+        version: 21.1.3
+      build-config/eslint:
+        specifier: workspace:*
+        version: link:../build-config/eslint
+      build-config/prettier:
+        specifier: workspace:*
+        version: link:../build-config/prettier
+      build-config/tsconfig:
+        specifier: workspace:*
+        version: link:../build-config/tsconfig
+      build-config/tsup:
+        specifier: workspace:*
+        version: link:../build-config/tsup
+      jsdom:
+        specifier: ^22.1.0
+        version: 22.1.0
+
   packages/build-config/eslint:
     devDependencies:
       '@typescript-eslint/eslint-plugin':
@@ -107,6 +273,40 @@ importers:
   packages/build-configs/tsconfig: {}
 
   packages/build-configs/tsup: {}
+
+  packages/converter:
+    dependencies:
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0
+      '@solana-suite/shared':
+        specifier: workspace:^
+        version: link:../@shared
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      types:
+        specifier: workspace:^
+        version: link:../types
+    devDependencies:
+      '@types/jsdom':
+        specifier: ^21.1.3
+        version: 21.1.3
+      build-config/eslint:
+        specifier: workspace:*
+        version: link:../build-config/eslint
+      build-config/prettier:
+        specifier: workspace:*
+        version: link:../build-config/prettier
+      build-config/tsconfig:
+        specifier: workspace:*
+        version: link:../build-config/tsconfig
+      build-config/tsup:
+        specifier: workspace:*
+        version: link:../build-config/tsup
+      jsdom:
+        specifier: ^22.1.0
+        version: 22.1.0
 
   packages/core:
     dependencies:
@@ -533,6 +733,102 @@ importers:
       jsdom:
         specifier: ^22.1.0
         version: 22.1.0
+
+  packages/shared-metaplex:
+    dependencies:
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.9.1
+        version: 2.13.0
+      '@solana-suite/shared':
+        specifier: workspace:^
+        version: link:../@shared
+      '@solana/web3.js':
+        specifier: ^1.73.2
+        version: 1.78.5
+      bn.js:
+        specifier: ^5.2.1
+        version: 5.2.1
+    devDependencies:
+      '@types/bn.js':
+        specifier: ^5.1.1
+        version: 5.1.2
+      '@types/jsdom':
+        specifier: ^21.1.3
+        version: 21.1.3
+      build-config/eslint:
+        specifier: workspace:*
+        version: link:../build-config/eslint
+      build-config/prettier:
+        specifier: workspace:*
+        version: link:../build-config/prettier
+      build-config/tsconfig:
+        specifier: workspace:*
+        version: link:../build-config/tsconfig
+      build-config/tsup:
+        specifier: workspace:*
+        version: link:../build-config/tsup
+      jsdom:
+        specifier: ^22.1.0
+        version: 22.1.0
+
+  packages/storage:
+    dependencies:
+      '@metaplex-foundation/js':
+        specifier: 0.19.1
+        version: 0.19.1
+      '@solana-suite/shared':
+        specifier: workspace:^
+        version: link:../@shared
+      nft.storage:
+        specifier: ^7.1.1
+        version: 7.1.1(node-fetch@3.3.2)
+      shared-metaplex:
+        specifier: workspace:^
+        version: link:../shared-metaplex
+    devDependencies:
+      build-config/eslint:
+        specifier: workspace:*
+        version: link:../build-config/eslint
+      build-config/prettier:
+        specifier: workspace:*
+        version: link:../build-config/prettier
+      build-config/tsconfig:
+        specifier: workspace:*
+        version: link:../build-config/tsconfig
+      build-config/tsup:
+        specifier: workspace:*
+        version: link:../build-config/tsup
+
+  packages/types:
+    dependencies:
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0
+      '@solana-suite/shared':
+        specifier: workspace:*
+        version: link:../@shared
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      bn.js:
+        specifier: ^5.2.1
+        version: 5.2.1
+    devDependencies:
+      '@types/bn.js':
+        specifier: ^5.1.2
+        version: 5.1.2
+      build-config/eslint:
+        specifier: workspace:*
+        version: link:../build-config/eslint
+      build-config/prettier:
+        specifier: workspace:*
+        version: link:../build-config/prettier
+      build-config/tsconfig:
+        specifier: workspace:*
+        version: link:../build-config/tsconfig
+      build-config/tsup:
+        specifier: workspace:*
+        version: link:../build-config/tsup
 
 packages:
 
@@ -1742,7 +2038,7 @@ packages:
   /@types/bn.js@5.1.2:
     resolution: {integrity: sha512-dkpZu0szUtn9UXTmw+e0AJFd4D2XAxDnsCLdc05SfqpqzPEBft8eQr8uaFitfo/dUUOZERaLec2hHMG87A4Dxg==}
     dependencies:
-      '@types/node': 20.6.3
+      '@types/node': 20.6.5
     dev: true
 
   /@types/chai@4.3.6:
@@ -1752,13 +2048,13 @@ packages:
   /@types/connect@3.4.36:
     resolution: {integrity: sha512-P63Zd/JUGq+PdrM1lv0Wv5SBYeA2+CORvbrXbngriYY0jzLUWfQMQQxOhjONEz/wlHOAxOdY7CY65rgQdTjq2w==}
     dependencies:
-      '@types/node': 16.11.7
+      '@types/node': 12.20.55
     dev: false
 
   /@types/jsdom@21.1.3:
     resolution: {integrity: sha512-1zzqSP+iHJYV4lB3lZhNBa012pubABkj9yG/GuXuf6LZH1cSPIJBqFDrm5JX65HHt6VOnNYdTui/0ySerRbMgA==}
     dependencies:
-      '@types/node': 20.6.3
+      '@types/node': 20.6.5
       '@types/tough-cookie': 4.0.3
       parse5: 7.1.2
     dev: true
@@ -1797,12 +2093,13 @@ packages:
 
   /@types/node@16.11.7:
     resolution: {integrity: sha512-QB5D2sqfSjCmTuWcBWyJ+/44bcjO7VbjSbOE0ucoVbAsSNQc4Lt6QkgkVXkTDwkL4z/beecZNDvVX15D4P8Jbw==}
+    dev: true
 
-  /@types/node@20.6.3:
-    resolution: {integrity: sha512-HksnYH4Ljr4VQgEy2lTStbCKv/P590tmPe5HqOnv9Gprffgv5WXAY+Y5Gqniu0GGqeTCUdBnzC3QSrzPkBkAMA==}
+  /@types/node@20.6.5:
+    resolution: {integrity: sha512-2qGq5LAOTh9izcc0+F+dToFigBWiK1phKPt7rNhOqJSr35y8rlIBjDwGtFSgAI6MGIhjwOVNSQZVdJsZJ2uR1w==}
 
-  /@types/normalize-package-data@2.4.1:
-    resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
+  /@types/normalize-package-data@2.4.2:
+    resolution: {integrity: sha512-lqa4UEhhv/2sjjIQgjX8B+RBjj47eo0mzGasklVJ78UKGQY1r0VpB9XHDaZZO9qzEFDdy4MrXLuEaSmPrPSe/A==}
     dev: false
 
   /@types/retry@0.12.0:
@@ -1820,7 +2117,7 @@ packages:
   /@types/ws@7.4.7:
     resolution: {integrity: sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==}
     dependencies:
-      '@types/node': 16.11.7
+      '@types/node': 12.20.55
     dev: false
 
   /@typescript-eslint/eslint-plugin@6.7.2(@typescript-eslint/parser@6.7.2)(eslint@8.49.0)(typescript@5.2.2):
@@ -5694,7 +5991,7 @@ packages:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 20.6.3
+      '@types/node': 20.6.5
       long: 4.0.0
     dev: false
 
@@ -5759,7 +6056,7 @@ packages:
     resolution: {integrity: sha512-Ug69mNOpfvKDAc2Q8DRpMjjzdtrnv9HcSMX+4VsZxD1aZ6ZzrIE7rlzXBtWTyhULSMKg076AW6WR5iZpD0JiOg==}
     engines: {node: '>=8'}
     dependencies:
-      '@types/normalize-package-data': 2.4.1
+      '@types/normalize-package-data': 2.4.2
       normalize-package-data: 2.5.0
       parse-json: 5.2.0
       type-fest: 0.6.0
@@ -5874,8 +6171,8 @@ packages:
       inherits: 2.0.4
     dev: false
 
-  /rollup@3.29.2:
-    resolution: {integrity: sha512-CJouHoZ27v6siztc21eEQGo0kIcE5D1gVPA571ez0mMYb25LGYGKnVNXpEj5MGlepmDWGXNjDB5q7uNiPHC11A==}
+  /rollup@3.29.3:
+    resolution: {integrity: sha512-T7du6Hum8jOkSWetjRgbwpM6Sy0nECYrYRSmZjayFcOddtKJWU4d17AC3HNUk7HRuqy4p+G7aEZclSHytqUmEg==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -6397,7 +6694,7 @@ packages:
       joycon: 3.1.1
       postcss-load-config: 4.0.1(ts-node@10.9.1)
       resolve-from: 5.0.0
-      rollup: 3.29.2
+      rollup: 3.29.3
       source-map: 0.8.0-beta.0
       sucrase: 3.34.0
       tree-kill: 1.2.2

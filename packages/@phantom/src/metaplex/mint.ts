@@ -1,6 +1,6 @@
 import { Transaction, TransactionInstruction } from '@solana/web3.js';
 import { Metaplex } from '@solana-suite/nft';
-import { Storage } from 'internal/storage';
+import { Storage } from 'storage';
 import {
   debugLog,
   KeypairAccount,
@@ -14,7 +14,7 @@ import {
   UserSideInput,
   Validator,
   ValidatorError,
-} from 'internals/shared-metaplex';
+} from 'shared-metaplex';
 import { Phantom } from '../types';
 
 export namespace PhantomMetaplex {

@@ -1,5 +1,5 @@
 {
-  "name": "~storage",
+  "name": "storage",
   "version": "0.7.0",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -18,7 +18,7 @@
   "dependencies": {
     "@metaplex-foundation/js": "0.19.1",
     "@solana-suite/shared": "workspace:^",
-    "~shared-metaplex": "workspace:^",
+    "shared-metaplex": "workspace:^",
     "nft.storage": "^7.1.1"
   },
   "devDependencies": {
