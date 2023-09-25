@@ -13,7 +13,7 @@ import {
   Try,
   Pubkey,
   Secret,
-} from '@solana-suite/shared';
+} from 'shared';
 import { AssociatedAccount } from '../associated-account';
 
 export namespace SolNative {

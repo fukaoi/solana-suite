@@ -1,12 +1,12 @@
-import { debugLog, Node, Pubkey, Result } from '@solana-suite/shared';
+import { debugLog, Node, Pubkey, Result } from 'shared';
 import { Find, OnErr, OnOk, Sortable, TokenMetadata } from '../types/';
 import {
-  Convert,
   InfraSideOutput,
-  Pda,
   UserSideInput,
   UserSideOutput,
-} from 'shared-metaplex';
+} from 'types/converter';
+import { Converter  } from "converter";
+import { Pda  } from "account";
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -44,7 +44,7 @@ export namespace SplToken {
     tokenAmount: string,
   ): T => {
     if (tokenStandard === UserSideInput.TokenStandard.Fungible) {
-      return Convert.TokenMetadata.intoUserSide(
+      return Converter.TokenMetadata.intoUserSide(
         {
           onchain: metadata,
           offchain: json,
@@ -52,7 +52,7 @@ export namespace SplToken {
         tokenAmount,
       ) as T;
     } else if (tokenStandard === UserSideInput.TokenStandard.NonFungible) {
-      return Convert.NftMetadata.intoUserSide(
+      return Converter.NftMetadata.intoUserSide(
         {
           onchain: metadata,
           offchain: json,

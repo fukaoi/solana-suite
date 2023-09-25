@@ -1,5 +1,5 @@
 import { createMintToCheckedInstruction } from '@solana/spl-token';
-import { Result, Instruction, Try, Pubkey, Secret } from '@solana-suite/shared';
+import { Result, Instruction, Try, Pubkey, Secret } from 'shared';
 import { AssociatedAccount } from '../associated-account';
 import { SplToken as _Calculate } from './calculate-amount';
 

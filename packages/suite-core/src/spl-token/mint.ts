@@ -29,7 +29,7 @@ import {
   Result,
   Secret,
   Try,
-} from '@solana-suite/shared';
+} from 'shared';
 
 import { UserSideInput } from 'types/converter';
 import { Pda } from 'account';

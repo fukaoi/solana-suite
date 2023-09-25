@@ -5,7 +5,7 @@ import {
   Result,
   Secret,
   Try,
-} from '@solana-suite/shared';
+} from 'shared';
 import {
   createThawAccountInstruction,
   getAssociatedTokenAddressSync,

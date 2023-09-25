@@ -1,5 +1,5 @@
 import { TransactionInstruction } from '@solana/web3.js';
-import { Constants, Instruction, Pubkey, Secret } from '@solana-suite/shared';
+import { Constants, Instruction, Pubkey, Secret } from 'shared';
 import bs from 'bs58';
 
 export namespace Memo {

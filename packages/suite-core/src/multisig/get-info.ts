@@ -1,4 +1,4 @@
-import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
+import { Node, Pubkey, Result, Try } from 'shared';
 import { LayoutObject } from '@solana/buffer-layout';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { PublicKey } from '@solana/web3.js';

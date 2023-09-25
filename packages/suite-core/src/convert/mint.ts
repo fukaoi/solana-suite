@@ -1,6 +1,6 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
 import { InfraSideOutput, UserSideOutput } from '../types/';
-import { convertTimestampToDateTime } from '@solana-suite/shared';
+import { convertTimestampToDateTime } from 'shared';
 
 export namespace Convert.Mint {
   export const intoUserSide = (

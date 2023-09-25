@@ -861,6 +861,159 @@ importers:
         specifier: workspace:*
         version: link:../build-configs/tsup
 
+  packages/suite-core:
+    dependencies:
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0
+      '@solana/buffer-layout':
+        specifier: ^4.0.1
+        version: 4.0.1
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.78.5)
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      account:
+        specifier: workspace:^
+        version: link:../account
+      bs58:
+        specifier: ^5.0.0
+        version: 5.0.0
+      converter:
+        specifier: workspace:^
+        version: link:../converter
+      cross-fetch:
+        specifier: ^4.0.0
+        version: 4.0.0
+      shared:
+        specifier: workspace:^
+        version: link:../shared
+      storage:
+        specifier: workspace:^
+        version: link:../storage
+      types:
+        specifier: workspace:^
+        version: link:../types
+      validator:
+        specifier: workspace:^
+        version: link:../validator
+    devDependencies:
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
+
+  packages/suite-phantom:
+    dependencies:
+      '@solana-suite/core':
+        specifier: workspace:^
+        version: link:../suite-core
+      '@solana-suite/nft':
+        specifier: workspace:^
+        version: link:../suite-traditional-nft
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.78.5)
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      converter:
+        specifier: workspace:^
+        version: link:../converter
+      shared:
+        specifier: workspace:^
+        version: link:../shared
+      storage:
+        specifier: workspace:^
+        version: link:../storage
+      types:
+        specifier: workspace:^
+        version: link:../types
+      validator:
+        specifier: workspace:^
+        version: link:../validator
+    devDependencies:
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
+
+  packages/suite-traditional-nft:
+    dependencies:
+      '@metaplex-foundation/js':
+        specifier: 0.19.1
+        version: 0.19.1
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0
+      '@solana-suite/core':
+        specifier: workspace:^
+        version: link:../suite-core
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.78.5)
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      bn.js:
+        specifier: ^5.2.1
+        version: 5.2.1
+      converter:
+        specifier: workspace:^
+        version: link:../converter
+      shared:
+        specifier: workspace:^
+        version: link:../shared
+      storage:
+        specifier: workspace:^
+        version: link:../storage
+      types:
+        specifier: workspace:^
+        version: link:../types
+      validator:
+        specifier: workspace:^
+        version: link:../validator
+    devDependencies:
+      '@types/bn.js':
+        specifier: ^5.1.2
+        version: 5.1.2
+      '@types/jsdom':
+        specifier: ^21.1.3
+        version: 21.1.3
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
+      jsdom:
+        specifier: ^22.1.0
+        version: 22.1.0
+
   packages/types:
     dependencies:
       '@metaplex-foundation/mpl-token-metadata':

@@ -1,5 +1,5 @@
-import * as _solana_suite_shared from '@solana-suite/shared';
-import { Pubkey, Result, Secret } from '@solana-suite/shared';
+import * as shared from 'shared';
+import { Pubkey, Result, Secret } from 'shared';
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionInstruction, PublicKey } from '@solana/web3.js';
 import * as types_converter from 'types/converter';
@@ -47,44 +47,44 @@ declare namespace AssociatedAccount {
 }
 
 declare const Memo: {
-    getHistory: (target: _solana_suite_shared.Pubkey, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    getHistory: (target: shared.Pubkey, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
-    create: (data: string, owner: _solana_suite_shared.Pubkey, signer: _solana_suite_shared.Secret, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Instruction;
+    create: (data: string, owner: shared.Pubkey, signer: shared.Secret, feePayer?: shared.Secret | undefined) => shared.Instruction;
 };
 
 declare const Multisig: {
-    isAddress: (multisig: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<boolean, Error>>;
-    getInfo: (multisig: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<_solana_buffer_layout.LayoutObject, Error>>;
-    create: (m: number, feePayer: _solana_suite_shared.Secret, signerPubkeys: _solana_suite_shared.Pubkey[]) => Promise<_solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>>;
+    isAddress: (multisig: shared.Pubkey) => Promise<shared.Result<boolean, Error>>;
+    getInfo: (multisig: shared.Pubkey) => Promise<shared.Result<_solana_buffer_layout.LayoutObject, Error>>;
+    create: (m: number, feePayer: shared.Secret, signerPubkeys: shared.Pubkey[]) => Promise<shared.Result<shared.Instruction, Error>>;
 };
 
 declare const SolNative: {
-    transferWithMultisig: (owner: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], amount: number, feePayer?: _solana_suite_shared.Secret | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>>;
-    transfer: (source: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], amount: number, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
-    getHistory: (target: _solana_suite_shared.Pubkey, filterType: FilterType, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
-    feePayerPartialSignTransfer: (owner: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], amount: number, feePayer: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<_solana_suite_shared.PartialSignInstruction, Error>>;
-    findByOwner: (owner: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<OwnerInfo, Error>>;
+    transferWithMultisig: (owner: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, feePayer?: shared.Secret | undefined) => Promise<shared.Result<shared.Instruction, Error>>;
+    transfer: (source: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, feePayer?: shared.Secret | undefined) => shared.Result<shared.Instruction, Error>;
+    getHistory: (target: shared.Pubkey, filterType: FilterType, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    feePayerPartialSignTransfer: (owner: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, feePayer: shared.Pubkey) => Promise<shared.Result<shared.PartialSignInstruction, Error>>;
+    findByOwner: (owner: shared.Pubkey) => Promise<shared.Result<OwnerInfo, Error>>;
 };
 
 declare const SplToken: {
-    transfer: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], amount: number, mintDecimal: number, feePayer?: _solana_suite_shared.Secret | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>>;
-    thaw: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, freezeAuthority: _solana_suite_shared.Secret, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
+    transfer: (mint: shared.Pubkey, owner: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, mintDecimal: number, feePayer?: shared.Secret | undefined) => Promise<shared.Result<shared.Instruction, Error>>;
+    thaw: (mint: shared.Pubkey, owner: shared.Pubkey, freezeAuthority: shared.Secret, feePayer?: shared.Secret | undefined) => shared.Result<shared.Instruction, Error>;
     createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
-    mint: (owner: _solana_suite_shared.Pubkey, signer: _solana_suite_shared.Secret, totalAmount: number, mintDecimal: number, input: types_converter.UserSideInput.TokenMetadata, feePayer?: _solana_suite_shared.Secret | undefined, freezeAuthority?: _solana_suite_shared.Pubkey | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.MintInstruction, Error>>;
-    getHistory: (target: _solana_suite_shared.Pubkey, filterType: FilterType, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
-    feePayerPartialSignTransfer: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, dest: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], amount: number, mintDecimal: number, feePayer: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<_solana_suite_shared.PartialSignInstruction, Error>>;
-    freeze: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, freezeAuthority: _solana_suite_shared.Secret, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
-    genericFindByOwner: <T extends unknown>(owner: _solana_suite_shared.Pubkey, callback: (result: _solana_suite_shared.Result<T[], Error>) => void, tokenStandard: UserSideInput.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
-    genericFindByMint: <T_1 extends unknown>(mint: _solana_suite_shared.Pubkey, tokenStandard: UserSideInput.TokenStandard) => Promise<_solana_suite_shared.Result<T_1, Error>>;
-    findByOwner: (owner: _solana_suite_shared.Pubkey, onOk: OnOk<types_converter.UserSideOutput.TokenMetadata>, onErr: OnErr, options?: {
+    mint: (owner: shared.Pubkey, signer: shared.Secret, totalAmount: number, mintDecimal: number, input: types_converter.UserSideInput.TokenMetadata, feePayer?: shared.Secret | undefined, freezeAuthority?: shared.Pubkey | undefined) => Promise<shared.Result<shared.MintInstruction, Error>>;
+    getHistory: (target: shared.Pubkey, filterType: FilterType, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    feePayerPartialSignTransfer: (mint: shared.Pubkey, owner: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, mintDecimal: number, feePayer: shared.Pubkey) => Promise<shared.Result<shared.PartialSignInstruction, Error>>;
+    freeze: (mint: shared.Pubkey, owner: shared.Pubkey, freezeAuthority: shared.Secret, feePayer?: shared.Secret | undefined) => shared.Result<shared.Instruction, Error>;
+    genericFindByOwner: <T extends types_converter.UserSideOutput.TokenMetadata | types_converter.UserSideOutput.NftMetadata>(owner: shared.Pubkey, callback: (result: shared.Result<T[], Error>) => void, tokenStandard: types_converter.UserSideInput.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
+    genericFindByMint: <T_1 extends types_converter.UserSideOutput.TokenMetadata | types_converter.UserSideOutput.NftMetadata>(mint: shared.Pubkey, tokenStandard: types_converter.UserSideInput.TokenStandard) => Promise<shared.Result<T_1, Error>>;
+    findByOwner: (owner: shared.Pubkey, onOk: OnOk<types_converter.UserSideOutput.TokenMetadata>, onErr: OnErr, options?: {
         sortable?: Sortable | undefined;
         isHolder?: boolean | undefined;
     } | undefined) => void;
-    findByMint: (mint: _solana_suite_shared.Pubkey) => Promise<_solana_suite_shared.Result<types_converter.UserSideOutput.TokenMetadata, Error>>;
-    burn: (mint: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], burnAmount: number, tokenDecimals: number, feePayer?: _solana_suite_shared.Secret | undefined) => _solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>;
-    add: (token: _solana_suite_shared.Pubkey, owner: _solana_suite_shared.Pubkey, signers: _solana_suite_shared.Secret[], totalAmount: number, mintDecimal: number, feePayer?: _solana_suite_shared.Secret | undefined) => Promise<_solana_suite_shared.Result<_solana_suite_shared.Instruction, Error>>;
+    findByMint: (mint: shared.Pubkey) => Promise<shared.Result<types_converter.UserSideOutput.TokenMetadata, Error>>;
+    burn: (mint: shared.Pubkey, owner: shared.Pubkey, signers: shared.Secret[], burnAmount: number, tokenDecimals: number, feePayer?: shared.Secret | undefined) => shared.Result<shared.Instruction, Error>;
+    add: (token: shared.Pubkey, owner: shared.Pubkey, signers: shared.Secret[], totalAmount: number, mintDecimal: number, feePayer?: shared.Secret | undefined) => Promise<shared.Result<shared.Instruction, Error>>;
 };
 
 declare namespace UserSideOutput {

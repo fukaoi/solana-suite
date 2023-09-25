@@ -7,7 +7,7 @@ import {
   Try,
   Pubkey,
   Secret,
-} from '@solana-suite/shared';
+} from 'shared';
 
 export namespace SolNative {
   const RADIX = 10;

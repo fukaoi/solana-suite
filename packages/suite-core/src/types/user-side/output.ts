@@ -1,4 +1,4 @@
-import { Pubkey } from '@solana-suite/shared';
+import { Pubkey } from 'shared';
 
 export namespace UserSideOutput {
   export type History = {

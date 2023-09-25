@@ -1,5 +1,5 @@
 import { SystemProgram } from '@solana/web3.js';
-import { Result, Instruction, Try, Pubkey, Secret } from '@solana-suite/shared';
+import { Result, Instruction, Try, Pubkey, Secret } from 'shared';
 
 export namespace SolNative {
   const RADIX = 10;

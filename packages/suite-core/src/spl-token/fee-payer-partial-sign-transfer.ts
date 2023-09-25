@@ -7,7 +7,7 @@ import {
   Try,
   Pubkey,
   Secret,
-} from '@solana-suite/shared';
+} from 'shared';
 
 import { SplToken as _Calculator } from './calculate-amount';
 import { AssociatedAccount } from '../associated-account';

@@ -1,4 +1,4 @@
-import { Node, Result, debugLog, Try, Pubkey } from '@solana-suite/shared';
+import { Node, Result, debugLog, Try, Pubkey } from 'shared';
 
 export namespace Airdrop {
   const DEFAULT_AIRDROP_AMOUNT = 1;

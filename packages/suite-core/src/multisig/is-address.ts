@@ -1,4 +1,4 @@
-import { Pubkey, Result, Try } from '@solana-suite/shared';
+import { Pubkey, Result, Try } from 'shared';
 import { Multisig as _Get } from './get-info';
 
 export namespace Multisig {

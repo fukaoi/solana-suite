@@ -1,5 +1,5 @@
 import { createTransferCheckedInstruction } from '@solana/spl-token';
-import { Result, Instruction, Try, Pubkey, Secret } from '@solana-suite/shared';
+import { Result, Instruction, Try, Pubkey, Secret } from 'shared';
 import { SplToken as _Calculator } from './calculate-amount';
 import { AssociatedAccount } from '../associated-account';
 

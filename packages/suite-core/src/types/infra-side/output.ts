@@ -1,4 +1,4 @@
-import { Pubkey } from '@solana-suite/shared';
+import { Pubkey } from 'shared';
 import { PublicKey } from '@solana/web3.js';
 
 export namespace InfraSideOutput {

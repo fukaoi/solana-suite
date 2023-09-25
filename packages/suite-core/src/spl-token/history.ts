@@ -1,5 +1,5 @@
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { debugLog, Node, Pubkey } from "@solana-suite/shared";
+import { debugLog, Node, Pubkey } from "shared";
 import {
   FilterType,
   History,

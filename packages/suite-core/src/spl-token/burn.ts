@@ -2,7 +2,7 @@ import {
   createBurnCheckedInstruction,
   getAssociatedTokenAddressSync,
 } from '@solana/spl-token';
-import { Instruction, Pubkey, Result, Secret, Try } from '@solana-suite/shared';
+import { Instruction, Pubkey, Result, Secret, Try } from 'shared';
 import { SplToken as _Calculate } from './calculate-amount';
 
 export namespace SplToken {

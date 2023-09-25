@@ -5,7 +5,7 @@ import {
   Try,
   Secret,
   Pubkey,
-} from '@solana-suite/shared';
+} from 'shared';
 import { Keypair } from '@solana/web3.js';
 import { Multisig as _Instruction } from './instruction';
 

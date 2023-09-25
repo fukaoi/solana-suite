@@ -10,7 +10,7 @@ import {
   PostTokenAccount,
   UserSideOutput,
 } from './types';
-import { debugLog } from '@solana-suite/shared';
+import { debugLog } from 'shared';
 
 //@internal
 export namespace TransactionFilter {

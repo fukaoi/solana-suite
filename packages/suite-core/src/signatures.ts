@@ -1,5 +1,5 @@
 import { ParsedTransactionWithMeta } from "@solana/web3.js";
-import { debugLog, Node, Pubkey, Result, sleep } from "@solana-suite/shared";
+import { debugLog, Node, Pubkey, Result, sleep } from "shared";
 import { UserSideOutput } from "./types/";
 
 //@internal

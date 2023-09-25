@@ -7,7 +7,7 @@ import {
   Pubkey,
   Secret,
   sleep,
-} from '@solana-suite/shared';
+} from 'shared';
 
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
