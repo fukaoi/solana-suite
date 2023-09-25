@@ -18,9 +18,9 @@
   },
   "dependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
-    "@solana-suite/shared": "workspace:*",
     "@solana/web3.js": "^1.78.5",
-    "bn.js": "^5.2.1"
+    "bn.js": "^5.2.1",
+    "shared": "workspace:*"
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.2",
@@ -30,6 +30,11 @@
     "build-configs/tsup": "workspace:*"
   },
   "exports": {
+    "./account": {
+      "require": "./dist/account.js",
+      "import": "./dist/account.mjs",
+      "types": "./dist/account.d.ts"
+    },
     "./converter": {
       "require": "./dist/converter.js",
       "import": "./dist/converter.mjs",

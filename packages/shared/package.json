@@ -1,39 +1,9 @@
 {
-  "name": "@solana-suite/shared",
+  "name": "shared",
   "version": "0.7.0",
-  "description": "shared module for solana-suite",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "keywords": [
-    "api",
-    "blockchain",
-    "solana",
-    "sdk",
-    "web3.js",
-    "nft"
-  ],
-  "engines": {
-    "node": ">=16.*"
-  },
-  "files": [
-    "dist",
-    "solana-suite-config.js",
-    "package.json"
-  ],
-  "license": "MIT",
-  "author": "Akira Takachi <a.takachi@atonoy.co>",
-  "homepage": "https://atonoy.github.io/solana-suite",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/atonoy/solana-suite.git"
-  },
-  "bugs": {
-    "url": "https://github.com/atonoy/solana-suite/issues"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "build": "tsup --config build-configs/tsup/base.ts && cp src/solana-suite.json dist/",
     "clean": "rm -rf dist/ && rm -rf node_modules",

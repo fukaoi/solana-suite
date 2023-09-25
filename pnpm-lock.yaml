@@ -47,9 +47,6 @@ importers:
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
         version: 2.13.0
-      '@solana-suite/shared':
-        specifier: workspace:^
-        version: link:../@shared
       '@solana/buffer-layout':
         specifier: ^4.0.1
         version: 4.0.1
@@ -71,6 +68,9 @@ importers:
       cross-fetch:
         specifier: ^4.0.0
         version: 4.0.0
+      shared:
+        specifier: workspace:^
+        version: link:../shared
       storage:
         specifier: workspace:^
         version: link:../storage
@@ -102,9 +102,6 @@ importers:
       '@solana-suite/nft':
         specifier: workspace:^
         version: link:../@traditional-nft
-      '@solana-suite/shared':
-        specifier: workspace:^
-        version: link:../@shared
       '@solana/spl-token':
         specifier: ^0.3.8
         version: 0.3.8(@solana/web3.js@1.78.5)
@@ -114,6 +111,9 @@ importers:
       converter:
         specifier: workspace:^
         version: link:../converter
+      shared:
+        specifier: workspace:^
+        version: link:../shared
       storage:
         specifier: workspace:^
         version: link:../storage
@@ -182,9 +182,6 @@ importers:
       '@solana-suite/core':
         specifier: workspace:^
         version: link:../@core
-      '@solana-suite/shared':
-        specifier: workspace:^
-        version: link:../@shared
       '@solana/spl-token':
         specifier: ^0.3.8
         version: 0.3.8(@solana/web3.js@1.78.5)
@@ -197,6 +194,9 @@ importers:
       converter:
         specifier: workspace:^
         version: link:../converter
+      shared:
+        specifier: workspace:^
+        version: link:../shared
       storage:
         specifier: workspace:^
         version: link:../storage
@@ -234,12 +234,15 @@ importers:
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
         version: 2.13.0
-      '@solana-suite/shared':
-        specifier: workspace:*
-        version: link:../@shared
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
+      bs58:
+        specifier: ^5.0.0
+        version: 5.0.0
+      shared:
+        specifier: workspace:*
+        version: link:../shared
       types:
         specifier: workspace:*
         version: link:../types
@@ -328,12 +331,12 @@ importers:
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
         version: 2.13.0
-      '@solana-suite/shared':
-        specifier: workspace:^
-        version: link:../@shared
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
+      shared:
+        specifier: workspace:^
+        version: link:../shared
       types:
         specifier: workspace:^
         version: link:../types
@@ -712,6 +715,28 @@ importers:
         specifier: ^22.1.0
         version: 22.1.0
 
+  packages/node:
+    dependencies:
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      shared:
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
+
   packages/phantom:
     dependencies:
       '@solana-suite/core':
@@ -767,18 +792,18 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.3
         version: 21.1.3
-      build-config/eslint:
+      build-configs/eslint:
         specifier: workspace:*
-        version: link:../build-config/eslint
-      build-config/prettier:
+        version: link:../build-configs/eslint
+      build-configs/prettier:
         specifier: workspace:*
-        version: link:../build-config/prettier
-      build-config/tsconfig:
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
         specifier: workspace:*
-        version: link:../build-config/tsconfig
-      build-config/tsup:
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
         specifier: workspace:*
-        version: link:../build-config/tsup
+        version: link:../build-configs/tsup
       jsdom:
         specifier: ^22.1.0
         version: 22.1.0
@@ -813,12 +838,12 @@ importers:
 
   packages/storage:
     dependencies:
-      '@solana-suite/shared':
-        specifier: workspace:^
-        version: link:../@shared
       nft.storage:
         specifier: ^7.1.1
         version: 7.1.1(node-fetch@3.3.2)
+      shared:
+        specifier: workspace:^
+        version: link:../shared
       types:
         specifier: workspace:^
         version: link:../types
@@ -841,15 +866,15 @@ importers:
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
         version: 2.13.0
-      '@solana-suite/shared':
-        specifier: workspace:*
-        version: link:../@shared
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
       bn.js:
         specifier: ^5.2.1
         version: 5.2.1
+      shared:
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       '@types/bn.js':
         specifier: ^5.1.2
@@ -869,12 +894,12 @@ importers:
 
   packages/validator:
     dependencies:
-      '@solana-suite/shared':
-        specifier: workspace:*
-        version: link:../@shared
       converter:
         specifier: workspace:*
         version: link:../converter
+      shared:
+        specifier: workspace:*
+        version: link:../shared
       types:
         specifier: workspace:*
         version: link:../types

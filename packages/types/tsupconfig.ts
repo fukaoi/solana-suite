@@ -1,9 +1,10 @@
-import defineConfig from '../build-configs/tsup/base';
+import defineConfig from "../build-configs/tsup/base";
 
 const entry = {
-  converter: 'src/converter/index.ts',
-  storage: 'src/storage/index.ts',
-  validator: 'src/validator/index.ts',
+  account: "src/account/index.ts",
+  converter: "src/converter/index.ts",
+  storage: "src/storage/index.ts",
+  validator: "src/validator/index.ts",
 };
 
 defineConfig.entry = entry;

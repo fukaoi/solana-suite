@@ -17,7 +17,7 @@
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
-    "@solana-suite/shared": "workspace:*",
+    "shared": "workspace:*",
     "converter": "workspace:*",
     "types": "workspace:*"
   },
