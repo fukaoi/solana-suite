@@ -1,3 +1,4 @@
+// @ts-expect-error moduleResolution:nodenext issue 54523
 import { NFTStorage, Blob } from 'nft.storage';
 import {
   Constants,
@@ -8,7 +9,7 @@ import {
   Try,
 } from '@solana-suite/shared';
 
-import { toMetaplexFile } from '@metaplex-foundation/js';
+// import { toMetaplexFile } from '@metaplex-foundation/js';
 import { InfraSideInput, FileContent } from 'types/converter';
 
 export namespace NftStorage {
@@ -50,7 +51,7 @@ export namespace NftStorage {
         file = (await import('fs')).readFileSync(filepath);
       } else if (isBrowser()) {
         const filepath = filePath;
-        file = toMetaplexFile(filepath, '').buffer;
+        // file = toMetaplexFile(filepath, '').buffer;
       } else {
         throw Error('Supported environment: only Node.js and Browser js');
       }

@@ -1,12 +1,12 @@
-import { Convert as Collection } from './collection';
-import { Convert as Creators } from './creators';
-import { Convert as NftMetadata } from './nft-metadata';
-import { Convert as Properties } from './properties';
-import { Convert as Royalty } from './royalty';
-import { Convert as TokenMetadata } from './token-metadata';
-import { Convert as Uses } from './uses';
+import { Converter as Collection } from './collection';
+import { Converter as Creators } from './creators';
+import { Converter as NftMetadata } from './nft-metadata';
+import { Converter as Properties } from './properties';
+import { Converter as Royalty } from './royalty';
+import { Converter as TokenMetadata } from './token-metadata';
+import { Converter as Uses } from './uses';
 
-export const Convert = {
+export const Converter = {
   ...Collection,
   ...Creators,
   ...NftMetadata,

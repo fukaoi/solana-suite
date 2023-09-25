@@ -1,5 +1,5 @@
-import { Convert as _Creators } from './creators';
-import { Convert as _Uses } from './uses';
+import { Converter as _Creators } from './creators';
+import { Converter as _Uses } from './uses';
 import {
   InfraSideInput,
   InfraSideOutput,
@@ -8,7 +8,7 @@ import {
 } from 'types/converter';
 
 import { convertTimestampToDateTime } from '@solana-suite/shared';
-export namespace Convert {
+export namespace Converter {
   export namespace TokenMetadata {
     export const intoInfraSide = (
       input: UserSideInput.TokenMetadata,

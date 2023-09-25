@@ -792,9 +792,6 @@ importers:
 
   packages/storage:
     dependencies:
-      '@metaplex-foundation/js':
-        specifier: 0.19.1
-        version: 0.19.1
       '@solana-suite/shared':
         specifier: workspace:^
         version: link:../@shared

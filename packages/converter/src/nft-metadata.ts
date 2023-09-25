@@ -1,7 +1,7 @@
-import { Convert as _Collection } from './collection';
-import { Convert as _Creators } from './creators';
-import { Convert as _Uses } from './uses';
-import { Convert as _Token } from './token-metadata';
+import { Converter as _Collection } from './collection';
+import { Converter as _Creators } from './creators';
+import { Converter as _Uses } from './uses';
+import { Converter as _Token } from './token-metadata';
 import {
   InfraSideInput,
   InfraSideOutput,
@@ -11,7 +11,7 @@ import {
 
 import { convertTimestampToDateTime } from '@solana-suite/shared';
 
-export namespace Convert {
+export namespace Converter {
   export namespace NftMetadata {
     export const intoInfraSide = (
       input: UserSideInput.NftMetadata,

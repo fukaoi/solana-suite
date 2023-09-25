@@ -6,7 +6,7 @@ import {
   UserSideOutput,
 } from 'types/converter';
 
-export namespace Convert {
+export namespace Converter {
   export namespace Creators {
     export const intoInfraSide = (
       input: Option<UserSideInput.Creators[]> | undefined,

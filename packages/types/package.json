@@ -41,9 +41,9 @@
       "types": "./dist/storage.d.ts"
     },
     "./validator": {
-      "require": "./dist/storage.js",
-      "import": "./dist/storage.mjs",
-      "types": "./dist/storage.d.ts"
+      "require": "./dist/validator.js",
+      "import": "./dist/validator.mjs",
+      "types": "./dist/validator.d.ts"
     }
   }
 }

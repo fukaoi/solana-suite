@@ -1,6 +1,6 @@
 import { InfraSideOutput, Option, UserSideOutput } from 'types/converter';
 
-export namespace Convert {
+export namespace Converter {
   export namespace Uses {
     export const intoUserSide = (
       output: Option<InfraSideOutput.Uses>,

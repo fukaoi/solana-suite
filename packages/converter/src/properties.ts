@@ -9,7 +9,7 @@ import {
   StorageType,
 } from 'types/storage';
 
-export namespace Convert {
+export namespace Converter {
   export namespace Properties {
     export const intoInfraSide = async (
       input: UserSideInput.Properties | undefined,

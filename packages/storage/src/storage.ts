@@ -2,13 +2,12 @@ import { Result, Secret } from '@solana-suite/shared';
 import {
   FileContent,
   InfraSideInput,
-  StorageType,
   UserSideInput,
 } from 'types/converter';
 
 import { StorageType } from 'types/storage';
 
-import { Arweave } from './arweave';
+// import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
 
 export namespace Storage {
@@ -39,7 +38,8 @@ export namespace Storage {
       if (!feePayer) {
         throw Error('Arweave needs to have feepayer');
       }
-      return await Arweave.uploadContent(filePath, feePayer);
+      // return await Arweave.uploadContent(filePath, feePayer);
+      return await NftStorage.uploadContent(filePath);
     } else if (storageType === 'nftStorage') {
       return await NftStorage.uploadContent(filePath);
     } else {
@@ -59,11 +59,12 @@ export namespace Storage {
         throw Error('Arweave needs to have feepayer');
       }
       storage = await (
-        await Arweave.uploadContent(filePath, feePayer)
+        // await Arweave.uploadContent(filePath, feePayer)
+        await NftStorage.uploadContent(filePath)
       ).unwrap(
         async (ok: string) => {
           input.image = ok;
-          return await Arweave.uploadMetadata(input, feePayer);
+          // return await Arweave.uploadMetadata(input, feePayer);
         },
         (err: Error) => {
           throw err;
