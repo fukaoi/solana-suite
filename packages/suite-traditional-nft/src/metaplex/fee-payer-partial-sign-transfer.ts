@@ -3,7 +3,7 @@ import {
   Pubkey,
   Result,
   Secret,
-} from '@solana-suite/shared';
+} from 'shared';
 import { SplToken } from '@solana-suite/core';
 
 export namespace Metaplex {

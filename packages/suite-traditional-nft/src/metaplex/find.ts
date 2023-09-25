@@ -1,5 +1,5 @@
-import { Pubkey, Result } from '@solana-suite/shared';
-import { UserSideInput } from 'shared-metaplex';
+import { Pubkey, Result } from 'shared';
+import { UserSideInput } from 'types/converter';
 import { Find, OnErr, OnOk, Sortable, SplToken } from '@solana-suite/core';
 import { NftMetadata } from '../types/';
 

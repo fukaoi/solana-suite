@@ -311,30 +311,6 @@ declare function Try<T, E extends Error>(block: () => T): Result<T, E>;
  */
 declare const convertTimestampToDateTime: (created_at: number | undefined) => Date | undefined;
 
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret = (string & {
-    [secretNominality]: never;
-}) | string;
-
-declare class KeypairAccount {
-    secret: Secret;
-    pubkey: Pubkey;
-    constructor(params: {
-        pubkey?: Pubkey;
-        secret: Secret;
-    });
-    toPublicKey(): PublicKey;
-    toKeypair(): Keypair;
-    static isPubkey: (value: string) => value is Pubkey;
-    static isSecret: (value: string) => value is Secret;
-    static create: () => KeypairAccount;
-    static toKeyPair: (keypair: Keypair) => KeypairAccount;
-}
-
 declare namespace Node {
     const getConnection: () => Connection;
     const changeConnection: (param: {
@@ -383,6 +359,15 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = string & {
+    [pubKeyNominality]: never;
+} | string;
+type Secret = string & {
+    [secretNominality]: never;
+} | string;
+
 declare class PartialSignInstruction {
     hexInstruction: string;
     data?: Pubkey;
@@ -390,4 +375,4 @@ declare class PartialSignInstruction {
     submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
 }
 
-export { AnyObject, Constants, Explorer, Instruction, KeypairAccount, MintInstruction, Node, OverwriteObject, PartialSignInstruction, Pubkey, Result, Secret, Try, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep };
+export { AnyObject, Constants, Explorer, Instruction, MintInstruction, Node, OverwriteObject, PartialSignInstruction, Pubkey, Result, Secret, Try, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep };

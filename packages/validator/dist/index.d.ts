@@ -1,4 +1,4 @@
-import { Result } from '@solana-suite/shared';
+import { Result } from 'shared';
 import { InfraSideInput, UserSideInput } from 'types/converter';
 import { Details } from 'types/validator';
 

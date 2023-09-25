@@ -927,6 +927,9 @@ importers:
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
+      account:
+        specifier: workspace:^
+        version: link:../account
       converter:
         specifier: workspace:^
         version: link:../converter
@@ -973,6 +976,9 @@ importers:
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
+      account:
+        specifier: workspace:^
+        version: link:../account
       bn.js:
         specifier: ^5.2.1
         version: 5.2.1

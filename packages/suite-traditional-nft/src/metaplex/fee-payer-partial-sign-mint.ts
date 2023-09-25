@@ -1,13 +1,12 @@
 import {
   debugLog,
-  KeypairAccount,
   Node,
   PartialSignInstruction,
   Pubkey,
   Result,
   Secret,
   Try,
-} from '@solana-suite/shared';
+} from 'shared';
 
 import { Transaction } from '@solana/web3.js';
 
@@ -18,6 +17,7 @@ import { UserSideInput } from 'types/converter';
 import { Validator } from 'validator';
 
 import { Metaplex as _Mint } from './mint';
+import { KeypairAccount } from 'shared/src/keypair-account';
 
 export namespace Metaplex {
   /**

@@ -6,7 +6,7 @@ import {
   isBrowser,
   debugLog,
   Try,
-} from '@solana-suite/shared';
+} from 'shared';
 
 // import { toMetaplexFile } from '@metaplex-foundation/js';
 import { InfraSideInput, FileContent } from 'types/converter';

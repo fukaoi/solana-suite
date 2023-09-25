@@ -45,6 +45,7 @@
     "@solana-suite/nft": "workspace:^",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
+    "account": "workspace:^",
     "shared": "workspace:^",
     "converter": "workspace:^",
     "storage": "workspace:^",

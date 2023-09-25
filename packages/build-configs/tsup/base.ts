@@ -12,7 +12,7 @@ export default defineConfig({
   sourcemap: 'inline',
   clean: true,
   dts: true,
-  skipNodeModulesBundle: true,
+  // skipNodeModulesBundle: true,
   minify: env === 'production',
   // onSuccess: 'cp package.json dist/',
   // watch: env !== 'production',

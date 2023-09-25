@@ -1,10 +1,11 @@
 import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 
-import { debugLog, Node, Pubkey, Result, Try } from '@solana-suite/shared';
+import { debugLog, Node, Pubkey, Result, Try } from 'shared';
 import { Storage } from 'storage';
 import { SplToken } from '@solana-suite/core';
 import { Phantom } from '../types';
-import { Convert, UserSideInput } from 'shared-metaplex';
+import { UserSideInput } from 'types/converter';
+import { Converter } from 'converter';
 
 export namespace PhantomSplToken {
   export const mint = async (
@@ -48,7 +49,7 @@ export namespace PhantomSplToken {
 
       const isMutable = true;
 
-      const datav2 = Convert.TokenMetadata.intoInfraSide(
+      const datav2 = Converter.TokenMetadata.intoInfraSide(
         input,
         uri,
         sellerFeeBasisPoints,

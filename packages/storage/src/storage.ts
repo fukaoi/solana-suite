@@ -1,4 +1,4 @@
-import { Result, Secret } from '@solana-suite/shared';
+import { Result, Secret } from 'shared';
 import {
   FileContent,
   InfraSideInput,

@@ -1,14 +1,14 @@
 import {
   Instruction,
-  KeypairAccount,
   Pubkey,
   Result,
   Secret,
   Try,
-} from '@solana-suite/shared';
-import { Pda } from 'shared-metaplex';
+} from 'shared';
+
 import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createFreezeDelegatedAccountInstruction } from '@metaplex-foundation/mpl-token-metadata';
+import { KeypairAccount, Pda } from 'account';
 
 export namespace Metaplex {
   /**

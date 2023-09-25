@@ -3,11 +3,11 @@ import { Metaplex } from '@solana-suite/nft';
 import { Storage } from 'storage';
 import {
   debugLog,
-  KeypairAccount,
   Node,
   Result,
   Try,
-} from '@solana-suite/shared';
+} from 'shared';
+import { KeypairAccount } from 'account';
 import { UserSideInput } from 'types/converter';
 import { Validator, ValidatorError } from 'validator';
 import { Converter } from 'converter';

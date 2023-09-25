@@ -1,6 +1,6 @@
 import { StorageType } from '../../storage';
 import { _Shared, bignum, FileContent } from '../shared';
-import { Pubkey } from '@solana-suite/shared';
+import { Pubkey } from 'shared';
 
 export namespace UserSideInput {
   export type Collection = Pubkey;

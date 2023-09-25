@@ -5,7 +5,7 @@ import {
 
 import { Transaction, TransactionInstruction } from '@solana/web3.js';
 
-import { Node, Pubkey, Result, Try } from '@solana-suite/shared';
+import { Node, Pubkey, Result, Try } from 'shared';
 
 import { AssociatedAccount } from '@solana-suite/core';
 import { Phantom } from '../types';

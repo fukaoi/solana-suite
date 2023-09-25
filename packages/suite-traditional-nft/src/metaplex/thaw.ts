@@ -1,12 +1,5 @@
-import {
-  Instruction,
-  KeypairAccount,
-  Pubkey,
-  Result,
-  Secret,
-  Try,
-} from '@solana-suite/shared';
-import { Pda } from 'shared-metaplex';
+import { Instruction, Pubkey, Result, Secret, Try } from 'shared';
+import { KeypairAccount, Pda } from 'account';
 import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createThawDelegatedAccountInstruction } from '@metaplex-foundation/mpl-token-metadata';
 
@@ -24,13 +17,13 @@ export namespace Metaplex {
     mint: Pubkey,
     owner: Pubkey,
     freezeAuthority: Secret,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Result<Instruction, Error> => {
     const payer = feePayer ? feePayer : freezeAuthority;
     return Try(() => {
       const tokenAccount = getAssociatedTokenAddressSync(
         mint.toPublicKey(),
-        owner.toPublicKey()
+        owner.toPublicKey(),
       );
       const editionAddress = Pda.getMasterEdition(mint);
 
@@ -43,7 +36,7 @@ export namespace Metaplex {
       return new Instruction(
         [inst],
         [freezeAuthority.toKeypair()],
-        payer.toKeypair()
+        payer.toKeypair(),
       );
     });
   };

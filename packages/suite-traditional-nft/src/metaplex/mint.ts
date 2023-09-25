@@ -18,30 +18,27 @@ import {
 } from '@solana/spl-token';
 import {
   debugLog,
-  KeypairAccount,
   MintInstruction,
+  Node,
   Pubkey,
   Result,
   Secret,
   Try,
-} from '@solana-suite/shared';
+} from 'shared';
 
 import { Storage } from 'storage';
 
-import {
-  Convert,
-  Pda,
-  Royalty,
-  UserSideInput,
-  Validator,
-} from 'internals/shared-metaplex';
+import { UserSideInput } from 'types/converter';
+
+import { Converter } from 'converter';
+import { Validator } from 'validator';
 
 import {
   createCreateMasterEditionV3Instruction,
   createCreateMetadataAccountV3Instruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
-import { Node } from '@solana-suite/shared';
+import { KeypairAccount, Pda } from 'account';
 const NFT_AMOUNT = 1;
 export namespace Metaplex {
   export const createDeleagateInstruction = (
@@ -169,7 +166,7 @@ export namespace Metaplex {
       //--- porperties, Upload content ---
       let properties;
       if (input.properties && input.storageType) {
-        properties = await Convert.Properties.intoInfraSide(
+        properties = await Converter.Properties.intoInfraSide(
           input.properties,
           Storage.uploadContent,
           input.storageType,
@@ -185,7 +182,9 @@ export namespace Metaplex {
       };
       //--- porperties, Upload content ---
 
-      const sellerFeeBasisPoints = Royalty.convert(input.royalty);
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfraSide(
+        input.royalty,
+      );
       const nftStorageMetadata = Storage.toConvertOffchaindata(
         input,
         sellerFeeBasisPoints,
@@ -214,7 +213,7 @@ export namespace Metaplex {
         throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
 
-      let datav2 = Convert.NftMetadata.intoInfraSide(
+      let datav2 = Converter.NftMetadata.intoInfraSide(
         input,
         uri,
         sellerFeeBasisPoints,
@@ -223,7 +222,7 @@ export namespace Metaplex {
       //--- collection ---
       let collection;
       if (input.collection && input.collection) {
-        collection = Convert.Collection.intoInfraSide(input.collection);
+        collection = Converter.Collection.intoInfraSide(input.collection);
         datav2 = { ...datav2, collection };
       }
 

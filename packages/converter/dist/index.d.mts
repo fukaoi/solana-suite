@@ -1,5 +1,5 @@
 import { Option, UserSideInput, InfraSideInput, InfraSideOutput, UserSideOutput, FileContent } from 'types/converter';
-import { Secret, Result } from '@solana-suite/shared';
+import { Secret, Result } from 'shared';
 import { StorageType } from 'types/storage';
 
 declare namespace Converter$7 {

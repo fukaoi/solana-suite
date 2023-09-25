@@ -2,12 +2,12 @@ import { TransactionInstruction } from '@solana/web3.js';
 import {
   debugLog,
   Instruction,
-  KeypairAccount,
   Node,
   Pubkey,
   Secret,
   sleep,
 } from 'shared';
+
 
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -18,6 +18,8 @@ import {
   TokenAccountNotFoundError,
   TokenInvalidAccountOwnerError,
 } from '@solana/spl-token';
+
+import { KeypairAccount } from 'account';
 
 /**
  * Get Associated token Account.

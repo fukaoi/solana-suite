@@ -7,7 +7,7 @@ import {
   UserSideOutput,
 } from 'types/converter';
 
-import { convertTimestampToDateTime } from '@solana-suite/shared';
+import { convertTimestampToDateTime } from 'shared';
 export namespace Converter {
   export namespace TokenMetadata {
     export const intoInfraSide = (

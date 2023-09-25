@@ -603,7 +603,6 @@ export {
   Constants,
   Explorer,
   Instruction2 as Instruction,
-  KeypairAccount,
   MintInstruction,
   Node,
   PartialSignInstruction,

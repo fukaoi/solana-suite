@@ -1,4 +1,4 @@
-import { Instruction, Pubkey, Result, Secret } from '@solana-suite/shared';
+import { Instruction, Pubkey, Result, Secret } from 'shared';
 import { SplToken } from '@solana-suite/core';
 
 export namespace Metaplex {

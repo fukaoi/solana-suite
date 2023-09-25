@@ -1,5 +1,5 @@
 import { _Shared, Option } from '../shared';
-import { Pubkey } from '@solana-suite/shared';
+import { Pubkey } from 'shared';
 import { InfraSideOutput } from '../infra-side/output';
 import { UserSideInput } from '../user-side/input';
 
