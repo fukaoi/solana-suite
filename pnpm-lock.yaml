@@ -81,18 +81,18 @@ importers:
         specifier: workspace:^
         version: link:../validator
     devDependencies:
-      build-config/eslint:
+      build-configs/eslint:
         specifier: workspace:*
-        version: link:../build-config/eslint
-      build-config/prettier:
+        version: link:../build-configs/eslint
+      build-configs/prettier:
         specifier: workspace:*
-        version: link:../build-config/prettier
-      build-config/tsconfig:
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
         specifier: workspace:*
-        version: link:../build-config/tsconfig
-      build-config/tsup:
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
         specifier: workspace:*
-        version: link:../build-config/tsup
+        version: link:../build-configs/tsup
 
   packages/@phantom:
     dependencies:
@@ -124,18 +124,18 @@ importers:
         specifier: workspace:^
         version: link:../validator
     devDependencies:
-      build-config/eslint:
+      build-configs/eslint:
         specifier: workspace:*
-        version: link:../build-config/eslint
-      build-config/prettier:
+        version: link:../build-configs/eslint
+      build-configs/prettier:
         specifier: workspace:*
-        version: link:../build-config/prettier
-      build-config/tsconfig:
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
         specifier: workspace:*
-        version: link:../build-config/tsconfig
-      build-config/tsup:
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
         specifier: workspace:*
-        version: link:../build-config/tsup
+        version: link:../build-configs/tsup
 
   packages/@shared:
     dependencies:
@@ -155,18 +155,18 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.3
         version: 21.1.3
-      build-config/eslint:
+      build-configs/eslint:
         specifier: workspace:*
-        version: link:../build-config/eslint
-      build-config/prettier:
+        version: link:../build-configs/eslint
+      build-configs/prettier:
         specifier: workspace:*
-        version: link:../build-config/prettier
-      build-config/tsconfig:
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
         specifier: workspace:*
-        version: link:../build-config/tsconfig
-      build-config/tsup:
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
         specifier: workspace:*
-        version: link:../build-config/tsup
+        version: link:../build-configs/tsup
       jsdom:
         specifier: ^22.1.0
         version: 22.1.0
@@ -213,18 +213,18 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.3
         version: 21.1.3
-      build-config/eslint:
+      build-configs/eslint:
         specifier: workspace:*
-        version: link:../build-config/eslint
-      build-config/prettier:
+        version: link:../build-configs/eslint
+      build-configs/prettier:
         specifier: workspace:*
-        version: link:../build-config/prettier
-      build-config/tsconfig:
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
         specifier: workspace:*
-        version: link:../build-config/tsconfig
-      build-config/tsup:
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
         specifier: workspace:*
-        version: link:../build-config/tsup
+        version: link:../build-configs/tsup
       jsdom:
         specifier: ^22.1.0
         version: 22.1.0
@@ -244,18 +244,18 @@ importers:
         specifier: workspace:*
         version: link:../types
     devDependencies:
-      build-config/eslint:
+      build-configs/eslint:
         specifier: workspace:*
-        version: link:../build-config/eslint
-      build-config/prettier:
+        version: link:../build-configs/eslint
+      build-configs/prettier:
         specifier: workspace:*
-        version: link:../build-config/prettier
-      build-config/tsconfig:
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
         specifier: workspace:*
-        version: link:../build-config/tsconfig
-      build-config/tsup:
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
         specifier: workspace:*
-        version: link:../build-config/tsup
+        version: link:../build-configs/tsup
 
   packages/build-config/eslint:
     devDependencies:
@@ -341,18 +341,18 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.3
         version: 21.1.3
-      build-config/eslint:
+      build-configs/eslint:
         specifier: workspace:*
-        version: link:../build-config/eslint
-      build-config/prettier:
+        version: link:../build-configs/eslint
+      build-configs/prettier:
         specifier: workspace:*
-        version: link:../build-config/prettier
-      build-config/tsconfig:
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
         specifier: workspace:*
-        version: link:../build-config/tsconfig
-      build-config/tsup:
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
         specifier: workspace:*
-        version: link:../build-config/tsup
+        version: link:../build-configs/tsup
       jsdom:
         specifier: ^22.1.0
         version: 22.1.0
@@ -823,18 +823,18 @@ importers:
         specifier: workspace:^
         version: link:../types
     devDependencies:
-      build-config/eslint:
+      build-configs/eslint:
         specifier: workspace:*
-        version: link:../build-config/eslint
-      build-config/prettier:
+        version: link:../build-configs/eslint
+      build-configs/prettier:
         specifier: workspace:*
-        version: link:../build-config/prettier
-      build-config/tsconfig:
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
         specifier: workspace:*
-        version: link:../build-config/tsconfig
-      build-config/tsup:
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
         specifier: workspace:*
-        version: link:../build-config/tsup
+        version: link:../build-configs/tsup
 
   packages/types:
     dependencies:
@@ -854,18 +854,18 @@ importers:
       '@types/bn.js':
         specifier: ^5.1.2
         version: 5.1.2
-      build-config/eslint:
+      build-configs/eslint:
         specifier: workspace:*
-        version: link:../build-config/eslint
-      build-config/prettier:
+        version: link:../build-configs/eslint
+      build-configs/prettier:
         specifier: workspace:*
-        version: link:../build-config/prettier
-      build-config/tsconfig:
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
         specifier: workspace:*
-        version: link:../build-config/tsconfig
-      build-config/tsup:
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
         specifier: workspace:*
-        version: link:../build-config/tsup
+        version: link:../build-configs/tsup
 
   packages/validator:
     dependencies:
@@ -879,18 +879,18 @@ importers:
         specifier: workspace:*
         version: link:../types
     devDependencies:
-      build-config/eslint:
+      build-configs/eslint:
         specifier: workspace:*
-        version: link:../build-config/eslint
-      build-config/prettier:
+        version: link:../build-configs/eslint
+      build-configs/prettier:
         specifier: workspace:*
-        version: link:../build-config/prettier
-      build-config/tsconfig:
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
         specifier: workspace:*
-        version: link:../build-config/tsconfig
-      build-config/tsup:
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
         specifier: workspace:*
-        version: link:../build-config/tsup
+        version: link:../build-configs/tsup
 
 packages:
 

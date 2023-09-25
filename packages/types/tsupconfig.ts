@@ -1,4 +1,4 @@
-import defineConfig from '../build-config/tsup/base';
+import defineConfig from '../build-configs/tsup/base';
 
 const entry = {
   converter: 'src/converter/index.ts',

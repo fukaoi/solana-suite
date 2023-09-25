@@ -1,5 +1,5 @@
 {
-  "name": "build-config/tsup",
+  "name": "build-configs/tsconfig",
   "version": "0.0.0",
   "private": true,
   "devDependencies": {}

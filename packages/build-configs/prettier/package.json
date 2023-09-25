@@ -1,5 +1,5 @@
 {
-  "name": "build-config/prettier",
+  "name": "build-configs/prettier",
   "version": "0.0.0",
   "private": true,
   "devDependencies": {}
