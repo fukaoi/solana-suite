@@ -4,9 +4,9 @@
 
   "display": "storage",
   "compilerOptions": {
-    // "moduleResolution": "NodeNext",
+    "moduleResolution": "NodeNext",
     // "target": "ESNext",
-    // "module": "NodeNext"
+    "module": "NodeNext"
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules", "dist"]

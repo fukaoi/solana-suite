@@ -4,7 +4,9 @@ import {
   InfraSideInput,
   StorageType,
   UserSideInput,
-} from 'shared-metaplex';
+} from 'types/converter';
+
+import { StorageType } from 'types/storage';
 
 import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';

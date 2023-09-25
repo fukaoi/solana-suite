@@ -65,12 +65,12 @@ importers:
       cross-fetch:
         specifier: ^4.0.0
         version: 4.0.0
-      shared-metaplex:
-        specifier: workspace:^
-        version: link:../shared-metaplex
       storage:
         specifier: workspace:^
         version: link:../storage
+      types:
+        specifier: workspace:^
+        version: link:../types
     devDependencies:
       build-config/eslint:
         specifier: workspace:*
@@ -102,12 +102,12 @@ importers:
       '@solana/web3.js':
         specifier: ^1.73.2
         version: 1.78.5
-      shared-metaplex:
-        specifier: workspace:^
-        version: link:../shared-metaplex
       storage:
         specifier: workspace:^
         version: link:../storage
+      types:
+        specifier: workspace:^
+        version: link:../types
     devDependencies:
       build-config/eslint:
         specifier: workspace:*
@@ -179,12 +179,12 @@ importers:
       bn.js:
         specifier: ^5.2.1
         version: 5.2.1
-      shared-metaplex:
-        specifier: workspace:^
-        version: link:../shared-metaplex
       storage:
         specifier: workspace:^
         version: link:../storage
+      types:
+        specifier: workspace:^
+        version: link:../types
     devDependencies:
       '@types/bn.js':
         specifier: ^5.1.2
@@ -801,9 +801,9 @@ importers:
       nft.storage:
         specifier: ^7.1.1
         version: 7.1.1(node-fetch@3.3.2)
-      shared-metaplex:
+      types:
         specifier: workspace:^
-        version: link:../shared-metaplex
+        version: link:../types
     devDependencies:
       build-config/eslint:
         specifier: workspace:*

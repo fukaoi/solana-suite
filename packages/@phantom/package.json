@@ -41,7 +41,7 @@
     "prettier:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
-    "shared-metaplex": "workspace:^",
+    "types": "workspace:^",
     "storage": "workspace:^",
     "@solana-suite/shared": "workspace:^",
     "@solana-suite/core": "workspace:^",

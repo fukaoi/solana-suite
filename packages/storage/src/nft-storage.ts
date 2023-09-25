@@ -9,7 +9,7 @@ import {
 } from '@solana-suite/shared';
 
 import { toMetaplexFile } from '@metaplex-foundation/js';
-import { InfraSideInput, FileContent } from 'shared-metaplex';
+import { InfraSideInput, FileContent } from 'types/converter';
 
 export namespace NftStorage {
   let isDisplayWarning = false;

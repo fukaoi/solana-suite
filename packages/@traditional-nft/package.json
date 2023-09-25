@@ -50,7 +50,7 @@
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
     "bn.js": "^5.2.1",
-    "shared-metaplex": "workspace:^",
+    "types": "workspace:^",
     "storage": "workspace:^"
   },
   "devDependencies": {

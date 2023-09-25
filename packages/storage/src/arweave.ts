@@ -8,7 +8,7 @@ import {
   Secret,
   Try,
 } from '@solana-suite/shared';
-import { FileContent, InfraSideInput } from 'shared-metaplex/';
+import { FileContent, InfraSideInput } from 'types/converter';
 import { Bundlr } from './bundlr';
 
 export interface MetaplexFileOptions {
