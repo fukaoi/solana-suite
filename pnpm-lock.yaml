@@ -208,6 +208,34 @@ importers:
         specifier: ^22.1.0
         version: 22.1.0
 
+  packages/account:
+    dependencies:
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0
+      '@solana-suite/shared':
+        specifier: workspace:*
+        version: link:../@shared
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      types:
+        specifier: workspace:*
+        version: link:../types
+    devDependencies:
+      build-config/eslint:
+        specifier: workspace:*
+        version: link:../build-config/eslint
+      build-config/prettier:
+        specifier: workspace:*
+        version: link:../build-config/prettier
+      build-config/tsconfig:
+        specifier: workspace:*
+        version: link:../build-config/tsconfig
+      build-config/tsup:
+        specifier: workspace:*
+        version: link:../build-config/tsup
+
   packages/build-config/eslint:
     devDependencies:
       '@typescript-eslint/eslint-plugin':
@@ -736,15 +764,6 @@ importers:
 
   packages/shared-metaplex:
     dependencies:
-      '@metaplex-foundation/mpl-token-metadata':
-        specifier: ^2.9.1
-        version: 2.13.0
-      '@solana-suite/shared':
-        specifier: workspace:^
-        version: link:../@shared
-      '@solana/web3.js':
-        specifier: ^1.73.2
-        version: 1.78.5
       bn.js:
         specifier: ^5.2.1
         version: 5.2.1
@@ -817,6 +836,31 @@ importers:
       '@types/bn.js':
         specifier: ^5.1.2
         version: 5.1.2
+      build-config/eslint:
+        specifier: workspace:*
+        version: link:../build-config/eslint
+      build-config/prettier:
+        specifier: workspace:*
+        version: link:../build-config/prettier
+      build-config/tsconfig:
+        specifier: workspace:*
+        version: link:../build-config/tsconfig
+      build-config/tsup:
+        specifier: workspace:*
+        version: link:../build-config/tsup
+
+  packages/validator:
+    dependencies:
+      '@solana-suite/shared':
+        specifier: workspace:*
+        version: link:../@shared
+      converter:
+        specifier: workspace:*
+        version: link:../converter
+      types:
+        specifier: workspace:*
+        version: link:../types
+    devDependencies:
       build-config/eslint:
         specifier: workspace:*
         version: link:../build-config/eslint

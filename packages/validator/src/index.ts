@@ -1,7 +1,7 @@
 import { Result, Try } from '@solana-suite/shared';
-import { Royalty } from './royalty';
-import { InfraSideInput, UserSideInput } from './types';
-import { Details, Limit } from './types/validator';
+import { Converter } from './converter';
+import { InfraSideInput, UserSideInput } from 'types/converter';
+import { Details, Limit } from 'types/validator';
 
 export namespace Validator {
   export namespace Message {
@@ -57,7 +57,7 @@ export namespace Validator {
           threshold: ROYALTY_MIN,
           condition: 'underMin',
         });
-      } else if (royalty > ROYALTY_MAX * Royalty.THRESHOLD) {
+      } else if (royalty > ROYALTY_MAX * Converter.Royalty.THRESHOLD) {
         throw createError(key, Message.BIG_NUMBER, royalty, {
           threshold: SELLER_FEE_BASIS_POINTS_MAX,
           condition: 'overMax',
