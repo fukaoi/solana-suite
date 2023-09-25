@@ -1,5 +1,5 @@
 {
-  "name": "internal-shared-metaplex",
+  "name": "~shared-metaplex",
   "version": "0.7.0",
   "private": true,
   "main": "dist/index.js",

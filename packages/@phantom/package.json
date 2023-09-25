@@ -1,8 +1,7 @@
 {
-  "name": "@solana-suite/core",
+  "name": "@solana-suite/phantom",
   "version": "0.7.0",
-  "description": "Easy use of Solana APIs such as solana-web3.js, spl-token, metaplex nft, decentralized storage, etc.",
-  "main": "dist/index.js",
+  "description": "Library spl-token/nft mint for phantom wallet",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "keywords": [
@@ -11,7 +10,8 @@
     "solana",
     "sdk",
     "web3.js",
-    "nft"
+    "nft",
+    "phantom"
   ],
   "engines": {
     "node": ">=16.*"
@@ -33,25 +33,21 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup --config build-config/tsup/publish.ts",
+    "build": "tsup --config build-config/tsup/esm.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-config/eslint/base.json ./src ./test",
     "eslint:fix": "eslint -c node_modules/build-config/eslint/base.json ./src ./test --fix",
     "prettier": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c",
-    "prettier:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write",
-    "test": "mocha -t 300000 --require ts-node/register -- ",
-    "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
+    "prettier:fix": "prettier --config node_modules/build-config/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
-    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
+    "~shared-metaplex": "workspace:^",
+    "~storage": "workspace:^",
     "@solana-suite/shared": "workspace:^",
-    "@solana/buffer-layout": "^4.0.1",
+    "@solana-suite/core": "workspace:^",
+    "@solana-suite/nft": "workspace:^",
     "@solana/spl-token": "^0.3.8",
-    "@solana/web3.js": "^1.78.5",
-    "bs58": "^5.0.0",
-    "cross-fetch": "^4.0.0",
-    "internal-shared-metaplex": "workspace:^",
-    "internal-storage": "workspace:^"
+    "@solana/web3.js": "^1.73.2"
   },
   "devDependencies": {
     "build-config/eslint": "workspace:*",

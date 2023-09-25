@@ -1,7 +1,7 @@
 {
-  "name": "@solana-suite/nft",
+  "name": "@solana-suite/core",
   "version": "0.7.0",
-  "description": "nft module for solana-suite",
+  "description": "Easy use of Solana APIs such as solana-web3.js, spl-token, metaplex nft, decentralized storage, etc.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -43,23 +43,20 @@
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
   "dependencies": {
-    "@metaplex-foundation/js": "0.19.1",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
-    "@solana-suite/core": "workspace:^",
     "@solana-suite/shared": "workspace:^",
+    "@solana/buffer-layout": "^4.0.1",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
-    "bn.js": "^5.2.1",
-    "internal-shared-metaplex": "workspace:^",
-    "internal-storage": "workspace:^"
+    "bs58": "^5.0.0",
+    "cross-fetch": "^4.0.0",
+    "~shared-metaplex": "workspace:^",
+    "~storage": "workspace:^"
   },
   "devDependencies": {
-    "@types/bn.js": "^5.1.2",
-    "@types/jsdom": "^21.1.3",
     "build-config/eslint": "workspace:*",
     "build-config/prettier": "workspace:*",
     "build-config/tsconfig": "workspace:*",
-    "build-config/tsup": "workspace:*",
-    "jsdom": "^22.1.0"
+    "build-config/tsup": "workspace:*"
   }
 }
