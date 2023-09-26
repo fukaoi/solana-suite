@@ -42,15 +42,17 @@
     "test": "mocha -t 300000 --require ts-node/register -- ",
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
-    "shared": "workspace:^",
     "@solana/buffer-layout": "^4.0.1",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
     "bs58": "^5.0.0",
-    "cross-fetch": "^4.0.0",
+    "cross-fetch": "^4.0.0"
+  },
+  "dependencies": {
     "types": "workspace:^",
+    "shared": "workspace:^",
     "storage": "workspace:^",
     "validator": "workspace:^",
     "account": "workspace:^",

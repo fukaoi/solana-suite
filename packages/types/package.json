@@ -5,9 +5,6 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": [
-    "./dist/"
-  ],
   "scripts": {
     "build": "tsup --config ./tsupconfig.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
@@ -16,10 +13,12 @@
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana/web3.js": "^1.78.5",
-    "bn.js": "^5.2.1",
+    "bn.js": "^5.2.1"
+  },
+  "dependencies": {
     "shared": "workspace:*"
   },
   "devDependencies": {

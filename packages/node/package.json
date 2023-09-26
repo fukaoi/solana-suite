@@ -13,9 +13,11 @@
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
+  "peerDependencies": {
+    "@solana/web3.js": "^1.78.5"
+  },
   "dependencies": {
     "shared": "workspace:*",
-    "converter": "workspace:*",
     "types": "workspace:*"
   },
   "devDependencies": {

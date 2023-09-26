@@ -13,10 +13,12 @@
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana/web3.js": "^1.78.5",
-    "bs58": "^5.0.0",
+    "bs58": "^5.0.0"
+  },
+  "dependencies": {
     "shared": "workspace:*",
     "types": "workspace:*"
   },
