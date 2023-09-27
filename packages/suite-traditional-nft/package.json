@@ -43,28 +43,28 @@
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
   "peerDependencies": {
-    "@solana/web3.js": "^1.78.5",
-    "@solana/spl-token": "^0.3.8",
-    "bn.js": "^5.2.1",
-    "@metaplex-foundation/js": "0.19.1",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
-    "@solana-suite/core": "workspace:^"
+    "@solana-suite/core": "workspace:^",
+    "@solana/spl-token": "^0.3.8",
+    "@solana/web3.js": "^1.78.5",
+    "bn.js": "^5.2.1",
+    "bignumber.js": "^9.1.2",
+    "bs58": "^5.0.0",
+    "nft.storage": "^7.1.1"
   },
   "dependencies": {
     "account": "workspace:^",
-    "shared": "workspace:^",
-    "types": "workspace:^",
     "converter": "workspace:^",
-    "validator": "workspace:^",
-    "storage": "workspace:^"
+    "shared": "workspace:^",
+    "storage": "workspace:^",
+    "types": "workspace:^",
+    "validator": "workspace:^"
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.2",
-    "@types/jsdom": "^21.1.3",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
-    "build-configs/tsup": "workspace:*",
-    "jsdom": "^22.1.0"
+    "build-configs/tsup": "workspace:*"
   }
 }

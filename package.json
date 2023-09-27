@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "publish": "pnpm --filter '@solana-suite/*' publish --dry-run"
+    "publish": "pnpm --filter '@solana-suite/*' publish --dry-run",
+    "dep": "pnpm depcheck --ignores build-configs/eslint,build-configs/prettier,build-configs/tsconfig,build-configs/tsup"
   },
   "devDependencies": {
     "@types/chai": "^4.3.6",

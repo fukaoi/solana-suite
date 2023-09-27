@@ -41,12 +41,16 @@
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
   "peerDependencies": {
-    "@solana/spl-token": "^0.3.8",
-    "@solana/web3.js": "^1.78.5"
-  },
-  "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana-suite/core": "workspace:^",
     "@solana-suite/nft": "workspace:^",
+    "@solana/spl-token": "^0.3.8",
+    "@solana/web3.js": "^1.78.5",
+    "bignumber.js": "^9.1.2",
+    "nft.storage": "^7.1.1",
+    "bs58": "^5.0.0"
+  },
+  "dependencies": {
     "account": "workspace:^",
     "shared": "workspace:^",
     "converter": "workspace:^",
