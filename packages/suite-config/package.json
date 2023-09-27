@@ -4,6 +4,9 @@
   "description": "solana-suite for config",
   "main": "./solana-suite.json",
   "module": "./solana-suite.json",
+  "bin": {
+    "solana-suite-config": "./solana-suite-config.mjs"
+  },
   "keywords": [
     "api",
     "blockchain",
