@@ -1,4 +1,3 @@
-import * as _solana_suite_core from '@solana-suite/core';
 import * as types_converter from 'types/converter';
 import { UserSideOutput } from 'types/converter';
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
@@ -14,8 +13,8 @@ declare const Metaplex: {
     feePayerPartialSignTransferNft: (mint: shared.Pubkey, owner: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], feePayer: shared.Pubkey) => Promise<shared.Result<shared.PartialSignInstruction, Error>>;
     feePayerPartialSignMint: (owner: shared.Pubkey, signer: shared.Secret, input: types_converter.UserSideInput.NftMetadata, feePayer: shared.Pubkey, freezeAuthority?: shared.Secret | undefined) => Promise<shared.Result<shared.PartialSignInstruction, Error>>;
     freeze: (mint: shared.Pubkey, owner: shared.Pubkey, freezeAuthority: shared.Secret, feePayer?: shared.Secret | undefined) => shared.Result<shared.Instruction, Error>;
-    findByOwner: (owner: shared.Pubkey, onOk: _solana_suite_core.OnOk<types_converter.UserSideOutput.TokenMetadata>, onErr: _solana_suite_core.OnErr, options?: {
-        sortable?: _solana_suite_core.Sortable | undefined;
+    findByOwner: (owner: shared.Pubkey, onOk: OnOk<Find>, onErr: OnErr, options?: {
+        sortable?: any;
         isHolder?: boolean | undefined;
     } | undefined) => Promise<void>;
     findByMint: (mint: shared.Pubkey) => Promise<shared.Result<types_converter.UserSideOutput.NftMetadata, Error>>;

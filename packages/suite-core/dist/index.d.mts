@@ -2,7 +2,8 @@ import * as shared from 'shared';
 import { Pubkey, Result, Secret } from 'shared';
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionInstruction, PublicKey } from '@solana/web3.js';
-import { UserSideOutput as UserSideOutput$2 } from 'types/converter';
+import * as types_converter from 'types/converter';
+import { UserSideOutput as UserSideOutput$1 } from 'types/converter';
 import * as _solana_buffer_layout from '@solana/buffer-layout';
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
 
@@ -46,10 +47,10 @@ declare namespace AssociatedAccount {
 }
 
 declare const Memo: {
-    getHistory: (target: shared.Pubkey, onOk: OnOk<UserSideOutput$1.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    getHistory: (target: shared.Pubkey, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
-    create: (data: string, owner: shared.Pubkey, signer: shared.Secret, feePayer?: shared.Secret) => shared.Instruction;
+    create: (data: string, owner: shared.Pubkey, signer: shared.Secret, feePayer?: shared.Secret | undefined) => shared.Instruction;
 };
 
 declare const Multisig: {
@@ -59,34 +60,34 @@ declare const Multisig: {
 };
 
 declare const SolNative: {
-    transferWithMultisig: (owner: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, feePayer?: shared.Secret) => Promise<shared.Result<shared.Instruction, Error>>;
-    transfer: (source: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, feePayer?: shared.Secret) => shared.Result<shared.Instruction, Error>;
-    getHistory: (target: shared.Pubkey, filterType: FilterType, onOk: OnOk<UserSideOutput$1.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    transferWithMultisig: (owner: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, feePayer?: shared.Secret | undefined) => Promise<shared.Result<shared.Instruction, Error>>;
+    transfer: (source: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, feePayer?: shared.Secret | undefined) => shared.Result<shared.Instruction, Error>;
+    getHistory: (target: shared.Pubkey, filterType: FilterType, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
     feePayerPartialSignTransfer: (owner: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, feePayer: shared.Pubkey) => Promise<shared.Result<shared.PartialSignInstruction, Error>>;
     findByOwner: (owner: shared.Pubkey) => Promise<shared.Result<OwnerInfo, Error>>;
 };
 
 declare const SplToken: {
-    transfer: (mint: shared.Pubkey, owner: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, mintDecimal: number, feePayer?: shared.Secret) => Promise<shared.Result<shared.Instruction, Error>>;
-    thaw: (mint: shared.Pubkey, owner: shared.Pubkey, freezeAuthority: shared.Secret, feePayer?: shared.Secret) => shared.Result<shared.Instruction, Error>;
+    transfer: (mint: shared.Pubkey, owner: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, mintDecimal: number, feePayer?: shared.Secret | undefined) => Promise<shared.Result<shared.Instruction, Error>>;
+    thaw: (mint: shared.Pubkey, owner: shared.Pubkey, freezeAuthority: shared.Secret, feePayer?: shared.Secret | undefined) => shared.Result<shared.Instruction, Error>;
     createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
-    mint: (owner: shared.Pubkey, signer: shared.Secret, totalAmount: number, mintDecimal: number, input: UserSideInput.TokenMetadata, feePayer?: shared.Secret, freezeAuthority?: shared.Pubkey) => Promise<shared.Result<shared.MintInstruction, Error>>;
-    getHistory: (target: shared.Pubkey, filterType: FilterType, onOk: OnOk<UserSideOutput$1.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    mint: (owner: shared.Pubkey, signer: shared.Secret, totalAmount: number, mintDecimal: number, input: types_converter.UserSideInput.TokenMetadata, feePayer?: shared.Secret | undefined, freezeAuthority?: shared.Pubkey | undefined) => Promise<shared.Result<shared.MintInstruction, Error>>;
+    getHistory: (target: shared.Pubkey, filterType: FilterType, onOk: OnOk<UserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
     feePayerPartialSignTransfer: (mint: shared.Pubkey, owner: shared.Pubkey, dest: shared.Pubkey, signers: shared.Secret[], amount: number, mintDecimal: number, feePayer: shared.Pubkey) => Promise<shared.Result<shared.PartialSignInstruction, Error>>;
-    freeze: (mint: shared.Pubkey, owner: shared.Pubkey, freezeAuthority: shared.Secret, feePayer?: shared.Secret) => shared.Result<shared.Instruction, Error>;
-    genericFindByOwner: <T extends unknown>(owner: shared.Pubkey, callback: (result: shared.Result<T[], Error>) => void, tokenStandard: UserSideInput.TokenStandard, sortable?: Sortable, isHolder?: boolean) => Promise<void>;
-    genericFindByMint: <T_1 extends unknown>(mint: shared.Pubkey, tokenStandard: UserSideInput.TokenStandard) => Promise<shared.Result<T_1, Error>>;
-    findByOwner: (owner: shared.Pubkey, onOk: OnOk<SharendMetaplex.TokenMetadata>, onErr: OnErr, options?: {
-        sortable?: Sortable;
-        isHolder?: boolean;
-    }) => void;
-    findByMint: (mint: shared.Pubkey) => Promise<shared.Result<UserSideOutput.TokenMetadata, Error>>;
-    burn: (mint: shared.Pubkey, owner: shared.Pubkey, signers: shared.Secret[], burnAmount: number, tokenDecimals: number, feePayer?: shared.Secret) => shared.Result<shared.Instruction, Error>;
-    add: (token: shared.Pubkey, owner: shared.Pubkey, signers: shared.Secret[], totalAmount: number, mintDecimal: number, feePayer?: shared.Secret) => Promise<shared.Result<shared.Instruction, Error>>;
+    freeze: (mint: shared.Pubkey, owner: shared.Pubkey, freezeAuthority: shared.Secret, feePayer?: shared.Secret | undefined) => shared.Result<shared.Instruction, Error>;
+    genericFindByOwner: <T extends types_converter.UserSideOutput.TokenMetadata | types_converter.UserSideOutput.NftMetadata>(owner: shared.Pubkey, callback: (result: shared.Result<T[], Error>) => void, tokenStandard: types_converter.UserSideInput.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
+    genericFindByMint: <T_1 extends types_converter.UserSideOutput.TokenMetadata | types_converter.UserSideOutput.NftMetadata>(mint: shared.Pubkey, tokenStandard: types_converter.UserSideInput.TokenStandard) => Promise<shared.Result<T_1, Error>>;
+    findByOwner: (owner: shared.Pubkey, onOk: OnOk<types_converter.UserSideOutput.TokenMetadata>, onErr: OnErr, options?: {
+        sortable?: Sortable | undefined;
+        isHolder?: boolean | undefined;
+    } | undefined) => void;
+    findByMint: (mint: shared.Pubkey) => Promise<shared.Result<types_converter.UserSideOutput.TokenMetadata, Error>>;
+    burn: (mint: shared.Pubkey, owner: shared.Pubkey, signers: shared.Secret[], burnAmount: number, tokenDecimals: number, feePayer?: shared.Secret | undefined) => shared.Result<shared.Instruction, Error>;
+    add: (token: shared.Pubkey, owner: shared.Pubkey, signers: shared.Secret[], totalAmount: number, mintDecimal: number, feePayer?: shared.Secret | undefined) => Promise<shared.Result<shared.Instruction, Error>>;
 };
 
-declare namespace UserSideOutput$1 {
+declare namespace UserSideOutput {
     type History = {
         sol?: string;
         account?: string;
@@ -110,7 +111,7 @@ declare enum Sortable {
     Asc = "asc",
     Desc = "desc"
 }
-type TokenMetadata = UserSideOutput$2.TokenMetadata;
+type TokenMetadata = UserSideOutput$1.TokenMetadata;
 
 declare namespace InfraSideOutput {
     type Transfer = {
@@ -205,9 +206,9 @@ type WithMemo = {
     memo: string;
 };
 
-type Find = UserSideOutput$2.TokenMetadata;
-type History = UserSideOutput$1.History;
+type Find = UserSideOutput$1.TokenMetadata;
+type History = UserSideOutput.History;
 type OnOk<T extends Find | History> = (ok: T[]) => void;
 type OnErr = (err: Error) => void;
 
-export { Airdrop, AssociatedAccount, FilterOptions, FilterType, Find, History, HistoryOptions, InfraSideOutput, Memo, ModuleName, Multisig, OnErr, OnOk, OwnerInfo, PostTokenAccount, SolNative, Sortable, SplToken, TokenMetadata, UserSideOutput$1 as UserSideOutput, WithMemo };
+export { Airdrop, AssociatedAccount, FilterOptions, FilterType, Find, History, HistoryOptions, InfraSideOutput, Memo, ModuleName, Multisig, OnErr, OnOk, OwnerInfo, PostTokenAccount, SolNative, Sortable, SplToken, TokenMetadata, UserSideOutput, WithMemo };
