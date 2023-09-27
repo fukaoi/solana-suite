@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "publish": "pnpm --filter '@solana-suite/*' publish --dry-run"
   },
   "devDependencies": {
     "@types/chai": "^4.3.6",
