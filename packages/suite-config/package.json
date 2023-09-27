@@ -1,0 +1,55 @@
+{
+  "name": "@solana-suite/config",
+  "version": "0.7.0",
+  "description": "solana-suite for config",
+  "main": "./solana-suite.json",
+  "module": "./solana-suite.json",
+  "keywords": [
+    "api",
+    "blockchain",
+    "solana",
+    "sdk",
+    "web3.js",
+    "config",
+    "solana-suite"
+  ],
+  "engines": {
+    "node": ">=16.*"
+  },
+  "files": [
+    "package.json",
+    "solana-suite.json",
+    "solana-suite-config.mjs"
+  ],
+  "license": "MIT",
+  "author": "fukaoi <usapyon2022@gmail.com>",
+  "homepage": "https://atonoy.github.io/solana-suite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atonoy/solana-suite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/atonoy/solana-suite/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm -rf dist/ && rm -rf node_modules",
+    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
+    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
+    "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
+    "test": "ava --config node_modules/build-configs/ava/base.cjs -- "
+  },
+  "peerDependencies": {
+    "commander": "9.3.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "build-configs/ava": "workspace:*",
+    "build-configs/tsconfig": "workspace:*",
+    "build-configs/eslint": "workspace:*",
+    "build-configs/prettier": "workspace:*"
+  }
+}
