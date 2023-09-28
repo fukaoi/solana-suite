@@ -9,7 +9,6 @@ import { Node } from 'node';
 import { MAX_RETRIES } from './define';
 import { Instruction as _Index } from './';
 
-//@internals
 export class Instruction {
   static batchSubmit = async (arr: _Index[]): Promise<TransactionSignature> => {
     let i = 0;
