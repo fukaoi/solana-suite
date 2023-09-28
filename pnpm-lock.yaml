@@ -463,6 +463,34 @@ importers:
         specifier: workspace:*
         version: link:../build-configs/tsup
 
+  packages/test-tools:
+    dependencies:
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      account:
+        specifier: workspace:*
+        version: link:../account
+      bs58:
+        specifier: ^5.0.0
+        version: 5.0.0
+      node:
+        specifier: workspace:*
+        version: link:../node
+      shared:
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+
   packages/types:
     dependencies:
       '@metaplex-foundation/mpl-token-metadata':

@@ -1,0 +1,37 @@
+{
+  "name": "test-tools",
+  "private": true,
+  "version": "0.7.0",
+  "scripts": {
+    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
+    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
+    "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
+  },
+  "peerDependencies": {
+    "@solana/web3.js": "^1.78.5"
+  },
+  "dependencies": {
+    "bs58": "^5.0.0",
+    "account": "workspace:*",
+    "node": "workspace:*",
+    "shared": "workspace:*"
+  },
+  "devDependencies": {
+    "build-configs/tsconfig": "workspace:*",
+    "build-configs/eslint": "workspace:*",
+    "build-configs/prettier": "workspace:*"
+  },
+  "exports": {
+    "./setup": {
+      "require": "./testSetup.ts",
+      "import": "./testSetup.ts",
+      "types": "./testSetup.ts"
+    },
+    "./assets": {
+      "require": "./assets",
+      "import": "./assets",
+      "types": "./assets"
+    }
+  }
+}

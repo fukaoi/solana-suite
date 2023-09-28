@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "build-configs/tsconfig/base.json",
+  "display": "test-tools",
+  "compilerOptions": {
+  },
+  "include": ["solana-suite.json", "test/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

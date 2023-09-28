@@ -1,2 +1,2 @@
-export * from "./keypair";
+export * from "./keypair-account";
 export * from "./pda";
