@@ -52,19 +52,5 @@
     "bignumber.js": "^9.1.2",
     "nft.storage": "^7.1.1",
     "bs58": "^5.0.0"
-  },
-  "dependencies": {
-    "account": "workspace:^",
-    "shared": "workspace:^",
-    "converter": "workspace:^",
-    "storage": "workspace:^",
-    "types": "workspace:^",
-    "validator": "workspace:^"
-  },
-  "devDependencies": {
-    "build-configs/eslint": "workspace:*",
-    "build-configs/prettier": "workspace:*",
-    "build-configs/tsconfig": "workspace:*",
-    "build-configs/tsup": "workspace:*"
   }
 }
