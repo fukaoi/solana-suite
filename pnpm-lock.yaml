@@ -152,6 +152,34 @@ importers:
         specifier: ^22.1.0
         version: 22.1.0
 
+  packages/instruction:
+    dependencies:
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      node:
+        specifier: workspace:*
+        version: link:../node
+      shared:
+        specifier: workspace:*
+        version: link:../shared
+      types:
+        specifier: workspace:*
+        version: link:../types
+    devDependencies:
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
+
   packages/node:
     dependencies:
       '@solana/web3.js':

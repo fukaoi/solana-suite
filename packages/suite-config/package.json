@@ -1,7 +1,7 @@
 {
   "name": "@solana-suite/config",
   "version": "0.7.0",
-  "description": "solana-suite config",
+  "description": "solana-suite for config",
   "main": "./solana-suite.json",
   "module": "./solana-suite.json",
   "bin": {
