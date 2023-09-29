@@ -71,7 +71,7 @@ abstract class AbstractResult<T, E extends Error> {
   async submit(): Promise<Result<TransactionSignature, Error>> {
     try {
       const instruction = this.unwrap() as unknown;
-      const castedInst = instruction as Instruction;
+      const castedInst = instruction as any;
       if (castedInst.instructions && castedInst.signers) {
         return await castedInst.submit();
       }
