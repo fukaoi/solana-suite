@@ -6,7 +6,7 @@ import {
   ModuleName,
   OnErr,
   OnOk,
-} from "../types/";
+} from "types/core";
 import { TransactionFilter } from "../transaction-filter";
 import { Signatures } from "../signatures";
 

@@ -1,7 +1,6 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { Pubkey, Secret } from 'types/account';
 import bs from 'bs58';
-import 'shared';
 
 export class KeypairAccount {
   secret: Secret;

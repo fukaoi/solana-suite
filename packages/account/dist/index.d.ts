@@ -1,5 +1,40 @@
-import { PublicKey, Keypair } from '@solana/web3.js';
-import { Secret, Pubkey } from 'types/account';
+import { TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
+import { Pubkey, Secret } from 'types/account';
+
+/**
+ * Get Associated token Account.
+ * if not created, create new token accouint
+ *
+ * @param {Pubkey} mint
+ * @param {Pubkey} owner
+ * @param {Secret} feePayer
+ * @param {boolean} allowOwnerOffCurve
+ * @returns Promise<string | Instruction>
+ */
+declare namespace AssociatedAccount {
+    /**
+     * Retry function if create new token accouint
+     *
+     * @param {Pubkey} mint
+     * @param {Pubkey} owner
+     * @param {Secret} feePayer
+     * @returns Promise<string>
+     */
+    const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret) => Promise<string>;
+    /**
+     * [Main logic]Get Associated token Account.
+     * if not created, create new token accouint
+     *
+     * @param {Pubkey} mint
+     * @param {Pubkey} owner
+     * @param {Pubkey} feePayer
+     * @returns Promise<string>
+     */
+    const makeOrCreateInstruction: (mint: Pubkey, owner: Pubkey, feePayer?: Pubkey, allowOwnerOffCurve?: boolean) => Promise<{
+        tokenAccount: string;
+        inst: TransactionInstruction | undefined;
+    }>;
+}
 
 declare class KeypairAccount {
     secret: Secret;
@@ -21,4 +56,4 @@ declare namespace Pda {
     const getMasterEdition: (mint: Pubkey) => PublicKey;
 }
 
-export { KeypairAccount, Pda };
+export { AssociatedAccount, KeypairAccount, Pda };

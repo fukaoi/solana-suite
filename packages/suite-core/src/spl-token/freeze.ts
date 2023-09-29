@@ -1,11 +1,7 @@
-import {
-  Instruction,
-  KeypairAccount,
-  Pubkey,
-  Result,
-  Secret,
-  Try,
-} from 'shared';
+import { KeypairAccount } from 'account';
+import { Instruction } from 'instruction';
+import { Result, Try } from 'shared';
+
 import {
   createFreezeAccountInstruction,
   getAssociatedTokenAddressSync,

@@ -1,16 +1,12 @@
 import { createTransferCheckedInstruction } from '@solana/spl-token';
 import { Transaction } from '@solana/web3.js';
-import {
-  Node,
-  Result,
-  PartialSignInstruction,
-  Try,
-  Pubkey,
-  Secret,
-} from 'shared';
+import { Node } from 'node';
+import { Result, Try } from 'shared';
+import { PartialSignInstruction } from 'instruction';
+import { Pubkey, Secret } from 'types/account';
 
 import { SplToken as _Calculator } from './calculate-amount';
-import { AssociatedAccount } from '../associated-account';
+import { AssociatedAccount } from 'account';
 
 export namespace SplToken {
   export const feePayerPartialSignTransfer = async (

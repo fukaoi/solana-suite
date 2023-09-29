@@ -1,4 +1,4 @@
-import { Pubkey } from 'shared';
+import { Pubkey } from '../../account';
 
 export namespace UserSideOutput {
   export type History = {

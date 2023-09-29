@@ -65,6 +65,7 @@ abstract class AbstractResult<T, E extends Error> {
     );
   }
 
+  /// submit (alias Instruction.submit) ////
   async submit(): Promise<Result<TransactionSignature, Error>> {
     try {
       const instruction = this.unwrap() as any;

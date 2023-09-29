@@ -1,4 +1,4 @@
-import { UserSideOutput as SharendMetaplex } from 'types/converter';
+import { UserSideOutput as SharendMetaplex } from '../converter';
 import { UserSideOutput as Internal } from './user-side/output';
 
 export * from './find';

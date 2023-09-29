@@ -1,5 +1,5 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
-import { InfraSideOutput, PostTokenAccount, UserSideOutput } from '../types/';
+import { InfraSideOutput, PostTokenAccount, UserSideOutput } from 'types/core';
 import { convertTimestampToDateTime } from 'shared';
 
 export namespace Convert.TransferChecked {

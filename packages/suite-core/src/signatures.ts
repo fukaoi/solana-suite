@@ -1,8 +1,8 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
 import { Node } from 'node';
 import { debugLog, Result, sleep } from 'shared';
-import { Pubkey } from 'account';
-import { UserSideOutput } from './types/';
+import { Pubkey } from 'types/account';
+import { UserSideOutput } from 'types/core';
 
 //@internal
 export namespace Signatures {

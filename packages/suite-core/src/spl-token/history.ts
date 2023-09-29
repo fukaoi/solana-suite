@@ -1,5 +1,7 @@
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { debugLog, Node, Pubkey } from "shared";
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { debugLog } from 'shared';
+import { Node } from 'node';
+import { Pubkey } from 'types/account';
 import {
   FilterType,
   History,
@@ -8,9 +10,9 @@ import {
   OnErr,
   OnOk,
   UserSideOutput,
-} from "../types/";
-import { Signatures } from "../signatures";
-import { TransactionFilter } from "../transaction-filter";
+} from 'types/core';
+import { Signatures } from '../signatures';
+import { TransactionFilter } from '../transaction-filter';
 
 export namespace SplToken {
   export const getHistory = async (
@@ -44,7 +46,7 @@ export namespace SplToken {
           );
 
         const storedHistories: UserSideOutput.History[] = [];
-        debugLog("# tokenAccounts size: ", tokenAccounts.value.length);
+        debugLog('# tokenAccounts size: ', tokenAccounts.value.length);
         for (const account of tokenAccounts.value) {
           const parser = TransactionFilter.parse(
             filterType,

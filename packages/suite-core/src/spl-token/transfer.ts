@@ -1,7 +1,9 @@
 import { createTransferCheckedInstruction } from '@solana/spl-token';
-import { Result, Instruction, Try, Pubkey, Secret } from 'shared';
+import { Result, Try } from 'shared';
 import { SplToken as _Calculator } from './calculate-amount';
-import { AssociatedAccount } from '../associated-account';
+import { AssociatedAccount } from 'account';
+import { Instruction } from 'instruction';
+import { Pubkey, Secret } from 'types/account';
 
 export namespace SplToken {
   export const transfer = async (

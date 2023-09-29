@@ -1,6 +1,8 @@
 import { ParsedAccountData } from '@solana/web3.js';
-import { Node, Pubkey, Result, Try } from 'shared';
-import { OwnerInfo } from '../types/sol-native';
+import { Result, Try } from 'shared';
+import { Node } from 'node';
+import { Pubkey } from 'types/account';
+import { OwnerInfo } from 'types/core';
 import { TransactionFilter } from '../transaction-filter';
 
 export namespace SolNative {

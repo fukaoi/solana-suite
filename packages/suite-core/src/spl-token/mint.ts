@@ -20,17 +20,12 @@ import {
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 
-import {
-  debugLog,
-  KeypairAccount,
-  MintInstruction,
-  Node,
-  Pubkey,
-  Result,
-  Secret,
-  Try,
-} from 'shared';
+import { debugLog, Result, Try } from 'shared';
 
+import { Node } from 'node';
+import { KeypairAccount } from 'account';
+import { MintInstruction } from 'instruction';
+import { Pubkey, Secret } from 'types/account';
 import { UserSideInput } from 'types/converter';
 import { Pda } from 'account';
 import { Converter } from 'converter';

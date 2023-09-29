@@ -9,7 +9,7 @@ import {
   ModuleName,
   PostTokenAccount,
   UserSideOutput,
-} from './types';
+} from 'types/core';
 import { debugLog } from 'shared';
 
 //@internal

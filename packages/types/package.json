@@ -32,6 +32,11 @@
       "import": "./dist/account.mjs",
       "types": "./dist/account.d.ts"
     },
+    "./core": {
+      "require": "./dist/core.js",
+      "import": "./dist/core.mjs",
+      "types": "./dist/core.d.ts"
+    },
     "./converter": {
       "require": "./dist/converter.js",
       "import": "./dist/converter.mjs",

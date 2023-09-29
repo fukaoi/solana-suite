@@ -1,4 +1,4 @@
-import { UserSideOutput } from 'types/converter';
+import { UserSideOutput } from '../converter';
 
 export enum Sortable {
   Asc = 'asc',
