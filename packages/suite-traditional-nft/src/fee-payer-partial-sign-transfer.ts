@@ -1,12 +1,9 @@
-import {
-  PartialSignInstruction,
-  Pubkey,
-  Result,
-  Secret,
-} from 'shared';
+import { Result } from 'shared';
+import { Pubkey, Secret } from 'types/account';
+import { PartialSignInstruction } from 'instruction';
 import { SplToken } from '@solana-suite/core';
 
-export namespace Metaplex {
+export namespace TraditionalNft {
   const NFT_AMOUNT = 1;
   const NFT_DECIMALS = 0;
 
@@ -15,7 +12,7 @@ export namespace Metaplex {
     owner: Pubkey,
     dest: Pubkey,
     signers: Secret[],
-    feePayer: Pubkey
+    feePayer: Pubkey,
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return SplToken.feePayerPartialSignTransfer(
       mint,
@@ -24,7 +21,7 @@ export namespace Metaplex {
       signers,
       NFT_AMOUNT,
       NFT_DECIMALS,
-      feePayer
+      feePayer,
     );
   };
 }

@@ -1,7 +1,9 @@
-import { Instruction, Pubkey, Result, Secret } from 'shared';
+import { Result } from 'shared';
+import { Instruction } from 'instruction';
+import { Pubkey, Secret } from 'types/account';
 import { SplToken } from '@solana-suite/core';
 
-export namespace Metaplex {
+export namespace TraditionalNft {
   const NFT_AMOUNT = 1;
   const NFT_DECIMALS = 0;
 
@@ -9,7 +11,7 @@ export namespace Metaplex {
     mint: Pubkey,
     owner: Pubkey,
     signer: Secret,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Result<Instruction, Error> => {
     return SplToken.burn(
       mint,
@@ -17,7 +19,7 @@ export namespace Metaplex {
       [signer],
       NFT_AMOUNT,
       NFT_DECIMALS,
-      feePayer
+      feePayer,
     );
   };
 }

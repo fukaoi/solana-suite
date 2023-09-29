@@ -16,20 +16,12 @@ import {
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import {
-  debugLog,
-  MintInstruction,
-  Node,
-  Pubkey,
-  Result,
-  Secret,
-  Try,
-} from 'shared';
-
+import { debugLog, Result, Try } from 'shared';
+import { Pubkey, Secret } from 'types/account';
+import { MintInstruction } from 'instruction';
+import { Node } from 'node';
 import { Storage } from 'storage';
-
 import { UserSideInput } from 'types/converter';
-
 import { Converter } from 'converter';
 import { Validator } from 'validator';
 
@@ -40,7 +32,7 @@ import {
 } from '@metaplex-foundation/mpl-token-metadata';
 import { KeypairAccount, Pda } from 'account';
 const NFT_AMOUNT = 1;
-export namespace Metaplex {
+export namespace TraditionalNft {
   export const createDeleagateInstruction = (
     mint: PublicKey,
     owner: PublicKey,

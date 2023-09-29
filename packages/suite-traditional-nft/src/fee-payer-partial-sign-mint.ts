@@ -1,25 +1,16 @@
-import {
-  debugLog,
-  Node,
-  PartialSignInstruction,
-  Pubkey,
-  Result,
-  Secret,
-  Try,
-} from 'shared';
-
-import { Transaction } from '@solana/web3.js';
-
+import { debugLog, Result, Try } from 'shared';
+import { Pubkey, Secret } from 'types/account';
+import { Node } from 'node';
+import { PartialSignInstruction } from 'instruction';
 import { Storage } from 'storage';
-
 import { Converter } from 'converter';
 import { UserSideInput } from 'types/converter';
 import { Validator } from 'validator';
+import { KeypairAccount } from 'account';
+import { TraditionalNft as _Mint } from './mint';
+import { Transaction } from '@solana/web3.js';
 
-import { Metaplex as _Mint } from './mint';
-import { KeypairAccount } from 'shared/src/keypair-account';
-
-export namespace Metaplex {
+export namespace TraditionalNft {
   /**
    * Upload content and NFT mint with Partial Sign
    *

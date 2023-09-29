@@ -1,5 +1,5 @@
 {
-  "name": "@solana-suite/nft",
+  "name": "@solana-suite/traditional-nft",
   "version": "0.7.0",
   "description": "nft module for solana-suite",
   "main": "dist/index.js",
@@ -57,6 +57,8 @@
   },
   "dependencies": {
     "account": "workspace:^",
+    "node": "workspace:^",
+    "instruction": "workspace:^",
     "converter": "workspace:^",
     "shared": "workspace:^",
     "storage": "workspace:^",

@@ -455,9 +455,15 @@ importers:
       converter:
         specifier: workspace:^
         version: link:../converter
+      instruction:
+        specifier: workspace:^
+        version: link:../instruction
       nft.storage:
         specifier: ^7.1.1
         version: 7.1.1(node-fetch@3.3.2)
+      node:
+        specifier: workspace:^
+        version: link:../node
       shared:
         specifier: workspace:^
         version: link:../shared

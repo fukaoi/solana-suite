@@ -8,6 +8,7 @@ const entry = {
   instruction: 'src/instruction/index.ts',
   shared: 'src/shared/index.ts',
   storage: 'src/storage/index.ts',
+  'traditional-nft': 'src/traditional-nft/index.ts',
   validator: 'src/validator/index.ts',
 };
 

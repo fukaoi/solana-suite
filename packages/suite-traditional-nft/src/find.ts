@@ -1,9 +1,11 @@
-import { Pubkey, Result } from 'shared';
+import { Result } from 'shared';
+import { Pubkey } from 'types/account';
 import { UserSideInput } from 'types/converter';
-import { Find, OnErr, OnOk, Sortable, SplToken } from '@solana-suite/core';
-import { NftMetadata } from '../types/';
+import { SplToken } from '@solana-suite/core';
+import { Find, OnErr, OnOk, Sortable } from 'types/core';
+import { NftMetadata } from 'types/traditional-nft';
 
-export namespace Metaplex {
+export namespace TraditionalNft {
   /**
    * Fetch minted metadata by owner Pubkey
    *
@@ -17,7 +19,7 @@ export namespace Metaplex {
     owner: Pubkey,
     onOk: OnOk<Find>,
     onErr: OnErr,
-    options?: { sortable?: Sortable; isHolder?: boolean }
+    options?: { sortable?: Sortable; isHolder?: boolean },
   ): Promise<void> => {
     const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
     const isHolder = !options?.isHolder ? true : false;
@@ -26,7 +28,7 @@ export namespace Metaplex {
       (result: Result<[], Error>) => result.match(onOk, onErr),
       UserSideInput.TokenStandard.NonFungible,
       sortable,
-      isHolder
+      isHolder,
     );
   };
 
@@ -37,12 +39,12 @@ export namespace Metaplex {
    * @return Promise<Result<NftMetadata, Error>>
    */
   export const findByMint = async (
-    mint: Pubkey
+    mint: Pubkey,
   ): Promise<Result<NftMetadata, Error>> => {
     // return await SplToken.genericFindByMint<NftMetadata>(
     return await SplToken.genericFindByMint(
       mint,
-      UserSideInput.TokenStandard.NonFungible
+      UserSideInput.TokenStandard.NonFungible,
     );
   };
 }

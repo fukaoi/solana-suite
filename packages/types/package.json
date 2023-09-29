@@ -62,6 +62,12 @@
       "import": "./dist/storage.mjs",
       "types": "./dist/storage.d.ts"
     },
+    "./traditional-nft": {
+      "require": "./dist/traditional-nft.js",
+      "import": "./dist/traditional-nft.mjs",
+      "types": "./dist/traditional-nft.d.ts"
+    },
+
     "./validator": {
       "require": "./dist/validator.js",
       "import": "./dist/validator.mjs",
