@@ -1,6 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
 import { InfraSideInput } from '../infra-side/input';
-import { _Shared } from '../shared';
+import { Common } from '../common';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 export namespace InfraSideOutput {
@@ -16,5 +16,5 @@ export namespace InfraSideOutput {
 
   export type Creator = InfraSideInput.Creators;
   export type Offchain = InfraSideInput.Offchain;
-  export type Uses = _Shared.Uses;
+  export type Uses = Common.Uses;
 }

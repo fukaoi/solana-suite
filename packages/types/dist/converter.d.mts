@@ -7,7 +7,7 @@ import { Pubkey } from './account.mjs';
 type Option<T> = T | null;
 type bignum = number | BN;
 type FileContent = string | Buffer | Uint8Array | ArrayBuffer;
-declare namespace _Shared {
+declare namespace Common {
     type Properties = {
         creators?: {
             address?: string;
@@ -61,7 +61,7 @@ declare namespace InfraSideInput {
         verified: boolean;
         share: number;
     };
-    type Properties = _Shared.Properties;
+    type Properties = Common.Properties;
     type Offchain = {
         name?: string;
         symbol?: string;
@@ -69,8 +69,8 @@ declare namespace InfraSideInput {
         seller_fee_basis_points?: number;
         image?: string;
         external_url?: string;
-        attributes?: _Shared.Attribute[];
-        properties?: _Shared.Properties;
+        attributes?: Common.Attribute[];
+        properties?: Common.Properties;
         collection?: {
             name?: string;
             family?: string;
@@ -85,7 +85,7 @@ declare namespace InfraSideInput {
         sellerFeeBasisPoints: number;
         creators: Option<Creators[]>;
         collection: Option<Collection>;
-        uses: Option<_Shared.Uses>;
+        uses: Option<Common.Uses>;
     };
 }
 
@@ -100,7 +100,7 @@ declare namespace InfraSideOutput {
     };
     type Creator = InfraSideInput.Creators;
     type Offchain = InfraSideInput.Offchain;
-    type Uses = _Shared.Uses;
+    type Uses = Common.Uses;
 }
 
 declare namespace UserSideInput {
@@ -110,7 +110,7 @@ declare namespace UserSideInput {
         share: number;
         verified: boolean;
     };
-    type Properties = _Shared.Properties;
+    type Properties = Common.Properties;
     enum TokenStandard {
         NonFungible = 0,
         FungibleAsset = 1,
@@ -128,13 +128,13 @@ declare namespace UserSideInput {
         isMutable?: boolean;
         description?: string;
         external_url?: string;
-        attributes?: _Shared.Attribute[];
+        attributes?: Common.Attribute[];
         properties?: Properties;
         maxSupply?: bignum;
         creators?: Creators[];
-        uses?: _Shared.Uses;
+        uses?: Common.Uses;
         collection?: Collection;
-        options?: _Shared.Options;
+        options?: Common.Options;
     };
     type TokenMetadata = {
         name: string;
@@ -144,10 +144,10 @@ declare namespace UserSideInput {
         storageType?: StorageType;
         description?: string;
         royalty?: number;
-        uses?: _Shared.Uses;
+        uses?: Common.Uses;
         creators?: Creators[];
-        attributes?: _Shared.Attribute[];
-        options?: _Shared.Options;
+        attributes?: Common.Attribute[];
+        options?: Common.Options;
     };
 }
 
@@ -157,7 +157,7 @@ declare namespace UserSideOutput {
         address: Pubkey;
         verified: boolean;
     };
-    type Uses = _Shared.Uses;
+    type Uses = Common.Uses;
     type NftMetadata = {
         mint: string;
         updateAuthority: string;
@@ -172,7 +172,7 @@ declare namespace UserSideOutput {
         tokenAmount: string;
         collection?: Collection | undefined;
         creators?: Creators[] | undefined;
-        uses?: _Shared.Uses | undefined;
+        uses?: Common.Uses | undefined;
         dateTime?: Date | undefined;
     };
     type TokenMetadata = {
@@ -183,11 +183,11 @@ declare namespace UserSideOutput {
         royalty: number;
         offchain: InfraSideOutput.Offchain;
         tokenAmount: string;
-        attributes?: _Shared.Attribute | undefined;
+        attributes?: Common.Attribute | undefined;
         creators?: Creators[] | undefined;
-        uses?: _Shared.Uses | undefined;
+        uses?: Common.Uses | undefined;
         dateTime?: Date | undefined;
     };
 }
 
-export { FileContent, InfraSideInput, InfraSideOutput, Option, UserSideInput, UserSideOutput, _Shared, bignum };
+export { Common, FileContent, InfraSideInput, InfraSideOutput, Option, UserSideInput, UserSideOutput, bignum };

@@ -1,4 +1,4 @@
-import { _Shared, Option } from '../shared';
+import { Common, Option } from '../common';
 import { Pubkey } from '../../account';
 import { InfraSideOutput } from '../infra-side/output';
 import { UserSideInput } from '../user-side/input';
@@ -6,7 +6,7 @@ import { UserSideInput } from '../user-side/input';
 export namespace UserSideOutput {
   export type Creators = UserSideInput.Creators;
   export type Collection = { address: Pubkey; verified: boolean };
-  export type Uses = _Shared.Uses;
+  export type Uses = Common.Uses;
 
   /////////// NFT //////////////
   export type NftMetadata = {
@@ -23,7 +23,7 @@ export namespace UserSideOutput {
     tokenAmount: string;
     collection?: Collection | undefined;
     creators?: Creators[] | undefined;
-    uses?: _Shared.Uses | undefined;
+    uses?: Common.Uses | undefined;
     dateTime?: Date | undefined;
   };
 
@@ -36,9 +36,9 @@ export namespace UserSideOutput {
     royalty: number;
     offchain: InfraSideOutput.Offchain;
     tokenAmount: string;
-    attributes?: _Shared.Attribute | undefined;
+    attributes?: Common.Attribute | undefined;
     creators?: Creators[] | undefined;
-    uses?: _Shared.Uses | undefined;
+    uses?: Common.Uses | undefined;
     dateTime?: Date | undefined;
   };
 }

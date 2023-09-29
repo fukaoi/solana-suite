@@ -1,5 +1,5 @@
 import { StorageType } from '../../storage';
-import { _Shared, bignum, FileContent } from '../shared';
+import { Common, bignum, FileContent } from '../common';
 import { Pubkey } from '../../account';
 
 export namespace UserSideInput {
@@ -11,7 +11,7 @@ export namespace UserSideInput {
     verified: boolean;
   };
 
-  export type Properties = _Shared.Properties;
+  export type Properties = Common.Properties;
 
   export enum TokenStandard {
     NonFungible = 0,
@@ -31,13 +31,13 @@ export namespace UserSideInput {
     isMutable?: boolean;
     description?: string;
     external_url?: string;
-    attributes?: _Shared.Attribute[];
+    attributes?: Common.Attribute[];
     properties?: Properties;
     maxSupply?: bignum;
     creators?: Creators[];
-    uses?: _Shared.Uses;
+    uses?: Common.Uses;
     collection?: Collection;
-    options?: _Shared.Options;
+    options?: Common.Options;
   };
 
   export type TokenMetadata = {
@@ -48,9 +48,9 @@ export namespace UserSideInput {
     storageType?: StorageType;
     description?: string;
     royalty?: number;
-    uses?: _Shared.Uses;
+    uses?: Common.Uses;
     creators?: Creators[];
-    attributes?: _Shared.Attribute[];
-    options?: _Shared.Options;
+    attributes?: Common.Attribute[];
+    options?: Common.Options;
   };
 }

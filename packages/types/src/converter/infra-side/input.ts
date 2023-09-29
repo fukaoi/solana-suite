@@ -1,4 +1,4 @@
-import { _Shared, Option } from '../shared';
+import { Common, Option } from '../common';
 import { PublicKey } from '@solana/web3.js';
 
 export namespace InfraSideInput {
@@ -26,7 +26,7 @@ export namespace InfraSideInput {
     share: number;
   };
 
-  export type Properties = _Shared.Properties;
+  export type Properties = Common.Properties;
 
   // Not need use Option type. bucasue Metaplex.JsonMetadata is same
   export type Offchain = {
@@ -36,8 +36,8 @@ export namespace InfraSideInput {
     seller_fee_basis_points?: number;
     image?: string;
     external_url?: string;
-    attributes?: _Shared.Attribute[];
-    properties?: _Shared.Properties;
+    attributes?: Common.Attribute[];
+    properties?: Common.Properties;
     collection?: {
       name?: string;
       family?: string;
@@ -53,6 +53,6 @@ export namespace InfraSideInput {
     sellerFeeBasisPoints: number;
     creators: Option<Creators[]>;
     collection: Option<Collection>;
-    uses: Option<_Shared.Uses>;
+    uses: Option<Common.Uses>;
   };
 }
