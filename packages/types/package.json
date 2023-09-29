@@ -18,8 +18,7 @@
     "@solana/web3.js": "^1.78.5",
     "bn.js": "^5.2.1"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/bn.js": "^5.1.2",
     "build-configs/eslint": "workspace:*",
@@ -30,27 +29,38 @@
   "exports": {
     "./account": {
       "require": "./dist/account.js",
-      "import": "./dist/account.mjs"
+      "import": "./dist/account.mjs",
+      "types": "./dist/account.d.ts"
     },
     "./converter": {
       "require": "./dist/converter.js",
-      "import": "./dist/converter.mjs"
+      "import": "./dist/converter.mjs",
+      "types": "./dist/converter.d.ts"
     },
     "./instruction": {
       "require": "./dist/instruction.js",
-      "import": "./dist/instruction.mjs"
+      "import": "./dist/instruction.mjs",
+      "types": "./dist/instruction.d.ts"
+    },
+    "./node": {
+      "require": "./dist/node.js",
+      "import": "./dist/node.mjs",
+      "types": "./dist/node.d.ts"
     },
     "./shared": {
       "require": "./dist/shared.js",
-      "import": "./dist/shared.mjs"
+      "import": "./dist/shared.mjs",
+      "types": "./dist/shared.d.ts"
     },
     "./storage": {
       "require": "./dist/storage.js",
-      "import": "./dist/storage.mjs"
+      "import": "./dist/storage.mjs",
+      "types": "./dist/storage.d.ts"
     },
     "./validator": {
       "require": "./dist/validator.js",
-      "import": "./dist/validator.mjs"
+      "import": "./dist/validator.mjs",
+      "types": "./dist/validator.d.ts"
     }
   }
 }

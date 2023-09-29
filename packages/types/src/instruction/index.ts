@@ -6,36 +6,34 @@ import {
 import { Result } from '../shared/result';
 import { Pubkey, Secret } from '../account';
 
-declare class Instruction {
+export type Instruction = {
   instructions: TransactionInstruction[];
   signers: Keypair[];
   feePayer?: Keypair;
   data?: unknown;
-  constructor(
+  constructor: (
     instructions: TransactionInstruction[],
     signers: Keypair[],
     feePayer?: Keypair,
     data?: unknown,
-  );
+  ) => void;
   submit: () => Promise<Result<TransactionSignature, Error>>;
-  static batchSubmit: (arr: Instruction[]) => Promise<TransactionSignature>;
-}
+  batchSubmit: (arr: Instruction[]) => Promise<TransactionSignature>;
+};
 
-declare class MintInstruction extends Instruction {
-  constructor(
+export type MintInstruction = {
+  constructor: (
     instructions: TransactionInstruction[],
     signers: Keypair[],
     feePayer?: Keypair,
     data?: unknown,
-  );
+  ) => void;
   submit: () => Promise<Result<TransactionSignature, Error>>;
-}
+};
 
-declare class PartialSignInstruction {
+export type PartialSignInstruction = {
   hexInstruction: string;
   data?: Pubkey;
-  constructor(instructions: string, mint?: Pubkey);
+  constructor: (instructions: string, mint?: Pubkey) => void;
   submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
-}
-
-export { Instruction, MintInstruction, PartialSignInstruction };
+};

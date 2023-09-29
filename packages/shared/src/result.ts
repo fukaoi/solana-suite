@@ -72,8 +72,6 @@ abstract class AbstractResult<T, E extends Error> {
     try {
       const instruction = this.unwrap() as unknown;
       const castedInst = instruction as Instruction;
-      // why return false?
-      // if (instruction instanceof Instruction) {
       if (castedInst.instructions && castedInst.signers) {
         return await castedInst.submit();
       }

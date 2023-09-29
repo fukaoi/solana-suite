@@ -3,6 +3,7 @@ import defineConfig from '../build-configs/tsup/base';
 const entry = {
   account: 'src/account/index.ts',
   converter: 'src/converter/index.ts',
+  node: 'src/node/index.ts',
   instruction: 'src/instruction/index.ts',
   shared: 'src/shared/index.ts',
   storage: 'src/storage/index.ts',

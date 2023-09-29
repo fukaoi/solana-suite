@@ -17,6 +17,7 @@
     "@solana/web3.js": "^1.78.5"
   },
   "dependencies": {
+    "account": "workspace:*",
     "shared": "workspace:*",
     "types": "workspace:*"
   },

@@ -185,6 +185,9 @@ importers:
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
+      account:
+        specifier: workspace:*
+        version: link:../account
       shared:
         specifier: workspace:*
         version: link:../shared

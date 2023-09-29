@@ -1,14 +1,7 @@
 import { Keypair, PublicKey, TransactionSignature } from '@solana/web3.js';
-import { Result } from '../result';
+import { Result } from './result';
 
 declare global {
-  interface String {
-    toPublicKey(): PublicKey;
-    toKeypair(): Keypair;
-    toExplorerUrl(explorer?: Explorer): string;
-    toAddressUrl(): string;
-  }
-
   interface Number {
     toSol(): number;
     toLamports(): number;
@@ -32,8 +25,3 @@ export type OverwriteObject = {
   existsKey: string;
   will: { key: string; value: unknown };
 };
-
-export enum Explorer {
-  Solscan = 'solscan',
-  SolanaFM = 'solanafm',
-}

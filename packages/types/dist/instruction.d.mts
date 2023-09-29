@@ -1,25 +1,25 @@
 import { TransactionInstruction, Keypair, TransactionSignature } from '@solana/web3.js';
-import { Result } from './shared.mjs';
+import { R as Result } from './result-b9d23549.js';
 import { Pubkey, Secret } from './account.mjs';
 
-declare class Instruction {
+type Instruction = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
     data?: unknown;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    constructor: (instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown) => void;
     submit: () => Promise<Result<TransactionSignature, Error>>;
-    static batchSubmit: (arr: Instruction[]) => Promise<TransactionSignature>;
-}
-declare class MintInstruction extends Instruction {
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    batchSubmit: (arr: Instruction[]) => Promise<TransactionSignature>;
+};
+type MintInstruction = {
+    constructor: (instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown) => void;
     submit: () => Promise<Result<TransactionSignature, Error>>;
-}
-declare class PartialSignInstruction {
+};
+type PartialSignInstruction = {
     hexInstruction: string;
     data?: Pubkey;
-    constructor(instructions: string, mint?: Pubkey);
+    constructor: (instructions: string, mint?: Pubkey) => void;
     submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
-}
+};
 
 export { Instruction, MintInstruction, PartialSignInstruction };
