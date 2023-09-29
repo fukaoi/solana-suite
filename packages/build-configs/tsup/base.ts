@@ -15,6 +15,8 @@ export default defineConfig({
   noExternal: [
     'account',
     'converter',
+    'global',
+    'instruction',
     'node',
     'shared',
     'storage',

@@ -4,7 +4,6 @@ import { Constants, debugLog } from 'shared';
 import { KeypairAccount } from 'account';
 import { BigNumber } from 'bignumber.js';
 import { Explorer } from 'types/global';
-import  'types/global';
 import bs from 'bs58';
 
 /**

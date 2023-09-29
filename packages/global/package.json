@@ -35,5 +35,12 @@
     "build-configs/tsconfig": "workspace:*",
     "build-configs/tsup": "workspace:*",
     "jsdom": "^22.1.0"
+  },
+  "exports": {
+    "*": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
   }
 }

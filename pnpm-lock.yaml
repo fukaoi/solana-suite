@@ -135,6 +135,9 @@ importers:
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
+      global:
+        specifier: workspace:^
+        version: link:../global
       shared:
         specifier: workspace:^
         version: link:../shared
@@ -243,9 +246,6 @@ importers:
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
-      global:
-        specifier: workspace:*
-        version: link:../global
       shared:
         specifier: workspace:*
         version: link:../shared
@@ -382,6 +382,9 @@ importers:
       cross-fetch:
         specifier: ^4.0.0
         version: 4.0.0
+      global:
+        specifier: workspace:^
+        version: link:../global
       instruction:
         specifier: workspace:^
         version: link:../instruction
