@@ -1,13 +1,12 @@
 import bs from 'bs58';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Constants } from './constants';
-import { Node } from './node';
+import { Node } from 'node';
 import { Result } from './result';
-import { Instruction as _Instruction } from './instruction';
-import { Instruction as _Batch } from './instruction/batch-submit';
-import { KeypairAccount } from './keypair-account';
+import { Instruction } from 'types/instruction';
+import { KeypairAccount } from 'account';
 import { BigNumber } from 'bignumber.js';
-import { AnyObject, Explorer } from './types/global';
+import { AnyObject, Explorer } from './types';
 
 /**
  * senTransaction() TransactionInstruction
@@ -19,7 +18,7 @@ import { AnyObject, Explorer } from './types/global';
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* @ts-ignore */
 Array.prototype.submit = async function () {
-  const instructions: _Instruction[] = [];
+  const instructions: Instruction[] = [];
   // dont use forEach
   // It is not possible to stop the process by RETURN in the middle of the process.
   return Try(async () => {
@@ -29,13 +28,13 @@ Array.prototype.submit = async function () {
         const errorMess: string = obj.error.message as string;
         throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
       } else if (obj.isOk) {
-        instructions.push(obj.value as _Instruction);
+        instructions.push(obj.value as Instruction);
       } else {
-        instructions.push(obj as _Instruction);
+        instructions.push(obj as Instruction);
       }
       i++;
     }
-    return _Batch.batchSubmit(instructions);
+    return Instruction.batchSubmit(instructions);
   });
 };
 

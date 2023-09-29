@@ -25,8 +25,8 @@ importers:
         specifier: ^5.3.1
         version: 5.3.1
       chai:
-        specifier: ^4.3.9
-        version: 4.3.9
+        specifier: ^4.3.10
+        version: 4.3.10
       eslint:
         specifier: ^8.50.0
         version: 8.50.0
@@ -207,9 +207,15 @@ importers:
 
   packages/shared:
     dependencies:
+      '@solana-suite/config':
+        specifier: workspace:*
+        version: link:../suite-config
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
+      account:
+        specifier: workspace:*
+        version: link:../account
       bignumber.js:
         specifier: ^9.1.2
         version: 9.1.2
@@ -219,6 +225,9 @@ importers:
       commander:
         specifier: 9.3.0
         version: 9.3.0
+      types:
+        specifier: workspace:*
+        version: link:../types
     devDependencies:
       '@types/jsdom':
         specifier: ^21.1.3
@@ -502,9 +511,6 @@ importers:
       bn.js:
         specifier: ^5.2.1
         version: 5.2.1
-      shared:
-        specifier: workspace:*
-        version: link:../shared
     devDependencies:
       '@types/bn.js':
         specifier: ^5.1.2
@@ -1251,7 +1257,7 @@ packages:
   /@types/jsdom@21.1.3:
     resolution: {integrity: sha512-1zzqSP+iHJYV4lB3lZhNBa012pubABkj9yG/GuXuf6LZH1cSPIJBqFDrm5JX65HHt6VOnNYdTui/0ySerRbMgA==}
     dependencies:
-      '@types/node': 20.6.5
+      '@types/node': 20.7.1
       '@types/tough-cookie': 4.0.3
       parse5: 7.1.2
     dev: true
@@ -1286,10 +1292,6 @@ packages:
 
   /@types/node@16.11.7:
     resolution: {integrity: sha512-QB5D2sqfSjCmTuWcBWyJ+/44bcjO7VbjSbOE0ucoVbAsSNQc4Lt6QkgkVXkTDwkL4z/beecZNDvVX15D4P8Jbw==}
-    dev: true
-
-  /@types/node@20.6.5:
-    resolution: {integrity: sha512-2qGq5LAOTh9izcc0+F+dToFigBWiK1phKPt7rNhOqJSr35y8rlIBjDwGtFSgAI6MGIhjwOVNSQZVdJsZJ2uR1w==}
     dev: true
 
   /@types/node@20.7.1:
@@ -1483,7 +1485,7 @@ packages:
       '@vue/shared': 3.3.4
       estree-walker: 2.0.2
       magic-string: 0.30.3
-      postcss: 8.4.30
+      postcss: 8.4.31
       source-map-js: 1.0.2
     dev: false
 
@@ -2083,8 +2085,8 @@ packages:
     hasBin: true
     dev: false
 
-  /chai@4.3.9:
-    resolution: {integrity: sha512-tH8vhfA1CfuYMkALXj+wmZcqiwqOfshU9Gry+NYiiLqIddrobkBhALv6XD4yDz68qapphYI4vSaqhqAdThCAAA==}
+  /chai@4.3.10:
+    resolution: {integrity: sha512-0UXG04VuVbruMUYbJ6JctvH0YnC/4q3/AkT18q4NaITo91CUm0liMS9VqzT9vZhVQ/1eqPanMWjBM+Juhfb/9g==}
     engines: {node: '>=4'}
     dependencies:
       assertion-error: 1.1.0
@@ -4900,8 +4902,8 @@ packages:
       yaml: 2.3.2
     dev: true
 
-  /postcss@8.4.30:
-    resolution: {integrity: sha512-7ZEao1g4kd68l97aWG/etQKPKq07us0ieSZ2TnFDk11i0ZfDW2AwKHYU8qv4MZKqN2fdBfg+7q0ES06UA73C1g==}
+  /postcss@8.4.31:
+    resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.6

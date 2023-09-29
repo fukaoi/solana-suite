@@ -2,7 +2,7 @@ import BN from 'bn.js';
 import { PublicKey } from '@solana/web3.js';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { StorageType } from './storage.js';
-import { Pubkey } from 'shared';
+import { Pubkey } from './account.js';
 
 type Option<T> = T | null;
 type bignum = number | BN;

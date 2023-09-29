@@ -1,5 +1,5 @@
 import { _Shared, Option } from '../shared';
-import { Pubkey } from 'shared';
+import { Pubkey } from '../../account';
 import { InfraSideOutput } from '../infra-side/output';
 import { UserSideInput } from '../user-side/input';
 

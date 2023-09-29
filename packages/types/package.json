@@ -19,7 +19,6 @@
     "bn.js": "^5.2.1"
   },
   "dependencies": {
-    "shared": "workspace:*"
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.2",
@@ -31,23 +30,27 @@
   "exports": {
     "./account": {
       "require": "./dist/account.js",
-      "import": "./dist/account.mjs",
-      "types": "./dist/account.d.ts"
+      "import": "./dist/account.mjs"
     },
     "./converter": {
       "require": "./dist/converter.js",
-      "import": "./dist/converter.mjs",
-      "types": "./dist/converter.d.ts"
+      "import": "./dist/converter.mjs"
+    },
+    "./instruction": {
+      "require": "./dist/instruction.js",
+      "import": "./dist/instruction.mjs"
+    },
+    "./shared": {
+      "require": "./dist/shared.js",
+      "import": "./dist/shared.mjs"
     },
     "./storage": {
       "require": "./dist/storage.js",
-      "import": "./dist/storage.mjs",
-      "types": "./dist/storage.d.ts"
+      "import": "./dist/storage.mjs"
     },
     "./validator": {
       "require": "./dist/validator.js",
-      "import": "./dist/validator.mjs",
-      "types": "./dist/validator.d.ts"
+      "import": "./dist/validator.mjs"
     }
   }
 }

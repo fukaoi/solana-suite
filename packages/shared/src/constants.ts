@@ -1,5 +1,5 @@
 import { Commitment, PublicKey } from '@solana/web3.js';
-import Config from './solana-suite.json';
+import Config from '@solana-suite/config';
 
 // WARNING: Not to be a circular reference
 export namespace Constants {

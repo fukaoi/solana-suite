@@ -1,6 +1,6 @@
 import { StorageType } from '../../storage';
 import { _Shared, bignum, FileContent } from '../shared';
-import { Pubkey } from 'shared';
+import { Pubkey } from '../../account';
 
 export namespace UserSideInput {
   export type Collection = Pubkey;
