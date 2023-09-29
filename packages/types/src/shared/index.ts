@@ -1,2 +1,2 @@
-export * from './global';
 export * from './result';
+export * from './shared';

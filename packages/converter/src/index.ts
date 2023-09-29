@@ -5,6 +5,7 @@ import { Converter as Properties } from './properties';
 import { Converter as Royalty } from './royalty';
 import { Converter as TokenMetadata } from './token-metadata';
 import { Converter as Uses } from './uses';
+import 'types/global';
 
 export const Converter = {
   ...Collection,

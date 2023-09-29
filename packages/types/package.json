@@ -47,10 +47,10 @@
       "import": "./dist/instruction.mjs",
       "types": "./dist/instruction.d.ts"
     },
-    "./node": {
-      "require": "./dist/node.js",
-      "import": "./dist/node.mjs",
-      "types": "./dist/node.d.ts"
+    "./global": {
+      "require": "./dist/global.js",
+      "import": "./dist/global.mjs",
+      "types": "./dist/global.d.ts"
     },
     "./phantom": {
       "require": "./dist/phantom.js",

@@ -1,7 +1,5 @@
-import { Constants, debugLog, Result } from 'shared';
-// import { KeypairAccount } from 'account';
+import { Constants, Result,debugLog } from 'shared';
 import { Commitment, Connection } from '@solana/web3.js';
-import { Explorer } from 'types/node';
 
 export namespace Node {
   const setted = {
@@ -94,50 +92,3 @@ export namespace Node {
       .catch(Result.err);
   };
 }
-
-/**
- * Create explorer url for account address or signature
- *
- * @see {@link types/global.ts}
- * @returns string
- */
-String.prototype.toExplorerUrl = function (
-  explorer: Explorer = Explorer.Solscan,
-) {
-  const endPointUrl = Node.getConnection().rpcEndpoint;
-  debugLog('# toExplorerUrl rpcEndpoint:', endPointUrl);
-  let cluster = '';
-  if (endPointUrl === Constants.EndPointUrl.prd) {
-    cluster = Constants.Cluster.prd;
-  } else if (endPointUrl === Constants.EndPointUrl.test) {
-    cluster = Constants.Cluster.test;
-  } else if (endPointUrl === Constants.EndPointUrl.dev) {
-    cluster = Constants.Cluster.dev;
-  } else {
-    cluster = Constants.Cluster.dev;
-  }
-
-  const addressOrSignature: string = this.toString();
-  let url = '';
-  if (KeypairAccount.isPubkey(addressOrSignature)) {
-    // address
-    if (explorer === Explorer.SolanaFM) {
-      url = `https://solana.fm/address/${addressOrSignature}?cluster=${cluster}`;
-    } else {
-      url = `https://solscan.io/account/${addressOrSignature}?cluster=${cluster}`;
-    }
-    // signature
-  } else {
-    // for Invalid type "never" of addressOrSignature, so `as string`
-    if (explorer === Explorer.SolanaFM) {
-      url = `https://solana.fm/tx/${
-        addressOrSignature as string
-      }?cluster=${cluster}`;
-    } else {
-      url = `https://solscan.io/tx/${
-        addressOrSignature as string
-      }?cluster=${cluster}`;
-    }
-  }
-  return url;
-};

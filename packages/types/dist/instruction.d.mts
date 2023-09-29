@@ -1,6 +1,6 @@
 import { TransactionSignature, TransactionInstruction, Keypair } from '@solana/web3.js';
 import { Pubkey, Secret } from './account.mjs';
-import { Result } from './shared.mjs';
+import { R as Result } from './result-b9d23549.js';
 
 type Instruction = {
     instructions: TransactionInstruction[];

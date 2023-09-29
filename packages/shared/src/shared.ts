@@ -1,32 +1,6 @@
-import { LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { Constants } from './constants';
-import { Result } from './result';
-import { BigNumber } from 'bignumber.js';
-import { AnyObject } from 'types/shared';
-
-/**
- * LAMPORTS to SOL
- *
- * @see {@link types/global.ts}
- * @returns number
- */
-Number.prototype.toSol = function () {
-  return BigNumber(this as number)
-    .div(LAMPORTS_PER_SOL)
-    .toNumber();
-};
-
-/**
- * SOL to LAMPORTS
- *
- * @see {@link types/global.ts}
- * @returns number
- */
-Number.prototype.toLamports = function () {
-  return BigNumber(this as number)
-    .times(LAMPORTS_PER_SOL)
-    .toNumber();
-};
+import { AnyObject } from "types/shared";
+import { Constants } from "./constants";
+import { Result } from "./result";
 
 /**
  * Overwrite JS Object

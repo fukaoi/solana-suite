@@ -20,6 +20,7 @@
     "@solana/web3.js": "^1.78.5"
   },
   "dependencies": {
+    "global": "workspace:^",
     "shared": "workspace:^",
     "types": "workspace:^"
   },

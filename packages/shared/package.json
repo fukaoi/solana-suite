@@ -19,7 +19,6 @@
     "@solana-suite/config": "workspace:*",
     "@solana/web3.js": "^1.78.5",
     "bignumber.js": "^9.1.2",
-    "bs58": "^5.0.0",
     "commander": "9.3.0"
   },
   "dependencies": {
