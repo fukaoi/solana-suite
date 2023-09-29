@@ -1,4 +1,5 @@
-import { Pubkey, Result, Try } from 'shared';
+import { Result, Try } from 'shared';
+import { Pubkey } from 'types/account';
 import { Multisig as _Get } from './get-info';
 
 export namespace Multisig {

@@ -216,9 +216,6 @@ importers:
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
-      account:
-        specifier: workspace:*
-        version: link:../account
       bignumber.js:
         specifier: ^9.1.2
         version: 9.1.2
@@ -327,6 +324,9 @@ importers:
       cross-fetch:
         specifier: ^4.0.0
         version: 4.0.0
+      instruction:
+        specifier: workspace:^
+        version: link:../instruction
       nft.storage:
         specifier: ^7.1.1
         version: 7.1.1(node-fetch@3.3.2)

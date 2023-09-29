@@ -3,8 +3,8 @@ import {
   TransactionInstruction,
   TransactionSignature,
 } from '@solana/web3.js';
-import { Result } from '../shared/result';
 import { Pubkey, Secret } from '../account';
+import {Result} from '../shared';
 
 export type Instruction = {
   instructions: TransactionInstruction[];
@@ -37,3 +37,10 @@ export type PartialSignInstruction = {
   constructor: (instructions: string, mint?: Pubkey) => void;
   submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
 };
+
+declare global {
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  interface Array<T> {
+    submit(): Promise<Result<TransactionSignature, Error>>;
+  }
+}

@@ -1,9 +1,6 @@
-import { Result, Secret } from 'shared';
-import {
-  FileContent,
-  InfraSideInput,
-  UserSideInput,
-} from 'types/converter';
+import { Result } from 'shared';
+import { Secret } from 'types/account';
+import { FileContent, InfraSideInput, UserSideInput } from 'types/converter';
 
 import { StorageType } from 'types/storage';
 
@@ -58,8 +55,8 @@ export namespace Storage {
       if (!feePayer) {
         throw Error('Arweave needs to have feepayer');
       }
-      storage = await (
-        // await Arweave.uploadContent(filePath, feePayer)
+      storage = await // await Arweave.uploadContent(filePath, feePayer)
+      (
         await NftStorage.uploadContent(filePath)
       ).unwrap(
         async (ok: string) => {

@@ -1,5 +1,4 @@
 export * from './airdrop';
-export * from './associated-account';
 export * from './memo';
 export * from './multisig';
 export * from './sol-native';

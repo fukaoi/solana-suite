@@ -8,8 +8,8 @@ declare const Metaplex: {
 };
 
 declare const PhantomSplToken: {
-    mint: (input: types_converter.UserSideInput.TokenMetadata, owner: shared.Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<shared.Result<string, Error>>;
-    add: (tokenKey: shared.Pubkey, owner: shared.Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<shared.Result<string, Error>>;
+    mint: (input: types_converter.UserSideInput.TokenMetadata, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<shared.Result<string, Error>>;
+    add: (tokenKey: Pubkey, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<shared.Result<string, Error>>;
 };
 
 type InitializeMint = {

@@ -6,7 +6,7 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup --config build-configs/tsup/base.ts && cp solana-suite.json dist/",
+    "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
@@ -23,8 +23,7 @@
     "commander": "9.3.0"
   },
   "dependencies": {
-    "types": "workspace:*",
-    "account": "workspace:*"
+    "types": "workspace:*"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.3",

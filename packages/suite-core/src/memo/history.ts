@@ -1,4 +1,4 @@
-import { Pubkey } from "shared";
+import { Pubkey } from "types/account";
 import {
   FilterType,
   History,

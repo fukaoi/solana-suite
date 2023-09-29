@@ -1,5 +1,6 @@
 import { Option, UserSideInput, InfraSideInput, InfraSideOutput, UserSideOutput, FileContent } from 'types/converter';
-import { Secret, Result } from 'shared';
+import { Result } from 'shared';
+import { Secret } from 'types/account';
 import { StorageType } from 'types/storage';
 
 declare namespace Converter$7 {

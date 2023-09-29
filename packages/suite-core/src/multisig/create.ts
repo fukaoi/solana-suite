@@ -1,13 +1,9 @@
-import {
-  Node,
-  Result,
-  Instruction,
-  Try,
-  Secret,
-  Pubkey,
-} from 'shared';
+import { Result, Try } from 'shared';
+import { Node } from 'node';
 import { Keypair } from '@solana/web3.js';
 import { Multisig as _Instruction } from './instruction';
+import { Pubkey, Secret } from 'types/account';
+import { Instruction } from 'instruction';
 
 export namespace Multisig {
   export const create = async (

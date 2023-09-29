@@ -1,5 +1,6 @@
-import { Result, Secret } from 'shared';
+import { Result } from 'shared';
 import { FileContent, InfraSideInput, UserSideInput } from 'types/converter';
+import { Secret } from 'types/account';
 import { StorageType } from 'types/storage';
 
 declare namespace NftStorage {

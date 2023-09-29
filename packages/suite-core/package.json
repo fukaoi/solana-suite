@@ -58,6 +58,7 @@
   "dependencies": {
     "account": "workspace:^",
     "converter": "workspace:^",
+    "instruction": "workspace:^",
     "shared": "workspace:^",
     "storage": "workspace:^",
     "types": "workspace:^",

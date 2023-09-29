@@ -1,7 +1,5 @@
 // forked: https://github.com/badrap/result, thank you advice  @jviide
-
 import { TransactionSignature } from '@solana/web3.js';
-import { Instruction } from 'types/instruction';
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
@@ -67,13 +65,11 @@ abstract class AbstractResult<T, E extends Error> {
     );
   }
 
-  /// submit (alias Instruction.submit) ////
   async submit(): Promise<Result<TransactionSignature, Error>> {
     try {
-      const instruction = this.unwrap() as unknown;
-      const castedInst = instruction as any;
-      if (castedInst.instructions && castedInst.signers) {
-        return await castedInst.submit();
+      const instruction = this.unwrap() as any;
+      if (instruction.instructions && instruction.signers) {
+        return await instruction.submit();
       }
       return Result.err(Error('Only Instruction object'));
     } catch (err) {

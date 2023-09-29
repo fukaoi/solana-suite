@@ -1,6 +1,6 @@
-import { TransactionInstruction, Keypair, TransactionSignature } from '@solana/web3.js';
-import { R as Result } from './result-b9d23549.js';
+import { TransactionSignature, TransactionInstruction, Keypair } from '@solana/web3.js';
 import { Pubkey, Secret } from './account.mjs';
+import { Result } from './shared.mjs';
 
 type Instruction = {
     instructions: TransactionInstruction[];
@@ -21,5 +21,10 @@ type PartialSignInstruction = {
     constructor: (instructions: string, mint?: Pubkey) => void;
     submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
 };
+declare global {
+    interface Array<T> {
+        submit(): Promise<Result<TransactionSignature, Error>>;
+    }
+}
 
 export { Instruction, MintInstruction, PartialSignInstruction };

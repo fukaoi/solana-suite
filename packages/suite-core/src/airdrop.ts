@@ -1,4 +1,6 @@
-import { Node, Result, debugLog, Try, Pubkey } from 'shared';
+import { Result, debugLog, Try } from 'shared';
+import { Node } from 'node';
+import { Pubkey } from 'account';
 
 export namespace Airdrop {
   const DEFAULT_AIRDROP_AMOUNT = 1;

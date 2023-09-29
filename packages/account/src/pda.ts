@@ -1,6 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
 import { PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
-import { Pubkey } from 'shared';
+import { Pubkey } from 'types/account';
 
 export namespace Pda {
   export const getMetadata = (mint: Pubkey): PublicKey => {

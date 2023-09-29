@@ -3,7 +3,16 @@ declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
     unwrap<U>(ok: (value: T) => U): U;
-    unwrap<U, V>(ok: (value: T) => U, err: (error: E) => V): U | V; map<U>(ok: (value: T) => U): Result<U, E>; map<U, F extends Error>(ok: (value: T) => U, err: (error: E) => F): Result<U, F>; chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>; chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>; chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>; match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>; submit(): Promise<Result<TransactionSignature, Error>>; } declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
+    unwrap<U, V>(ok: (value: T) => U, err: (error: E) => V): U | V;
+    map<U>(ok: (value: T) => U): Result<U, E>;
+    map<U, F extends Error>(ok: (value: T) => U, err: (error: E) => F): Result<U, F>;
+    chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
+    chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
+    chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
+    match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
+    submit(): Promise<Result<TransactionSignature, Error>>;
+}
+declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
     readonly value: T;
     readonly isOk = true;
     readonly isErr = false;

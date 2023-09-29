@@ -1,6 +1,5 @@
 import { PublicKey, Keypair } from '@solana/web3.js';
 import { Secret, Pubkey } from 'types/account';
-import { Pubkey as Pubkey$1 } from 'shared';
 
 declare class KeypairAccount {
     secret: Secret;
@@ -18,8 +17,8 @@ declare class KeypairAccount {
 }
 
 declare namespace Pda {
-    const getMetadata: (mint: Pubkey$1) => PublicKey;
-    const getMasterEdition: (mint: Pubkey$1) => PublicKey;
+    const getMetadata: (mint: Pubkey) => PublicKey;
+    const getMasterEdition: (mint: Pubkey) => PublicKey;
 }
 
 export { KeypairAccount, Pda };
