@@ -1,9 +1,11 @@
 import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 
-import { debugLog, Node, Pubkey, Result, Try } from 'shared';
+import { debugLog, Result, Try } from 'shared';
+import { Node } from 'node';
+import { Pubkey } from 'types/account';
 import { Storage } from 'storage';
 import { SplToken } from '@solana-suite/core';
-import { Phantom } from '../types';
+import { Phantom } from 'types/phantom';
 import { UserSideInput } from 'types/converter';
 import { Converter } from 'converter';
 

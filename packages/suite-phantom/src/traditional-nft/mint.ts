@@ -1,17 +1,13 @@
 import { Transaction, TransactionInstruction } from '@solana/web3.js';
-import { Metaplex } from '@solana-suite/nft';
+import { TraditionalNft } from '@solana-suite/traditional-nft';
 import { Storage } from 'storage';
-import {
-  debugLog,
-  Node,
-  Result,
-  Try,
-} from 'shared';
+import { Node } from 'node';
+import { debugLog, Result, Try } from 'shared';
 import { KeypairAccount } from 'account';
 import { UserSideInput } from 'types/converter';
 import { Validator, ValidatorError } from 'validator';
 import { Converter } from 'converter';
-import { Phantom } from '../types';
+import { Phantom } from 'types/phantom';
 
 export namespace PhantomMetaplex {
   /**
@@ -45,7 +41,9 @@ export namespace PhantomMetaplex {
         input.storageType,
       );
 
-      const sellerFeeBasisPoints = Converter.Royalty.intoInfraSide(input.royalty);
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfraSide(
+        input.royalty,
+      );
       const nftStorageMetadata = Storage.toConvertOffchaindata(
         { ...input, properties },
         sellerFeeBasisPoints,
@@ -77,7 +75,7 @@ export namespace PhantomMetaplex {
 
       const tx = new Transaction();
 
-      const insts = await Metaplex.createMintInstructions(
+      const insts = await TraditionalNft.createMintInstructions(
         mint.toPublicKey(),
         phantom.publicKey,
         datav2,

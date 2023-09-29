@@ -6,6 +6,7 @@ const entry = {
   converter: 'src/converter/index.ts',
   node: 'src/node/index.ts',
   instruction: 'src/instruction/index.ts',
+  phantom: 'src/phantom/index.ts',
   shared: 'src/shared/index.ts',
   storage: 'src/storage/index.ts',
   'traditional-nft': 'src/traditional-nft/index.ts',

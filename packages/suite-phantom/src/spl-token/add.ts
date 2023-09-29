@@ -1,14 +1,15 @@
 import {
-  TOKEN_PROGRAM_ID,
   createMintToCheckedInstruction,
+  TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
 import { Transaction, TransactionInstruction } from '@solana/web3.js';
 
-import { Node, Pubkey, Result, Try } from 'shared';
-
-import { AssociatedAccount } from '@solana-suite/core';
-import { Phantom } from '../types';
+import { Result, Try } from 'shared';
+import { Node } from 'node';
+import { Pubkey } from 'types/account';
+import { AssociatedAccount } from 'account';
+import { Phantom } from 'types/phantom';
 
 export namespace PhantomSplToken {
   export const add = async (
@@ -17,7 +18,7 @@ export namespace PhantomSplToken {
     cluster: string,
     totalAmount: number,
     mintDecimal: number,
-    phantom: Phantom
+    phantom: Phantom,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       Node.changeConnection({ cluster });
@@ -26,7 +27,7 @@ export namespace PhantomSplToken {
 
       const makeInstruction = await AssociatedAccount.makeOrCreateInstruction(
         tokenKey,
-        owner
+        owner,
       );
       transaction.add(makeInstruction.inst as TransactionInstruction);
       transaction.add(
@@ -37,8 +38,8 @@ export namespace PhantomSplToken {
           totalAmount,
           mintDecimal,
           [],
-          TOKEN_PROGRAM_ID
-        )
+          TOKEN_PROGRAM_ID,
+        ),
       );
 
       transaction.feePayer = owner.toPublicKey();

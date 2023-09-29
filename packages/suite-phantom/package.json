@@ -44,9 +44,9 @@
     "publish": "../../scripts/after-publish.mjs"
   },
   "peerDependencies": {
-    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana-suite/core": "workspace:^",
-    "@solana-suite/nft": "workspace:^",
+    "@solana-suite/traditional-nft": "workspace:^",
+    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
     "bignumber.js": "^9.1.2",
@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "account": "workspace:^",
+    "node": "workspace:^",
     "shared": "workspace:^",
     "converter": "workspace:^",
     "storage": "workspace:^",

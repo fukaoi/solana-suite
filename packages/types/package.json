@@ -52,6 +52,11 @@
       "import": "./dist/node.mjs",
       "types": "./dist/node.d.ts"
     },
+    "./phantom": {
+      "require": "./dist/phantom.js",
+      "import": "./dist/phantom.mjs",
+      "types": "./dist/phantom.d.ts"
+    },
     "./shared": {
       "require": "./dist/shared.js",
       "import": "./dist/shared.mjs",
