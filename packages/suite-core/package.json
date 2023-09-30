@@ -33,7 +33,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup --config build-configs/tsup/base.ts",
+    "build": "tsup --config tsup.config.ts",
+    "build:def": "tsc -p ./tsconfig.define.json",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
@@ -50,6 +51,7 @@
     "@solana/buffer-layout": "^4.0.1",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
+    "@solana-suite/config": "workspace:^",
     "bs58": "^5.0.0",
     "cross-fetch": "^4.0.0",
     "bignumber.js": "^9.1.2",

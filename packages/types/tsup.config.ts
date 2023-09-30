@@ -1,6 +1,7 @@
 import defineConfig from '../build-configs/tsup/base';
 
 const entry = {
+  index: 'src/index.ts',
   account: 'src/account/index.ts',
   core: 'src/core/index.ts',
   converter: 'src/converter/index.ts',

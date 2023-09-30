@@ -358,6 +358,9 @@ importers:
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
         version: 2.13.0
+      '@solana-suite/config':
+        specifier: workspace:^
+        version: link:../suite-config
       '@solana/buffer-layout':
         specifier: ^4.0.1
         version: 4.0.1

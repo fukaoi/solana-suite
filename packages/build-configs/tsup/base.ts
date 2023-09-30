@@ -21,6 +21,7 @@ export default defineConfig({
     'shared',
     'storage',
     'types',
+    'types/account',
     'validator',
   ],
   skipNodeModulesBundle: true,

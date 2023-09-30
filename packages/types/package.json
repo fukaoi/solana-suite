@@ -27,6 +27,11 @@
     "build-configs/tsup": "workspace:*"
   },
   "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
     "./account": {
       "require": "./dist/account.js",
       "import": "./dist/account.mjs",
@@ -72,7 +77,6 @@
       "import": "./dist/traditional-nft.mjs",
       "types": "./dist/traditional-nft.d.ts"
     },
-
     "./validator": {
       "require": "./dist/validator.js",
       "import": "./dist/validator.mjs",
