@@ -4,6 +4,14 @@
 
   "display": "@solana-suite/core",
   "compilerOptions": {
+    "paths": {
+      "types/account": ["../types/account/dist"],
+      "types/global": ["../types/global/dist"],
+      "types/core": ["../types/core/dist"],
+      "types/converter": ["../types/converter/dist"],
+      "shared": ["../shared/src/", "../shared/dist/"],
+      "instruction": ["../instruction/src/", "../instruction/dist/"]
+    }
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules", "dist"]

@@ -2,9 +2,6 @@
   "name": "types",
   "version": "0.7.0",
   "private": true,
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup --config ./tsup.config.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
@@ -27,11 +24,6 @@
     "build-configs/tsup": "workspace:*"
   },
   "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
-    },
     "./account": {
       "require": "./dist/account.js",
       "import": "./dist/account.mjs",

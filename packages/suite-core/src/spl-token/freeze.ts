@@ -1,6 +1,7 @@
 import { KeypairAccount } from 'account';
 import { Instruction } from 'instruction';
 import { Result, Try } from 'shared';
+import { Pubkey, Secret } from 'types/account';
 
 import {
   createFreezeAccountInstruction,

@@ -33,8 +33,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup --config tsup.config.ts",
-    "build:def": "tsc -p ./tsconfig.define.json",
+    "build": "tsup --config build-configs/tsup/base.ts --dts-resolve",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",

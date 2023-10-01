@@ -45,8 +45,8 @@ declare class KeypairAccount {
     });
     toPublicKey(): PublicKey;
     toKeypair(): Keypair;
-    static isPubkey: (value: string) => value is Pubkey;
-    static isSecret: (value: string) => value is Secret;
+    static isPubkey: (value: string) => value is string;
+    static isSecret: (value: string) => value is string;
     static create: () => KeypairAccount;
     static toKeyPair: (keypair: Keypair) => KeypairAccount;
 }
