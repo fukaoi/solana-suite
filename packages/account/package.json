@@ -23,7 +23,6 @@
   "dependencies": {},
   "devDependencies": {
     "@solana-suite/spl-token": "workspace:*",
-    "account": "workspace:*",
     "global": "workspace:*",
     "test-tools": "workspace:*",
     "build-configs/ava": "workspace:*",
