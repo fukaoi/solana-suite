@@ -4,7 +4,7 @@ import {
   Option,
   UserSideInput,
   UserSideOutput,
-} from 'types/converter';
+} from '~/types/converter';
 
 export namespace Converter {
   export namespace Collection {

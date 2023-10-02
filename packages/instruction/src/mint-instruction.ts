@@ -7,8 +7,8 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import { Constants, debugLog, Result, Try } from 'shared';
-import { Node } from 'node';
+import { Constants, debugLog, Result, Try } from '~/shared';
+import { Node } from '~/node';
 import { MAX_RETRIES } from './instruction/define';
 import { Instruction } from './instruction';
 

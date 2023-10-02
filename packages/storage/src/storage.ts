@@ -1,9 +1,7 @@
-import { Result } from 'shared';
-import { Secret } from 'types/account';
-import { FileContent, InfraSideInput, UserSideInput } from 'types/converter';
-
-import { StorageType } from 'types/storage';
-
+import { Result } from '~/shared';
+import { Secret } from '~/types/account';
+import { FileContent, InfraSideInput, UserSideInput } from '~/types/converter';
+import { StorageType } from '~/types/storage';
 // import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
 

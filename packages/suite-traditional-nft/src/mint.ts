@@ -16,21 +16,21 @@ import {
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { debugLog, Result, Try } from 'shared';
-import { Pubkey, Secret } from 'types/account';
-import { MintInstruction } from 'instruction';
-import { Node } from 'node';
-import { Storage } from 'storage';
-import { UserSideInput } from 'types/converter';
-import { Converter } from 'converter';
-import { Validator } from 'validator';
+import { debugLog, Result, Try } from '~/shared';
+import { Pubkey, Secret } from '~/types/account';
+import { MintInstruction } from '~/instruction';
+import { Node } from '~/node';
+import { Storage } from '~/storage';
+import { UserSideInput } from '~/types/converter';
+import { Converter } from '~/converter';
+import { Validator } from '~/validator';
 
 import {
   createCreateMasterEditionV3Instruction,
   createCreateMetadataAccountV3Instruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
-import { KeypairAccount, Pda } from 'account';
+import { KeypairAccount, Pda } from '~/account';
 const NFT_AMOUNT = 1;
 export namespace TraditionalNft {
   export const createDeleagateInstruction = (

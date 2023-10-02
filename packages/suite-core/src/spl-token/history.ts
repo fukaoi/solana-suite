@@ -1,16 +1,16 @@
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { debugLog } from 'shared';
-import { Node } from 'node';
-import { Pubkey } from 'types/account';
+import { debugLog } from '~/shared';
+import { Node } from '~/node';
+import { Pubkey } from '~/types/account';
 import {
+  CoreUserSideOutput,
   FilterType,
   History,
   HistoryOptions,
   ModuleName,
   OnErr,
   OnOk,
-  UserSideOutput,
-} from 'types/core';
+} from '~/types/core';
 import { Signatures } from '../signatures';
 import { TransactionFilter } from '../transaction-filter';
 
@@ -45,7 +45,7 @@ export namespace SplToken {
             },
           );
 
-        const storedHistories: UserSideOutput.History[] = [];
+        const storedHistories: CoreUserSideOutput.History[] = [];
         debugLog('# tokenAccounts size: ', tokenAccounts.value.length);
         for (const account of tokenAccounts.value) {
           const parser = TransactionFilter.parse(

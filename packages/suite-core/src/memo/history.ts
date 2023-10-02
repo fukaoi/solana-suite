@@ -1,4 +1,4 @@
-import { Pubkey } from "types/account";
+import { Pubkey } from "~/types/account";
 import {
   FilterType,
   History,
@@ -6,7 +6,7 @@ import {
   ModuleName,
   OnErr,
   OnOk,
-} from "types/core";
+} from "~/types/core";
 import { TransactionFilter } from "../transaction-filter";
 import { Signatures } from "../signatures";
 

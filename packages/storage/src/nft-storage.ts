@@ -1,8 +1,8 @@
 import { Blob, NFTStorage } from 'nft.storage';
-import { Constants, debugLog, isBrowser, isNode, Result, Try } from 'shared';
+import { Constants, debugLog, isBrowser, isNode, Result, Try } from '~/shared';
 
 // import { toMetaplexFile } from '@metaplex-foundation/js';
-import { FileContent, InfraSideInput } from 'types/converter';
+import { FileContent, InfraSideInput } from '~/types/converter';
 
 export namespace NftStorage {
   let isDisplayWarning = false;

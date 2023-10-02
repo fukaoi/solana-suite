@@ -1,5 +1,7 @@
 import { TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
-import { Pubkey, Secret } from 'types/account';
+
+type Pubkey = string;
+type Secret = string;
 
 /**
  * Get Associated token Account.

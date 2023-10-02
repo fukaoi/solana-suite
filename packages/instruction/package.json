@@ -16,11 +16,7 @@
   "peerDependencies": {
     "@solana/web3.js": "^1.78.5"
   },
-  "dependencies": {
-    "shared": "workspace:*",
-    "node": "workspace:*",
-    "types": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",

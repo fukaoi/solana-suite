@@ -1,7 +1,7 @@
-import { Result, Try } from 'shared';
-import { Instruction } from 'instruction';
-import { Pubkey, Secret } from 'types/account';
-import { KeypairAccount } from 'account';
+import { Result, Try } from '~/shared';
+import { Instruction } from '~/instruction';
+import { Pubkey, Secret } from '~/types/account';
+import { KeypairAccount } from '~/account';
 import {
   createThawAccountInstruction,
   getAssociatedTokenAddressSync,

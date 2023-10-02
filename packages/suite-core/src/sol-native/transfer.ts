@@ -1,7 +1,7 @@
 import { SystemProgram } from '@solana/web3.js';
-import { Pubkey, Secret } from 'types/account';
-import { Result, Try } from 'shared';
-import { Instruction } from 'instruction';
+import { Pubkey, Secret } from '~/types/account';
+import { Result, Try } from '~/shared';
+import { Instruction } from '~/instruction';
 
 export namespace SolNative {
   const RADIX = 10;

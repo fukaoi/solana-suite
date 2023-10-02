@@ -1,9 +1,9 @@
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { Node } from 'node';
-import { Constants, debugLog } from 'shared';
-import { KeypairAccount } from 'account';
+import { Node } from '~/node';
+import { Constants, debugLog } from '~/shared';
+import { KeypairAccount } from '~/account';
 import { BigNumber } from 'bignumber.js';
-import { Explorer } from 'types/global';
+import { Explorer } from '~/types/global';
 import bs from 'bs58';
 
 /**

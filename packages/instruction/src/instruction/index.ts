@@ -7,8 +7,8 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import { Node } from 'node';
-import { Result, Try } from 'shared';
+import { Node } from '~/node';
+import { Result, Try } from '~/shared';
 import { MAX_RETRIES } from './define';
 import { Instruction as Batch } from './batch-submit';
 

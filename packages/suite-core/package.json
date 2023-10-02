@@ -33,7 +33,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup --config ./tsup.config.ts",
+    "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
@@ -54,26 +54,14 @@
     "bs58": "^5.0.0",
     "cross-fetch": "^4.0.0",
     "bignumber.js": "^9.1.2",
-    "nft.storage": "^7.1.1"
+    "nft.storage": "^7.1.1",
+    "bn.js": "^5.2.1"
   },
-  "dependencies": {
-    "account": "workspace:^",
-    "converter": "workspace:^",
-    "global": "workspace:^",
-    "node": "workspace:^",
-    "instruction": "workspace:^",
-    "shared": "workspace:^",
-    "storage": "workspace:^",
-    "types": "workspace:^",
-    "validator": "workspace:^"
-  },
+  "dependencies": {},
   "devDependencies": {
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
     "build-configs/tsup": "workspace:*"
-  },
-  "imports": {
-    "types/account": "../types/src/account/index.ts"
   }
 }

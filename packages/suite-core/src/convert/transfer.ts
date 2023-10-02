@@ -1,13 +1,13 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
-import { InfraSideOutput, UserSideOutput } from 'types/core';
-import { convertTimestampToDateTime } from 'shared';
+import { CoreInfraSideOutput, CoreUserSideOutput } from '~/types/core';
+import { convertTimestampToDateTime } from '~/shared';
 
 export namespace Convert.Transfer {
   export const intoUserSide = (
-    output: InfraSideOutput.Transfer,
+    output: CoreInfraSideOutput.Transfer,
     meta: ParsedTransactionWithMeta,
-  ): UserSideOutput.History | undefined => {
-    const history: UserSideOutput.History = {};
+  ): CoreUserSideOutput.History | undefined => {
+    const history: CoreUserSideOutput.History = {};
 
     // validation check
     if (!output.parsed.info.destination || !output.parsed.info.lamports) {

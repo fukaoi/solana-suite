@@ -1,15 +1,15 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
-import { InfraSideOutput, PostTokenAccount, UserSideOutput } from 'types/core';
-import { convertTimestampToDateTime } from 'shared';
+import { CoreInfraSideOutput, PostTokenAccount, CoreUserSideOutput } from '~/types/core';
+import { convertTimestampToDateTime } from '~/shared';
 
 export namespace Convert.Memo {
   export const intoUserSide = (
-    output: InfraSideOutput.Memo,
+    output: CoreInfraSideOutput.Memo,
     meta: ParsedTransactionWithMeta,
-    outputTransfer?: InfraSideOutput.TransferChecked,
+    outputTransfer?: CoreInfraSideOutput.TransferChecked,
     mappingTokenAccount?: PostTokenAccount[],
-  ): UserSideOutput.History | undefined => {
-    const history: UserSideOutput.History = {};
+  ): CoreUserSideOutput.History | undefined => {
+    const history: CoreUserSideOutput.History = {};
 
     // case: transfer with memo
     if (outputTransfer && outputTransfer.program !== '') {

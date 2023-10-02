@@ -20,18 +20,18 @@ import {
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 
-import { debugLog, Result, Try } from 'shared';
+import { debugLog, Result, Try } from '~/shared';
 
-import { Node } from 'node';
-import { KeypairAccount } from 'account';
-import { MintInstruction } from 'instruction';
-import { Pubkey, Secret } from 'types/account';
-import { UserSideInput } from 'types/converter';
-import { Pda } from 'account';
-import { Converter } from 'converter';
-import { Validator } from 'validator';
+import { Node } from '~/node';
+import { KeypairAccount } from '~/account';
+import { MintInstruction } from '~/instruction';
+import { Pubkey, Secret } from '~/types/account';
+import { UserSideInput } from '~/types/converter';
+import { Pda } from '~/account';
+import { Converter } from '~/converter';
+import { Validator } from '~/validator';
 import { SplToken as _Calculate } from './calculate-amount';
-import { Storage } from 'storage';
+import { Storage } from '~/storage';
 
 export namespace SplToken {
   export const createFreezeAuthority = (

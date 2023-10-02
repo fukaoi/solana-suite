@@ -1,7 +1,7 @@
-import { overwriteObject, Result } from 'shared';
-import { Secret } from 'types/account';
-import { FileContent, InfraSideInput, UserSideInput } from 'types/converter';
-import { StorageType } from 'types/storage';
+import { overwriteObject, Result } from '~/shared';
+import { Secret } from '~/types/account';
+import { FileContent, InfraSideInput, UserSideInput } from '~/types/converter';
+import { StorageType } from '~/types/storage';
 
 export namespace Converter {
   export namespace Properties {

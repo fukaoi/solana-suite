@@ -9,8 +9,8 @@ import {
   FilterType,
   ModuleName,
   PostTokenAccount,
-} from 'types/core';
-import { debugLog } from 'shared';
+} from '~/types/core';
+import { debugLog } from '~/shared';
 
 //@internal
 export namespace TransactionFilter {

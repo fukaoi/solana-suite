@@ -53,15 +53,7 @@
     "nft.storage": "^7.1.1",
     "bs58": "^5.0.0"
   },
-  "dependencies": {
-    "account": "workspace:^",
-    "node": "workspace:^",
-    "shared": "workspace:^",
-    "converter": "workspace:^",
-    "storage": "workspace:^",
-    "types": "workspace:^",
-    "validator": "workspace:^"
-  },
+  "dependencies": {},
   "devDependencies": {
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",

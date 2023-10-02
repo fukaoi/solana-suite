@@ -1,4 +1,4 @@
-import { PublicKey, Commitment, TransactionSignature } from '@solana/web3.js';
+import { PublicKey, Commitment, TransactionSignature, Keypair } from '@solana/web3.js';
 
 declare namespace Constants {
     const currentCluster: string;
@@ -300,5 +300,30 @@ declare function Try<T, E extends Error>(block: () => T): Result<T, E>;
  * @returns Date | undefined
  */
 declare const convertTimestampToDateTime: (created_at: number | undefined) => Date | undefined;
+
+declare global {
+    interface String {
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        toExplorerUrl(explorer?: Explorer): string;
+    }
+    interface Number {
+        toSol(): number;
+        toLamports(): number;
+    }
+    interface Console {
+        debug(data: unknown, data2?: unknown, data3?: unknown): void;
+    }
+    interface Secret {
+        toKeypair(): Keypair;
+    }
+    interface Pubkey {
+        toPublicKey(): PublicKey;
+    }
+}
+declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm"
+}
 
 export { Constants, Result, Try, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep };

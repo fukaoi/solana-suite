@@ -1,7 +1,7 @@
-import { Result, Try } from 'shared';
-import { Converter } from 'converter';
-import { InfraSideInput, UserSideInput } from 'types/converter';
-import { Details, Limit } from 'types/validator';
+import { Result, Try } from '~/shared';
+import { Converter } from '~/converter';
+import { InfraSideInput, UserSideInput } from '~/types/converter';
+import { Details, Limit } from '~/types/validator';
 
 export namespace Validator {
   export namespace Message {

@@ -3,6 +3,14 @@
   "extends": "build-configs/tsconfig/base.json",
   "display": "node",
   "compilerOptions": {
+    "paths": {
+      "~/types/*": [
+        "../types/src/*/index.ts"
+      ],
+      "~/*": [
+        "../*/src/index.ts"
+      ]
+    }
   },
 
   "include": ["src/**/*.ts", "test/**/*.ts"],

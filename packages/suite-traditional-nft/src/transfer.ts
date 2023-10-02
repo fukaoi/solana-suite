@@ -1,7 +1,7 @@
 import { SplToken } from '@solana-suite/core';
-import { Result } from 'shared';
-import { Pubkey, Secret } from 'types/account';
-import { Instruction } from 'instruction';
+import { Result } from '~/shared';
+import { Pubkey, Secret } from '~/types/account';
+import { Instruction } from '~/instruction';
 
 export namespace TraditionalNft {
   const NFT_AMOUNT = 1;

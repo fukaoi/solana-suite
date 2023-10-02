@@ -13,11 +13,7 @@
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
-  "dependencies": {
-    "shared": "workspace:*",
-    "converter": "workspace:*",
-    "types": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",

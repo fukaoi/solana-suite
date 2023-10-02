@@ -4,9 +4,9 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import { Result, Try } from 'shared';
-import { Node } from 'node';
-import { Pubkey, Secret } from 'types/account';
+import { Result, Try } from '~/shared';
+import { Node } from '~/node';
+import { Pubkey, Secret } from '~/types/account';
 import { MAX_RETRIES } from './instruction/define';
 
 export class PartialSignInstruction {

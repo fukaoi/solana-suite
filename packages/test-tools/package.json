@@ -9,14 +9,10 @@
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
   "peerDependencies": {
-    "@solana/web3.js": "^1.78.5"
+    "@solana/web3.js": "^1.78.5",
+    "bs58": "^5.0.0"
   },
-  "dependencies": {
-    "bs58": "^5.0.0",
-    "account": "workspace:*",
-    "node": "workspace:*",
-    "shared": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "build-configs/tsconfig": "workspace:*",
     "build-configs/eslint": "workspace:*",

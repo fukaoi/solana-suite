@@ -7,9 +7,9 @@ import {
   InfraSideOutput,
   UserSideInput,
   UserSideOutput,
-} from 'types/converter';
+} from '~/types/converter';
 
-import { convertTimestampToDateTime } from 'shared';
+import { convertTimestampToDateTime } from '~/shared';
 
 export namespace Converter {
   export namespace NftMetadata {

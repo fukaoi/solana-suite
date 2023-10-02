@@ -1,6 +1,6 @@
-import { Result } from 'shared';
-import { Pubkey, Secret } from 'types/account';
-import { PartialSignInstruction } from 'instruction';
+import { Result } from '~/shared';
+import { Pubkey, Secret } from '~/types/account';
+import { PartialSignInstruction } from '~/instruction';
 import { SplToken } from '@solana-suite/core';
 
 export namespace TraditionalNft {

@@ -1,7 +1,7 @@
-import { Result, Try } from 'shared';
-import { Pubkey, Secret } from 'types/account';
-import { Instruction } from 'instruction';
-import { KeypairAccount, Pda } from 'account';
+import { Result, Try } from '~/shared';
+import { Pubkey, Secret } from '~/types/account';
+import { Instruction } from '~/instruction';
+import { KeypairAccount, Pda } from '~/account';
 import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createThawDelegatedAccountInstruction } from '@metaplex-foundation/mpl-token-metadata';
 

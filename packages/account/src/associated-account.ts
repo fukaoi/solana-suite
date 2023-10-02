@@ -1,9 +1,9 @@
 import { TransactionInstruction } from '@solana/web3.js';
-import { debugLog, sleep } from 'shared';
+import { debugLog, sleep } from '~/shared';
 
-import { Node } from 'node';
-import { Instruction } from 'instruction';
-import { Pubkey, Secret } from 'types/account';
+import { Node } from '~/node';
+import { Instruction } from '~/instruction';
+import { Pubkey, Secret } from '~/types/account';
 
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,

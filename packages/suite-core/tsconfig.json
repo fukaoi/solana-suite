@@ -1,32 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "build-configs/tsconfig/base.json",
-
   "display": "@solana-suite/core",
   "compilerOptions": {
     "paths": {
-      "types/account": [
-        "../types/dist/account.d.ts",
-        "../types/src/account/index.ts"
+      "~/types/*": [
+        "../types/src/*/index.ts"
       ],
-      "types/global": [
-        "../types/dist/global.d.ts",
-        "../types/src/global/index.ts"
-      ],
-      "types/core": [
-        "../types/dist/core.d.ts",
-        "../types/src/core/index.ts"
-      ],
-      "types/coverter": [
-        "../types/dist/converter.d.ts",
-        "../types/src/converter/index.ts"
-      ],
-      "shared": [
-        "../shared/dist/index.d.ts",
-        "../shared/src/index.ts"
+      "~/*": [
+        "../*/src/index.ts"
       ]
     }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "test/**/*.ts"]
 }

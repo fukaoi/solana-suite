@@ -1,6 +1,6 @@
-import { AnyObject } from "types/shared";
-import { Constants } from "./constants";
-import { Result } from "./result";
+import { AnyObject } from '~/types/shared';
+import { Constants } from './constants';
+import { Result } from './result';
 
 /**
  * Overwrite JS Object

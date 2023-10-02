@@ -1,10 +1,10 @@
-import { Result, Try } from 'shared';
-import { Pubkey, Secret } from 'types/account';
-import { Instruction } from 'instruction';
+import { Result, Try } from '~/shared';
+import { Pubkey, Secret } from '~/types/account';
+import { Instruction } from '~/instruction';
 
 import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createFreezeDelegatedAccountInstruction } from '@metaplex-foundation/mpl-token-metadata';
-import { KeypairAccount, Pda } from 'account';
+import { KeypairAccount, Pda } from '~/account';
 
 export namespace TraditionalNft {
   /**

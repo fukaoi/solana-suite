@@ -1,14 +1,14 @@
-import { Node } from 'node';
-import { Pubkey } from 'types/account';
-import { debugLog, Result } from 'shared';
-import { Find, OnErr, OnOk, Sortable, TokenMetadata } from 'types/core';
+import { Node } from '~/node';
+import { Pubkey } from '~/types/account';
+import { debugLog, Result } from '~/shared';
+import { Find, OnErr, OnOk, Sortable, TokenMetadata } from '~/types/core';
 import {
   InfraSideOutput,
   UserSideInput,
   UserSideOutput,
-} from 'types/converter';
-import { Converter } from 'converter';
-import { Pda } from 'account';
+} from '~/types/converter';
+import { Converter } from '~/converter';
+import { Pda } from '~/account';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';

@@ -5,11 +5,11 @@ import {
   createWrappedNativeAccount,
 } from '@solana/spl-token';
 
-import { debugLog, Result, Try } from 'shared';
-import { Instruction } from 'instruction';
-import { Node } from 'node';
-import { Pubkey, Secret } from 'types/account';
-import { AssociatedAccount } from 'account';
+import { debugLog, Result, Try } from '~/shared';
+import { Instruction } from '~/instruction';
+import { Node } from '~/node';
+import { Pubkey, Secret } from '~/types/account';
+import { AssociatedAccount } from '~/account';
 
 export namespace SolNative {
   const RADIX = 10;

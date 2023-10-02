@@ -1,4 +1,3 @@
-import 'types/global';
 import { TraditionalNft as Burn } from './burn';
 import { TraditionalNft as Find } from './find';
 import { TraditionalNft as Freeze } from './freeze';

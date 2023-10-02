@@ -1,13 +1,13 @@
 import { Transaction, TransactionInstruction } from '@solana/web3.js';
 import { TraditionalNft } from '@solana-suite/traditional-nft';
-import { Storage } from 'storage';
-import { Node } from 'node';
-import { debugLog, Result, Try } from 'shared';
-import { KeypairAccount } from 'account';
-import { UserSideInput } from 'types/converter';
-import { Validator, ValidatorError } from 'validator';
-import { Converter } from 'converter';
-import { Phantom } from 'types/phantom';
+import { Storage } from '~/storage';
+import { Node } from '~/node';
+import { debugLog, Result, Try } from '~/shared';
+import { KeypairAccount } from '~/account';
+import { UserSideInput } from '~/types/converter';
+import { Validator, ValidatorError } from '~/validator';
+import { Converter } from '~/converter';
+import { Phantom } from '~/types/phantom';
 
 export namespace PhantomMetaplex {
   /**

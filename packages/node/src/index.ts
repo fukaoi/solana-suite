@@ -1,4 +1,4 @@
-import { Constants, Result,debugLog } from 'shared';
+import { Constants, Result,debugLog } from '~/shared';
 import { Commitment, Connection } from '@solana/web3.js';
 
 export namespace Node {

@@ -19,12 +19,7 @@
     "@solana/web3.js": "^1.78.5",
     "bs58": "^5.0.0"
   },
-  "dependencies": {
-    "node": "workspace:*",
-    "instruction": "workspace:*",
-    "shared": "workspace:*",
-    "types": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",
