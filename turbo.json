@@ -26,6 +26,8 @@
         "test/**/*.ts"
       ]
     },
+    "prettier": {},
+    "eslint": {},
     "clean": {},
     "dev": {
       "cache": false,
