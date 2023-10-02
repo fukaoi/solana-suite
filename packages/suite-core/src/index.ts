@@ -3,5 +3,5 @@ export * from './memo';
 export * from './multisig';
 export * from './sol-native';
 export * from './spl-token';
-import 'types/global';
+import 'types';
 import 'global';
