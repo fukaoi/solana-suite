@@ -6,7 +6,8 @@ export { Instruction, MintInstruction, PartialSignInstruction } from './instruct
 export { InitializeMint, Phantom, connectOption } from './phantom.mjs';
 export { R as Result } from './result-b9d23549.js';
 export { AnyObject, OverwriteObject } from './shared.mjs';
-export { StorageType } from './storage.mjs';
+export { S as StorageType } from './type-ed05193d.js';
+export { BundlrSigner, PhantomWallet } from './storage.mjs';
 export { NftMetadata } from './traditional-nft.mjs';
 export { Condition, Details, Limit } from './validator.mjs';
 import 'bn.js';

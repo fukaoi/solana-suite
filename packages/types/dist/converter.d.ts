@@ -1,7 +1,7 @@
 import BN from 'bn.js';
 import { PublicKey } from '@solana/web3.js';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
-import { StorageType } from './storage.js';
+import { S as StorageType } from './type-ed05193d.js';
 import { Pubkey } from './account.js';
 
 type Option<T> = T | null;

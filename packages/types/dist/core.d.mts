@@ -3,7 +3,7 @@ import { Pubkey } from './account.mjs';
 import { PublicKey } from '@solana/web3.js';
 import 'bn.js';
 import '@metaplex-foundation/mpl-token-metadata';
-import './storage.mjs';
+import './type-ed05193d.js';
 
 declare namespace CoreUserSideOutput {
     type History = {
