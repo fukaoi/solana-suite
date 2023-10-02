@@ -1,0 +1,26 @@
+{
+  "name": "transaction-filter",
+  "version": "0.7.0",
+  "private": true,
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup --config build-configs/tsup/base.ts",
+    "clean": "rm -rf dist/ && rm -rf node_modules",
+    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
+    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
+    "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
+  },
+  "peerDependencies": {
+    "@solana/web3.js": "^1.78.5"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "build-configs/eslint": "workspace:*",
+    "build-configs/prettier": "workspace:*",
+    "build-configs/tsconfig": "workspace:*",
+    "build-configs/tsup": "workspace:*"
+  }
+}

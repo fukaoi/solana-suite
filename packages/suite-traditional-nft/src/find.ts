@@ -1,7 +1,7 @@
 import { Result } from '~/shared';
 import { Pubkey } from '~/types/account';
 import { UserSideInput } from '~/types/converter';
-import { SplToken } from '@solana-suite/core';
+import { SplToken } from '@solana-suite/spl-token';
 import { Find, OnErr, OnOk, Sortable } from '~/types/core';
 import { NftMetadata } from '~/types/traditional-nft';
 

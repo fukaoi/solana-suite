@@ -1,5 +1,5 @@
 import BN from 'bn.js';
-import { PublicKey, TransactionSignature, Keypair } from '@solana/web3.js';
+import { PublicKey, ParsedTransactionWithMeta, TransactionSignature, Keypair } from '@solana/web3.js';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 type Option<T> = T | null;
@@ -193,21 +193,107 @@ declare namespace UserSideOutput {
     };
 }
 
-declare namespace Converter$7 {
+declare namespace Converter$b {
     namespace Collection {
         const intoInfraSide: (input: Option<UserSideInput.Collection> | undefined) => Option<InfraSideInput.Collection>;
         const intoUserSide: (output: Option<InfraSideOutput.Collection>) => UserSideOutput.Collection | undefined;
     }
 }
 
-declare namespace Converter$6 {
+declare namespace Converter$a {
     namespace Creators {
         const intoInfraSide: (input: Option<UserSideInput.Creators[]> | undefined) => Option<InfraSideInput.Creators[]>;
         const intoUserSide: (output: Option<InfraSideOutput.Creator[]>) => UserSideOutput.Creators[] | undefined;
     }
 }
 
-declare namespace Converter$5 {
+declare namespace CoreUserSideOutput {
+    type History = {
+        sol?: string;
+        account?: string;
+        destination?: Pubkey;
+        source?: Pubkey;
+        authority?: Pubkey;
+        multisigAuthority?: Pubkey;
+        signers?: Pubkey[];
+        mint?: Pubkey;
+        mintAuthority?: Pubkey;
+        tokenAmount?: string;
+        memo?: string;
+        dateTime?: Date;
+        type?: string;
+        sig?: string;
+        innerInstruction?: boolean;
+    };
+}
+
+declare namespace CoreInfraSideOutput {
+    type Transfer = {
+        parsed: {
+            info: {
+                destination: Pubkey;
+                source: Pubkey;
+                lamports: number;
+            };
+            type: string;
+        };
+        program: string;
+        programId?: PublicKey;
+    };
+    type MintTo = {
+        parsed: {
+            info: {
+                account: Pubkey;
+                mint: Pubkey;
+                mintAuthority: Pubkey;
+                tokenAmount: string;
+            };
+            type: string;
+        };
+        program: string;
+        programId?: PublicKey;
+    };
+    type MintToChecked = MintTo;
+    type TransferChecked = {
+        parsed: {
+            info: {
+                destination: Pubkey;
+                mint: Pubkey;
+                multisigAuthority: Pubkey;
+                signers: Pubkey[];
+                source: Pubkey;
+                tokenAmount: string;
+            };
+            type: string;
+        };
+        program: string;
+        programId?: PublicKey;
+    };
+    type Memo = {
+        parsed: string;
+        program: string;
+        programId: PublicKey;
+    };
+}
+
+type PostTokenAccount = {
+    account: string;
+    owner: string;
+};
+
+declare namespace Converter$9 {
+    namespace Memo {
+        const intoUserSide: (output: CoreInfraSideOutput.Memo, meta: ParsedTransactionWithMeta, outputTransfer?: CoreInfraSideOutput.TransferChecked, mappingTokenAccount?: PostTokenAccount[]) => CoreUserSideOutput.History | undefined;
+    }
+}
+
+declare namespace Converter$8 {
+    namespace Mint {
+        const intoUserSide: (output: CoreInfraSideOutput.MintTo, meta: ParsedTransactionWithMeta) => CoreUserSideOutput.History | undefined;
+    }
+}
+
+declare namespace Converter$7 {
     namespace NftMetadata {
         const intoInfraSide: (input: UserSideInput.NftMetadata, uri: string, sellerFeeBasisPoints: number) => InfraSideInput.MetaplexDataV2;
         const intoUserSide: (output: InfraSideOutput.OnchainAndOffchain, tokenAmount: string) => UserSideOutput.NftMetadata;
@@ -442,24 +528,36 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
-declare namespace Converter$4 {
+declare namespace Converter$6 {
     namespace Properties {
         const intoInfraSide: (input: UserSideInput.Properties | undefined, storageFunc: (data: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>, storageType: StorageType, feePayer?: Secret) => Promise<InfraSideInput.Properties>;
     }
 }
 
-declare namespace Converter$3 {
+declare namespace Converter$5 {
     namespace Royalty {
         const THRESHOLD = 100;
         const intoInfraSide: (percentage: number) => number;
     }
 }
 
-declare namespace Converter$2 {
+declare namespace Converter$4 {
     namespace TokenMetadata {
         const intoInfraSide: (input: UserSideInput.TokenMetadata, uri: string, sellerFeeBasisPoints: number) => InfraSideInput.MetaplexDataV2;
         const intoUserSide: (output: InfraSideOutput.OnchainAndOffchain, tokenAmount: string) => UserSideOutput.TokenMetadata;
         const deleteNullStrings: (str: string) => string;
+    }
+}
+
+declare namespace Converter$3 {
+    namespace TransferChecked {
+        const intoUserSide: (output: CoreInfraSideOutput.TransferChecked, meta: ParsedTransactionWithMeta, mappingTokenAccount?: PostTokenAccount[]) => CoreUserSideOutput.History | undefined;
+    }
+}
+
+declare namespace Converter$2 {
+    namespace Transfer {
+        const intoUserSide: (output: CoreInfraSideOutput.Transfer, meta: ParsedTransactionWithMeta) => CoreUserSideOutput.History | undefined;
     }
 }
 
@@ -471,12 +569,16 @@ declare namespace Converter$1 {
 
 declare const Converter: {
     Uses: typeof Converter$1.Uses;
-    TokenMetadata: typeof Converter$2.TokenMetadata;
-    Royalty: typeof Converter$3.Royalty;
-    Properties: typeof Converter$4.Properties;
-    NftMetadata: typeof Converter$5.NftMetadata;
-    Creators: typeof Converter$6.Creators;
-    Collection: typeof Converter$7.Collection;
+    Transfer: typeof Converter$2.Transfer;
+    TransferChecked: typeof Converter$3.TransferChecked;
+    TokenMetadata: typeof Converter$4.TokenMetadata;
+    Royalty: typeof Converter$5.Royalty;
+    Properties: typeof Converter$6.Properties;
+    NftMetadata: typeof Converter$7.NftMetadata;
+    Mint: typeof Converter$8.Mint;
+    Memo: typeof Converter$9.Memo;
+    Creators: typeof Converter$a.Creators;
+    Collection: typeof Converter$b.Collection;
 };
 
 export { Converter };

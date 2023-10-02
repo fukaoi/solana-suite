@@ -44,7 +44,7 @@
     "publish": "../../scripts/after-publish.mjs"
   },
   "peerDependencies": {
-    "@solana-suite/core": "workspace:^",
+    "@solana-suite/spl-token": "workspace:^",
     "@solana-suite/traditional-nft": "workspace:^",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana/spl-token": "^0.3.8",

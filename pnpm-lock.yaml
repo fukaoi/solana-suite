@@ -274,6 +274,21 @@ importers:
         specifier: workspace:*
         version: link:../build-configs/tsup
 
+  packages/suite-airdrop:
+    devDependencies:
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
+
   packages/suite-config:
     dependencies:
       '@solana/web3.js':
@@ -296,7 +311,128 @@ importers:
         specifier: workspace:*
         version: link:../build-configs/tsconfig
 
-  packages/suite-core:
+  packages/suite-memo:
+    dependencies:
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      bs58:
+        specifier: ^5.0.0
+        version: 5.0.0
+    devDependencies:
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
+
+  packages/suite-multisig:
+    dependencies:
+      '@solana/buffer-layout':
+        specifier: ^4.0.1
+        version: 4.0.1
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.78.5)
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+    devDependencies:
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
+
+  packages/suite-phantom:
+    dependencies:
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0
+      '@solana-suite/spl-token':
+        specifier: workspace:^
+        version: link:../suite-spl-token
+      '@solana-suite/traditional-nft':
+        specifier: workspace:^
+        version: link:../suite-traditional-nft
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.78.5)
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
+      bs58:
+        specifier: ^5.0.0
+        version: 5.0.0
+      nft.storage:
+        specifier: ^7.1.1
+        version: 7.1.1(node-fetch@3.3.2)
+    devDependencies:
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
+
+  packages/suite-sol-native:
+    dependencies:
+      '@solana-suite/config':
+        specifier: workspace:^
+        version: link:../suite-config
+      '@solana/buffer-layout':
+        specifier: ^4.0.1
+        version: 4.0.1
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
+      bn.js:
+        specifier: ^5.2.1
+        version: 5.2.1
+      bs58:
+        specifier: ^5.0.0
+        version: 5.0.0
+    devDependencies:
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
+
+  packages/suite-spl-token:
     dependencies:
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
@@ -342,54 +478,14 @@ importers:
         specifier: workspace:*
         version: link:../build-configs/tsup
 
-  packages/suite-phantom:
-    dependencies:
-      '@metaplex-foundation/mpl-token-metadata':
-        specifier: ^2.13.0
-        version: 2.13.0
-      '@solana-suite/core':
-        specifier: workspace:^
-        version: link:../suite-core
-      '@solana-suite/traditional-nft':
-        specifier: workspace:^
-        version: link:../suite-traditional-nft
-      '@solana/spl-token':
-        specifier: ^0.3.8
-        version: 0.3.8(@solana/web3.js@1.78.5)
-      '@solana/web3.js':
-        specifier: ^1.78.5
-        version: 1.78.5
-      bignumber.js:
-        specifier: ^9.1.2
-        version: 9.1.2
-      bs58:
-        specifier: ^5.0.0
-        version: 5.0.0
-      nft.storage:
-        specifier: ^7.1.1
-        version: 7.1.1(node-fetch@3.3.2)
-    devDependencies:
-      build-configs/eslint:
-        specifier: workspace:*
-        version: link:../build-configs/eslint
-      build-configs/prettier:
-        specifier: workspace:*
-        version: link:../build-configs/prettier
-      build-configs/tsconfig:
-        specifier: workspace:*
-        version: link:../build-configs/tsconfig
-      build-configs/tsup:
-        specifier: workspace:*
-        version: link:../build-configs/tsup
-
   packages/suite-traditional-nft:
     dependencies:
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
         version: 2.13.0
-      '@solana-suite/core':
+      '@solana-suite/spl-token':
         specifier: workspace:^
-        version: link:../suite-core
+        version: link:../suite-spl-token
       '@solana/spl-token':
         specifier: ^0.3.8
         version: 0.3.8(@solana/web3.js@1.78.5)
@@ -443,6 +539,25 @@ importers:
       build-configs/tsconfig:
         specifier: workspace:*
         version: link:../build-configs/tsconfig
+
+  packages/transaction-filter:
+    dependencies:
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.78.5
+    devDependencies:
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
 
   packages/types:
     dependencies:

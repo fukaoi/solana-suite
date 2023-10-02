@@ -1,0 +1,55 @@
+{
+  "name": "@solana-suite/airdrop",
+  "version": "0.7.0",
+  "description": "request faucet, only devnet",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "api",
+    "blockchain",
+    "solana",
+    "sdk",
+    "web3.js",
+    "nft"
+  ],
+  "engines": {
+    "node": ">=16.*"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "author": "fukaoi <usapyon2022@gmail.com>",
+  "homepage": "https://atonoy.github.io/solana-suite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atonoy/solana-suite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/atonoy/solana-suite/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup --config build-configs/tsup/base.ts",
+    "clean": "rm -rf dist/ && rm -rf node_modules",
+    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
+    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
+    "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
+    "test": "mocha -t 300000 --require ts-node/register -- ",
+    "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'",
+    "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs'",
+    "prepublishOnly": "../../scripts/before-publish.mjs",
+    "publish": "../../scripts/after-publish.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "build-configs/eslint": "workspace:*",
+    "build-configs/prettier": "workspace:*",
+    "build-configs/tsconfig": "workspace:*",
+    "build-configs/tsup": "workspace:*"
+  }
+}
