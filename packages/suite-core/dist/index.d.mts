@@ -35,7 +35,7 @@ declare class PartialSignInstruction {
 }
 
 declare const Memo: {
-    getHistory: (target: string, onOk: types_core.OnOk<types_core.UserSideOutput.History>, onErr: types_core.OnErr, options?: Partial<types_core.HistoryOptions>) => Promise<void>;
+    getHistory: (target: string, onOk: types_core.OnOk<types_core.CoreUserSideOutput.History>, onErr: types_core.OnErr, options?: Partial<types_core.HistoryOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
     create: (data: string, owner: string, signer: string, feePayer?: string | undefined) => Instruction;
@@ -253,7 +253,7 @@ declare const Multisig: {
 declare const SolNative: {
     transferWithMultisig: (owner: string, dest: string, signers: string[], amount: number, feePayer?: string | undefined) => Promise<Result<Instruction, Error>>;
     transfer: (source: string, dest: string, signers: string[], amount: number, feePayer?: string | undefined) => Result<Instruction, Error>;
-    getHistory: (target: string, filterType: types_core.FilterType, onOk: types_core.OnOk<types_core.UserSideOutput.History>, onErr: types_core.OnErr, options?: Partial<types_core.HistoryOptions>) => Promise<void>;
+    getHistory: (target: string, filterType: types_core.FilterType, onOk: types_core.OnOk<types_core.CoreUserSideOutput.History>, onErr: types_core.OnErr, options?: Partial<types_core.HistoryOptions>) => Promise<void>;
     feePayerPartialSignTransfer: (owner: string, dest: string, signers: string[], amount: number, feePayer: string) => Promise<Result<PartialSignInstruction, Error>>;
     findByOwner: (owner: string) => Promise<Result<types_core.OwnerInfo, Error>>;
 };
@@ -264,7 +264,7 @@ declare const SplToken: {
     createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
     mint: (owner: string, signer: string, totalAmount: number, mintDecimal: number, input: types_converter.UserSideInput.TokenMetadata, feePayer?: string | undefined, freezeAuthority?: string | undefined) => Promise<Result<MintInstruction, Error>>;
-    getHistory: (target: string, filterType: types_core.FilterType, onOk: types_core.OnOk<types_core.UserSideOutput.History>, onErr: types_core.OnErr, options?: Partial<types_core.HistoryOptions>) => Promise<void>;
+    getHistory: (target: string, filterType: types_core.FilterType, onOk: types_core.OnOk<types_core.CoreUserSideOutput.History>, onErr: types_core.OnErr, options?: Partial<types_core.HistoryOptions>) => Promise<void>;
     feePayerPartialSignTransfer: (mint: string, owner: string, dest: string, signers: string[], amount: number, mintDecimal: number, feePayer: string) => Promise<Result<PartialSignInstruction, Error>>;
     genericFindByOwner: <T extends types_converter.UserSideOutput.TokenMetadata | types_converter.UserSideOutput.NftMetadata>(owner: string, callback: (result: Result<T[], Error>) => void, tokenStandard: types_converter.UserSideInput.TokenStandard, sortable?: types_core.Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
     genericFindByMint: <T_1 extends types_converter.UserSideOutput.TokenMetadata | types_converter.UserSideOutput.NftMetadata>(mint: string, tokenStandard: types_converter.UserSideInput.TokenStandard) => Promise<Result<T_1, Error>>;

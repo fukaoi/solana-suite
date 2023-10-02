@@ -1,11 +1,11 @@
-import { UserSideOutput as UserSideOutput$1 } from './converter.mjs';
+import { UserSideOutput } from './converter.mjs';
 import { Pubkey } from './account.mjs';
 import { PublicKey } from '@solana/web3.js';
 import 'bn.js';
 import '@metaplex-foundation/mpl-token-metadata';
 import './storage.mjs';
 
-declare namespace UserSideOutput {
+declare namespace CoreUserSideOutput {
     type History = {
         sol?: string;
         account?: string;
@@ -29,9 +29,9 @@ declare enum Sortable {
     Asc = "asc",
     Desc = "desc"
 }
-type TokenMetadata = UserSideOutput$1.TokenMetadata;
+type TokenMetadata = UserSideOutput.TokenMetadata;
 
-declare namespace InfraSideOutput {
+declare namespace CoreInfraSideOutput {
     type Transfer = {
         parsed: {
             info: {
@@ -124,9 +124,9 @@ type WithMemo = {
     memo: string;
 };
 
-type Find = UserSideOutput$1.TokenMetadata;
-type History = UserSideOutput.History;
+type Find = UserSideOutput.TokenMetadata;
+type History = CoreUserSideOutput.History;
 type OnOk<T extends Find | History> = (ok: T[]) => void;
 type OnErr = (err: Error) => void;
 
-export { FilterOptions, FilterType, Find, History, HistoryOptions, InfraSideOutput, ModuleName, OnErr, OnOk, OwnerInfo, PostTokenAccount, Sortable, TokenMetadata, UserSideOutput, WithMemo };
+export { CoreInfraSideOutput, CoreUserSideOutput, FilterOptions, FilterType, Find, History, HistoryOptions, ModuleName, OnErr, OnOk, OwnerInfo, PostTokenAccount, Sortable, TokenMetadata, WithMemo };

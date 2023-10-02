@@ -1,5 +1,5 @@
 import { UserSideOutput as SharendMetaplex } from '../converter';
-import { UserSideOutput as Internal } from './user-side/output';
+import { CoreUserSideOutput as Internal } from './user-side/output';
 
 export * from './find';
 export * from './infra-side/output';
