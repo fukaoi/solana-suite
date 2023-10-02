@@ -1,47 +1,44 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
-import { AssociatedAccount } from '../src/associated-account';
-import { SplToken } from '../src';
-import { Setup } from '../../shared/test/testSetup';
-import { RandomAsset } from '../../internals/storage/test/randomAsset';
-import { KeypairAccount } from '@solana-suite/shared';
+import test from "ava";
+import { AssociatedAccount } from "../src/associated-account";
+import { SplToken } from "@solana-suite/spl-token";
+import { Setup } from "test-tools/setup";
+import { RandomAsset } from "test-tools/setupAsset";
+import { KeypairAccount } from "account";
 
 let source: KeypairAccount;
 const TOKEN_METADATA = {
-  name: 'solana-suite-token',
-  symbol: 'SST',
+  name: "solana-suite-token",
+  symbol: "SST",
   royalty: 50,
   filePath: RandomAsset.get().filePath as string,
-  storageType: 'nftStorage' 
+  storageType: "nftStorage",
 };
 
-describe('AssociatedAccount', () => {
-  before(async () => {
-    const obj = await Setup.generateKeyPair();
-    source = obj.source;
-  });
+test.before(async () => {
+  const obj = await Setup.generateKeyPair();
+  source = obj.source;
+});
 
-  it('Retry getOrCreate', async () => {
-    const mintInst = await SplToken.mint(
-      source.pubkey,
-      source.secret,
-      10000,
-      1,
-      TOKEN_METADATA
-    );
+test("Retry getOrCreate", async (t) => {
+  const mintInst = await SplToken.mint(
+    source.pubkey,
+    source.secret,
+    10000,
+    1,
+    TOKEN_METADATA,
+  );
 
-    await mintInst.submit();
+  await mintInst.submit();
 
-    assert.isTrue(mintInst.isOk, `${mintInst.unwrap()}`);
-    const mint = mintInst.unwrap().data as string;
+  t.true(mintInst.isOk);
+  const mint = mintInst.unwrap().data as string;
 
-    const res = await AssociatedAccount.retryGetOrCreate(
-      mint,
-      source.pubkey,
-      source.secret
-    );
+  const res = await AssociatedAccount.retryGetOrCreate(
+    mint,
+    source.pubkey,
+    source.secret,
+  );
 
-    console.log('# associated token account: ', res);
-    assert.isString(res);
-  });
+  console.log("# associated token account: ", res);
+  t.is(typeof res, "string");
 });

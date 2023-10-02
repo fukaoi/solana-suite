@@ -1,67 +1,60 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
-import { PublicKey, Keypair } from '@solana/web3.js';
-import { KeypairAccount } from '../src/keypair-account';
-import { Pubkey } from '../src/types/keypair-account';
-import '../src/global';
-import bs from 'bs58';
+import test from "ava";
+import { Keypair, PublicKey } from "@solana/web3.js";
+import { KeypairAccount } from "../src/keypair-account";
+import bs from "bs58";
+import "global";
 
-const PUBKEY = '6KJBDz6qPZZyJ9gAWXSgHufqAzU8pnhQmVdTitfusYS5';
+const PUBKEY = "6KJBDz6qPZZyJ9gAWXSgHufqAzU8pnhQmVdTitfusYS5";
 const SECRET =
-  '5K8YJqfs8Zs6fkRK9UyuX1TvSchofkwodQHciDpmw3zzEE3Tkiuyg6jes2FtmvQNETafE5tqfrb7ssYUMmEggWwF';
+  "5K8YJqfs8Zs6fkRK9UyuX1TvSchofkwodQHciDpmw3zzEE3Tkiuyg6jes2FtmvQNETafE5tqfrb7ssYUMmEggWwF";
 
-describe('KeypairStr', () => {
-  it('Pubkey to PublicKey', async () => {
-    const res = PUBKEY.toPublicKey();
-    assert.deepEqual(res, new PublicKey(PUBKEY));
+test("Pubkey to PublicKey", (t) => {
+  const res = PUBKEY.toPublicKey();
+  t.deepEqual(res, new PublicKey(PUBKEY));
+});
+
+test("Secret to SecretKey", (t) => {
+  const res = SECRET.toKeypair();
+  t.deepEqual(res, Keypair.fromSecretKey(bs.decode(SECRET)));
+});
+
+test("Failed convert string to PublicKey", (t) => {
+  const error = t.throws(() => {
+    "failed-publickey".toPublicKey();
   });
+  t.not(error, undefined);
+});
 
-  it('Secret to SecretKey', async () => {
-    const res = SECRET.toKeypair();
-    assert.deepEqual(res, Keypair.fromSecretKey(bs.decode(SECRET)));
+test("Failed convert string to SecretKey", (t) => {
+  const error = t.throws(() => {
+    "failed-secretKey".toKeypair();
   });
+  t.not(error, undefined);
+});
 
-  it('Failed convert string to PublicKey', async () => {
-    assert.throws(() => 'failed-publickey'.toPublicKey());
-  });
+test("Create KeyPair Object", async (t) => {
+  const obj = new KeypairAccount({ pubkey: PUBKEY, secret: SECRET });
+  t.not(obj, undefined);
+});
 
-  it('Failed convert string to SecretKey', async () => {
-    assert.throws(() => 'failed-secretKey'.toKeypair());
-  });
+test("is Pubkey", async (t) => {
+  for (let index = 0; index < 50; index++) {
+    t.true(KeypairAccount.isPubkey(KeypairAccount.create().pubkey));
+  }
+});
 
-  it('Create KeyPair Object', async () => {
-    const obj = new KeypairAccount({ pubkey: PUBKEY, secret: SECRET });
-    assert.isNotEmpty(obj);
-  });
+test("is Secret", async (t) => {
+  for (let index = 0; index < 50; index++) {
+    t.true(KeypairAccount.isSecret(KeypairAccount.create().secret));
+  }
+});
 
-  it('is Pubkey', async () => {
-    for (let index = 0; index < 50; index++) {
-      assert.isTrue(KeypairAccount.isPubkey(KeypairAccount.create().pubkey));
-    }
-  });
-
-  it('is Secret', async () => {
-    for (let index = 0; index < 50; index++) {
-      assert.isTrue(KeypairAccount.isSecret(KeypairAccount.create().secret));
-    }
-  });
-
-  it('Keypair to KeyPair', async () => {
-    const keypair = Keypair.generate();
-    const expeted = {
-      pubkey: keypair.publicKey.toString(),
-      secret: bs.encode(keypair.secretKey).toString(),
-    };
-    const res = KeypairAccount.toKeyPair(keypair);
-    assert.deepEqual(res, expeted);
-  });
-
-  it('Pubkey', async () => {
-    const pubkey = '0AWTL3RSxNe2mN7uS6MUvyWmBDBXUDQRNQftrS1R6baS';
-
-    const func = (address: Pubkey) => {
-      console.log(address);
-    };
-    func(pubkey as Pubkey);
-  });
+test("Keypair to KeyPair", async (t) => {
+  const keypair = Keypair.generate();
+  const expeted = {
+    pubkey: keypair.publicKey.toString(),
+    secret: bs.encode(keypair.secretKey).toString(),
+  };
+  const res = KeypairAccount.toKeyPair(keypair);
+  t.like(res, expeted);
 });

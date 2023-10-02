@@ -11,6 +11,7 @@
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
+    "test": "ava --config node_modules/build-configs/ava/base.cjs",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
   "peerDependencies": {
@@ -21,6 +22,11 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@solana-suite/spl-token": "workspace:*",
+    "account": "workspace:*",
+    "global": "workspace:*",
+    "test-tools": "workspace:*",
+    "build-configs/ava": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",

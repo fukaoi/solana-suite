@@ -28,6 +28,11 @@
       "require": "./assets",
       "import": "./assets",
       "types": "./assets"
+    },
+    "./setupAsset": {
+      "require": "./randomAsset.ts",
+      "import": "./randomAsset.ts",
+      "types": "./randomAsset.ts"
     }
   }
 }

@@ -70,6 +70,15 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
     devDependencies:
+      '@solana-suite/spl-token':
+        specifier: workspace:*
+        version: link:../suite-spl-token
+      account:
+        specifier: workspace:*
+        version: 'link:'
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
       build-configs/eslint:
         specifier: workspace:*
         version: link:../build-configs/eslint
@@ -82,6 +91,12 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      global:
+        specifier: workspace:*
+        version: link:../global
+      test-tools:
+        specifier: workspace:*
+        version: link:../test-tools
 
   packages/build-configs/ava: {}
 
