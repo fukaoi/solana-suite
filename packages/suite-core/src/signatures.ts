@@ -2,7 +2,7 @@ import { ParsedTransactionWithMeta } from '@solana/web3.js';
 import { Node } from 'node';
 import { debugLog, Result, sleep } from 'shared';
 import { Pubkey } from 'types/account';
-import { UserSideOutput } from 'types/core';
+import { CoreUserSideOutput } from 'types/core';
 
 //@internal
 export namespace Signatures {
@@ -20,13 +20,13 @@ export namespace Signatures {
     pubkey: Pubkey,
     parser: (
       transaction: ParsedTransactionWithMeta,
-    ) => UserSideOutput.History | undefined,
-    callback: (history: Result<UserSideOutput.History[], Error>) => void,
+    ) => CoreUserSideOutput.History | undefined,
+    callback: (history: Result<CoreUserSideOutput.History[], Error>) => void,
     options: {
       waitTime: number;
       narrowDown: number;
     },
-    histories: UserSideOutput.History[] = [],
+    histories: CoreUserSideOutput.History[] = [],
   ): Promise<void> => {
     try {
       debugLog('# options: ', options);

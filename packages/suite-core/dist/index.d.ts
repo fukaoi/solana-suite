@@ -1,13 +1,11 @@
 import { Result as Result$1 } from 'shared';
+import { Pubkey, Secret } from 'types/account';
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionInstruction, Keypair, TransactionSignature } from '@solana/web3.js';
 import * as types_core from 'types/core';
 import * as _solana_buffer_layout from '@solana/buffer-layout';
-import { Pubkey as Pubkey$1, Secret } from 'types/account';
 import * as types_converter from 'types/converter';
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
-
-type Pubkey = string;
 
 declare namespace Airdrop {
     const request: (pubkey: Pubkey, airdropAmount?: number) => Promise<Result$1<string, Error>>;
@@ -29,8 +27,8 @@ declare class MintInstruction extends Instruction {
 
 declare class PartialSignInstruction {
     hexInstruction: string;
-    data?: Pubkey$1;
-    constructor(instructions: string, mint?: Pubkey$1);
+    data?: Pubkey;
+    constructor(instructions: string, mint?: Pubkey);
     submit: (feePayer: Secret) => Promise<Result$1<TransactionSignature, Error>>;
 }
 

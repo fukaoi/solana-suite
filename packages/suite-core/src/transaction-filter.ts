@@ -4,11 +4,11 @@ import { Convert as _Transfer } from './convert/transfer';
 import { Convert as _TransferChecked } from './convert/transfer-checked';
 import { ParsedInstruction, ParsedTransactionWithMeta } from '@solana/web3.js';
 import {
+  CoreUserSideOutput,
   FilterOptions,
   FilterType,
   ModuleName,
   PostTokenAccount,
-  UserSideOutput,
 } from 'types/core';
 import { debugLog } from 'shared';
 
@@ -42,8 +42,10 @@ export namespace TransactionFilter {
 
   export const parse =
     (filterType: FilterType, moduleName: ModuleName) =>
-    (txMeta: ParsedTransactionWithMeta): UserSideOutput.History | undefined => {
-      let history: UserSideOutput.History | undefined;
+    (
+      txMeta: ParsedTransactionWithMeta,
+    ): CoreUserSideOutput.History | undefined => {
+      let history: CoreUserSideOutput.History | undefined;
 
       if (
         filterType === FilterType.Mint &&
