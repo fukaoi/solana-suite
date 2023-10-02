@@ -1,1 +1,2 @@
-export type StorageType = 'nftStorage' | 'arweave' | string;
+export * from './type'
+export * from './bundlr'
