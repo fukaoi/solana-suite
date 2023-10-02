@@ -1,17 +1,17 @@
-import test from "ava";
-import { AssociatedAccount } from "../src/associated-account";
-import { SplToken } from "@solana-suite/spl-token";
-import { Setup } from "test-tools/setup";
-import { RandomAsset } from "test-tools/setupAsset";
-import { KeypairAccount } from "account";
+import test from 'ava';
+import { AssociatedAccount } from '../src/associated-account';
+import { SplToken } from '@solana-suite/spl-token';
+import { Setup } from 'test-tools/setup';
+import { RandomAsset } from 'test-tools/setupAsset';
+import { KeypairAccount } from 'account';
 
 let source: KeypairAccount;
 const TOKEN_METADATA = {
-  name: "solana-suite-token",
-  symbol: "SST",
+  name: 'solana-suite-token',
+  symbol: 'SST',
   royalty: 50,
   filePath: RandomAsset.get().filePath as string,
-  storageType: "nftStorage",
+  storageType: 'nftStorage',
 };
 
 test.before(async () => {
@@ -19,7 +19,7 @@ test.before(async () => {
   source = obj.source;
 });
 
-test("Retry getOrCreate", async (t) => {
+test('Retry getOrCreate', async (t) => {
   const mintInst = await SplToken.mint(
     source.pubkey,
     source.secret,
@@ -39,6 +39,6 @@ test("Retry getOrCreate", async (t) => {
     source.secret,
   );
 
-  console.log("# associated token account: ", res);
-  t.is(typeof res, "string");
+  console.log('# associated token account: ', res);
+  t.is(typeof res, 'string');
 });
