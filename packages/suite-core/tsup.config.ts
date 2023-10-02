@@ -1,7 +1,8 @@
 import defineConfig from '../build-configs/tsup/base';
 
 const entry = {
-  "./#account": 'src/account2/index.ts',
+  index: 'src/index.ts',
+  'types/account': './node_modules/types/src/account/index.ts',
 };
 
 defineConfig.entry = entry;

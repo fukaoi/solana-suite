@@ -33,7 +33,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup --config build-configs/tsup/base.ts --dts-resolve",
+    "build": "tsup --config ./tsup.config.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
@@ -72,5 +72,8 @@
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
     "build-configs/tsup": "workspace:*"
+  },
+  "imports": {
+    "types/account": "../types/src/account/index.ts"
   }
 }

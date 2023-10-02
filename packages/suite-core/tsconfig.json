@@ -5,12 +5,26 @@
   "display": "@solana-suite/core",
   "compilerOptions": {
     "paths": {
-      "types/account": ["../types/account/dist"],
-      "types/global": ["../types/global/dist"],
-      "types/core": ["../types/core/dist"],
-      "types/converter": ["../types/converter/dist"],
-      "shared": ["../shared/src/", "../shared/dist/"],
-      "instruction": ["../instruction/src/", "../instruction/dist/"]
+      "types/account": [
+        "../types/dist/account.d.ts",
+        "../types/src/account/index.ts"
+      ],
+      "types/global": [
+        "../types/dist/global.d.ts",
+        "../types/src/global/index.ts"
+      ],
+      "types/core": [
+        "../types/dist/core.d.ts",
+        "../types/src/core/index.ts"
+      ],
+      "types/coverter": [
+        "../types/dist/converter.d.ts",
+        "../types/src/converter/index.ts"
+      ],
+      "shared": [
+        "../shared/dist/index.d.ts",
+        "../shared/src/index.ts"
+      ]
     }
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],

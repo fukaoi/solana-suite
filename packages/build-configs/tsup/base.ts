@@ -11,7 +11,9 @@ export default defineConfig({
   splitting: false,
   sourcemap: 'inline',
   clean: true,
-  dts: true,
+  dts: {
+    resolve: true,
+  },
   noExternal: [
     'account',
     'converter',
