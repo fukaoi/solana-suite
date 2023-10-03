@@ -244,6 +244,9 @@ importers:
         specifier: ^1.78.5
         version: 1.78.5
     devDependencies:
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
       build-configs/eslint:
         specifier: workspace:*
         version: link:../build-configs/eslint
@@ -256,6 +259,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      shared:
+        specifier: workspace:*
+        version: link:../shared
 
   packages/shared:
     dependencies:

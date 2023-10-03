@@ -15,13 +15,13 @@
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
   "peerDependencies": {
+    "@solana/web3.js": "^1.78.5",
+    "@solana-suite/config": "workspace:*",
     "bs58": "^4.0.1"
   },
   "dependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
-    "@solana/spl-token": "^0.3.8",
-    "@solana/web3.js": "^1.78.5",
-    "@solana-suite/config": "workspace:*"
+    "@solana/spl-token": "^0.3.8"
   },
   "devDependencies": {
     "@types/bs58": "^4.0.1",
