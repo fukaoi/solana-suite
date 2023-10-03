@@ -16,13 +16,12 @@
     "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'"
   },
   "peerDependencies": {
-    "bs58": "^4.0.1"
+    "@solana/web3.js": "^1.78.5",
+    "@solana-suite/config": "workspace:*"
   },
   "dependencies": {
-    "@solana-suite/config": "workspace:*",
-    "@solana/web3.js": "^1.78.5",
     "bignumber.js": "^9.1.2",
-    "commander": "9.3.0"
+    "bs58": "^4.0.1"
   },
   "devDependencies": {
     "@types/bs58": "^4.0.1",

@@ -17,11 +17,10 @@
   },
   "peerDependencies": {
     "@solana-suite/config": "workspace:*",
-    "@solana/web3.js": "^1.78.5",
-    "bignumber.js": "^9.1.2",
-    "commander": "9.3.0"
+    "@solana/web3.js": "^1.78.5"
   },
   "dependencies": {
+    "commander": "9.3.0"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.3",
