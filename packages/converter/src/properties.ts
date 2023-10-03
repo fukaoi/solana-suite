@@ -7,8 +7,8 @@ export namespace Converter {
   export namespace Properties {
     export const intoInfraSide = async (
       input: UserSideInput.Properties | undefined,
-      storageFunc: (
-        data: FileContent,
+      callbackFunc: (
+        filePath: FileContent,
         storageType: StorageType,
         feePayer?: Secret,
       ) => Promise<Result<string, Error>>,
@@ -24,7 +24,7 @@ export namespace Converter {
           if (!file.filePath) {
             return {};
           }
-          const res = await storageFunc(file.filePath, storageType, feePayer);
+          const res = await callbackFunc(file.filePath, storageType, feePayer);
           if (res.isErr) {
             throw Error(res.error.message);
           }

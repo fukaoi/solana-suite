@@ -51,7 +51,6 @@
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
     "@solana-suite/config": "workspace:^",
-    "bs58": "^5.0.0",
     "cross-fetch": "^4.0.0",
     "bignumber.js": "^9.1.2",
     "nft.storage": "^7.1.1",

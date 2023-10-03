@@ -11,17 +11,20 @@
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
-    "test": "ava --config node_modules/build-configs/ava/base.cjs",
-    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
+    "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
   "peerDependencies": {
+    "bs58": "^4.0.1"
+  },
+  "dependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
-    "bs58": "^5.0.0"
+    "@solana-suite/config": "workspace:*"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@types/bs58": "^4.0.1",
     "@solana-suite/spl-token": "workspace:*",
     "global": "workspace:*",
     "test-tools": "workspace:*",

@@ -20,6 +20,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@solana-suite/config": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",

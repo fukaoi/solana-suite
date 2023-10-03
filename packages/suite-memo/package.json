@@ -46,7 +46,6 @@
     "publish": "../../scripts/after-publish.mjs"
   },
   "peerDependencies": {
-    "bs58": "^5.0.0",
     "@solana/web3.js": "^1.78.5"
   },
   "dependencies": {},

@@ -63,7 +63,7 @@ String.prototype.toPublicKey = function () {
   if (!KeypairAccount.isPubkey(this.toString())) {
     throw Error(`No match KeyPair.PubKey: ${this.toString()}`);
   }
-  return new PublicKey(this);
+  return new PublicKey(this.toString());
 };
 
 /**
@@ -76,7 +76,7 @@ String.prototype.toKeypair = function () {
   if (!KeypairAccount.isSecret(this.toString())) {
     throw Error(`No match KeyPair.Secret: ${this.toString()}`);
   }
-  const decoded = bs.decode(this as string);
+  const decoded = bs.decode(this.toString());
   return Keypair.fromSecretKey(decoded);
 };
 

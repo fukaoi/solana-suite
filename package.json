@@ -5,13 +5,9 @@
     "publish": "pnpm --filter '@solana-suite/*' publish --dry-run"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.6",
-    "@types/mocha": "^8.2.3",
     "@types/node": "16.11.7",
     "ava": "^5.3.1",
-    "chai": "^4.3.10",
     "eslint": "^8.50.0",
-    "mocha": "^9.2.2",
     "prettier": "3.0.3",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.8",

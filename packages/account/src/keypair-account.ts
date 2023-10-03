@@ -1,5 +1,5 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
-import { Pubkey, Secret } from '~/types/account';
+import { Pubkey, Secret } from 'types/account';
 import bs from 'bs58';
 
 export class KeypairAccount {
@@ -46,3 +46,30 @@ export class KeypairAccount {
     });
   };
 }
+
+/**
+ * PubKey(@solana-suite) to PublicKey(@solana/web3.js)
+ *
+ * @see {@link types/global.ts}
+ * @returns PublicKey
+ */
+String.prototype.toPublicKey = function () {
+  if (!KeypairAccount.isPubkey(this.toString())) {
+    throw Error(`No match KeyPair.PubKey: ${this.toString()}`);
+  }
+  return new PublicKey(this);
+};
+
+/**
+ * Secret(@solana-suite) to Keypair(@solana/web3.js)
+ *
+ * @see {@link types/global.ts}
+ * @returns Keypair
+ */
+String.prototype.toKeypair = function () {
+  if (!KeypairAccount.isSecret(this.toString())) {
+    throw Error(`No match KeyPair.Secret: ${this.toString()}`);
+  }
+  const decoded = bs.decode(this as string);
+  return Keypair.fromSecretKey(decoded);
+};
