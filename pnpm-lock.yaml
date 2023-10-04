@@ -278,6 +278,9 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.3
         version: 21.1.3
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
       build-configs/eslint:
         specifier: workspace:*
         version: link:../build-configs/eslint
