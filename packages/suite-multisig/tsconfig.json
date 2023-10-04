@@ -4,14 +4,10 @@
   "display": "@solana-suite/multisig",
   "compilerOptions": {
     "paths": {
-      "~/types/*": [
-        "../types/src/*/index.ts"
-      ],
-      "~/*": [
-        "../*/src/index.ts"
-      ]
+      "~/types/*": ["../types/src/*/index.ts"],
+      "~/*": ["../*/src/index.ts"]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "test/**/*.ts"]
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

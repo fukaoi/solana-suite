@@ -214,6 +214,12 @@ importers:
 
   packages/instruction:
     dependencies:
+      '@solana/buffer-layout':
+        specifier: ^4.0.1
+        version: 4.0.1
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.78.5)
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
@@ -416,6 +422,12 @@ importers:
         specifier: ^1.78.5
         version: 1.78.5
     devDependencies:
+      account:
+        specifier: workspace:*
+        version: link:../account
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
       build-configs/eslint:
         specifier: workspace:*
         version: link:../build-configs/eslint
@@ -428,6 +440,12 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      test-tools:
+        specifier: workspace:*
+        version: link:../test-tools
+      types:
+        specifier: workspace:*
+        version: link:../types
 
   packages/suite-phantom:
     dependencies:

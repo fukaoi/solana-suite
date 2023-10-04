@@ -4,7 +4,7 @@ import { Node } from '~/node';
 import { LayoutObject } from '@solana/buffer-layout';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { PublicKey } from '@solana/web3.js';
-import { Multisig as _Instruction } from './instruction';
+import { MultisigInstruction } from '~/instruction';
 
 export namespace Multisig {
   export const getInfo = async (
@@ -20,12 +20,12 @@ export namespace Multisig {
       if (!info.owner.equals(TOKEN_PROGRAM_ID)) {
         throw Error('Invalid multisig owner');
       }
-      if (info.data.length !== _Instruction.Layout.span) {
+      if (info.data.length !== MultisigInstruction.Layout.span) {
         throw Error('Invalid multisig size');
       }
 
       const data = Buffer.from(info.data);
-      const multisigInfo = _Instruction.Layout.decode(data);
+      const multisigInfo = MultisigInstruction.Layout.decode(data);
       multisigInfo.signer1 = new PublicKey(multisigInfo.signer1);
       multisigInfo.signer2 = new PublicKey(multisigInfo.signer2);
       multisigInfo.signer3 = new PublicKey(multisigInfo.signer3);

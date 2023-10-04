@@ -1,16 +1,15 @@
 import {
-  PublicKey,
-  TransactionInstruction,
   Keypair,
-  SYSVAR_RENT_PUBKEY,
+  PublicKey,
   SystemProgram,
+  SYSVAR_RENT_PUBKEY,
+  TransactionInstruction,
 } from '@solana/web3.js';
 
-import { struct, u8, blob } from '@solana/buffer-layout';
+import { blob, struct, u8 } from '@solana/buffer-layout';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 
-// @internal
-export namespace Multisig {
+export namespace MultisigInstruction {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const createLayoutPubKey = (property: string): any => {
     return blob(32, property);

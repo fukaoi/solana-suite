@@ -238,10 +238,19 @@ declare class Instruction {
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
+
 declare const Multisig: {
-    isAddress: (multisig: string) => Promise<Result<boolean, Error>>;
-    getInfo: (multisig: string) => Promise<Result<_solana_buffer_layout.LayoutObject, Error>>;
-    create: (m: number, feePayer: string, signerPubkeys: string[]) => Promise<Result<Instruction, Error>>;
+    isAddress: (multisig: Pubkey) => Promise<Result<boolean, Error>>;
+    getInfo: (multisig: Pubkey) => Promise<Result<_solana_buffer_layout.LayoutObject, Error>>;
+    create: (m: number, feePayer: Secret, signerPubkeys: Pubkey[]) => Promise<Result<Instruction, Error>>;
 };
 
 export { Multisig };

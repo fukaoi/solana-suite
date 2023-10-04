@@ -1,9 +1,8 @@
 import { Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { Keypair } from '@solana/web3.js';
-import { Multisig as _Instruction } from './instruction';
 import { Pubkey, Secret } from '~/types/account';
-import { Instruction } from '~/instruction';
+import { Instruction, MultisigInstruction } from '~/instruction';
 
 export namespace Multisig {
   export const create = async (
@@ -19,16 +18,16 @@ export namespace Multisig {
       const account = Keypair.generate();
       const connection = Node.getConnection();
       const balanceNeeded = await connection.getMinimumBalanceForRentExemption(
-        _Instruction.Layout.span,
+        MultisigInstruction.Layout.span,
       );
 
-      const inst1 = _Instruction.account(
+      const inst1 = MultisigInstruction.account(
         account,
         feePayer.toKeypair(),
         balanceNeeded,
       );
 
-      const inst2 = _Instruction.multisig(
+      const inst2 = MultisigInstruction.multisig(
         m,
         account,
         signerPubkeys.map((pubkey: Pubkey) => pubkey.toPublicKey()),

@@ -1,4 +1,5 @@
 import { TransactionSignature, PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
+import * as _solana_buffer_layout from '@solana/buffer-layout';
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -242,8 +243,35 @@ declare class MintInstruction extends Instruction {
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
-type Pubkey = string;
-type Secret = string;
+declare namespace MultisigInstruction {
+    const Layout: _solana_buffer_layout.Structure<{
+        m: number;
+        n: number;
+        is_initialized: number;
+        signer1: PublicKey;
+        signer2: PublicKey;
+        signer3: PublicKey;
+        signer4: PublicKey;
+        signer5: PublicKey;
+        signer6: PublicKey;
+        signer7: PublicKey;
+        signer8: PublicKey;
+        signer9: PublicKey;
+        signer10: PublicKey;
+        signer11: PublicKey;
+    }>;
+    const account: (newAccount: Keypair, feePayer: Keypair, balanceNeeded: number) => TransactionInstruction;
+    const multisig: (m: number, feePayer: Keypair, signerPubkey: PublicKey[]) => TransactionInstruction;
+}
+
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
 
 declare class PartialSignInstruction {
     hexInstruction: string;
@@ -252,4 +280,4 @@ declare class PartialSignInstruction {
     submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
 }
 
-export { Instruction, MintInstruction, PartialSignInstruction };
+export { Instruction, MintInstruction, MultisigInstruction, PartialSignInstruction };
