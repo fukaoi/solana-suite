@@ -306,6 +306,9 @@ importers:
       '@solana-suite/config':
         specifier: workspace:*
         version: link:../suite-config
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
       build-configs/eslint:
         specifier: workspace:*
         version: link:../build-configs/eslint
@@ -318,6 +321,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      test-tools:
+        specifier: workspace:*
+        version: link:../test-tools
 
   packages/suite-airdrop:
     devDependencies:
