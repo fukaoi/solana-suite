@@ -78,9 +78,6 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
-      global:
-        specifier: workspace:*
-        version: link:../global
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
@@ -132,9 +129,6 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.3
         version: 21.1.3
-      account:
-        specifier: workspace:*
-        version: link:../account
       build-configs/ava:
         specifier: workspace:*
         version: link:../build-configs/ava
@@ -153,15 +147,9 @@ importers:
       jsdom:
         specifier: ^22.1.0
         version: 22.1.0
-      storage:
-        specifier: workspace:*
-        version: link:../storage
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
-      types:
-        specifier: workspace:*
-        version: link:../types
 
   packages/global:
     dependencies:
@@ -202,15 +190,6 @@ importers:
       jsdom:
         specifier: ^22.1.0
         version: 22.1.0
-      node:
-        specifier: workspace:*
-        version: link:../node
-      shared:
-        specifier: workspace:*
-        version: link:../shared
-      types:
-        specifier: workspace:*
-        version: link:../types
 
   packages/instruction:
     dependencies:
@@ -261,9 +240,6 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
-      shared:
-        specifier: workspace:*
-        version: link:../shared
 
   packages/shared:
     dependencies:
@@ -382,9 +358,6 @@ importers:
       '@types/bs58':
         specifier: ^4.0.2
         version: 4.0.2
-      account:
-        specifier: workspace:*
-        version: link:../account
       build-configs/ava:
         specifier: workspace:*
         version: link:../build-configs/ava
@@ -400,15 +373,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
-      node:
-        specifier: workspace:*
-        version: link:../node
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
-      types:
-        specifier: workspace:*
-        version: link:../types
 
   packages/suite-multisig:
     dependencies:
@@ -422,9 +389,6 @@ importers:
         specifier: ^1.78.5
         version: 1.78.5
     devDependencies:
-      account:
-        specifier: workspace:*
-        version: link:../account
       build-configs/ava:
         specifier: workspace:*
         version: link:../build-configs/ava
@@ -443,9 +407,6 @@ importers:
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
-      types:
-        specifier: workspace:*
-        version: link:../types
 
   packages/suite-phantom:
     dependencies:
@@ -492,6 +453,9 @@ importers:
       '@solana/buffer-layout':
         specifier: ^4.0.1
         version: 4.0.1
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.78.5)
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
@@ -502,6 +466,12 @@ importers:
         specifier: ^5.2.1
         version: 5.2.1
     devDependencies:
+      '@solana-suite/multisig':
+        specifier: workspace:*
+        version: link:../suite-multisig
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
       build-configs/eslint:
         specifier: workspace:*
         version: link:../build-configs/eslint
@@ -514,6 +484,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      test-tools:
+        specifier: workspace:*
+        version: link:../test-tools
 
   packages/suite-spl-token:
     dependencies:

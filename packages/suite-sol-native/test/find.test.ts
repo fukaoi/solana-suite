@@ -1,60 +1,56 @@
-import { describe, it } from 'mocha';
-import { SolNative } from '../../src';
-import { assert } from 'chai';
+import test from 'ava';
+import { SolNative } from '../src';
 
 const owner = '6bo6UqEZ2D7C4oMpycxBzY5eLeHdmUkCrFXozhqUd4sp';
 const tokenAccount = '2QSBPixtfHP2JGYfwGaxeLYji9F4NfemCvCJCXe5kMdt';
 const notFoundOwner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
 
-describe('SolNative', () => {
-  it('find owner info', async () => {
-    const res = await SolNative.findByOwner(owner);
+test('find owner info', async (t) => {
+  const res = await SolNative.findByOwner(owner);
 
-    console.log('SolNative.findByOwner: ', res);
+  console.log('SolNative.findByOwner: ', res);
 
-    if (res.isErr) {
-      assert(res.error.message);
-    }
+  if (res.isErr) {
+    t.fail(res.error.message);
+  }
 
-    if (res.isOk) {
-      const info = res.value;
-      assert.isNumber(info.sol);
-      assert.isNumber(info.lamports);
-      assert.isString(info.owner);
-    }
-  });
+  if (res.isOk) {
+    const info = res.value;
+    t.is(typeof info.sol, 'number');
+    t.is(typeof info.lamports, 'number');
+    t.is(typeof info.owner, 'string');
+  }
+});
 
-  it('find token account info', async () => {
-    const res = await SolNative.findByOwner(tokenAccount);
+test('find token account info', async (t) => {
+  const res = await SolNative.findByOwner(tokenAccount);
 
-    console.log('SolNative.findByOwner: ', res);
+  console.log('SolNative.findByOwner: ', res);
+  if (res.isErr) {
+    t.fail(res.error.message);
+  }
 
-    if (res.isErr) {
-      assert(res.error.message);
-    }
+  if (res.isOk) {
+    const info = res.value;
+    t.is(typeof info.sol, 'number');
+    t.is(typeof info.lamports, 'number');
+    t.is(typeof info.owner, 'string');
+  }
+});
 
-    if (res.isOk) {
-      const info = res.value;
-      assert.isNumber(info.sol);
-      assert.isNumber(info.lamports);
-      assert.isString(info.owner);
-    }
-  });
+test('not found asset owner', async (t) => {
+  const res = await SolNative.findByOwner(notFoundOwner);
 
-  it('not found asset owner', async () => {
-    const res = await SolNative.findByOwner(notFoundOwner);
+  console.log('SolNative.findByOwner: ', res);
 
-    console.log('SolNative.findByOwner: ', res);
+  if (res.isErr) {
+    t.fail(res.error.message);
+  }
 
-    if (res.isErr) {
-      assert(res.error.message);
-    }
-
-    if (res.isOk) {
-      const info = res.value;
-      assert.isNumber(info.sol);
-      assert.isNumber(info.lamports);
-      assert.isString(info.owner);
-    }
-  });
+  if (res.isOk) {
+    const info = res.value;
+    t.is(typeof info.sol, 'number');
+    t.is(typeof info.lamports, 'number');
+    t.is(typeof info.owner, 'string');
+  }
 });

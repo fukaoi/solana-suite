@@ -14,13 +14,11 @@
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@solana-suite/config": "workspace:*",
     "@solana/web3.js": "^1.78.5"
   },
-  "dependencies": {},
   "devDependencies": {
-    "shared": "workspace:*",
     "build-configs/ava": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",

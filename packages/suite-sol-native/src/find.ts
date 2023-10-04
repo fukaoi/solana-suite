@@ -1,9 +1,8 @@
-import { ParsedAccountData } from "@solana/web3.js";
-import { Result, Try } from "~/shared";
-import { Node } from "~/node";
-import { Pubkey } from "~/types/account";
-import { OwnerInfo } from "~/types/core";
-import { TransactionFilter } from "~/transaction-filter";
+import { ParsedAccountData } from '@solana/web3.js';
+import { Result, Try } from '~/shared';
+import { Node } from '~/node';
+import { Pubkey, OwnerInfo } from '~/types/account';
+import { TransactionFilter } from '~/transaction-filter';
 
 export namespace SolNative {
   export const findByOwner = async (

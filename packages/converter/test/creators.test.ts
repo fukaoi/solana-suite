@@ -1,5 +1,5 @@
 import test from 'ava';
-import { KeypairAccount } from 'account';
+import { KeypairAccount } from '~/account';
 import { Converter } from '../src/';
 
 test('To input convert', async (t) => {

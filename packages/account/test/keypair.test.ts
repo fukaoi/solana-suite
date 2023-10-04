@@ -1,8 +1,8 @@
 import test from 'ava';
 import { Keypair, PublicKey } from '@solana/web3.js';
-import { KeypairAccount } from '../src/keypair-account';
+import { KeypairAccount } from '../src/';
 import bs from 'bs58';
-import 'global';
+import '~/global';
 
 const PUBKEY = '6KJBDz6qPZZyJ9gAWXSgHufqAzU8pnhQmVdTitfusYS5';
 const SECRET =

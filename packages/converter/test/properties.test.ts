@@ -1,8 +1,8 @@
 import test from 'ava';
 import { Converter } from '../src/properties';
-import { Common, UserSideInput } from 'types/converter';
+import { Common, UserSideInput } from '~/types/converter';
 import { RandomAsset } from 'test-tools/setupAsset';
-import { Storage } from 'storage';
+import { Storage } from '~/storage';
 
 test('To input convert', async (t) => {
   const asset = RandomAsset.get();

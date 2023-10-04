@@ -1,9 +1,8 @@
 import test from 'ava';
-import { AssociatedAccount } from '../src/associated-account';
 import { SplToken } from '@solana-suite/spl-token';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
-import { KeypairAccount } from '../src/keypair-account';
+import { AssociatedAccount, KeypairAccount } from '../src';
 
 let source: KeypairAccount;
 const TOKEN_METADATA = {

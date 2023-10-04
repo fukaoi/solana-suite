@@ -42,7 +42,7 @@
     "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs'",
     "prepublishOnly": "../../scripts/before-publish.mjs",
     "publish": "../../scripts/after-publish.mjs",
-    "test": "ava --config node_modules/build-configs/ava/base.cjs -- "
+    "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
   "dependencies": {
     "@solana/buffer-layout": "^4.0.1",
@@ -50,8 +50,6 @@
     "@solana/web3.js": "^1.78.5"
   },
   "devDependencies": {
-    "account": "workspace:*",
-    "types": "workspace:*",
     "test-tools": "workspace:*",
     "build-configs/ava": "workspace:*",
     "build-configs/eslint": "workspace:*",

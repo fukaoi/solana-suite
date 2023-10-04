@@ -1,7 +1,7 @@
 import test from 'ava';
 import { Memo } from '../src/';
-import { History } from 'types/history';
-import { OnErr, OnOk } from 'types/shared';
+import { History } from '~/types/history';
+import { OnErr, OnOk } from '~/types/shared';
 
 const target = 'Ebq72X3i8ug6AX2G3v2ZoLA4ZcxHurvMuJYorqJ6sALD';
 

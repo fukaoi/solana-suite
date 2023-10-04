@@ -30,9 +30,6 @@
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
     "build-configs/tsup": "workspace:*",
-    "jsdom": "^22.1.0",
-    "node": "workspace:*",
-    "shared": "workspace:*",
-    "types": "workspace:*"
+    "jsdom": "^22.1.0"
   }
 }

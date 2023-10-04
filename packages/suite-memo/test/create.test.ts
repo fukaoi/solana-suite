@@ -1,9 +1,9 @@
 import test from 'ava';
 import { Setup } from 'test-tools/setup';
 import { Memo } from '../src';
-import { Node } from 'node';
-import { Pubkey } from 'types/account';
-import { KeypairAccount } from 'account';
+import { Node } from '~/node';
+import { Pubkey } from '~/types/account';
+import { KeypairAccount } from '~/account';
 import { SolNative } from '@solana-suite/sol-native';
 import { SplToken } from '@solana-suite/spl-token';
 

@@ -55,15 +55,12 @@
   "devDependencies": {
     "@solana-suite/sol-native": "workspace:*",
     "@solana-suite/spl-token": "workspace:*",
+    "test-tools": "workspace:*",
     "@types/bs58": "^4.0.2",
-    "account": "workspace:*",
     "build-configs/ava": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
-    "build-configs/tsup": "workspace:*",
-    "node": "workspace:*",
-    "test-tools": "workspace:*",
-    "types": "workspace:*"
+    "build-configs/tsup": "workspace:*"
   }
 }

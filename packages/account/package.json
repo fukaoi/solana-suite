@@ -26,7 +26,6 @@
   "devDependencies": {
     "@types/bs58": "^4.0.1",
     "@solana-suite/spl-token": "workspace:*",
-    "global": "workspace:*",
     "test-tools": "workspace:*",
     "build-configs/ava": "workspace:*",
     "build-configs/eslint": "workspace:*",

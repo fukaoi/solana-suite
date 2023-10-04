@@ -1,13 +1,10 @@
 import { SystemProgram, Transaction } from '@solana/web3.js';
 
-import {
-  Result,
-  Try,
-} from '~/shared';
+import { Result, Try } from '~/shared';
 
 import { Node } from '~/node';
 import { PartialSignInstruction } from '~/instruction';
-import {Pubkey, Secret} from '~/types/account';
+import { Pubkey, Secret } from '~/types/account';
 
 export namespace SolNative {
   const RADIX = 10;

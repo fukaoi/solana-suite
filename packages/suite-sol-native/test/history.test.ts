@@ -1,46 +1,63 @@
-import { describe, it } from "mocha";
-import { FilterType, History, OnErr, OnOk, SolNative } from "../../src";
-import { assert } from "chai";
-import { Setup } from "../../../shared/test/testSetup";
-import { Pubkey } from "@solana-suite/shared";
+import { SolNative } from '../src';
+import test from 'ava';
+import { Setup } from 'test-tools/setup';
+import { Pubkey } from '~/types/account';
+import { FilterType } from '~/types/transaction-filter';
+import { History } from '~/types/history';
 
 let target: Pubkey;
-const onOk: OnOk<History> = (ok) => {
-  console.log("# hisory size: ", ok.length);
-  ok.forEach((res) => {
-    assert.isNotEmpty(res.source);
-    assert.isNotEmpty(res.destination);
-    assert.isNotEmpty(res.tokenAmount);
-    assert.isNotEmpty(res.signers);
-    assert.isNotEmpty(res.multisigAuthority);
-    assert.isNotNull(res.dateTime);
-  });
-};
 
-const onErr: OnErr = (err: Error) => assert.fail(err.message);
+test.before(async () => {
+  const obj = await Setup.generateKeyPair();
+  target = obj.source.pubkey;
+});
 
-describe("SolNative", () => {
-  before(async () => {
-    const obj = await Setup.generateKeyPair();
-    target = obj.source.pubkey;
-  });
-
-  it("Get transfer history", async () => {
-    await SolNative.getHistory(target, FilterType.Transfer, onOk, onErr, {
-      waitTime: 0,
+test('Get transfer history', (t) => {
+  const onErr = (err: Error) => {
+    t.fail(err.message);
+  };
+  const onOk = (datas: History[]) => {
+    t.log('# hisory size: ', datas.length);
+    datas.forEach((res) => {
+      t.not(res.source, '');
+      t.not(res.destination, '');
+      t.not(res.tokenAmount, '');
+      t.not(res.signers, '');
+      t.not(res.multisigAuthority, '');
+      t.not(res.dateTime, null);
     });
+  };
+
+  SolNative.getHistory(target, FilterType.Transfer, onOk, onErr, {
+    waitTime: 0,
   });
+  t.pass();
+});
 
-  it("Get Memo history", async () => {
-    await SolNative.getHistory(target, FilterType.Memo, onOk, onErr);
-
-    it("[Error]Get Mint history", async () => {
-      await SolNative.getHistory(
-        target,
-        FilterType.Mint,
-        (_: string) => assert.fail("Dont go through here"),
-        (err: Error) => assert.isOk(err.message),
-      );
+test('Get Memo history', async (t) => {
+  const onErr = (err: Error) => {
+    t.fail(err.message);
+  };
+  const onOk = (datas: History[]) => {
+    t.log('# hisory size: ', datas.length);
+    datas.forEach((res) => {
+      t.not(res.source, '');
+      t.not(res.destination, '');
+      t.not(res.tokenAmount, '');
+      t.not(res.signers, '');
+      t.not(res.multisigAuthority, '');
+      t.not(res.dateTime, null);
     });
-  });
+  };
+  await SolNative.getHistory(target, FilterType.Memo, onOk, onErr);
+  t.pass();
+});
+
+test('[Error]Get Mint history', async (t) => {
+  await SolNative.getHistory(
+    target,
+    FilterType.Mint,
+    (ok: History[]) => t.fail(`Dont go through here: ${ok}`),
+    (err: Error) => t.pass(err.message),
+  );
 });

@@ -1,13 +1,8 @@
-import { Pubkey } from "~/types/account";
-import {
-  FilterType,
-  History,
-  HistoryOptions,
-  ModuleName,
-  OnErr,
-  OnOk,
-} from "~/types/core";
-import { Signatures, TransactionFilter } from "~/transaction-filter";
+import { Pubkey } from '~/types/account';
+import { History, HistoryOptions } from '~/types/history';
+import { FilterType, ModuleName } from '~/types/transaction-filter';
+import { OnErr, OnOk } from '~/types/shared';
+import { Signatures, TransactionFilter } from '~/transaction-filter';
 
 export namespace SolNative {
   export const getHistory = async (

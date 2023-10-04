@@ -1,8 +1,8 @@
 import test from 'ava';
 import { Multisig } from '../src/';
 import { Setup } from 'test-tools/setup';
-import { KeypairAccount } from 'account';
-import { Pubkey } from 'types/account';
+import { KeypairAccount } from '~/account';
+import { Pubkey } from '~/types/account';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;

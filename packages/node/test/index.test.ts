@@ -1,6 +1,6 @@
 import test from 'ava';
 import { Node } from '../src/';
-import { Constants } from 'shared';
+import { Constants } from '~/shared';
 
 test('Connect devnet', (t) => {
   Node.changeConnection({ cluster: Constants.Cluster.dev });

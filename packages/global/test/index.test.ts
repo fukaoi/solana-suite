@@ -1,8 +1,8 @@
 import test from 'ava';
 import '../src';
-import { Constants } from 'shared';
-import { Node } from 'node';
-import { Explorer } from 'types/global';
+import { Constants } from '~/shared';
+import { Node } from '~/node';
+import { Explorer } from '~/types/global';
 
 const PUBKEY = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
 const SIG =
