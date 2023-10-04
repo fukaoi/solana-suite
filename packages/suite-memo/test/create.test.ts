@@ -67,7 +67,7 @@ test('send memo and sol transfer by owner', async (t) => {
     [source.secret],
     0.01, // Too low lamports, but  error occurs
   );
-  
+
   const res = await [inst1, inst2].submit();
   t.true(res.isOk);
   t.log('# tx signature: ', res.unwrap());

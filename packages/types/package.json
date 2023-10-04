@@ -47,6 +47,11 @@
       "import": "./dist/converter.mjs",
       "types": "./dist/converter.d.ts"
     },
+    "./find": {
+      "require": "./dist/find.js",
+      "import": "./dist/find.mjs",
+      "types": "./dist/find.d.ts"
+    },
     "./history": {
       "require": "./dist/history.js",
       "import": "./dist/history.mjs",
@@ -76,6 +81,11 @@
       "require": "./dist/storage.js",
       "import": "./dist/storage.mjs",
       "types": "./dist/storage.d.ts"
+    },
+    "./transaction-filter": {
+      "require": "./dist/transaction-filter.js",
+      "import": "./dist/transaction-filter.mjs",
+      "types": "./dist/transaction-filter.d.ts"
     },
     "./traditional-nft": {
       "require": "./dist/traditional-nft.js",

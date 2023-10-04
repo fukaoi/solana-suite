@@ -1,6 +1,4 @@
 import { TransactionSignature, PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
-import BN from 'bn.js';
-import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 declare abstract class AbstractResult$1<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
@@ -241,230 +239,12 @@ declare class Instruction {
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
-type Pubkey = (string & {
+type Pubkey$1 = (string & {
     [pubKeyNominality]: never;
 }) | string;
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
-
-type Option<T> = T | null;
-type bignum = number | BN;
-type FileContent = string | Buffer | Uint8Array | ArrayBuffer;
-declare namespace Common {
-    type Properties = {
-        creators?: {
-            address?: string;
-            share?: number;
-            [key: string]: unknown;
-        }[];
-        files?: {
-            type?: string;
-            filePath?: FileContent;
-            [key: string]: unknown;
-        }[];
-        [key: string]: unknown;
-    };
-    type Attribute = {
-        trait_type?: string;
-        value?: string;
-        [key: string]: unknown;
-    };
-    enum UseMethod {
-        Burn = 0,
-        Multiple = 1,
-        Single = 2
-    }
-    type Uses = {
-        useMethod: UseMethod;
-        remaining: bignum;
-        total: bignum;
-    };
-    type Options = {
-        [key: string]: unknown;
-    };
-}
-
-declare namespace InfraSideInput {
-    interface File extends Blob {
-        readonly lastModified: number;
-        readonly name: string;
-    }
-    type StorageNftStorageMetadata = {
-        storageType?: 'nftStorage';
-    };
-    type StorageArweaveMetadata = {
-        storageType?: 'arweave';
-    };
-    type Collection = {
-        key: PublicKey;
-        verified: boolean;
-    };
-    type Creators = {
-        address: PublicKey;
-        verified: boolean;
-        share: number;
-    };
-    type Properties = Common.Properties;
-    type Offchain = {
-        name?: string;
-        symbol?: string;
-        description?: string;
-        seller_fee_basis_points?: number;
-        image?: string;
-        external_url?: string;
-        attributes?: Common.Attribute[];
-        properties?: Common.Properties;
-        collection?: {
-            name?: string;
-            family?: string;
-            [key: string]: unknown;
-        };
-        created_at?: number;
-    };
-    type MetaplexDataV2 = {
-        name: string;
-        symbol: string;
-        uri: string;
-        sellerFeeBasisPoints: number;
-        creators: Option<Creators[]>;
-        collection: Option<Collection>;
-        uses: Option<Common.Uses>;
-    };
-}
-
-declare namespace InfraSideOutput {
-    type Collection = {
-        verified: boolean;
-        key: PublicKey;
-    };
-    type OnchainAndOffchain = {
-        onchain: Metadata;
-        offchain: InfraSideOutput.Offchain;
-    };
-    type Creator = InfraSideInput.Creators;
-    type Offchain = InfraSideInput.Offchain;
-    type Uses = Common.Uses;
-}
-
-type StorageType = 'nftStorage' | 'arweave' | string;
-
-declare namespace UserSideInput {
-    type Collection = Pubkey;
-    type Creators = {
-        address: Pubkey;
-        share: number;
-        verified: boolean;
-    };
-    type Properties = Common.Properties;
-    enum TokenStandard {
-        NonFungible = 0,
-        FungibleAsset = 1,
-        Fungible = 2,
-        NonFungibleEdition = 3,
-        ProgrammableNonFungible = 4
-    }
-    type NftMetadata = {
-        name: string;
-        symbol: string;
-        royalty: number;
-        storageType?: StorageType;
-        filePath?: FileContent;
-        uri?: string;
-        isMutable?: boolean;
-        description?: string;
-        external_url?: string;
-        attributes?: Common.Attribute[];
-        properties?: Properties;
-        maxSupply?: bignum;
-        creators?: Creators[];
-        uses?: Common.Uses;
-        collection?: Collection;
-        options?: Common.Options;
-    };
-    type TokenMetadata = {
-        name: string;
-        symbol: string;
-        filePath?: FileContent;
-        uri?: string;
-        storageType?: StorageType;
-        description?: string;
-        royalty?: number;
-        uses?: Common.Uses;
-        creators?: Creators[];
-        attributes?: Common.Attribute[];
-        options?: Common.Options;
-    };
-}
-
-declare namespace UserSideOutput {
-    type Creators = UserSideInput.Creators;
-    type Collection = {
-        address: Pubkey;
-        verified: boolean;
-    };
-    type Uses = Common.Uses;
-    type NftMetadata = {
-        mint: string;
-        updateAuthority: string;
-        royalty: number;
-        name: string;
-        symbol: string;
-        uri: string;
-        isMutable: boolean;
-        primarySaleHappened: boolean;
-        editionNonce: Option<number>;
-        offchain: InfraSideOutput.Offchain;
-        tokenAmount: string;
-        collection?: Collection | undefined;
-        creators?: Creators[] | undefined;
-        uses?: Common.Uses | undefined;
-        dateTime?: Date | undefined;
-    };
-    type TokenMetadata = {
-        mint: string;
-        name: string;
-        symbol: string;
-        uri: string;
-        royalty: number;
-        offchain: InfraSideOutput.Offchain;
-        tokenAmount: string;
-        attributes?: Common.Attribute | undefined;
-        creators?: Creators[] | undefined;
-        uses?: Common.Uses | undefined;
-        dateTime?: Date | undefined;
-    };
-}
-
-declare namespace CoreUserSideOutput {
-    type History = {
-        sol?: string;
-        account?: string;
-        destination?: Pubkey;
-        source?: Pubkey;
-        authority?: Pubkey;
-        multisigAuthority?: Pubkey;
-        signers?: Pubkey[];
-        mint?: Pubkey;
-        mintAuthority?: Pubkey;
-        tokenAmount?: string;
-        memo?: string;
-        dateTime?: Date;
-        type?: string;
-        sig?: string;
-        innerInstruction?: boolean;
-    };
-}
-
-type HistoryOptions = {
-    waitTime: number;
-    narrowDown: number;
-};
-
-type Find = UserSideOutput.TokenMetadata;
-type History = CoreUserSideOutput.History;
-type OnOk<T extends Find | History> = (ok: T[]) => void;
-type OnErr = (err: Error) => void;
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -669,6 +449,49 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+type Find = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+
+type History = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+type HistoryOptions = {
+    waitTime: number;
+    narrowDown: number;
+};
+
+type OnOk<T extends History | Find> = (ok: T[]) => void;
+type OnErr = (err: Error) => void;
+
 declare global {
     interface Array<T> {
         submit(): Promise<Result<TransactionSignature, Error>>;
@@ -676,10 +499,10 @@ declare global {
 }
 
 declare const Memo: {
-    getHistory: (target: Pubkey, onOk: OnOk<CoreUserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    getHistory: (target: Pubkey$1, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
-    create: (data: string, owner: Pubkey, signer: Secret, feePayer?: Secret | undefined) => Instruction;
+    create: (data: string, owner: Pubkey$1, signer: Secret, feePayer?: Secret | undefined) => Instruction;
 };
 
 export { Memo };

@@ -1,4 +1,4 @@
-export type History = {
+export type Find = {
   sol?: string;
   account?: string;
   destination?: Pubkey;
@@ -14,9 +14,4 @@ export type History = {
   type?: string;
   sig?: string;
   innerInstruction?: boolean;
-};
-
-export type HistoryOptions = {
-  waitTime: number;
-  narrowDown: number;
 };

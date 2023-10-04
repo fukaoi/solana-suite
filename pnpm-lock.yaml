@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -377,6 +373,9 @@ importers:
       '@solana-suite/spl-token':
         specifier: workspace:*
         version: link:../suite-spl-token
+      '@types/bs58':
+        specifier: ^4.0.2
+        version: 4.0.2
       account:
         specifier: workspace:*
         version: link:../account
@@ -1911,7 +1910,7 @@ packages:
       chalk: 5.3.0
       chokidar: 3.5.3
       chunkd: 2.0.1
-      ci-info: 3.8.0
+      ci-info: 3.9.0
       ci-parallel-vars: 1.0.1
       clean-yaml-object: 0.1.0
       cli-truncate: 3.1.0
@@ -2201,8 +2200,8 @@ packages:
     resolution: {integrity: sha512-7d58XsFmOq0j6el67Ug9mHf9ELUXsQXYJBkyxhH/k+6Ke0qXRnv0kbemx+Twc6fRJ07C49lcbdgm9FL1Ei/6SQ==}
     dev: true
 
-  /ci-info@3.8.0:
-    resolution: {integrity: sha512-eXTggHWSooYhq49F2opQhuHWgzucfF2YgODK4e1566GQs5BIfP30B0oenwBJHfWxAs2fyPB1s7Mg949zLf61Yw==}
+  /ci-info@3.9.0:
+    resolution: {integrity: sha512-NIxF55hv4nSqQswkAeiOi1r83xy8JldOFDTWiug55KBu9Jnblncd2U6ViHmYgHf01TPZS77NJBhBMKdWj9HQMQ==}
     engines: {node: '>=8'}
     dev: true
 
@@ -4767,10 +4766,11 @@ packages:
       semver-compare: 1.0.0
     dev: false
 
-  /plimit-lit@1.5.0:
-    resolution: {integrity: sha512-Eb/MqCb1Iv/ok4m1FqIXqvUKPISufcjZ605hl3KM/n8GaX8zfhtgdLwZU3vKjuHGh2O9Rjog/bHTq8ofIShdng==}
+  /plimit-lit@1.6.0:
+    resolution: {integrity: sha512-CHWRJui6rwCDZarn9nbEPAreA/09vzKCBRqKDqXclKczXmdtQstyZMRxOa5Jweq8dTAbJ2/Us038OWObu6R1SA==}
+    engines: {node: '>=18'}
     dependencies:
-      queue-lit: 1.5.0
+      queue-lit: 1.5.1
     dev: true
 
   /plur@5.1.0:
@@ -4857,8 +4857,9 @@ packages:
     resolution: {integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==}
     dev: true
 
-  /queue-lit@1.5.0:
-    resolution: {integrity: sha512-IslToJ4eiCEE9xwMzq3viOO5nH8sUWUCwoElrhNMozzr9IIt2qqvB4I+uHu/zJTQVqc9R5DFwok4ijNK1pU3fA==}
+  /queue-lit@1.5.1:
+    resolution: {integrity: sha512-StsMlkSvodNW5b2L6jOH9vHH11OeEMWEFQPJ2MBed/lXhw2uP+/+xjxCrfhjQXQUfqkGIAYoIJJiEWeWowc3PQ==}
+    engines: {node: '>=18'}
     dev: true
 
   /queue-microtask@1.2.3:
@@ -5516,7 +5517,7 @@ packages:
       globby: 11.1.0
       mylas: 2.1.13
       normalize-path: 3.0.0
-      plimit-lit: 1.5.0
+      plimit-lit: 1.6.0
     dev: true
 
   /tsconfig-paths@3.14.2:
@@ -6021,3 +6022,7 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false

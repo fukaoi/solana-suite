@@ -1,12 +1,7 @@
 import { Pubkey } from '~/types/account';
-import {
-  FilterType,
-  History,
-  HistoryOptions,
-  ModuleName,
-  OnErr,
-  OnOk,
-} from '~/types/history';
+import { History, HistoryOptions } from '~/types/history';
+import { OnErr, OnOk } from '~/types/shared';
+import { FilterType, ModuleName } from '~/types/transaction-filter';
 import { Signatures, TransactionFilter } from '~/transaction-filter';
 
 export namespace Memo {
