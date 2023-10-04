@@ -35,12 +35,10 @@
   "scripts": {
     "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
-    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
-    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
-    "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
-    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
-    "test": "mocha -t 300000 --require ts-node/register -- ",
-    "test:all": "mocha -t 300000 --require ts-node/register './test/**/*.test.ts'",
+    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src",
+    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src --fix",
+    "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ -c",
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/  -c --write",
     "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs'",
     "prepublishOnly": "../../scripts/before-publish.mjs",
     "publish": "../../scripts/after-publish.mjs"
