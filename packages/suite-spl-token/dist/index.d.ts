@@ -105,8 +105,14 @@ declare namespace InfraSideOutput {
 
 type StorageType = 'nftStorage' | 'arweave' | string;
 
-type Pubkey = string;
-type Secret = string;
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
 
 declare namespace UserSideInput {
     type Collection = Pubkey;
@@ -487,22 +493,22 @@ declare class PartialSignInstruction {
 }
 
 declare const SplToken: {
-    transfer: (mint: string, owner: string, dest: string, signers: string[], amount: number, mintDecimal: number, feePayer?: string | undefined) => Promise<Result<Instruction, Error>>;
-    thaw: (mint: string, owner: string, freezeAuthority: string, feePayer?: string | undefined) => Result<Instruction, Error>;
+    transfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, mintDecimal: number, feePayer?: Secret | undefined) => Promise<Result<Instruction, Error>>;
+    thaw: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, feePayer?: Secret | undefined) => Result<Instruction, Error>;
     createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
-    mint: (owner: string, signer: string, totalAmount: number, mintDecimal: number, input: UserSideInput.TokenMetadata, feePayer?: string | undefined, freezeAuthority?: string | undefined) => Promise<Result<MintInstruction, Error>>;
-    getHistory: (target: string, filterType: FilterType, onOk: OnOk<CoreUserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
-    feePayerPartialSignTransfer: (mint: string, owner: string, dest: string, signers: string[], amount: number, mintDecimal: number, feePayer: string) => Promise<Result<PartialSignInstruction, Error>>;
-    genericFindByOwner: <T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata>(owner: string, callback: (result: Result<T[], Error>) => void, tokenStandard: UserSideInput.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
-    genericFindByMint: <T_1 extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata>(mint: string, tokenStandard: UserSideInput.TokenStandard) => Promise<Result<T_1, Error>>;
-    findByOwner: (owner: string, onOk: OnOk<UserSideOutput.TokenMetadata>, onErr: OnErr, options?: {
+    mint: (owner: Pubkey, signer: Secret, totalAmount: number, mintDecimal: number, input: UserSideInput.TokenMetadata, feePayer?: Secret | undefined, freezeAuthority?: Pubkey | undefined) => Promise<Result<MintInstruction, Error>>;
+    getHistory: (target: Pubkey, filterType: FilterType, onOk: OnOk<CoreUserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    feePayerPartialSignTransfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, mintDecimal: number, feePayer: Pubkey) => Promise<Result<PartialSignInstruction, Error>>;
+    genericFindByOwner: <T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata>(owner: Pubkey, callback: (result: Result<T[], Error>) => void, tokenStandard: UserSideInput.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
+    genericFindByMint: <T_1 extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata>(mint: Pubkey, tokenStandard: UserSideInput.TokenStandard) => Promise<Result<T_1, Error>>;
+    findByOwner: (owner: Pubkey, onOk: OnOk<UserSideOutput.TokenMetadata>, onErr: OnErr, options?: {
         sortable?: Sortable | undefined;
         isHolder?: boolean | undefined;
     } | undefined) => void;
-    findByMint: (mint: string) => Promise<Result<UserSideOutput.TokenMetadata, Error>>;
-    burn: (mint: string, owner: string, signers: string[], burnAmount: number, tokenDecimals: number, feePayer?: string | undefined) => Result<Instruction, Error>;
-    add: (token: string, owner: string, signers: string[], totalAmount: number, mintDecimal: number, feePayer?: string | undefined) => Promise<Result<Instruction, Error>>;
+    findByMint: (mint: Pubkey) => Promise<Result<UserSideOutput.TokenMetadata, Error>>;
+    burn: (mint: Pubkey, owner: Pubkey, signers: Secret[], burnAmount: number, tokenDecimals: number, feePayer?: Secret | undefined) => Result<Instruction, Error>;
+    add: (token: Pubkey, owner: Pubkey, signers: Secret[], totalAmount: number, mintDecimal: number, feePayer?: Secret | undefined) => Promise<Result<Instruction, Error>>;
 };
 
 export { SplToken };

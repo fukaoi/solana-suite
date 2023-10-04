@@ -6,7 +6,7 @@ import {
   ModuleName,
   OnErr,
   OnOk,
-} from '~/types/core';
+} from '~/types/history';
 import { Signatures, TransactionFilter } from '~/transaction-filter';
 
 export namespace Memo {

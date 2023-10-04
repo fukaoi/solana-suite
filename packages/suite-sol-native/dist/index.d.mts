@@ -103,8 +103,14 @@ declare namespace InfraSideOutput {
 
 type StorageType = 'nftStorage' | 'arweave' | string;
 
-type Pubkey = string;
-type Secret = string;
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
 
 declare namespace UserSideInput {
     type Collection = Pubkey;
@@ -481,11 +487,11 @@ declare class PartialSignInstruction {
 }
 
 declare const SolNative: {
-    transferWithMultisig: (owner: string, dest: string, signers: string[], amount: number, feePayer?: string | undefined) => Promise<Result<Instruction, Error>>;
-    transfer: (source: string, dest: string, signers: string[], amount: number, feePayer?: string | undefined) => Result<Instruction, Error>;
-    getHistory: (target: string, filterType: FilterType, onOk: OnOk<CoreUserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
-    feePayerPartialSignTransfer: (owner: string, dest: string, signers: string[], amount: number, feePayer: string) => Promise<Result<PartialSignInstruction, Error>>;
-    findByOwner: (owner: string) => Promise<Result<OwnerInfo, Error>>;
+    transferWithMultisig: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, feePayer?: Secret | undefined) => Promise<Result<Instruction, Error>>;
+    transfer: (source: Pubkey, dest: Pubkey, signers: Secret[], amount: number, feePayer?: Secret | undefined) => Result<Instruction, Error>;
+    getHistory: (target: Pubkey, filterType: FilterType, onOk: OnOk<CoreUserSideOutput.History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    feePayerPartialSignTransfer: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, feePayer: Pubkey) => Promise<Result<PartialSignInstruction, Error>>;
+    findByOwner: (owner: Pubkey) => Promise<Result<OwnerInfo, Error>>;
 };
 
 export { SolNative };

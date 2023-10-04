@@ -47,6 +47,11 @@
       "import": "./dist/converter.mjs",
       "types": "./dist/converter.d.ts"
     },
+    "./history": {
+      "require": "./dist/history.js",
+      "import": "./dist/history.mjs",
+      "types": "./dist/history.d.ts"
+    },
     "./instruction": {
       "require": "./dist/instruction.js",
       "import": "./dist/instruction.mjs",

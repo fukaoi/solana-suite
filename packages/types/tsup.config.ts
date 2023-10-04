@@ -6,6 +6,7 @@ const entry = {
   core: 'src/core/index.ts',
   converter: 'src/converter/index.ts',
   global: 'src/global/index.ts',
+  history: 'src/history/index.ts',
   instruction: 'src/instruction/index.ts',
   phantom: 'src/phantom/index.ts',
   shared: 'src/shared/index.ts',

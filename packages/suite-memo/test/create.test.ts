@@ -6,7 +6,6 @@ import { Pubkey } from 'types/account';
 import { KeypairAccount } from 'account';
 import { SolNative } from '@solana-suite/sol-native';
 import { SplToken } from '@solana-suite/spl-token';
-import 'instruction';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
