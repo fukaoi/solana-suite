@@ -76,12 +76,12 @@ test('Change cluster destination, check singleton object', (t) => {
 test('Change custom cluster url', (t) => {
   const customClusterUrl = ['https://dummy-solana-devnet.url'];
   const before = Node.getConnection().rpcEndpoint;
-  console.log('# default clsuter url: ', before);
+  t.log('# default clsuter url: ', before);
   Node.changeConnection({
     customClusterUrl,
   });
   const after = Node.getConnection().rpcEndpoint;
-  console.log('# default clsuter url: ', after);
+  t.log('# default clsuter url: ', after);
   t.is(after, customClusterUrl[0]);
 });
 
@@ -92,12 +92,12 @@ test('Change custom cluster urls', (t) => {
     'https://dummy3-solana-devnet.url',
   ];
   const before = Node.getConnection().rpcEndpoint;
-  console.log('# default clsuter url: ', before);
+  t.log('# default clsuter url: ', before);
   Node.changeConnection({
     customClusterUrl,
   });
   const after = Node.getConnection().rpcEndpoint;
-  console.log('# default clsuter url: ', after);
+  t.log('# default clsuter url: ', after);
   t.regex(customClusterUrl.join(''), new RegExp(after));
 });
 

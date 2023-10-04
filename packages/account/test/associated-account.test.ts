@@ -39,6 +39,6 @@ test('Retry getOrCreate', async (t) => {
     source.secret,
   );
 
-  console.log('# associated token account: ', res);
+  t.log('# associated token account: ', res);
   t.is(typeof res, 'string');
 });

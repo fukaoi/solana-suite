@@ -367,7 +367,22 @@ importers:
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
+      bs58:
+        specifier: ^4.0.1
+        version: 4.0.1
     devDependencies:
+      '@solana-suite/sol-native':
+        specifier: workspace:*
+        version: link:../suite-sol-native
+      '@solana-suite/spl-token':
+        specifier: workspace:*
+        version: link:../suite-spl-token
+      account:
+        specifier: workspace:*
+        version: link:../account
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
       build-configs/eslint:
         specifier: workspace:*
         version: link:../build-configs/eslint
@@ -380,6 +395,15 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      node:
+        specifier: workspace:*
+        version: link:../node
+      test-tools:
+        specifier: workspace:*
+        version: link:../test-tools
+      types:
+        specifier: workspace:*
+        version: link:../types
 
   packages/suite-multisig:
     dependencies:

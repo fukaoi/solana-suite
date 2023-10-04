@@ -20,9 +20,9 @@
   },
   "exports": {
     "./setup": {
-      "require": "./testSetup.ts",
-      "import": "./testSetup.ts",
-      "types": "./testSetup.ts"
+      "require": "./setup.ts",
+      "import": "./setup.ts",
+      "types": "./setup.ts"
     },
     "./assets": {
       "require": "./assets",

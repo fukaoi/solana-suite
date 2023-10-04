@@ -47,12 +47,12 @@ test('[SolanaFM][Devnet, localhost]Create explorer url', (t) => {
 });
 
 test('[SolanaFM][Devnet, custom]Create explorer url', (t) => {
-  console.log('# default clsuter url: ', Node.getConnection().rpcEndpoint);
+  t.log('# default clsuter url: ', Node.getConnection().rpcEndpoint);
   Node.changeConnection({
     cluster: Constants.Cluster.dev,
     customClusterUrl: ['https://dummy-solana-devnet.url'],
   });
-  console.log('# update clsuter url: ', Node.getConnection().rpcEndpoint);
+  t.log('# update clsuter url: ', Node.getConnection().rpcEndpoint);
   const url = SIG.toExplorerUrl(Explorer.SolanaFM);
   const res = /devnet/.test(url);
   t.true(res);

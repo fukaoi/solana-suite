@@ -30,7 +30,7 @@ test('To input convert', async (t) => {
     },
   ];
   const results = Converter.Creators.intoInfraSide(input);
-  console.log('# converted creators', results);
+  t.log('# converted creators', results);
   if (results) {
     results.forEach((res, i) => {
       t.is(res.address.toString(), input[i].address);

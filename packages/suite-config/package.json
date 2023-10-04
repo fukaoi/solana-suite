@@ -42,10 +42,10 @@
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
-    "test": "ava --config node_modules/build-configs/ava/base.cjs -- ",
     "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs'",
     "prepublishOnly": "../../scripts/before-publish.mjs",
-    "publish": "../../scripts/after-publish.mjs"
+    "publish": "../../scripts/after-publish.mjs",
+    "test": "ava --config node_modules/build-configs/ava/base.cjs -- "
   },
   "peerDependencies": {
     "@solana/web3.js": "^1.78.5",

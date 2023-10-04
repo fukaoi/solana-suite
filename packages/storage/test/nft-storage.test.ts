@@ -7,7 +7,8 @@ test('Upload content data', async (t) => {
   const res = await NftStorage.uploadContent(asset.filePath!);
 
   res.match(
-    (ok) => t.pass(`# nft.storage content url: ${ok}`),
+    (ok) => 
+      t.pass(), t.log(`# nft.storage content url: ${ok}`);
     (err) => t.fail(err.message),
   );
 });
@@ -21,7 +22,7 @@ test('Upload metadata json', async (t) => {
   const res = await NftStorage.uploadMetadata(meta);
 
   res.match(
-    (ok) => t.pass(`# nft.storage content url: ${ok}`),
+    (ok) => t.pass(),t.log(`# nft.storage content url: ${ok}`),
     (err) => t.fail(err.message),
   );
 });

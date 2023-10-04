@@ -6,6 +6,7 @@ import {
 } from '@solana/web3.js';
 
 import { Node } from '~/node';
+import { Try } from '~/shared';
 import { MAX_RETRIES } from './define';
 import { Instruction as _Index } from './';
 
@@ -50,3 +51,33 @@ export class Instruction {
     );
   };
 }
+
+/**
+ * senTransaction() TransactionInstruction
+ *
+ * @see {@link types/global.ts}
+ * @returns Promise<Result<string, Error>>
+ */
+
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* @ts-ignore */
+Array.prototype.submit = async function () {
+  const instructions: _Index[] = [];
+  // dont use forEach
+  // It is not possible to stop the process by RETURN in the middle of the process.
+  return Try(async () => {
+    let i = 0;
+    for (const obj of this) {
+      if (obj.isErr) {
+        const errorMess: string = obj.error.message as string;
+        throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
+      } else if (obj.isOk) {
+        instructions.push(obj.value as _Index);
+      } else {
+        instructions.push(obj as _Index);
+      }
+      i++;
+    }
+    return Instruction.batchSubmit(instructions);
+  });
+};

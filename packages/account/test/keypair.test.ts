@@ -35,7 +35,7 @@ test('Failed convert string to SecretKey', (t) => {
 test.only('toPublicKey()', async (t) => {
   for (let index = 0; index < 50; index++) {
     const pubkey = KeypairAccount.create().pubkey;
-    console.log(pubkey.toPublicKey());
+    t.log(pubkey.toPublicKey());
     t.pass();
   }
 });

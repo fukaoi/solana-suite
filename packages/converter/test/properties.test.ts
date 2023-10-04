@@ -30,7 +30,7 @@ test('To input convert', async (t) => {
     t.fail('Miss match output.files');
   } else {
     output.files.forEach(async (file: Common.Properties) => {
-      console.log('# uploade content', file);
+      t.log('# uploade content', file);
       t.not(file, null);
     });
   }
