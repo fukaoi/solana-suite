@@ -2,7 +2,7 @@ import BN from 'bn.js';
 import { PublicKey } from '@solana/web3.js';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { S as StorageType } from './type-ed05193d.js';
-import { Pubkey } from './account.mjs';
+import { Pubkey as Pubkey$1 } from './account.mjs';
 
 type Option<T> = T | null;
 type bignum = number | BN;
@@ -98,15 +98,61 @@ declare namespace InfraSideOutput {
         onchain: Metadata;
         offchain: InfraSideOutput.Offchain;
     };
+    type Transfer = {
+        parsed: {
+            info: {
+                destination: Pubkey;
+                source: Pubkey;
+                lamports: number;
+            };
+            type: string;
+        };
+        program: string;
+        programId?: PublicKey;
+    };
+    type MintTo = {
+        parsed: {
+            info: {
+                account: Pubkey;
+                mint: Pubkey;
+                mintAuthority: Pubkey;
+                tokenAmount: string;
+            };
+            type: string;
+        };
+        program: string;
+        programId?: PublicKey;
+    };
+    type MintToChecked = MintTo;
+    type TransferChecked = {
+        parsed: {
+            info: {
+                destination: Pubkey;
+                mint: Pubkey;
+                multisigAuthority: Pubkey;
+                signers: Pubkey[];
+                source: Pubkey;
+                tokenAmount: string;
+            };
+            type: string;
+        };
+        program: string;
+        programId?: PublicKey;
+    };
+    type Memo = {
+        parsed: string;
+        program: string;
+        programId: PublicKey;
+    };
     type Creator = InfraSideInput.Creators;
     type Offchain = InfraSideInput.Offchain;
     type Uses = Common.Uses;
 }
 
 declare namespace UserSideInput {
-    type Collection = Pubkey;
+    type Collection = Pubkey$1;
     type Creators = {
-        address: Pubkey;
+        address: Pubkey$1;
         share: number;
         verified: boolean;
     };
@@ -154,7 +200,7 @@ declare namespace UserSideInput {
 declare namespace UserSideOutput {
     type Creators = UserSideInput.Creators;
     type Collection = {
-        address: Pubkey;
+        address: Pubkey$1;
         verified: boolean;
     };
     type Uses = Common.Uses;

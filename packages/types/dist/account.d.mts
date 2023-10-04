@@ -6,5 +6,10 @@ type Pubkey = (string & {
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
+type OwnerInfo = {
+    sol: number;
+    lamports: number;
+    owner: string;
+};
 
-export { Pubkey, Secret };
+export { OwnerInfo, Pubkey, Secret };
