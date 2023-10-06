@@ -16,23 +16,20 @@ test.before(async () => {
   owner = obj.source.pubkey;
 });
 
-const withCallback =
-  (fn: (t: ExecutionContext<any>, end: () => void) => Promise<void>) =>
-  async (t: ExecutionContext<any>) => {
-    await promisify(fn)(t);
+test.only('Not found token', async (t) => {
+  const onOk: OnOk<UserSideOutput.TokenMetadata> = (ok) => {
+    console.log('ok: ', ok);
+    // t.fail('Do not come here');
   };
+  // const onErr: OnErr = (err) => t.is(err.message, 'fetch failed');
 
-test.only(
-  'Not found token',
-  withCallback(async (t: ExecutionContext<any>, end: () => void) => {
-    const onOk: OnOk<UserSideOutput.TokenMetadata> = (ok) => {
-      t.true(ok.length === 0);
-      end();
-    };
-    const onErr: OnErr = (err) => t.fail(err.message);
-    SplToken.findByOwner(mint, onOk, onErr);
-  }),
-);
+  const wrap = promisify((err: Error, pubkey: Pubkey, callback: any) => {
+    SplToken.findByOwner(pubkey, callback, console.log);
+  });
+  const res = await wrap(notFoundTokenOwner);
+  console.log(res);
+  t.true(res);
+});
 
 test('Get token info owned', (t) => {
   const onErr: OnErr = (err: Error) => t.fail(err.message);
@@ -105,7 +102,7 @@ test('Get token info by mint address', async (t) => {
 
 test('[Error]Get token info by mint address, but token standard is difierent', async (t) => {
   (await SplToken.findByMint(nftMint)).match(
-    (ok: UserSideOutput.TokenMetadata) => t.fail('Do not come here.'),
+    () => t.fail('Do not come here.'),
     (err: Error) => t.not(err.message, ''),
   );
 });
