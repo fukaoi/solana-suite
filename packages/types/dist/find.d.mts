@@ -15,5 +15,9 @@ type Find = {
     sig?: string;
     innerInstruction?: boolean;
 };
+declare enum Sortable {
+    Asc = "asc",
+    Desc = "desc"
+}
 
-export { Find };
+export { Find, Sortable };

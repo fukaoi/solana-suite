@@ -1,7 +1,8 @@
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
 import { debugLog, Result } from '~/shared';
-import { Find, OnErr, OnOk, Sortable, TokenMetadata } from '~/types/core';
+import { Sortable } from '~/types/find';
+import { OnErr, OnOk } from '~/types/shared';
 import {
   InfraSideOutput,
   UserSideInput,
@@ -194,7 +195,7 @@ export namespace SplToken {
    */
   export const findByOwner = (
     owner: Pubkey,
-    onOk: OnOk<Find>,
+    onOk: OnOk<UserSideOutput.TokenMetadata>,
     onErr: OnErr,
     options?: { sortable?: Sortable; isHolder?: boolean },
   ): void => {
@@ -202,7 +203,7 @@ export namespace SplToken {
     const isHolder = !options?.isHolder ? true : false;
 
     /* eslint-disable @typescript-eslint/no-floating-promises */
-    genericFindByOwner<TokenMetadata>(
+    genericFindByOwner<UserSideOutput.TokenMetadata>(
       owner,
       (result) => {
         result.match((ok) => onOk(ok), onErr);
@@ -221,8 +222,8 @@ export namespace SplToken {
    */
   export const findByMint = async (
     mint: Pubkey,
-  ): Promise<Result<TokenMetadata, Error>> => {
-    return await genericFindByMint<TokenMetadata>(
+  ): Promise<Result<UserSideOutput.TokenMetadata, Error>> => {
+    return await genericFindByMint<UserSideOutput.TokenMetadata>(
       mint,
       UserSideInput.TokenStandard.Fungible,
     );

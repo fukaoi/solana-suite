@@ -1,31 +1,30 @@
-import { describe, it } from "mocha";
-import { assert } from "chai";
-import { FilterType, History, OnErr, OnOk, SplToken } from "../../src/";
-import { Setup } from "../../../shared/test/testSetup";
-import { Pubkey } from "@solana-suite/shared";
+import test from 'ava';
+import { Setup } from 'test-tools/setup';
+import { SplToken } from '../src/';
+import { Pubkey } from '~/types/account';
+import { History } from '~/types/history';
+import { OnErr, OnOk } from '~/types/shared';
+import { FilterType } from '~/types/transaction-filter';
 
 let target: Pubkey;
-const onOk: OnOk<History> = (ok) => {
-  console.log("# hisory size: ", ok.length);
-  ok.forEach((res) => {
-    assert.isNotEmpty(res.source);
-    assert.isNotEmpty(res.destination);
-    assert.isNotEmpty(res.tokenAmount);
-    assert.isNotEmpty(res.signers);
-    assert.isNotEmpty(res.multisigAuthority);
-    assert.isNotNull(res.dateTime);
-  });
-};
+test.before(async () => {
+  const obj = await Setup.generateKeyPair();
+  target = obj.source.pubkey;
+});
 
-const onErr: OnErr = (err: Error) => assert.fail(err.message);
+test('Get mint history', async (t) => {
+  const onOk: OnOk<History> = (ok) => {
+    t.log('# hisory size: ', ok.length);
+    ok.forEach((res) => {
+      t.not(res.source, '');
+      t.not(res.destination, '');
+      t.not(res.tokenAmount, '');
+      t.not(res.signers, '');
+      t.not(res.multisigAuthority, '');
+      t.not(res.dateTime, null);
+    });
+  };
 
-describe("SplToken", () => {
-  before(async () => {
-    const obj = await Setup.generateKeyPair();
-    target = obj.source.pubkey;
-  });
-
-  it("Get mint history", async () => {
-    await SplToken.getHistory(target, FilterType.Mint, onOk, onErr);
-  });
+  const onErr: OnErr = (err: Error) => t.fail(err.message);
+  await SplToken.getHistory(target, FilterType.Mint, onOk, onErr);
 });

@@ -1,7 +1,7 @@
 export { OwnerInfo, Pubkey, Secret } from './account.mjs';
 export { Common, FileContent, InfraSideInput, InfraSideOutput, Option, UserSideInput, UserSideOutput, bignum } from './converter.mjs';
 export { History, HistoryOptions } from './history.mjs';
-export { Find } from './find.mjs';
+export { Find, Sortable } from './find.mjs';
 export { Explorer } from './global.mjs';
 export { Instruction, MintInstruction, PartialSignInstruction } from './instruction.mjs';
 export { InitializeMint, Phantom, connectOption } from './phantom.mjs';

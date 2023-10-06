@@ -1,9 +1,8 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
-import { Setup } from '../../../shared/test/testSetup';
-import { SplToken } from '../../src/';
-import { RandomAsset } from '../../../internals/storage/test/randomAsset';
-import { KeypairAccount } from '@solana-suite/shared';
+import test from 'ava';
+import { Setup } from 'test-tools/setup';
+import { RandomAsset } from 'test-tools/setupAsset';
+import { SplToken } from '../src/';
+import { KeypairAccount } from '~/account';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
@@ -18,61 +17,59 @@ const TOKEN_METADATA = {
   isMutable: false,
 };
 
-describe('SplToken', () => {
-  before(async () => {
-    const obj = await Setup.generateKeyPair();
-    source = obj.source;
-    dest = obj.dest;
-  });
+test.before(async () => {
+  const obj = await Setup.generateKeyPair();
+  source = obj.source;
+  dest = obj.dest;
+});
 
-  it('Create token, batch transfer', async () => {
-    const inst1 = await SplToken.mint(
-      source.pubkey,
-      source.secret,
-      TOKEN_TOTAL_AMOUNT,
-      MINT_DECIMAL,
-      TOKEN_METADATA
-    );
+test('Create token, batch transfer', async (t) => {
+  const inst1 = await SplToken.mint(
+    source.pubkey,
+    source.secret,
+    TOKEN_TOTAL_AMOUNT,
+    MINT_DECIMAL,
+    TOKEN_METADATA,
+  );
 
-    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
-    const token = inst1.unwrap().data as string;
-    (await inst1.submit()).match(
-      (ok: string) => {
-        console.log('# mint: ', token);
-        console.log('# mint signature: ', ok);
-      },
-      (err: Error) => {
-        assert.fail(err.message);
-      }
-    );
+  t.true(inst1.isOk, `${inst1.unwrap()}`);
+  const token = inst1.unwrap().data as string;
+  (await inst1.submit()).match(
+    (ok: string) => {
+      t.log('# mint: ', token);
+      t.log('# mint signature: ', ok);
+    },
+    (err: Error) => {
+      t.fail(err.message);
+    },
+  );
 
-    const inst2 = await SplToken.transfer(
-      token,
-      source.pubkey,
-      dest.pubkey,
-      [source.secret],
-      1,
-      MINT_DECIMAL,
-      source.secret
-    );
+  const inst2 = await SplToken.transfer(
+    token,
+    source.pubkey,
+    dest.pubkey,
+    [source.secret],
+    1,
+    MINT_DECIMAL,
+    source.secret,
+  );
 
-    const inst3 = await SplToken.transfer(
-      token,
-      source.pubkey,
-      dest.pubkey,
-      [source.secret],
-      1,
-      MINT_DECIMAL,
-      source.secret
-    );
+  const inst3 = await SplToken.transfer(
+    token,
+    source.pubkey,
+    dest.pubkey,
+    [source.secret],
+    1,
+    MINT_DECIMAL,
+    source.secret,
+  );
 
-    (await [inst2, inst3].submit()).match(
-      (ok) => {
-        console.log('# transfer signature: ', ok);
-      },
-      (err) => {
-        assert.fail(err.message);
-      }
-    );
-  });
+  (await [inst2, inst3].submit()).match(
+    (ok) => {
+      t.log('# transfer signature: ', ok);
+    },
+    (err) => {
+      t.fail(err.message);
+    },
+  );
 });

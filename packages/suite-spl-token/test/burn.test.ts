@@ -1,9 +1,8 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
-import { Setup } from '../../../shared/test/testSetup';
-import { SplToken } from '../../src/';
-import { KeypairAccount } from '@solana-suite/shared';
-import { RandomAsset } from '../../../internals/storage/test/randomAsset';
+import test from 'ava';
+import { Setup } from 'test-tools/setup';
+import { RandomAsset } from 'test-tools/setupAsset';
+import { SplToken } from '../src/';
+import { KeypairAccount } from '~/account';
 
 let source: KeypairAccount;
 
@@ -18,36 +17,34 @@ const TOKEN_METADATA = {
   isMutable: false,
 };
 
-describe('SplToken', () => {
-  before(async () => {
-    const obj = await Setup.generateKeyPair();
-    source = obj.source;
-  });
+test.before(async () => {
+  const obj = await Setup.generateKeyPair();
+  source = obj.source;
+});
 
-  it('Create token, burn token', async () => {
-    const inst1 = await SplToken.mint(
-      source.pubkey,
-      source.secret,
-      TOKEN_TOTAL_AMOUNT,
-      MINT_DECIMAL,
-      TOKEN_METADATA
-    );
+test('Create token, burn token', async (t) => {
+  const inst1 = await SplToken.mint(
+    source.pubkey,
+    source.secret,
+    TOKEN_TOTAL_AMOUNT,
+    MINT_DECIMAL,
+    TOKEN_METADATA,
+  );
 
-    assert.isTrue(inst1.isOk, `${inst1.unwrap()}`);
-    const token = inst1.unwrap().data as string;
-    console.log('# mint: ', token);
+  t.true(inst1.isOk, `${inst1.unwrap()}`);
+  const token = inst1.unwrap().data as string;
+  t.log('# mint: ', token);
 
-    const burnAmount = 500000;
-    const inst2 = SplToken.burn(
-      token,
-      source.pubkey,
-      [source.secret],
-      burnAmount,
-      MINT_DECIMAL
-    );
+  const burnAmount = 500000;
+  const inst2 = SplToken.burn(
+    token,
+    source.pubkey,
+    [source.secret],
+    burnAmount,
+    MINT_DECIMAL,
+  );
 
-    assert.isTrue(inst2.isOk);
-    const sig = await [inst1, inst2].submit();
-    console.log('signature: ', sig.unwrap());
-  });
+  t.true(inst2.isOk);
+  const sig = await [inst1, inst2].submit();
+  t.log('signature: ', sig.unwrap());
 });
