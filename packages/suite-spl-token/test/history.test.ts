@@ -13,7 +13,7 @@ test.before(async () => {
 });
 
 test('Get mint history', async (t) => {
-  const onOk: OnOk<History> = (ok) => {
+  const onOk: OnOk<History> = async (ok) => {
     t.log('# hisory size: ', ok.length);
     ok.forEach((res) => {
       t.not(res.source, '');
@@ -26,5 +26,7 @@ test('Get mint history', async (t) => {
   };
 
   const onErr: OnErr = (err: Error) => t.fail(err.message);
-  await SplToken.getHistory(target, FilterType.Mint, onOk, onErr);
+  await SplToken.getHistory(target, FilterType.Mint, onOk, onErr, {
+    waitTime: 0,
+  });
 });
