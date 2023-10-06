@@ -2,7 +2,8 @@ import { Result } from '~/shared';
 import { Pubkey } from '~/types/account';
 import { UserSideInput } from '~/types/converter';
 import { SplToken } from '@solana-suite/spl-token';
-import { Find, OnErr, OnOk, Sortable } from '~/types/core';
+import { Find, Sortable } from '~/types/find';
+import { OnErr, OnOk } from '~/types/shared';
 import { NftMetadata } from '~/types/traditional-nft';
 
 export namespace TraditionalNft {

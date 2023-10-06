@@ -6,6 +6,8 @@ import { TraditionalNft as FeePayerTransfer } from './fee-payer-partial-sign-tra
 import { TraditionalNft as Mint } from './mint';
 import { TraditionalNft as Thaw } from './thaw';
 import { TraditionalNft as Transfer } from './transfer';
+import '~/types/instruction';
+import '~/instruction';
 
 export const TraditionalNft = {
   ...Burn,

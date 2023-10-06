@@ -568,6 +568,9 @@ importers:
       '@types/bn.js':
         specifier: ^5.1.2
         version: 5.1.2
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
       build-configs/eslint:
         specifier: workspace:*
         version: link:../build-configs/eslint
