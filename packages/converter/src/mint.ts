@@ -1,19 +1,20 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
-import { CoreInfraSideOutput, CoreUserSideOutput } from '~/types/core';
+import { InfraSideOutput } from '~/types/converter';
+import { History } from '~/types/history';
 import { convertTimestampToDateTime } from '~/shared';
 
 export namespace Converter {
   export namespace Mint {
     export const intoUserSide = (
-      output: CoreInfraSideOutput.MintTo,
+      output: InfraSideOutput.MintTo,
       meta: ParsedTransactionWithMeta,
-    ): CoreUserSideOutput.History | undefined => {
-      const history: CoreUserSideOutput.History = {};
+    ): History | undefined => {
+      const history: History = {};
 
       history.mint = output.parsed.info.mint;
       history.mintAuthority = output.parsed.info.mintAuthority;
       history.tokenAmount = output.parsed.info.tokenAmount;
-      history.account = output.parsed.info.account;
+      history.account = output.parsed.info.account as string;
       history.type = output.program;
       history.dateTime = convertTimestampToDateTime(meta.blockTime as number);
       history.sig = meta.transaction.signatures[0];

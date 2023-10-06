@@ -1,19 +1,17 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
-import {
-  CoreInfraSideOutput,
-  CoreUserSideOutput,
-  PostTokenAccount,
-} from '~/types/core';
+import { InfraSideOutput } from '~/types/converter';
+import { PostTokenAccount } from '~/types/transaction-filter';
+import { History } from '~/types/history';
 import { convertTimestampToDateTime } from '~/shared';
 
 export namespace Converter {
   export namespace TransferChecked {
     export const intoUserSide = (
-      output: CoreInfraSideOutput.TransferChecked,
+      output: InfraSideOutput.TransferChecked,
       meta: ParsedTransactionWithMeta,
       mappingTokenAccount?: PostTokenAccount[],
-    ): CoreUserSideOutput.History | undefined => {
-      const history: CoreUserSideOutput.History = {};
+    ): History | undefined => {
+      const history: History = {};
 
       if (mappingTokenAccount) {
         const foundSource = mappingTokenAccount.find(

@@ -1,14 +1,15 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
-import { CoreInfraSideOutput, CoreUserSideOutput } from '~/types/core';
+import { InfraSideOutput } from '~/types/converter';
+import { History } from '~/types/history';
 import { convertTimestampToDateTime } from '~/shared';
 
 export namespace Converter {
   export namespace Transfer {
     export const intoUserSide = (
-      output: CoreInfraSideOutput.Transfer,
+      output: InfraSideOutput.Transfer,
       meta: ParsedTransactionWithMeta,
-    ): CoreUserSideOutput.History | undefined => {
-      const history: CoreUserSideOutput.History = {};
+    ): History | undefined => {
+      const history: History = {};
 
       // validation check
       if (!output.parsed.info.destination || !output.parsed.info.lamports) {

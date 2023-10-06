@@ -1,5 +1,4 @@
 import { TransactionSignature, PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
-import * as _solana_buffer_layout from '@solana/buffer-layout';
 
 declare abstract class AbstractResult$1<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
@@ -204,48 +203,55 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm"
-}
+type Find = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
 
-declare class Instruction {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    data?: unknown;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
-    submit: () => Promise<Result$1<TransactionSignature, Error>>;
-}
+type History = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+type HistoryOptions = {
+    waitTime: number;
+    narrowDown: number;
+};
 
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret = (string & {
-    [secretNominality]: never;
-}) | string;
+type OnOk<T extends History | Find> = (ok: T[]) => void;
+type OnErr = (err: Error) => void;
+
+declare enum FilterType {
+    Memo = "memo",
+    Mint = "mint",
+    OnlyMemo = "only-memo",
+    Transfer = "transfer"
+}
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -451,15 +457,72 @@ type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
 declare global {
+    interface String {
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        toExplorerUrl(explorer?: Explorer): string;
+    }
+    interface Number {
+        toSol(): number;
+        toLamports(): number;
+    }
+    interface Console {
+        debug(data: unknown, data2?: unknown, data3?: unknown): void;
+    }
+    interface Secret {
+        toKeypair(): Keypair;
+    }
+    interface Pubkey {
+        toPublicKey(): PublicKey;
+    }
+}
+declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm"
+}
+
+declare class Instruction {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: unknown;
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    submit: () => Promise<Result<TransactionSignature, Error>>;
+}
+
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey$1 = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
+type OwnerInfo = {
+    sol: number;
+    lamports: number;
+    owner: string;
+};
+
+declare class PartialSignInstruction {
+    hexInstruction: string;
+    data?: Pubkey$1;
+    constructor(instructions: string, mint?: Pubkey$1);
+    submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
+}
+
+declare global {
     interface Array<T> {
-        submit(): Promise<Result<TransactionSignature, Error>>;
+        submit(): Promise<Result$1<TransactionSignature, Error>>;
     }
 }
 
-declare const Multisig: {
-    isAddress: (multisig: Pubkey) => Promise<Result$1<boolean, Error>>;
-    getInfo: (multisig: Pubkey) => Promise<Result$1<_solana_buffer_layout.LayoutObject, Error>>;
-    create: (m: number, feePayer: Secret, signerPubkeys: Pubkey[]) => Promise<Result$1<Instruction, Error>>;
+declare const SolNative: {
+    transferWithMultisig: (owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, feePayer?: Secret | undefined) => Promise<Result<Instruction, Error>>;
+    transfer: (source: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, feePayer?: Secret | undefined) => Result<Instruction, Error>;
+    getHistory: (target: Pubkey$1, filterType: FilterType, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    feePayerPartialSignTransfer: (owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, feePayer: Pubkey$1) => Promise<Result<PartialSignInstruction, Error>>;
+    findByOwner: (owner: Pubkey$1) => Promise<Result<OwnerInfo, Error>>;
 };
 
-export { Multisig };
+export { SolNative };

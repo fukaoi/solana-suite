@@ -228,26 +228,34 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
-type Pubkey = string;
+declare const pubKeyNominality: unique symbol;
+type Pubkey$1 = (string & {
+    [pubKeyNominality]: never;
+}) | string;
 
-declare namespace CoreUserSideOutput {
-    type History = {
-        sol?: string;
-        account?: string;
-        destination?: Pubkey;
-        source?: Pubkey;
-        authority?: Pubkey;
-        multisigAuthority?: Pubkey;
-        signers?: Pubkey[];
-        mint?: Pubkey;
-        mintAuthority?: Pubkey;
-        tokenAmount?: string;
-        memo?: string;
-        dateTime?: Date;
-        type?: string;
-        sig?: string;
-        innerInstruction?: boolean;
-    };
+type History = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+
+declare namespace Signatures {
+    const getForAdress: (pubkey: Pubkey$1, parser: (transaction: ParsedTransactionWithMeta) => History | undefined, callback: (history: Result<History[], Error>) => void, options: {
+        waitTime: number;
+        narrowDown: number;
+    }, histories?: History[]) => Promise<void>;
 }
 
 declare enum FilterType {
@@ -261,16 +269,9 @@ declare enum ModuleName {
     SplToken = "spl-token"
 }
 
-declare namespace Signatures {
-    const getForAdress: (pubkey: Pubkey, parser: (transaction: ParsedTransactionWithMeta) => CoreUserSideOutput.History | undefined, callback: (history: Result<CoreUserSideOutput.History[], Error>) => void, options: {
-        waitTime: number;
-        narrowDown: number;
-    }, histories?: CoreUserSideOutput.History[]) => Promise<void>;
-}
-
 declare namespace TransactionFilter {
     const isParsedInstruction: (arg: unknown) => arg is ParsedInstruction;
-    const parse: (filterType: FilterType, moduleName: ModuleName) => (txMeta: ParsedTransactionWithMeta) => CoreUserSideOutput.History | undefined;
+    const parse: (filterType: FilterType, moduleName: ModuleName) => (txMeta: ParsedTransactionWithMeta) => History | undefined;
 }
 
 export { Signatures, TransactionFilter };

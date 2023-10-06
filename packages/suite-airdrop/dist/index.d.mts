@@ -228,7 +228,10 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
-type Pubkey = string;
+declare const pubKeyNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
 
 declare namespace Airdrop {
     const request: (pubkey: Pubkey, airdropAmount?: number) => Promise<Result<string, Error>>;

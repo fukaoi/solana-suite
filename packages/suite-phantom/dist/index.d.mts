@@ -1,6 +1,220 @@
 import { TransactionSignature, PublicKey, Keypair, Transaction, SendOptions } from '@solana/web3.js';
 import BN from 'bn.js';
 
+declare const pubKeyNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+
+declare abstract class AbstractResult$1<T, E extends Error> {
+    protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
+    unwrap(): T;
+    unwrap<U>(ok: (value: T) => U): U;
+    unwrap<U, V>(ok: (value: T) => U, err: (error: E) => V): U | V;
+    map<U>(ok: (value: T) => U): Result$1<U, E>;
+    map<U, F extends Error>(ok: (value: T) => U, err: (error: E) => F): Result$1<U, F>;
+    chain<X>(ok: (value: T) => Result$1<X, E>): Result$1<X, E>;
+    chain<X>(ok: (value: T) => Result$1<X, E>): Result$1<X, E>;
+    chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
+    match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
+    submit(): Promise<Result$1<TransactionSignature, Error>>;
+}
+declare class InternalOk$1<T, E extends Error> extends AbstractResult$1<T, E> {
+    readonly value: T;
+    readonly isOk = true;
+    readonly isErr = false;
+    constructor(value: T);
+    protected _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, _err: (error: E) => Result$1<X, U>): Result$1<X, U>;
+}
+declare class InternalErr$1<T, E extends Error> extends AbstractResult$1<T, E> {
+    readonly error: E;
+    readonly isOk = false;
+    readonly isErr = true;
+    constructor(error: E);
+    protected _chain<X, U extends Error>(_ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
+}
+declare namespace Result$1 {
+    export type Ok<T, E extends Error> = InternalOk$1<T, E>;
+    export type Err<T, E extends Error> = InternalErr$1<T, E>;
+    export function ok<T, E extends Error>(value: T): Result$1<T, E>;
+    export function err<E extends Error, T = never>(error?: E): Result$1<T, E>;
+    type U = Result$1<unknown>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U, R10 extends U, R11 extends U, R12 extends U, R13 extends U, R14 extends U, R15 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>,
+        OkType$1<R4>,
+        OkType$1<R5>,
+        OkType$1<R6>,
+        OkType$1<R7>,
+        OkType$1<R8>,
+        OkType$1<R9>,
+        OkType$1<R10>,
+        OkType$1<R11>,
+        OkType$1<R12>,
+        OkType$1<R13>,
+        OkType$1<R14>,
+        OkType$1<R15>
+    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 | R11 | R12 | R13 | R14 | R15>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U, R10 extends U, R11 extends U, R12 extends U, R13 extends U, R14 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>,
+        OkType$1<R4>,
+        OkType$1<R5>,
+        OkType$1<R6>,
+        OkType$1<R7>,
+        OkType$1<R8>,
+        OkType$1<R9>,
+        OkType$1<R10>,
+        OkType$1<R11>,
+        OkType$1<R12>,
+        OkType$1<R13>,
+        OkType$1<R14>
+    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 | R11 | R12 | R13 | R14>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U, R10 extends U, R11 extends U, R12 extends U, R13 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>,
+        OkType$1<R4>,
+        OkType$1<R5>,
+        OkType$1<R6>,
+        OkType$1<R7>,
+        OkType$1<R8>,
+        OkType$1<R9>,
+        OkType$1<R10>,
+        OkType$1<R11>,
+        OkType$1<R12>,
+        OkType$1<R13>
+    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 | R11 | R12 | R13>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U, R10 extends U, R11 extends U, R12 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>,
+        OkType$1<R4>,
+        OkType$1<R5>,
+        OkType$1<R6>,
+        OkType$1<R7>,
+        OkType$1<R8>,
+        OkType$1<R9>,
+        OkType$1<R10>,
+        OkType$1<R11>
+    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 | R11>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U, R10 extends U, R11 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>,
+        OkType$1<R4>,
+        OkType$1<R5>,
+        OkType$1<R6>,
+        OkType$1<R7>,
+        OkType$1<R8>,
+        OkType$1<R9>,
+        OkType$1<R10>,
+        OkType$1<R11>
+    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 | R11>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U, R10 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>,
+        OkType$1<R4>,
+        OkType$1<R5>,
+        OkType$1<R6>,
+        OkType$1<R7>,
+        OkType$1<R8>,
+        OkType$1<R9>,
+        OkType$1<R10>
+    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>,
+        OkType$1<R4>,
+        OkType$1<R5>,
+        OkType$1<R6>,
+        OkType$1<R7>,
+        OkType$1<R8>,
+        OkType$1<R9>
+    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>,
+        OkType$1<R4>,
+        OkType$1<R5>,
+        OkType$1<R6>,
+        OkType$1<R7>,
+        OkType$1<R8>
+    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>,
+        OkType$1<R4>,
+        OkType$1<R5>,
+        OkType$1<R6>,
+        OkType$1<R7>
+    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>,
+        OkType$1<R4>,
+        OkType$1<R5>,
+        OkType$1<R6>
+    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U>(obj: [R0, R1, R2, R3, R4, R5]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>,
+        OkType$1<R4>,
+        OkType$1<R5>
+    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U>(obj: [R0, R1, R2, R3, R4]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>,
+        OkType$1<R4>
+    ], ErrType$1<R0 | R1 | R2 | R3 | R4>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U>(obj: [R0, R1, R2, R3]): Result$1<[
+        OkType$1<R0>,
+        OkType$1<R1>,
+        OkType$1<R2>,
+        OkType$1<R3>
+    ], ErrType$1<R0 | R1 | R2 | R3>>;
+    export function all<R0 extends U, R1 extends U, R2 extends U>(obj: [R0, R1, R2]): Result$1<[OkType$1<R0>, OkType$1<R1>, OkType$1<R2>], ErrType$1<R0 | R1 | R2>>;
+    export function all<R0 extends U, R1 extends U>(obj: [R0, R1]): Result$1<[OkType$1<R0>, OkType$1<R1>], ErrType$1<R0 | R1>>;
+    export function all<R0 extends U>(obj: [R0]): Result$1<[OkType$1<R0>], ErrType$1<R0>>;
+    export function all(obj: []): Result$1<[]>;
+    export function all<T extends U[] | Record<string, U>>(obj: T): Result$1<{
+        [K in keyof T]: T[K] extends Result$1<infer I> ? I : never;
+    }, {
+        [K in keyof T]: T[K] extends Result$1<unknown, infer E> ? E : never;
+    }[keyof T]>;
+    export {};
+}
+type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, E>;
+type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
+type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
+
+declare global {
+    interface Array<T> {
+        submit(): Promise<Result$1<TransactionSignature, Error>>;
+    }
+}
+
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
@@ -267,8 +481,6 @@ declare namespace Common {
 
 type StorageType = 'nftStorage' | 'arweave' | string;
 
-type Pubkey = string;
-
 declare namespace UserSideInput {
     type Collection = Pubkey;
     type Creators = {
@@ -356,8 +568,8 @@ declare const Metaplex: {
 };
 
 declare const PhantomSplToken: {
-    mint: (input: UserSideInput.TokenMetadata, owner: string, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<Result<string, Error>>;
-    add: (tokenKey: string, owner: string, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<Result<string, Error>>;
+    mint: (input: UserSideInput.TokenMetadata, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<Result<string, Error>>;
+    add: (tokenKey: Pubkey, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<Result<string, Error>>;
 };
 
 export { Metaplex, PhantomSplToken };

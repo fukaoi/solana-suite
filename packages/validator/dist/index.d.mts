@@ -316,7 +316,10 @@ declare namespace InfraSideInput {
 
 type StorageType = 'nftStorage' | 'arweave' | string;
 
-type Pubkey = string;
+declare const pubKeyNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
 
 declare namespace UserSideInput {
     type Collection = Pubkey;

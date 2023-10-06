@@ -96,6 +96,52 @@ declare namespace InfraSideOutput {
         onchain: Metadata;
         offchain: InfraSideOutput.Offchain;
     };
+    type Transfer = {
+        parsed: {
+            info: {
+                destination: Pubkey;
+                source: Pubkey;
+                lamports: number;
+            };
+            type: string;
+        };
+        program: string;
+        programId?: PublicKey;
+    };
+    type MintTo = {
+        parsed: {
+            info: {
+                account: Pubkey;
+                mint: Pubkey;
+                mintAuthority: Pubkey;
+                tokenAmount: string;
+            };
+            type: string;
+        };
+        program: string;
+        programId?: PublicKey;
+    };
+    type MintToChecked = MintTo;
+    type TransferChecked = {
+        parsed: {
+            info: {
+                destination: Pubkey;
+                mint: Pubkey;
+                multisigAuthority: Pubkey;
+                signers: Pubkey[];
+                source: Pubkey;
+                tokenAmount: string;
+            };
+            type: string;
+        };
+        program: string;
+        programId?: PublicKey;
+    };
+    type Memo = {
+        parsed: string;
+        program: string;
+        programId: PublicKey;
+    };
     type Creator = InfraSideInput.Creators;
     type Offchain = InfraSideInput.Offchain;
     type Uses = Common.Uses;
@@ -103,13 +149,19 @@ declare namespace InfraSideOutput {
 
 type StorageType = 'nftStorage' | 'arweave' | string;
 
-type Pubkey = string;
-type Secret = string;
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey$1 = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
 
 declare namespace UserSideInput {
-    type Collection = Pubkey;
+    type Collection = Pubkey$1;
     type Creators = {
-        address: Pubkey;
+        address: Pubkey$1;
         share: number;
         verified: boolean;
     };
@@ -157,7 +209,7 @@ declare namespace UserSideInput {
 declare namespace UserSideOutput {
     type Creators = UserSideInput.Creators;
     type Collection = {
-        address: Pubkey;
+        address: Pubkey$1;
         verified: boolean;
     };
     type Uses = Common.Uses;
@@ -207,89 +259,38 @@ declare namespace Converter$a {
     }
 }
 
-declare namespace CoreUserSideOutput {
-    type History = {
-        sol?: string;
-        account?: string;
-        destination?: Pubkey;
-        source?: Pubkey;
-        authority?: Pubkey;
-        multisigAuthority?: Pubkey;
-        signers?: Pubkey[];
-        mint?: Pubkey;
-        mintAuthority?: Pubkey;
-        tokenAmount?: string;
-        memo?: string;
-        dateTime?: Date;
-        type?: string;
-        sig?: string;
-        innerInstruction?: boolean;
-    };
-}
-
-declare namespace CoreInfraSideOutput {
-    type Transfer = {
-        parsed: {
-            info: {
-                destination: Pubkey;
-                source: Pubkey;
-                lamports: number;
-            };
-            type: string;
-        };
-        program: string;
-        programId?: PublicKey;
-    };
-    type MintTo = {
-        parsed: {
-            info: {
-                account: Pubkey;
-                mint: Pubkey;
-                mintAuthority: Pubkey;
-                tokenAmount: string;
-            };
-            type: string;
-        };
-        program: string;
-        programId?: PublicKey;
-    };
-    type MintToChecked = MintTo;
-    type TransferChecked = {
-        parsed: {
-            info: {
-                destination: Pubkey;
-                mint: Pubkey;
-                multisigAuthority: Pubkey;
-                signers: Pubkey[];
-                source: Pubkey;
-                tokenAmount: string;
-            };
-            type: string;
-        };
-        program: string;
-        programId?: PublicKey;
-    };
-    type Memo = {
-        parsed: string;
-        program: string;
-        programId: PublicKey;
-    };
-}
-
 type PostTokenAccount = {
     account: string;
     owner: string;
 };
 
+type History = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+
 declare namespace Converter$9 {
     namespace Memo {
-        const intoUserSide: (output: CoreInfraSideOutput.Memo, meta: ParsedTransactionWithMeta, outputTransfer?: CoreInfraSideOutput.TransferChecked, mappingTokenAccount?: PostTokenAccount[]) => CoreUserSideOutput.History | undefined;
+        const intoUserSide: (output: InfraSideOutput.Memo, meta: ParsedTransactionWithMeta, outputTransfer?: InfraSideOutput.TransferChecked, mappingTokenAccount?: PostTokenAccount[]) => History | undefined;
     }
 }
 
 declare namespace Converter$8 {
     namespace Mint {
-        const intoUserSide: (output: CoreInfraSideOutput.MintTo, meta: ParsedTransactionWithMeta) => CoreUserSideOutput.History | undefined;
+        const intoUserSide: (output: InfraSideOutput.MintTo, meta: ParsedTransactionWithMeta) => History | undefined;
     }
 }
 
@@ -551,13 +552,13 @@ declare namespace Converter$4 {
 
 declare namespace Converter$3 {
     namespace TransferChecked {
-        const intoUserSide: (output: CoreInfraSideOutput.TransferChecked, meta: ParsedTransactionWithMeta, mappingTokenAccount?: PostTokenAccount[]) => CoreUserSideOutput.History | undefined;
+        const intoUserSide: (output: InfraSideOutput.TransferChecked, meta: ParsedTransactionWithMeta, mappingTokenAccount?: PostTokenAccount[]) => History | undefined;
     }
 }
 
 declare namespace Converter$2 {
     namespace Transfer {
-        const intoUserSide: (output: CoreInfraSideOutput.Transfer, meta: ParsedTransactionWithMeta) => CoreUserSideOutput.History | undefined;
+        const intoUserSide: (output: InfraSideOutput.Transfer, meta: ParsedTransactionWithMeta) => History | undefined;
     }
 }
 
