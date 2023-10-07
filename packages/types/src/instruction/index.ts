@@ -4,7 +4,7 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 import { Pubkey, Secret } from '../account';
-import {Result} from '../shared';
+import { Result } from '../shared';
 
 export type Instruction = {
   instructions: TransactionInstruction[];

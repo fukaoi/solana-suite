@@ -14,7 +14,6 @@ export namespace InfraSideOutput {
     offchain: InfraSideOutput.Offchain;
   };
 
-
   export type Transfer = {
     parsed: {
       info: {

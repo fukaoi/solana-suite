@@ -1,6 +1,6 @@
-import {Keypair, Transaction} from '@solana/web3.js'
+import { Keypair, Transaction } from '@solana/web3.js';
 
 export type InitializeMint = {
-  mint: Keypair,
-  tx: Transaction
-}
+  mint: Keypair;
+  tx: Transaction;
+};

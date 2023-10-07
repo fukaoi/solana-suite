@@ -6,8 +6,8 @@ import {
 } from '@solana/web3.js';
 
 export type connectOption = {
-   onlyIfTrusted: false
-}
+  onlyIfTrusted: false;
+};
 
 export type Phantom = {
   isPhantom?: boolean;
@@ -17,7 +17,7 @@ export type Phantom = {
   signAllTransactions(transactions: Transaction[]): Promise<Transaction[]>;
   signAndSendTransaction(
     transaction: Transaction,
-    options?: SendOptions
+    options?: SendOptions,
   ): Promise<{ signature: TransactionSignature }>;
   signMessage(message: Uint8Array): Promise<Uint8Array>;
   connect(): Promise<{
