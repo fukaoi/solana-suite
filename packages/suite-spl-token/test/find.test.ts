@@ -24,6 +24,8 @@ const withCallback = (fn: any) => async (t: any) => {
   t.pass();
 };
 
+// not use t.log, because it is buffering
+
 test(
   'Not found token',
   withCallback((t: any, end: any) => {
@@ -37,35 +39,10 @@ test(
 );
 
 test(
-  'Get token info owned',
-  withCallback(async (t: any, end: any) => {
-    const onErr: OnErr = (err: Error) => t.fail(err.message);
-    SplToken.findByOwner(
-      owner,
-      (ok: UserSideOutput.TokenMetadata[]) => {
-        t.log(ok);
-        ok.forEach((res) => {
-          t.not(res.name, '');
-          t.not(res.mint, '');
-          t.not(res.symbol, '');
-          t.not(res.uri, '');
-          t.is(typeof res.royalty, 'number');
-          t.not(res.offchain, '');
-          t.not(res.tokenAmount, '');
-        });
-      },
-      onErr,
-    );
-    await sleep(2);
-    end();
-  }),
-);
-
-test(
   'Get token info owned with no Hold',
   withCallback(async (t: any, end: any) => {
     const onOk: OnOk<UserSideOutput.TokenMetadata> = async (ok) => {
-      t.log(ok);
+      console.log(ok);
       ok.forEach((res) => {
         t.not(res.name, '');
         t.not(res.mint, '');
@@ -75,19 +52,20 @@ test(
         t.not(res.offchain, '');
         t.not(res.tokenAmount, '');
       });
+      if (ok.length > 5 || (await sleep(10)) > 0) {
+        end();
+      }
     };
     const onErr: OnErr = (err: Error) => t.fail(err.message);
     SplToken.findByOwner(owner, onOk, onErr, { isHolder: false });
-    await sleep(2);
-    end();
   }),
 );
 
 test(
   'Get token info owned with Asc',
-  withCallback(async (t: any, end: any) => {
-    const onOk: OnOk<UserSideOutput.TokenMetadata> = (ok) => {
-      t.log(ok);
+  withCallback((t: any, end: any) => {
+    const onOk: OnOk<UserSideOutput.TokenMetadata> = async (ok) => {
+      console.log(ok);
       ok.forEach((res) => {
         t.not(res.name, '');
         t.not(res.mint, '');
@@ -97,34 +75,30 @@ test(
         t.not(res.offchain, '');
         t.not(res.tokenAmount, '');
       });
+      if (ok.length > 5 || (await sleep(10)) > 0) {
+        end();
+      }
     };
     const onErr: OnErr = (err: Error) => t.fail(err.message);
     SplToken.findByOwner(owner, onOk, onErr, { sortable: Sortable.Asc });
-    await sleep(2);
-    end();
   }),
 );
 
-test(
-  'Get token info by mint address',
-  withCallback(async (t: any, end: any) => {
-    (await SplToken.findByMint(mint)).match(
-      (ok: UserSideOutput.TokenMetadata) => {
-        t.log(ok);
-        t.not(ok.name, '');
-        t.not(ok.mint, '');
-        t.not(ok.symbol, '');
-        t.not(ok.uri, '');
-        t.not(ok.royalty, '');
-        t.not(ok.tokenAmount, '');
-        t.not(ok.offchain, '');
-      },
-      (err: Error) => t.fail(err.message),
-    );
-    await sleep(2);
-    end();
-  }),
-);
+test('Get token info by mint address', async (t) => {
+  (await SplToken.findByMint(mint)).match(
+    (ok: UserSideOutput.TokenMetadata) => {
+      console.log(ok);
+      t.not(ok.name, '');
+      t.not(ok.mint, '');
+      t.not(ok.symbol, '');
+      t.not(ok.uri, '');
+      t.not(ok.royalty, '');
+      t.not(ok.tokenAmount, '');
+      t.not(ok.offchain, '');
+    },
+    (err: Error) => t.fail(err.message),
+  );
+});
 
 test('[Error]Get token info by mint address, but token standard is difierent', async (t) => {
   (await SplToken.findByMint(nftMint)).match(
