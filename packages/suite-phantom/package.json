@@ -44,13 +44,16 @@
     "publish": "../../scripts/after-publish.mjs"
   },
   "dependencies": {
+    "@solana/buffer-layout": "^4.0.1",
     "@solana-suite/spl-token": "workspace:^",
     "@solana-suite/traditional-nft": "workspace:^",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
+    "@solana-suite/config": "workspace:^",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
     "bignumber.js": "^9.1.2",
     "nft.storage": "^7.1.1",
+    "bn.js": "^5.2.1",
     "bs58": "^4.0.1"
   },
   "devDependencies": {
