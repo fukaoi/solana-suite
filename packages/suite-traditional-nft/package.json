@@ -44,18 +44,21 @@
     "prepublishOnly": "../../scripts/before-publish.mjs",
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana-suite/spl-token": "workspace:^",
     "@solana/spl-token": "^0.3.8",
+    "@solana/buffer-layout": "^4.0.1",
     "@solana/web3.js": "^1.78.5",
     "bn.js": "^5.2.1",
     "bignumber.js": "^9.1.2",
-    "nft.storage": "^7.1.1"
+    "nft.storage": "^7.1.1",
+    "bs58": "^4.0.1",
+    "@solana-suite/config": "workspace:*"
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/bn.js": "^5.1.2",
+    "test-tools": "workspace:*",
     "build-configs/ava": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",

@@ -1,77 +1,127 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
-import { Metaplex } from '../../src/metaplex';
-import { Find, OnErr, OnOk, Sortable } from '@solana-suite/core';
-import { Setup } from '../../../shared/test/testSetup';
-import { Pubkey } from '@solana-suite/shared';
-import { NftMetadata } from 'src';
+import test from 'ava';
+import { Setup } from 'test-tools/setup';
+import { Pubkey } from '~/types/account';
+import { Sortable } from '~/types/find';
+import { OnErr, OnOk } from '~/types/shared';
+import { UserSideOutput } from '~/types/converter';
+import { promisify } from 'node:util';
+import { sleep } from '../../shared/src/shared';
+import { TraditionalNft } from '../src/';
 
 let owner: Pubkey;
 const notFoundTokenOwner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT';
 const nftMint = '5cjaV2QxSrZ3qESwsH49JmQqrcakThBZ9uZ5NVCcqzHt'; // nft
 const mint = 'EFgwtsm4azvQcnRPhDZ8yV9we1A12PgecpJ3im79o4x3'; // token
 
-const onOk: OnOk<Find> = (ok) => {
-  ok.forEach((res) => {
-    assert.isNotEmpty(res.name);
-    assert.isNotEmpty(res.mint);
-    assert.isNotEmpty(res.symbol);
-    assert.isNotEmpty(res.uri);
-    assert.isNumber(res.royalty);
-    assert.isNotEmpty(res.offchain);
-    assert.isNotEmpty(res.tokenAmount);
-  });
+/* eslint-disable */
+const withCallback = (fn: any) => async (t: any) => {
+  await promisify(fn)(t);
+  t.pass();
 };
 
-const onErr: OnErr = (err: Error) => assert.fail(err.message);
+// not use t.log, because it is buffering
 
-describe('Metaplex.find', () => {
-  before(async () => {
-    const obj = await Setup.generateKeyPair();
-    owner = obj.source.pubkey;
-  });
+test.before(async () => {
+  const obj = await Setup.generateKeyPair();
+  owner = obj.source.pubkey;
+});
 
-  it('Not found nft', (done) => {
-    const onOk: OnOk<Find> = (ok) => assert.isArray(ok);
-    const onErr: OnErr = (err) => assert.fail(err.message);
-    Metaplex.findByOwner(notFoundTokenOwner, onOk, onErr);
-    done();
-  });
+test(
+  'Not found nft',
+  withCallback((t: any, end: any) => {
+    const onOk: OnOk<UserSideOutput.NftMetadata> = (ok) =>
+      t.true(Array.isArray(ok));
+    end();
+    const onErr: OnErr = (err) => t.fail(err.message);
+    TraditionalNft.findByOwner(notFoundTokenOwner, onOk, onErr);
+  }),
+);
 
-  it('Find owner info', (done) => {
-    Metaplex.findByOwner(owner, onOk, onErr);
-    done();
-  });
+test(
+  'Find owner info',
+  withCallback((t: any, end: any) => {
+    const onOk: OnOk<UserSideOutput.NftMetadata> = async (ok) => {
+      ok.forEach((res) => {
+        t.not(res.name, '');
+        t.not(res.mint, '');
+        t.not(res.symbol, '');
+        t.not(res.uri, '');
+        t.is(typeof res.royalty, 'number');
+        t.not(res.offchain, '');
+        t.not(res.tokenAmount, '');
+      });
+      if (ok.length > 5 || (await sleep(10)) > 0) {
+        end();
+      }
+    };
+    const onErr: OnErr = (err: Error) => t.fail(err.message);
+    TraditionalNft.findByOwner(owner, onOk, onErr);
+  }),
+);
 
-  it('Find owner info with Asc', (done) => {
-    Metaplex.findByOwner(owner, onOk, onErr, { sortable: Sortable.Asc });
-    done();
-  });
+test(
+  'Find owner info with Asc',
+  withCallback((t: any, end: any) => {
+    const onOk: OnOk<UserSideOutput.NftMetadata> = async (ok) => {
+      ok.forEach((res) => {
+        t.not(res.name, '');
+        t.not(res.mint, '');
+        t.not(res.symbol, '');
+        t.not(res.uri, '');
+        t.is(typeof res.royalty, 'number');
+        t.not(res.offchain, '');
+        t.not(res.tokenAmount, '');
+      });
+      if (ok.length > 5 || (await sleep(10)) > 0) {
+        end();
+      }
+    };
+    const onErr: OnErr = (err: Error) => t.fail(err.message);
+    TraditionalNft.findByOwner(owner, onOk, onErr, { sortable: Sortable.Asc });
+  }),
+);
 
-  it('Find owner info with no Hold', (done) => {
-    Metaplex.findByOwner(owner, onOk, onErr, { isHolder: true });
-    done();
-  });
+test(
+  'Find owner info with no Hold',
+  withCallback((t: any, end: any) => {
+    const onOk: OnOk<UserSideOutput.NftMetadata> = async (ok) => {
+      ok.forEach((res) => {
+        t.not(res.name, '');
+        t.not(res.mint, '');
+        t.not(res.symbol, '');
+        t.not(res.uri, '');
+        t.is(typeof res.royalty, 'number');
+        t.not(res.offchain, '');
+        t.not(res.tokenAmount, '');
+      });
+      if (ok.length > 5 || (await sleep(10)) > 0) {
+        end();
+      }
+    };
+    const onErr: OnErr = (err: Error) => t.fail(err.message);
 
-  it('Get token info by mint address', async () => {
-    (await Metaplex.findByMint(nftMint)).match(
-      (ok: NftMetadata) => {
-        assert.isNotEmpty(ok.name);
-        assert.isNotEmpty(ok.mint);
-        assert.isNotEmpty(ok.symbol);
-        assert.isNotEmpty(ok.uri);
-        assert.isNumber(ok.royalty);
-        assert.isNotEmpty(ok.tokenAmount);
-        assert.isNotEmpty(ok.offchain);
-      },
-      (err: Error) => assert.fail(err.message),
-    );
-  });
+    TraditionalNft.findByOwner(owner, onOk, onErr, { isHolder: true });
+  }),
+);
 
-  it('[Error]Get token info by mint address, but token standard is difierent', async () => {
-    (await Metaplex.findByMint(mint)).match(
-      (ok: string) => assert.fail(`${ok}`),
-      (err: Error) => assert.isNotEmpty(err.message),
-    );
-  });
+test('Get token info by mint address', async (t) => {
+  (await TraditionalNft.findByMint(nftMint)).match(
+    (ok: UserSideOutput.NftMetadata) => {
+      t.not(ok.name, '');
+      t.not(ok.mint, '');
+      t.not(ok.symbol, '');
+      t.not(ok.uri, '');
+      t.not(ok.royalty, '');
+      t.not(ok.tokenAmount, '');
+      t.not(ok.offchain, '');
+    },
+    (err: Error) => t.fail(err.message),
+  );
+});
+
+test('[Error]Get token info by mint address, but token standard is difierent', async (t) => {
+  (await TraditionalNft.findByMint(mint)).match(
+    () => t.fail('Dont come here'),
+    (err: Error) => t.not(err.message, ''),
+  );
 });

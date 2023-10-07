@@ -53,7 +53,7 @@
     "cross-fetch": "^4.0.0",
     "bignumber.js": "^9.1.2",
     "nft.storage": "^7.1.1",
-    "bn.js": "^5.2.1"
+    "bs58": "^4.0.1"
   },
   "devDependencies": {
     "test-tools": "workspace:*",

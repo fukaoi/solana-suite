@@ -19,13 +19,13 @@ export namespace TraditionalNft {
     mint: Pubkey,
     owner: Pubkey,
     freezeAuthority: Secret,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Result<Instruction, Error> => {
     const payer = feePayer ? feePayer : freezeAuthority;
     return Try(() => {
       const tokenAccount = getAssociatedTokenAddressSync(
         mint.toPublicKey(),
-        owner.toPublicKey()
+        owner.toPublicKey(),
       );
       const editionAddress = Pda.getMasterEdition(mint);
 
@@ -38,7 +38,7 @@ export namespace TraditionalNft {
       return new Instruction(
         [inst],
         [freezeAuthority.toKeypair()],
-        payer.toKeypair()
+        payer.toKeypair(),
       );
     });
   };

@@ -1,8 +1,8 @@
 import { Result } from '~/shared';
 import { Pubkey } from '~/types/account';
-import { UserSideInput } from '~/types/converter';
+import { UserSideInput, UserSideOutput } from '~/types/converter';
 import { SplToken } from '@solana-suite/spl-token';
-import { Find, Sortable } from '~/types/find';
+import { Sortable } from '~/types/find';
 import { OnErr, OnOk } from '~/types/shared';
 import { NftMetadata } from '~/types/traditional-nft';
 
@@ -18,7 +18,7 @@ export namespace TraditionalNft {
    */
   export const findByOwner = async (
     owner: Pubkey,
-    onOk: OnOk<Find>,
+    onOk: OnOk<UserSideOutput.NftMetadata>,
     onErr: OnErr,
     options?: { sortable?: Sortable; isHolder?: boolean },
   ): Promise<void> => {
