@@ -12,6 +12,6 @@
       ]
     }
   },
-  "include": ["solana-suite.json", "test/**/*.ts"],
+  "include": ["solana-suite.json"],
   "exclude": ["node_modules", "dist"]
 }

@@ -19,7 +19,7 @@ export namespace Validator {
   export const URL_LENGTH = 200;
   export const ROYALTY_MAX = 100;
   export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
-  export const ROYALTY_MIN = -1;
+  export const ROYALTY_MIN = 0;
 
   export const isRoyalty = (
     royalty: number,
