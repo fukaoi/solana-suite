@@ -24,12 +24,10 @@
   },
   "devDependencies": {
     "@types/bs58": "^4.0.2",
-    "@types/jsdom": "^21.1.3",
     "build-configs/ava": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
-    "build-configs/tsup": "workspace:*",
-    "jsdom": "^22.1.0"
+    "build-configs/tsup": "workspace:*"
   }
 }

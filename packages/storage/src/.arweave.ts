@@ -1,4 +1,4 @@
-import { MetaplexFile, toMetaplexFile } from '@metaplex-foundation/js';
+import { MetaplexFile, toMetaplexFile } from '@metaplex-foundgtion/js';
 
 import {
   debugLog,

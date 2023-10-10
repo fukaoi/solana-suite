@@ -14,11 +14,12 @@
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
-  "peerDependencies": {
+  "dependencies": {
     "nft.storage": "^7.1.1"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@types/jsdom": "^21.1.3",
+    "jsdom": "^22.1.0",
     "@solana-suite/config": "workspace:*",
     "test-tools": "workspace:*",
     "build-configs/ava": "workspace:*",
