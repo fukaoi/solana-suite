@@ -10,14 +10,12 @@ const browserUploaded = (filePath: string): ArrayBuffer => {
 
 test('string to buffer', (t) => {
   const asset = RandomAsset.get();
-  const buffer = Bundlr.toBuffer(asset.filePath);
-  console.log(buffer);
-  t.pass();
+  const res = Bundlr.toBuffer(asset.filePath);
+  t.true(res.isOk);
 });
 
 test('file to buffer', (t) => {
   const asset = RandomAsset.get();
-  const buffer = Bundlr.toBuffer(browserUploaded(asset.filePath));
-  console.log(buffer);
-  t.pass();
+  const res = Bundlr.toBuffer(browserUploaded(asset.filePath));
+  t.true(res.isOk);
 });

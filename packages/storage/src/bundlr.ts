@@ -1,8 +1,9 @@
 import { Try } from '~/shared';
+import { FileContent } from '~/types/converter';
 import fs from 'fs';
 
 export namespace Bundlr {
-  export const toBuffer = (content: string | ArrayBuffer) => {
+  export const toBuffer = (content: FileContent) => {
     return Try(() => {
       let buffer: ArrayBuffer;
       if (typeof content === 'string') {
