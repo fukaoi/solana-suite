@@ -1,13 +1,14 @@
 import { Try } from '~/shared';
 import { FileContent } from '~/types/converter';
-import fs from 'fs';
 
 export namespace Bundlr {
+  export const upload = () => {};
+
   export const toBuffer = (content: FileContent) => {
-    return Try(() => {
+    return Try(async () => {
       let buffer: ArrayBuffer;
       if (typeof content === 'string') {
-        buffer = fs.readFileSync(content).buffer;
+        buffer = (await import('fs')).readFileSync(content);
       } else if (isArrayBuffer(content)) {
         buffer = content;
       } else {
