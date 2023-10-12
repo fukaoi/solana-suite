@@ -1,4 +1,4 @@
-import { Irys } from '../src/';
+import { ProvenanceLayer } from '../src/';
 import fs from 'node:fs';
 import test from 'ava';
 import { RandomAsset } from 'test-tools/setupAsset';
@@ -8,14 +8,14 @@ const browserUploaded = (filePath: string): ArrayBuffer => {
   return buffer.buffer;
 };
 
-test('string to buffer', (t) => {
+test('string to buffer', async (t) => {
   const asset = RandomAsset.get();
-  const res = Irys.toBuffer(asset.filePath);
+  const res = await ProvenanceLayer.toBuffer(asset.filePath);
   t.true(res.isOk);
 });
 
-test('file to buffer', (t) => {
+test('file to buffer', async (t) => {
   const asset = RandomAsset.get();
-  const res = Irys.toBuffer(browserUploaded(asset.filePath));
+  const res = await ProvenanceLayer.toBuffer(browserUploaded(asset.filePath));
   t.true(res.isOk);
 });
