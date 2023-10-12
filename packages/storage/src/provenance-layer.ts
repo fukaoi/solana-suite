@@ -1,4 +1,4 @@
-import { Constants, Try } from '~/shared';
+import { Constants } from '~/shared';
 import { FileContent } from '~/types/converter';
 import { PhantomProvider } from '~/types/phantom';
 import Irys, { WebIrys } from '@irys/sdk';
@@ -7,20 +7,22 @@ export namespace ProvenanceLayer {
   export const upload = () => {};
   const TOKEN = 'solana';
 
-  export const toBuffer = (content: FileContent) => {
-    return Try(async () => {
-      let buffer: ArrayBuffer;
-      if (typeof content === 'string') {
-        buffer = (await import('fs')).readFileSync(content);
-      } else if (isArrayBuffer(content)) {
-        buffer = content;
-      } else {
-        throw Error('No match content type');
-      }
-      return buffer;
-    });
+  // @internal
+  export const toBuffer = async (
+    content: FileContent,
+  ): Promise<ArrayBuffer> => {
+    let buffer: ArrayBuffer;
+    if (typeof content === 'string') {
+      buffer = (await import('fs')).readFileSync(content);
+    } else if (isArrayBuffer(content)) {
+      buffer = content;
+    } else {
+      throw Error('No match content type');
+    }
+    return buffer;
   };
 
+  // @internal
   export const getIrys = async (secret: Secret) => {
     const url = Constants.BUNDLR_NETWORK_URL;
     const clusterUrl = Constants.currentCluster;
@@ -35,7 +37,10 @@ export namespace ProvenanceLayer {
     return irys;
   };
 
-  export const getWebIrys = async (provider: PhantomProvider) => {
+  // @internal
+  export const getBrowserIrys = async (
+    provider: PhantomProvider,
+  ): Promise<WebIrys> => {
     const url = Constants.BUNDLR_NETWORK_URL;
     const token = TOKEN;
     const clusterUrl = Constants.currentCluster;

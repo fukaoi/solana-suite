@@ -1,6 +1,10 @@
 import { TransactionSignature, PublicKey, Keypair } from '@solana/web3.js';
 import BN from 'bn.js';
 
+declare namespace ProvenanceLayer {
+    const upload: () => void;
+}
+
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
@@ -402,4 +406,4 @@ declare namespace Storage {
     const uploadMetaAndContent: (input: InfraSideInput.Offchain, filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
 }
 
-export { NftStorage, Storage };
+export { NftStorage, ProvenanceLayer, Storage };

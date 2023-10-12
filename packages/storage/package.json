@@ -19,7 +19,10 @@
     "nft.storage": "^7.1.1"
   },
   "devDependencies": {
+    "jsdom": "^22.1.0",
+    "@types/jsdom": "^21.1.3",
     "@solana-suite/config": "workspace:*",
+    "@solana/wallet-adapter-wallets": "^0.19.23",
     "build-configs/ava": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",
