@@ -55,13 +55,10 @@ export namespace Constants {
       case Constants.Cluster.dev:
       case Constants.Cluster.test:
       case Constants.Cluster.localhost:
-        return 'https://devnet.bundlr.network';
+        return 'https://devnet.irys.xyz';
       default: {
         const index = Date.now() % 2;
-        const clusters = [
-          'https://node1.bundlr.network',
-          'https://node2.bundlr.network',
-        ];
+        const clusters = ['https://node1.irys.xyz', 'https://node2.irys.xyz'];
         return clusters[index];
       }
     }

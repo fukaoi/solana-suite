@@ -9,7 +9,7 @@ export type connectOption = {
   onlyIfTrusted: false;
 };
 
-export type Phantom = {
+export type PhantomProvider = {
   isPhantom?: boolean;
   publicKey: PublicKey;
   isConnected: boolean;
