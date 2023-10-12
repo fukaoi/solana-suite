@@ -15,8 +15,8 @@ export namespace ProvenanceLayer {
       const irys = await getIrys(identity);
       const tags = [{ name: 'application-id', value: 'MyNFTDrop' }];
 
-      const buffer = await toBuffer(uploadFile);
-      const willPay = await calculateCost(buffer.byteLength, identity);
+      const byteLength = await toByteLength(uploadFile);
+      const willPay = await calculateCost(byteLength, identity);
       const fundTx = await irys.fund(irys.utils.toAtomic(willPay));
       debugLog('#fundTx: ', fundTx);
       let receipt!: UploadResponse;
@@ -30,21 +30,18 @@ export namespace ProvenanceLayer {
   };
 
   // @internal
-  export const toBuffer = async (
-    content: FileContent,
-  ): Promise<ArrayBuffer> => {
-    let buffer: ArrayBuffer;
+  export const toByteLength = async (content: FileContent): Promise<number> => {
+    let length: number;
     if (typeof content === 'string') {
-      buffer = (await import('fs')).readFileSync(content);
+      length = (await import('fs')).readFileSync(content).length;
     } else if (content instanceof File) {
-      // todo File
-      buffer = content;
+      length = content.size;
     } else if (isArrayBuffer(content)) {
-      buffer = content;
+      length = content.byteLength;
     } else {
       throw Error('No match content type');
     }
-    return buffer;
+    return length;
   };
 
   // @internal

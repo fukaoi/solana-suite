@@ -1,8 +1,18 @@
-import { TransactionSignature, PublicKey, Keypair } from '@solana/web3.js';
+import { PublicKey, Transaction, TransactionSignature, Keypair } from '@solana/web3.js';
 import BN from 'bn.js';
 
+type PhantomProvider = {
+    isPhantom?: boolean;
+    publicKey: PublicKey | null;
+    signTransaction(transaction: Transaction): Promise<Transaction>;
+    signAllTransactions(transactions: Transaction[]): Promise<Transaction[]>;
+    signMessage(message: Uint8Array): Promise<Uint8Array>;
+    connect(): Promise<void>;
+    disconnect(): Promise<void>;
+};
+
 declare namespace ProvenanceLayer {
-    const upload: () => void;
+    const uploadFile: (uploadFile: string | File, identity: Secret | PhantomProvider) => void;
 }
 
 declare abstract class AbstractResult<T, E extends Error> {
@@ -235,7 +245,7 @@ declare enum Explorer {
 
 type Option<T> = T | null;
 type bignum = number | BN;
-type FileContent = string | Buffer | Uint8Array | ArrayBuffer;
+type FileContent = string | Buffer | Uint8Array | ArrayBuffer | File;
 declare namespace Common {
     type Properties = {
         creators?: {
@@ -325,7 +335,7 @@ declare const secretNominality: unique symbol;
 type Pubkey = (string & {
     [pubKeyNominality]: never;
 }) | string;
-type Secret = (string & {
+type Secret$1 = (string & {
     [secretNominality]: never;
 }) | string;
 
@@ -402,8 +412,8 @@ declare namespace NftStorage {
 
 declare namespace Storage {
     const toConvertOffchaindata: (input: UserSideInput.NftMetadata, sellerFeeBasisPoints: number) => InfraSideInput.Offchain;
-    const uploadContent: (filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
-    const uploadMetaAndContent: (input: InfraSideInput.Offchain, filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const uploadContent: (filePath: FileContent, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
+    const uploadMetaAndContent: (input: InfraSideInput.Offchain, filePath: FileContent, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
 }
 
 export { NftStorage, ProvenanceLayer, Storage };
