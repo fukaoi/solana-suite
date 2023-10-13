@@ -1,12 +1,12 @@
 import BN from 'bn.js';
+import { FileType, StorageType } from './storage.js';
 import { PublicKey } from '@solana/web3.js';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
-import { S as StorageType } from './type-ed05193d.js';
 import { Pubkey as Pubkey$1 } from './account.js';
+import './phantom-e9a40784.js';
 
 type Option<T> = T | null;
 type bignum = number | BN;
-type FileContent = string | Buffer | Uint8Array | ArrayBuffer;
 declare namespace Common {
     type Properties = {
         creators?: {
@@ -16,7 +16,7 @@ declare namespace Common {
         }[];
         files?: {
             type?: string;
-            filePath?: FileContent;
+            filePath?: FileType;
             [key: string]: unknown;
         }[];
         [key: string]: unknown;
@@ -169,7 +169,7 @@ declare namespace UserSideInput {
         symbol: string;
         royalty: number;
         storageType?: StorageType;
-        filePath?: FileContent;
+        filePath?: FileType;
         uri?: string;
         isMutable?: boolean;
         description?: string;
@@ -185,7 +185,7 @@ declare namespace UserSideInput {
     type TokenMetadata = {
         name: string;
         symbol: string;
-        filePath?: FileContent;
+        filePath?: FileType;
         uri?: string;
         storageType?: StorageType;
         description?: string;
@@ -236,4 +236,4 @@ declare namespace UserSideOutput {
     };
 }
 
-export { Common, FileContent, InfraSideInput, InfraSideOutput, Option, UserSideInput, UserSideOutput, bignum };
+export { Common, InfraSideInput, InfraSideOutput, Option, UserSideInput, UserSideOutput, bignum };

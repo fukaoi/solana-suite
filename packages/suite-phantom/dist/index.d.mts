@@ -1,4 +1,4 @@
-import { TransactionSignature, PublicKey, Keypair, Transaction, SendOptions } from '@solana/web3.js';
+import { TransactionSignature, PublicKey, Keypair } from '@solana/web3.js';
 import BN from 'bn.js';
 
 declare const pubKeyNominality: unique symbol;
@@ -443,8 +443,11 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
+type FileType = string | File;
+
+type StorageType = 'nftStorage' | 'arweave' | string;
+
 type bignum = number | BN;
-type FileContent = string | Buffer | Uint8Array | ArrayBuffer;
 declare namespace Common {
     type Properties = {
         creators?: {
@@ -454,7 +457,7 @@ declare namespace Common {
         }[];
         files?: {
             type?: string;
-            filePath?: FileContent;
+            filePath?: FileType;
             [key: string]: unknown;
         }[];
         [key: string]: unknown;
@@ -479,8 +482,6 @@ declare namespace Common {
     };
 }
 
-type StorageType = 'nftStorage' | 'arweave' | string;
-
 declare namespace UserSideInput {
     type Collection = Pubkey;
     type Creators = {
@@ -501,7 +502,7 @@ declare namespace UserSideInput {
         symbol: string;
         royalty: number;
         storageType?: StorageType;
-        filePath?: FileContent;
+        filePath?: FileType;
         uri?: string;
         isMutable?: boolean;
         description?: string;
@@ -517,7 +518,7 @@ declare namespace UserSideInput {
     type TokenMetadata = {
         name: string;
         symbol: string;
-        filePath?: FileContent;
+        filePath?: FileType;
         uri?: string;
         storageType?: StorageType;
         description?: string;
@@ -545,23 +546,6 @@ declare class ValidatorError extends Error {
     details: Details[];
     constructor(message: string, details: Details[]);
 }
-
-type Phantom = {
-    isPhantom?: boolean;
-    publicKey: PublicKey;
-    isConnected: boolean;
-    signTransaction(transaction: Transaction): Promise<Transaction>;
-    signAllTransactions(transactions: Transaction[]): Promise<Transaction[]>;
-    signAndSendTransaction(transaction: Transaction, options?: SendOptions): Promise<{
-        signature: TransactionSignature;
-    }>;
-    signMessage(message: Uint8Array): Promise<Uint8Array>;
-    connect(): Promise<{
-        publicKey: Uint16Array;
-    }>;
-    disconnect(): Promise<void>;
-    _handleDisconnect(...args: unknown[]): unknown;
-};
 
 declare const Metaplex: {
     mint: (input: UserSideInput.NftMetadata, cluster: string, phantom: Phantom) => Promise<Result<string, Error | ValidatorError>>;

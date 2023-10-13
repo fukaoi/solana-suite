@@ -398,9 +398,9 @@ declare namespace Arweave {
 declare namespace ProvenanceLayer {
     const uploadFile: (uploadFile: FileType, identity: Identity, tags?: Tags) => Promise<string>;
     const uploadData: (data: string, identity: Identity, tags?: Tags) => Promise<string>;
-    const isNodeable: (value: any) => value is string;
-    const isBrowserable: (value: any) => value is File;
-    const isUploadable: (value: any) => value is UploadableFileType;
+    const isNodeable: (value: unknown) => value is string;
+    const isBrowserable: (value: unknown) => value is File;
+    const isUploadable: (value: unknown) => value is UploadableFileType;
 }
 
 declare namespace NftStorage {

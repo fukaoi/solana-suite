@@ -4,6 +4,28 @@ import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/m
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import BN from 'bn.js';
 
+declare enum Sortable {
+    Asc = "asc",
+    Desc = "desc"
+}
+type Find = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+
 declare abstract class AbstractResult$1<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
     unwrap(): T;
@@ -207,28 +229,6 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
-declare enum Sortable {
-    Asc = "asc",
-    Desc = "desc"
-}
-type Find = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-
 type History = {
     sol?: string;
     account?: string;
@@ -250,9 +250,12 @@ type History = {
 type OnOk<T extends History | Find> = (ok: T[]) => void;
 type OnErr = (err: Error) => void;
 
+type FileType = string | File;
+
+type StorageType = 'nftStorage' | 'arweave' | string;
+
 type Option<T> = T | null;
 type bignum = number | BN;
-type FileContent = string | Buffer | Uint8Array | ArrayBuffer;
 declare namespace Common {
     type Properties = {
         creators?: {
@@ -262,7 +265,7 @@ declare namespace Common {
         }[];
         files?: {
             type?: string;
-            filePath?: FileContent;
+            filePath?: FileType;
             [key: string]: unknown;
         }[];
         [key: string]: unknown;
@@ -395,8 +398,6 @@ declare namespace InfraSideOutput {
     type Uses = Common.Uses;
 }
 
-type StorageType = 'nftStorage' | 'arweave' | string;
-
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
 type Pubkey$1 = (string & {
@@ -426,7 +427,7 @@ declare namespace UserSideInput {
         symbol: string;
         royalty: number;
         storageType?: StorageType;
-        filePath?: FileContent;
+        filePath?: FileType;
         uri?: string;
         isMutable?: boolean;
         description?: string;
@@ -442,7 +443,7 @@ declare namespace UserSideInput {
     type TokenMetadata = {
         name: string;
         symbol: string;
-        filePath?: FileContent;
+        filePath?: FileType;
         uri?: string;
         storageType?: StorageType;
         description?: string;
@@ -757,7 +758,7 @@ declare const TraditionalNft: {
     feePayerPartialSignTransferNft: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], feePayer: Pubkey$1) => Promise<Result<PartialSignInstruction, Error>>;
     feePayerPartialSignMint: (owner: Pubkey$1, signer: Secret, input: UserSideInput.NftMetadata, feePayer: Pubkey$1, freezeAuthority?: Secret | undefined) => Promise<Result<PartialSignInstruction, Error>>;
     freeze: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, feePayer?: Secret | undefined) => Result<Instruction, Error>;
-    findByOwner: (owner: Pubkey$1, onOk: OnOk<Find>, onErr: OnErr, options?: {
+    findByOwner: (owner: Pubkey$1, onOk: OnOk<UserSideOutput.NftMetadata>, onErr: OnErr, options?: {
         sortable?: Sortable | undefined;
         isHolder?: boolean | undefined;
     } | undefined) => Promise<void>;

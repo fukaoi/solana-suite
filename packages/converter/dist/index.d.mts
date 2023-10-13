@@ -2,9 +2,12 @@ import BN from 'bn.js';
 import { PublicKey, ParsedTransactionWithMeta, TransactionSignature, Keypair } from '@solana/web3.js';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
+type FileType = string | File;
+
+type StorageType = 'nftStorage' | 'arweave' | string;
+
 type Option<T> = T | null;
 type bignum = number | BN;
-type FileContent = string | Buffer | Uint8Array | ArrayBuffer;
 declare namespace Common {
     type Properties = {
         creators?: {
@@ -14,7 +17,7 @@ declare namespace Common {
         }[];
         files?: {
             type?: string;
-            filePath?: FileContent;
+            filePath?: FileType;
             [key: string]: unknown;
         }[];
         [key: string]: unknown;
@@ -147,8 +150,6 @@ declare namespace InfraSideOutput {
     type Uses = Common.Uses;
 }
 
-type StorageType = 'nftStorage' | 'arweave' | string;
-
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
 type Pubkey$1 = (string & {
@@ -178,7 +179,7 @@ declare namespace UserSideInput {
         symbol: string;
         royalty: number;
         storageType?: StorageType;
-        filePath?: FileContent;
+        filePath?: FileType;
         uri?: string;
         isMutable?: boolean;
         description?: string;
@@ -194,7 +195,7 @@ declare namespace UserSideInput {
     type TokenMetadata = {
         name: string;
         symbol: string;
-        filePath?: FileContent;
+        filePath?: FileType;
         uri?: string;
         storageType?: StorageType;
         description?: string;
@@ -531,7 +532,7 @@ declare enum Explorer {
 
 declare namespace Converter$6 {
     namespace Properties {
-        const intoInfraSide: (input: UserSideInput.Properties | undefined, callbackFunc: (filePath: FileContent, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>, storageType: StorageType, feePayer?: Secret) => Promise<InfraSideInput.Properties>;
+        const intoInfraSide: (input: UserSideInput.Properties | undefined, callbackFunc: (filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>, storageType: StorageType, feePayer?: Secret) => Promise<InfraSideInput.Properties>;
     }
 }
 

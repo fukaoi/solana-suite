@@ -229,9 +229,12 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
+type FileType = string | File;
+
+type StorageType = 'nftStorage' | 'arweave' | string;
+
 type Option<T> = T | null;
 type bignum = number | BN;
-type FileContent = string | Buffer | Uint8Array | ArrayBuffer;
 declare namespace Common {
     type Properties = {
         creators?: {
@@ -241,7 +244,7 @@ declare namespace Common {
         }[];
         files?: {
             type?: string;
-            filePath?: FileContent;
+            filePath?: FileType;
             [key: string]: unknown;
         }[];
         [key: string]: unknown;
@@ -314,8 +317,6 @@ declare namespace InfraSideInput {
     };
 }
 
-type StorageType = 'nftStorage' | 'arweave' | string;
-
 declare const pubKeyNominality: unique symbol;
 type Pubkey = (string & {
     [pubKeyNominality]: never;
@@ -341,7 +342,7 @@ declare namespace UserSideInput {
         symbol: string;
         royalty: number;
         storageType?: StorageType;
-        filePath?: FileContent;
+        filePath?: FileType;
         uri?: string;
         isMutable?: boolean;
         description?: string;
@@ -357,7 +358,7 @@ declare namespace UserSideInput {
     type TokenMetadata = {
         name: string;
         symbol: string;
-        filePath?: FileContent;
+        filePath?: FileType;
         uri?: string;
         storageType?: StorageType;
         description?: string;
@@ -396,7 +397,7 @@ declare namespace Validator {
     export const URL_LENGTH = 200;
     export const ROYALTY_MAX = 100;
     export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
-    export const ROYALTY_MIN = -1;
+    export const ROYALTY_MIN = 0;
     export const isRoyalty: (royalty: number) => Result<string, ValidatorError>;
     export const isSellerFeeBasisPoints: (royalty: number) => Result<string, ValidatorError>;
     export const isName: (name: string) => Result<string, ValidatorError>;
