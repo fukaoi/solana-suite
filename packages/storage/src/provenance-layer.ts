@@ -1,6 +1,6 @@
 import { Constants, debugLog, isBrowser, isNode, Result, Try } from '~/shared';
 import { FileContent } from '~/types/converter';
-import { Identity, Tags, UploadableFileType } from '~/types/storage';
+import { FileType, Identity, Tags, UploadableFileType } from '~/types/storage';
 import { PhantomProvider } from '~/types/phantom';
 import Irys, { WebIrys } from '@irys/sdk';
 import { UploadResponse } from '@irys/sdk/build/esm/common/types';
@@ -9,7 +9,7 @@ export namespace ProvenanceLayer {
   const TOKEN = 'solana';
 
   export const uploadFile = (
-    uploadFile: string | File,
+    uploadFile: FileType,
     identity: Identity,
     tags?: Tags,
   ): Promise<Result<string, Error>> => {
@@ -28,27 +28,20 @@ export namespace ProvenanceLayer {
   };
 
   export const uploadData = (
-    uploadFile: string | File,
+    data: string,
     identity: Identity,
     tags?: Tags,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       const irys = await getIrys(identity);
-      let receipt!: UploadResponse;
-      if (isUploadable(uploadFile)) {
-        receipt = await irys.uploadFile(uploadFile, { tags });
-      } else if (isUploadable(uploadFile)) {
-        receipt = await irys.uploadFile(uploadFile, { tags });
-      } else {
-        throw Error('No match file type or enviroment');
-      }
+      const receipt = await irys.upload(data, { tags });
       return `${Constants.IRYS_GATEWAY_URL}/${receipt.id}`;
     });
   };
 
   // @internal
   export const fundArweave = async (
-    uploadFile: string | File,
+    uploadFile: FileType,
     identity: Identity,
   ): Promise<void> => {
     const irys = await getIrys(identity);
@@ -131,10 +124,7 @@ export namespace ProvenanceLayer {
     return false;
   };
 
-  const calculateCost = async (
-    size: number,
-    identity: Secret | PhantomProvider,
-  ) => {
+  const calculateCost = async (size: number, identity: Identity) => {
     const irys = await getIrys(identity);
     const priceAtomic = await irys.getPrice(size);
     const priceConverted = irys.utils.fromAtomic(priceAtomic);
