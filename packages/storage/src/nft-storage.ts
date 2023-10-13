@@ -1,5 +1,6 @@
 import { Blob, NFTStorage } from 'nft.storage';
-import { Constants, debugLog, isBrowser, isNode, Result, Try } from '~/shared';
+import { Constants, debugLog, Result, Try } from '~/shared';
+import { ProvenanceLayer } from './provenance-layer';
 import { InfraSideInput } from '~/types/converter';
 import { FileType } from '~/types/storage';
 
@@ -32,16 +33,15 @@ export namespace NftStorage {
   const connect = () => new NFTStorage({ token: getNftStorageApiKey() });
 
   export const uploadFile = async (
-    filePath: FileType,
+    fileType: FileType,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
-      debugLog('# upload content: ', filePath);
+      debugLog('# upload content: ', fileType);
       let file!: Buffer;
-      if (isNode()) {
-        file = (await import('fs')).readFileSync(filepath as string);
-      } else if (isBrowser()) {
-        const filepath = filePath;
-        file = toMetaplexFile(filepath, '').buffer;
+      if (ProvenanceLayer.isNodeable(fileType)) {
+        file = (await import('fs')).readFileSync(fileType);
+      } else if (ProvenanceLayer.isBrowserable(fileType)) {
+        file = Buffer.from(await fileType.arrayBuffer());
       } else {
         throw Error('Supported environment: only Node.js and Browser js');
       }

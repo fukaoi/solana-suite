@@ -1,5 +1,4 @@
-import { Constants, debugLog, isBrowser, isNode, Result, Try } from '~/shared';
-import { FileContent } from '~/types/converter';
+import { Constants, debugLog, isBrowser, isNode } from '~/shared';
 import { FileType, Identity, Tags, UploadableFileType } from '~/types/storage';
 import { PhantomProvider } from '~/types/phantom';
 import Irys, { WebIrys } from '@irys/sdk';
@@ -8,35 +7,52 @@ import { UploadResponse } from '@irys/sdk/build/esm/common/types';
 export namespace ProvenanceLayer {
   const TOKEN = 'solana';
 
-  export const uploadFile = (
+  export const uploadFile = async (
     uploadFile: FileType,
     identity: Identity,
     tags?: Tags,
-  ): Promise<Result<string, Error>> => {
-    return Try(async () => {
-      const irys = await getIrys(identity);
-      let receipt!: UploadResponse;
-      if (isUploadable(uploadFile)) {
-        receipt = await irys.uploadFile(uploadFile, { tags });
-      } else if (isUploadable(uploadFile)) {
-        receipt = await irys.uploadFile(uploadFile, { tags });
-      } else {
-        throw Error('No match file type or enviroment');
-      }
-      return `${Constants.IRYS_GATEWAY_URL}/${receipt.id}`;
-    });
+  ): Promise<string> => {
+    const irys = await getIrys(identity);
+    let receipt!: UploadResponse;
+    if (isUploadable(uploadFile)) {
+      receipt = await irys.uploadFile(uploadFile, { tags });
+    } else {
+      throw Error('No match file type or enviroment');
+    }
+    return `${Constants.IRYS_GATEWAY_URL}/${receipt.id}`;
   };
 
-  export const uploadData = (
+  export const uploadData = async (
     data: string,
     identity: Identity,
     tags?: Tags,
-  ): Promise<Result<string, Error>> => {
-    return Try(async () => {
-      const irys = await getIrys(identity);
-      const receipt = await irys.upload(data, { tags });
-      return `${Constants.IRYS_GATEWAY_URL}/${receipt.id}`;
-    });
+  ): Promise<string> => {
+    const irys = await getIrys(identity);
+    const receipt = await irys.upload(data, { tags });
+    return `${Constants.IRYS_GATEWAY_URL}/${receipt.id}`;
+  };
+
+  export const isNodeable = (value: unknown): value is string => {
+    if (isNode()) {
+      return typeof value === 'string';
+    }
+    return false;
+  };
+
+  export const isBrowserable = (value: unknown): value is File => {
+    if (isBrowser()) {
+      return value instanceof File;
+    }
+    return false;
+  };
+
+  export const isUploadable = (value: unknown): value is UploadableFileType => {
+    if (isNode()) {
+      return typeof value === 'string';
+    } else if (isBrowser()) {
+      return value instanceof File;
+    }
+    return false;
   };
 
   // @internal
@@ -52,14 +68,12 @@ export namespace ProvenanceLayer {
   };
 
   // @internal
-  export const toByteLength = async (content: FileContent): Promise<number> => {
+  export const toByteLength = async (content: FileType): Promise<number> => {
     let length: number = 100;
-    if (isUploadable(content)) {
+    if (isNodeable(content)) {
       length = (await import('fs')).readFileSync(content).length;
-    } else if (isUploadable(content)) {
+    } else if (isBrowserable(content)) {
       length = content.size;
-    } else if (isArrayBuffer(content)) {
-      length = content.byteLength;
     } else {
       throw Error('No match content type');
     }
@@ -109,19 +123,6 @@ export namespace ProvenanceLayer {
     const webIrys = new WebIrys({ url, token, wallet });
     await webIrys.ready();
     return webIrys;
-  };
-
-  const isArrayBuffer = (value: any): value is ArrayBuffer => {
-    return value instanceof ArrayBuffer;
-  };
-
-  const isUploadable = (value: any): value is UploadableFileType => {
-    if (isNode()) {
-      return typeof value === 'string';
-    } else if (isBrowser()) {
-      return value instanceof File;
-    }
-    return false;
   };
 
   const calculateCost = async (size: number, identity: Identity) => {

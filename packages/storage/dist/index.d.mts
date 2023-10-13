@@ -1,19 +1,5 @@
-import { PublicKey, Transaction, TransactionSignature, Keypair } from '@solana/web3.js';
+import { TransactionSignature, PublicKey, Keypair, Transaction } from '@solana/web3.js';
 import BN from 'bn.js';
-
-type PhantomProvider = {
-    isPhantom?: boolean;
-    publicKey: PublicKey | null;
-    signTransaction(transaction: Transaction): Promise<Transaction>;
-    signAllTransactions(transactions: Transaction[]): Promise<Transaction[]>;
-    signMessage(message: Uint8Array): Promise<Uint8Array>;
-    connect(): Promise<void>;
-    disconnect(): Promise<void>;
-};
-
-declare namespace ProvenanceLayer {
-    const uploadFile: (uploadFile: string | File, identity: Secret | PhantomProvider) => void;
-}
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -243,9 +229,37 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret$1 = (string & {
+    [secretNominality]: never;
+}) | string;
+
+type PhantomProvider = {
+    isPhantom?: boolean;
+    publicKey: PublicKey | null;
+    signTransaction(transaction: Transaction): Promise<Transaction>;
+    signAllTransactions(transactions: Transaction[]): Promise<Transaction[]>;
+    signMessage(message: Uint8Array): Promise<Uint8Array>;
+    connect(): Promise<void>;
+    disconnect(): Promise<void>;
+};
+
+type FileType = string | File;
+type UploadableFileType = string & File;
+type Identity = Secret | PhantomProvider;
+type Tags = [{
+    name: string;
+    value: string;
+}];
+
+type StorageType = 'nftStorage' | 'arweave' | string;
+
 type Option<T> = T | null;
 type bignum = number | BN;
-type FileContent = string | Buffer | Uint8Array | ArrayBuffer | File;
 declare namespace Common {
     type Properties = {
         creators?: {
@@ -255,7 +269,7 @@ declare namespace Common {
         }[];
         files?: {
             type?: string;
-            filePath?: FileContent;
+            filePath?: FileType;
             [key: string]: unknown;
         }[];
         [key: string]: unknown;
@@ -328,17 +342,6 @@ declare namespace InfraSideInput {
     };
 }
 
-type StorageType = 'nftStorage' | 'arweave' | string;
-
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret$1 = (string & {
-    [secretNominality]: never;
-}) | string;
-
 declare namespace UserSideInput {
     type Collection = Pubkey;
     type Creators = {
@@ -359,7 +362,7 @@ declare namespace UserSideInput {
         symbol: string;
         royalty: number;
         storageType?: StorageType;
-        filePath?: FileContent;
+        filePath?: FileType;
         uri?: string;
         isMutable?: boolean;
         description?: string;
@@ -375,7 +378,7 @@ declare namespace UserSideInput {
     type TokenMetadata = {
         name: string;
         symbol: string;
-        filePath?: FileContent;
+        filePath?: FileType;
         uri?: string;
         storageType?: StorageType;
         description?: string;
@@ -387,12 +390,25 @@ declare namespace UserSideInput {
     };
 }
 
+declare namespace Arweave {
+    const uploadFile: (filePath: FileType, feePayer: Secret$1) => Promise<Result<string, Error>>;
+    const uploadData: (metadata: InfraSideInput.Offchain, feePayer: Secret$1) => Promise<Result<string, Error>>;
+}
+
+declare namespace ProvenanceLayer {
+    const uploadFile: (uploadFile: FileType, identity: Identity, tags?: Tags) => Promise<string>;
+    const uploadData: (data: string, identity: Identity, tags?: Tags) => Promise<string>;
+    const isNodeable: (value: any) => value is string;
+    const isBrowserable: (value: any) => value is File;
+    const isUploadable: (value: any) => value is UploadableFileType;
+}
+
 declare namespace NftStorage {
-    const uploadContent: (filePath: FileContent) => Promise<Result<string, Error>>;
+    const uploadFile: (fileType: FileType) => Promise<Result<string, Error>>;
     /**
      * Upload content
      *
-     * @param {StorageMetadata} metadata
+     * @param {StorageData} storageData
      * {
      *   name?: {string}                      // nft content name
      *   symbol?: {string}                    // nft ticker symbol
@@ -407,13 +423,13 @@ declare namespace NftStorage {
      * }
      * @return Promise<Result<string, Error>>
      */
-    const uploadMetadata: (metadata: InfraSideInput.Offchain) => Promise<Result<string, Error>>;
+    const uploadData: (storageData: InfraSideInput.Offchain) => Promise<Result<string, Error>>;
 }
 
 declare namespace Storage {
     const toConvertOffchaindata: (input: UserSideInput.NftMetadata, sellerFeeBasisPoints: number) => InfraSideInput.Offchain;
-    const uploadContent: (filePath: FileContent, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
-    const uploadMetaAndContent: (input: InfraSideInput.Offchain, filePath: FileContent, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
+    const uploadFile: (filePath: FileType, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
+    const upload: (input: InfraSideInput.Offchain, filePath: FileType, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
 }
 
-export { NftStorage, ProvenanceLayer, Storage };
+export { Arweave, NftStorage, ProvenanceLayer, Storage };

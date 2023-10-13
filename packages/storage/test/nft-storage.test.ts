@@ -4,7 +4,7 @@ import { NftStorage } from '../src/';
 
 test('Upload content data', async (t) => {
   const asset = RandomAsset.get();
-  const res = await NftStorage.uploadContent(asset.filePath!);
+  const res = await NftStorage.uploadFile(asset.filePath!);
 
   res.match(
     (ok) => {
@@ -21,7 +21,7 @@ test('Upload metadata json', async (t) => {
     image: 'https://arweave.net/mVT6g3X99bZG0oMlTBB8fdbH7arnQ9lKWMUR9jMTXbQ',
   };
   const meta = { ...asset, ...image };
-  const res = await NftStorage.uploadMetadata(meta);
+  const res = await NftStorage.uploadData(meta);
 
   res.match(
     (ok) => {

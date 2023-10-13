@@ -15,14 +15,17 @@ test('Upload file', async (t) => {
   const asset = RandomAsset.get();
   const res = await Arweave.uploadFile(asset.filePath!, source.secret);
   res.match(
-    (ok: string) => console.log('# arweave content upload url: ', ok),
+    (ok: string) => {
+      t.not(ok, '');
+      console.log('# arweave content upload url: ', ok);
+    },
     (err: Error) => t.fail(err.message),
   );
 });
 
 test('Upload meta data', async (t) => {
   const asset = RandomAsset.get();
-  const res = await Arweave.uploadMetadata(
+  const res = await Arweave.uploadData(
     {
       name: asset.name,
       symbol: asset.symbol,
@@ -33,7 +36,10 @@ test('Upload meta data', async (t) => {
     source.secret,
   );
   res.match(
-    (ok: string) => console.log('# arweave metadata url: ', ok),
+    (ok: string) => {
+      t.not(ok, '');
+      console.log('# arweave metadata url: ', ok);
+    },
     (err: Error) => t.fail(err.message),
   );
 });

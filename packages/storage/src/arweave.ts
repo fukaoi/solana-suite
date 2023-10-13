@@ -1,24 +1,31 @@
 import { ProvenanceLayer } from './provenance-layer';
-import { debugLog, Result } from '~/shared';
+import { debugLog, Result, Try } from '~/shared';
 import { Secret } from '~/types/account';
 import { InfraSideInput } from '~/types/converter';
 import { FileType } from '~/types/storage';
 
 export namespace Arweave {
-  export const uploadFile = async (
+  export const uploadFile = (
     filePath: FileType,
     feePayer: Secret,
   ): Promise<Result<string, Error>> => {
-    debugLog('# upload file: ', filePath);
-    await ProvenanceLayer.fundArweave(filePath, feePayer);
-    return await ProvenanceLayer.uploadFile(filePath, feePayer);
+    return Try(async () => {
+      debugLog('# upload file: ', filePath);
+      await ProvenanceLayer.fundArweave(filePath, feePayer);
+      return await ProvenanceLayer.uploadFile(filePath, feePayer);
+    });
   };
 
-  export const uploadMetadata = async (
+  export const uploadData = (
     metadata: InfraSideInput.Offchain,
     feePayer: Secret,
   ): Promise<Result<string, Error>> => {
-    debugLog('# upload meta data: ', metadata);
-    return await ProvenanceLayer.uploadData(JSON.stringify(metadata), feePayer);
+    return Try(async () => {
+      debugLog('# upload meta data: ', metadata);
+      return await ProvenanceLayer.uploadData(
+        JSON.stringify(metadata),
+        feePayer,
+      );
+    });
   };
 }

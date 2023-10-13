@@ -52,10 +52,9 @@ export namespace Storage {
       if (!feePayer) {
         throw Error('Arweave needs to have feepayer');
       }
-      storage = await Arweave.uploadFile(
-        filePath,
-        feePayer,
-      )(await NftStorage.uploadContent(filePath)).unwrap(
+      storage = await (
+        await Arweave.uploadFile(filePath, feePayer)
+      ).unwrap(
         async (ok: string) => {
           input.image = ok;
           return await Arweave.uploadData(input, feePayer);

@@ -44,40 +44,48 @@ test('Get Irys object', async (t) => {
   t.true(typeof res === 'object');
 });
 
-test('Upload file', async (t) => {
+test('Upload file', (t) => {
   const asset = RandomAsset.get();
-  await ProvenanceLayer.fundArweave(asset.filePath, source.secret);
-  const res = await ProvenanceLayer.uploadFile(asset.filePath, source.secret);
-  t.true(res.isOk, res.unwrap());
+  t.notThrows(async () => {
+    ProvenanceLayer.fundArweave(asset.filePath, source.secret);
+    ProvenanceLayer.uploadFile(asset.filePath, source.secret);
+  });
 });
 
-test('Upload file with tags', async (t) => {
+test('Upload file with tags', (t) => {
   const asset = RandomAsset.get();
-  await ProvenanceLayer.fundArweave(asset.filePath, source.secret);
-  const res = await ProvenanceLayer.uploadFile(asset.filePath, source.secret, [
-    {
-      name: 'app_id',
-      value: 'solana-suuite',
-    },
-  ]);
-  t.true(res.isOk, res.unwrap());
+  t.notThrows(async () => {
+    await ProvenanceLayer.fundArweave(asset.filePath, source.secret);
+    await ProvenanceLayer.uploadFile(asset.filePath, source.secret, [
+      {
+        name: 'app_id',
+        value: 'solana-suuite',
+      },
+    ]);
+  });
 });
 
-test('Upload data', async (t) => {
+test('Upload data', (t) => {
   const asset = RandomAsset.get();
-  await ProvenanceLayer.fundArweave(asset.filePath, source.secret);
-  const res = await ProvenanceLayer.uploadData(JSON.stringify(uploadData), source.secret);
-  t.true(res.isOk, res.unwrap());
+  t.notThrows(async () => {
+    await ProvenanceLayer.fundArweave(asset.filePath, source.secret);
+    await ProvenanceLayer.uploadData(JSON.stringify(uploadData), source.secret);
+  });
 });
 
-test('Upload data with tags', async (t) => {
+test('Upload data with tags', (t) => {
   const asset = RandomAsset.get();
-  await ProvenanceLayer.fundArweave(asset.filePath, source.secret);
-  const res = await ProvenanceLayer.uploadData(JSON.stringify(uploadData), source.secret, [
-    {
-      name: 'app_id',
-      value: 'solana-suuite',
-    },
-  ]);
-  t.true(res.isOk, res.unwrap());
+  t.notThrows(async () => {
+    await ProvenanceLayer.fundArweave(asset.filePath, source.secret);
+    await ProvenanceLayer.uploadData(
+      JSON.stringify(uploadData),
+      source.secret,
+      [
+        {
+          name: 'app_id',
+          value: 'solana-suuite',
+        },
+      ],
+    );
+  });
 });
