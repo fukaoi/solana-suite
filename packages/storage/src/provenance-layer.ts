@@ -1,6 +1,7 @@
-import { Constants, debugLog, isBrowser, isNode, Try } from '~/shared';
+import { Constants, debugLog, isBrowser, isNode, Result, Try } from '~/shared';
 import { FileContent } from '~/types/converter';
 import { PhantomProvider } from '~/types/phantom';
+import { FileType } from '~/types/storage';
 import Irys, { WebIrys } from '@irys/sdk';
 import { UploadResponse } from '@irys/sdk/build/esm/common/types';
 
@@ -8,21 +9,21 @@ export namespace ProvenanceLayer {
   const TOKEN = 'solana';
 
   export const uploadFile = (
-    uploadFile: string & File,
+    uploadFile: string | File,
     identity: Secret | PhantomProvider,
-  ) => {
-    Try(async () => {
+  ): Promise<Result<string, Error>> => {
+    return Try(async () => {
       const irys = await getIrys(identity);
       const tags = [{ name: 'application-id', value: 'MyNFTDrop' }];
 
       const byteLength = await toByteLength(uploadFile);
       const willPay = await calculateCost(byteLength, identity);
       const fundTx = await irys.fund(irys.utils.toAtomic(willPay));
-      debugLog('#fundTx: ', fundTx);
+      debugLog('# fundTx: ', fundTx);
       let receipt!: UploadResponse;
-      if (isNodeFile(uploadFile)) {
+      if (isUploadable(uploadFile)) {
         receipt = await irys.uploadFile(uploadFile, { tags });
-      } else if (isBrowserFile(uploadFile)) {
+      } else if (isUploadable(uploadFile)) {
         receipt = await irys.uploadFile(uploadFile, { tags });
       } else {
         throw Error('No match file type or enviroment');
@@ -33,10 +34,10 @@ export namespace ProvenanceLayer {
 
   // @internal
   export const toByteLength = async (content: FileContent): Promise<number> => {
-    let length: number;
-    if (isNodeFile(content)) {
+    let length: number = 100;
+    if (isUploadable(content)) {
       length = (await import('fs')).readFileSync(content).length;
-    } else if (isBrowserFile(content)) {
+    } else if (isUploadable(content)) {
       length = content.size;
     } else if (isArrayBuffer(content)) {
       length = content.byteLength;
@@ -61,8 +62,10 @@ export namespace ProvenanceLayer {
 
   // @internal
   export const getNodeIrys = async (secret: Secret) => {
+    const clusterUrl = Constants.switchCluster({
+      cluster: Constants.currentCluster,
+    });
     const url = Constants.BUNDLR_NETWORK_URL;
-    const clusterUrl = Constants.currentCluster;
     const token = TOKEN;
     const key = secret;
     const irys = new Irys({
@@ -78,9 +81,11 @@ export namespace ProvenanceLayer {
   export const getBrowserIrys = async (
     provider: PhantomProvider,
   ): Promise<WebIrys> => {
+    const clusterUrl = Constants.switchCluster({
+      cluster: Constants.currentCluster,
+    });
     const url = Constants.BUNDLR_NETWORK_URL;
     const token = TOKEN;
-    const clusterUrl = Constants.currentCluster;
     const wallet = { rpcUrl: clusterUrl, name: TOKEN, provider: provider };
     const webIrys = new WebIrys({ url, token, wallet });
     await webIrys.ready();
@@ -91,15 +96,10 @@ export namespace ProvenanceLayer {
     return value instanceof ArrayBuffer;
   };
 
-  const isNodeFile = (value: any): value is string => {
+  const isUploadable = (value: any): value is FileType => {
     if (isNode()) {
       return typeof value === 'string';
-    }
-    return false;
-  };
-
-  const isBrowserFile = (value: any): value is File => {
-    if (isBrowser()) {
+    } else if (isBrowser()) {
       return value instanceof File;
     }
     return false;
@@ -112,8 +112,8 @@ export namespace ProvenanceLayer {
     const irys = await getIrys(identity);
     const priceAtomic = await irys.getPrice(size);
     const priceConverted = irys.utils.fromAtomic(priceAtomic);
-    debugLog('#size: ', size);
-    debugLog(`#price: ${priceConverted}`);
+    debugLog('# size: ', size);
+    debugLog(`# price: ${priceConverted}`);
     return priceConverted;
   };
 }

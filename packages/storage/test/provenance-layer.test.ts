@@ -25,14 +25,13 @@ test('string to byte length', async (t) => {
   t.is(res, expeted);
 });
 
-test.only('Error no match content', async (t) => {
-  const dummy = new ArrayBuffer(0);
-  const res = await ProvenanceLayer.toByteLength(dummy);
-  console.log(res);
-  // t.throws(async () => await ProvenanceLayer.toByteLength(dummy));
-});
-
 test('Get Irys object', async (t) => {
   const res = await ProvenanceLayer.getIrys(source.secret);
   t.true(typeof res === 'object');
+});
+
+test('Upload file', async (t) => {
+  const asset = RandomAsset.get();
+  const res = await ProvenanceLayer.uploadFile(asset.filePath, source.secret);
+  t.true(res.isOk);
 });

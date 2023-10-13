@@ -6,3 +6,5 @@ export type PhantomWallet = {
   publicKey: PublicKey;
   // original: @solana-suite/phantom/types/phantom.ts
 };
+
+export type FileType = string & File

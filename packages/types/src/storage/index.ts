@@ -1,2 +1,2 @@
+export * from './irys';
 export * from './type';
-export * from './bundlr';
