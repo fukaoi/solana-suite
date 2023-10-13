@@ -15,10 +15,6 @@ export namespace ProvenanceLayer {
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       const irys = await getIrys(identity);
-      const byteLength = await toByteLength(uploadFile);
-      const willPay = await calculateCost(byteLength, identity);
-      const fundTx = await irys.fund(irys.utils.toAtomic(willPay));
-      debugLog('# fundTx: ', fundTx);
       let receipt!: UploadResponse;
       if (isUploadable(uploadFile)) {
         receipt = await irys.uploadFile(uploadFile, { tags });
@@ -29,6 +25,18 @@ export namespace ProvenanceLayer {
       }
       return `${Constants.IRYS_GATEWAY_URL}/${receipt.id}`;
     });
+  };
+
+  // @internal
+  export const fundArweave = async (
+    uploadFile: string | File,
+    identity: Secret | PhantomProvider,
+  ): Promise<void> => {
+    const irys = await getIrys(identity);
+    const byteLength = await toByteLength(uploadFile);
+    const willPay = await calculateCost(byteLength, identity);
+    const fundTx = await irys.fund(irys.utils.toAtomic(willPay));
+    debugLog('# fundTx: ', fundTx);
   };
 
   // @internal

@@ -31,17 +31,19 @@ test('Get Irys object', async (t) => {
 
 test('Upload file', async (t) => {
   const asset = RandomAsset.get();
+  await ProvenanceLayer.fundArweave(asset.filePath, source.secret);
   const res = await ProvenanceLayer.uploadFile(asset.filePath, source.secret);
-  t.true(res.isOk);
+  t.true(res.isOk, res.unwrap());
 });
 
 test('Upload file with tags', async (t) => {
   const asset = RandomAsset.get();
+  await ProvenanceLayer.fundArweave(asset.filePath, source.secret);
   const res = await ProvenanceLayer.uploadFile(asset.filePath, source.secret, [
     {
       name: 'app_id',
       value: 'solana-suuite',
     },
   ]);
-  t.true(res.isOk);
+  t.true(res.isOk, res.unwrap());
 });
