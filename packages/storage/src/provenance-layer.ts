@@ -8,7 +8,7 @@ export namespace ProvenanceLayer {
   const TOKEN = 'solana';
 
   export const uploadFile = (
-    uploadFile: string | File,
+    uploadFile: string & File,
     identity: Secret | PhantomProvider,
   ) => {
     Try(async () => {
@@ -20,21 +20,23 @@ export namespace ProvenanceLayer {
       const fundTx = await irys.fund(irys.utils.toAtomic(willPay));
       debugLog('#fundTx: ', fundTx);
       let receipt!: UploadResponse;
-      if (isNode() && typeof uploadFile === 'string') {
-        receipt = await (irys as Irys).uploadFile(uploadFile, { tags });
-      } else if (isBrowser() && typeof uploadFile !== 'string') {
-        receipt = await (irys as WebIrys).uploadFile(uploadFile, { tags });
+      if (isNodeFile(uploadFile)) {
+        receipt = await irys.uploadFile(uploadFile, { tags });
+      } else if (isBrowserFile(uploadFile)) {
+        receipt = await irys.uploadFile(uploadFile, { tags });
+      } else {
+        throw Error('No match file type or enviroment');
       }
-      return `https://gateway.irys.xyz/${receipt.id}`;
+      return `${Constants.IRYS_GATEWAY_URL}/${receipt.id}`;
     });
   };
 
   // @internal
   export const toByteLength = async (content: FileContent): Promise<number> => {
     let length: number;
-    if (typeof content === 'string') {
+    if (isNodeFile(content)) {
       length = (await import('fs')).readFileSync(content).length;
-    } else if (content instanceof File) {
+    } else if (isBrowserFile(content)) {
       length = content.size;
     } else if (isArrayBuffer(content)) {
       length = content.byteLength;
@@ -45,10 +47,16 @@ export namespace ProvenanceLayer {
   };
 
   // @internal
-  export const getIrys = async (identity: Secret | PhantomProvider) => {
-    return isNode()
-      ? await getNodeIrys(identity as Secret)
-      : await getBrowserIrys(identity as PhantomProvider);
+  export const getIrys = async <T extends Irys | WebIrys>(
+    identity: Secret | PhantomProvider,
+  ) => {
+    if (isNode()) {
+      return (await getNodeIrys(identity as Secret)) as T;
+    } else if (isBrowser()) {
+      return (await getBrowserIrys(identity as PhantomProvider)) as T;
+    } else {
+      throw Error('Only Node.js or Browser');
+    }
   };
 
   // @internal
@@ -81,6 +89,20 @@ export namespace ProvenanceLayer {
 
   const isArrayBuffer = (value: any): value is ArrayBuffer => {
     return value instanceof ArrayBuffer;
+  };
+
+  const isNodeFile = (value: any): value is string => {
+    if (isNode()) {
+      return typeof value === 'string';
+    }
+    return false;
+  };
+
+  const isBrowserFile = (value: any): value is File => {
+    if (isBrowser()) {
+      return value instanceof File;
+    }
+    return false;
   };
 
   const calculateCost = async (
