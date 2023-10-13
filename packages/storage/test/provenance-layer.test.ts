@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import test from 'ava';
-import { JSDOM } from 'jsdom';
 import { ProvenanceLayer } from '../src/';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Setup } from 'test-tools/setup';
@@ -33,5 +32,16 @@ test('Get Irys object', async (t) => {
 test('Upload file', async (t) => {
   const asset = RandomAsset.get();
   const res = await ProvenanceLayer.uploadFile(asset.filePath, source.secret);
+  t.true(res.isOk);
+});
+
+test('Upload file with tags', async (t) => {
+  const asset = RandomAsset.get();
+  const res = await ProvenanceLayer.uploadFile(asset.filePath, source.secret, [
+    {
+      name: 'app_id',
+      value: 'solana-suuite',
+    },
+  ]);
   t.true(res.isOk);
 });

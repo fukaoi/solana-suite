@@ -7,4 +7,4 @@ export type PhantomWallet = {
   // original: @solana-suite/phantom/types/phantom.ts
 };
 
-export type FileType = string & File
+export type UploadableFileType = string & File

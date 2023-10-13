@@ -1,7 +1,7 @@
 import { Constants, debugLog, isBrowser, isNode, Result, Try } from '~/shared';
 import { FileContent } from '~/types/converter';
 import { PhantomProvider } from '~/types/phantom';
-import { FileType } from '~/types/storage';
+import { UploadableFileType } from '~/types/storage';
 import Irys, { WebIrys } from '@irys/sdk';
 import { UploadResponse } from '@irys/sdk/build/esm/common/types';
 
@@ -11,11 +11,10 @@ export namespace ProvenanceLayer {
   export const uploadFile = (
     uploadFile: string | File,
     identity: Secret | PhantomProvider,
+    tags?: [{ name: string; value: string }],
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       const irys = await getIrys(identity);
-      const tags = [{ name: 'application-id', value: 'MyNFTDrop' }];
-
       const byteLength = await toByteLength(uploadFile);
       const willPay = await calculateCost(byteLength, identity);
       const fundTx = await irys.fund(irys.utils.toAtomic(willPay));
@@ -96,7 +95,7 @@ export namespace ProvenanceLayer {
     return value instanceof ArrayBuffer;
   };
 
-  const isUploadable = (value: any): value is FileType => {
+  const isUploadable = (value: any): value is UploadableFileType => {
     if (isNode()) {
       return typeof value === 'string';
     } else if (isBrowser()) {
