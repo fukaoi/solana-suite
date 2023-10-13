@@ -1,4 +1,5 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
+import { PhantomProvider } from '../phantom';
 
 export type BundlrSigner = Keypair | PhantomWallet | undefined;
 
@@ -7,4 +8,6 @@ export type PhantomWallet = {
   // original: @solana-suite/phantom/types/phantom.ts
 };
 
-export type UploadableFileType = string & File
+export type UploadableFileType = string & File;
+export type Identity = Secret | PhantomProvider;
+export type Tags = [{ name: string; value: string }];

@@ -1,7 +1,7 @@
 import { Constants, debugLog, isBrowser, isNode, Result, Try } from '~/shared';
 import { FileContent } from '~/types/converter';
+import { Identity, Tags, UploadableFileType } from '~/types/storage';
 import { PhantomProvider } from '~/types/phantom';
-import { UploadableFileType } from '~/types/storage';
 import Irys, { WebIrys } from '@irys/sdk';
 import { UploadResponse } from '@irys/sdk/build/esm/common/types';
 
@@ -10,8 +10,27 @@ export namespace ProvenanceLayer {
 
   export const uploadFile = (
     uploadFile: string | File,
-    identity: Secret | PhantomProvider,
-    tags?: [{ name: string; value: string }],
+    identity: Identity,
+    tags?: Tags,
+  ): Promise<Result<string, Error>> => {
+    return Try(async () => {
+      const irys = await getIrys(identity);
+      let receipt!: UploadResponse;
+      if (isUploadable(uploadFile)) {
+        receipt = await irys.uploadFile(uploadFile, { tags });
+      } else if (isUploadable(uploadFile)) {
+        receipt = await irys.uploadFile(uploadFile, { tags });
+      } else {
+        throw Error('No match file type or enviroment');
+      }
+      return `${Constants.IRYS_GATEWAY_URL}/${receipt.id}`;
+    });
+  };
+
+  export const uploadData = (
+    uploadFile: string | File,
+    identity: Identity,
+    tags?: Tags,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       const irys = await getIrys(identity);
@@ -30,7 +49,7 @@ export namespace ProvenanceLayer {
   // @internal
   export const fundArweave = async (
     uploadFile: string | File,
-    identity: Secret | PhantomProvider,
+    identity: Identity,
   ): Promise<void> => {
     const irys = await getIrys(identity);
     const byteLength = await toByteLength(uploadFile);
@@ -56,7 +75,7 @@ export namespace ProvenanceLayer {
 
   // @internal
   export const getIrys = async <T extends Irys | WebIrys>(
-    identity: Secret | PhantomProvider,
+    identity: Identity,
   ) => {
     if (isNode()) {
       return (await getNodeIrys(identity as Secret)) as T;
