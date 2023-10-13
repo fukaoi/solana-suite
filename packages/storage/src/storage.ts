@@ -1,8 +1,8 @@
 import { Result } from '~/shared';
 import { Secret } from '~/types/account';
-import { FileContent, InfraSideInput, UserSideInput } from '~/types/converter';
-import { StorageType } from '~/types/storage';
-// import { Arweave } from './arweave';
+import { InfraSideInput, UserSideInput } from '~/types/converter';
+import { FileType, StorageType } from '~/types/storage';
+import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
 
 export namespace Storage {
@@ -24,8 +24,8 @@ export namespace Storage {
     return data;
   };
 
-  export const uploadContent = async (
-    filePath: FileContent,
+  export const uploadFile = async (
+    filePath: FileType,
     storageType: StorageType,
     feePayer?: Secret,
   ): Promise<Result<string, Error>> => {
@@ -33,18 +33,17 @@ export namespace Storage {
       if (!feePayer) {
         throw Error('Arweave needs to have feepayer');
       }
-      // return await Arweave.uploadContent(filePath, feePayer);
-      return await NftStorage.uploadContent(filePath);
+      return await Arweave.uploadFile(filePath, feePayer);
     } else if (storageType === 'nftStorage') {
-      return await NftStorage.uploadContent(filePath);
+      return await NftStorage.uploadFile(filePath);
     } else {
       throw Error('Not found storageType');
     }
   };
 
-  export const uploadMetaAndContent = async (
+  export const upload = async (
     input: InfraSideInput.Offchain,
-    filePath: FileContent,
+    filePath: FileType,
     storageType: StorageType,
     feePayer?: Secret,
   ): Promise<Result<string, Error>> => {
@@ -53,13 +52,13 @@ export namespace Storage {
       if (!feePayer) {
         throw Error('Arweave needs to have feepayer');
       }
-      storage = await // await Arweave.uploadContent(filePath, feePayer)
-      (
-        await NftStorage.uploadContent(filePath)
-      ).unwrap(
+      storage = await Arweave.uploadFile(
+        filePath,
+        feePayer,
+      )(await NftStorage.uploadContent(filePath)).unwrap(
         async (ok: string) => {
           input.image = ok;
-          // return await Arweave.uploadMetadata(input, feePayer);
+          return await Arweave.uploadData(input, feePayer);
         },
         (err: Error) => {
           throw err;
@@ -67,11 +66,11 @@ export namespace Storage {
       );
     } else if (storageType === 'nftStorage') {
       storage = await (
-        await NftStorage.uploadContent(filePath)
+        await NftStorage.uploadFile(filePath)
       ).unwrap(
         async (ok: string) => {
           input.image = ok;
-          return await NftStorage.uploadMetadata(input);
+          return await NftStorage.uploadData(input);
         },
         (err: Error) => {
           throw err;

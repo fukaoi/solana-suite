@@ -1,6 +1,7 @@
 import { Blob, NFTStorage } from 'nft.storage';
 import { Constants, debugLog, isBrowser, isNode, Result, Try } from '~/shared';
-import { FileContent, InfraSideInput } from '~/types/converter';
+import { InfraSideInput } from '~/types/converter';
+import { FileType } from '~/types/storage';
 
 export namespace NftStorage {
   let isDisplayWarning = false;
@@ -30,18 +31,17 @@ export namespace NftStorage {
 
   const connect = () => new NFTStorage({ token: getNftStorageApiKey() });
 
-  export const uploadContent = async (
-    filePath: FileContent,
+  export const uploadFile = async (
+    filePath: FileType,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       debugLog('# upload content: ', filePath);
       let file!: Buffer;
       if (isNode()) {
-        const filepath = filePath as string;
-        file = (await import('fs')).readFileSync(filepath);
+        file = (await import('fs')).readFileSync(filepath as string);
       } else if (isBrowser()) {
         const filepath = filePath;
-        // file = toMetaplexFile(filepath, '').buffer;
+        file = toMetaplexFile(filepath, '').buffer;
       } else {
         throw Error('Supported environment: only Node.js and Browser js');
       }
@@ -55,7 +55,7 @@ export namespace NftStorage {
   /**
    * Upload content
    *
-   * @param {StorageMetadata} metadata
+   * @param {StorageData} storageData
    * {
    *   name?: {string}                      // nft content name
    *   symbol?: {string}                    // nft ticker symbol
@@ -70,13 +70,13 @@ export namespace NftStorage {
    * }
    * @return Promise<Result<string, Error>>
    */
-  export const uploadMetadata = async (
-    metadata: InfraSideInput.Offchain,
+  export const uploadData = async (
+    storageData: InfraSideInput.Offchain,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
-      debugLog('# upload metadata: ', metadata);
+      debugLog('# upload metadata: ', storageData);
 
-      const blobJson = new Blob([JSON.stringify(metadata)]);
+      const blobJson = new Blob([JSON.stringify(storageData)]);
       const res = await connect().storeBlob(blobJson);
       return createGatewayUrl(res);
     });

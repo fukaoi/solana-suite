@@ -1,6 +1,7 @@
 import { StorageType } from '../../storage';
-import { Common, bignum, FileContent } from '../common';
+import { bignum, Common } from '../common';
 import { Pubkey } from '../../account';
+import { FileType } from '../../storage';
 
 export namespace UserSideInput {
   export type Collection = Pubkey;
@@ -26,7 +27,7 @@ export namespace UserSideInput {
     symbol: string;
     royalty: number;
     storageType?: StorageType;
-    filePath?: FileContent;
+    filePath?: FileType;
     uri?: string;
     isMutable?: boolean;
     description?: string;
@@ -43,7 +44,7 @@ export namespace UserSideInput {
   export type TokenMetadata = {
     name: string;
     symbol: string;
-    filePath?: FileContent;
+    filePath?: FileType;
     uri?: string;
     storageType?: StorageType;
     description?: string;

@@ -1,8 +1,8 @@
 import BN from 'bn.js';
+import {FileType} from '../storage';
 
 export type Option<T> = T | null;
 export type bignum = number | BN;
-export type FileContent = string | Buffer | Uint8Array | ArrayBuffer | File;
 
 export namespace Common {
   export type Properties = {
@@ -13,7 +13,7 @@ export namespace Common {
     }[];
     files?: {
       type?: string;
-      filePath?: FileContent;
+      filePath?: FileType;
       [key: string]: unknown;
     }[];
     [key: string]: unknown;
