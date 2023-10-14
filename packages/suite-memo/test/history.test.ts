@@ -12,7 +12,7 @@ test.before(async () => {
 });
 test('Get Only memo history', async (t) => {
   const onOk: OnOk<History> = (ok) => {
-    console.log('# hisory size: ', ok.length);
+    console.log('# hisory size: ', ok.length); // t.log is buffering
     ok.forEach((res) => {
       t.not(res.source, '');
       t.not(res.destination, '');

@@ -17,7 +17,7 @@ test('Get transfer history', (t) => {
     t.fail(err.message);
   };
   const onOk = (datas: History[]) => {
-    t.log('# hisory size: ', datas.length);
+    console.log('# hisory size: ', datas.length); // t.log is buffering
     datas.forEach((res) => {
       t.not(res.source, '');
       t.not(res.destination, '');
@@ -39,7 +39,7 @@ test('Get Memo history', async (t) => {
     t.fail(err.message);
   };
   const onOk = (datas: History[]) => {
-    t.log('# hisory size: ', datas.length);
+    console.log('# hisory size: ', datas.length); // t.log is buffering
     datas.forEach((res) => {
       t.not(res.source, '');
       t.not(res.destination, '');

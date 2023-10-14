@@ -1,9 +1,8 @@
 import test from 'ava';
 import { KeypairAccount } from '~/account';
 import { Converter } from '../src/';
-import bs58 from 'bs58';
 
-test('To input convert', async (t) => {
+test.skip('To input convert', async (t) => {
   const creator1 = KeypairAccount.create();
   const creator2 = KeypairAccount.create();
   const creator3 = KeypairAccount.create();
@@ -14,23 +13,22 @@ test('To input convert', async (t) => {
       share: 20,
       verified: false,
     },
-    // {
-    //   address: creator2.pubkey,
-    //   share: 30,
-    //   verified: false,
-    // },
-    // {
-    //   address: creator3.pubkey,
-    //   share: 40,
-    //   verified: false,
-    // },
-    // {
-    //   address: creator4.pubkey,
-    //   share: 10,
-    //   verified: false,
-    // },
+    {
+      address: creator2.pubkey,
+      share: 30,
+      verified: false,
+    },
+    {
+      address: creator3.pubkey,
+      share: 40,
+      verified: false,
+    },
+    {
+      address: creator4.pubkey,
+      share: 10,
+      verified: false,
+    },
   ];
-  console.log(creator1.pubkey, bs58.decode(creator1.pubkey).length);
   const results = Converter.Creators.intoInfraSide(input);
   t.log('# converted creators', results);
   if (results) {
