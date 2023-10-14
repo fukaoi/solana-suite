@@ -42,7 +42,7 @@ test(
   'Get token info owned with no Hold',
   withCallback(async (t: any, end: any) => {
     const onOk: OnOk<UserSideOutput.TokenMetadata> = async (ok) => {
-      console.log(ok);
+      t.log(ok);
       ok.forEach((res) => {
         t.not(res.name, '');
         t.not(res.mint, '');
@@ -65,7 +65,7 @@ test(
   'Get token info owned with Asc',
   withCallback((t: any, end: any) => {
     const onOk: OnOk<UserSideOutput.TokenMetadata> = async (ok) => {
-      console.log(ok);
+      t.log(ok);
       ok.forEach((res) => {
         t.not(res.name, '');
         t.not(res.mint, '');
@@ -87,7 +87,7 @@ test(
 test('Get token info by mint address', async (t) => {
   (await SplToken.findByMint(mint)).match(
     (ok: UserSideOutput.TokenMetadata) => {
-      console.log(ok);
+      t.log(ok);
       t.not(ok.name, '');
       t.not(ok.mint, '');
       t.not(ok.symbol, '');

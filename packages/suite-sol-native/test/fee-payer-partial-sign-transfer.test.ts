@@ -24,9 +24,9 @@ test('transfer feePayerPartialSign', async (t) => {
 
   t.true(serialized.isOk, `${serialized.unwrap()}`);
   if (serialized.isOk) {
-    console.log(serialized.value);
+    t.log(serialized.value);
     const res = await serialized.value.submit(source.secret);
     t.true(res.isOk, `${res.unwrap()}`);
-    console.log('# tx signature: ', res.unwrap());
+    t.log('# tx signature: ', res.unwrap());
   }
 });

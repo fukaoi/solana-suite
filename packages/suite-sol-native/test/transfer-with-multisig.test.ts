@@ -40,7 +40,10 @@ test('transfer transaction with multi sig', async (t) => {
   );
 
   (await inst2.submit()).match(
-    (sig: string) => console.log('# signature: ', sig),
+    (sig: string) => {
+      t.log('# signature: ', sig);
+      t.pass();
+    },
     (err: Error) => t.fail(err.message),
   );
 });

@@ -26,8 +26,8 @@ test.before(async () => {
 test('transfer feePayerPartialSign', async (t) => {
   const tokenOwner = KeypairAccount.create();
   const receipt = KeypairAccount.create();
-  console.log('# owner: ', tokenOwner.pubkey);
-  console.log('# receipt: ', receipt.pubkey);
+  t.log('# owner: ', tokenOwner.pubkey);
+  t.log('# receipt: ', receipt.pubkey);
 
   const inst1 = await SplToken.mint(
     tokenOwner.pubkey,

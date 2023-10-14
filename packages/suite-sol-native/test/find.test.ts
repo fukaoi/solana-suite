@@ -8,7 +8,7 @@ const notFoundOwner = 'FbreoZcjxH4h8qfptQmGEGrwZLcPMbdHfoTJycAjtfu';
 test('find owner info', async (t) => {
   const res = await SolNative.findByOwner(owner);
 
-  console.log('SolNative.findByOwner: ', res);
+  t.log('SolNative.findByOwner: ', res);
 
   if (res.isErr) {
     t.fail(res.error.message);
@@ -25,7 +25,7 @@ test('find owner info', async (t) => {
 test('find token account info', async (t) => {
   const res = await SolNative.findByOwner(tokenAccount);
 
-  console.log('SolNative.findByOwner: ', res);
+  t.log('SolNative.findByOwner: ', res);
   if (res.isErr) {
     t.fail(res.error.message);
   }
@@ -41,7 +41,7 @@ test('find token account info', async (t) => {
 test('not found asset owner', async (t) => {
   const res = await SolNative.findByOwner(notFoundOwner);
 
-  console.log('SolNative.findByOwner: ', res);
+  t.log('SolNative.findByOwner: ', res);
 
   if (res.isErr) {
     t.fail(res.error.message);

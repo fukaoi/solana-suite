@@ -24,5 +24,5 @@ test('transfer transaction', async (t) => {
   t.true(inst.isOk, `${inst.unwrap()}`);
   const res = await inst.submit();
   t.true(res.isOk, `${res.unwrap()}`);
-  console.log('# tx signature: ', res.unwrap());
+  t.log('# tx signature: ', res.unwrap());
 });
