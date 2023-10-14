@@ -3,8 +3,8 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Airdrop } from '@solana-suite/core';
-import { Metaplex } from '@solana-suite/nft';
+import { Airdrop } from '@solana-suite/airdrop';
+import { Metaplex } from '@solana-suite/';
 import { KeypairAccount, Node, Pubkey } from '@solana-suite/shared';
 import { RandomAsset } from '../packages/storage/test/randomAsset';
 import { requestTransferByKeypair } from './requestTransferByKeypair';

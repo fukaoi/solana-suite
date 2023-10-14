@@ -16,14 +16,16 @@
   },
   "dependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
-    "@solana/web3.js": "^1.78.5"
+    "@solana/web3.js": "^1.78.5",
+    "bs58": "^4.0.1"
   },
   "devDependencies": {
-    "test-tools": "workspace:*",
+    "@types/bs58": "^4.0.2",
     "build-configs/ava": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
-    "build-configs/tsup": "workspace:*"
+    "build-configs/tsup": "workspace:*",
+    "test-tools": "workspace:*"
   }
 }

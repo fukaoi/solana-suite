@@ -22,7 +22,7 @@ test('To input convert', async (t) => {
   const output = await Converter.Properties.intoInfraSide(
     input,
     /* @ts-ignore */
-    Storage.uploadContent,
+    Storage.uploadFile,
     'nftStorage',
   );
 

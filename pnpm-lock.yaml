@@ -129,7 +129,13 @@ importers:
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.78.5
+      bs58:
+        specifier: ^4.0.1
+        version: 4.0.1
     devDependencies:
+      '@types/bs58':
+        specifier: ^4.0.2
+        version: 4.0.2
       build-configs/ava:
         specifier: workspace:*
         version: link:../build-configs/ava

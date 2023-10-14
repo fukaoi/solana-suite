@@ -2,9 +2,14 @@ import test from 'ava';
 import { Memo } from '../src/';
 import { History } from '~/types/history';
 import { OnErr, OnOk } from '~/types/shared';
+import { Setup } from 'test-tools/setup';
+import { KeypairAccount } from '~/account';
 
-const target = 'Ebq72X3i8ug6AX2G3v2ZoLA4ZcxHurvMuJYorqJ6sALD';
-
+let source: KeypairAccount;
+test.before(async () => {
+  const obj = await Setup.generateKeyPair();
+  source = obj.source;
+});
 test('Get Only memo history', async (t) => {
   const onOk: OnOk<History> = (ok) => {
     console.log('# hisory size: ', ok.length);
@@ -18,7 +23,7 @@ test('Get Only memo history', async (t) => {
     });
   };
 
-  const onErr: OnErr = (err: Error) => t.fail(err.message);
-  await Memo.getHistory(target, onOk, onErr);
+  const onErr: OnErr = (err: Error) => t.fail(JSON.stringify(err, ['stack']));
+  await Memo.getHistory(source.pubkey, onOk, onErr, { waitTime: 0.1 });
   t.pass();
 });
