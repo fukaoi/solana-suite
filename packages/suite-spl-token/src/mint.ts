@@ -153,7 +153,7 @@ export namespace SplToken {
 
       let uri!: string;
       if (input.filePath && input.storageType) {
-        const uploaded = await Storage.uploadMetaAndContent(
+        const uploaded = await Storage.upload(
           tokenStorageMetadata,
           input.filePath,
           input.storageType,

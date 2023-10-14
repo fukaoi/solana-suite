@@ -29,6 +29,7 @@ test('Retry getOrCreate', async (t) => {
 
   await mintInst.submit();
 
+  console.log(mintInst);
   t.true(mintInst.isOk);
   const mint = mintInst.unwrap().data as string;
 
