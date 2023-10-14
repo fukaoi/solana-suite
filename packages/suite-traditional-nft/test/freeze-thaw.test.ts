@@ -38,8 +38,8 @@ test('Freezing and Thawing a target nft', async (t) => {
   (await inst1.submit()).match(
     async (ok: string) => {
       await Node.confirmedSig(ok);
-      console.log('# mint:', mint);
-      console.log('# mint sig:', ok);
+      t.log('# mint:', mint);
+      t.log('# mint sig:', ok);
     },
     (ng: Error) => t.fail(ng.message),
   );
@@ -54,7 +54,7 @@ test('Freezing and Thawing a target nft', async (t) => {
   (await inst2.submit()).match(
     async (ok: string) => {
       await Node.confirmedSig(ok);
-      console.log('# freeze sig:', ok);
+      t.log('# freeze sig:', ok);
     },
     (ng: Error) => t.fail(ng.message),
   );
@@ -69,7 +69,7 @@ test('Freezing and Thawing a target nft', async (t) => {
   (await inst3.submit()).match(
     async (ok: string) => {
       await Node.confirmedSig(ok);
-      console.log('# thaw sig:', ok);
+      t.log('# thaw sig:', ok);
     },
     (ng: Error) => t.fail(ng.message),
   );

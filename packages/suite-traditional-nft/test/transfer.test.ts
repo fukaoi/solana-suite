@@ -55,8 +55,9 @@ test('Transfer nft', async (t) => {
 
   res.match(
     (ok: string) => {
-      console.log('# mint: ', mint.unwrap().data);
-      console.log('# sig: ', ok);
+      t.log('# mint: ', mint.unwrap().data);
+      t.log('# sig: ', ok);
+      t.pass();
     },
     (err: Error) => {
       t.fail(err.message);

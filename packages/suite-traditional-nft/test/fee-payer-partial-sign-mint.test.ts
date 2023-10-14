@@ -37,8 +37,8 @@ test('[Nft Storage] mint nft with partial sing fee payer', async (t) => {
   if (serialized.isOk) {
     (await serialized.value.submit(source.secret)).match(
       (ok: string) => {
-        console.log('# mint:', serialized.value.data);
-        console.log('# sig:', ok);
+        t.log('# mint:', serialized.value.data);
+        t.log('# sig:', ok);
       },
       (ng: Error) => t.fail(ng.message),
     );
@@ -58,7 +58,7 @@ test('[Arweave] use case arweave', async (t) => {
     seller_fee_basis_points: sellerFeeBasisPoints,
   };
 
-  const uploaded = await Storage.uploadMetaAndContent(
+  const uploaded = await Storage.upload(
     offchaindata,
     asset.filePath,
     'arweave',
@@ -87,8 +87,8 @@ test('[Arweave] use case arweave', async (t) => {
   if (serialized.isOk) {
     (await serialized.value.submit(source.secret)).match(
       (ok: string) => {
-        console.log('# mint:', serialized.value.data);
-        console.log('# sig:', ok);
+        t.log('# mint:', serialized.value.data);
+        t.log('# sig:', ok);
       },
       (ng: Error) => t.fail(ng.message),
     );

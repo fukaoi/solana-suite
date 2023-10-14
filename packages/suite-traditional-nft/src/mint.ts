@@ -160,7 +160,7 @@ export namespace TraditionalNft {
       if (input.properties && input.storageType) {
         properties = await Converter.Properties.intoInfraSide(
           input.properties,
-          Storage.uploadContent,
+          Storage.uploadFile,
           input.storageType,
           payer,
         );
@@ -188,7 +188,7 @@ export namespace TraditionalNft {
 
       let uri!: string;
       if (input.filePath && input.storageType) {
-        const uploaded = await Storage.uploadMetaAndContent(
+        const uploaded = await Storage.upload(
           nftStorageMetadata,
           input.filePath,
           input.storageType,

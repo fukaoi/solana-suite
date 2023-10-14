@@ -29,8 +29,8 @@ test('[Arweave] mint nft', async (t) => {
 
   (await res.submit()).match(
     (ok: string) => {
-      console.log('# mint:', res.unwrap().data);
-      console.log('# sig:', ok);
+      t.log('# mint:', res.unwrap().data);
+      t.log('# sig:', ok);
     },
     (ng: Error) => t.fail(ng.message),
   );
@@ -56,8 +56,8 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
 
   (await res.submit()).match(
     (ok: string) => {
-      console.log('# mint:', res.unwrap().data);
-      console.log('# sig:', ok);
+      t.log('# mint:', res.unwrap().data);
+      t.log('# sig:', ok);
     },
     (ng: Error) => t.fail(ng.message),
   );
@@ -132,8 +132,8 @@ test('[Nft Storage] mint nft with many optional datas', async (t) => {
     (ok: string) => {
       const mint = res.unwrap().data as Pubkey;
       t.true(KeypairAccount.isPubkey(mint));
-      console.log('# mint:', mint);
-      console.log('# sig:', ok);
+      t.log('# mint:', mint);
+      t.log('# sig:', ok);
     },
     (ng: Error) => t.fail(ng.message),
   );
@@ -150,11 +150,9 @@ test('[Error]Raise validation error when upload meta data', async (t) => {
 
   res.match(
     () => t.fail('Unrecognized error'),
-    () => {
-      (err: ValidatorError) => {
-        t.not(err.message, '');
-        console.log(err.details);
-      };
+    (err: Error) => {
+      t.not(err.message, '');
+      t.log((err as ValidatorError).details);
     },
   );
 });
@@ -169,7 +167,7 @@ test('[Error]Raise parameter error when not need uri or filePath', async (t) => 
     isMutable: true,
   });
   res.match(
-    (_: unknown) => t.fail('Unrecognized error'),
+    () => t.fail('Unrecognized error'),
     (err: Error) => {
       t.is(err.message, `Must set 'storageType + filePath' or 'uri'`);
     },

@@ -50,14 +50,14 @@ export namespace TraditionalNft {
         throw valid.error;
       }
 
-      const sellerFeeBasisPoints = Converter.Royalty.convert(input.royalty);
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfraSide(input.royalty);
 
       //--- porperties, Upload content ---
       let uri = '';
       if (input.filePath && input.storageType === 'nftStorage') {
         const properties = await Converter.Properties.intoInfraSide(
           input.properties,
-          Storage.uploadContent,
+          Storage.uploadFile,
           input.storageType,
         );
 
@@ -66,7 +66,7 @@ export namespace TraditionalNft {
           sellerFeeBasisPoints,
         );
 
-        const uploaded = await Storage.uploadMetaAndContent(
+        const uploaded = await Storage.upload(
           nftStorageMetadata,
           input.filePath,
           input.storageType,
