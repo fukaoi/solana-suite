@@ -2,6 +2,11 @@ import test from 'ava';
 import { KeypairAccount } from '~/account';
 import { Converter } from '../src/';
 
+test.only('test', async (t) => {
+  console.log((KeypairAccount.create().pubkey as string).toPublicKey());
+  t.pass();
+});
+
 test.skip('To input convert', async (t) => {
   const creator1 = KeypairAccount.create();
   const creator2 = KeypairAccount.create();

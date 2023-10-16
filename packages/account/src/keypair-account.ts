@@ -16,15 +16,6 @@ export class KeypairAccount {
     this.secret = params.secret;
   }
 
-  toPublicKey(): PublicKey {
-    return new PublicKey(this.pubkey);
-  }
-
-  toKeypair(): Keypair {
-    const decoded = bs.decode(this.secret);
-    return Keypair.fromSecretKey(decoded);
-  }
-
   static isPubkey = (value: string): value is Pubkey =>
     /^[0-9a-zA-Z]{32,44}$/.test(value);
 
@@ -46,30 +37,3 @@ export class KeypairAccount {
     });
   };
 }
-
-/**
- * PubKey(@solana-suite) to PublicKey(@solana/web3.js)
- *
- * @see {@link types/global.ts}
- * @returns PublicKey
- */
-String.prototype.toPublicKey = function () {
-  if (!KeypairAccount.isPubkey(this.toString())) {
-    throw Error(`No match KeyPair.PubKey: ${this.toString()}`);
-  }
-  return new PublicKey(this);
-};
-
-/**
- * Secret(@solana-suite) to Keypair(@solana/web3.js)
- *
- * @see {@link types/global.ts}
- * @returns Keypair
- */
-String.prototype.toKeypair = function () {
-  if (!KeypairAccount.isSecret(this.toString())) {
-    throw Error(`No match KeyPair.Secret: ${this.toString()}`);
-  }
-  const decoded = bs.decode(this as string);
-  return Keypair.fromSecretKey(decoded);
-};

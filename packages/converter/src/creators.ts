@@ -15,7 +15,6 @@ export namespace Converter {
         return null;
       }
       return input.map((data) => {
-        console.log(data.address, data.address.length);
         let modify: Option<InfraSideInput.Creators> = null;
         modify = {
           address: data.address.toPublicKey(),
