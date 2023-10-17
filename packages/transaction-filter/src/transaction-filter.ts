@@ -14,6 +14,10 @@ export namespace TransactionFilter {
     transaction: ParsedTransactionWithMeta,
   ): PostTokenAccount[] => {
     const postTokenAccount: PostTokenAccount[] = [];
+
+    if (Object.keys(transaction).length === 0) {
+      return postTokenAccount;
+    }
     const accountKeys = transaction.transaction.message.accountKeys.map((t) =>
       t.pubkey.toString(),
     );
@@ -50,18 +54,16 @@ export namespace TransactionFilter {
         );
       }
 
-      if (!txMeta) {
+      if (!txMeta || !txMeta.transaction) {
         return history;
       }
 
       const postTokenAccount = createPostTokenAccountList(txMeta);
-
       txMeta.transaction.message.instructions.forEach((instruction) => {
         if (isParsedInstruction(instruction)) {
           switch (filterType) {
             case FilterType.Memo: {
               if (FilterOptions.Memo.program.includes(instruction.program)) {
-                // console.log(txMeta.transaction.message.instructions);
                 let instructionTransfer;
 
                 // fetch  transfer transaction for relational memo

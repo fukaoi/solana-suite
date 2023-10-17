@@ -1,4 +1,4 @@
-import { TransactionInstruction, Keypair, PublicKey } from '@solana/web3.js';
+import { TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -51,6 +51,8 @@ declare class KeypairAccount {
         pubkey?: Pubkey;
         secret: Secret;
     });
+    toPublicKey(): PublicKey;
+    toKeypair(): Keypair;
     static isPubkey: (value: string) => value is Pubkey;
     static isSecret: (value: string) => value is Secret;
     static create: () => KeypairAccount;

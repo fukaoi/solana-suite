@@ -8,3 +8,4 @@ package-lock.json
 .gdb_history
 .node-version
 .turbo
+.vscode
