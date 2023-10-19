@@ -12,7 +12,7 @@ test.before(async () => {
   target = obj.dest.pubkey; // if target is source, have a lot transactions
 });
 
-test('Get transfer history', async (t) => {
+test('Get Mint history', async (t) => {
   const onOk: OnOk<History> = async (ok) => {
     console.log('# hisory size: ', ok.length); // t.log is buffering
     ok.forEach((res) => {
@@ -26,7 +26,7 @@ test('Get transfer history', async (t) => {
   };
 
   const onErr: OnErr = (err: Error) => t.fail(err.message);
-  await SplToken.getHistory(target, FilterType.Transfer, onOk, onErr, {
+  await SplToken.getHistory(target, FilterType.Mint, onOk, onErr, {
     narrowDown: 10,
     waitTime: 0,
   });
