@@ -3,11 +3,18 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Airdrop, FilterType, Memo, SplToken } from '@solana-suite/core';
+import { Airdrop } from '@solana-suite/airdrop';
+import {
+  FilterType,
+  KeypairAccount,
+  Node,
+  Pubkey,
+  SplToken,
+} from '@solana-suite/spl-token';
+import { Memo } from '@solana-suite/memo';
 
-import { KeypairAccount, Node, Pubkey } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
-import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
+import { RandomAsset } from 'test-tools/setupAsset';
 
 (async () => {
   //////////////////////////////////////////////

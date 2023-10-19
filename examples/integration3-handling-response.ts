@@ -2,15 +2,11 @@
 // $ npx ts-node examples/integration3-handling-response
 //////////////////////////////////////////////
 
-import {
-  SolNative, OwnerInfo,
-} from '@solana-suite/core';
-
+import { OwnerInfo, SolNative } from '@solana-suite/sol-native';
 
 const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
 
 (async () => {
-
   // success, ok  => ex1.value
   // failed,  err => ex1.error
 
@@ -32,18 +28,18 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
   const ex2 = await SolNative.findByOwner(DEMO_ADDRESS);
   console.log('# ex2: ', ex2.unwrap());
 
-
   //////////////////////////////////////////////
   // Example3 map()
   //////////////////////////////////////////////
   const ex4 = await SolNative.findByOwner(DEMO_ADDRESS);
 
-  const mapped = ex4.map(
-    (value: OwnerInfo) => value.sol * 100,
-    (error: Error) => new Error(error.message)
-  ).unwrap();
+  const mapped = ex4
+    .map(
+      (value: OwnerInfo) => value.sol * 100,
+      (error: Error) => new Error(error.message),
+    )
+    .unwrap();
   console.log('# ex4: ', mapped);
-
 
   //////////////////////////////////////////////
   // Example4 match()
@@ -52,7 +48,6 @@ const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
 
   ex5.match(
     (value: OwnerInfo) => console.log('# ex5: ', value),
-    (error: Error) => console.error(error)
+    (error: Error) => console.error(error),
   );
-
 })();

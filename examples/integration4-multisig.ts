@@ -3,9 +3,8 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Multisig, Airdrop } from '@solana-suite/core';
-
-import { Node, KeypairAccount, Pubkey } from '@solana-suite/shared';
+import { KeypairAccount, Multisig, Node, Pubkey } from '@solana-suite/multisig';
+import { Airdrop } from '@solana-suite/airdrop';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 
 (async () => {
@@ -49,6 +48,6 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
       console.log('# multisig address: ', multisig);
       await Node.confirmedSig(value);
     },
-    (error) => assert.fail(error)
+    (error) => assert.fail(error),
   );
 })();

@@ -3,19 +3,16 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Airdrop, SplToken } from '@solana-suite/core';
-
+import { Airdrop } from '@solana-suite/airdrop';
 import {
-  // Node,
-  // Constants,
   KeypairAccount,
   Pubkey,
   Secret,
-  sleep,
-} from '@solana-suite/shared';
+  SplToken,
+} from '@solana-suite/spl-token';
+
 import { requestTransferByKeypair } from './requestTransferByKeypair';
-import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
-import { StorageType } from '@solana-suite/shared-metaplex';
+import { RandomAsset } from 'test-tools/setupAsset';
 
 const USERS_COUNT = 10;
 const SLEEP_TIME_WAIT = 0;
@@ -64,7 +61,7 @@ const SLEEP_TIME_WAIT = 0;
     symbol: 'SST',
     royalty: 50,
     filePath: RandomAsset.get().filePath as string,
-    storageType: 'nftStorage' as StorageType,
+    storageType: 'nftStorage',
     isMutable: false,
   };
 
@@ -73,13 +70,13 @@ const SLEEP_TIME_WAIT = 0;
     owner.secret,
     totalAmount,
     decimals,
-    tokenMetadata
+    tokenMetadata,
   );
 
   // submit instructions
   (await inst1.submit()).match(
     (value) => console.log('# mint nft sig: ', value),
-    (error) => assert.fail(error)
+    (error) => assert.fail(error),
   );
 
   const mint = inst1.unwrap().data as Pubkey;
@@ -91,14 +88,14 @@ const SLEEP_TIME_WAIT = 0;
 
   let i = 1;
   for (const user of users) {
-    await sleep(SLEEP_TIME_WAIT);
+    await new Promise(() => setTimeout(() => {}, SLEEP_TIME_WAIT * 1000));
     const inst2 = await SplToken.transfer(
       mint,
       owner.pubkey,
       user.pubkey,
       [owner.secret],
       10,
-      decimals
+      decimals,
     );
 
     (await inst2.submit()).match(
@@ -109,7 +106,7 @@ const SLEEP_TIME_WAIT = 0;
       },
       (error) => {
         assert.fail(error);
-      }
+      },
     );
   }
 })();

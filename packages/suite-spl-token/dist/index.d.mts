@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
+import { TransactionSignature, PublicKey, Keypair, TransactionInstruction, Connection, Commitment } from '@solana/web3.js';
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import BN from 'bn.js';
@@ -260,6 +260,32 @@ declare enum FilterType {
     OnlyMemo = "only-memo",
     Transfer = "transfer"
 }
+declare enum ModuleName {
+    SolNative = "system",
+    SplToken = "spl-token"
+}
+declare const FilterOptions: {
+    Transfer: {
+        program: string[];
+        action: string[];
+    };
+    Memo: {
+        program: string[];
+        action: string[];
+    };
+    Mint: {
+        program: string[];
+        action: string[];
+    };
+};
+type PostTokenAccount = {
+    account: string;
+    owner: string;
+};
+type WithMemo = {
+    sig: string[];
+    memo: string;
+};
 
 type FileType = string | File;
 
@@ -417,6 +443,11 @@ type Pubkey$1 = (string & {
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
+type OwnerInfo = {
+    sol: number;
+    lamports: number;
+    owner: string;
+};
 
 declare namespace UserSideInput {
     type Collection = Pubkey$1;
@@ -760,6 +791,115 @@ declare global {
     }
 }
 
+/**
+ * Get Associated token Account.
+ * if not created, create new token accouint
+ *
+ * @param {Pubkey} mint
+ * @param {Pubkey} owner
+ * @param {Secret} feePayer
+ * @param {boolean} allowOwnerOffCurve
+ * @returns Promise<string | Instruction>
+ */
+declare namespace AssociatedAccount {
+    /**
+     * Retry function if create new token accouint
+     *
+     * @param {Pubkey} mint
+     * @param {Pubkey} owner
+     * @param {Secret} feePayer
+     * @returns Promise<string>
+     */
+    const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret) => Promise<string>;
+    /**
+     * [Main logic]Get Associated token Account.
+     * if not created, create new token accouint
+     *
+     * @param {Pubkey} mint
+     * @param {Pubkey} owner
+     * @param {Pubkey} feePayer
+     * @returns Promise<string>
+     */
+    const makeOrCreateInstruction: (mint: Pubkey$1, owner: Pubkey$1, feePayer?: Pubkey$1, allowOwnerOffCurve?: boolean) => Promise<{
+        tokenAccount: string;
+        inst: TransactionInstruction | undefined;
+    }>;
+}
+
+declare class KeypairAccount {
+    secret: Secret;
+    pubkey: Pubkey$1;
+    constructor(params: {
+        pubkey?: Pubkey$1;
+        secret: Secret;
+    });
+    toPublicKey(): PublicKey;
+    toKeypair(): Keypair;
+    static isPubkey: (value: string) => value is Pubkey$1;
+    static isSecret: (value: string) => value is Secret;
+    static create: () => KeypairAccount;
+    static toKeyPair: (keypair: Keypair) => KeypairAccount;
+}
+
+declare namespace Pda {
+    const getMetadata: (mint: Pubkey$1) => PublicKey;
+    const getMasterEdition: (mint: Pubkey$1) => PublicKey;
+}
+
+declare namespace Node {
+    const getConnection: () => Connection;
+    const changeConnection: (param: {
+        cluster?: string;
+        commitment?: Commitment;
+        customClusterUrl?: string[];
+    }) => void;
+    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
+}
+
+type Condition = 'overMax' | 'underMin';
+interface Limit {
+    threshold: number;
+    condition: Condition;
+}
+interface Details {
+    key: string;
+    message: string;
+    actual: string | number;
+    limit?: Limit;
+}
+
+declare namespace Validator {
+    export namespace Message {
+        const SUCCESS = "success";
+        const SMALL_NUMBER = "too small";
+        const BIG_NUMBER = "too big";
+        const LONG_LENGTH = "too long";
+        const EMPTY = "invalid empty value";
+        const INVALID_URL = "invalid url";
+        const ONLY_NODE_JS = "`string` type is only Node.js";
+    }
+    export const NAME_LENGTH = 32;
+    export const SYMBOL_LENGTH = 10;
+    export const URL_LENGTH = 200;
+    export const ROYALTY_MAX = 100;
+    export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
+    export const ROYALTY_MIN = 0;
+    export const isRoyalty: (royalty: number) => Result<string, ValidatorError>;
+    export const isSellerFeeBasisPoints: (royalty: number) => Result<string, ValidatorError>;
+    export const isName: (name: string) => Result<string, ValidatorError>;
+    export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
+    export const isImageUrl: (image: string) => Result<string, ValidatorError>;
+    export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
+    type PickNftStorage = Pick<InfraSideInput.Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
+    type PickNftStorageMetaplex = Pick<UserSideInput.NftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
+    type PickMetaplex = Pick<InfraSideInput.MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
+    export {};
+}
+declare class ValidatorError extends Error {
+    details: Details[];
+    constructor(message: string, details: Details[]);
+}
+
 declare const SplToken: {
     transfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, mintDecimal: number, feePayer?: Secret | undefined) => Promise<Result<Instruction, Error>>;
     thaw: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, feePayer?: Secret | undefined) => Result<Instruction, Error>;
@@ -780,4 +920,4 @@ declare const SplToken: {
     add: (token: Pubkey$1, owner: Pubkey$1, signers: Secret[], totalAmount: number, mintDecimal: number, feePayer?: Secret | undefined) => Promise<Result<Instruction, Error>>;
 };
 
-export { SplToken };
+export { AssociatedAccount, FilterOptions, FilterType, KeypairAccount, ModuleName, Node, OwnerInfo, Pda, PostTokenAccount, Pubkey$1 as Pubkey, Secret, SplToken, Validator, ValidatorError, WithMemo };

@@ -30,9 +30,9 @@
       "types": "./assets"
     },
     "./setupAsset": {
-      "require": "./randomAsset.ts",
-      "import": "./randomAsset.ts",
-      "types": "./randomAsset.ts"
+      "require": "./setupAsset.ts",
+      "import": "./setupAsset.ts",
+      "types": "./setupAsset.ts"
     }
   }
 }

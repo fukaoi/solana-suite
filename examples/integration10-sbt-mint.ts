@@ -3,10 +3,13 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Airdrop } from '@solana-suite/core';
-import { Metaplex } from '@solana-suite/nft';
-import { KeypairAccount, Pubkey } from '@solana-suite/shared';
-import { RandomAsset } from '../packages/storage/test/randomAsset';
+import { Airdrop } from '@solana-suite/airdrop';
+import {
+  KeypairAccount,
+  Pubkey,
+  TraditionalNft,
+} from '@solana-suite/traditional-nft';
+import { RandomAsset } from 'test-tools/setupAsset';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 
 (async () => {
@@ -39,7 +42,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // CREATE NFT, MINT NFT FROM THIS LINE
   //////////////////////////////////////////////
 
-  const inst1 = await Metaplex.mint(
+  const inst1 = await TraditionalNft.mint(
     owner.pubkey,
     owner.secret,
     {
@@ -50,7 +53,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
       storageType: 'nftStorage',
     },
     feePayer.secret,
-    freeze.pubkey // Pubkey !!
+    freeze.pubkey, // Pubkey !!
   );
 
   // this is NFT ID
@@ -60,15 +63,15 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
   // CHANGE STATE TO SBT
   //////////////////////////////////////////////
-  const inst2 = Metaplex.freeze(
+  const inst2 = TraditionalNft.freeze(
     mint,
     owner.pubkey,
     freeze.secret,
-    feePayer.secret
+    feePayer.secret,
   );
 
   (await [inst1, inst2].submit()).match(
     (value) => console.log(value.toExplorerUrl()),
-    (error) => assert.fail(error)
+    (error) => assert.fail(error),
   );
 })();

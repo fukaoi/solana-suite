@@ -3,12 +3,17 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Airdrop, FilterType, SplToken } from '@solana-suite/core';
+import { Airdrop } from '@solana-suite/airdrop';
+import {
+  FilterType,
+  KeypairAccount,
+  Node,
+  Pubkey,
+  SplToken,
+} from '@solana-suite/spl-token';
 
-import { KeypairAccount, Node, Pubkey } from '@solana-suite/shared';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
-import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
-import { StorageType } from '@solana-suite/shared-metaplex';
+import { RandomAsset } from 'test-tools/setupAsset';
 
 (async () => {
   //////////////////////////////////////////////
@@ -41,7 +46,7 @@ import { StorageType } from '@solana-suite/shared-metaplex';
     symbol: 'SST',
     royalty: 50,
     filePath: RandomAsset.get().filePath as string,
-    storageType: 'nftStorage' as StorageType,
+    storageType: 'nftStorage',
     isMutable: false,
   };
   const inst1 = await SplToken.mint(
@@ -49,7 +54,7 @@ import { StorageType } from '@solana-suite/shared-metaplex';
     owner.secret,
     totalAmount,
     decimals,
-    tokenMetadata
+    tokenMetadata,
   );
 
   const mint = inst1.unwrap().data as Pubkey;
@@ -59,7 +64,7 @@ import { StorageType } from '@solana-suite/shared-metaplex';
       console.log('# mint: ', mint);
       await Node.confirmedSig(value);
     },
-    (error) => assert.fail(error)
+    (error) => assert.fail(error),
   );
 
   //////////////////////////////////////////////
@@ -73,7 +78,7 @@ import { StorageType } from '@solana-suite/shared-metaplex';
     receipt.pubkey,
     [owner.secret],
     10,
-    decimals
+    decimals,
   );
 
   (await inst2.submit()).match(
@@ -81,7 +86,7 @@ import { StorageType } from '@solana-suite/shared-metaplex';
       console.log('# Transfer nft sig: ', value.toExplorerUrl());
       await Node.confirmedSig(value);
     },
-    (error) => assert.fail(error)
+    (error) => assert.fail(error),
   );
 
   //////////////////////////////////////////////
@@ -94,6 +99,6 @@ import { StorageType } from '@solana-suite/shared-metaplex';
     (histories) => {
       histories.forEach((history) => console.log(history));
     },
-    (err) => assert.fail(err.message)
+    (err) => assert.fail(err.message),
   );
 })();

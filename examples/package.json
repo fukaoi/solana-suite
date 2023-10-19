@@ -1,0 +1,15 @@
+{
+  "name": "examples",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "workspaces": [
+    "../packages/*"
+  ],
+  "devDependencies": {
+    "@solana-suite/airdrop": "../packages/suite-airdrop/",
+    "@solana-suite/traditional-nft": "../packages/suite-traditional-nft/",
+    "test-tools": "../packages/test-tools/"
+  }
+}

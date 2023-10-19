@@ -3,13 +3,10 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Airdrop } from '@solana-suite/core';
-
-import { KeypairAccount, PartialSignInstruction } from '@solana-suite/shared';
+import { Airdrop } from '@solana-suite/airdrop';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
-import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
-import { StorageType } from '@solana-suite/shared-metaplex';
-import { Metaplex } from '@solana-suite/nft';
+import { RandomAsset } from 'test-tools/setupAsset';
+import { KeypairAccount, TraditionalNft } from '@solana-suite/traditional-nft';
 
 (async () => {
   // random create
@@ -38,25 +35,22 @@ import { Metaplex } from '@solana-suite/nft';
     royalty: 10,
     description: 'solana suite nft',
     filePath: RandomAsset.get().filePath as string,
-    storageType: 'nftStorage' as StorageType,
+    storageType: 'nftStorage',
     isMutable: false,
   };
 
-  const inst = await Metaplex.feePayerPartialSignMint(
+  const inst = await TraditionalNft.feePayerPartialSignMint(
     owner.pubkey,
     owner.secret,
     metadata,
-    feePayer.pubkey
+    feePayer.pubkey,
   );
 
-  let hex: string = '';
   inst.match(
     (ok) => {
-      hex = ok.hexInstruction;
-      console.log('# hex instruction: ', hex);
       console.log('# mint: ', ok.data);
     },
-    (err) => assert.fail(err.message)
+    (err) => assert.fail(err.message),
   );
 
   // =============================================== //
@@ -67,10 +61,9 @@ import { Metaplex } from '@solana-suite/nft';
   // SIGN FEE PAYER AND SUBMIT (Server side)
   //////////////////////////////////////////////
 
-  const obj = new PartialSignInstruction(hex);
-  const res = await obj.submit(feePayer.secret);
+  const res = await inst.unwrap().submit(feePayer.secret);
   res.match(
     (ok) => console.log('# tx signature: ', ok),
-    (err) => assert.fail(err.message)
+    (err) => assert.fail(err.message),
   );
 })();

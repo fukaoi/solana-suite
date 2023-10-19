@@ -4,9 +4,13 @@
 
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
-import { Metaplex } from '@solana-suite/';
-import { KeypairAccount, Node, Pubkey } from '@solana-suite/shared';
-import { RandomAsset } from '../packages/storage/test/randomAsset';
+import {
+  KeypairAccount,
+  Node,
+  Pubkey,
+  TraditionalNft,
+} from '@solana-suite/traditional-nft';
+import { RandomAsset } from 'test-tools/setupAsset';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 
 (async () => {
@@ -39,7 +43,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // CREATE NFT, MINT NFT FROM THIS LINE
   //////////////////////////////////////////////
 
-  const inst1 = await Metaplex.mint(
+  const inst1 = await TraditionalNft.mint(
     owner.pubkey,
     owner.secret,
     {
@@ -51,13 +55,13 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
       isMutable: true,
       external_url: 'https://github.com/atonoy/solana-suite',
     },
-    feePayer.secret
+    feePayer.secret,
   );
 
   // this is NFT ID
   (await inst1.submit()).match(
     async (value) => await Node.confirmedSig(value, 'finalized'),
-    (error) => assert.fail(error)
+    (error) => assert.fail(error),
   );
 
   const mint = inst1.unwrap().data as Pubkey;
@@ -67,10 +71,10 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // Display metadata from blockchain(optional)
   //////////////////////////////////////////////
 
-  await Metaplex.findByOwner(
+  await TraditionalNft.findByOwner(
     owner.pubkey,
     (value) => console.log('# metadata: ', value),
-    (error) => assert.fail(error)
+    (error) => assert.fail(error),
   );
 
   //////////////////////////////////////////////
@@ -78,17 +82,17 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
 
   //transfer nft owner => receipt
-  const inst2 = await Metaplex.transfer(
+  const inst2 = await TraditionalNft.transfer(
     mint,
     owner.pubkey,
     receipt.pubkey,
     [owner.secret],
-    feePayer.secret
+    feePayer.secret,
   );
 
   // submit instructions
   (await inst2.submit()).match(
     (value) => console.log('# sig: ', value),
-    (error) => assert.fail(error)
+    (error) => assert.fail(error),
   );
 })();

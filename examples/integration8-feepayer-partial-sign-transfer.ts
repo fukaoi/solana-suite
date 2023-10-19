@@ -3,15 +3,11 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Airdrop, SolNative, SplToken } from '@solana-suite/core';
-
-import {
-  KeypairAccount,
-  PartialSignInstruction,
-  Pubkey,
-} from '@solana-suite/shared';
+import { Airdrop } from '@solana-suite/airdrop';
+import { SplToken } from '@solana-suite/spl-token';
+import { KeypairAccount, Pubkey, SolNative } from '@solana-suite/sol-native';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
-import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
+import { RandomAsset } from 'test-tools/setupAsset';
 
 (async () => {
   // random create
@@ -44,16 +40,7 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
     dest.pubkey,
     [owner.secret],
     0.001,
-    feePayer.pubkey
-  );
-
-  let hex: string = '';
-  inst.match(
-    (ok) => {
-      hex = ok.hexInstruction;
-      console.log('# hex instruction: ', hex);
-    },
-    (err) => assert.fail(err.message)
+    feePayer.pubkey,
   );
 
   // =============================================== //
@@ -64,11 +51,10 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
   // SIGN FEE PAYER AND SUBMIT (Server side)
   //////////////////////////////////////////////
 
-  const obj = new PartialSignInstruction(hex);
-  const res = await obj.submit(feePayer.secret);
+  const res = await inst.unwrap().submit(feePayer.secret);
   res.match(
     (ok) => console.log('# tx signature: ', ok),
-    (err) => assert.fail(err.message)
+    (err) => assert.fail(err.message),
   );
 
   // SPL-TOKEN version //
@@ -91,7 +77,7 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
     10000,
     decimals,
     tokenMetadata,
-    feePayer.secret
+    feePayer.secret,
   );
 
   await mintInst.submit();
@@ -103,16 +89,7 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
     [tokenOwner.secret],
     100,
     decimals,
-    feePayer.pubkey
-  );
-
-  let hex2: string = '';
-  inst2.match(
-    (ok) => {
-      hex2 = ok.hexInstruction;
-      console.log('# hex instruction: ', hex2);
-    },
-    (err) => assert.fail(err.message)
+    feePayer.pubkey,
   );
 
   // =============================================== //
@@ -123,10 +100,9 @@ import { RandomAsset } from '@solana-suite/storage/test/randomAsset';
   // SIGN FEE PAYER AND SUBMIT (Server side)
   //////////////////////////////////////////////
 
-  const obj2 = new PartialSignInstruction(hex2);
-  const res2 = await obj2.submit(feePayer.secret);
+  const res2 = await inst2.unwrap().submit(feePayer.secret);
   res2.match(
     (ok) => console.log('# tx signature: ', ok),
-    (err) => assert.fail(err.message)
+    (err) => assert.fail(err.message),
   );
 })();
