@@ -203,6 +203,11 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+declare const pubKeyNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -227,11 +232,6 @@ declare enum Explorer {
     Solscan = "solscan",
     SolanaFM = "solanafm"
 }
-
-declare const pubKeyNominality: unique symbol;
-type Pubkey = (string & {
-    [pubKeyNominality]: never;
-}) | string;
 
 declare namespace Airdrop {
     const request: (pubkey: Pubkey, airdropAmount?: number) => Promise<Result<string, Error>>;

@@ -418,31 +418,6 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm"
-}
-
 type FileType = string | File;
 
 type StorageType = 'nftStorage' | 'arweave' | string;
@@ -545,6 +520,31 @@ interface Details {
 declare class ValidatorError extends Error {
     details: Details[];
     constructor(message: string, details: Details[]);
+}
+
+declare global {
+    interface String {
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        toExplorerUrl(explorer?: Explorer): string;
+    }
+    interface Number {
+        toSol(): number;
+        toLamports(): number;
+    }
+    interface Console {
+        debug(data: unknown, data2?: unknown, data3?: unknown): void;
+    }
+    interface Secret {
+        toKeypair(): Keypair;
+    }
+    interface Pubkey {
+        toPublicKey(): PublicKey;
+    }
+}
+declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm"
 }
 
 declare const Metaplex: {

@@ -4,7 +4,7 @@
 
   "display": "shared",
   "compilerOptions": {
-   "paths": {
+    "paths": {
       "~/types/*": [
         "../types/src/*/index.ts"
       ],

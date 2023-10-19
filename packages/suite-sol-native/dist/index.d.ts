@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, PublicKey, Keypair, TransactionInstruction, Connection, Commitment } from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
 
 declare abstract class AbstractResult$1<T, E extends Error> {
@@ -484,40 +484,6 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm"
-}
-
-declare class Instruction {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    data?: unknown;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
-    submit: () => Promise<Result<TransactionSignature, Error>>;
-}
-
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
 type Pubkey$1 = (string & {
@@ -531,19 +497,6 @@ type OwnerInfo = {
     lamports: number;
     owner: string;
 };
-
-declare class PartialSignInstruction {
-    hexInstruction: string;
-    data?: Pubkey$1;
-    constructor(instructions: string, mint?: Pubkey$1);
-    submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
-}
-
-declare global {
-    interface Array<T> {
-        submit(): Promise<Result$1<TransactionSignature, Error>>;
-    }
-}
 
 /**
  * Get Associated token Account.
@@ -788,6 +741,53 @@ declare namespace Validator {
 declare class ValidatorError extends Error {
     details: Details[];
     constructor(message: string, details: Details[]);
+}
+
+declare global {
+    interface String {
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        toExplorerUrl(explorer?: Explorer): string;
+    }
+    interface Number {
+        toSol(): number;
+        toLamports(): number;
+    }
+    interface Console {
+        debug(data: unknown, data2?: unknown, data3?: unknown): void;
+    }
+    interface Secret {
+        toKeypair(): Keypair;
+    }
+    interface Pubkey {
+        toPublicKey(): PublicKey;
+    }
+}
+declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm"
+}
+
+declare class Instruction {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: unknown;
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    submit: () => Promise<Result<TransactionSignature, Error>>;
+}
+
+declare class PartialSignInstruction {
+    hexInstruction: string;
+    data?: Pubkey$1;
+    constructor(instructions: string, mint?: Pubkey$1);
+    submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
+}
+
+declare global {
+    interface Array<T> {
+        submit(): Promise<Result$1<TransactionSignature, Error>>;
+    }
 }
 
 declare const SolNative: {

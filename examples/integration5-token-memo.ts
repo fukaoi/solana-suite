@@ -8,10 +8,10 @@ import {
   FilterType,
   KeypairAccount,
   Node,
-  // Pubkey,
+  Pubkey,
   SplToken,
 } from '@solana-suite/spl-token';
-import { Memo, Pubkey } from '@solana-suite/memo';
+import { Memo } from '@solana-suite/memo';
 
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 import { RandomAsset } from 'test-tools/setupAsset';

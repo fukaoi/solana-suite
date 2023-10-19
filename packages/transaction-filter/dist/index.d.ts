@@ -203,6 +203,22 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+declare const pubKeyNominality: unique symbol;
+type Pubkey$1 = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+
+declare enum FilterType {
+    Memo = "memo",
+    Mint = "mint",
+    OnlyMemo = "only-memo",
+    Transfer = "transfer"
+}
+declare enum ModuleName {
+    SolNative = "system",
+    SplToken = "spl-token"
+}
+
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -228,11 +244,6 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
-declare const pubKeyNominality: unique symbol;
-type Pubkey$1 = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-
 type History = {
     sol?: string;
     account?: string;
@@ -256,17 +267,6 @@ declare namespace Signatures {
         waitTime: number;
         narrowDown: number;
     }, histories?: History[]) => Promise<void>;
-}
-
-declare enum FilterType {
-    Memo = "memo",
-    Mint = "mint",
-    OnlyMemo = "only-memo",
-    Transfer = "transfer"
-}
-declare enum ModuleName {
-    SolNative = "system",
-    SplToken = "spl-token"
 }
 
 declare namespace TransactionFilter {

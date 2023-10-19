@@ -9,6 +9,9 @@
       ],
       "~/*": [
         "../*/src/index.ts"
+      ],
+      "~/shared/exports": [
+        "../shared/src/exports.ts"
       ]
     }
   },
