@@ -10,4 +10,4 @@ export const Memo = { ...Create, ...History };
 // export * from '~/validator';
 // export * from '~/types/account';
 // export * from '~/types/transaction-filter';
-export * from '~/shared';
+export * from '~/shared/exports';

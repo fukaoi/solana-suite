@@ -11,6 +11,11 @@ type Pubkey = (string & {
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
+type OwnerInfo = {
+    sol: number;
+    lamports: number;
+    owner: string;
+};
 
 /**
  * Get Associated token Account.
@@ -267,30 +272,27 @@ declare enum ModuleName {
     SolNative = "system",
     SplToken = "spl-token"
 }
-
-declare const _default: {
-    FilterType: typeof FilterType;
-    ModuleName: typeof ModuleName;
-    FilterOptions: {
-        Transfer: {
-            program: string[];
-            action: string[];
-        };
-        Memo: {
-            program: string[];
-            action: string[];
-        };
-        Mint: {
-            program: string[];
-            action: string[];
-        };
+declare const FilterOptions: {
+    Transfer: {
+        program: string[];
+        action: string[];
     };
-    Validator: typeof Validator;
-    ValidatorError: typeof ValidatorError;
-    Node: typeof Node;
-    AssociatedAccount: typeof AssociatedAccount;
-    KeypairAccount: typeof KeypairAccount;
-    Pda: typeof Pda;
+    Memo: {
+        program: string[];
+        action: string[];
+    };
+    Mint: {
+        program: string[];
+        action: string[];
+    };
+};
+type PostTokenAccount = {
+    account: string;
+    owner: string;
+};
+type WithMemo = {
+    sig: string[];
+    memo: string;
 };
 
-export { _default as default };
+export { AssociatedAccount, FilterOptions, FilterType, KeypairAccount, ModuleName, Node, OwnerInfo, Pda, PostTokenAccount, Pubkey, Secret, Validator, ValidatorError, WithMemo };
