@@ -3,10 +3,9 @@
   "private": true,
   "version": "0.7.0",
   "scripts": {
-    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
-    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
-    "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
-    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
+    "eslint": "eslint -c node_modules/build-configs/eslint/base.json .",
+    "prettier": "prettier --config node_modules/build-configs/prettier/base.json . -c",
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json . -c --write"
   },
   "peerDependencies": {
     "@solana/web3.js": "^1.78.5",

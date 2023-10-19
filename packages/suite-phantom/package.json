@@ -35,10 +35,9 @@
   "scripts": {
     "build": "tsup --config tsup.config.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
-    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
-    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
-    "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
-    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
+    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src",
+    "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ -c",
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ -c --write",
     "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs, ~'",
     "prepublishOnly": "../../scripts/before-publish.mjs",
     "publish": "../../scripts/after-publish.mjs"

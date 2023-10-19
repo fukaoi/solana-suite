@@ -50,7 +50,9 @@ export namespace TraditionalNft {
         throw valid.error;
       }
 
-      const sellerFeeBasisPoints = Converter.Royalty.intoInfraSide(input.royalty);
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfraSide(
+        input.royalty,
+      );
 
       //--- porperties, Upload content ---
       let uri = '';

@@ -36,7 +36,6 @@
     "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src",
-    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/  -c --write",
     "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs, ~'",

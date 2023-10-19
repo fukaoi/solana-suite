@@ -5,4 +5,4 @@ import '~/types/instruction';
 import '~/instruction';
 
 export const Multisig = { ...Create, ...GetInfo, ...IsAddress };
-export * from  '~/shared/exports';
+export * from '~/shared/exports';

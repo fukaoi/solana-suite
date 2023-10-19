@@ -1,9 +1,4 @@
-import {
-  PublicKey,
-  SendOptions,
-  Transaction,
-  TransactionSignature,
-} from '@solana/web3.js';
+import { PublicKey, Transaction } from '@solana/web3.js';
 
 export type connectOption = {
   onlyIfTrusted: false;

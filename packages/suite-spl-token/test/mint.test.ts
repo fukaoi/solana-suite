@@ -97,7 +97,7 @@ test('[Error]Raise parameter error when not need uri or filePath', async (t) => 
     },
   );
   res.match(
-    (_: unknown) => t.fail('Unrecognized error'),
+    () => t.fail('Unrecognized error'),
     (err: Error) => {
       t.is(err.message, `Must set 'storageType + filePath' or 'uri'`);
     },

@@ -1,5 +1,5 @@
 import BN from 'bn.js';
-import {FileType} from '../storage';
+import { FileType } from '../storage';
 
 export type Option<T> = T | null;
 export type bignum = number | BN;

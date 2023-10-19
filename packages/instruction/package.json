@@ -8,10 +8,9 @@
   "scripts": {
     "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
-    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
-    "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
-    "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
-    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
+    "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src",
+    "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ -c",
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ -c --write"
   },
   "dependencies": {
     "@solana/web3.js": "^1.78.5",

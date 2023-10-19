@@ -12,7 +12,7 @@ test.before(async () => {
   target = obj.source.pubkey;
 });
 
-test('Get transfer history', async(t) => {
+test('Get transfer history', async (t) => {
   const onErr = (err: Error) => {
     t.fail(err.message);
   };

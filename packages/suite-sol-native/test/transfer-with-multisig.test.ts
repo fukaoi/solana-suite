@@ -24,7 +24,7 @@ test('transfer transaction with multi sig', async (t) => {
   let multisig!: string;
 
   (await inst1.submit()).match(
-    (_) => {
+    () => {
       multisig = inst1.unwrap().data as string;
       t.log('# multisig: ', multisig);
     },

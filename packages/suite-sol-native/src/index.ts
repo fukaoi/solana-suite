@@ -13,5 +13,4 @@ export const SolNative = {
   ...Transfer,
   ...TransferWithMultisig,
 };
-export * from  '~/shared/exports';
-
+export * from '~/shared/exports';

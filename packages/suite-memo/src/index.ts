@@ -3,5 +3,5 @@ import { Memo as History } from './history';
 import '~/types/instruction';
 import '~/instruction';
 
-export * from  '~/shared/exports';
+export * from '~/shared/exports';
 export const Memo = { ...Create, ...History };

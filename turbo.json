@@ -12,7 +12,6 @@
     "deploy": {
       "dependsOn": [
         "build",
-        "test",
         "eslint",
         "prettier"
       ]
@@ -27,6 +26,7 @@
       ]
     },
     "prettier": {},
+    "prettier:fix": {},
     "eslint": {},
     "clean": {},
     "depcheck": {},

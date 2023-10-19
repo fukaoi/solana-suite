@@ -3,13 +3,9 @@
   "extends": "build-configs/tsconfig/base.json",
   "display": "test-tools",
   "compilerOptions": {
-   "paths": {
-      "~/types/*": [
-        "../types/src/*/index.ts"
-      ],
-      "~/*": [
-        "../*/src/index.ts"
-      ]
+    "paths": {
+      "~/types/*": ["../types/src/*/index.ts"],
+      "~/*": ["../*/src/index.ts"]
     }
   },
   "include": ["solana-suite.json"],
