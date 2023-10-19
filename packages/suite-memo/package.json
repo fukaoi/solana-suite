@@ -39,7 +39,7 @@
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
-    "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs'",
+    "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs, ava, ~'",
     "prepublishOnly": "../../scripts/before-publish.mjs",
     "publish": "../../scripts/after-publish.mjs",
     "test": "ava --config node_modules/build-configs/ava/base.cjs"

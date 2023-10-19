@@ -29,6 +29,7 @@
     "prettier": {},
     "eslint": {},
     "clean": {},
+    "depcheck": {},
     "dev": {
       "cache": false,
       "persistent": true

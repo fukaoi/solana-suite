@@ -39,7 +39,7 @@
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
-    "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs'",
+    "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs, ava, ~'",
     "publish": "../../scripts/after-publish.mjs",
     "prepublishOnly": "../../scripts/before-publish.mjs",
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
@@ -54,7 +54,8 @@
     "bignumber.js": "^9.1.2",
     "nft.storage": "^7.1.1",
     "bs58": "^4.0.1",
-    "@solana-suite/config": "workspace:*"
+    "@solana-suite/config": "workspace:*",
+    "@irys/sdk": "^0.0.3"
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.2",

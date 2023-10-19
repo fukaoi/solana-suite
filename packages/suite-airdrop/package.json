@@ -39,11 +39,19 @@
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/  -c --write",
-    "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs'",
+    "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs, ~'",
     "prepublishOnly": "../../scripts/before-publish.mjs",
     "publish": "../../scripts/after-publish.mjs"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@solana/spl-token": "^0.3.8",
+    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
+    "@solana/buffer-layout": "^4.0.1",
+    "@solana/web3.js": "^1.78.5",
+    "@solana-suite/config": "workspace:^",
+    "bignumber.js": "^9.1.2",
+    "bs58": "^4.0.1"
+  },
   "devDependencies": {
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",

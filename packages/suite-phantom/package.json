@@ -39,7 +39,7 @@
     "eslint:fix": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test --fix",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
-    "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs'",
+    "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs, ~'",
     "prepublishOnly": "../../scripts/before-publish.mjs",
     "publish": "../../scripts/after-publish.mjs"
   },
@@ -54,7 +54,8 @@
     "bignumber.js": "^9.1.2",
     "nft.storage": "^7.1.1",
     "bn.js": "^5.2.1",
-    "bs58": "^4.0.1"
+    "bs58": "^4.0.1",
+    "@irys/sdk": "^0.0.3"
   },
   "devDependencies": {
     "build-configs/eslint": "workspace:*",
