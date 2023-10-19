@@ -9,10 +9,10 @@ import { FilterType } from '~/types/transaction-filter';
 let target: Pubkey;
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
-  target = obj.source.pubkey;
+  target = obj.dest.pubkey; // if target is source, have a lot transactions
 });
 
-test.skip('Get mint history', async (t) => {
+test('Get transfer history', async (t) => {
   const onOk: OnOk<History> = async (ok) => {
     console.log('# hisory size: ', ok.length); // t.log is buffering
     ok.forEach((res) => {
@@ -26,7 +26,8 @@ test.skip('Get mint history', async (t) => {
   };
 
   const onErr: OnErr = (err: Error) => t.fail(err.message);
-  await SplToken.getHistory(target, FilterType.Mint, onOk, onErr, {
+  await SplToken.getHistory(target, FilterType.Transfer, onOk, onErr, {
+    narrowDown: 10,
     waitTime: 0,
   });
 });

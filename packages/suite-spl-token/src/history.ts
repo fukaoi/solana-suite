@@ -21,38 +21,24 @@ export namespace SplToken {
         narrowDown: 100,
       };
       const mergedOptions = { ...defaultValues, ...options };
-      if (filterType === FilterType.Memo) {
+      const tokenAccounts =
+        await Node.getConnection().getParsedTokenAccountsByOwner(
+          target.toPublicKey(),
+          {
+            programId: TOKEN_PROGRAM_ID,
+          },
+        );
+      const storedHistories: History[] = [];
+      debugLog('# tokenAccounts size: ', tokenAccounts.value.length);
+      for (const account of tokenAccounts.value) {
         const parser = TransactionFilter.parse(filterType, ModuleName.SplToken);
         await Signatures.getForAdress(
-          target,
+          account.pubkey.toString(),
           parser,
           (result) => result.match(onOk, onErr),
           mergedOptions,
+          storedHistories,
         );
-      } else {
-        const tokenAccounts =
-          await Node.getConnection().getParsedTokenAccountsByOwner(
-            target.toPublicKey(),
-            {
-              programId: TOKEN_PROGRAM_ID,
-            },
-          );
-
-        const storedHistories: History[] = [];
-        debugLog('# tokenAccounts size: ', tokenAccounts.value.length);
-        for (const account of tokenAccounts.value) {
-          const parser = TransactionFilter.parse(
-            filterType,
-            ModuleName.SplToken,
-          );
-          await Signatures.getForAdress(
-            account.pubkey.toString(),
-            parser,
-            (result) => result.match(onOk, onErr),
-            mergedOptions,
-            storedHistories,
-          );
-        }
       }
     } catch (e) {
       if (e instanceof Error) {

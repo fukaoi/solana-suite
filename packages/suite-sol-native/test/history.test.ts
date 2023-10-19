@@ -12,7 +12,7 @@ test.before(async () => {
   target = obj.source.pubkey;
 });
 
-test('Get transfer history', (t) => {
+test('Get transfer history', async(t) => {
   const onErr = (err: Error) => {
     t.fail(err.message);
   };
@@ -28,10 +28,9 @@ test('Get transfer history', (t) => {
     });
   };
 
-  SolNative.getHistory(target, FilterType.Transfer, onOk, onErr, {
-    waitTime: 0,
+  await SolNative.getHistory(target, FilterType.Transfer, onOk, onErr, {
+    narrowDown: 10,
   });
-  t.pass();
 });
 
 test('Get Memo history', async (t) => {
@@ -49,8 +48,9 @@ test('Get Memo history', async (t) => {
       t.not(res.dateTime, null);
     });
   };
-  await SolNative.getHistory(target, FilterType.Memo, onOk, onErr);
-  t.pass();
+  await SolNative.getHistory(target, FilterType.Memo, onOk, onErr, {
+    narrowDown: 10,
+  });
 });
 
 test('[Error]Get Mint history', async (t) => {
