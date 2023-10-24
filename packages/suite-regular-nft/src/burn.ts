@@ -1,7 +1,7 @@
 import { Result } from '~/shared';
 import { Instruction } from '~/instruction';
 import { Pubkey, Secret } from '~/types/account';
-import { SplToken } from '@solana-suite/spl-token';
+import { SplToken } from '~/suite-spl-token';
 
 export namespace RegularNft {
   const NFT_AMOUNT = 1;

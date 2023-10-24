@@ -1,4 +1,4 @@
-import { SplToken } from '@solana-suite/spl-token';
+import { SplToken } from '~/suite-spl-token';
 import { Result } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 import { Instruction } from '~/instruction';

@@ -1,0 +1,5 @@
+"use strict";
+
+// src/index.ts
+console.log("noop");
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiLi4vc3JjL2luZGV4LnRzIl0sCiAgInNvdXJjZXNDb250ZW50IjogWyJjb25zb2xlLmxvZygnbm9vcCcpO1xuIl0sCiAgIm1hcHBpbmdzIjogIjs7O0FBQUEsUUFBUSxJQUFJLE1BQU07IiwKICAibmFtZXMiOiBbXQp9Cg==

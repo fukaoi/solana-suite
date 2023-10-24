@@ -10,7 +10,8 @@
       ],
       "~/*": [
         "../*/src/index.ts"
-      ]
+      ],
+      "~/shared/exports": ["../shared/src/exports.ts"]
     }
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],

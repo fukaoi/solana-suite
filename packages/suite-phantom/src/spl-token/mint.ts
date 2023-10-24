@@ -4,7 +4,7 @@ import { debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
 import { Storage } from '~/storage';
-import { SplToken } from '@solana-suite/spl-token';
+import { SplToken } from '~/suite-spl-token';
 import { Phantom } from '~/types/phantom';
 import { UserSideInput } from '~/types/converter';
 import { Converter } from '~/converter';

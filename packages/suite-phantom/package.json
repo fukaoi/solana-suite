@@ -44,8 +44,6 @@
   },
   "dependencies": {
     "@solana/buffer-layout": "^4.0.1",
-    "@solana-suite/spl-token": "workspace:^",
-    "@solana-suite/regular-nft": "workspace:^",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana-suite/config": "workspace:^",
     "@solana/spl-token": "^0.3.8",

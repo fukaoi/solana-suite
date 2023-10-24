@@ -1,5 +1,5 @@
 import { Transaction, TransactionInstruction } from '@solana/web3.js';
-import { RegularNft } from '@solana-suite/regular-nft';
+import { RegularNft } from '~/suite-regular-nft';
 import { Storage } from '~/storage';
 import { Node } from '~/node';
 import { debugLog, Result, Try } from '~/shared';
