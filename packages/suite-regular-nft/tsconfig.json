@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "build-configs/tsconfig/base.json",
 
-  "display": "@solana-suite/traditional-nft",
+  "display": "@solana-suite/regular-nft",
   "compilerOptions": {
     "paths": {
       "~/types/*": [

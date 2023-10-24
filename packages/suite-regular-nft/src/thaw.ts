@@ -5,7 +5,7 @@ import { KeypairAccount, Pda } from '~/account';
 import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createThawDelegatedAccountInstruction } from '@metaplex-foundation/mpl-token-metadata';
 
-export namespace TraditionalNft {
+export namespace RegularNft {
   /**
    * Thawing a target NFT
    * it should set to freezeAuthority when mint()

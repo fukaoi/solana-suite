@@ -6,7 +6,7 @@ import { Sortable } from '~/types/find';
 import { OnErr, OnOk } from '~/types/shared';
 import { NftMetadata } from '~/types/traditional-nft';
 
-export namespace TraditionalNft {
+export namespace RegularNft {
   /**
    * Fetch minted metadata by owner Pubkey
    *

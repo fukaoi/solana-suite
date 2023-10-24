@@ -1,7 +1,7 @@
 import test from 'ava';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
-import { TraditionalNft } from '../src/';
+import { RegularNft } from '../src/';
 import { KeypairAccount } from '~/account';
 import { Storage } from '~/storage';
 import { InfraSideInput } from '~/types/converter';
@@ -17,7 +17,7 @@ test('[Nft Storage] mint nft with partial sing fee payer', async (t) => {
   const owner = KeypairAccount.create();
   const freezeAuthority = KeypairAccount.create();
   const asset = RandomAsset.get();
-  const serialized = await TraditionalNft.feePayerPartialSignMint(
+  const serialized = await RegularNft.feePayerPartialSignMint(
     owner.pubkey,
     owner.secret,
     {
@@ -69,7 +69,7 @@ test('[Arweave] use case arweave', async (t) => {
   }
   const uri = uploaded.value;
 
-  const serialized = await TraditionalNft.feePayerPartialSignMint(
+  const serialized = await RegularNft.feePayerPartialSignMint(
     owner.pubkey,
     owner.secret,
     {
@@ -98,7 +98,7 @@ test('[Arweave] use case arweave', async (t) => {
 test('[Error]Raise parameter error when not need uri or filePath', async (t) => {
   const owner = KeypairAccount.create();
   const asset = RandomAsset.get();
-  const res = await TraditionalNft.feePayerPartialSignMint(
+  const res = await RegularNft.feePayerPartialSignMint(
     owner.pubkey,
     owner.secret,
     {

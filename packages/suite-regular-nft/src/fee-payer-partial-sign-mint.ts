@@ -7,10 +7,10 @@ import { Converter } from '~/converter';
 import { UserSideInput } from '~/types/converter';
 import { Validator } from '~/validator';
 import { KeypairAccount } from '~/account';
-import { TraditionalNft as _Mint } from './mint';
+import { RegularNft as _Mint } from './mint';
 import { Transaction } from '@solana/web3.js';
 
-export namespace TraditionalNft {
+export namespace RegularNft {
   /**
    * Upload content and NFT mint with Partial Sign
    *

@@ -1,7 +1,7 @@
 import test from 'ava';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
-import { TraditionalNft } from '../src/';
+import { RegularNft } from '../src/';
 import { KeypairAccount } from '~/account';
 import { Pubkey } from '~/types/account';
 
@@ -15,7 +15,7 @@ test.before(async () => {
 test('[Nft Storage] mint nft and nft burn', async (t) => {
   const owner = KeypairAccount.create();
   const asset = RandomAsset.get();
-  const inst1 = await TraditionalNft.mint(
+  const inst1 = await RegularNft.mint(
     owner.pubkey,
     owner.secret,
     {
@@ -40,7 +40,7 @@ test('[Nft Storage] mint nft and nft burn', async (t) => {
     (ng: Error) => t.fail(ng.message),
   );
 
-  const inst2 = TraditionalNft.burn(
+  const inst2 = RegularNft.burn(
     mint!,
     owner.pubkey,
     owner.secret,

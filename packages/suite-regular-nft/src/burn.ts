@@ -3,7 +3,7 @@ import { Instruction } from '~/instruction';
 import { Pubkey, Secret } from '~/types/account';
 import { SplToken } from '@solana-suite/spl-token';
 
-export namespace TraditionalNft {
+export namespace RegularNft {
   const NFT_AMOUNT = 1;
   const NFT_DECIMALS = 0;
 

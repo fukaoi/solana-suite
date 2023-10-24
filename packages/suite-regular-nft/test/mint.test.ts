@@ -1,5 +1,5 @@
 import test from 'ava';
-import { TraditionalNft } from '../src';
+import { RegularNft } from '../src';
 import { KeypairAccount } from '~/account';
 import { UserSideInput } from '~/types/converter';
 import { Setup } from 'test-tools/setup';
@@ -16,7 +16,7 @@ test.before(async () => {
 
 test('[Arweave] mint nft', async (t) => {
   const asset = RandomAsset.get();
-  const res = await TraditionalNft.mint(source.pubkey, source.secret, {
+  const res = await RegularNft.mint(source.pubkey, source.secret, {
     filePath: asset.filePath as string,
     storageType: 'arweave',
     name: asset.name!,
@@ -39,7 +39,7 @@ test('[Arweave] mint nft', async (t) => {
 test('[Nft Storage] mint nft with fee payer', async (t) => {
   const owner = KeypairAccount.create();
   const asset = RandomAsset.get();
-  const res = await TraditionalNft.mint(
+  const res = await RegularNft.mint(
     owner.pubkey,
     owner.secret,
     {
@@ -109,7 +109,7 @@ test('[Nft Storage] mint nft with many optional datas', async (t) => {
     docs_url: 'https://solana-suite.gitbook.io/solana-suite-develpoment-guide/',
   };
 
-  const res = await TraditionalNft.mint(
+  const res = await RegularNft.mint(
     owner.pubkey,
     owner.secret,
     {
@@ -140,7 +140,7 @@ test('[Nft Storage] mint nft with many optional datas', async (t) => {
 });
 
 test('[Error]Raise validation error when upload meta data', async (t) => {
-  const res = await TraditionalNft.mint(source.pubkey, source.secret, {
+  const res = await RegularNft.mint(source.pubkey, source.secret, {
     filePath: '',
     name: '',
     symbol: 'LONG-SYMBOL-LONG',
@@ -160,7 +160,7 @@ test('[Error]Raise validation error when upload meta data', async (t) => {
 test('[Error]Raise parameter error when not need uri or filePath', async (t) => {
   const owner = KeypairAccount.create();
   const asset = RandomAsset.get();
-  const res = await TraditionalNft.mint(owner.pubkey, owner.secret, {
+  const res = await RegularNft.mint(owner.pubkey, owner.secret, {
     name: asset.name!,
     symbol: asset.symbol!,
     royalty: 50,

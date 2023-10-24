@@ -6,7 +6,7 @@ import { OnErr, OnOk } from '~/types/shared';
 import { UserSideOutput } from '~/types/converter';
 import { promisify } from 'node:util';
 import { sleep } from '../../shared/src/shared';
-import { TraditionalNft } from '../src/';
+import { RegularNft } from '../src/';
 
 let owner: Pubkey;
 const notFoundTokenOwner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT';
@@ -33,7 +33,7 @@ test(
       t.true(Array.isArray(ok));
     end();
     const onErr: OnErr = (err) => t.fail(err.message);
-    TraditionalNft.findByOwner(notFoundTokenOwner, onOk, onErr);
+    RegularNft.findByOwner(notFoundTokenOwner, onOk, onErr);
   }),
 );
 
@@ -55,7 +55,7 @@ test(
       }
     };
     const onErr: OnErr = (err: Error) => t.fail(err.message);
-    TraditionalNft.findByOwner(owner, onOk, onErr);
+    RegularNft.findByOwner(owner, onOk, onErr);
   }),
 );
 
@@ -77,7 +77,7 @@ test(
       }
     };
     const onErr: OnErr = (err: Error) => t.fail(err.message);
-    TraditionalNft.findByOwner(owner, onOk, onErr, { sortable: Sortable.Asc });
+    RegularNft.findByOwner(owner, onOk, onErr, { sortable: Sortable.Asc });
   }),
 );
 
@@ -100,12 +100,12 @@ test(
     };
     const onErr: OnErr = (err: Error) => t.fail(err.message);
 
-    TraditionalNft.findByOwner(owner, onOk, onErr, { isHolder: true });
+    RegularNft.findByOwner(owner, onOk, onErr, { isHolder: true });
   }),
 );
 
 test('Get token info by mint address', async (t) => {
-  (await TraditionalNft.findByMint(nftMint)).match(
+  (await RegularNft.findByMint(nftMint)).match(
     (ok: UserSideOutput.NftMetadata) => {
       t.not(ok.name, '');
       t.not(ok.mint, '');
@@ -120,7 +120,7 @@ test('Get token info by mint address', async (t) => {
 });
 
 test('[Error]Get token info by mint address, but token standard is difierent', async (t) => {
-  (await TraditionalNft.findByMint(mint)).match(
+  (await RegularNft.findByMint(mint)).match(
     () => t.fail('Dont come here'),
     (err: Error) => t.not(err.message, ''),
   );

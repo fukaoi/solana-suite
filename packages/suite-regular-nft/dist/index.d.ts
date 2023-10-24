@@ -896,7 +896,7 @@ declare global {
     }
 }
 
-declare const TraditionalNft: {
+declare const RegularNft: {
     transfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], feePayer?: Secret | undefined) => Promise<Result<Instruction, Error>>;
     thaw: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, feePayer?: Secret | undefined) => Result<Instruction, Error>;
     createDeleagateInstruction: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, delegateAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
@@ -913,4 +913,4 @@ declare const TraditionalNft: {
     burn: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret, feePayer?: Secret | undefined) => Result<Instruction, Error>;
 };
 
-export { AssociatedAccount, FilterOptions, FilterType, KeypairAccount, ModuleName, Node, OwnerInfo, Pda, PostTokenAccount, Pubkey$1 as Pubkey, Secret, TraditionalNft, Validator, ValidatorError, WithMemo };
+export { AssociatedAccount, FilterOptions, FilterType, KeypairAccount, ModuleName, Node, OwnerInfo, Pda, PostTokenAccount, Pubkey$1 as Pubkey, RegularNft, Secret, Validator, ValidatorError, WithMemo };

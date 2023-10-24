@@ -1,5 +1,5 @@
 import { Transaction, TransactionInstruction } from '@solana/web3.js';
-import { TraditionalNft } from '@solana-suite/traditional-nft';
+import { RegularNft } from '@solana-suite/regular-nft';
 import { Storage } from '~/storage';
 import { Node } from '~/node';
 import { debugLog, Result, Try } from '~/shared';
@@ -75,7 +75,7 @@ export namespace PhantomMetaplex {
 
       const tx = new Transaction();
 
-      const insts = await TraditionalNft.createMintInstructions(
+      const insts = await RegularNft.createMintInstructions(
         mint.toPublicKey(),
         phantom.publicKey,
         datav2,

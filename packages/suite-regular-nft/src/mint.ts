@@ -32,7 +32,7 @@ import {
 } from '@metaplex-foundation/mpl-token-metadata';
 import { KeypairAccount, Pda } from '~/account';
 const NFT_AMOUNT = 1;
-export namespace TraditionalNft {
+export namespace RegularNft {
   export const createDeleagateInstruction = (
     mint: PublicKey,
     owner: PublicKey,

@@ -4,7 +4,7 @@ import { RandomAsset } from 'test-tools/setupAsset';
 import { Pubkey } from '~/types/account';
 import { KeypairAccount } from '~/account';
 import { Node } from '~/node';
-import { TraditionalNft } from '../src/';
+import { RegularNft } from '../src/';
 
 let feePayer: KeypairAccount;
 
@@ -18,7 +18,7 @@ test('Freezing and Thawing a target nft', async (t) => {
   const owner = KeypairAccount.create();
   const freezeAuthority = KeypairAccount.create();
   const asset = RandomAsset.get();
-  const inst1 = await TraditionalNft.mint(
+  const inst1 = await RegularNft.mint(
     owner.pubkey,
     owner.secret,
     {
@@ -45,7 +45,7 @@ test('Freezing and Thawing a target nft', async (t) => {
   );
 
   // freeze
-  const inst2 = TraditionalNft.freeze(
+  const inst2 = RegularNft.freeze(
     mint,
     owner.pubkey,
     freezeAuthority.secret,
@@ -60,7 +60,7 @@ test('Freezing and Thawing a target nft', async (t) => {
   );
 
   // thaw
-  const inst3 = TraditionalNft.thaw(
+  const inst3 = RegularNft.thaw(
     mint,
     owner.pubkey,
     freezeAuthority.secret,

@@ -1,5 +1,5 @@
 import test from 'ava';
-import { TraditionalNft } from '../src';
+import { RegularNft } from '../src';
 import { KeypairAccount } from '~/account';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
@@ -29,7 +29,7 @@ test('Transfer nft', async (t) => {
     verified: false,
   };
 
-  const mint = await TraditionalNft.mint(source.pubkey, source.secret, {
+  const mint = await RegularNft.mint(source.pubkey, source.secret, {
     filePath: asset.filePath as string,
     storageType: 'arweave',
     name: asset.name!,
@@ -45,7 +45,7 @@ test('Transfer nft', async (t) => {
     t.fail(resMint.error.message);
   }
   const res = await (
-    await TraditionalNft.transfer(
+    await RegularNft.transfer(
       mint.unwrap().data as Pubkey,
       source.pubkey,
       dest.pubkey,

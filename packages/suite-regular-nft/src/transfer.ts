@@ -3,7 +3,7 @@ import { Result } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 import { Instruction } from '~/instruction';
 
-export namespace TraditionalNft {
+export namespace RegularNft {
   const NFT_AMOUNT = 1;
   const NFT_DECIMALS = 0;
 
