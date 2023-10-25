@@ -10,6 +10,7 @@ export namespace Memo {
 
   export const encode = (data: string): Buffer => Buffer.from(data);
 
+  // todo: use Try()
   export const create = (
     data: string,
     owner: Pubkey,
