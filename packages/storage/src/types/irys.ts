@@ -1,6 +1,6 @@
-import { Keypair, PublicKey } from "@solana/web3.js";
-import { Secret } from "@solana-suite/shared";
-import { Phantom } from "./bundlr";
+import { Keypair, PublicKey } from '@solana/web3.js';
+import { Secret } from '@solana-suite/shared';
+import { Phantom } from './bundlr';
 
 export type BundlrSigner = Keypair | PhantomWallet | undefined;
 

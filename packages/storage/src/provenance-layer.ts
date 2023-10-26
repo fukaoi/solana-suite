@@ -4,15 +4,15 @@ import {
   isBrowser,
   isNode,
   Secret,
-} from "@solana-suite/shared";
-import { Identity, Phantom, Tags, UploadableFileType } from "./types";
+} from '@solana-suite/shared';
+import { Identity, Phantom, Tags, UploadableFileType } from './types';
 
-import { FileContent } from "@solana-suite/shared-metaplex";
-import Irys, { WebIrys } from "@irys/sdk";
-import { UploadResponse } from "@irys/sdk/build/esm/common/types";
+import { FileContent } from '@solana-suite/shared-metaplex';
+import Irys, { WebIrys } from '@irys/sdk';
+import { UploadResponse } from '@irys/sdk/build/esm/common/types';
 
 export namespace ProvenanceLayer {
-  const TOKEN = "solana";
+  const TOKEN = 'solana';
 
   export const uploadFile = async (
     uploadFile: FileContent,
@@ -24,7 +24,7 @@ export namespace ProvenanceLayer {
     if (isUploadable(uploadFile)) {
       receipt = await irys.uploadFile(uploadFile, { tags });
     } else {
-      throw Error("No match file type or enviroment");
+      throw Error('No match file type or enviroment');
     }
     return `${Constants.IRYS_GATEWAY_URL}/${receipt.id}`;
   };
@@ -41,7 +41,7 @@ export namespace ProvenanceLayer {
 
   export const isNodeable = (value: unknown): value is string => {
     if (isNode()) {
-      return typeof value === "string";
+      return typeof value === 'string';
     }
     return false;
   };
@@ -53,11 +53,9 @@ export namespace ProvenanceLayer {
     return false;
   };
 
-  export const isUploadable = (
-    value: unknown,
-  ): value is UploadableFileType => {
+  export const isUploadable = (value: unknown): value is UploadableFileType => {
     if (isNode()) {
-      return typeof value === "string";
+      return typeof value === 'string';
     } else if (isBrowser()) {
       return value instanceof File;
     }
@@ -73,18 +71,18 @@ export namespace ProvenanceLayer {
     const byteLength = await toByteLength(uploadFile);
     const willPay = await calculateCost(byteLength, identity);
     const fundTx = await irys.fund(irys.utils.toAtomic(willPay));
-    debugLog("# fundTx: ", fundTx);
+    debugLog('# fundTx: ', fundTx);
   };
 
   // @internal
   export const toByteLength = async (content: FileContent): Promise<number> => {
     let length: number = 100;
     if (isNodeable(content)) {
-      length = (await import("fs")).readFileSync(content).length;
+      length = (await import('fs')).readFileSync(content).length;
     } else if (isBrowserable(content)) {
       length = content.size;
     } else {
-      throw Error("No match content type");
+      throw Error('No match content type');
     }
     return length;
   };
@@ -98,7 +96,7 @@ export namespace ProvenanceLayer {
     } else if (isBrowser()) {
       return (await getBrowserIrys(identity as Phantom)) as T;
     } else {
-      throw Error("Only Node.js or Browser");
+      throw Error('Only Node.js or Browser');
     }
   };
 
@@ -136,7 +134,7 @@ export namespace ProvenanceLayer {
     const irys = await getIrys(identity);
     const priceAtomic = await irys.getPrice(size);
     const priceConverted = irys.utils.fromAtomic(priceAtomic);
-    debugLog("# size: ", size);
+    debugLog('# size: ', size);
     debugLog(`# price: ${priceConverted}`);
     return priceConverted;
   };
