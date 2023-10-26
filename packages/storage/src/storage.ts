@@ -12,7 +12,7 @@ import { NftStorage } from './nft-storage';
 export namespace Storage {
   export const toConvertOffchaindata = (
     input: UserSideInput.NftMetadata,
-    sellerFeeBasisPoints: number
+    sellerFeeBasisPoints: number,
   ): InfraSideInput.Offchain => {
     const data = {
       name: input.name,
@@ -31,13 +31,13 @@ export namespace Storage {
   export const uploadContent = async (
     filePath: FileContent,
     storageType: StorageType,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Promise<Result<string, Error>> => {
     if (storageType === 'arweave') {
       if (!feePayer) {
         throw Error('Arweave needs to have feepayer');
       }
-      return await Arweave.uploadContent(filePath, feePayer);
+      return await Arweave.uploadFile(filePath, feePayer);
     } else if (storageType === 'nftStorage') {
       return await NftStorage.uploadContent(filePath);
     } else {
@@ -49,7 +49,7 @@ export namespace Storage {
     input: InfraSideInput.Offchain,
     filePath: FileContent,
     storageType: StorageType,
-    feePayer?: Secret
+    feePayer?: Secret,
   ): Promise<Result<string, Error>> => {
     let storage;
     if (storageType === 'arweave') {
@@ -57,15 +57,15 @@ export namespace Storage {
         throw Error('Arweave needs to have feepayer');
       }
       storage = await (
-        await Arweave.uploadContent(filePath, feePayer)
+        await Arweave.uploadFile(filePath, feePayer)
       ).unwrap(
         async (ok: string) => {
           input.image = ok;
-          return await Arweave.uploadMetadata(input, feePayer);
+          return await Arweave.uploadData(input, feePayer);
         },
         (err: Error) => {
           throw err;
-        }
+        },
       );
     } else if (storageType === 'nftStorage') {
       storage = await (
@@ -77,7 +77,7 @@ export namespace Storage {
         },
         (err: Error) => {
           throw err;
-        }
+        },
       );
     } else {
       throw Error('No match storageType');
