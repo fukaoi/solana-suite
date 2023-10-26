@@ -74,7 +74,7 @@ export var ProvenanceLayer;
     // @internal
     ProvenanceLayer.getIrys = (identity) => __awaiter(this, void 0, void 0, function* () {
         if (isNode()) {
-            return (yield ProvenanceLayer.getNodeIrys(identity));
+            return ProvenanceLayer.getNodeIrys(identity);
         }
         else if (isBrowser()) {
             return (yield ProvenanceLayer.getBrowserIrys(identity));
@@ -84,7 +84,7 @@ export var ProvenanceLayer;
         }
     });
     // @internal
-    ProvenanceLayer.getNodeIrys = (secret) => __awaiter(this, void 0, void 0, function* () {
+    ProvenanceLayer.getNodeIrys = (secret) => {
         const clusterUrl = Constants.switchCluster({
             cluster: Constants.currentCluster,
         });
@@ -98,7 +98,7 @@ export var ProvenanceLayer;
             config: { providerUrl: clusterUrl },
         });
         return irys;
-    });
+    };
     // @internal
     ProvenanceLayer.getBrowserIrys = (provider) => __awaiter(this, void 0, void 0, function* () {
         const clusterUrl = Constants.switchCluster({
@@ -116,7 +116,7 @@ export var ProvenanceLayer;
         const priceAtomic = yield irys.getPrice(size);
         const priceConverted = irys.utils.fromAtomic(priceAtomic);
         debugLog('# size: ', size);
-        debugLog(`# price: ${priceConverted}`);
+        debugLog('# price: ', priceConverted);
         return priceConverted;
     });
 })(ProvenanceLayer || (ProvenanceLayer = {}));

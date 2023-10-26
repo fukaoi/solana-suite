@@ -76,7 +76,7 @@ export namespace ProvenanceLayer {
 
   // @internal
   export const toByteLength = async (content: FileContent): Promise<number> => {
-    let length: number = 100;
+    let length = 100;
     if (isNodeable(content)) {
       length = (await import('fs')).readFileSync(content).length;
     } else if (isBrowserable(content)) {
@@ -92,7 +92,7 @@ export namespace ProvenanceLayer {
     identity: Identity,
   ) => {
     if (isNode()) {
-      return (await getNodeIrys(identity as Secret)) as T;
+      return getNodeIrys(identity as Secret) as T;
     } else if (isBrowser()) {
       return (await getBrowserIrys(identity as Phantom)) as T;
     } else {
@@ -101,7 +101,7 @@ export namespace ProvenanceLayer {
   };
 
   // @internal
-  export const getNodeIrys = async (secret: Secret) => {
+  export const getNodeIrys = (secret: Secret) => {
     const clusterUrl = Constants.switchCluster({
       cluster: Constants.currentCluster,
     });
@@ -135,7 +135,7 @@ export namespace ProvenanceLayer {
     const priceAtomic = await irys.getPrice(size);
     const priceConverted = irys.utils.fromAtomic(priceAtomic);
     debugLog('# size: ', size);
-    debugLog(`# price: ${priceConverted}`);
+    debugLog('# price: ', priceConverted);
     return priceConverted;
   };
 }

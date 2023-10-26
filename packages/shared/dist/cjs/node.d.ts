@@ -1,5 +1,5 @@
-import { Result } from "./result";
-import { Commitment, Connection } from "@solana/web3.js";
+import { Result } from './result';
+import { Commitment, Connection } from '@solana/web3.js';
 export declare namespace Node {
     const getConnection: () => Connection;
     const changeConnection: (param: {

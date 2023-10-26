@@ -1,4 +1,4 @@
-import { Pubkey } from "@solana-suite/shared";
+import { Pubkey } from '@solana-suite/shared';
 import {
   FilterType,
   History,
@@ -6,9 +6,9 @@ import {
   ModuleName,
   OnErr,
   OnOk,
-} from "../types/";
-import { TransactionFilter } from "../transaction-filter";
-import { Signatures } from "../signatures";
+} from '../types/';
+import { TransactionFilter } from '../transaction-filter';
+import { Signatures } from '../signatures';
 
 export namespace SolNative {
   export const getHistory = async (

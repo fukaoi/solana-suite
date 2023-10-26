@@ -1,6 +1,6 @@
-import { ParsedTransactionWithMeta } from "@solana/web3.js";
-import { debugLog, Node, Pubkey, Result, sleep } from "@solana-suite/shared";
-import { UserSideOutput } from "./types/";
+import { ParsedTransactionWithMeta } from '@solana/web3.js';
+import { debugLog, Node, Pubkey, Result, sleep } from '@solana-suite/shared';
+import { UserSideOutput } from './types/';
 
 //@internal
 export namespace Signatures {
@@ -27,7 +27,7 @@ export namespace Signatures {
     histories: UserSideOutput.History[] = [],
   ): Promise<void> => {
     try {
-      debugLog("# options: ", options);
+      debugLog('# options: ', options);
       const transactions = await Node.getConnection().getSignaturesForAddress(
         pubkey.toPublicKey(),
         {
@@ -35,7 +35,7 @@ export namespace Signatures {
         },
       );
 
-      debugLog("# transactions count:", transactions.length);
+      debugLog('# transactions count:', transactions.length);
 
       for (const transaction of transactions) {
         parseForTransaction(transaction.signature)

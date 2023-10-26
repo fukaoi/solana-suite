@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { debugLog, Node, Result, sleep } from "@solana-suite/shared";
+import { debugLog, Node, Result, sleep } from '@solana-suite/shared';
 //@internal
 export var Signatures;
 (function (Signatures) {
@@ -20,11 +20,11 @@ export var Signatures;
     });
     Signatures.getForAdress = (pubkey, parser, callback, options, histories = []) => __awaiter(this, void 0, void 0, function* () {
         try {
-            debugLog("# options: ", options);
+            debugLog('# options: ', options);
             const transactions = yield Node.getConnection().getSignaturesForAddress(pubkey.toPublicKey(), {
                 limit: options.narrowDown,
             });
-            debugLog("# transactions count:", transactions.length);
+            debugLog('# transactions count:', transactions.length);
             for (const transaction of transactions) {
                 parseForTransaction(transaction.signature)
                     .then((signature) => {

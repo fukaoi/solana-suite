@@ -7,11 +7,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { debugLog, Node } from "@solana-suite/shared";
-import { FilterType, ModuleName, } from "../types/";
-import { Signatures } from "../signatures";
-import { TransactionFilter } from "../transaction-filter";
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { debugLog, Node } from '@solana-suite/shared';
+import { FilterType, ModuleName, } from '../types/';
+import { Signatures } from '../signatures';
+import { TransactionFilter } from '../transaction-filter';
 export var SplToken;
 (function (SplToken) {
     SplToken.getHistory = (target, filterType, onOk, onErr, options = {}) => __awaiter(this, void 0, void 0, function* () {
@@ -30,7 +30,7 @@ export var SplToken;
                     programId: TOKEN_PROGRAM_ID,
                 });
                 const storedHistories = [];
-                debugLog("# tokenAccounts size: ", tokenAccounts.value.length);
+                debugLog('# tokenAccounts size: ', tokenAccounts.value.length);
                 for (const account of tokenAccounts.value) {
                     const parser = TransactionFilter.parse(filterType, ModuleName.SplToken);
                     yield Signatures.getForAdress(account.pubkey.toString(), parser, (result) => result.match(onOk, onErr), mergedOptions, storedHistories);
