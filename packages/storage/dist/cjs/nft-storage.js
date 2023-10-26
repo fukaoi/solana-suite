@@ -35,7 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NftStorage = void 0;
 const nft_storage_1 = require("nft.storage");
 const shared_1 = require("@solana-suite/shared");
-const js_1 = require("@metaplex-foundation/js");
+const provenance_layer_1 = require("./provenance-layer");
 var NftStorage;
 (function (NftStorage) {
     let isDisplayWarning = false;
@@ -62,18 +62,16 @@ var NftStorage;
     const connect = () => new nft_storage_1.NFTStorage({ token: getNftStorageApiKey() });
     NftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            (0, shared_1.debugLog)('# upload content: ', filePath);
+            (0, shared_1.debugLog)("# upload content: ", filePath);
             let file;
-            if ((0, shared_1.isNode)()) {
-                const filepath = filePath;
-                file = (yield Promise.resolve().then(() => __importStar(require('fs')))).readFileSync(filepath);
+            if (provenance_layer_1.ProvenanceLayer.isNodeable(filePath)) {
+                file = (yield Promise.resolve().then(() => __importStar(require("fs")))).readFileSync(filePath);
             }
-            else if ((0, shared_1.isBrowser)()) {
-                const filepath = filePath;
-                file = (0, js_1.toMetaplexFile)(filepath, '').buffer;
+            else if (provenance_layer_1.ProvenanceLayer.isBrowserable(filePath)) {
+                file = Buffer.from(yield filePath.arrayBuffer());
             }
             else {
-                throw Error('Supported environment: only Node.js and Browser js');
+                throw Error("Supported environment: only Node.js and Browser js");
             }
             const blobImage = new nft_storage_1.Blob([file]);
             const res = yield connect().storeBlob(blobImage);
@@ -100,7 +98,7 @@ var NftStorage;
      */
     NftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            (0, shared_1.debugLog)('# upload metadata: ', metadata);
+            (0, shared_1.debugLog)("# upload metadata: ", metadata);
             const blobJson = new nft_storage_1.Blob([JSON.stringify(metadata)]);
             const res = yield connect().storeBlob(blobJson);
             return createGatewayUrl(res);

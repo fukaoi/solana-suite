@@ -7,9 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { NFTStorage, Blob } from 'nft.storage';
-import { Constants, isNode, isBrowser, debugLog, Try, } from '@solana-suite/shared';
-import { toMetaplexFile } from '@metaplex-foundation/js';
+import { Blob, NFTStorage } from "nft.storage";
+import { Constants, debugLog, Try, } from "@solana-suite/shared";
+import { ProvenanceLayer } from "./provenance-layer";
 export var NftStorage;
 (function (NftStorage) {
     let isDisplayWarning = false;
@@ -36,18 +36,16 @@ export var NftStorage;
     const connect = () => new NFTStorage({ token: getNftStorageApiKey() });
     NftStorage.uploadContent = (filePath) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            debugLog('# upload content: ', filePath);
+            debugLog("# upload content: ", filePath);
             let file;
-            if (isNode()) {
-                const filepath = filePath;
-                file = (yield import('fs')).readFileSync(filepath);
+            if (ProvenanceLayer.isNodeable(filePath)) {
+                file = (yield import("fs")).readFileSync(filePath);
             }
-            else if (isBrowser()) {
-                const filepath = filePath;
-                file = toMetaplexFile(filepath, '').buffer;
+            else if (ProvenanceLayer.isBrowserable(filePath)) {
+                file = Buffer.from(yield filePath.arrayBuffer());
             }
             else {
-                throw Error('Supported environment: only Node.js and Browser js');
+                throw Error("Supported environment: only Node.js and Browser js");
             }
             const blobImage = new Blob([file]);
             const res = yield connect().storeBlob(blobImage);
@@ -74,7 +72,7 @@ export var NftStorage;
      */
     NftStorage.uploadMetadata = (metadata) => __awaiter(this, void 0, void 0, function* () {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            debugLog('# upload metadata: ', metadata);
+            debugLog("# upload metadata: ", metadata);
             const blobJson = new Blob([JSON.stringify(metadata)]);
             const res = yield connect().storeBlob(blobJson);
             return createGatewayUrl(res);

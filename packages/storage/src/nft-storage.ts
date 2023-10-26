@@ -1,15 +1,12 @@
-import { NFTStorage, Blob } from 'nft.storage';
+import { Blob, NFTStorage } from "nft.storage";
 import {
   Constants,
-  Result,
-  isNode,
-  isBrowser,
   debugLog,
+  Result,
   Try,
-} from '@solana-suite/shared';
-
-import { toMetaplexFile } from '@metaplex-foundation/js';
-import { InfraSideInput, FileContent } from '@solana-suite/shared-metaplex';
+} from "@solana-suite/shared";
+import { ProvenanceLayer } from "./provenance-layer";
+import { FileContent, InfraSideInput } from "@solana-suite/shared-metaplex";
 
 export namespace NftStorage {
   let isDisplayWarning = false;
@@ -24,7 +21,7 @@ export namespace NftStorage {
         your need to update nftStorage.apiKey define parameter in solana-suite.json.
         can get apiKey from https://nft.storage/
         --------------------------------------
-        `
+        `,
         );
         isDisplayWarning = true;
       }
@@ -40,19 +37,17 @@ export namespace NftStorage {
   const connect = () => new NFTStorage({ token: getNftStorageApiKey() });
 
   export const uploadContent = async (
-    filePath: FileContent
+    filePath: FileContent,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
-      debugLog('# upload content: ', filePath);
+      debugLog("# upload content: ", filePath);
       let file!: Buffer;
-      if (isNode()) {
-        const filepath = filePath as string;
-        file = (await import('fs')).readFileSync(filepath);
-      } else if (isBrowser()) {
-        const filepath = filePath;
-        file = toMetaplexFile(filepath, '').buffer;
+      if (ProvenanceLayer.isNodeable(filePath)) {
+        file = (await import("fs")).readFileSync(filePath);
+      } else if (ProvenanceLayer.isBrowserable(filePath)) {
+        file = Buffer.from(await filePath.arrayBuffer());
       } else {
-        throw Error('Supported environment: only Node.js and Browser js');
+        throw Error("Supported environment: only Node.js and Browser js");
       }
 
       const blobImage = new Blob([file]);
@@ -80,10 +75,10 @@ export namespace NftStorage {
    * @return Promise<Result<string, Error>>
    */
   export const uploadMetadata = async (
-    metadata: InfraSideInput.Offchain
+    metadata: InfraSideInput.Offchain,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
-      debugLog('# upload metadata: ', metadata);
+      debugLog("# upload metadata: ", metadata);
 
       const blobJson = new Blob([JSON.stringify(metadata)]);
       const res = await connect().storeBlob(blobJson);
