@@ -1,12 +1,12 @@
-import { debugLog } from "./global";
-import { Result } from "./result";
-import { Constants } from "./constants";
+import { debugLog } from './global';
+import { Result } from './result';
+import { Constants } from './constants';
 
-import { Commitment, Connection } from "@solana/web3.js";
+import { Commitment, Connection } from '@solana/web3.js';
 
 export namespace Node {
   const setted = {
-    clusterUrl: "",
+    clusterUrl: '',
     commitment: Constants.COMMITMENT,
     customClusterUrl: [] as string[],
   };
@@ -41,27 +41,27 @@ export namespace Node {
     customClusterUrl?: string[];
   }): void => {
     // initialize
-    setted.clusterUrl = "";
+    setted.clusterUrl = '';
     setted.customClusterUrl = [];
     setted.commitment = Constants.COMMITMENT;
 
     const { cluster, commitment, customClusterUrl } = param;
     if (commitment) {
       setted.commitment = commitment;
-      debugLog("# Node change commitment: ", setted.commitment);
+      debugLog('# Node change commitment: ', setted.commitment);
     }
 
     if (cluster) {
       setted.clusterUrl = Constants.switchCluster({ cluster: cluster });
-      debugLog("# Node change clusterUrl: ", setted.clusterUrl);
+      debugLog('# Node change clusterUrl: ', setted.clusterUrl);
     }
 
     if (customClusterUrl) {
-      debugLog("# customClusterUrl: ", customClusterUrl);
+      debugLog('# customClusterUrl: ', customClusterUrl);
       setted.clusterUrl = Constants.switchCluster({ customClusterUrl });
       setted.customClusterUrl = customClusterUrl;
       debugLog(
-        "# Node change cluster, custom cluster url: ",
+        '# Node change cluster, custom cluster url: ',
         setted.clusterUrl,
       );
     }

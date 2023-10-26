@@ -7,14 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { debugLog } from "./global";
-import { Result } from "./result";
-import { Constants } from "./constants";
-import { Connection } from "@solana/web3.js";
+import { debugLog } from './global';
+import { Result } from './result';
+import { Constants } from './constants';
+import { Connection } from '@solana/web3.js';
 export var Node;
 (function (Node) {
     const setted = {
-        clusterUrl: "",
+        clusterUrl: '',
         commitment: Constants.COMMITMENT,
         customClusterUrl: [],
     };
@@ -44,23 +44,23 @@ export var Node;
     };
     Node.changeConnection = (param) => {
         // initialize
-        setted.clusterUrl = "";
+        setted.clusterUrl = '';
         setted.customClusterUrl = [];
         setted.commitment = Constants.COMMITMENT;
         const { cluster, commitment, customClusterUrl } = param;
         if (commitment) {
             setted.commitment = commitment;
-            debugLog("# Node change commitment: ", setted.commitment);
+            debugLog('# Node change commitment: ', setted.commitment);
         }
         if (cluster) {
             setted.clusterUrl = Constants.switchCluster({ cluster: cluster });
-            debugLog("# Node change clusterUrl: ", setted.clusterUrl);
+            debugLog('# Node change clusterUrl: ', setted.clusterUrl);
         }
         if (customClusterUrl) {
-            debugLog("# customClusterUrl: ", customClusterUrl);
+            debugLog('# customClusterUrl: ', customClusterUrl);
             setted.clusterUrl = Constants.switchCluster({ customClusterUrl });
             setted.customClusterUrl = customClusterUrl;
-            debugLog("# Node change cluster, custom cluster url: ", setted.clusterUrl);
+            debugLog('# Node change cluster, custom cluster url: ', setted.clusterUrl);
         }
     };
     Node.confirmedSig = (signature, commitment = Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {

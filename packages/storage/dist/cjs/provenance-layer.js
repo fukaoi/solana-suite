@@ -100,7 +100,7 @@ var ProvenanceLayer;
     // @internal
     ProvenanceLayer.getIrys = (identity) => __awaiter(this, void 0, void 0, function* () {
         if ((0, shared_1.isNode)()) {
-            return (yield ProvenanceLayer.getNodeIrys(identity));
+            return ProvenanceLayer.getNodeIrys(identity);
         }
         else if ((0, shared_1.isBrowser)()) {
             return (yield ProvenanceLayer.getBrowserIrys(identity));
@@ -110,7 +110,7 @@ var ProvenanceLayer;
         }
     });
     // @internal
-    ProvenanceLayer.getNodeIrys = (secret) => __awaiter(this, void 0, void 0, function* () {
+    ProvenanceLayer.getNodeIrys = (secret) => {
         const clusterUrl = shared_1.Constants.switchCluster({
             cluster: shared_1.Constants.currentCluster,
         });
@@ -124,7 +124,7 @@ var ProvenanceLayer;
             config: { providerUrl: clusterUrl },
         });
         return irys;
-    });
+    };
     // @internal
     ProvenanceLayer.getBrowserIrys = (provider) => __awaiter(this, void 0, void 0, function* () {
         const clusterUrl = shared_1.Constants.switchCluster({
@@ -142,7 +142,7 @@ var ProvenanceLayer;
         const priceAtomic = yield irys.getPrice(size);
         const priceConverted = irys.utils.fromAtomic(priceAtomic);
         (0, shared_1.debugLog)('# size: ', size);
-        (0, shared_1.debugLog)(`# price: ${priceConverted}`);
+        (0, shared_1.debugLog)('# price: ', priceConverted);
         return priceConverted;
     });
 })(ProvenanceLayer = exports.ProvenanceLayer || (exports.ProvenanceLayer = {}));

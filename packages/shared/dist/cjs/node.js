@@ -17,7 +17,7 @@ const web3_js_1 = require("@solana/web3.js");
 var Node;
 (function (Node) {
     const setted = {
-        clusterUrl: "",
+        clusterUrl: '',
         commitment: constants_1.Constants.COMMITMENT,
         customClusterUrl: [],
     };
@@ -47,23 +47,23 @@ var Node;
     };
     Node.changeConnection = (param) => {
         // initialize
-        setted.clusterUrl = "";
+        setted.clusterUrl = '';
         setted.customClusterUrl = [];
         setted.commitment = constants_1.Constants.COMMITMENT;
         const { cluster, commitment, customClusterUrl } = param;
         if (commitment) {
             setted.commitment = commitment;
-            (0, global_1.debugLog)("# Node change commitment: ", setted.commitment);
+            (0, global_1.debugLog)('# Node change commitment: ', setted.commitment);
         }
         if (cluster) {
             setted.clusterUrl = constants_1.Constants.switchCluster({ cluster: cluster });
-            (0, global_1.debugLog)("# Node change clusterUrl: ", setted.clusterUrl);
+            (0, global_1.debugLog)('# Node change clusterUrl: ', setted.clusterUrl);
         }
         if (customClusterUrl) {
-            (0, global_1.debugLog)("# customClusterUrl: ", customClusterUrl);
+            (0, global_1.debugLog)('# customClusterUrl: ', customClusterUrl);
             setted.clusterUrl = constants_1.Constants.switchCluster({ customClusterUrl });
             setted.customClusterUrl = customClusterUrl;
-            (0, global_1.debugLog)("# Node change cluster, custom cluster url: ", setted.clusterUrl);
+            (0, global_1.debugLog)('# Node change cluster, custom cluster url: ', setted.clusterUrl);
         }
     };
     Node.confirmedSig = (signature, commitment = constants_1.Constants.COMMITMENT) => __awaiter(this, void 0, void 0, function* () {

@@ -7,9 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { ModuleName, } from "../types/";
-import { TransactionFilter } from "../transaction-filter";
-import { Signatures } from "../signatures";
+import { ModuleName, } from '../types/';
+import { TransactionFilter } from '../transaction-filter';
+import { Signatures } from '../signatures';
 export var SolNative;
 (function (SolNative) {
     SolNative.getHistory = (target, filterType, onOk, onErr, options = {}) => __awaiter(this, void 0, void 0, function* () {

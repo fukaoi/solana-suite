@@ -23,11 +23,11 @@ var Signatures;
     });
     Signatures.getForAdress = (pubkey, parser, callback, options, histories = []) => __awaiter(this, void 0, void 0, function* () {
         try {
-            (0, shared_1.debugLog)("# options: ", options);
+            (0, shared_1.debugLog)('# options: ', options);
             const transactions = yield shared_1.Node.getConnection().getSignaturesForAddress(pubkey.toPublicKey(), {
                 limit: options.narrowDown,
             });
-            (0, shared_1.debugLog)("# transactions count:", transactions.length);
+            (0, shared_1.debugLog)('# transactions count:', transactions.length);
             for (const transaction of transactions) {
                 parseForTransaction(transaction.signature)
                     .then((signature) => {

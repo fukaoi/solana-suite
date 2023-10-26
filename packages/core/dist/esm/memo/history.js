@@ -7,9 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { FilterType, ModuleName, } from "../types/";
-import { TransactionFilter } from "../transaction-filter";
-import { Signatures } from "../signatures";
+import { FilterType, ModuleName, } from '../types/';
+import { TransactionFilter } from '../transaction-filter';
+import { Signatures } from '../signatures';
 export var Memo;
 (function (Memo) {
     Memo.getHistory = (target, onOk, onErr, options = {}) => __awaiter(this, void 0, void 0, function* () {
