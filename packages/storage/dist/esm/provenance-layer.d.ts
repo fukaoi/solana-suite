@@ -1,5 +1,5 @@
-import { Identity, Tags, UploadableFileType } from "./types";
-import { FileContent } from "@solana-suite/shared-metaplex";
+import { Identity, Tags, UploadableFileType } from './types';
+import { FileContent } from '@solana-suite/shared-metaplex';
 export declare namespace ProvenanceLayer {
     const uploadFile: (uploadFile: FileContent, identity: Identity, tags?: Tags) => Promise<string>;
     const uploadData: (data: string, identity: Identity, tags?: Tags) => Promise<string>;

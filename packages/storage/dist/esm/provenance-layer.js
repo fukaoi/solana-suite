@@ -7,11 +7,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Constants, debugLog, isBrowser, isNode, } from "@solana-suite/shared";
-import Irys, { WebIrys } from "@irys/sdk";
+import { Constants, debugLog, isBrowser, isNode, } from '@solana-suite/shared';
+import Irys, { WebIrys } from '@irys/sdk';
 export var ProvenanceLayer;
 (function (ProvenanceLayer) {
-    const TOKEN = "solana";
+    const TOKEN = 'solana';
     ProvenanceLayer.uploadFile = (uploadFile, identity, tags) => __awaiter(this, void 0, void 0, function* () {
         const irys = yield ProvenanceLayer.getIrys(identity);
         let receipt;
@@ -19,7 +19,7 @@ export var ProvenanceLayer;
             receipt = yield irys.uploadFile(uploadFile, { tags });
         }
         else {
-            throw Error("No match file type or enviroment");
+            throw Error('No match file type or enviroment');
         }
         return `${Constants.IRYS_GATEWAY_URL}/${receipt.id}`;
     });
@@ -30,7 +30,7 @@ export var ProvenanceLayer;
     });
     ProvenanceLayer.isNodeable = (value) => {
         if (isNode()) {
-            return typeof value === "string";
+            return typeof value === 'string';
         }
         return false;
     };
@@ -42,7 +42,7 @@ export var ProvenanceLayer;
     };
     ProvenanceLayer.isUploadable = (value) => {
         if (isNode()) {
-            return typeof value === "string";
+            return typeof value === 'string';
         }
         else if (isBrowser()) {
             return value instanceof File;
@@ -55,19 +55,19 @@ export var ProvenanceLayer;
         const byteLength = yield ProvenanceLayer.toByteLength(uploadFile);
         const willPay = yield calculateCost(byteLength, identity);
         const fundTx = yield irys.fund(irys.utils.toAtomic(willPay));
-        debugLog("# fundTx: ", fundTx);
+        debugLog('# fundTx: ', fundTx);
     });
     // @internal
     ProvenanceLayer.toByteLength = (content) => __awaiter(this, void 0, void 0, function* () {
         let length = 100;
         if (ProvenanceLayer.isNodeable(content)) {
-            length = (yield import("fs")).readFileSync(content).length;
+            length = (yield import('fs')).readFileSync(content).length;
         }
         else if (ProvenanceLayer.isBrowserable(content)) {
             length = content.size;
         }
         else {
-            throw Error("No match content type");
+            throw Error('No match content type');
         }
         return length;
     });
@@ -80,7 +80,7 @@ export var ProvenanceLayer;
             return (yield ProvenanceLayer.getBrowserIrys(identity));
         }
         else {
-            throw Error("Only Node.js or Browser");
+            throw Error('Only Node.js or Browser');
         }
     });
     // @internal
@@ -115,7 +115,7 @@ export var ProvenanceLayer;
         const irys = yield ProvenanceLayer.getIrys(identity);
         const priceAtomic = yield irys.getPrice(size);
         const priceConverted = irys.utils.fromAtomic(priceAtomic);
-        debugLog("# size: ", size);
+        debugLog('# size: ', size);
         debugLog(`# price: ${priceConverted}`);
         return priceConverted;
     });

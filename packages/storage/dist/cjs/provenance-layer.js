@@ -37,7 +37,7 @@ const shared_1 = require("@solana-suite/shared");
 const sdk_1 = __importStar(require("@irys/sdk"));
 var ProvenanceLayer;
 (function (ProvenanceLayer) {
-    const TOKEN = "solana";
+    const TOKEN = 'solana';
     ProvenanceLayer.uploadFile = (uploadFile, identity, tags) => __awaiter(this, void 0, void 0, function* () {
         const irys = yield ProvenanceLayer.getIrys(identity);
         let receipt;
@@ -45,7 +45,7 @@ var ProvenanceLayer;
             receipt = yield irys.uploadFile(uploadFile, { tags });
         }
         else {
-            throw Error("No match file type or enviroment");
+            throw Error('No match file type or enviroment');
         }
         return `${shared_1.Constants.IRYS_GATEWAY_URL}/${receipt.id}`;
     });
@@ -56,7 +56,7 @@ var ProvenanceLayer;
     });
     ProvenanceLayer.isNodeable = (value) => {
         if ((0, shared_1.isNode)()) {
-            return typeof value === "string";
+            return typeof value === 'string';
         }
         return false;
     };
@@ -68,7 +68,7 @@ var ProvenanceLayer;
     };
     ProvenanceLayer.isUploadable = (value) => {
         if ((0, shared_1.isNode)()) {
-            return typeof value === "string";
+            return typeof value === 'string';
         }
         else if ((0, shared_1.isBrowser)()) {
             return value instanceof File;
@@ -81,19 +81,19 @@ var ProvenanceLayer;
         const byteLength = yield ProvenanceLayer.toByteLength(uploadFile);
         const willPay = yield calculateCost(byteLength, identity);
         const fundTx = yield irys.fund(irys.utils.toAtomic(willPay));
-        (0, shared_1.debugLog)("# fundTx: ", fundTx);
+        (0, shared_1.debugLog)('# fundTx: ', fundTx);
     });
     // @internal
     ProvenanceLayer.toByteLength = (content) => __awaiter(this, void 0, void 0, function* () {
         let length = 100;
         if (ProvenanceLayer.isNodeable(content)) {
-            length = (yield Promise.resolve().then(() => __importStar(require("fs")))).readFileSync(content).length;
+            length = (yield Promise.resolve().then(() => __importStar(require('fs')))).readFileSync(content).length;
         }
         else if (ProvenanceLayer.isBrowserable(content)) {
             length = content.size;
         }
         else {
-            throw Error("No match content type");
+            throw Error('No match content type');
         }
         return length;
     });
@@ -106,7 +106,7 @@ var ProvenanceLayer;
             return (yield ProvenanceLayer.getBrowserIrys(identity));
         }
         else {
-            throw Error("Only Node.js or Browser");
+            throw Error('Only Node.js or Browser');
         }
     });
     // @internal
@@ -141,7 +141,7 @@ var ProvenanceLayer;
         const irys = yield ProvenanceLayer.getIrys(identity);
         const priceAtomic = yield irys.getPrice(size);
         const priceConverted = irys.utils.fromAtomic(priceAtomic);
-        (0, shared_1.debugLog)("# size: ", size);
+        (0, shared_1.debugLog)('# size: ', size);
         (0, shared_1.debugLog)(`# price: ${priceConverted}`);
         return priceConverted;
     });

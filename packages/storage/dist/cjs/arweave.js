@@ -16,14 +16,14 @@ var Arweave;
 (function (Arweave) {
     Arweave.uploadFile = (filePath, feePayer) => {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            (0, shared_1.debugLog)("# upload file: ", filePath);
+            (0, shared_1.debugLog)('# upload file: ', filePath);
             yield provenance_layer_1.ProvenanceLayer.fundArweave(filePath, feePayer);
             return yield provenance_layer_1.ProvenanceLayer.uploadFile(filePath, feePayer);
         }));
     };
     Arweave.uploadData = (metadata, feePayer) => {
         return (0, shared_1.Try)(() => __awaiter(this, void 0, void 0, function* () {
-            (0, shared_1.debugLog)("# upload meta data: ", metadata);
+            (0, shared_1.debugLog)('# upload meta data: ', metadata);
             return yield provenance_layer_1.ProvenanceLayer.uploadData(JSON.stringify(metadata), feePayer);
         }));
     };

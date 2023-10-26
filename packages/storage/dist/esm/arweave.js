@@ -7,20 +7,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { ProvenanceLayer } from "./provenance-layer";
-import { debugLog, Try } from "@solana-suite/shared";
+import { ProvenanceLayer } from './provenance-layer';
+import { debugLog, Try } from '@solana-suite/shared';
 export var Arweave;
 (function (Arweave) {
     Arweave.uploadFile = (filePath, feePayer) => {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            debugLog("# upload file: ", filePath);
+            debugLog('# upload file: ', filePath);
             yield ProvenanceLayer.fundArweave(filePath, feePayer);
             return yield ProvenanceLayer.uploadFile(filePath, feePayer);
         }));
     };
     Arweave.uploadData = (metadata, feePayer) => {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            debugLog("# upload meta data: ", metadata);
+            debugLog('# upload meta data: ', metadata);
             return yield ProvenanceLayer.uploadData(JSON.stringify(metadata), feePayer);
         }));
     };
