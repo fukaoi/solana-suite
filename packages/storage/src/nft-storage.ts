@@ -1,12 +1,7 @@
-import { Blob, NFTStorage } from "nft.storage";
-import {
-  Constants,
-  debugLog,
-  Result,
-  Try,
-} from "@solana-suite/shared";
-import { ProvenanceLayer } from "./provenance-layer";
-import { FileContent, InfraSideInput } from "@solana-suite/shared-metaplex";
+import { Blob, NFTStorage } from 'nft.storage';
+import { Constants, debugLog, Result, Try } from '@solana-suite/shared';
+import { ProvenanceLayer } from './provenance-layer';
+import { FileContent, InfraSideInput } from '@solana-suite/shared-metaplex';
 
 export namespace NftStorage {
   let isDisplayWarning = false;
@@ -40,14 +35,14 @@ export namespace NftStorage {
     filePath: FileContent,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
-      debugLog("# upload content: ", filePath);
+      debugLog('# upload content: ', filePath);
       let file!: Buffer;
       if (ProvenanceLayer.isNodeable(filePath)) {
-        file = (await import("fs")).readFileSync(filePath);
+        file = (await import('fs')).readFileSync(filePath);
       } else if (ProvenanceLayer.isBrowserable(filePath)) {
         file = Buffer.from(await filePath.arrayBuffer());
       } else {
-        throw Error("Supported environment: only Node.js and Browser js");
+        throw Error('Supported environment: only Node.js and Browser js');
       }
 
       const blobImage = new Blob([file]);
@@ -78,7 +73,7 @@ export namespace NftStorage {
     metadata: InfraSideInput.Offchain,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
-      debugLog("# upload metadata: ", metadata);
+      debugLog('# upload metadata: ', metadata);
 
       const blobJson = new Blob([JSON.stringify(metadata)]);
       const res = await connect().storeBlob(blobJson);
