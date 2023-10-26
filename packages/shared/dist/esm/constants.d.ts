@@ -1,7 +1,7 @@
 import { Commitment, PublicKey } from '@solana/web3.js';
 export declare namespace Constants {
     const currentCluster: string;
-    const customClusterUrl: string[];
+    const customClusterUrl: never[];
     const isDebugging: string;
     const nftStorageApiKey: string;
     enum Cluster {
