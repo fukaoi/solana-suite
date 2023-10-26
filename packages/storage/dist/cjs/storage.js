@@ -23,39 +23,39 @@ var Storage;
             external_url: input.external_url,
             attributes: input.attributes,
             properties: input.properties,
-            image: '',
+            image: "",
             options: input.options,
         };
         return data;
     };
     Storage.uploadContent = (filePath, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        if (storageType === 'arweave') {
+        if (storageType === "arweave") {
             if (!feePayer) {
-                throw Error('Arweave needs to have feepayer');
+                throw Error("Arweave needs to have feepayer");
             }
-            return yield arweave_1.Arweave.uploadContent(filePath, feePayer);
+            return yield arweave_1.Arweave.uploadFile(filePath, feePayer);
         }
-        else if (storageType === 'nftStorage') {
+        else if (storageType === "nftStorage") {
             return yield nft_storage_1.NftStorage.uploadContent(filePath);
         }
         else {
-            throw Error('Not found storageType');
+            throw Error("Not found storageType");
         }
     });
     Storage.uploadMetaAndContent = (input, filePath, storageType, feePayer) => __awaiter(this, void 0, void 0, function* () {
         let storage;
-        if (storageType === 'arweave') {
+        if (storageType === "arweave") {
             if (!feePayer) {
-                throw Error('Arweave needs to have feepayer');
+                throw Error("Arweave needs to have feepayer");
             }
-            storage = yield (yield arweave_1.Arweave.uploadContent(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
+            storage = yield (yield arweave_1.Arweave.uploadFile(filePath, feePayer)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 input.image = ok;
-                return yield arweave_1.Arweave.uploadMetadata(input, feePayer);
+                return yield arweave_1.Arweave.uploadData(input, feePayer);
             }), (err) => {
                 throw err;
             });
         }
-        else if (storageType === 'nftStorage') {
+        else if (storageType === "nftStorage") {
             storage = yield (yield nft_storage_1.NftStorage.uploadContent(filePath)).unwrap((ok) => __awaiter(this, void 0, void 0, function* () {
                 input.image = ok;
                 return yield nft_storage_1.NftStorage.uploadMetadata(input);
@@ -64,10 +64,10 @@ var Storage;
             });
         }
         else {
-            throw Error('No match storageType');
+            throw Error("No match storageType");
         }
         if (!storage) {
-            throw Error('Empty storage object');
+            throw Error("Empty storage object");
         }
         return storage;
     });

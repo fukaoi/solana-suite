@@ -15,4 +15,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./bundlr"), exports);
+__exportStar(require("./type"), exports);
+__exportStar(require("./irys"), exports);
 //# sourceMappingURL=index.js.map

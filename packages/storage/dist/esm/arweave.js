@@ -7,72 +7,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { toMetaplexFile, } from '@metaplex-foundation/js';
-import { debugLog, isBrowser, isNode, Try, } from '@solana-suite/shared';
-import { Bundlr } from './bundlr';
+import { ProvenanceLayer } from "./provenance-layer";
+import { debugLog, Try } from "@solana-suite/shared";
 export var Arweave;
 (function (Arweave) {
-    Arweave.getUploadPrice = (filePath, feePayer) => __awaiter(this, void 0, void 0, function* () {
+    Arweave.uploadFile = (filePath, feePayer) => {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            let buffer;
-            if (isNode()) {
-                const filepath = filePath;
-                buffer = (yield import('fs')).readFileSync(filepath);
-            }
-            else if (isBrowser()) {
-                const filepath = filePath;
-                buffer = toMetaplexFile(filepath, '').buffer;
-            }
-            else {
-                throw Error('Supported environment: only Node.js and Browser js');
-            }
-            const res = yield Bundlr.useStorage(feePayer.toKeypair()).getUploadPrice(buffer.length);
-            const basisPoints = res.basisPoints.toString();
-            debugLog('# buffer length, price', buffer.length, parseInt(basisPoints).toSol());
-            return {
-                price: parseInt(basisPoints).toSol(),
-                currency: res.currency,
-            };
+            debugLog("# upload file: ", filePath);
+            yield ProvenanceLayer.fundArweave(filePath, feePayer);
+            return yield ProvenanceLayer.uploadFile(filePath, feePayer);
         }));
-    });
-    Arweave.uploadContent = (filePath, feePayer, fileOptions // only arweave, not nft-storage
-    ) => __awaiter(this, void 0, void 0, function* () {
+    };
+    Arweave.uploadData = (metadata, feePayer) => {
         return Try(() => __awaiter(this, void 0, void 0, function* () {
-            debugLog('# upload content: ', filePath);
-            let file;
-            if (isNode()) {
-                const filepath = filePath;
-                const buffer = (yield import('fs')).readFileSync(filepath);
-                if (fileOptions) {
-                    file = toMetaplexFile(buffer, filepath, fileOptions);
-                }
-                else {
-                    file = toMetaplexFile(buffer, filepath);
-                }
-            }
-            else if (isBrowser()) {
-                const filepath = filePath;
-                if (fileOptions) {
-                    file = toMetaplexFile(filepath, '', fileOptions);
-                }
-                else {
-                    file = toMetaplexFile(filepath, '');
-                }
-            }
-            else {
-                throw Error('Supported environment: only Node.js and Browser js');
-            }
-            return Bundlr.useStorage(feePayer.toKeypair()).upload(file);
+            debugLog("# upload meta data: ", metadata);
+            return yield ProvenanceLayer.uploadData(JSON.stringify(metadata), feePayer);
         }));
-    });
-    Arweave.uploadMetadata = (metadata, feePayer) => __awaiter(this, void 0, void 0, function* () {
-        return Try(() => __awaiter(this, void 0, void 0, function* () {
-            debugLog('# upload meta data: ', metadata);
-            const uploaded = yield Bundlr.make(feePayer.toKeypair())
-                .nfts()
-                .uploadMetadata(metadata);
-            return uploaded.uri;
-        }));
-    });
+    };
 })(Arweave || (Arweave = {}));
 //# sourceMappingURL=arweave.js.map
