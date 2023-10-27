@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -711,64 +707,6 @@ importers:
         specifier: ^7.1.1
         version: 7.1.1(node-fetch@3.3.2)
     devDependencies:
-      build-configs/ava:
-        specifier: workspace:*
-        version: link:../build-configs/ava
-      build-configs/eslint:
-        specifier: workspace:*
-        version: link:../build-configs/eslint
-      build-configs/prettier:
-        specifier: workspace:*
-        version: link:../build-configs/prettier
-      build-configs/tsconfig:
-        specifier: workspace:*
-        version: link:../build-configs/tsconfig
-      build-configs/tsup:
-        specifier: workspace:*
-        version: link:../build-configs/tsup
-      test-tools:
-        specifier: workspace:*
-        version: link:../test-tools
-
-  packages/suite-traditional-nft:
-    dependencies:
-      '@irys/sdk':
-        specifier: ^0.0.3
-        version: 0.0.3(arweave@1.14.4)
-      '@metaplex-foundation/mpl-token-metadata':
-        specifier: ^2.13.0
-        version: 2.13.0
-      '@solana-suite/config':
-        specifier: workspace:*
-        version: link:../suite-config
-      '@solana-suite/spl-token':
-        specifier: workspace:^
-        version: link:../suite-spl-token
-      '@solana/buffer-layout':
-        specifier: ^4.0.1
-        version: 4.0.1
-      '@solana/spl-token':
-        specifier: ^0.3.8
-        version: 0.3.8(@solana/web3.js@1.87.1)
-      '@solana/web3.js':
-        specifier: ^1.78.5
-        version: 1.87.1
-      bignumber.js:
-        specifier: ^9.1.2
-        version: 9.1.2
-      bn.js:
-        specifier: ^5.2.1
-        version: 5.2.1
-      bs58:
-        specifier: ^4.0.1
-        version: 4.0.1
-      nft.storage:
-        specifier: ^7.1.1
-        version: 7.1.1(node-fetch@3.3.2)
-    devDependencies:
-      '@types/bn.js':
-        specifier: ^5.1.2
-        version: 5.1.2
       build-configs/ava:
         specifier: workspace:*
         version: link:../build-configs/ava
@@ -9761,3 +9699,7 @@ packages:
       - supports-color
       - utf-8-validate
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
