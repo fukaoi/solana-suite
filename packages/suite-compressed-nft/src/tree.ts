@@ -13,13 +13,19 @@ import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
 /**
  * create a new markle tree
  * This function needs only 1 call
+ *
+ * @param {treeOwner} Secret
+ * @param {feePayer} Secret
+ * @param {maxDepth} number
+ * @param {maxBufferSize} number
+ * @return Promise<Result<Instruction, Error>>
  */
 export namespace CompressedNft {
   export const initTree = (
-    maxDepth: number = 14,
-    maxBufferSize: number = 64,
     treeOwner: Secret,
     feePayer: Secret,
+    maxDepth: number = 14,
+    maxBufferSize: number = 64,
   ) => {
     return Try(async () => {
       const space = getConcurrentMerkleTreeAccountSize(maxDepth, maxBufferSize);
@@ -27,6 +33,7 @@ export namespace CompressedNft {
         [treeOwner.toKeypair().publicKey.toBuffer()],
         MPL_BUBBLEGUM_PROGRAM_ID.toPublicKey(),
       );
+      console.log(_bump);
 
       const inst1 = SystemProgram.createAccount({
         fromPubkey: feePayer.toKeypair().publicKey,
