@@ -5,7 +5,7 @@ import {
 } from '@solana/spl-account-compression';
 import { MPL_BUBBLEGUM_PROGRAM_ID } from '@metaplex-foundation/mpl-bubblegum';
 import { PublicKey, SystemProgram } from '@solana/web3.js';
-import { Try } from '~/shared';
+import { debugLog, Try } from '~/shared';
 import { Node } from '~/node';
 import { Instruction } from '~/instruction';
 import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
@@ -23,10 +23,12 @@ export namespace CompressedNft {
   ) => {
     return Try(async () => {
       const space = getConcurrentMerkleTreeAccountSize(maxDepth, maxBufferSize);
-      const [treeAuthority, _bump] = PublicKey.findProgramAddressSync(
+      const [treeAuthority] = PublicKey.findProgramAddressSync(
         [treeOwner.toKeypair().publicKey.toBuffer()],
         MPL_BUBBLEGUM_PROGRAM_ID.toPublicKey(),
       );
+
+      debugLog('# tree space: ', space);
 
       const inst1 = SystemProgram.createAccount({
         fromPubkey: feePayer.toKeypair().publicKey,
