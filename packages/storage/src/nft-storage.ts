@@ -43,7 +43,7 @@ export namespace NftStorage {
       } else if (ProvenanceLayer.isBrowserable(fileType)) {
         file = Buffer.from(await fileType.arrayBuffer());
       } else {
-        throw Error('Supported environment: only Node.js and Browser js');
+        file = Buffer.from(fileType as ArrayBuffer);
       }
 
       const blobImage = new Blob([file]);
