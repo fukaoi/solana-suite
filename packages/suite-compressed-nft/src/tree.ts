@@ -33,7 +33,6 @@ export namespace CompressedNft {
         [treeOwner.toKeypair().publicKey.toBuffer()],
         MPL_BUBBLEGUM_PROGRAM_ID.toPublicKey(),
       );
-      console.log(_bump);
 
       debugLog('# tree space: ', space);
 
