@@ -71,7 +71,7 @@ var NftStorage;
                 file = Buffer.from(yield filePath.arrayBuffer());
             }
             else {
-                throw Error('Supported environment: only Node.js and Browser js');
+                file = Buffer.from(filePath);
             }
             const blobImage = new nft_storage_1.Blob([file]);
             const res = yield connect().storeBlob(blobImage);
