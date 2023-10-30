@@ -1,5 +1,12 @@
 import { Blob, NFTStorage } from 'nft.storage';
-import { Constants, debugLog, Result, Try } from '@solana-suite/shared';
+import {
+  Constants,
+  debugLog,
+  isBrowser,
+  isNode,
+  Result,
+  Try,
+} from '@solana-suite/shared';
 import { ProvenanceLayer } from './provenance-layer';
 import { FileContent, InfraSideInput } from '@solana-suite/shared-metaplex';
 
@@ -42,9 +49,8 @@ export namespace NftStorage {
       } else if (ProvenanceLayer.isBrowserable(filePath)) {
         file = Buffer.from(await filePath.arrayBuffer());
       } else {
-        throw Error('Supported environment: only Node.js and Browser js');
+        file = Buffer.from(filePath as ArrayBuffer);
       }
-
       const blobImage = new Blob([file]);
       const res = await connect().storeBlob(blobImage);
       return createGatewayUrl(res);

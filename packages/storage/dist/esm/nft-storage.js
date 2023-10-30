@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Blob, NFTStorage } from 'nft.storage';
-import { Constants, debugLog, Try } from '@solana-suite/shared';
+import { Constants, debugLog, Try, } from '@solana-suite/shared';
 import { ProvenanceLayer } from './provenance-layer';
 export var NftStorage;
 (function (NftStorage) {
@@ -45,7 +45,7 @@ export var NftStorage;
                 file = Buffer.from(yield filePath.arrayBuffer());
             }
             else {
-                throw Error('Supported environment: only Node.js and Browser js');
+                file = Buffer.from(filePath);
             }
             const blobImage = new Blob([file]);
             const res = yield connect().storeBlob(blobImage);
