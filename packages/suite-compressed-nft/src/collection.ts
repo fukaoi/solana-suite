@@ -7,13 +7,16 @@ import {
 
 import { PublicKey, SystemProgram } from '@solana/web3.js';
 import {
+  createAccount,
   createInitializeMint2Instruction,
-  Token,
+  createMint,
+  mintTo,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { debugLog, Try } from '~/shared';
 import { Node } from '~/node';
 import { Instruction } from '~/instruction';
+import { KeypairAccount } from '@solana-suite/spl-token';
 // import { SplToken } from '~/suite-spl-token';
 
 /**
@@ -36,18 +39,26 @@ export namespace CompressedNft {
       //   feePayer.toKeypair().publicKey,
       // );
 
-      const mint = await Token.createMint(
+      const mint = await createMint(
         Node.getConnection(),
         payer,
         payer.publicKey,
         payer.publicKey,
         0,
-        TOKEN_PROGRAM_ID,
       );
 
-      const collectionTokenAccount = await mint.createAccount(payer.publicKey);
-      await mint.mintTo(collectionTokenAccount, payer, [], 1);
-      const [collectionMetadataAccount, _b] = PublicKey.findProgramAddressSync(
+      const collectionTokenAccount = await createAccount(
+        Node.getConnection(),
+        payer.publicKey,
+        KeypairAccount.create().toKeypair(),
+        payer.publicKey,
+        payer,
+      );
+      await mintTo(collectionTokenAccount, payer, [], 1);
+
+
+
+      const [collectionMetadataAccount] = PublicKey.findProgramAddressSync(
         [
           Buffer.from('metadata', 'utf8'),
           TOKEN_METADATA_PROGRAM_ID.toBuffer(),
