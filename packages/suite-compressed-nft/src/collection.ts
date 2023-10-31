@@ -14,9 +14,11 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { debugLog, Try } from '~/shared';
+import { Validator } from '~/validator';
 import { Node } from '~/node';
 import { Instruction } from '~/instruction';
 import { KeypairAccount } from '@solana-suite/spl-token';
+import { RegularNft } from '~/suite-regular-nft';
 // import { SplToken } from '~/suite-spl-token';
 
 /**
@@ -26,115 +28,112 @@ import { KeypairAccount } from '@solana-suite/spl-token';
  * @param {feePayer} Secret
  * @return Promise<Result<Instruction, Error>>
  */
-export namespace CompressedNft {
-  export const initCollection = (feePayer: Secret) => {
-    return Try(async () => {
-      const payer = feePayer.toKeypair();
-
-      // const inst1 = createInitializeMint2Instruction(
-      //   feePayer.toKeypair().publicKey,
-      //   0,
-      //   feePayer.toKeypair().publicKey,
-      //   feePayer.toKeypair().publicKey,
-      //   feePayer.toKeypair().publicKey,
-      // );
-
-      const mint = await createMint(
-        Node.getConnection(),
-        payer,
-        payer.publicKey,
-        payer.publicKey,
-        0,
-      );
-
-      const collectionTokenAccount = await createAccount(
-        Node.getConnection(),
-        payer.publicKey,
-        KeypairAccount.create().toKeypair(),
-        payer.publicKey,
-        payer,
-      );
-      await mintTo(collectionTokenAccount, payer, [], 1);
-
-
-
-      const [collectionMetadataAccount] = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from('metadata', 'utf8'),
-          TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-          mint.publicKey.toBuffer(),
-        ],
-        TOKEN_METADATA_PROGRAM_ID,
-      );
-
-      const inst1 = createCreateMetadataAccountV3Instruction(
-        {
-          metadata: collectionMetadataAccount,
-          mint: mint.publicKey,
-          mintAuthority: payer.publicKey,
-          payer: payer.publicKey,
-          updateAuthority: payer.publicKey,
-        },
-        {
-          createMetadataAccountArgsV3: {
-            data: {
-              name: "Nick's collection",
-              symbol: 'NICK',
-              uri: 'nicksfancyuri',
-              sellerFeeBasisPoints: 100,
-              creators: null,
-              collection: null,
-              uses: null,
-            },
-            isMutable: false,
-            collectionDetails: null,
-          },
-        },
-      );
-      const [collectionMasterEditionAccount] = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from('metadata', 'utf8'),
-          TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-          mint.publicKey.toBuffer(),
-          Buffer.from('edition', 'utf8'),
-        ],
-        TOKEN_METADATA_PROGRAM_ID,
-      );
-      const inst2 = createCreateMasterEditionV3Instruction(
-        {
-          edition: collectionMasterEditionAccount,
-          mint: mint.publicKey,
-          mintAuthority: payer.publicKey,
-          payer: payer.publicKey,
-          updateAuthority: payer.publicKey,
-          metadata: collectionMetadataAccount,
-        },
-        {
-          createMasterEditionArgs: {
-            maxSupply: 0,
-          },
-        },
-      );
-
-      const inst3 = createSetCollectionSizeInstruction(
-        {
-          collectionMetadata: collectionMetadataAccount,
-          collectionAuthority: payer.publicKey,
-          collectionMint: mint.publicKey,
-        },
-        {
-          setCollectionSizeArgs: { size: 50 },
-        },
-      );
-      const collectionMetadata = collectionMetadataAccount.toString();
-      const collectionAuthority = payer.publicKey.toString();
-      const collectionMint = mint.publicKey.toString();
-
-      return new Instruction([inst1, inst2, inst3], [payer], payer, {
-        collectionMint,
-        collectionMetadata,
-        collectionAuthority,
-      });
-    });
-  };
-}
+// export namespace CompressedNft {
+//   export const mintCollection = (
+//     owner: Pubkey,
+//     signer: Secret,
+//     input: UserSideInput.NftMetadata,
+//     feePayer?: Secret,
+//     freezeAuthority?: Pubkey,
+//   ) => {
+//     return Try(async () => {
+//       const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
+//       if (valid.isErr) {
+//         throw valid.error;
+//       }
+//
+//       const payer = feePayer ? feePayer : signer;
+//
+//       //--- porperties, Upload content ---
+//       let properties;
+//       if (input.properties && input.storageType) {
+//         properties = await Converter.Properties.intoInfraSide(
+//           input.properties,
+//           Storage.uploadFile,
+//           input.storageType,
+//           payer,
+//         );
+//       } else if (input.properties && !input.storageType) {
+//         throw Error('Must set storageType if will use properties');
+//       }
+//
+//       input = {
+//         ...input,
+//         properties,
+//       };
+//       //--- porperties, Upload content ---
+//
+//       const nftStorageMetadata = Storage.toConvertOffchaindata(input, 0);
+//
+//       // created at by unix timestamp
+//       const createdAt = Math.floor(new Date().getTime() / 1000);
+//       nftStorageMetadata.created_at = createdAt;
+//
+//       let uri!: string;
+//       if (input.filePath && input.storageType) {
+//         const uploaded = await Storage.upload(
+//           nftStorageMetadata,
+//           input.filePath,
+//           input.storageType,
+//           payer,
+//         );
+//         debugLog('# upload content url: ', uploaded);
+//         if (uploaded.isErr) {
+//           throw uploaded;
+//         }
+//         uri = uploaded.value;
+//       } else if (input.uri) {
+//         uri = input.uri;
+//       } else {
+//         throw Error(`Must set 'storageType + filePath' or 'uri'`);
+//       }
+//
+//       let datav2 = Converter.NftMetadata.intoInfraSide(
+//         input,
+//         uri,
+//         sellerFeeBasisPoints,
+//       );
+//
+//       //--- collection ---
+//       let collection;
+//       if (input.collection && input.collection) {
+//         collection = Converter.Collection.intoInfraSide(input.collection);
+//         datav2 = { ...datav2, collection };
+//       }
+//
+//       const isMutable = input.isMutable === undefined ? true : input.isMutable;
+//
+//       debugLog('# input: ', input);
+//       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
+//       debugLog('# datav2: ', datav2);
+//
+//       const mint = KeypairAccount.create();
+//
+//       const insts = await createMintInstructions(
+//         mint.toPublicKey(),
+//         owner.toPublicKey(),
+//         datav2,
+//         payer.toKeypair().publicKey,
+//         isMutable,
+//       );
+//
+//       // freezeAuthority
+//       if (freezeAuthority) {
+//         insts.push(
+//           createDeleagateInstruction(
+//             mint.toPublicKey(),
+//             owner.toPublicKey(),
+//             freezeAuthority.toPublicKey(),
+//           ),
+//         );
+//       }
+//
+//       return new MintInstruction(
+//         insts,
+//         [signer.toKeypair(), mint.toKeypair()],
+//         payer.toKeypair(),
+//         mint.pubkey,
+//       );
+//     });
+//   };
+// }
