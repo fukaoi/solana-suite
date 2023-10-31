@@ -1,10 +1,10 @@
 import { Result } from '~/shared';
 import { Pubkey } from '~/types/account';
-import { UserSideInput, UserSideOutput } from '~/types/converter';
+import { UserInput, UserOutput } from '~/types/converter';
 import { SplToken } from '~/suite-spl-token';
 import { Sortable } from '~/types/find';
 import { OnErr, OnOk } from '~/types/shared';
-import { NftMetadata } from '~/types/traditional-nft';
+import { NftMetadata } from '~/types/regular-nft';
 
 export namespace RegularNft {
   /**
@@ -18,7 +18,7 @@ export namespace RegularNft {
    */
   export const findByOwner = async (
     owner: Pubkey,
-    onOk: OnOk<UserSideOutput.NftMetadata>,
+    onOk: OnOk<UserOutput.NftMetadata>,
     onErr: OnErr,
     options?: { sortable?: Sortable; isHolder?: boolean },
   ): Promise<void> => {
@@ -27,7 +27,7 @@ export namespace RegularNft {
     await SplToken.genericFindByOwner(
       owner,
       (result: Result<[], Error>) => result.match(onOk, onErr),
-      UserSideInput.TokenStandard.NonFungible,
+      UserInput.TokenStandard.NonFungible,
       sortable,
       isHolder,
     );
@@ -45,7 +45,7 @@ export namespace RegularNft {
     // return await SplToken.genericFindByMint<NftMetadata>(
     return await SplToken.genericFindByMint(
       mint,
-      UserSideInput.TokenStandard.NonFungible,
+      UserInput.TokenStandard.NonFungible,
     );
   };
 }

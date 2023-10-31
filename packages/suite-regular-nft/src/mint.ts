@@ -21,7 +21,7 @@ import { Pubkey, Secret } from '~/types/account';
 import { MintInstruction } from '~/instruction';
 import { Node } from '~/node';
 import { Storage } from '~/storage';
-import { UserSideInput } from '~/types/converter';
+import { UserInput } from '~/types/converter';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
 
@@ -119,7 +119,7 @@ export namespace RegularNft {
    *
    * @param {Pubkey} owner          // first minted owner
    * @param {Secret} signer         // owner's Secret
-   * @param {UserSideInput.NftMetadata} input
+   * @param {UserInput.NftMetadata} input
    * {
    *   name: string               // nft content name
    *   symbol: string             // nft ticker symbol
@@ -143,12 +143,12 @@ export namespace RegularNft {
   export const mint = async (
     owner: Pubkey,
     signer: Secret,
-    input: UserSideInput.NftMetadata,
+    input: UserInput.NftMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
+      const valid = Validator.checkAll<UserInput.NftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }

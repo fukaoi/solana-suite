@@ -274,7 +274,7 @@ declare namespace Common {
     };
 }
 
-declare namespace InfraSideInput {
+declare namespace InfraInput {
     interface File extends Blob {
         readonly lastModified: number;
         readonly name: string;
@@ -322,7 +322,7 @@ declare namespace InfraSideInput {
     };
 }
 
-declare namespace UserSideInput {
+declare namespace UserInput {
     type Collection = Pubkey;
     type Creators = {
         address: Pubkey;
@@ -404,9 +404,9 @@ declare namespace Validator {
     export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
     export const isImageUrl: (image: string) => Result<string, ValidatorError>;
     export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
-    type PickNftStorage = Pick<InfraSideInput.Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
-    type PickNftStorageMetaplex = Pick<UserSideInput.NftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<InfraSideInput.MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
+    type PickNftStorage = Pick<InfraInput.Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
+    type PickNftStorageMetaplex = Pick<UserInput.NftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
+    type PickMetaplex = Pick<InfraInput.MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
     export {};
 }
 declare class ValidatorError extends Error {

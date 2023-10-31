@@ -5,18 +5,18 @@ import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
 import { Storage } from '~/storage';
 import { SplToken } from '~/suite-spl-token';
-import { Phantom } from '~/types/phantom';
-import { UserSideInput } from '~/types/converter';
+import { PhantomProvider } from '~/types/phantom';
+import { UserInput } from '~/types/converter';
 import { Converter } from '~/converter';
 
 export namespace PhantomSplToken {
   export const mint = async (
-    input: UserSideInput.TokenMetadata,
+    input: UserInput.TokenMetadata,
     owner: Pubkey,
     cluster: string,
     totalAmount: number,
     mintDecimal: number,
-    phantom: Phantom,
+    phantom: PhantomProvider,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       Node.changeConnection({ cluster });
@@ -27,13 +27,13 @@ export namespace PhantomSplToken {
       input.royalty = 0;
       const sellerFeeBasisPoints = 0;
       const tokenStorageMetadata = Storage.toConvertOffchaindata(
-        input as UserSideInput.NftMetadata,
+        input as UserInput.NftMetadata,
         input.royalty,
       );
 
       let uri!: string;
       if (input.filePath && input.storageType) {
-        const uploaded = await Storage.uploadMetaAndContent(
+        const uploaded = await Storage.upload(
           tokenStorageMetadata,
           input.filePath,
           input.storageType,

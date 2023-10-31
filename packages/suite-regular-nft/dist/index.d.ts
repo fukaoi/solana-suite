@@ -290,7 +290,7 @@ declare namespace Common {
     };
 }
 
-declare namespace InfraSideInput {
+declare namespace InfraInput {
     interface File extends Blob {
         readonly lastModified: number;
         readonly name: string;
@@ -338,14 +338,14 @@ declare namespace InfraSideInput {
     };
 }
 
-declare namespace InfraSideOutput {
+declare namespace InfraOutput {
     type Collection = {
         verified: boolean;
         key: PublicKey;
     };
     type OnchainAndOffchain = {
         onchain: Metadata;
-        offchain: InfraSideOutput.Offchain;
+        offchain: InfraOutput.Offchain;
     };
     type Transfer = {
         parsed: {
@@ -393,8 +393,8 @@ declare namespace InfraSideOutput {
         program: string;
         programId: PublicKey;
     };
-    type Creator = InfraSideInput.Creators;
-    type Offchain = InfraSideInput.Offchain;
+    type Creator = InfraInput.Creators;
+    type Offchain = InfraInput.Offchain;
     type Uses = Common.Uses;
 }
 
@@ -412,7 +412,7 @@ type OwnerInfo = {
     owner: string;
 };
 
-declare namespace UserSideInput {
+declare namespace UserInput {
     type Collection = Pubkey$1;
     type Creators = {
         address: Pubkey$1;
@@ -460,8 +460,8 @@ declare namespace UserSideInput {
     };
 }
 
-declare namespace UserSideOutput {
-    type Creators = UserSideInput.Creators;
+declare namespace UserOutput {
+    type Creators = UserInput.Creators;
     type Collection = {
         address: Pubkey$1;
         verified: boolean;
@@ -477,7 +477,7 @@ declare namespace UserSideOutput {
         isMutable: boolean;
         primarySaleHappened: boolean;
         editionNonce: Option<number>;
-        offchain: InfraSideOutput.Offchain;
+        offchain: InfraOutput.Offchain;
         tokenAmount: string;
         collection?: Collection | undefined;
         creators?: Creators[] | undefined;
@@ -490,7 +490,7 @@ declare namespace UserSideOutput {
         symbol: string;
         uri: string;
         royalty: number;
-        offchain: InfraSideOutput.Offchain;
+        offchain: InfraOutput.Offchain;
         tokenAmount: string;
         attributes?: Common.Attribute | undefined;
         creators?: Creators[] | undefined;
@@ -801,9 +801,9 @@ declare namespace Validator {
     export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
     export const isImageUrl: (image: string) => Result<string, ValidatorError>;
     export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
-    type PickNftStorage = Pick<InfraSideInput.Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
-    type PickNftStorageMetaplex = Pick<UserSideInput.NftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<InfraSideInput.MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
+    type PickNftStorage = Pick<InfraInput.Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
+    type PickNftStorageMetaplex = Pick<UserInput.NftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
+    type PickMetaplex = Pick<InfraInput.MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
     export {};
 }
 declare class ValidatorError extends Error {
@@ -901,15 +901,15 @@ declare const RegularNft: {
     thaw: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, feePayer?: Secret | undefined) => Result<Instruction, Error>;
     createDeleagateInstruction: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, delegateAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, nftMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
-    mint: (owner: Pubkey$1, signer: Secret, input: UserSideInput.NftMetadata, feePayer?: Secret | undefined, freezeAuthority?: Pubkey$1 | undefined) => Promise<Result<MintInstruction, Error>>;
+    mint: (owner: Pubkey$1, signer: Secret, input: UserInput.NftMetadata, feePayer?: Secret | undefined, freezeAuthority?: Pubkey$1 | undefined) => Promise<Result<MintInstruction, Error>>;
     feePayerPartialSignTransferNft: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], feePayer: Pubkey$1) => Promise<Result<PartialSignInstruction, Error>>;
-    feePayerPartialSignMint: (owner: Pubkey$1, signer: Secret, input: UserSideInput.NftMetadata, feePayer: Pubkey$1, freezeAuthority?: Secret | undefined) => Promise<Result<PartialSignInstruction, Error>>;
+    feePayerPartialSignMint: (owner: Pubkey$1, signer: Secret, input: UserInput.NftMetadata, feePayer: Pubkey$1, freezeAuthority?: Secret | undefined) => Promise<Result<PartialSignInstruction, Error>>;
     freeze: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, feePayer?: Secret | undefined) => Result<Instruction, Error>;
-    findByOwner: (owner: Pubkey$1, onOk: OnOk<UserSideOutput.NftMetadata>, onErr: OnErr, options?: {
+    findByOwner: (owner: Pubkey$1, onOk: OnOk<UserOutput.NftMetadata>, onErr: OnErr, options?: {
         sortable?: Sortable | undefined;
         isHolder?: boolean | undefined;
     } | undefined) => Promise<void>;
-    findByMint: (mint: Pubkey$1) => Promise<Result<UserSideOutput.NftMetadata, Error>>;
+    findByMint: (mint: Pubkey$1) => Promise<Result<UserOutput.NftMetadata, Error>>;
     burn: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret, feePayer?: Secret | undefined) => Result<Instruction, Error>;
 };
 

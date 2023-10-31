@@ -8,5 +8,5 @@ export * from './phantom';
 export * from './shared';
 export * from './storage';
 export * from './transaction-filter';
-export * from './traditional-nft';
+export * from './regular-nft';
 export * from './validator';

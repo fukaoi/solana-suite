@@ -4,7 +4,7 @@ import { Node } from '~/node';
 import { PartialSignInstruction } from '~/instruction';
 import { Storage } from '~/storage';
 import { Converter } from '~/converter';
-import { UserSideInput } from '~/types/converter';
+import { UserInput } from '~/types/converter';
 import { Validator } from '~/validator';
 import { KeypairAccount } from '~/account';
 import { RegularNft as _Mint } from './mint';
@@ -40,12 +40,12 @@ export namespace RegularNft {
   export const feePayerPartialSignMint = async (
     owner: Pubkey,
     signer: Secret,
-    input: UserSideInput.NftMetadata,
+    input: UserInput.NftMetadata,
     feePayer: Pubkey,
     freezeAuthority?: Secret,
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
+      const valid = Validator.checkAll<UserInput.NftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }

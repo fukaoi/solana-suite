@@ -9,7 +9,7 @@ import { Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
 import { AssociatedAccount } from '~/account';
-import { Phantom } from '~/types/phantom';
+import { PhantomProvider } from '~/types/phantom';
 
 export namespace PhantomSplToken {
   export const add = async (
@@ -18,7 +18,7 @@ export namespace PhantomSplToken {
     cluster: string,
     totalAmount: number,
     mintDecimal: number,
-    phantom: Phantom,
+    phantom: PhantomProvider,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       Node.changeConnection({ cluster });

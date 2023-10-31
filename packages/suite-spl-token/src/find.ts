@@ -3,11 +3,7 @@ import { Pubkey } from '~/types/account';
 import { debugLog, Result } from '~/shared';
 import { Sortable } from '~/types/find';
 import { OnErr, OnOk } from '~/types/shared';
-import {
-  InfraSideOutput,
-  UserSideInput,
-  UserSideOutput,
-} from '~/types/converter';
+import { InfraOutput, UserInput, UserOutput } from '~/types/converter';
 import { Converter } from '~/converter';
 import { Pda } from '~/account';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
@@ -21,7 +17,7 @@ export namespace SplToken {
 
   // Sort by latest with unixtimestamp function
   const sortByUinixTimestamp =
-    <T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata>(
+    <T extends UserOutput.NftMetadata | UserOutput.TokenMetadata>(
       sortable: Sortable,
     ) =>
     (a: T, b: T): number => {
@@ -41,12 +37,12 @@ export namespace SplToken {
     };
 
   const converter = <T>(
-    tokenStandard: UserSideInput.TokenStandard,
+    tokenStandard: UserInput.TokenStandard,
     metadata: Metadata,
-    json: InfraSideOutput.Offchain,
+    json: InfraOutput.Offchain,
     tokenAmount: string,
   ): T => {
-    if (tokenStandard === UserSideInput.TokenStandard.Fungible) {
+    if (tokenStandard === UserInput.TokenStandard.Fungible) {
       return Converter.TokenMetadata.intoUserSide(
         {
           onchain: metadata,
@@ -54,7 +50,7 @@ export namespace SplToken {
         },
         tokenAmount,
       ) as T;
-    } else if (tokenStandard === UserSideInput.TokenStandard.NonFungible) {
+    } else if (tokenStandard === UserInput.TokenStandard.NonFungible) {
       return Converter.NftMetadata.intoUserSide(
         {
           onchain: metadata,
@@ -68,11 +64,11 @@ export namespace SplToken {
   };
 
   export const genericFindByOwner = async <
-    T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata,
+    T extends UserOutput.NftMetadata | UserOutput.TokenMetadata,
   >(
     owner: Pubkey,
     callback: (result: Result<T[], Error>) => void,
-    tokenStandard: UserSideInput.TokenStandard,
+    tokenStandard: UserInput.TokenStandard,
     sortable?: Sortable,
     isHolder?: boolean,
   ): Promise<void> => {
@@ -114,7 +110,7 @@ export namespace SplToken {
             .then((response) => {
               response
                 .json()
-                .then((json: InfraSideOutput.Offchain) => {
+                .then((json: InfraOutput.Offchain) => {
                   data.push(
                     converter<T>(tokenStandard, metadata, json, tokenAmount),
                   );
@@ -152,10 +148,10 @@ export namespace SplToken {
   };
 
   export const genericFindByMint = async <
-    T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata,
+    T extends UserOutput.NftMetadata | UserOutput.TokenMetadata,
   >(
     mint: Pubkey,
-    tokenStandard: UserSideInput.TokenStandard,
+    tokenStandard: UserInput.TokenStandard,
   ): Promise<Result<T, Error>> => {
     try {
       const connection = Node.getConnection();
@@ -175,7 +171,7 @@ export namespace SplToken {
 
       const response = (await (
         await fetch(metadata.data.uri)
-      ).json()) as InfraSideOutput.Offchain;
+      ).json()) as InfraOutput.Offchain;
       return Result.ok(
         converter<T>(tokenStandard, metadata, response, tokenAmount),
       );
@@ -195,7 +191,7 @@ export namespace SplToken {
    */
   export const findByOwner = (
     owner: Pubkey,
-    onOk: OnOk<UserSideOutput.TokenMetadata>,
+    onOk: OnOk<UserOutput.TokenMetadata>,
     onErr: OnErr,
     options?: { sortable?: Sortable; isHolder?: boolean },
   ): void => {
@@ -203,12 +199,12 @@ export namespace SplToken {
     const isHolder = !options?.isHolder ? true : false;
 
     /* eslint-disable @typescript-eslint/no-floating-promises */
-    genericFindByOwner<UserSideOutput.TokenMetadata>(
+    genericFindByOwner<UserOutput.TokenMetadata>(
       owner,
       (result) => {
         result.match((ok) => onOk(ok), onErr);
       },
-      UserSideInput.TokenStandard.Fungible,
+      UserInput.TokenStandard.Fungible,
       sortable,
       isHolder,
     );
@@ -222,10 +218,10 @@ export namespace SplToken {
    */
   export const findByMint = async (
     mint: Pubkey,
-  ): Promise<Result<UserSideOutput.TokenMetadata, Error>> => {
-    return await genericFindByMint<UserSideOutput.TokenMetadata>(
+  ): Promise<Result<UserOutput.TokenMetadata, Error>> => {
+    return await genericFindByMint<UserOutput.TokenMetadata>(
       mint,
-      UserSideInput.TokenStandard.Fungible,
+      UserInput.TokenStandard.Fungible,
     );
   };
 }

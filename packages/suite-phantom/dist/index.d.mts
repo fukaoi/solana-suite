@@ -1,4 +1,4 @@
-import { TransactionSignature, PublicKey, Keypair } from '@solana/web3.js';
+import { TransactionSignature, PublicKey, Transaction, Keypair } from '@solana/web3.js';
 import BN from 'bn.js';
 
 declare const pubKeyNominality: unique symbol;
@@ -418,6 +418,16 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+type PhantomProvider = {
+    isPhantom?: boolean;
+    publicKey: PublicKey | null;
+    signTransaction(transaction: Transaction): Promise<Transaction>;
+    signAllTransactions(transactions: Transaction[]): Promise<Transaction[]>;
+    signMessage(message: Uint8Array): Promise<Uint8Array>;
+    connect(): Promise<void>;
+    disconnect(): Promise<void>;
+};
+
 type FileType = string | File;
 
 type StorageType = 'nftStorage' | 'arweave' | string;
@@ -457,7 +467,7 @@ declare namespace Common {
     };
 }
 
-declare namespace UserSideInput {
+declare namespace UserInput {
     type Collection = Pubkey;
     type Creators = {
         address: Pubkey;
@@ -548,12 +558,12 @@ declare enum Explorer {
 }
 
 declare const Metaplex: {
-    mint: (input: UserSideInput.NftMetadata, cluster: string, phantom: Phantom) => Promise<Result<string, Error | ValidatorError>>;
+    mint: (input: UserInput.NftMetadata, cluster: string, phantom: PhantomProvider) => Promise<Result<string, Error | ValidatorError>>;
 };
 
 declare const PhantomSplToken: {
-    mint: (input: UserSideInput.TokenMetadata, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<Result<string, Error>>;
-    add: (tokenKey: Pubkey, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: Phantom) => Promise<Result<string, Error>>;
+    mint: (input: UserInput.TokenMetadata, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
+    add: (tokenKey: Pubkey, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
 };
 
 export { Metaplex, PhantomSplToken };

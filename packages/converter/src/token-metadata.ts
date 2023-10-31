@@ -1,20 +1,20 @@
 import { Converter as _Creators } from './creators';
 import { Converter as _Uses } from './uses';
 import {
-  InfraSideInput,
-  InfraSideOutput,
-  UserSideInput,
-  UserSideOutput,
+  InfraInput,
+  InfraOutput,
+  UserInput,
+  UserOutput,
 } from '~/types/converter';
 
 import { convertTimestampToDateTime } from '~/shared';
 export namespace Converter {
   export namespace TokenMetadata {
     export const intoInfraSide = (
-      input: UserSideInput.TokenMetadata,
+      input: UserInput.TokenMetadata,
       uri: string,
       sellerFeeBasisPoints: number,
-    ): InfraSideInput.MetaplexDataV2 => {
+    ): InfraInput.MetaplexDataV2 => {
       return {
         name: input.name,
         symbol: input.symbol,
@@ -27,9 +27,9 @@ export namespace Converter {
     };
 
     export const intoUserSide = (
-      output: InfraSideOutput.OnchainAndOffchain,
+      output: InfraOutput.OnchainAndOffchain,
       tokenAmount: string,
-    ): UserSideOutput.TokenMetadata => {
+    ): UserOutput.TokenMetadata => {
       return {
         mint: output.onchain.mint.toString(),
         royalty: output.onchain.data.sellerFeeBasisPoints,

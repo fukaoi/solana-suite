@@ -1,5 +1,5 @@
 export { OwnerInfo, Pubkey, Secret } from './account.mjs';
-export { Common, InfraSideInput, InfraSideOutput, Option, UserSideInput, UserSideOutput, bignum } from './converter.mjs';
+export { Common, InfraInput, InfraOutput, Option, UserInput, UserOutput, bignum } from './converter.mjs';
 export { History, HistoryOptions } from './history.mjs';
 export { Find, Sortable } from './find.mjs';
 export { Explorer } from './global.mjs';
@@ -10,7 +10,7 @@ export { R as Result } from './result-b9d23549.js';
 export { AnyObject, OnErr, OnOk, OverwriteObject } from './shared.mjs';
 export { BundlrSigner, FileType, Identity, PhantomWallet, StorageType, Tags, UploadableFileType } from './storage.mjs';
 export { FilterOptions, FilterType, ModuleName, PostTokenAccount, WithMemo } from './transaction-filter.mjs';
-export { NftMetadata } from './traditional-nft.mjs';
+export { NftMetadata } from './regular-nft.mjs';
 export { Condition, Details, Limit } from './validator.mjs';
 import 'bn.js';
 import '@solana/web3.js';

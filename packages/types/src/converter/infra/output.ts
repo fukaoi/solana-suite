@@ -1,9 +1,9 @@
 import { PublicKey } from '@solana/web3.js';
-import { InfraSideInput } from '../infra-side/input';
+import { InfraInput } from '../infra/input';
 import { Common } from '../common';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
-export namespace InfraSideOutput {
+export namespace InfraOutput {
   export type Collection = {
     verified: boolean;
     key: PublicKey;
@@ -11,7 +11,7 @@ export namespace InfraSideOutput {
 
   export type OnchainAndOffchain = {
     onchain: Metadata;
-    offchain: InfraSideOutput.Offchain;
+    offchain: InfraOutput.Offchain;
   };
 
   export type Transfer = {
@@ -65,7 +65,7 @@ export namespace InfraSideOutput {
     programId: PublicKey;
   };
 
-  export type Creator = InfraSideInput.Creators;
-  export type Offchain = InfraSideInput.Offchain;
+  export type Creator = InfraInput.Creators;
+  export type Offchain = InfraInput.Offchain;
   export type Uses = Common.Uses;
 }

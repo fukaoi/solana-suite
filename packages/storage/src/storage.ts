@@ -1,15 +1,15 @@
 import { Result } from '~/shared';
 import { Secret } from '~/types/account';
-import { InfraSideInput, UserSideInput } from '~/types/converter';
+import { InfraInput, UserInput } from '~/types/converter';
 import { FileType, StorageType } from '~/types/storage';
 import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
 
 export namespace Storage {
   export const toConvertOffchaindata = (
-    input: UserSideInput.NftMetadata,
+    input: UserInput.NftMetadata,
     sellerFeeBasisPoints: number,
-  ): InfraSideInput.Offchain => {
+  ): InfraInput.Offchain => {
     const data = {
       name: input.name,
       symbol: input.symbol,
@@ -42,7 +42,7 @@ export namespace Storage {
   };
 
   export const upload = async (
-    input: InfraSideInput.Offchain,
+    input: InfraInput.Offchain,
     filePath: FileType,
     storageType: StorageType,
     feePayer?: Secret,

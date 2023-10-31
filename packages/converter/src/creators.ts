@@ -1,21 +1,21 @@
 import {
-  InfraSideInput,
-  InfraSideOutput,
+  InfraInput,
+  InfraOutput,
   Option,
-  UserSideInput,
-  UserSideOutput,
+  UserInput,
+  UserOutput,
 } from '~/types/converter';
 
 export namespace Converter {
   export namespace Creators {
     export const intoInfraSide = (
-      input: Option<UserSideInput.Creators[]> | undefined,
-    ): Option<InfraSideInput.Creators[]> => {
+      input: Option<UserInput.Creators[]> | undefined,
+    ): Option<InfraInput.Creators[]> => {
       if (!input) {
         return null;
       }
       return input.map((data) => {
-        let modify: Option<InfraSideInput.Creators> = null;
+        let modify: Option<InfraInput.Creators> = null;
         modify = {
           address: data.address.toPublicKey(),
           share: data.share,
@@ -27,8 +27,8 @@ export namespace Converter {
     };
 
     export const intoUserSide = (
-      output: Option<InfraSideOutput.Creator[]>,
-    ): UserSideOutput.Creators[] | undefined => {
+      output: Option<InfraOutput.Creator[]>,
+    ): UserOutput.Creators[] | undefined => {
       if (!output) {
         return undefined;
       }

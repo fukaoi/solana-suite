@@ -3,10 +3,10 @@ import { Converter as _Creators } from './creators';
 import { Converter as _Uses } from './uses';
 import { Converter as _Token } from './token-metadata';
 import {
-  InfraSideInput,
-  InfraSideOutput,
-  UserSideInput,
-  UserSideOutput,
+  InfraInput,
+  InfraOutput,
+  UserInput,
+  UserOutput,
 } from '~/types/converter';
 
 import { convertTimestampToDateTime } from '~/shared';
@@ -14,10 +14,10 @@ import { convertTimestampToDateTime } from '~/shared';
 export namespace Converter {
   export namespace NftMetadata {
     export const intoInfraSide = (
-      input: UserSideInput.NftMetadata,
+      input: UserInput.NftMetadata,
       uri: string,
       sellerFeeBasisPoints: number,
-    ): InfraSideInput.MetaplexDataV2 => {
+    ): InfraInput.MetaplexDataV2 => {
       return {
         name: input.name,
         symbol: input.symbol,
@@ -30,9 +30,9 @@ export namespace Converter {
     };
 
     export const intoUserSide = (
-      output: InfraSideOutput.OnchainAndOffchain,
+      output: InfraOutput.OnchainAndOffchain,
       tokenAmount: string,
-    ): UserSideOutput.NftMetadata => {
+    ): UserOutput.NftMetadata => {
       return {
         mint: output.onchain.mint.toString(),
         updateAuthority: output.onchain.updateAuthority.toString(),

@@ -1,7 +1,7 @@
 import { ProvenanceLayer } from './provenance-layer';
 import { debugLog, Result, Try } from '~/shared';
 import { Secret } from '~/types/account';
-import { InfraSideInput } from '~/types/converter';
+import { InfraInput } from '~/types/converter';
 import { FileType } from '~/types/storage';
 
 export namespace Arweave {
@@ -17,7 +17,7 @@ export namespace Arweave {
   };
 
   export const uploadData = (
-    metadata: InfraSideInput.Offchain,
+    metadata: InfraInput.Offchain,
     feePayer: Secret,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {

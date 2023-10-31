@@ -327,7 +327,7 @@ declare namespace Common {
     };
 }
 
-declare namespace InfraSideInput {
+declare namespace InfraInput {
     interface File extends Blob {
         readonly lastModified: number;
         readonly name: string;
@@ -375,14 +375,14 @@ declare namespace InfraSideInput {
     };
 }
 
-declare namespace InfraSideOutput {
+declare namespace InfraOutput {
     type Collection = {
         verified: boolean;
         key: PublicKey;
     };
     type OnchainAndOffchain = {
         onchain: Metadata;
-        offchain: InfraSideOutput.Offchain;
+        offchain: InfraOutput.Offchain;
     };
     type Transfer = {
         parsed: {
@@ -430,8 +430,8 @@ declare namespace InfraSideOutput {
         program: string;
         programId: PublicKey;
     };
-    type Creator = InfraSideInput.Creators;
-    type Offchain = InfraSideInput.Offchain;
+    type Creator = InfraInput.Creators;
+    type Offchain = InfraInput.Offchain;
     type Uses = Common.Uses;
 }
 
@@ -449,7 +449,7 @@ type OwnerInfo = {
     owner: string;
 };
 
-declare namespace UserSideInput {
+declare namespace UserInput {
     type Collection = Pubkey$1;
     type Creators = {
         address: Pubkey$1;
@@ -497,8 +497,8 @@ declare namespace UserSideInput {
     };
 }
 
-declare namespace UserSideOutput {
-    type Creators = UserSideInput.Creators;
+declare namespace UserOutput {
+    type Creators = UserInput.Creators;
     type Collection = {
         address: Pubkey$1;
         verified: boolean;
@@ -514,7 +514,7 @@ declare namespace UserSideOutput {
         isMutable: boolean;
         primarySaleHappened: boolean;
         editionNonce: Option<number>;
-        offchain: InfraSideOutput.Offchain;
+        offchain: InfraOutput.Offchain;
         tokenAmount: string;
         collection?: Collection | undefined;
         creators?: Creators[] | undefined;
@@ -527,7 +527,7 @@ declare namespace UserSideOutput {
         symbol: string;
         uri: string;
         royalty: number;
-        offchain: InfraSideOutput.Offchain;
+        offchain: InfraOutput.Offchain;
         tokenAmount: string;
         attributes?: Common.Attribute | undefined;
         creators?: Creators[] | undefined;
@@ -838,9 +838,9 @@ declare namespace Validator {
     export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
     export const isImageUrl: (image: string) => Result<string, ValidatorError>;
     export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
-    type PickNftStorage = Pick<InfraSideInput.Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
-    type PickNftStorageMetaplex = Pick<UserSideInput.NftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<InfraSideInput.MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
+    type PickNftStorage = Pick<InfraInput.Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
+    type PickNftStorageMetaplex = Pick<UserInput.NftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
+    type PickMetaplex = Pick<InfraInput.MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
     export {};
 }
 declare class ValidatorError extends Error {
@@ -905,17 +905,17 @@ declare const SplToken: {
     thaw: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, feePayer?: Secret | undefined) => Result<Instruction, Error>;
     createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
-    mint: (owner: Pubkey$1, signer: Secret, totalAmount: number, mintDecimal: number, input: UserSideInput.TokenMetadata, feePayer?: Secret | undefined, freezeAuthority?: Pubkey$1 | undefined) => Promise<Result<MintInstruction, Error>>;
+    mint: (owner: Pubkey$1, signer: Secret, totalAmount: number, mintDecimal: number, input: UserInput.TokenMetadata, feePayer?: Secret | undefined, freezeAuthority?: Pubkey$1 | undefined) => Promise<Result<MintInstruction, Error>>;
     getHistory: (target: Pubkey$1, filterType: FilterType, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
     feePayerPartialSignTransfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, mintDecimal: number, feePayer: Pubkey$1) => Promise<Result<PartialSignInstruction, Error>>;
     freeze: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, feePayer?: Secret | undefined) => Result<Instruction, Error>;
-    genericFindByOwner: <T extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata>(owner: Pubkey$1, callback: (result: Result<T[], Error>) => void, tokenStandard: UserSideInput.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
-    genericFindByMint: <T_1 extends UserSideOutput.NftMetadata | UserSideOutput.TokenMetadata>(mint: Pubkey$1, tokenStandard: UserSideInput.TokenStandard) => Promise<Result<T_1, Error>>;
-    findByOwner: (owner: Pubkey$1, onOk: OnOk<UserSideOutput.TokenMetadata>, onErr: OnErr, options?: {
+    genericFindByOwner: <T extends UserOutput.NftMetadata | UserOutput.TokenMetadata>(owner: Pubkey$1, callback: (result: Result<T[], Error>) => void, tokenStandard: UserInput.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
+    genericFindByMint: <T_1 extends UserOutput.NftMetadata | UserOutput.TokenMetadata>(mint: Pubkey$1, tokenStandard: UserInput.TokenStandard) => Promise<Result<T_1, Error>>;
+    findByOwner: (owner: Pubkey$1, onOk: OnOk<UserOutput.TokenMetadata>, onErr: OnErr, options?: {
         sortable?: Sortable | undefined;
         isHolder?: boolean | undefined;
     } | undefined) => void;
-    findByMint: (mint: Pubkey$1) => Promise<Result<UserSideOutput.TokenMetadata, Error>>;
+    findByMint: (mint: Pubkey$1) => Promise<Result<UserOutput.TokenMetadata, Error>>;
     burn: (mint: Pubkey$1, owner: Pubkey$1, signers: Secret[], burnAmount: number, tokenDecimals: number, feePayer?: Secret | undefined) => Result<Instruction, Error>;
     add: (token: Pubkey$1, owner: Pubkey$1, signers: Secret[], totalAmount: number, mintDecimal: number, feePayer?: Secret | undefined) => Promise<Result<Instruction, Error>>;
 };

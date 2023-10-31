@@ -12,7 +12,7 @@ const entry = {
   shared: 'src/shared/index.ts',
   storage: 'src/storage/index.ts',
   'transaction-filter': 'src/transaction-filter/index.ts',
-  'traditional-nft': 'src/traditional-nft/index.ts',
+  'regular-nft': 'src/regular-nft/index.ts',
   validator: 'src/validator/index.ts',
 };
 

@@ -269,7 +269,7 @@ declare namespace Common {
     };
 }
 
-declare namespace InfraSideInput {
+declare namespace InfraInput {
     interface File extends Blob {
         readonly lastModified: number;
         readonly name: string;
@@ -317,7 +317,7 @@ declare namespace InfraSideInput {
     };
 }
 
-declare namespace UserSideInput {
+declare namespace UserInput {
     type Collection = Pubkey;
     type Creators = {
         address: Pubkey;
@@ -392,7 +392,7 @@ declare enum Explorer {
 
 declare namespace Arweave {
     const uploadFile: (filePath: FileType, feePayer: Secret$1) => Promise<Result<string, Error>>;
-    const uploadData: (metadata: InfraSideInput.Offchain, feePayer: Secret$1) => Promise<Result<string, Error>>;
+    const uploadData: (metadata: InfraInput.Offchain, feePayer: Secret$1) => Promise<Result<string, Error>>;
 }
 
 declare namespace ProvenanceLayer {
@@ -423,13 +423,13 @@ declare namespace NftStorage {
      * }
      * @return Promise<Result<string, Error>>
      */
-    const uploadData: (storageData: InfraSideInput.Offchain) => Promise<Result<string, Error>>;
+    const uploadData: (storageData: InfraInput.Offchain) => Promise<Result<string, Error>>;
 }
 
 declare namespace Storage {
-    const toConvertOffchaindata: (input: UserSideInput.NftMetadata, sellerFeeBasisPoints: number) => InfraSideInput.Offchain;
+    const toConvertOffchaindata: (input: UserInput.NftMetadata, sellerFeeBasisPoints: number) => InfraInput.Offchain;
     const uploadFile: (filePath: FileType, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
-    const upload: (input: InfraSideInput.Offchain, filePath: FileType, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
+    const upload: (input: InfraInput.Offchain, filePath: FileType, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
 }
 
 export { Arweave, NftStorage, ProvenanceLayer, Storage };

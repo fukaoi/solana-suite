@@ -42,7 +42,7 @@ declare namespace Common {
     };
 }
 
-declare namespace InfraSideInput {
+declare namespace InfraInput {
     interface File extends Blob {
         readonly lastModified: number;
         readonly name: string;
@@ -90,14 +90,14 @@ declare namespace InfraSideInput {
     };
 }
 
-declare namespace InfraSideOutput {
+declare namespace InfraOutput {
     type Collection = {
         verified: boolean;
         key: PublicKey;
     };
     type OnchainAndOffchain = {
         onchain: Metadata;
-        offchain: InfraSideOutput.Offchain;
+        offchain: InfraOutput.Offchain;
     };
     type Transfer = {
         parsed: {
@@ -145,8 +145,8 @@ declare namespace InfraSideOutput {
         program: string;
         programId: PublicKey;
     };
-    type Creator = InfraSideInput.Creators;
-    type Offchain = InfraSideInput.Offchain;
+    type Creator = InfraInput.Creators;
+    type Offchain = InfraInput.Offchain;
     type Uses = Common.Uses;
 }
 
@@ -159,7 +159,7 @@ type Secret = (string & {
     [secretNominality]: never;
 }) | string;
 
-declare namespace UserSideInput {
+declare namespace UserInput {
     type Collection = Pubkey$1;
     type Creators = {
         address: Pubkey$1;
@@ -207,8 +207,8 @@ declare namespace UserSideInput {
     };
 }
 
-declare namespace UserSideOutput {
-    type Creators = UserSideInput.Creators;
+declare namespace UserOutput {
+    type Creators = UserInput.Creators;
     type Collection = {
         address: Pubkey$1;
         verified: boolean;
@@ -224,7 +224,7 @@ declare namespace UserSideOutput {
         isMutable: boolean;
         primarySaleHappened: boolean;
         editionNonce: Option<number>;
-        offchain: InfraSideOutput.Offchain;
+        offchain: InfraOutput.Offchain;
         tokenAmount: string;
         collection?: Collection | undefined;
         creators?: Creators[] | undefined;
@@ -237,7 +237,7 @@ declare namespace UserSideOutput {
         symbol: string;
         uri: string;
         royalty: number;
-        offchain: InfraSideOutput.Offchain;
+        offchain: InfraOutput.Offchain;
         tokenAmount: string;
         attributes?: Common.Attribute | undefined;
         creators?: Creators[] | undefined;
@@ -248,15 +248,15 @@ declare namespace UserSideOutput {
 
 declare namespace Converter$b {
     namespace Collection {
-        const intoInfraSide: (input: Option<UserSideInput.Collection> | undefined) => Option<InfraSideInput.Collection>;
-        const intoUserSide: (output: Option<InfraSideOutput.Collection>) => UserSideOutput.Collection | undefined;
+        const intoInfraSide: (input: Option<UserInput.Collection> | undefined) => Option<InfraInput.Collection>;
+        const intoUserSide: (output: Option<InfraOutput.Collection>) => UserOutput.Collection | undefined;
     }
 }
 
 declare namespace Converter$a {
     namespace Creators {
-        const intoInfraSide: (input: Option<UserSideInput.Creators[]> | undefined) => Option<InfraSideInput.Creators[]>;
-        const intoUserSide: (output: Option<InfraSideOutput.Creator[]>) => UserSideOutput.Creators[] | undefined;
+        const intoInfraSide: (input: Option<UserInput.Creators[]> | undefined) => Option<InfraInput.Creators[]>;
+        const intoUserSide: (output: Option<InfraOutput.Creator[]>) => UserOutput.Creators[] | undefined;
     }
 }
 
@@ -285,20 +285,20 @@ type History = {
 
 declare namespace Converter$9 {
     namespace Memo {
-        const intoUserSide: (output: InfraSideOutput.Memo, meta: ParsedTransactionWithMeta, outputTransfer?: InfraSideOutput.TransferChecked, mappingTokenAccount?: PostTokenAccount[]) => History | undefined;
+        const intoUserSide: (output: InfraOutput.Memo, meta: ParsedTransactionWithMeta, outputTransfer?: InfraOutput.TransferChecked, mappingTokenAccount?: PostTokenAccount[]) => History | undefined;
     }
 }
 
 declare namespace Converter$8 {
     namespace Mint {
-        const intoUserSide: (output: InfraSideOutput.MintTo, meta: ParsedTransactionWithMeta) => History | undefined;
+        const intoUserSide: (output: InfraOutput.MintTo, meta: ParsedTransactionWithMeta) => History | undefined;
     }
 }
 
 declare namespace Converter$7 {
     namespace NftMetadata {
-        const intoInfraSide: (input: UserSideInput.NftMetadata, uri: string, sellerFeeBasisPoints: number) => InfraSideInput.MetaplexDataV2;
-        const intoUserSide: (output: InfraSideOutput.OnchainAndOffchain, tokenAmount: string) => UserSideOutput.NftMetadata;
+        const intoInfraSide: (input: UserInput.NftMetadata, uri: string, sellerFeeBasisPoints: number) => InfraInput.MetaplexDataV2;
+        const intoUserSide: (output: InfraOutput.OnchainAndOffchain, tokenAmount: string) => UserOutput.NftMetadata;
     }
 }
 
@@ -532,7 +532,7 @@ declare enum Explorer {
 
 declare namespace Converter$6 {
     namespace Properties {
-        const intoInfraSide: (input: UserSideInput.Properties | undefined, callbackFunc: (filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>, storageType: StorageType, feePayer?: Secret) => Promise<InfraSideInput.Properties>;
+        const intoInfraSide: (input: UserInput.Properties | undefined, callbackFunc: (filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>, storageType: StorageType, feePayer?: Secret) => Promise<InfraInput.Properties>;
     }
 }
 
@@ -545,27 +545,27 @@ declare namespace Converter$5 {
 
 declare namespace Converter$4 {
     namespace TokenMetadata {
-        const intoInfraSide: (input: UserSideInput.TokenMetadata, uri: string, sellerFeeBasisPoints: number) => InfraSideInput.MetaplexDataV2;
-        const intoUserSide: (output: InfraSideOutput.OnchainAndOffchain, tokenAmount: string) => UserSideOutput.TokenMetadata;
+        const intoInfraSide: (input: UserInput.TokenMetadata, uri: string, sellerFeeBasisPoints: number) => InfraInput.MetaplexDataV2;
+        const intoUserSide: (output: InfraOutput.OnchainAndOffchain, tokenAmount: string) => UserOutput.TokenMetadata;
         const deleteNullStrings: (str: string) => string;
     }
 }
 
 declare namespace Converter$3 {
     namespace TransferChecked {
-        const intoUserSide: (output: InfraSideOutput.TransferChecked, meta: ParsedTransactionWithMeta, mappingTokenAccount?: PostTokenAccount[]) => History | undefined;
+        const intoUserSide: (output: InfraOutput.TransferChecked, meta: ParsedTransactionWithMeta, mappingTokenAccount?: PostTokenAccount[]) => History | undefined;
     }
 }
 
 declare namespace Converter$2 {
     namespace Transfer {
-        const intoUserSide: (output: InfraSideOutput.Transfer, meta: ParsedTransactionWithMeta) => History | undefined;
+        const intoUserSide: (output: InfraOutput.Transfer, meta: ParsedTransactionWithMeta) => History | undefined;
     }
 }
 
 declare namespace Converter$1 {
     namespace Uses {
-        const intoUserSide: (output: Option<InfraSideOutput.Uses>) => UserSideOutput.Uses | undefined;
+        const intoUserSide: (output: Option<InfraOutput.Uses>) => UserOutput.Uses | undefined;
     }
 }
 

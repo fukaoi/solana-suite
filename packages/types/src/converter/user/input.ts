@@ -3,7 +3,7 @@ import { bignum, Common } from '../common';
 import { Pubkey } from '../../account';
 import { FileType } from '../../storage';
 
-export namespace UserSideInput {
+export namespace UserInput {
   export type Collection = Pubkey;
 
   export type Creators = {

@@ -2,14 +2,14 @@ import { ParsedTransactionWithMeta } from '@solana/web3.js';
 import { convertTimestampToDateTime } from '~/shared';
 import { PostTokenAccount } from '~/types/transaction-filter';
 import { History } from '~/types/history';
-import { InfraSideOutput } from '~/types/converter';
+import { InfraOutput } from '~/types/converter';
 
 export namespace Converter {
   export namespace Memo {
     export const intoUserSide = (
-      output: InfraSideOutput.Memo,
+      output: InfraOutput.Memo,
       meta: ParsedTransactionWithMeta,
-      outputTransfer?: InfraSideOutput.TransferChecked,
+      outputTransfer?: InfraOutput.TransferChecked,
       mappingTokenAccount?: PostTokenAccount[],
     ): History | undefined => {
       const history: History = {};

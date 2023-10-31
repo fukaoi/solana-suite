@@ -4,26 +4,26 @@ import { Storage } from '~/storage';
 import { Node } from '~/node';
 import { debugLog, Result, Try } from '~/shared';
 import { KeypairAccount } from '~/account';
-import { UserSideInput } from '~/types/converter';
+import { UserInput } from '~/types/converter';
 import { Validator, ValidatorError } from '~/validator';
 import { Converter } from '~/converter';
-import { Phantom } from '~/types/phantom';
+import { PhantomProvider } from '~/types/phantom';
 
 export namespace PhantomMetaplex {
   /**
    * Upload content and NFT mint
    *
-   * @param {UserSideInput.NftMetadata}  input
+   * @param {UserInput.NftMetadata}  input
    * @param {Phantom} phantom        phantom wallet object
    * @return Promise<Result<Instruction, Error>>
    */
   export const mint = async (
-    input: UserSideInput.NftMetadata,
+    input: UserInput.NftMetadata,
     cluster: string,
-    phantom: Phantom,
+    phantom: PhantomProvider,
   ): Promise<Result<string, Error | ValidatorError>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<UserSideInput.NftMetadata>(input);
+      const valid = Validator.checkAll<UserInput.NftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -37,7 +37,7 @@ export namespace PhantomMetaplex {
       //Convert porperties, Upload content
       const properties = await Converter.Properties.intoInfraSide(
         input.properties,
-        Storage.uploadContent,
+        Storage.uploadFile,
         input.storageType,
       );
 
@@ -48,7 +48,7 @@ export namespace PhantomMetaplex {
         { ...input, properties },
         sellerFeeBasisPoints,
       );
-      const uploaded = await Storage.uploadMetaAndContent(
+      const uploaded = await Storage.upload(
         nftStorageMetadata,
         input.filePath,
         input.storageType,
@@ -77,16 +77,16 @@ export namespace PhantomMetaplex {
 
       const insts = await RegularNft.createMintInstructions(
         mint.toPublicKey(),
-        phantom.publicKey,
+        phantom.publicKey!,
         datav2,
-        phantom.publicKey,
+        phantom.publicKey!,
         isMutable,
       );
 
       insts.forEach((inst: TransactionInstruction) => {
         tx.add(inst);
       });
-      tx.feePayer = phantom.publicKey;
+      tx.feePayer = phantom.publicKey!;
       const blockhashObj = await connection.getLatestBlockhashAndContext();
       tx.recentBlockhash = blockhashObj.value.blockhash;
       tx.partialSign(mint.toKeypair());

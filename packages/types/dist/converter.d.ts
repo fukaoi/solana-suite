@@ -41,7 +41,7 @@ declare namespace Common {
     };
 }
 
-declare namespace InfraSideInput {
+declare namespace InfraInput {
     interface File extends Blob {
         readonly lastModified: number;
         readonly name: string;
@@ -89,14 +89,14 @@ declare namespace InfraSideInput {
     };
 }
 
-declare namespace InfraSideOutput {
+declare namespace InfraOutput {
     type Collection = {
         verified: boolean;
         key: PublicKey;
     };
     type OnchainAndOffchain = {
         onchain: Metadata;
-        offchain: InfraSideOutput.Offchain;
+        offchain: InfraOutput.Offchain;
     };
     type Transfer = {
         parsed: {
@@ -144,12 +144,12 @@ declare namespace InfraSideOutput {
         program: string;
         programId: PublicKey;
     };
-    type Creator = InfraSideInput.Creators;
-    type Offchain = InfraSideInput.Offchain;
+    type Creator = InfraInput.Creators;
+    type Offchain = InfraInput.Offchain;
     type Uses = Common.Uses;
 }
 
-declare namespace UserSideInput {
+declare namespace UserInput {
     type Collection = Pubkey$1;
     type Creators = {
         address: Pubkey$1;
@@ -197,8 +197,8 @@ declare namespace UserSideInput {
     };
 }
 
-declare namespace UserSideOutput {
-    type Creators = UserSideInput.Creators;
+declare namespace UserOutput {
+    type Creators = UserInput.Creators;
     type Collection = {
         address: Pubkey$1;
         verified: boolean;
@@ -214,7 +214,7 @@ declare namespace UserSideOutput {
         isMutable: boolean;
         primarySaleHappened: boolean;
         editionNonce: Option<number>;
-        offchain: InfraSideOutput.Offchain;
+        offchain: InfraOutput.Offchain;
         tokenAmount: string;
         collection?: Collection | undefined;
         creators?: Creators[] | undefined;
@@ -227,7 +227,7 @@ declare namespace UserSideOutput {
         symbol: string;
         uri: string;
         royalty: number;
-        offchain: InfraSideOutput.Offchain;
+        offchain: InfraOutput.Offchain;
         tokenAmount: string;
         attributes?: Common.Attribute | undefined;
         creators?: Creators[] | undefined;
@@ -236,4 +236,4 @@ declare namespace UserSideOutput {
     };
 }
 
-export { Common, InfraSideInput, InfraSideOutput, Option, UserSideInput, UserSideOutput, bignum };
+export { Common, InfraInput, InfraOutput, Option, UserInput, UserOutput, bignum };

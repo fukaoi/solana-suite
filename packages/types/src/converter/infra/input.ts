@@ -1,7 +1,7 @@
 import { Common, Option } from '../common';
 import { PublicKey } from '@solana/web3.js';
 
-export namespace InfraSideInput {
+export namespace InfraInput {
   export interface File extends Blob {
     readonly lastModified: number;
     readonly name: string;

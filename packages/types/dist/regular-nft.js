@@ -13,7 +13,7 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/traditional-nft/index.ts
-var traditional_nft_exports = {};
-module.exports = __toCommonJS(traditional_nft_exports);
-//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiLi4vc3JjL3RyYWRpdGlvbmFsLW5mdC9pbmRleC50cyJdLAogICJzb3VyY2VzQ29udGVudCI6IFsiaW1wb3J0IHsgVXNlclNpZGVPdXRwdXQgfSBmcm9tICcuLi9jb252ZXJ0ZXInO1xuXG5leHBvcnQgdHlwZSBOZnRNZXRhZGF0YSA9IFVzZXJTaWRlT3V0cHV0Lk5mdE1ldGFkYXRhO1xuIl0sCiAgIm1hcHBpbmdzIjogIjs7Ozs7Ozs7Ozs7Ozs7OztBQUFBO0FBQUE7IiwKICAibmFtZXMiOiBbXQp9Cg==
+// src/regular-nft/index.ts
+var regular_nft_exports = {};
+module.exports = __toCommonJS(regular_nft_exports);
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiLi4vc3JjL3JlZ3VsYXItbmZ0L2luZGV4LnRzIl0sCiAgInNvdXJjZXNDb250ZW50IjogWyJpbXBvcnQgeyBVc2VyT3V0cHV0IH0gZnJvbSAnLi4vY29udmVydGVyJztcblxuZXhwb3J0IHR5cGUgTmZ0TWV0YWRhdGEgPSBVc2VyT3V0cHV0Lk5mdE1ldGFkYXRhO1xuIl0sCiAgIm1hcHBpbmdzIjogIjs7Ozs7Ozs7Ozs7Ozs7OztBQUFBO0FBQUE7IiwKICAibmFtZXMiOiBbXQp9Cg==
