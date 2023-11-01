@@ -1,35 +1,32 @@
 import { Converter as _Creators } from './creators';
 import { Converter as _Uses } from './uses';
-import {
-  InfraInput,
-  InfraOutput,
-  UserInput,
-  UserOutput,
-} from '~/types/converter';
-
+import { InputTokenMetadata, TokenMetadata } from '~/types/spl-token';
+import { MetaplexDataV2 } from '~/types/regular-nft';
+import { OnchainAndOffchain } from '~/types/storage';
 import { convertTimestampToDateTime } from '~/shared';
+
 export namespace Converter {
   export namespace TokenMetadata {
     export const intoInfraSide = (
-      input: UserInput.TokenMetadata,
+      input: InputTokenMetadata,
       uri: string,
       sellerFeeBasisPoints: number,
-    ): InfraInput.MetaplexDataV2 => {
+    ): MetaplexDataV2 => {
       return {
         name: input.name,
         symbol: input.symbol,
         uri,
         sellerFeeBasisPoints,
-        creators: _Creators.Creators.intoInfraSide(input.creators),
+        creators: _Creators.Creators.intoInfra(input.creators),
         collection: null,
         uses: input.uses || null,
       };
     };
 
     export const intoUserSide = (
-      output: InfraOutput.OnchainAndOffchain,
+      output: OnchainAndOffchain,
       tokenAmount: string,
-    ): UserOutput.TokenMetadata => {
+    ): TokenMetadata => {
       return {
         mint: output.onchain.mint.toString(),
         royalty: output.onchain.data.sellerFeeBasisPoints,
@@ -37,7 +34,7 @@ export namespace Converter {
         symbol: deleteNullStrings(output.onchain.data.symbol),
         tokenAmount: tokenAmount,
         uri: deleteNullStrings(output.onchain.data.uri),
-        creators: _Creators.Creators.intoUserSide(output.onchain.data.creators),
+        creators: _Creators.Creators.intoUser(output.onchain.data.creators),
         uses: _Uses.Uses.intoUserSide(output.onchain.uses),
         dateTime: convertTimestampToDateTime(output.offchain.created_at),
         offchain: output.offchain,

@@ -1,12 +1,12 @@
 import { overwriteObject, Result } from '~/shared';
 import { Secret } from '~/types/account';
-import { InfraInput, UserInput } from '~/types/converter';
-import { FileType, StorageType } from '~/types/storage';
+import {} from '~/types/converter';
+import { FileType, Properties, StorageType } from '~/types/storage';
 
 export namespace Converter {
   export namespace Properties {
-    export const intoInfraSide = async (
-      input: UserInput.Properties | undefined,
+    export const intoInfra = async (
+      input: Properties | undefined,
       callbackFunc: (
         filePath: FileType,
         storageType: StorageType,
@@ -14,7 +14,7 @@ export namespace Converter {
       ) => Promise<Result<string, Error>>,
       storageType: StorageType,
       feePayer?: Secret,
-    ): Promise<InfraInput.Properties> => {
+    ): Promise<Properties> => {
       if (!input || !input.files) {
         return {};
       }
@@ -36,7 +36,7 @@ export namespace Converter {
           ]);
         }),
       );
-      return { ...input, files } as InfraInput.Properties;
+      return { ...input, files } as Properties;
     };
   }
 }

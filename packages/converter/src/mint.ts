@@ -1,12 +1,12 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
-import { InfraOutput } from '~/types/converter';
+import { MintTo } from '~/types/transaction-filter';
 import { History } from '~/types/history';
 import { convertTimestampToDateTime } from '~/shared';
 
 export namespace Converter {
   export namespace Mint {
     export const intoUserSide = (
-      output: InfraOutput.MintTo,
+      output: MintTo,
       meta: ParsedTransactionWithMeta,
     ): History | undefined => {
       const history: History = {};

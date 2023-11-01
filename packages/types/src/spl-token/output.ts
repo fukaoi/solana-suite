@@ -1,7 +1,5 @@
 import { Attribute, Offchain } from '../storage';
-import { Creators, Option, Uses } from './common';
-
-export type Collection = { address: Pubkey; verified: boolean };
+import { Collection, Creators, Option, Uses } from '../regular-nft';
 
 /////////// NFT //////////////
 export type NftMetadata = {

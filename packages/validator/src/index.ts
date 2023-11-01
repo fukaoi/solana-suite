@@ -1,7 +1,8 @@
 import { Result, Try } from '~/shared';
 import { Converter } from '~/converter';
-import { InfraInput, UserInput } from '~/types/converter';
 import { Details, Limit } from '~/types/validator';
+import { InputNftMetadata, MetaplexDataV2 } from '~/types/regular-nft';
+import { Offchain } from '~/types/storage';
 
 export namespace Validator {
   export namespace Message {
@@ -158,15 +159,15 @@ export namespace Validator {
   };
 
   type PickNftStorage = Pick<
-    InfraInput.Offchain,
+    Offchain,
     'name' | 'symbol' | 'image' | 'seller_fee_basis_points'
   >;
   type PickNftStorageMetaplex = Pick<
-    UserInput.NftMetadata,
+    InputNftMetadata,
     'name' | 'symbol' | 'royalty' | 'filePath'
   >;
   type PickMetaplex = Pick<
-    InfraInput.MetaplexDataV2,
+    MetaplexDataV2,
     'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'
   >;
 

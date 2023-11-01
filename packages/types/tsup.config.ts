@@ -11,6 +11,7 @@ const entry = {
   phantom: 'src/phantom/index.ts',
   shared: 'src/shared/index.ts',
   storage: 'src/storage/index.ts',
+  'spl-token': 'src/spl-token/index.ts',
   'transaction-filter': 'src/transaction-filter/index.ts',
   'regular-nft': 'src/regular-nft/index.ts',
   validator: 'src/validator/index.ts',

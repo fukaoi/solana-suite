@@ -1,21 +1,17 @@
-import {
-  InfraInput,
-  InfraOutput,
-  Option,
-  UserInput,
-  UserOutput,
-} from '~/types/converter';
+import { Creators, Option } from '~/types/regular-nft';
+
+import { InternalCreators } from '~/types/converter';
 
 export namespace Converter {
   export namespace Creators {
-    export const intoInfraSide = (
-      input: Option<UserInput.Creators[]> | undefined,
-    ): Option<InfraInput.Creators[]> => {
+    export const intoInfra = (
+      input: Option<Creators[]> | undefined,
+    ): Option<InternalCreators[]> => {
       if (!input) {
         return null;
       }
       return input.map((data) => {
-        let modify: Option<InfraInput.Creators> = null;
+        let modify: Option<InternalCreators> = null;
         modify = {
           address: data.address.toPublicKey(),
           share: data.share,
@@ -26,9 +22,9 @@ export namespace Converter {
       });
     };
 
-    export const intoUserSide = (
-      output: Option<InfraOutput.Creator[]>,
-    ): UserOutput.Creators[] | undefined => {
+    export const intoUser = (
+      output: Option<InternalCreators[]>,
+    ): Creators[] | undefined => {
       if (!output) {
         return undefined;
       }

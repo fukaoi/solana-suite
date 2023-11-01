@@ -1,7 +1,5 @@
 import BN from 'bn.js';
 
-export type Collection = Pubkey;
-
 export type bignum = number | BN;
 
 export type Option<T> = T | null;

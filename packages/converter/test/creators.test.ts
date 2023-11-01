@@ -34,7 +34,7 @@ test.skip('To input convert', async (t) => {
       verified: false,
     },
   ];
-  const results = Converter.Creators.intoInfraSide(input);
+  const results = Converter.Creators.intoInfra(input);
   t.log('# converted creators', results);
   if (results) {
     results.forEach((res, i) => {
@@ -47,6 +47,6 @@ test.skip('To input convert', async (t) => {
 });
 
 test('To un-define convert', async (t) => {
-  const res = Converter.Creators.intoInfraSide([]);
+  const res = Converter.Creators.intoInfra([]);
   t.deepEqual(res, []);
 });

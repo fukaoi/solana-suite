@@ -2,37 +2,37 @@ import { Converter as _Collection } from './collection';
 import { Converter as _Creators } from './creators';
 import { Converter as _Uses } from './uses';
 import { Converter as _Token } from './token-metadata';
-import {
-  InfraInput,
-  InfraOutput,
-  UserInput,
-  UserOutput,
-} from '~/types/converter';
-
 import { convertTimestampToDateTime } from '~/shared';
+import {
+  InputNftMetadata,
+  MetaplexDataV2,
+  NftMetadata,
+} from '~/types/regular-nft';
+
+import { OnchainAndOffchain } from '~/types/storage';
 
 export namespace Converter {
   export namespace NftMetadata {
-    export const intoInfraSide = (
-      input: UserInput.NftMetadata,
+    export const intoInfra = (
+      input: InputNftMetadata,
       uri: string,
       sellerFeeBasisPoints: number,
-    ): InfraInput.MetaplexDataV2 => {
+    ): MetaplexDataV2 => {
       return {
         name: input.name,
         symbol: input.symbol,
         uri,
         sellerFeeBasisPoints,
-        creators: _Creators.Creators.intoInfraSide(input.creators),
-        collection: _Collection.Collection.intoInfraSide(input.collection),
+        creators: _Creators.Creators.intoInfra(input.creators),
+        collection: _Collection.Collection.intoInfra(input.collection),
         uses: input.uses || null,
       };
     };
 
-    export const intoUserSide = (
-      output: InfraOutput.OnchainAndOffchain,
+    export const intoUser = (
+      output: OnchainAndOffchain,
       tokenAmount: string,
-    ): UserOutput.NftMetadata => {
+    ): NftMetadata => {
       return {
         mint: output.onchain.mint.toString(),
         updateAuthority: output.onchain.updateAuthority.toString(),
@@ -45,11 +45,9 @@ export namespace Converter {
         uri: _Token.TokenMetadata.deleteNullStrings(output.onchain.data.uri),
         isMutable: output.onchain.isMutable,
         primarySaleHappened: output.onchain.primarySaleHappened,
-        creators: _Creators.Creators.intoUserSide(output.onchain.data.creators),
+        creators: _Creators.Creators.intoUser(output.onchain.data.creators),
         editionNonce: output.onchain.editionNonce,
-        collection: _Collection.Collection.intoUserSide(
-          output.onchain.collection,
-        ),
+        collection: _Collection.Collection.intoUser(output.onchain.collection),
         uses: _Uses.Uses.intoUserSide(output.onchain.uses),
         dateTime: convertTimestampToDateTime(output.offchain.created_at),
         offchain: output.offchain,

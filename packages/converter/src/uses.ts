@@ -1,10 +1,8 @@
-import { InfraOutput, Option, UserOutput } from '~/types/converter';
+import { Option, Uses } from '~/types/regular-nft';
 
 export namespace Converter {
   export namespace Uses {
-    export const intoUserSide = (
-      output: Option<InfraOutput.Uses>,
-    ): UserOutput.Uses | undefined => {
+    export const intoUserSide = (output: Option<Uses>): Uses | undefined => {
       if (!output) {
         return undefined;
       }

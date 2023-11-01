@@ -1,268 +1,154 @@
-import BN from 'bn.js';
 import { PublicKey, ParsedTransactionWithMeta, TransactionSignature, Keypair } from '@solana/web3.js';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
+import BN from 'bn.js';
+
+type InternalCollection = {
+    key: PublicKey;
+    verified: boolean;
+};
+type InternalCreators = {
+    address: PublicKey;
+    verified: boolean;
+    share: number;
+};
 
 type FileType = string | File;
 
 type StorageType = 'nftStorage' | 'arweave' | string;
-
-type Option<T> = T | null;
-type bignum = number | BN;
-declare namespace Common {
-    type Properties = {
-        creators?: {
-            address?: string;
-            share?: number;
-            [key: string]: unknown;
-        }[];
-        files?: {
-            type?: string;
-            filePath?: FileType;
-            [key: string]: unknown;
-        }[];
-        [key: string]: unknown;
-    };
-    type Attribute = {
-        trait_type?: string;
-        value?: string;
-        [key: string]: unknown;
-    };
-    enum UseMethod {
-        Burn = 0,
-        Multiple = 1,
-        Single = 2
-    }
-    type Uses = {
-        useMethod: UseMethod;
-        remaining: bignum;
-        total: bignum;
-    };
-    type Options = {
-        [key: string]: unknown;
-    };
-}
-
-declare namespace InfraInput {
-    interface File extends Blob {
-        readonly lastModified: number;
-        readonly name: string;
-    }
-    type StorageNftStorageMetadata = {
-        storageType?: 'nftStorage';
-    };
-    type StorageArweaveMetadata = {
-        storageType?: 'arweave';
-    };
-    type Collection = {
-        key: PublicKey;
-        verified: boolean;
-    };
-    type Creators = {
-        address: PublicKey;
-        verified: boolean;
-        share: number;
-    };
-    type Properties = Common.Properties;
-    type Offchain = {
+type OnchainAndOffchain = {
+    onchain: Metadata;
+    offchain: Offchain;
+};
+type Offchain = {
+    name?: string;
+    symbol?: string;
+    description?: string;
+    seller_fee_basis_points?: number;
+    image?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    collection?: {
         name?: string;
-        symbol?: string;
-        description?: string;
-        seller_fee_basis_points?: number;
-        image?: string;
-        external_url?: string;
-        attributes?: Common.Attribute[];
-        properties?: Common.Properties;
-        collection?: {
-            name?: string;
-            family?: string;
-            [key: string]: unknown;
-        };
-        created_at?: number;
+        family?: string;
+        [key: string]: unknown;
     };
-    type MetaplexDataV2 = {
-        name: string;
-        symbol: string;
-        uri: string;
-        sellerFeeBasisPoints: number;
-        creators: Option<Creators[]>;
-        collection: Option<Collection>;
-        uses: Option<Common.Uses>;
-    };
-}
-
-declare namespace InfraOutput {
-    type Collection = {
-        verified: boolean;
-        key: PublicKey;
-    };
-    type OnchainAndOffchain = {
-        onchain: Metadata;
-        offchain: InfraOutput.Offchain;
-    };
-    type Transfer = {
-        parsed: {
-            info: {
-                destination: Pubkey;
-                source: Pubkey;
-                lamports: number;
-            };
-            type: string;
-        };
-        program: string;
-        programId?: PublicKey;
-    };
-    type MintTo = {
-        parsed: {
-            info: {
-                account: Pubkey;
-                mint: Pubkey;
-                mintAuthority: Pubkey;
-                tokenAmount: string;
-            };
-            type: string;
-        };
-        program: string;
-        programId?: PublicKey;
-    };
-    type MintToChecked = MintTo;
-    type TransferChecked = {
-        parsed: {
-            info: {
-                destination: Pubkey;
-                mint: Pubkey;
-                multisigAuthority: Pubkey;
-                signers: Pubkey[];
-                source: Pubkey;
-                tokenAmount: string;
-            };
-            type: string;
-        };
-        program: string;
-        programId?: PublicKey;
-    };
-    type Memo = {
-        parsed: string;
-        program: string;
-        programId: PublicKey;
-    };
-    type Creator = InfraInput.Creators;
-    type Offchain = InfraInput.Offchain;
-    type Uses = Common.Uses;
-}
-
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey$1 = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret = (string & {
-    [secretNominality]: never;
-}) | string;
-
-declare namespace UserInput {
-    type Collection = Pubkey$1;
-    type Creators = {
-        address: Pubkey$1;
-        share: number;
-        verified: boolean;
-    };
-    type Properties = Common.Properties;
-    enum TokenStandard {
-        NonFungible = 0,
-        FungibleAsset = 1,
-        Fungible = 2,
-        NonFungibleEdition = 3,
-        ProgrammableNonFungible = 4
-    }
-    type NftMetadata = {
-        name: string;
-        symbol: string;
-        royalty: number;
-        storageType?: StorageType;
+    created_at?: number;
+};
+type Properties = {
+    creators?: {
+        address?: string;
+        share?: number;
+        [key: string]: unknown;
+    }[];
+    files?: {
+        type?: string;
         filePath?: FileType;
-        uri?: string;
-        isMutable?: boolean;
-        description?: string;
-        external_url?: string;
-        attributes?: Common.Attribute[];
-        properties?: Properties;
-        maxSupply?: bignum;
-        creators?: Creators[];
-        uses?: Common.Uses;
-        collection?: Collection;
-        options?: Common.Options;
-    };
-    type TokenMetadata = {
-        name: string;
-        symbol: string;
-        filePath?: FileType;
-        uri?: string;
-        storageType?: StorageType;
-        description?: string;
-        royalty?: number;
-        uses?: Common.Uses;
-        creators?: Creators[];
-        attributes?: Common.Attribute[];
-        options?: Common.Options;
-    };
-}
+        [key: string]: unknown;
+    }[];
+    [key: string]: unknown;
+};
+type Attribute = {
+    trait_type?: string;
+    value?: string;
+    [key: string]: unknown;
+};
 
-declare namespace UserOutput {
-    type Creators = UserInput.Creators;
-    type Collection = {
-        address: Pubkey$1;
-        verified: boolean;
-    };
-    type Uses = Common.Uses;
-    type NftMetadata = {
-        mint: string;
-        updateAuthority: string;
-        royalty: number;
-        name: string;
-        symbol: string;
-        uri: string;
-        isMutable: boolean;
-        primarySaleHappened: boolean;
-        editionNonce: Option<number>;
-        offchain: InfraOutput.Offchain;
-        tokenAmount: string;
-        collection?: Collection | undefined;
-        creators?: Creators[] | undefined;
-        uses?: Common.Uses | undefined;
-        dateTime?: Date | undefined;
-    };
-    type TokenMetadata = {
-        mint: string;
-        name: string;
-        symbol: string;
-        uri: string;
-        royalty: number;
-        offchain: InfraOutput.Offchain;
-        tokenAmount: string;
-        attributes?: Common.Attribute | undefined;
-        creators?: Creators[] | undefined;
-        uses?: Common.Uses | undefined;
-        dateTime?: Date | undefined;
-    };
+type bignum = number | BN;
+type Option<T> = T | null;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
 }
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type Creators = {
+    address: Pubkey;
+    share: number;
+    verified: boolean;
+};
+
+type InputCollection = Pubkey;
+type Options = {
+    [key: string]: unknown;
+};
+type MetaplexDataV2 = {
+    name: string;
+    symbol: string;
+    uri: string;
+    sellerFeeBasisPoints: number;
+    creators: Option<InternalCreators[]>;
+    collection: Option<InternalCollection>;
+    uses: Option<Uses>;
+};
+type InputNftMetadata = {
+    name: string;
+    symbol: string;
+    royalty: number;
+    storageType?: StorageType;
+    filePath?: FileType;
+    uri?: string;
+    isMutable?: boolean;
+    description?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    maxSupply?: bignum;
+    creators?: Creators[];
+    uses?: Uses;
+    collection?: InputCollection;
+    options?: Options;
+};
 
 declare namespace Converter$b {
     namespace Collection {
-        const intoInfraSide: (input: Option<UserInput.Collection> | undefined) => Option<InfraInput.Collection>;
-        const intoUserSide: (output: Option<InfraOutput.Collection>) => UserOutput.Collection | undefined;
+        const intoInfra: (input: Option<InputCollection> | undefined) => Option<InternalCollection>;
+        const intoUser: (output: Option<InternalCollection>) => Collection | undefined;
     }
 }
 
 declare namespace Converter$a {
     namespace Creators {
-        const intoInfraSide: (input: Option<UserInput.Creators[]> | undefined) => Option<InfraInput.Creators[]>;
-        const intoUserSide: (output: Option<InfraOutput.Creator[]>) => UserOutput.Creators[] | undefined;
+        const intoInfra: (input: Option<Creators[]> | undefined) => Option<InternalCreators[]>;
+        const intoUser: (output: Option<InternalCreators[]>) => Creators[] | undefined;
     }
 }
 
 type PostTokenAccount = {
     account: string;
     owner: string;
+};
+type MintTo = {
+    parsed: {
+        info: {
+            account: Pubkey;
+            mint: Pubkey;
+            mintAuthority: Pubkey;
+            tokenAmount: string;
+        };
+        type: string;
+    };
+    program: string;
+    programId?: PublicKey;
+};
+type TransferChecked = {
+    parsed: {
+        info: {
+            destination: Pubkey;
+            mint: Pubkey;
+            multisigAuthority: Pubkey;
+            signers: Pubkey[];
+            source: Pubkey;
+            tokenAmount: string;
+        };
+        type: string;
+    };
+    program: string;
+    programId?: PublicKey;
 };
 
 type History = {
@@ -285,20 +171,20 @@ type History = {
 
 declare namespace Converter$9 {
     namespace Memo {
-        const intoUserSide: (output: InfraOutput.Memo, meta: ParsedTransactionWithMeta, outputTransfer?: InfraOutput.TransferChecked, mappingTokenAccount?: PostTokenAccount[]) => History | undefined;
+        const intoUserSide: (output: Memo, meta: ParsedTransactionWithMeta, outputTransfer?: TransferChecked, mappingTokenAccount?: PostTokenAccount[]) => History | undefined;
     }
 }
 
 declare namespace Converter$8 {
     namespace Mint {
-        const intoUserSide: (output: InfraOutput.MintTo, meta: ParsedTransactionWithMeta) => History | undefined;
+        const intoUserSide: (output: MintTo, meta: ParsedTransactionWithMeta) => History | undefined;
     }
 }
 
 declare namespace Converter$7 {
     namespace NftMetadata {
-        const intoInfraSide: (input: UserInput.NftMetadata, uri: string, sellerFeeBasisPoints: number) => InfraInput.MetaplexDataV2;
-        const intoUserSide: (output: InfraOutput.OnchainAndOffchain, tokenAmount: string) => UserOutput.NftMetadata;
+        const intoInfra: (input: InputNftMetadata, uri: string, sellerFeeBasisPoints: number) => MetaplexDataV2;
+        const intoUser: (output: OnchainAndOffchain, tokenAmount: string) => NftMetadata;
     }
 }
 
@@ -505,6 +391,11 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+declare const secretNominality: unique symbol;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
+
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -532,7 +423,7 @@ declare enum Explorer {
 
 declare namespace Converter$6 {
     namespace Properties {
-        const intoInfraSide: (input: UserInput.Properties | undefined, callbackFunc: (filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>, storageType: StorageType, feePayer?: Secret) => Promise<InfraInput.Properties>;
+        const intoInfra: (input: Properties | undefined, callbackFunc: (filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>, storageType: StorageType, feePayer?: Secret) => Promise<Properties>;
     }
 }
 
@@ -543,29 +434,43 @@ declare namespace Converter$5 {
     }
 }
 
+type InputTokenMetadata = {
+    name: string;
+    symbol: string;
+    filePath?: FileType;
+    uri?: string;
+    storageType?: StorageType;
+    description?: string;
+    royalty?: number;
+    uses?: Uses;
+    creators?: Creators[];
+    attributes?: Attribute[];
+    options?: Options;
+};
+
 declare namespace Converter$4 {
     namespace TokenMetadata {
-        const intoInfraSide: (input: UserInput.TokenMetadata, uri: string, sellerFeeBasisPoints: number) => InfraInput.MetaplexDataV2;
-        const intoUserSide: (output: InfraOutput.OnchainAndOffchain, tokenAmount: string) => UserOutput.TokenMetadata;
+        const intoInfraSide: (input: InputTokenMetadata, uri: string, sellerFeeBasisPoints: number) => MetaplexDataV2;
+        const intoUserSide: (output: OnchainAndOffchain, tokenAmount: string) => TokenMetadata;
         const deleteNullStrings: (str: string) => string;
     }
 }
 
 declare namespace Converter$3 {
     namespace TransferChecked {
-        const intoUserSide: (output: InfraOutput.TransferChecked, meta: ParsedTransactionWithMeta, mappingTokenAccount?: PostTokenAccount[]) => History | undefined;
+        const intoUserSide: (output: TransferChecked, meta: ParsedTransactionWithMeta, mappingTokenAccount?: PostTokenAccount[]) => History | undefined;
     }
 }
 
 declare namespace Converter$2 {
     namespace Transfer {
-        const intoUserSide: (output: InfraOutput.Transfer, meta: ParsedTransactionWithMeta) => History | undefined;
+        const intoUserSide: (output: Transfer, meta: ParsedTransactionWithMeta) => History | undefined;
     }
 }
 
 declare namespace Converter$1 {
     namespace Uses {
-        const intoUserSide: (output: Option<InfraOutput.Uses>) => UserOutput.Uses | undefined;
+        const intoUserSide: (output: Option<Uses>) => Uses | undefined;
     }
 }
 

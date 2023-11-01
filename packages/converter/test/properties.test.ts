@@ -1,12 +1,12 @@
 import test from 'ava';
 import { Converter } from '../src/properties';
-import { Common, UserSideInput } from '~/types/converter';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Storage } from '~/storage';
+import { Properties } from '~/types/storage';
 
 test('To input convert', async (t) => {
   const asset = RandomAsset.get();
-  const input: UserSideInput.Properties = {
+  const input: Properties = {
     files: [
       {
         type: 'image/jpeg',
@@ -19,7 +19,7 @@ test('To input convert', async (t) => {
     ],
   };
 
-  const output = await Converter.Properties.intoInfraSide(
+  const output = await Converter.Properties.intoInfra(
     input,
     /* @ts-ignore */
     Storage.uploadFile,
@@ -29,7 +29,7 @@ test('To input convert', async (t) => {
   if (!output || !output.files) {
     t.fail('Miss match output.files');
   } else {
-    output.files.forEach(async (file: Common.Properties) => {
+    output.files.forEach(async (file: Properties) => {
       t.log('# uploade content', file);
       t.not(file, null);
     });

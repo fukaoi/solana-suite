@@ -1,3 +1,12 @@
-export * from './infra';
-export * from './user';
-export * from './common';
+import { PublicKey } from '@solana/web3.js';
+
+export type InternalCollection = {
+  key: PublicKey;
+  verified: boolean;
+};
+
+export type InternalCreators = {
+  address: PublicKey;
+  verified: boolean;
+  share: number;
+};

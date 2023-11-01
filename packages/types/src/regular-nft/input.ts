@@ -1,7 +1,9 @@
 import { Attribute, Properties, StorageType } from '../storage';
 import { FileType } from '../storage';
-import { bignum, Collection, Creators, Option, Uses } from './common';
+import { InternalCreators, InternalCollection } from '../converter';
+import { bignum, Creators, Option, Uses } from './common';
 
+export type InputCollection = Pubkey;
 export type Options = { [key: string]: unknown };
 
 export type MetaplexDataV2 = {
@@ -9,8 +11,8 @@ export type MetaplexDataV2 = {
   symbol: string;
   uri: string;
   sellerFeeBasisPoints: number;
-  creators: Option<Creators[]>;
-  collection: Option<Collection>;
+  creators: Option<InternalCreators[]>;
+  collection: Option<InternalCollection>;
   uses: Option<Uses>;
 };
 export enum TokenStandard {
@@ -36,7 +38,7 @@ export type InputNftMetadata = {
   maxSupply?: bignum;
   creators?: Creators[];
   uses?: Uses;
-  collection?: Collection;
+  collection?: InputCollection;
   options?: Options;
 };
 
