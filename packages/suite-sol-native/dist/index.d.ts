@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, PublicKey, TransactionInstruction, Keypair, Connection, Commitment } from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
 
 declare abstract class AbstractResult$1<T, E extends Error> {
@@ -205,48 +205,226 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
-type Find = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey$1 = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
+type OwnerInfo = {
+    sol: number;
+    lamports: number;
+    owner: string;
 };
 
-type History = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
+/**
+ * Get Associated token Account.
+ * if not created, create new token accouint
+ *
+ * @param {Pubkey} mint
+ * @param {Pubkey} owner
+ * @param {Secret} feePayer
+ * @param {boolean} allowOwnerOffCurve
+ * @returns Promise<string | Instruction>
+ */
+declare namespace AssociatedAccount {
+    /**
+     * Retry function if create new token accouint
+     *
+     * @param {Pubkey} mint
+     * @param {Pubkey} owner
+     * @param {Secret} feePayer
+     * @returns Promise<string>
+     */
+    const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret) => Promise<string>;
+    /**
+     * [Main logic]Get Associated token Account.
+     * if not created, create new token accouint
+     *
+     * @param {Pubkey} mint
+     * @param {Pubkey} owner
+     * @param {Pubkey} feePayer
+     * @returns Promise<string>
+     */
+    const makeOrCreateInstruction: (mint: Pubkey$1, owner: Pubkey$1, feePayer?: Pubkey$1, allowOwnerOffCurve?: boolean) => Promise<{
+        tokenAccount: string;
+        inst: TransactionInstruction | undefined;
+    }>;
+}
+
+declare class KeypairAccount {
+    secret: Secret;
+    pubkey: Pubkey$1;
+    constructor(params: {
+        pubkey?: Pubkey$1;
+        secret: Secret;
+    });
+    toPublicKey(): PublicKey;
+    toKeypair(): Keypair;
+    static isPubkey: (value: string) => value is Pubkey$1;
+    static isSecret: (value: string) => value is Secret;
+    static create: () => KeypairAccount;
+    static toKeyPair: (keypair: Keypair) => KeypairAccount;
+}
+
+declare namespace Pda {
+    const getMetadata: (mint: Pubkey$1) => PublicKey;
+    const getMasterEdition: (mint: Pubkey$1) => PublicKey;
+}
+
+declare namespace Node {
+    const getConnection: () => Connection;
+    const changeConnection: (param: {
+        cluster?: string;
+        commitment?: Commitment;
+        customClusterUrl?: string[];
+    }) => void;
+    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result$1.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Ok<never, any> | Result$1.Err<never, any>>;
+}
+
+type Condition = 'overMax' | 'underMin';
+interface Limit {
+    threshold: number;
+    condition: Condition;
+}
+interface Details {
+    key: string;
+    message: string;
+    actual: string | number;
+    limit?: Limit;
+}
+
+type FileType = string | File;
+
+type StorageType = 'nftStorage' | 'arweave' | string;
+type Offchain = {
+    name?: string;
+    symbol?: string;
+    description?: string;
+    seller_fee_basis_points?: number;
+    image?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    collection?: {
+        name?: string;
+        family?: string;
+        [key: string]: unknown;
+    };
+    created_at?: number;
 };
-type HistoryOptions = {
-    waitTime: number;
-    narrowDown: number;
+type Properties = {
+    creators?: {
+        address?: string;
+        share?: number;
+        [key: string]: unknown;
+    }[];
+    files?: {
+        type?: string;
+        filePath?: FileType;
+        [key: string]: unknown;
+    }[];
+    [key: string]: unknown;
+};
+type Attribute = {
+    trait_type?: string;
+    value?: string;
+    [key: string]: unknown;
 };
 
-type OnOk<T extends History | Find> = (ok: T[]) => void;
-type OnErr = (err: Error) => void;
+type InternalCollection = {
+    key: PublicKey;
+    verified: boolean;
+};
+type InternalCreators = {
+    address: PublicKey;
+    verified: boolean;
+    share: number;
+};
+
+type bignum = number | BN;
+type Option<T> = T | null;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type Creators = {
+    address: Pubkey$1;
+    share: number;
+    verified: boolean;
+};
+
+type InputCollection = Pubkey$1;
+type Options = {
+    [key: string]: unknown;
+};
+type MetaplexDataV2 = {
+    name: string;
+    symbol: string;
+    uri: string;
+    sellerFeeBasisPoints: number;
+    creators: Option<InternalCreators[]>;
+    collection: Option<InternalCollection>;
+    uses: Option<Uses>;
+};
+type InputNftMetadata = {
+    name: string;
+    symbol: string;
+    royalty: number;
+    storageType?: StorageType;
+    filePath?: FileType;
+    uri?: string;
+    isMutable?: boolean;
+    description?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    maxSupply?: bignum;
+    creators?: Creators[];
+    uses?: Uses;
+    collection?: InputCollection;
+    options?: Options;
+};
+
+declare namespace Validator {
+    export namespace Message {
+        const SUCCESS = "success";
+        const SMALL_NUMBER = "too small";
+        const BIG_NUMBER = "too big";
+        const LONG_LENGTH = "too long";
+        const EMPTY = "invalid empty value";
+        const INVALID_URL = "invalid url";
+        const ONLY_NODE_JS = "`string` type is only Node.js";
+    }
+    export const NAME_LENGTH = 32;
+    export const SYMBOL_LENGTH = 10;
+    export const URL_LENGTH = 200;
+    export const ROYALTY_MAX = 100;
+    export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
+    export const ROYALTY_MIN = 0;
+    export const isRoyalty: (royalty: number) => Result$1<string, ValidatorError>;
+    export const isSellerFeeBasisPoints: (royalty: number) => Result$1<string, ValidatorError>;
+    export const isName: (name: string) => Result$1<string, ValidatorError>;
+    export const isSymbol: (symbol: string) => Result$1<string, ValidatorError>;
+    export const isImageUrl: (image: string) => Result$1<string, ValidatorError>;
+    export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result$1<string, ValidatorError>;
+    type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
+    type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
+    type PickMetaplex = Pick<MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
+    export {};
+}
+declare class ValidatorError extends Error {
+    details: Details[];
+    constructor(message: string, details: Details[]);
+}
 
 declare enum FilterType {
     Memo = "memo",
@@ -326,6 +504,47 @@ type Memo = {
     program: string;
     programId: PublicKey;
 };
+
+declare global {
+    interface String {
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        toExplorerUrl(explorer?: Explorer): string;
+    }
+    interface Number {
+        toSol(): number;
+        toLamports(): number;
+    }
+    interface Console {
+        debug(data: unknown, data2?: unknown, data3?: unknown): void;
+    }
+    interface Secret {
+        toKeypair(): Keypair;
+    }
+    interface Pubkey {
+        toPublicKey(): PublicKey;
+    }
+}
+declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm"
+}
+
+declare class Instruction {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: unknown;
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    submit: () => Promise<Result$1<TransactionSignature, Error>>;
+}
+
+declare class PartialSignInstruction {
+    hexInstruction: string;
+    data?: Pubkey$1;
+    constructor(instructions: string, mint?: Pubkey$1);
+    submit: (feePayer: Secret) => Promise<Result$1<TransactionSignature, Error>>;
+}
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -530,280 +749,17 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey$1 = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret = (string & {
-    [secretNominality]: never;
-}) | string;
-type OwnerInfo = {
-    sol: number;
-    lamports: number;
-    owner: string;
-};
-
-/**
- * Get Associated token Account.
- * if not created, create new token accouint
- *
- * @param {Pubkey} mint
- * @param {Pubkey} owner
- * @param {Secret} feePayer
- * @param {boolean} allowOwnerOffCurve
- * @returns Promise<string | Instruction>
- */
-declare namespace AssociatedAccount {
-    /**
-     * Retry function if create new token accouint
-     *
-     * @param {Pubkey} mint
-     * @param {Pubkey} owner
-     * @param {Secret} feePayer
-     * @returns Promise<string>
-     */
-    const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret) => Promise<string>;
-    /**
-     * [Main logic]Get Associated token Account.
-     * if not created, create new token accouint
-     *
-     * @param {Pubkey} mint
-     * @param {Pubkey} owner
-     * @param {Pubkey} feePayer
-     * @returns Promise<string>
-     */
-    const makeOrCreateInstruction: (mint: Pubkey$1, owner: Pubkey$1, feePayer?: Pubkey$1, allowOwnerOffCurve?: boolean) => Promise<{
-        tokenAccount: string;
-        inst: TransactionInstruction | undefined;
-    }>;
-}
-
-declare class KeypairAccount {
-    secret: Secret;
-    pubkey: Pubkey$1;
-    constructor(params: {
-        pubkey?: Pubkey$1;
-        secret: Secret;
-    });
-    toPublicKey(): PublicKey;
-    toKeypair(): Keypair;
-    static isPubkey: (value: string) => value is Pubkey$1;
-    static isSecret: (value: string) => value is Secret;
-    static create: () => KeypairAccount;
-    static toKeyPair: (keypair: Keypair) => KeypairAccount;
-}
-
-declare namespace Pda {
-    const getMetadata: (mint: Pubkey$1) => PublicKey;
-    const getMasterEdition: (mint: Pubkey$1) => PublicKey;
-}
-
-declare namespace Node {
-    const getConnection: () => Connection;
-    const changeConnection: (param: {
-        cluster?: string;
-        commitment?: Commitment;
-        customClusterUrl?: string[];
-    }) => void;
-    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
-}
-
-type Condition = 'overMax' | 'underMin';
-interface Limit {
-    threshold: number;
-    condition: Condition;
-}
-interface Details {
-    key: string;
-    message: string;
-    actual: string | number;
-    limit?: Limit;
-}
-
-type FileType = string | File;
-
-type StorageType = 'nftStorage' | 'arweave' | string;
-type Offchain = {
-    name?: string;
-    symbol?: string;
-    description?: string;
-    seller_fee_basis_points?: number;
-    image?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    collection?: {
-        name?: string;
-        family?: string;
-        [key: string]: unknown;
-    };
-    created_at?: number;
-};
-type Properties = {
-    creators?: {
-        address?: string;
-        share?: number;
-        [key: string]: unknown;
-    }[];
-    files?: {
-        type?: string;
-        filePath?: FileType;
-        [key: string]: unknown;
-    }[];
-    [key: string]: unknown;
-};
-type Attribute = {
-    trait_type?: string;
-    value?: string;
-    [key: string]: unknown;
-};
-
-type InternalCollection = {
-    key: PublicKey;
-    verified: boolean;
-};
-type InternalCreators = {
-    address: PublicKey;
-    verified: boolean;
-    share: number;
-};
-
-type bignum = number | BN;
-type Option<T> = T | null;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
-};
-type Creators = {
-    address: Pubkey$1;
-    share: number;
-    verified: boolean;
-};
-
-type InputCollection = Pubkey$1;
-type Options = {
-    [key: string]: unknown;
-};
-type MetaplexDataV2 = {
-    name: string;
-    symbol: string;
-    uri: string;
-    sellerFeeBasisPoints: number;
-    creators: Option<InternalCreators[]>;
-    collection: Option<InternalCollection>;
-    uses: Option<Uses>;
-};
-type InputNftMetadata = {
-    name: string;
-    symbol: string;
-    royalty: number;
-    storageType?: StorageType;
-    filePath?: FileType;
-    uri?: string;
-    isMutable?: boolean;
-    description?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    maxSupply?: bignum;
-    creators?: Creators[];
-    uses?: Uses;
-    collection?: InputCollection;
-    options?: Options;
-};
-
-declare namespace Validator {
-    export namespace Message {
-        const SUCCESS = "success";
-        const SMALL_NUMBER = "too small";
-        const BIG_NUMBER = "too big";
-        const LONG_LENGTH = "too long";
-        const EMPTY = "invalid empty value";
-        const INVALID_URL = "invalid url";
-        const ONLY_NODE_JS = "`string` type is only Node.js";
-    }
-    export const NAME_LENGTH = 32;
-    export const SYMBOL_LENGTH = 10;
-    export const URL_LENGTH = 200;
-    export const ROYALTY_MAX = 100;
-    export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
-    export const ROYALTY_MIN = 0;
-    export const isRoyalty: (royalty: number) => Result<string, ValidatorError>;
-    export const isSellerFeeBasisPoints: (royalty: number) => Result<string, ValidatorError>;
-    export const isName: (name: string) => Result<string, ValidatorError>;
-    export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
-    export const isImageUrl: (image: string) => Result<string, ValidatorError>;
-    export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
-    type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
-    type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
-    export {};
-}
-declare class ValidatorError extends Error {
-    details: Details[];
-    constructor(message: string, details: Details[]);
-}
-
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm"
-}
-
-declare class Instruction {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    data?: unknown;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
-    submit: () => Promise<Result<TransactionSignature, Error>>;
-}
-
-declare class PartialSignInstruction {
-    hexInstruction: string;
-    data?: Pubkey$1;
-    constructor(instructions: string, mint?: Pubkey$1);
-    submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
-}
-
 declare global {
     interface Array<T> {
-        submit(): Promise<Result$1<TransactionSignature, Error>>;
+        submit(): Promise<Result<TransactionSignature, Error>>;
     }
 }
 
 declare const SolNative: {
-    transferWithMultisig: (owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, feePayer?: Secret | undefined) => Promise<Result<Instruction, Error>>;
-    transfer: (source: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, feePayer?: Secret | undefined) => Result<Instruction, Error>;
-    getHistory: (target: Pubkey$1, filterType: FilterType, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
-    feePayerPartialSignTransfer: (owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, feePayer: Pubkey$1) => Promise<Result<PartialSignInstruction, Error>>;
-    findByOwner: (owner: Pubkey$1) => Promise<Result<OwnerInfo, Error>>;
+    transferWithMultisig: (owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, feePayer?: Secret | undefined) => Promise<Result$1<Instruction, Error>>;
+    transfer: (source: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, feePayer?: Secret | undefined) => Result$1<Instruction, Error>;
+    feePayerPartialSignTransfer: (owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, feePayer: Pubkey$1) => Promise<Result$1<PartialSignInstruction, Error>>;
+    findByOwner: (owner: Pubkey$1) => Promise<Result$1<OwnerInfo, Error>>;
 };
 
 export { AssociatedAccount, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, Pda, PostTokenAccount, Pubkey$1 as Pubkey, Secret, SolNative, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };
