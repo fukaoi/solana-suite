@@ -21,6 +21,5 @@ test('Get Only memo history', async (t) => {
     'Ebq72X3i8ug6AX2G3v2ZoLA4ZcxHurvMuJYorqJ6sALD',
     onOk,
     onErr,
-    { narrowDown: 20 },
   );
 });
