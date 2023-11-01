@@ -48,6 +48,9 @@ export namespace Signatures {
           .catch((e) => callback(Result.err(e)));
         await sleep(options.waitTime); // avoid 429 error
       }
+      if (histories.length === 0) {
+        callback(Result.ok([]));
+      }
     } catch (e) {
       if (e instanceof Error) {
         callback(Result.err(e));

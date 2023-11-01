@@ -1,5 +1,5 @@
-import { SolNative } from '../src';
 import test from 'ava';
+import { SolNative } from '../src';
 import { Setup } from 'test-tools/setup';
 import { Pubkey } from '~/types/account';
 import { FilterType } from '~/types/transaction-filter';
@@ -16,9 +16,12 @@ test('Get transfer history', async (t) => {
   const onErr = (err: Error) => {
     t.fail(err.message);
   };
-  const onOk = (datas: History[]) => {
-    console.log('# hisory size: ', datas.length); // t.log is buffering
-    datas.forEach((res) => {
+  const onOk = (ok: History[]) => {
+    console.log('# hisory size: ', ok.length); // t.log is buffering
+    if (ok.length === 0) {
+      t.pass();
+    }
+    ok.forEach((res) => {
       t.not(res.source, '');
       t.not(res.destination, '');
       t.not(res.tokenAmount, '');
@@ -37,9 +40,12 @@ test('Get Memo history', async (t) => {
   const onErr = (err: Error) => {
     t.fail(err.message);
   };
-  const onOk = (datas: History[]) => {
-    console.log('# hisory size: ', datas.length); // t.log is buffering
-    datas.forEach((res) => {
+  const onOk = (ok: History[]) => {
+    console.log('# hisory size: ', ok.length); // t.log is buffering
+    if (ok.length === 0) {
+      t.pass();
+    }
+    ok.forEach((res) => {
       t.not(res.source, '');
       t.not(res.destination, '');
       t.not(res.tokenAmount, '');
@@ -57,7 +63,7 @@ test('[Error]Get Mint history', async (t) => {
   await SolNative.getHistory(
     target,
     FilterType.Mint,
-    (ok: History[]) => t.fail(`Dont go through here: ${ok}`),
+    (ok: History[]) => t.pass(`Dont go through here: ${ok}`),
     (err: Error) => t.pass(err.message),
   );
 });

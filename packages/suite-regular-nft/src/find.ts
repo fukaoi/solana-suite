@@ -42,9 +42,6 @@ export namespace RegularNft {
     mint: Pubkey,
   ): Promise<Result<NftMetadata, Error>> => {
     // return await SplToken.genericFindByMint<NftMetadata>(
-    return await SplToken.genericFindByMint(
-      mint,
-      UserInput.TokenStandard.NonFungible,
-    );
+    return await SplToken.genericFindByMint(mint, TokenStandard.NonFungible);
   };
 }

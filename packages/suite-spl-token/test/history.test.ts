@@ -15,6 +15,9 @@ test.before(async () => {
 test('Get Mint history', async (t) => {
   const onOk: OnOk<History> = async (ok) => {
     console.log('# hisory size: ', ok.length); // t.log is buffering
+    if (ok.length === 0) {
+      t.pass();
+    }
     ok.forEach((res) => {
       t.not(res.source, '');
       t.not(res.destination, '');
