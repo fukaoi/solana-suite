@@ -29,8 +29,7 @@ test.before(async () => {
 test(
   'Not found nft',
   withCallback((t: any, end: any) => {
-    const onOk: OnOk<NftMetadata> = (ok) =>
-      t.true(Array.isArray(ok));
+    const onOk: OnOk<NftMetadata> = (ok) => t.true(Array.isArray(ok));
     end();
     const onErr: OnErr = (err) => t.fail(err.message);
     RegularNft.findByOwner(notFoundTokenOwner, onOk, onErr);

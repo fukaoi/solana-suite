@@ -3,7 +3,8 @@ module.exports = {
     ts: "module",
   },
   nodeArguments: ["--loader=tsx", "--no-warnings"],
-  concureency: 5,
+  // concureency: 5,
   verbose: false,
+  serial: true,
   timeout: "30m",
 };

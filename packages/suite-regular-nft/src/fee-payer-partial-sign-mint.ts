@@ -50,9 +50,7 @@ export namespace RegularNft {
         throw valid.error;
       }
 
-      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(
-        input.royalty,
-      );
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(input.royalty);
 
       //--- porperties, Upload content ---
       let uri = '';
