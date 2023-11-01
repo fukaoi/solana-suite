@@ -4,7 +4,6 @@ import { RandomAsset } from 'test-tools/setupAsset';
 import { RegularNft } from '../src/';
 import { KeypairAccount } from '~/account';
 import { Storage } from '~/storage';
-import { InfraSideInput } from '~/types/converter';
 import { Converter } from '~/converter';
 
 let source: KeypairAccount;
@@ -49,9 +48,9 @@ test('[Arweave] use case arweave', async (t) => {
   const royalty = 60;
   const owner = KeypairAccount.create();
   const asset = RandomAsset.get();
-  const sellerFeeBasisPoints = Converter.Royalty.intoInfraSide(royalty);
+  const sellerFeeBasisPoints = Converter.Royalty.intoInfra(royalty);
 
-  const offchaindata: InfraSideInput.Offchain = {
+  const offchaindata = {
     name: asset.name,
     symbol: asset.symbol,
     description: 'upload meta and content',

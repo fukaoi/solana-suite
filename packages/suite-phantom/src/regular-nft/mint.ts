@@ -4,10 +4,10 @@ import { Storage } from '~/storage';
 import { Node } from '~/node';
 import { debugLog, Result, Try } from '~/shared';
 import { KeypairAccount } from '~/account';
-import { UserInput } from '~/types/converter';
 import { Validator, ValidatorError } from '~/validator';
 import { Converter } from '~/converter';
 import { PhantomProvider } from '~/types/phantom';
+import { InputNftMetadata } from '~/types/regular-nft';
 
 export namespace PhantomMetaplex {
   /**
@@ -18,12 +18,12 @@ export namespace PhantomMetaplex {
    * @return Promise<Result<Instruction, Error>>
    */
   export const mint = async (
-    input: UserInput.NftMetadata,
+    input: InputNftMetadata,
     cluster: string,
     phantom: PhantomProvider,
   ): Promise<Result<string, Error | ValidatorError>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<UserInput.NftMetadata>(input);
+      const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -35,13 +35,13 @@ export namespace PhantomMetaplex {
       Node.changeConnection({ cluster });
 
       //Convert porperties, Upload content
-      const properties = await Converter.Properties.intoInfraSide(
+      const properties = await Converter.Properties.intoInfra(
         input.properties,
         Storage.uploadFile,
         input.storageType,
       );
 
-      const sellerFeeBasisPoints = Converter.Royalty.intoInfraSide(
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(
         input.royalty,
       );
       const nftStorageMetadata = Storage.toConvertOffchaindata(
@@ -59,7 +59,7 @@ export namespace PhantomMetaplex {
       }
       const uri = uploaded.value;
 
-      const datav2 = Converter.NftMetadata.intoInfraSide(
+      const datav2 = Converter.NftMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints,

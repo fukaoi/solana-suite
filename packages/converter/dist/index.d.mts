@@ -12,6 +12,15 @@ type InternalCreators = {
     share: number;
 };
 
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey$1 = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
+
 type FileType = string | File;
 
 type StorageType = 'nftStorage' | 'arweave' | string;
@@ -67,12 +76,12 @@ type Uses = {
     total: bignum;
 };
 type Creators = {
-    address: Pubkey;
+    address: Pubkey$1;
     share: number;
     verified: boolean;
 };
 
-type InputCollection = Pubkey;
+type InputCollection = Pubkey$1;
 type Options = {
     [key: string]: unknown;
 };
@@ -391,11 +400,6 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-declare const secretNominality: unique symbol;
-type Secret = (string & {
-    [secretNominality]: never;
-}) | string;
-
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -430,7 +434,7 @@ declare namespace Converter$6 {
 declare namespace Converter$5 {
     namespace Royalty {
         const THRESHOLD = 100;
-        const intoInfraSide: (percentage: number) => number;
+        const intoInfra: (percentage: number) => number;
     }
 }
 
@@ -450,8 +454,8 @@ type InputTokenMetadata = {
 
 declare namespace Converter$4 {
     namespace TokenMetadata {
-        const intoInfraSide: (input: InputTokenMetadata, uri: string, sellerFeeBasisPoints: number) => MetaplexDataV2;
-        const intoUserSide: (output: OnchainAndOffchain, tokenAmount: string) => TokenMetadata;
+        const intoInfra: (input: InputTokenMetadata, uri: string, sellerFeeBasisPoints: number) => MetaplexDataV2;
+        const intoUser: (output: OnchainAndOffchain, tokenAmount: string) => TokenMetadata;
         const deleteNullStrings: (str: string) => string;
     }
 }

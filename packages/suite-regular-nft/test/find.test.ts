@@ -3,7 +3,7 @@ import { Setup } from 'test-tools/setup';
 import { Pubkey } from '~/types/account';
 import { Sortable } from '~/types/find';
 import { OnErr, OnOk } from '~/types/shared';
-import { UserSideOutput } from '~/types/converter';
+import { NftMetadata } from '~/types/regular-nft';
 import { promisify } from 'node:util';
 import { sleep } from '../../shared/src/shared';
 import { RegularNft } from '../src/';
@@ -29,7 +29,7 @@ test.before(async () => {
 test(
   'Not found nft',
   withCallback((t: any, end: any) => {
-    const onOk: OnOk<UserSideOutput.NftMetadata> = (ok) =>
+    const onOk: OnOk<NftMetadata> = (ok) =>
       t.true(Array.isArray(ok));
     end();
     const onErr: OnErr = (err) => t.fail(err.message);
@@ -40,7 +40,7 @@ test(
 test(
   'Find owner info',
   withCallback((t: any, end: any) => {
-    const onOk: OnOk<UserSideOutput.NftMetadata> = async (ok) => {
+    const onOk: OnOk<NftMetadata> = async (ok) => {
       ok.forEach((res) => {
         t.not(res.name, '');
         t.not(res.mint, '');
@@ -62,7 +62,7 @@ test(
 test(
   'Find owner info with Asc',
   withCallback((t: any, end: any) => {
-    const onOk: OnOk<UserSideOutput.NftMetadata> = async (ok) => {
+    const onOk: OnOk<NftMetadata> = async (ok) => {
       ok.forEach((res) => {
         t.not(res.name, '');
         t.not(res.mint, '');
@@ -84,7 +84,7 @@ test(
 test(
   'Find owner info with no Hold',
   withCallback((t: any, end: any) => {
-    const onOk: OnOk<UserSideOutput.NftMetadata> = async (ok) => {
+    const onOk: OnOk<NftMetadata> = async (ok) => {
       ok.forEach((res) => {
         t.not(res.name, '');
         t.not(res.mint, '');
@@ -106,7 +106,7 @@ test(
 
 test('Get token info by mint address', async (t) => {
   (await RegularNft.findByMint(nftMint)).match(
-    (ok: UserSideOutput.NftMetadata) => {
+    (ok: NftMetadata) => {
       t.not(ok.name, '');
       t.not(ok.mint, '');
       t.not(ok.symbol, '');

@@ -26,7 +26,8 @@ import { Node } from '~/node';
 import { KeypairAccount } from '~/account';
 import { MintInstruction } from '~/instruction';
 import { Pubkey, Secret } from '~/types/account';
-import { UserInput } from '~/types/converter';
+import { InputNftMetadata } from '~/types/regular-nft';
+import { InputTokenMetadata } from '~/types/spl-token';
 import { Pda } from '~/account';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
@@ -118,7 +119,7 @@ export namespace SplToken {
    * @param {Secret} signer      // token owner Secret
    * @param {number} totalAmount // total number
    * @param {number} mintDecimal // token decimal
-   * @param {Pubkey} input       // token metadata
+   * @param {InputTokenMetadata} input       // token metadata
    * @param {Secret} feePayer?   // fee payer
    * @param {Pubkey} freezeAuthority? // freeze authority
    * @return Promise<Result<MintInstruction, Error>>
@@ -128,12 +129,12 @@ export namespace SplToken {
     signer: Secret,
     totalAmount: number,
     mintDecimal: number,
-    input: UserInput.TokenMetadata,
+    input: InputTokenMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<UserInput.TokenMetadata>(input);
+      const valid = Validator.checkAll<InputTokenMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -143,7 +144,7 @@ export namespace SplToken {
       const sellerFeeBasisPoints = 0;
 
       const tokenStorageMetadata = Storage.toConvertOffchaindata(
-        input as UserInput.NftMetadata,
+        input as InputNftMetadata,
         input.royalty,
       );
 
@@ -172,7 +173,7 @@ export namespace SplToken {
 
       const isMutable = true;
 
-      const datav2 = Converter.TokenMetadata.intoInfraSide(
+      const datav2 = Converter.TokenMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints,

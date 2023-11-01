@@ -209,7 +209,7 @@ declare const secretNominality: unique symbol;
 type Pubkey = (string & {
     [pubKeyNominality]: never;
 }) | string;
-type Secret$1 = (string & {
+type Secret = (string & {
     [secretNominality]: never;
 }) | string;
 
@@ -232,138 +232,80 @@ type Tags = [{
 }];
 
 type StorageType = 'nftStorage' | 'arweave' | string;
-
-type Option<T> = T | null;
-type bignum = number | BN;
-declare namespace Common {
-    type Properties = {
-        creators?: {
-            address?: string;
-            share?: number;
-            [key: string]: unknown;
-        }[];
-        files?: {
-            type?: string;
-            filePath?: FileType;
-            [key: string]: unknown;
-        }[];
-        [key: string]: unknown;
-    };
-    type Attribute = {
-        trait_type?: string;
-        value?: string;
-        [key: string]: unknown;
-    };
-    enum UseMethod {
-        Burn = 0,
-        Multiple = 1,
-        Single = 2
-    }
-    type Uses = {
-        useMethod: UseMethod;
-        remaining: bignum;
-        total: bignum;
-    };
-    type Options = {
-        [key: string]: unknown;
-    };
-}
-
-declare namespace InfraInput {
-    interface File extends Blob {
-        readonly lastModified: number;
-        readonly name: string;
-    }
-    type StorageNftStorageMetadata = {
-        storageType?: 'nftStorage';
-    };
-    type StorageArweaveMetadata = {
-        storageType?: 'arweave';
-    };
-    type Collection = {
-        key: PublicKey;
-        verified: boolean;
-    };
-    type Creators = {
-        address: PublicKey;
-        verified: boolean;
-        share: number;
-    };
-    type Properties = Common.Properties;
-    type Offchain = {
+type Offchain = {
+    name?: string;
+    symbol?: string;
+    description?: string;
+    seller_fee_basis_points?: number;
+    image?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    collection?: {
         name?: string;
-        symbol?: string;
-        description?: string;
-        seller_fee_basis_points?: number;
-        image?: string;
-        external_url?: string;
-        attributes?: Common.Attribute[];
-        properties?: Common.Properties;
-        collection?: {
-            name?: string;
-            family?: string;
-            [key: string]: unknown;
-        };
-        created_at?: number;
+        family?: string;
+        [key: string]: unknown;
     };
-    type MetaplexDataV2 = {
-        name: string;
-        symbol: string;
-        uri: string;
-        sellerFeeBasisPoints: number;
-        creators: Option<Creators[]>;
-        collection: Option<Collection>;
-        uses: Option<Common.Uses>;
-    };
-}
+    created_at?: number;
+};
+type Properties = {
+    creators?: {
+        address?: string;
+        share?: number;
+        [key: string]: unknown;
+    }[];
+    files?: {
+        type?: string;
+        filePath?: FileType;
+        [key: string]: unknown;
+    }[];
+    [key: string]: unknown;
+};
+type Attribute = {
+    trait_type?: string;
+    value?: string;
+    [key: string]: unknown;
+};
 
-declare namespace UserInput {
-    type Collection = Pubkey;
-    type Creators = {
-        address: Pubkey;
-        share: number;
-        verified: boolean;
-    };
-    type Properties = Common.Properties;
-    enum TokenStandard {
-        NonFungible = 0,
-        FungibleAsset = 1,
-        Fungible = 2,
-        NonFungibleEdition = 3,
-        ProgrammableNonFungible = 4
-    }
-    type NftMetadata = {
-        name: string;
-        symbol: string;
-        royalty: number;
-        storageType?: StorageType;
-        filePath?: FileType;
-        uri?: string;
-        isMutable?: boolean;
-        description?: string;
-        external_url?: string;
-        attributes?: Common.Attribute[];
-        properties?: Properties;
-        maxSupply?: bignum;
-        creators?: Creators[];
-        uses?: Common.Uses;
-        collection?: Collection;
-        options?: Common.Options;
-    };
-    type TokenMetadata = {
-        name: string;
-        symbol: string;
-        filePath?: FileType;
-        uri?: string;
-        storageType?: StorageType;
-        description?: string;
-        royalty?: number;
-        uses?: Common.Uses;
-        creators?: Creators[];
-        attributes?: Common.Attribute[];
-        options?: Common.Options;
-    };
+type bignum = number | BN;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
 }
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type Creators = {
+    address: Pubkey;
+    share: number;
+    verified: boolean;
+};
+
+type InputCollection = Pubkey;
+type Options = {
+    [key: string]: unknown;
+};
+type InputNftMetadata = {
+    name: string;
+    symbol: string;
+    royalty: number;
+    storageType?: StorageType;
+    filePath?: FileType;
+    uri?: string;
+    isMutable?: boolean;
+    description?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    maxSupply?: bignum;
+    creators?: Creators[];
+    uses?: Uses;
+    collection?: InputCollection;
+    options?: Options;
+};
 
 declare global {
     interface String {
@@ -391,8 +333,8 @@ declare enum Explorer {
 }
 
 declare namespace Arweave {
-    const uploadFile: (filePath: FileType, feePayer: Secret$1) => Promise<Result<string, Error>>;
-    const uploadData: (metadata: InfraInput.Offchain, feePayer: Secret$1) => Promise<Result<string, Error>>;
+    const uploadFile: (filePath: FileType, feePayer: Secret) => Promise<Result<string, Error>>;
+    const uploadData: (metadata: Offchain, feePayer: Secret) => Promise<Result<string, Error>>;
 }
 
 declare namespace ProvenanceLayer {
@@ -408,7 +350,7 @@ declare namespace NftStorage {
     /**
      * Upload content
      *
-     * @param {StorageData} storageData
+     * @param {Offchain} storageData
      * {
      *   name?: {string}                      // nft content name
      *   symbol?: {string}                    // nft ticker symbol
@@ -423,13 +365,13 @@ declare namespace NftStorage {
      * }
      * @return Promise<Result<string, Error>>
      */
-    const uploadData: (storageData: InfraInput.Offchain) => Promise<Result<string, Error>>;
+    const uploadData: (storageData: Offchain) => Promise<Result<string, Error>>;
 }
 
 declare namespace Storage {
-    const toConvertOffchaindata: (input: UserInput.NftMetadata, sellerFeeBasisPoints: number) => InfraInput.Offchain;
-    const uploadFile: (filePath: FileType, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
-    const upload: (input: InfraInput.Offchain, filePath: FileType, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
+    const toConvertOffchaindata: (input: InputNftMetadata, sellerFeeBasisPoints: number) => Offchain;
+    const uploadFile: (filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const upload: (input: Offchain, filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
 }
 
 export { Arweave, NftStorage, ProvenanceLayer, Storage };

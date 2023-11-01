@@ -6,12 +6,13 @@ import { Pubkey } from '~/types/account';
 import { Storage } from '~/storage';
 import { SplToken } from '~/suite-spl-token';
 import { PhantomProvider } from '~/types/phantom';
-import { UserInput } from '~/types/converter';
+import { InputTokenMetadata } from '~/types/spl-token';
+import { InputNftMetadata } from '~/types/regular-nft';
 import { Converter } from '~/converter';
 
 export namespace PhantomSplToken {
   export const mint = async (
-    input: UserInput.TokenMetadata,
+    input: InputTokenMetadata,
     owner: Pubkey,
     cluster: string,
     totalAmount: number,
@@ -27,7 +28,7 @@ export namespace PhantomSplToken {
       input.royalty = 0;
       const sellerFeeBasisPoints = 0;
       const tokenStorageMetadata = Storage.toConvertOffchaindata(
-        input as UserInput.NftMetadata,
+        input as InputNftMetadata,
         input.royalty,
       );
 
@@ -51,7 +52,7 @@ export namespace PhantomSplToken {
 
       const isMutable = true;
 
-      const datav2 = Converter.TokenMetadata.intoInfraSide(
+      const datav2 = Converter.TokenMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints,

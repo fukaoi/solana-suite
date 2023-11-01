@@ -1,8 +1,7 @@
 import { Blob, NFTStorage } from 'nft.storage';
 import { Constants, debugLog, Result, Try } from '~/shared';
 import { ProvenanceLayer } from './provenance-layer';
-import { InfraInput } from '~/types/converter';
-import { FileType } from '~/types/storage';
+import { FileType, Offchain } from '~/types/storage';
 
 export namespace NftStorage {
   let isDisplayWarning = false;
@@ -55,7 +54,7 @@ export namespace NftStorage {
   /**
    * Upload content
    *
-   * @param {StorageData} storageData
+   * @param {Offchain} storageData
    * {
    *   name?: {string}                      // nft content name
    *   symbol?: {string}                    // nft ticker symbol
@@ -71,7 +70,7 @@ export namespace NftStorage {
    * @return Promise<Result<string, Error>>
    */
   export const uploadData = async (
-    storageData: InfraInput.Offchain,
+    storageData: Offchain,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       debugLog('# upload metadata: ', storageData);

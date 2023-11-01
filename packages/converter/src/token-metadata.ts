@@ -7,7 +7,7 @@ import { convertTimestampToDateTime } from '~/shared';
 
 export namespace Converter {
   export namespace TokenMetadata {
-    export const intoInfraSide = (
+    export const intoInfra = (
       input: InputTokenMetadata,
       uri: string,
       sellerFeeBasisPoints: number,
@@ -23,7 +23,7 @@ export namespace Converter {
       };
     };
 
-    export const intoUserSide = (
+    export const intoUser = (
       output: OnchainAndOffchain,
       tokenAmount: string,
     ): TokenMetadata => {

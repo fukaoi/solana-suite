@@ -1,10 +1,10 @@
 import test from 'ava';
 import { RegularNft } from '../src';
 import { KeypairAccount } from '~/account';
-import { UserSideInput } from '~/types/converter';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Pubkey } from '~/types/account';
+import { Creators } from '~/types/regular-nft';
 import { ValidatorError } from '~/validator';
 
 let source: KeypairAccount;
@@ -65,7 +65,7 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
 
 test('[Nft Storage] mint nft with many optional datas', async (t) => {
   const asset = RandomAsset.get();
-  const creators: UserSideInput.Creators[] = [];
+  const creators: Creators[] = [];
   const owner = KeypairAccount.create();
   const freezeAuthority = KeypairAccount.create();
 

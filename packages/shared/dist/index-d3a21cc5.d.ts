@@ -207,7 +207,7 @@ type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
-type Pubkey = (string & {
+type Pubkey$1 = (string & {
     [pubKeyNominality]: never;
 }) | string;
 type Secret = (string & {
@@ -238,7 +238,7 @@ declare namespace AssociatedAccount {
      * @param {Secret} feePayer
      * @returns Promise<string>
      */
-    const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret) => Promise<string>;
+    const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret) => Promise<string>;
     /**
      * [Main logic]Get Associated token Account.
      * if not created, create new token accouint
@@ -248,7 +248,7 @@ declare namespace AssociatedAccount {
      * @param {Pubkey} feePayer
      * @returns Promise<string>
      */
-    const makeOrCreateInstruction: (mint: Pubkey, owner: Pubkey, feePayer?: Pubkey, allowOwnerOffCurve?: boolean) => Promise<{
+    const makeOrCreateInstruction: (mint: Pubkey$1, owner: Pubkey$1, feePayer?: Pubkey$1, allowOwnerOffCurve?: boolean) => Promise<{
         tokenAccount: string;
         inst: TransactionInstruction | undefined;
     }>;
@@ -256,22 +256,22 @@ declare namespace AssociatedAccount {
 
 declare class KeypairAccount {
     secret: Secret;
-    pubkey: Pubkey;
+    pubkey: Pubkey$1;
     constructor(params: {
-        pubkey?: Pubkey;
+        pubkey?: Pubkey$1;
         secret: Secret;
     });
     toPublicKey(): PublicKey;
     toKeypair(): Keypair;
-    static isPubkey: (value: string) => value is Pubkey;
+    static isPubkey: (value: string) => value is Pubkey$1;
     static isSecret: (value: string) => value is Secret;
     static create: () => KeypairAccount;
     static toKeyPair: (keypair: Keypair) => KeypairAccount;
 }
 
 declare namespace Pda {
-    const getMetadata: (mint: Pubkey) => PublicKey;
-    const getMasterEdition: (mint: Pubkey) => PublicKey;
+    const getMetadata: (mint: Pubkey$1) => PublicKey;
+    const getMasterEdition: (mint: Pubkey$1) => PublicKey;
 }
 
 declare namespace Node {
@@ -282,142 +282,6 @@ declare namespace Node {
         customClusterUrl?: string[];
     }) => void;
     const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
-}
-
-type FileType = string | File;
-
-type StorageType = 'nftStorage' | 'arweave' | string;
-
-type Option<T> = T | null;
-type bignum = number | BN;
-declare namespace Common {
-    type Properties = {
-        creators?: {
-            address?: string;
-            share?: number;
-            [key: string]: unknown;
-        }[];
-        files?: {
-            type?: string;
-            filePath?: FileType;
-            [key: string]: unknown;
-        }[];
-        [key: string]: unknown;
-    };
-    type Attribute = {
-        trait_type?: string;
-        value?: string;
-        [key: string]: unknown;
-    };
-    enum UseMethod {
-        Burn = 0,
-        Multiple = 1,
-        Single = 2
-    }
-    type Uses = {
-        useMethod: UseMethod;
-        remaining: bignum;
-        total: bignum;
-    };
-    type Options = {
-        [key: string]: unknown;
-    };
-}
-
-declare namespace InfraInput {
-    interface File extends Blob {
-        readonly lastModified: number;
-        readonly name: string;
-    }
-    type StorageNftStorageMetadata = {
-        storageType?: 'nftStorage';
-    };
-    type StorageArweaveMetadata = {
-        storageType?: 'arweave';
-    };
-    type Collection = {
-        key: PublicKey;
-        verified: boolean;
-    };
-    type Creators = {
-        address: PublicKey;
-        verified: boolean;
-        share: number;
-    };
-    type Properties = Common.Properties;
-    type Offchain = {
-        name?: string;
-        symbol?: string;
-        description?: string;
-        seller_fee_basis_points?: number;
-        image?: string;
-        external_url?: string;
-        attributes?: Common.Attribute[];
-        properties?: Common.Properties;
-        collection?: {
-            name?: string;
-            family?: string;
-            [key: string]: unknown;
-        };
-        created_at?: number;
-    };
-    type MetaplexDataV2 = {
-        name: string;
-        symbol: string;
-        uri: string;
-        sellerFeeBasisPoints: number;
-        creators: Option<Creators[]>;
-        collection: Option<Collection>;
-        uses: Option<Common.Uses>;
-    };
-}
-
-declare namespace UserInput {
-    type Collection = Pubkey;
-    type Creators = {
-        address: Pubkey;
-        share: number;
-        verified: boolean;
-    };
-    type Properties = Common.Properties;
-    enum TokenStandard {
-        NonFungible = 0,
-        FungibleAsset = 1,
-        Fungible = 2,
-        NonFungibleEdition = 3,
-        ProgrammableNonFungible = 4
-    }
-    type NftMetadata = {
-        name: string;
-        symbol: string;
-        royalty: number;
-        storageType?: StorageType;
-        filePath?: FileType;
-        uri?: string;
-        isMutable?: boolean;
-        description?: string;
-        external_url?: string;
-        attributes?: Common.Attribute[];
-        properties?: Properties;
-        maxSupply?: bignum;
-        creators?: Creators[];
-        uses?: Common.Uses;
-        collection?: Collection;
-        options?: Common.Options;
-    };
-    type TokenMetadata = {
-        name: string;
-        symbol: string;
-        filePath?: FileType;
-        uri?: string;
-        storageType?: StorageType;
-        description?: string;
-        royalty?: number;
-        uses?: Common.Uses;
-        creators?: Creators[];
-        attributes?: Common.Attribute[];
-        options?: Common.Options;
-    };
 }
 
 type Condition = 'overMax' | 'underMin';
@@ -431,6 +295,104 @@ interface Details {
     actual: string | number;
     limit?: Limit;
 }
+
+type FileType = string | File;
+
+type StorageType = 'nftStorage' | 'arweave' | string;
+type Offchain = {
+    name?: string;
+    symbol?: string;
+    description?: string;
+    seller_fee_basis_points?: number;
+    image?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    collection?: {
+        name?: string;
+        family?: string;
+        [key: string]: unknown;
+    };
+    created_at?: number;
+};
+type Properties = {
+    creators?: {
+        address?: string;
+        share?: number;
+        [key: string]: unknown;
+    }[];
+    files?: {
+        type?: string;
+        filePath?: FileType;
+        [key: string]: unknown;
+    }[];
+    [key: string]: unknown;
+};
+type Attribute = {
+    trait_type?: string;
+    value?: string;
+    [key: string]: unknown;
+};
+
+type InternalCollection = {
+    key: PublicKey;
+    verified: boolean;
+};
+type InternalCreators = {
+    address: PublicKey;
+    verified: boolean;
+    share: number;
+};
+
+type bignum = number | BN;
+type Option<T> = T | null;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type Creators = {
+    address: Pubkey$1;
+    share: number;
+    verified: boolean;
+};
+
+type InputCollection = Pubkey$1;
+type Options = {
+    [key: string]: unknown;
+};
+type MetaplexDataV2 = {
+    name: string;
+    symbol: string;
+    uri: string;
+    sellerFeeBasisPoints: number;
+    creators: Option<InternalCreators[]>;
+    collection: Option<InternalCollection>;
+    uses: Option<Uses>;
+};
+type InputNftMetadata = {
+    name: string;
+    symbol: string;
+    royalty: number;
+    storageType?: StorageType;
+    filePath?: FileType;
+    uri?: string;
+    isMutable?: boolean;
+    description?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    maxSupply?: bignum;
+    creators?: Creators[];
+    uses?: Uses;
+    collection?: InputCollection;
+    options?: Options;
+};
 
 declare namespace Validator {
     export namespace Message {
@@ -454,9 +416,9 @@ declare namespace Validator {
     export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
     export const isImageUrl: (image: string) => Result<string, ValidatorError>;
     export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
-    type PickNftStorage = Pick<InfraInput.Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
-    type PickNftStorageMetaplex = Pick<UserInput.NftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<InfraInput.MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
+    type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
+    type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
+    type PickMetaplex = Pick<MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
     export {};
 }
 declare class ValidatorError extends Error {
@@ -496,6 +458,52 @@ type WithMemo = {
     sig: string[];
     memo: string;
 };
+type Transfer = {
+    parsed: {
+        info: {
+            destination: Pubkey;
+            source: Pubkey;
+            lamports: number;
+        };
+        type: string;
+    };
+    program: string;
+    programId?: PublicKey;
+};
+type MintTo = {
+    parsed: {
+        info: {
+            account: Pubkey;
+            mint: Pubkey;
+            mintAuthority: Pubkey;
+            tokenAmount: string;
+        };
+        type: string;
+    };
+    program: string;
+    programId?: PublicKey;
+};
+type MintToChecked = MintTo;
+type TransferChecked = {
+    parsed: {
+        info: {
+            destination: Pubkey;
+            mint: Pubkey;
+            multisigAuthority: Pubkey;
+            signers: Pubkey[];
+            source: Pubkey;
+            tokenAmount: string;
+        };
+        type: string;
+    };
+    program: string;
+    programId?: PublicKey;
+};
+type Memo = {
+    parsed: string;
+    program: string;
+    programId: PublicKey;
+};
 
 declare global {
     interface String {
@@ -522,4 +530,4 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
-export { AssociatedAccount as A, FilterType as F, KeypairAccount as K, ModuleName as M, Node as N, OwnerInfo as O, Pda as P, Result as R, Secret as S, Validator as V, WithMemo as W, ValidatorError as a, Pubkey as b, FilterOptions as c, PostTokenAccount as d };
+export { AssociatedAccount as A, FilterType as F, KeypairAccount as K, ModuleName as M, Node as N, OwnerInfo as O, Pda as P, Result as R, Secret as S, Transfer as T, Validator as V, WithMemo as W, ValidatorError as a, Pubkey$1 as b, FilterOptions as c, PostTokenAccount as d, MintTo as e, MintToChecked as f, TransferChecked as g, Memo as h };

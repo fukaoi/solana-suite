@@ -1,3 +1,4 @@
+import { Pubkey } from '../account';
 import { Attribute, Offchain } from '../storage';
 import { Creators, Option, Uses } from './common';
 

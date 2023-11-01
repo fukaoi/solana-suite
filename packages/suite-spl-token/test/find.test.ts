@@ -4,7 +4,7 @@ import { Pubkey } from '~/types/account';
 import { SplToken } from '../src/';
 import { Sortable } from '~/types/find';
 import { OnErr, OnOk } from '~/types/shared';
-import { UserSideOutput } from '~/types/converter';
+import { TokenMetadata } from '~/types/spl-token';
 import { promisify } from 'node:util';
 import { sleep } from '../../shared/src/shared';
 
@@ -29,7 +29,7 @@ const withCallback = (fn: any) => async (t: any) => {
 test(
   'Not found token',
   withCallback((t: any, end: any) => {
-    const onOk: OnOk<UserSideOutput.TokenMetadata> = (ok) => {
+    const onOk: OnOk<TokenMetadata> = (ok) => {
       t.true(Array.isArray(ok));
       end();
     };
@@ -41,7 +41,7 @@ test(
 test(
   'Get token info owned with no Hold',
   withCallback(async (t: any, end: any) => {
-    const onOk: OnOk<UserSideOutput.TokenMetadata> = async (ok) => {
+    const onOk: OnOk<TokenMetadata> = async (ok) => {
       t.log(ok);
       ok.forEach((res) => {
         t.not(res.name, '');
@@ -64,7 +64,7 @@ test(
 test(
   'Get token info owned with Asc',
   withCallback((t: any, end: any) => {
-    const onOk: OnOk<UserSideOutput.TokenMetadata> = async (ok) => {
+    const onOk: OnOk<TokenMetadata> = async (ok) => {
       t.log(ok);
       ok.forEach((res) => {
         t.not(res.name, '');
@@ -86,7 +86,7 @@ test(
 
 test('Get token info by mint address', async (t) => {
   (await SplToken.findByMint(mint)).match(
-    (ok: UserSideOutput.TokenMetadata) => {
+    (ok: TokenMetadata) => {
       t.log(ok);
       t.not(ok.name, '');
       t.not(ok.mint, '');

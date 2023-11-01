@@ -1,3 +1,4 @@
+import { Pubkey } from '../account';
 import { Attribute, Properties, StorageType } from '../storage';
 import { FileType } from '../storage';
 import { InternalCreators, InternalCollection } from '../converter';

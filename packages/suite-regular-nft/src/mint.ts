@@ -21,7 +21,7 @@ import { Pubkey, Secret } from '~/types/account';
 import { MintInstruction } from '~/instruction';
 import { Node } from '~/node';
 import { Storage } from '~/storage';
-import { UserInput } from '~/types/converter';
+import { InputNftMetadata } from '~/types/regular-nft';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
 
@@ -119,7 +119,7 @@ export namespace RegularNft {
    *
    * @param {Pubkey} owner          // first minted owner
    * @param {Secret} signer         // owner's Secret
-   * @param {UserInput.NftMetadata} input
+   * @param {InputNftMetadata} input
    * {
    *   name: string               // nft content name
    *   symbol: string             // nft ticker symbol
@@ -143,12 +143,12 @@ export namespace RegularNft {
   export const mint = async (
     owner: Pubkey,
     signer: Secret,
-    input: UserInput.NftMetadata,
+    input: InputNftMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
   ): Promise<Result<MintInstruction, Error>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<UserInput.NftMetadata>(input);
+      const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
@@ -158,7 +158,7 @@ export namespace RegularNft {
       //--- porperties, Upload content ---
       let properties;
       if (input.properties && input.storageType) {
-        properties = await Converter.Properties.intoInfraSide(
+        properties = await Converter.Properties.intoInfra(
           input.properties,
           Storage.uploadFile,
           input.storageType,
@@ -174,9 +174,7 @@ export namespace RegularNft {
       };
       //--- porperties, Upload content ---
 
-      const sellerFeeBasisPoints = Converter.Royalty.intoInfraSide(
-        input.royalty,
-      );
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(input.royalty);
       const nftStorageMetadata = Storage.toConvertOffchaindata(
         input,
         sellerFeeBasisPoints,
@@ -205,7 +203,7 @@ export namespace RegularNft {
         throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
 
-      let datav2 = Converter.NftMetadata.intoInfraSide(
+      let datav2 = Converter.NftMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints,
@@ -214,7 +212,7 @@ export namespace RegularNft {
       //--- collection ---
       let collection;
       if (input.collection && input.collection) {
-        collection = Converter.Collection.intoInfraSide(input.collection);
+        collection = Converter.Collection.intoInfra(input.collection);
         datav2 = { ...datav2, collection };
       }
 

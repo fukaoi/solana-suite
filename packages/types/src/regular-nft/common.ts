@@ -1,3 +1,4 @@
+import { Pubkey } from '../account';
 import BN from 'bn.js';
 
 export type bignum = number | BN;

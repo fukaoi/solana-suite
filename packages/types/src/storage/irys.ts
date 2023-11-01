@@ -1,5 +1,6 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { PhantomProvider } from '../phantom';
+import { Secret } from '../account';
 
 export type BundlrSigner = Keypair | PhantomWallet | undefined;
 

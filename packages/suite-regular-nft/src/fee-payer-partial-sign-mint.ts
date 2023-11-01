@@ -1,10 +1,10 @@
 import { debugLog, Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
+import { InputNftMetadata } from '~/types/regular-nft';
 import { Node } from '~/node';
 import { PartialSignInstruction } from '~/instruction';
 import { Storage } from '~/storage';
 import { Converter } from '~/converter';
-import { UserInput } from '~/types/converter';
 import { Validator } from '~/validator';
 import { KeypairAccount } from '~/account';
 import { RegularNft as _Mint } from './mint';
@@ -40,24 +40,24 @@ export namespace RegularNft {
   export const feePayerPartialSignMint = async (
     owner: Pubkey,
     signer: Secret,
-    input: UserInput.NftMetadata,
+    input: InputNftMetadata,
     feePayer: Pubkey,
     freezeAuthority?: Secret,
   ): Promise<Result<PartialSignInstruction, Error>> => {
     return Try(async () => {
-      const valid = Validator.checkAll<UserInput.NftMetadata>(input);
+      const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
 
-      const sellerFeeBasisPoints = Converter.Royalty.intoInfraSide(
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(
         input.royalty,
       );
 
       //--- porperties, Upload content ---
       let uri = '';
       if (input.filePath && input.storageType === 'nftStorage') {
-        const properties = await Converter.Properties.intoInfraSide(
+        const properties = await Converter.Properties.intoInfra(
           input.properties,
           Storage.uploadFile,
           input.storageType,
@@ -85,7 +85,7 @@ export namespace RegularNft {
       }
       //--- porperties, Upload content ---
 
-      let datav2 = Converter.NftMetadata.intoInfraSide(
+      let datav2 = Converter.NftMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints,
@@ -94,7 +94,7 @@ export namespace RegularNft {
       //--- collection ---
       let collection;
       if (input.collection && input.collection) {
-        collection = Converter.Collection.intoInfraSide(input.collection);
+        collection = Converter.Collection.intoInfra(input.collection);
         datav2 = { ...datav2, collection };
       }
       //--- collection ---
