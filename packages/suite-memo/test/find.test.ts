@@ -6,9 +6,6 @@ import { OnErr, OnOk } from '~/types/shared';
 test('Get Only memo history', async (t) => {
   const onOk: OnOk<History> = (ok) => {
     console.log('# hisory size: ', ok.length); // t.log is buffering
-    if (ok.length === 0) {
-      t.pass();
-    }
     ok.forEach((res) => {
       t.not(res.source, '');
       t.not(res.destination, '');
@@ -20,10 +17,10 @@ test('Get Only memo history', async (t) => {
   };
 
   const onErr: OnErr = (err: Error) => t.fail(JSON.stringify(err, ['stack']));
-  await Memo.getHistory(
+  await Memo.findByOwner(
     'Ebq72X3i8ug6AX2G3v2ZoLA4ZcxHurvMuJYorqJ6sALD',
     onOk,
     onErr,
-    { narrowDown: 10 },
+    { narrowDown: 20 },
   );
 });

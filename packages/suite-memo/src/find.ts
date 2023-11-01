@@ -5,7 +5,7 @@ import { FilterType, ModuleName } from '~/types/transaction-filter';
 import { Signatures, TransactionFilter } from '~/transaction-filter';
 
 export namespace Memo {
-  export const getHistory = async (
+  export const findByOwner = async (
     target: Pubkey,
     onOk: OnOk<History>,
     onErr: OnErr,

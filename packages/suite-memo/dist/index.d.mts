@@ -787,7 +787,7 @@ declare global {
 }
 
 declare const Memo: {
-    getHistory: (target: Pubkey$1, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    findByOwner: (target: Pubkey$1, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
     create: (data: string, owner: Pubkey$1, signer: Secret, feePayer?: Secret | undefined) => Instruction;

@@ -1,7 +1,7 @@
 import { Memo as Create } from './create';
-import { Memo as History } from './history';
+import { Memo as Find } from './find';
 import '~/types/instruction';
 import '~/instruction';
 
 export * from '~/shared/exports';
-export const Memo = { ...Create, ...History };
+export const Memo = { ...Create, ...Find };
