@@ -2,7 +2,8 @@ import test from 'ava';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { RegularNft } from '../src/';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/account';
+import { KeypairAccount } from '~/types/account';
 import { Storage } from '~/storage';
 import { Converter } from '~/converter';
 
@@ -13,8 +14,8 @@ test.before(async () => {
 });
 
 test('[Nft Storage] mint nft with partial sing fee payer', async (t) => {
-  const owner = KeypairAccount.create();
-  const freezeAuthority = KeypairAccount.create();
+  const owner = Account.Keypair.create();
+  const freezeAuthority = Account.Keypair.create();
   const asset = RandomAsset.get();
   const serialized = await RegularNft.feePayerPartialSignMint(
     owner.pubkey,
@@ -46,7 +47,7 @@ test('[Nft Storage] mint nft with partial sing fee payer', async (t) => {
 
 test('[Arweave] use case arweave', async (t) => {
   const royalty = 60;
-  const owner = KeypairAccount.create();
+  const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
   const sellerFeeBasisPoints = Converter.Royalty.intoInfra(royalty);
 
@@ -95,7 +96,7 @@ test('[Arweave] use case arweave', async (t) => {
 });
 
 test('[Error]Raise parameter error when not need uri or filePath', async (t) => {
-  const owner = KeypairAccount.create();
+  const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
   const res = await RegularNft.feePayerPartialSignMint(
     owner.pubkey,

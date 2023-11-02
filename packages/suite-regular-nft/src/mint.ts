@@ -18,7 +18,7 @@ import {
 } from '@solana/spl-token';
 import { debugLog, Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
-import { MintInstruction } from '~/instruction';
+import { MintTransaction } from '~/transaction';
 import { Node } from '~/node';
 import { Storage } from '~/storage';
 import { InputNftMetadata } from '~/types/regular-nft';
@@ -30,7 +30,7 @@ import {
   createCreateMetadataAccountV3Instruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
-import { KeypairAccount, Pda } from '~/account';
+import { Account } from '~/account';
 const NFT_AMOUNT = 1;
 export namespace RegularNft {
   export const createDeleagateInstruction = (
@@ -56,8 +56,8 @@ export namespace RegularNft {
     isMutable: boolean,
   ): Promise<TransactionInstruction[]> => {
     const ata = getAssociatedTokenAddressSync(mint, owner);
-    const tokenMetadataPubkey = Pda.getMetadata(mint.toString());
-    const masterEditionPubkey = Pda.getMasterEdition(mint.toString());
+    const tokenMetadataPubkey = Account.Pda.getMetadata(mint.toString());
+    const masterEditionPubkey = Account.Pda.getMasterEdition(mint.toString());
     const connection = Node.getConnection();
 
     const inst1 = SystemProgram.createAccount({
@@ -146,7 +146,7 @@ export namespace RegularNft {
     input: InputNftMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
-  ): Promise<Result<MintInstruction, Error>> => {
+  ): Promise<Result<MintTransaction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -222,7 +222,7 @@ export namespace RegularNft {
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# datav2: ', datav2);
 
-      const mint = KeypairAccount.create();
+      const mint = Account.Keypair.create();
 
       const insts = await createMintInstructions(
         mint.toPublicKey(),
@@ -243,7 +243,7 @@ export namespace RegularNft {
         );
       }
 
-      return new MintInstruction(
+      return new MintTransaction(
         insts,
         [signer.toKeypair(), mint.toKeypair()],
         payer.toKeypair(),

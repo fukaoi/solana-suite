@@ -1,10 +1,10 @@
 import { Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
-import { Instruction } from '~/instruction';
+import { Transaction } from '~/transaction';
 
 import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createFreezeDelegatedAccountInstruction } from '@metaplex-foundation/mpl-token-metadata';
-import { KeypairAccount, Pda } from '~/account';
+import { Account } from '~/account';
 
 export namespace RegularNft {
   /**
@@ -20,22 +20,24 @@ export namespace RegularNft {
     owner: Pubkey,
     freezeAuthority: Secret,
     feePayer?: Secret,
-  ): Result<Instruction, Error> => {
+  ): Result<Transaction, Error> => {
     const payer = feePayer ? feePayer : freezeAuthority;
     return Try(() => {
       const tokenAccount = getAssociatedTokenAddressSync(
         mint.toPublicKey(),
         owner.toPublicKey(),
       );
-      const editionAddress = Pda.getMasterEdition(mint);
+      const editionAddress = Account.Pda.getMasterEdition(mint);
 
       const inst = createFreezeDelegatedAccountInstruction({
-        delegate: new KeypairAccount({ secret: freezeAuthority }).toPublicKey(),
+        delegate: new Account.Keypair({
+          secret: freezeAuthority,
+        }).toPublicKey(),
         tokenAccount: tokenAccount,
         edition: editionAddress,
         mint: mint.toPublicKey(),
       });
-      return new Instruction(
+      return new Transaction(
         [inst],
         [freezeAuthority.toKeypair()],
         payer.toKeypair(),

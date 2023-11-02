@@ -1,7 +1,7 @@
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Node } from '~/node';
 import { Constants, debugLog } from '~/shared';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/account';
 import { BigNumber } from 'bignumber.js';
 import { Explorer } from '~/types/global';
 import bs from 'bs58';
@@ -30,7 +30,7 @@ String.prototype.toExplorerUrl = function (
 
   const addressOrSignature: string = this.toString();
   let url = '';
-  if (KeypairAccount.isPubkey(addressOrSignature)) {
+  if (Account.Keypair.isPubkey(addressOrSignature)) {
     // address
     if (explorer === Explorer.SolanaFM) {
       url = `https://solana.fm/address/${addressOrSignature}?cluster=${cluster}`;
@@ -60,7 +60,7 @@ String.prototype.toExplorerUrl = function (
  * @returns PublicKey
  */
 String.prototype.toPublicKey = function () {
-  if (!KeypairAccount.isPubkey(this.toString())) {
+  if (!Account.Keypair.isPubkey(this.toString())) {
     throw Error(`No match KeyPair.PubKey: ${this.toString()}`);
   }
   return new PublicKey(this.toString());
@@ -73,7 +73,7 @@ String.prototype.toPublicKey = function () {
  * @returns Keypair
  */
 String.prototype.toKeypair = function () {
-  if (!KeypairAccount.isSecret(this.toString())) {
+  if (!Account.Keypair.isSecret(this.toString())) {
     throw Error(`No match KeyPair.Secret: ${this.toString()}`);
   }
   const decoded = bs.decode(this.toString());

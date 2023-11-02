@@ -1,11 +1,16 @@
 import {
   createCreateMasterEditionV3Instruction,
   createCreateMetadataAccountV3Instruction,
+  DataV2,
   createSetCollectionSizeInstruction,
   PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID,
 } from '@metaplex-foundation/mpl-token-metadata';
 
-import { PublicKey, SystemProgram } from '@solana/web3.js';
+import {
+  PublicKey,
+  SystemProgram,
+  TransactionInstruction,
+} from '@solana/web3.js';
 import {
   createAccount,
   createInitializeMint2Instruction,
@@ -20,6 +25,72 @@ import { Validator } from '~/validator';
 import { MintInstruction } from '~/instruction';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { KeypairAccount } from '@solana-suite/spl-token';
+
+export const createMintInstructions = async (
+  mint: PublicKey,
+  owner: PublicKey,
+  nftMetadata: DataV2,
+  feePayer: PublicKey,
+  isMutable: boolean,
+): Promise<TransactionInstruction[]> => {
+  const ata = getAssociatedTokenAddressSync(mint, owner);
+  const tokenMetadataPubkey = Pda.getMetadata(mint.toString());
+  const masterEditionPubkey = Pda.getMasterEdition(mint.toString());
+  const connection = Node.getConnection();
+
+  const inst1 = SystemProgram.createAccount({
+    fromPubkey: feePayer,
+    newAccountPubkey: mint,
+    lamports: await getMinimumBalanceForRentExemptMint(connection),
+    space: MINT_SIZE,
+    programId: TOKEN_PROGRAM_ID,
+  });
+
+  const inst2 = createInitializeMintInstruction(mint, 0, owner, owner);
+
+  const inst3 = createAssociatedTokenAccountInstruction(
+    feePayer,
+    ata,
+    owner,
+    mint,
+  );
+
+  const inst4 = createMintToCheckedInstruction(mint, ata, owner, 1, 0);
+
+  const inst5 = createCreateMetadataAccountV3Instruction(
+    {
+      metadata: tokenMetadataPubkey,
+      mint,
+      mintAuthority: owner,
+      payer: feePayer,
+      updateAuthority: owner,
+    },
+    {
+      createMetadataAccountArgsV3: {
+        data: nftMetadata,
+        isMutable,
+        collectionDetails: { __kind: 'V1', size: new BN(1) },
+      },
+    },
+  );
+
+  const inst6 = createCreateMasterEditionV3Instruction(
+    {
+      edition: masterEditionPubkey,
+      mint,
+      updateAuthority: owner,
+      mintAuthority: owner,
+      payer: feePayer,
+      metadata: tokenMetadataPubkey,
+    },
+    {
+      createMasterEditionArgs: {
+        maxSupply: 0,
+      },
+    },
+  );
+  return [inst1, inst2, inst3, inst4, inst5, inst6];
+};
 
 /**
  * create a collection

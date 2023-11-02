@@ -7,7 +7,7 @@ const entry = {
   find: 'src/find/index.ts',
   global: 'src/global/index.ts',
   history: 'src/history/index.ts',
-  instruction: 'src/instruction/index.ts',
+  transaction: 'src/transaction/index.ts',
   phantom: 'src/phantom/index.ts',
   shared: 'src/shared/index.ts',
   storage: 'src/storage/index.ts',

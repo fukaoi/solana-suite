@@ -6,7 +6,7 @@ import {
 import { Pubkey, Secret } from '../account';
 import { Result } from '../shared';
 
-export type Instruction = {
+export type Transaction = {
   instructions: TransactionInstruction[];
   signers: Keypair[];
   feePayer?: Keypair;
@@ -18,10 +18,10 @@ export type Instruction = {
     data?: unknown,
   ) => void;
   submit: () => Promise<Result<TransactionSignature, Error>>;
-  batchSubmit: (arr: Instruction[]) => Promise<TransactionSignature>;
+  batchSubmit: (arr: Default[]) => Promise<TransactionSignature>;
 };
 
-export type MintInstruction = {
+export type MintTransaction = {
   constructor: (
     instructions: TransactionInstruction[],
     signers: Keypair[],
@@ -31,7 +31,7 @@ export type MintInstruction = {
   submit: () => Promise<Result<TransactionSignature, Error>>;
 };
 
-export type PartialSignInstruction = {
+export type PartialSignTransaction = {
   hexInstruction: string;
   data?: Pubkey;
   constructor: (instructions: string, mint?: Pubkey) => void;

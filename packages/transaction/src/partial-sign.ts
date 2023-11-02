@@ -1,15 +1,15 @@
 import {
   ConfirmOptions,
-  Transaction,
+  Transaction as Tx,
   TransactionSignature,
 } from '@solana/web3.js';
 
 import { Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
-import { MAX_RETRIES } from './instruction/define';
+import { MAX_RETRIES } from './define';
 
-export class PartialSignInstruction {
+export class PartialSignTransaction {
   hexInstruction: string;
   data?: Pubkey;
 
@@ -22,12 +22,12 @@ export class PartialSignInstruction {
     feePayer: Secret,
   ): Promise<Result<TransactionSignature, Error>> => {
     return Try(async () => {
-      if (!(this instanceof PartialSignInstruction)) {
+      if (!(this instanceof PartialSignTransaction)) {
         throw Error('only PartialSignInstruction object that can use this');
       }
 
       const decode = Buffer.from(this.hexInstruction, 'hex');
-      const transactionFromJson = Transaction.from(decode);
+      const transactionFromJson = Tx.from(decode);
       transactionFromJson.partialSign(feePayer.toKeypair());
 
       const options: ConfirmOptions = {

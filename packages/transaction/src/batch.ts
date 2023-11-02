@@ -1,17 +1,17 @@
 import {
   ConfirmOptions,
   sendAndConfirmTransaction,
-  Transaction,
+  Transaction as Tx,
   TransactionSignature,
 } from '@solana/web3.js';
 
 import { Node } from '~/node';
 import { Try } from '~/shared';
 import { MAX_RETRIES } from './define';
-import { Instruction as _Index } from './';
+import { Transaction } from './default';
 
-export class Instruction {
-  static batchSubmit = async (arr: _Index[]): Promise<TransactionSignature> => {
+export class BatchTransaction {
+  static submit = async (arr: Transaction[]): Promise<TransactionSignature> => {
     let i = 0;
     for (const a of arr) {
       if (!a.instructions && !a.signers) {
@@ -31,7 +31,7 @@ export class Instruction {
       feePayer = feePayers[0].feePayer;
     }
 
-    const transaction = new Transaction();
+    const transaction = new Tx();
     let finalSigners = signers;
     if (feePayer) {
       transaction.feePayer = feePayer.publicKey;
@@ -62,7 +62,7 @@ export class Instruction {
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* @ts-ignore */
 Array.prototype.submit = async function () {
-  const instructions: _Index[] = [];
+  const instructions: Transaction[] = [];
   // dont use forEach
   // It is not possible to stop the process by RETURN in the middle of the process.
   return Try(async () => {
@@ -72,12 +72,12 @@ Array.prototype.submit = async function () {
         const errorMess: string = obj.error.message as string;
         throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
       } else if (obj.isOk) {
-        instructions.push(obj.value as _Index);
+        instructions.push(obj.value as Transaction);
       } else {
-        instructions.push(obj as _Index);
+        instructions.push(obj as Transaction);
       }
       i++;
     }
-    return Instruction.batchSubmit(instructions);
+    return BatchTransaction.submit(instructions);
   });
 };

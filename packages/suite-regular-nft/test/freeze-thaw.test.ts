@@ -2,7 +2,8 @@ import test from 'ava';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Pubkey } from '~/types/account';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/account';
+import { KeypairAccount } from '~/types/account';
 import { Node } from '~/node';
 import { RegularNft } from '../src/';
 
@@ -15,8 +16,8 @@ test.before(async () => {
 
 test('Freezing and Thawing a target nft', async (t) => {
   // mint
-  const owner = KeypairAccount.create();
-  const freezeAuthority = KeypairAccount.create();
+  const owner = Account.Keypair.create();
+  const freezeAuthority = Account.Keypair.create();
   const asset = RandomAsset.get();
   const inst1 = await RegularNft.mint(
     owner.pubkey,
@@ -33,7 +34,7 @@ test('Freezing and Thawing a target nft', async (t) => {
   );
 
   const mint = inst1.unwrap().data as Pubkey;
-  t.true(KeypairAccount.isPubkey(mint));
+  t.true(Account.Keypair.isPubkey(mint));
 
   (await inst1.submit()).match(
     async (ok: string) => {

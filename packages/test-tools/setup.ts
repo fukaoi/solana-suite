@@ -3,7 +3,8 @@ import bs from 'bs58';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Constants, debugLog, Pubkey, Secret } from '~/shared';
 import { Node } from '~/node';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/account';
+import { KeypairAccount } from '~/types/account';
 
 console.log(`\u001b[33m === TEST START ===`);
 console.log(`\u001b[33m solana-network: ${Constants.currentCluster}`);
@@ -18,11 +19,11 @@ export namespace Setup {
     const { source, dest } = await fetchSourceAndDest();
     log(source, dest);
     return {
-      source: new KeypairAccount({
+      source: new Account.Keypair({
         pubkey: source.pubkey,
         secret: source.secret,
       }),
-      dest: new KeypairAccount({ pubkey: dest.pubkey, secret: dest.secret }),
+      dest: new Account.Keypair({ pubkey: dest.pubkey, secret: dest.secret }),
     };
   };
 
@@ -62,12 +63,12 @@ export namespace Setup {
 
     await requestAirdrop(source.publicKey);
 
-    const sourceObject = new KeypairAccount({
+    const sourceObject = new Account.Keypair({
       pubkey: source.publicKey.toBase58() as Pubkey,
       secret: bs.encode(source.secretKey) as Secret,
     });
 
-    const destObject = new KeypairAccount({
+    const destObject = new Account.Keypair({
       pubkey: dest.publicKey.toBase58() as Pubkey,
       secret: bs.encode(dest.secretKey) as Secret,
     });

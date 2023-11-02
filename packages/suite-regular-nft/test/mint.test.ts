@@ -1,6 +1,7 @@
 import test from 'ava';
 import { RegularNft } from '../src';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/account';
+import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Pubkey } from '~/types/account';
@@ -25,7 +26,7 @@ test('[Arweave] mint nft', async (t) => {
     isMutable: true,
   });
 
-  t.true(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
+  t.true(Account.Keypair.isPubkey(res.unwrap().data as Pubkey));
 
   (await res.submit()).match(
     (ok: string) => {
@@ -37,7 +38,7 @@ test('[Arweave] mint nft', async (t) => {
 });
 
 test('[Nft Storage] mint nft with fee payer', async (t) => {
-  const owner = KeypairAccount.create();
+  const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
   const res = await RegularNft.mint(
     owner.pubkey,
@@ -52,7 +53,7 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
     source.secret,
   );
 
-  t.true(KeypairAccount.isPubkey(res.unwrap().data as Pubkey));
+  t.true(Account.Keypair.isPubkey(res.unwrap().data as Pubkey));
 
   (await res.submit()).match(
     (ok: string) => {
@@ -66,8 +67,8 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
 test('[Nft Storage] mint nft with many optional datas', async (t) => {
   const asset = RandomAsset.get();
   const creators: Creators[] = [];
-  const owner = KeypairAccount.create();
-  const freezeAuthority = KeypairAccount.create();
+  const owner = Account.Keypair.create();
+  const freezeAuthority = Account.Keypair.create();
 
   creators.push({
     address: owner.pubkey,
@@ -131,7 +132,7 @@ test('[Nft Storage] mint nft with many optional datas', async (t) => {
   (await res.submit()).match(
     (ok: string) => {
       const mint = res.unwrap().data as Pubkey;
-      t.true(KeypairAccount.isPubkey(mint));
+      t.true(Account.Keypair.isPubkey(mint));
       t.log('# mint:', mint);
       t.log('# sig:', ok);
     },
@@ -158,7 +159,7 @@ test('[Error]Raise validation error when upload meta data', async (t) => {
 });
 
 test('[Error]Raise parameter error when not need uri or filePath', async (t) => {
-  const owner = KeypairAccount.create();
+  const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
   const res = await RegularNft.mint(owner.pubkey, owner.secret, {
     name: asset.name!,

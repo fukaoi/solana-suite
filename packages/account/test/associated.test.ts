@@ -2,7 +2,8 @@ import test from 'ava';
 import { SplToken } from '@solana-suite/spl-token';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
-import { AssociatedAccount, KeypairAccount } from '../src';
+import { Account } from '../src';
+import { KeypairAccount } from '~/types/account';
 
 let source: KeypairAccount;
 const TOKEN_METADATA = {
@@ -33,7 +34,7 @@ test('Retry getOrCreate', async (t) => {
   t.true(mintInst.isOk);
   const mint = mintInst.unwrap().data as string;
 
-  const res = await AssociatedAccount.retryGetOrCreate(
+  const res = await Account.Associated.retryGetOrCreate(
     mint,
     source.pubkey,
     source.secret,

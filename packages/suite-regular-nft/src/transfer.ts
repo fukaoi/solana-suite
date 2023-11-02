@@ -1,7 +1,7 @@
 import { SplToken } from '~/suite-spl-token';
 import { Result } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
-import { Instruction } from '~/instruction';
+import { Transaction } from '~/transaction';
 
 export namespace RegularNft {
   const NFT_AMOUNT = 1;
@@ -13,7 +13,7 @@ export namespace RegularNft {
     dest: Pubkey,
     signers: Secret[],
     feePayer?: Secret,
-  ): Promise<Result<Instruction, Error>> => {
+  ): Promise<Result<Transaction, Error>> => {
     return SplToken.transfer(
       mint,
       owner,

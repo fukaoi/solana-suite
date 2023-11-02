@@ -2,7 +2,8 @@ import test from 'ava';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { RegularNft } from '../src/';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/account';
+import { KeypairAccount } from '~/types/account';
 import { Pubkey } from '~/types/account';
 
 let source: KeypairAccount;
@@ -13,7 +14,7 @@ test.before(async () => {
 });
 
 test('[Nft Storage] mint nft and nft burn', async (t) => {
-  const owner = KeypairAccount.create();
+  const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
   const inst1 = await RegularNft.mint(
     owner.pubkey,
@@ -32,7 +33,7 @@ test('[Nft Storage] mint nft and nft burn', async (t) => {
   (await inst1.submit()).match(
     async (ok: string) => {
       mint = inst1.unwrap().data as Pubkey;
-      t.true(KeypairAccount.isPubkey(mint));
+      t.true(Account.Keypair.isPubkey(mint));
       t.log('# mint:', inst1.unwrap().data);
       t.log('# sig:', ok);
       return ok;

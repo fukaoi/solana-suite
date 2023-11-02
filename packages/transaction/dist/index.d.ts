@@ -1,5 +1,4 @@
 import { TransactionSignature, PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
-import * as _solana_buffer_layout from '@solana/buffer-layout';
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -238,7 +237,7 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
-declare class Instruction {
+declare class Transaction {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
@@ -247,37 +246,24 @@ declare class Instruction {
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
-declare class MintInstruction extends Instruction {
+declare class BatchTransaction {
+    static submit: (arr: Transaction[]) => Promise<TransactionSignature>;
+}
+
+declare class MintTransaction {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: unknown;
     constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
-declare namespace MultisigInstruction {
-    const Layout: _solana_buffer_layout.Structure<{
-        m: number;
-        n: number;
-        is_initialized: number;
-        signer1: PublicKey;
-        signer2: PublicKey;
-        signer3: PublicKey;
-        signer4: PublicKey;
-        signer5: PublicKey;
-        signer6: PublicKey;
-        signer7: PublicKey;
-        signer8: PublicKey;
-        signer9: PublicKey;
-        signer10: PublicKey;
-        signer11: PublicKey;
-    }>;
-    const account: (newAccount: Keypair, feePayer: Keypair, balanceNeeded: number) => TransactionInstruction;
-    const multisig: (m: number, feePayer: Keypair, signerPubkey: PublicKey[]) => TransactionInstruction;
-}
-
-declare class PartialSignInstruction {
+declare class PartialSignTransaction {
     hexInstruction: string;
     data?: Pubkey;
     constructor(instructions: string, mint?: Pubkey);
     submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
 }
 
-export { Instruction, MintInstruction, MultisigInstruction, PartialSignInstruction };
+export { BatchTransaction, MintTransaction, PartialSignTransaction, Transaction };

@@ -1,6 +1,6 @@
 import test from 'ava';
 import { Keypair, PublicKey } from '@solana/web3.js';
-import { KeypairAccount } from '../src/';
+import { Account } from '../src/';
 import bs from 'bs58';
 import '~/global';
 
@@ -34,26 +34,26 @@ test('Failed convert string to SecretKey', (t) => {
 
 test.only('toPublicKey()', async (t) => {
   for (let index = 0; index < 50; index++) {
-    const pubkey = KeypairAccount.create().pubkey;
+    const pubkey = Account.Keypair.create().pubkey;
     t.log(pubkey.toPublicKey());
     t.pass();
   }
 });
 
 test('Create KeyPair Object', async (t) => {
-  const obj = new KeypairAccount({ pubkey: PUBKEY, secret: SECRET });
+  const obj = new Account.Keypair({ pubkey: PUBKEY, secret: SECRET });
   t.not(obj, undefined);
 });
 
 test('is Pubkey', async (t) => {
   for (let index = 0; index < 50; index++) {
-    t.true(KeypairAccount.isPubkey(KeypairAccount.create().pubkey));
+    t.true(Account.Keypair.isPubkey(Account.Keypair.create().pubkey));
   }
 });
 
 test('is Secret', async (t) => {
   for (let index = 0; index < 50; index++) {
-    t.true(KeypairAccount.isSecret(KeypairAccount.create().secret));
+    t.true(Account.Keypair.isSecret(Account.Keypair.create().secret));
   }
 });
 
@@ -63,6 +63,6 @@ test('Keypair to KeyPair', async (t) => {
     pubkey: keypair.publicKey.toString(),
     secret: bs.encode(keypair.secretKey).toString(),
   };
-  const res = KeypairAccount.toKeyPair(keypair);
+  const res = Account.Keypair.toKeyPair(keypair);
   t.like(res, expeted);
 });

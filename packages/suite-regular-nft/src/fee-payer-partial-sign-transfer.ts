@@ -1,6 +1,6 @@
 import { Result } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
-import { PartialSignInstruction } from '~/instruction';
+import { PartialSignTransaction } from '~/transaction';
 import { SplToken } from '~/suite-spl-token';
 
 export namespace RegularNft {
@@ -13,7 +13,7 @@ export namespace RegularNft {
     dest: Pubkey,
     signers: Secret[],
     feePayer: Pubkey,
-  ): Promise<Result<PartialSignInstruction, Error>> => {
+  ): Promise<Result<PartialSignTransaction, Error>> => {
     return SplToken.feePayerPartialSignTransfer(
       mint,
       owner,

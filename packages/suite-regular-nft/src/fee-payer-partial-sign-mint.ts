@@ -2,11 +2,11 @@ import { debugLog, Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { Node } from '~/node';
-import { PartialSignInstruction } from '~/instruction';
+import { PartialSignTransaction } from '~/transaction';
 import { Storage } from '~/storage';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/account';
 import { RegularNft as _Mint } from './mint';
 import { Transaction } from '@solana/web3.js';
 
@@ -43,7 +43,7 @@ export namespace RegularNft {
     input: InputNftMetadata,
     feePayer: Pubkey,
     freezeAuthority?: Secret,
-  ): Promise<Result<PartialSignInstruction, Error>> => {
+  ): Promise<Result<PartialSignTransaction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -103,7 +103,7 @@ export namespace RegularNft {
       debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# datav2: ', datav2);
 
-      const mint = KeypairAccount.create();
+      const mint = Account.Keypair.create();
       const insts = await _Mint.createMintInstructions(
         mint.toPublicKey(),
         owner.toPublicKey(),
@@ -138,7 +138,7 @@ export namespace RegularNft {
         requireAllSignatures: false,
       });
       const hex = serializedTx.toString('hex');
-      return new PartialSignInstruction(hex, mint.pubkey);
+      return new PartialSignTransaction(hex, mint.pubkey);
     });
   };
 }

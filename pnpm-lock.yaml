@@ -189,31 +189,6 @@ importers:
         specifier: workspace:*
         version: link:../build-configs/tsup
 
-  packages/instruction:
-    dependencies:
-      '@solana/buffer-layout':
-        specifier: ^4.0.1
-        version: 4.0.1
-      '@solana/spl-token':
-        specifier: ^0.3.8
-        version: 0.3.8(@solana/web3.js@1.87.1)
-      '@solana/web3.js':
-        specifier: ^1.78.5
-        version: 1.87.1
-    devDependencies:
-      build-configs/eslint:
-        specifier: workspace:*
-        version: link:../build-configs/eslint
-      build-configs/prettier:
-        specifier: workspace:*
-        version: link:../build-configs/prettier
-      build-configs/tsconfig:
-        specifier: workspace:*
-        version: link:../build-configs/tsconfig
-      build-configs/tsup:
-        specifier: workspace:*
-        version: link:../build-configs/tsup
-
   packages/node:
     dependencies:
       '@solana-suite/config':
@@ -748,6 +723,34 @@ importers:
       build-configs/tsconfig:
         specifier: workspace:*
         version: link:../build-configs/tsconfig
+
+  packages/transaction:
+    dependencies:
+      '@solana/buffer-layout':
+        specifier: ^4.0.1
+        version: 4.0.1
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.87.1)
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.87.1
+    devDependencies:
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
 
   packages/transaction-filter:
     dependencies:
