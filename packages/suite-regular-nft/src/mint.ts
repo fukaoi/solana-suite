@@ -91,7 +91,8 @@ export namespace RegularNft {
         createMetadataAccountArgsV3: {
           data: nftMetadata,
           isMutable,
-          collectionDetails: { __kind: 'V1', size: new BN(1) },
+          // collectionDetails: { __kind: 'V1', size: new BN(1) },
+          collectionDetails: null,
         },
       },
     );

@@ -76,14 +76,14 @@ export namespace CompressedNft {
       }
 
       let datav2 = Converter.NftMetadata.intoInfra(input, uri, 0);
+
       const isMutable = input.isMutable === undefined ? true : input.isMutable;
 
       debugLog('# input: ', input);
       debugLog('# datav2: ', datav2);
 
       const collectionMint = Account.Keypair.create();
-
-      const collectionMetadataAccount = Account.Pda.getMasterEdition(
+      const collectionMetadataAccount = Account.Pda.getMetadata(
         collectionMint.pubkey,
       );
 
@@ -114,7 +114,7 @@ export namespace CompressedNft {
             collectionMint: collectionMint.toKeypair().publicKey,
           },
           {
-            setCollectionSizeArgs: { size: 50 },
+            setCollectionSizeArgs: { size: 100 },
           },
         ),
       );
