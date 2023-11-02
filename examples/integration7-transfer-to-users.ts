@@ -4,12 +4,7 @@
 
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
-import {
-  KeypairAccount,
-  Pubkey,
-  Secret,
-  SplToken,
-} from '@solana-suite/spl-token';
+import { Account, Pubkey, Secret, SplToken } from '@solana-suite/spl-token';
 
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 import { RandomAsset } from 'test-tools/setupAsset';
@@ -29,7 +24,7 @@ const SLEEP_TIME_WAIT = 0;
 
   let users: { pubkey: Pubkey; secret: Secret }[] = [];
   for (let i = 0; i < USERS_COUNT; i++) {
-    users.push(KeypairAccount.create());
+    users.push(Account.Keypair.create());
   }
 
   // manual setting
@@ -39,7 +34,7 @@ const SLEEP_TIME_WAIT = 0;
   // );
 
   // random create
-  const owner = KeypairAccount.create();
+  const owner = Account.Keypair.create();
 
   // faucet
   if (process.env.AIR_DROP) {

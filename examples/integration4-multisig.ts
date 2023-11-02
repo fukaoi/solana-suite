@@ -3,7 +3,7 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { KeypairAccount, Multisig, Node, Pubkey } from '@solana-suite/multisig';
+import { Account, Multisig, Node, Pubkey } from '@solana-suite/multisig';
 import { Airdrop } from '@solana-suite/airdrop';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 
@@ -18,12 +18,12 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // publisher: mint token, transfer token and pay transaction fee account
   // receipt: generally user account. sol not stocked
 
-  const feePayer = KeypairAccount.create();
+  const feePayer = Account.Keypair.create();
 
   // signer for multisig
-  const signer1 = KeypairAccount.create();
-  const signer2 = KeypairAccount.create();
-  const signer3 = KeypairAccount.create();
+  const signer1 = Account.Keypair.create();
+  const signer2 = Account.Keypair.create();
+  const signer3 = Account.Keypair.create();
 
   // faucet
   if (process.env.AIR_DROP) {

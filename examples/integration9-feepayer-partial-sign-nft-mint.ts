@@ -6,12 +6,12 @@ import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 import { RandomAsset } from 'test-tools/setupAsset';
-import { KeypairAccount, TraditionalNft } from '@solana-suite/traditional-nft';
+import { Account, RegularNft } from '@solana-suite/regular-nft';
 
 (async () => {
   // random create
-  const owner = KeypairAccount.create();
-  const feePayer = KeypairAccount.create();
+  const owner = Account.Keypair.create();
+  const feePayer = Account.Keypair.create();
 
   // faucet
   if (process.env.AIR_DROP) {
@@ -39,7 +39,7 @@ import { KeypairAccount, TraditionalNft } from '@solana-suite/traditional-nft';
     isMutable: false,
   };
 
-  const inst = await TraditionalNft.feePayerPartialSignMint(
+  const inst = await RegularNft.feePayerPartialSignMint(
     owner.pubkey,
     owner.secret,
     metadata,

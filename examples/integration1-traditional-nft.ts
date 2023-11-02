@@ -4,12 +4,7 @@
 
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
-import {
-  KeypairAccount,
-  Node,
-  Pubkey,
-  TraditionalNft,
-} from '@solana-suite/traditional-nft';
+import { Account, Node, Pubkey, RegularNft } from '@solana-suite/regular-nft';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 
@@ -19,9 +14,9 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
 
   // create nft owner wallet.
-  const owner = KeypairAccount.create();
-  const receipt = KeypairAccount.create();
-  const feePayer = KeypairAccount.create();
+  const owner = Account.Keypair.create();
+  const receipt = Account.Keypair.create();
+  const feePayer = Account.Keypair.create();
 
   // faucet
   if (process.env.AIR_DROP) {
@@ -43,7 +38,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // CREATE NFT, MINT NFT FROM THIS LINE
   //////////////////////////////////////////////
 
-  const inst1 = await TraditionalNft.mint(
+  const inst1 = await RegularNft.mint(
     owner.pubkey,
     owner.secret,
     {
@@ -71,7 +66,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // Display metadata from blockchain(optional)
   //////////////////////////////////////////////
 
-  await TraditionalNft.findByOwner(
+  await RegularNft.findByOwner(
     owner.pubkey,
     (value) => console.log('# metadata: ', value),
     (error) => assert.fail(error),
@@ -82,7 +77,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
 
   //transfer nft owner => receipt
-  const inst2 = await TraditionalNft.transfer(
+  const inst2 = await RegularNft.transfer(
     mint,
     owner.pubkey,
     receipt.pubkey,

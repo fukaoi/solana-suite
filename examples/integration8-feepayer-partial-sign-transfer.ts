@@ -5,16 +5,16 @@
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
 import { SplToken } from '@solana-suite/spl-token';
-import { KeypairAccount, Pubkey, SolNative } from '@solana-suite/sol-native';
+import { Account, Pubkey, SolNative } from '@solana-suite/sol-native';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 import { RandomAsset } from 'test-tools/setupAsset';
 
 (async () => {
   // random create
-  const owner = KeypairAccount.create();
-  const tokenOwner = KeypairAccount.create();
-  const dest = KeypairAccount.create();
-  const feePayer = KeypairAccount.create();
+  const owner = Account.Keypair.create();
+  const tokenOwner = Account.Keypair.create();
+  const dest = Account.Keypair.create();
+  const feePayer = Account.Keypair.create();
 
   // faucet
   if (process.env.AIR_DROP) {

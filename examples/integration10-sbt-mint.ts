@@ -4,11 +4,7 @@
 
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
-import {
-  KeypairAccount,
-  Pubkey,
-  TraditionalNft,
-} from '@solana-suite/traditional-nft';
+import { Account, Pubkey, RegularNft } from '@solana-suite/regular-nft';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 
@@ -18,9 +14,9 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
 
   // create nft owner wallet.
-  const owner = KeypairAccount.create();
-  const freeze = KeypairAccount.create();
-  const feePayer = KeypairAccount.create();
+  const owner = Account.Keypair.create();
+  const freeze = Account.Keypair.create();
+  const feePayer = Account.Keypair.create();
 
   // faucet
   if (process.env.AIR_DROP) {
@@ -42,7 +38,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // CREATE NFT, MINT NFT FROM THIS LINE
   //////////////////////////////////////////////
 
-  const inst1 = await TraditionalNft.mint(
+  const inst1 = await RegularNft.mint(
     owner.pubkey,
     owner.secret,
     {
@@ -63,7 +59,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
   // CHANGE STATE TO SBT
   //////////////////////////////////////////////
-  const inst2 = TraditionalNft.freeze(
+  const inst2 = RegularNft.freeze(
     mint,
     owner.pubkey,
     freeze.secret,

@@ -9,7 +9,7 @@
   ],
   "devDependencies": {
     "@solana-suite/airdrop": "../packages/suite-airdrop/",
-    "@solana-suite/traditional-nft": "../packages/suite-traditional-nft/",
+    "@solana-suite/suite-regular-nft": "../packages/suite-regular-nft/",
     "test-tools": "../packages/test-tools/"
   }
 }

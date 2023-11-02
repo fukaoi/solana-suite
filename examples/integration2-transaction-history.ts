@@ -5,8 +5,8 @@
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
 import {
+  Account,
   FilterType,
-  KeypairAccount,
   Node,
   Pubkey,
   SplToken,
@@ -21,8 +21,8 @@ import { RandomAsset } from 'test-tools/setupAsset';
   //////////////////////////////////////////////
 
   // create token owner wallet, receive token receipt wallet.
-  const owner = KeypairAccount.create();
-  const receipt = KeypairAccount.create();
+  const owner = Account.Keypair.create();
+  const receipt = Account.Keypair.create();
 
   // faucet
   if (process.env.AIR_DROP) {
@@ -87,18 +87,5 @@ import { RandomAsset } from 'test-tools/setupAsset';
       await Node.confirmedSig(value);
     },
     (error) => assert.fail(error),
-  );
-
-  //////////////////////////////////////////////
-  // GET TRANSACTION HISTORY
-  //////////////////////////////////////////////
-
-  await SplToken.getHistory(
-    owner.pubkey, // search key
-    FilterType.Transfer,
-    (histories) => {
-      histories.forEach((history) => console.log(history));
-    },
-    (err) => assert.fail(err.message),
   );
 })();
