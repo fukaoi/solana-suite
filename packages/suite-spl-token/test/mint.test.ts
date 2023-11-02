@@ -3,7 +3,8 @@ import { Setup } from 'test-tools/setup';
 import { Pubkey } from '~/types/account';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { SplToken } from '../src';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/Account';
+import { KeypairAccount } from '~/types/account';
 
 let source: KeypairAccount;
 let mintStr: string;
@@ -34,7 +35,7 @@ test('Create token', async (t) => {
   );
 
   t.true(inst.isOk, `${inst.unwrap()}`);
-  t.true(KeypairAccount.isPubkey(inst.unwrap().data as Pubkey));
+  t.true(Account.Keypair.isPubkey(inst.unwrap().data as Pubkey));
 
   const res = await inst.submit();
   t.true(res.isOk, res.unwrap());
@@ -43,8 +44,8 @@ test('Create token', async (t) => {
 });
 
 test('Create token with creators, freezeAuthority', async (t) => {
-  const creator = KeypairAccount.create();
-  const freezeAuthority = KeypairAccount.create();
+  const creator = Account.Keypair.create();
+  const freezeAuthority = Account.Keypair.create();
   const tokenMetadata = {
     name: 'solana-suite-token',
     symbol: 'SST',
@@ -75,7 +76,7 @@ test('Create token with creators, freezeAuthority', async (t) => {
   );
 
   t.true(inst.isOk, `${inst.unwrap()}`);
-  t.true(KeypairAccount.isPubkey(inst.unwrap().data as Pubkey));
+  t.true(Account.Keypair.isPubkey(inst.unwrap().data as Pubkey));
 
   const res = await inst.submit();
   t.true(res.isOk, res.unwrap());
@@ -84,7 +85,7 @@ test('Create token with creators, freezeAuthority', async (t) => {
 });
 
 test('[Error]Raise parameter error when not need uri or filePath', async (t) => {
-  const owner = KeypairAccount.create();
+  const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
   const res = await SplToken.mint(
     owner.pubkey,

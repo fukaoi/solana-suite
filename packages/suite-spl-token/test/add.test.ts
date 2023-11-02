@@ -2,7 +2,7 @@ import test from 'ava';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { SplToken } from '../src/';
-import { KeypairAccount } from '~/account';
+import { KeypairAccount } from '~/types/account';
 import { Pubkey } from '~/types/account';
 
 let source: KeypairAccount;

@@ -1,5 +1,5 @@
-import { KeypairAccount } from '~/account';
-import { Instruction } from '~/instruction';
+import { Account } from '~/account';
+import { Transaction } from '~/transaction';
 import { Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 
@@ -22,7 +22,7 @@ export namespace SplToken {
     owner: Pubkey,
     freezeAuthority: Secret,
     feePayer?: Secret,
-  ): Result<Instruction, Error> => {
+  ): Result<Transaction, Error> => {
     const payer = feePayer ? feePayer : freezeAuthority;
     return Try(() => {
       const tokenAccount = getAssociatedTokenAddressSync(
@@ -32,10 +32,10 @@ export namespace SplToken {
       const inst = createFreezeAccountInstruction(
         tokenAccount,
         mint.toPublicKey(),
-        new KeypairAccount({ secret: freezeAuthority }).toPublicKey(),
+        new Account.Keypair({ secret: freezeAuthority }).toPublicKey(),
       );
 
-      return new Instruction(
+      return new Transaction(
         [inst],
         [freezeAuthority.toKeypair()],
         payer.toKeypair(),

@@ -6,8 +6,8 @@ import { SplToken as FeePayer } from './fee-payer-partial-sign-transfer';
 import { SplToken as Mint } from './mint';
 import { SplToken as Thaw } from './thaw';
 import { SplToken as Transfer } from './transfer';
-import '~/types/instruction';
-import '~/instruction';
+import '~/types/transaction';
+import '~/transaction';
 
 export const SplToken = {
   ...Add,

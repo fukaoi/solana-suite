@@ -2,8 +2,8 @@ import test from 'ava';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { SplToken } from '../src/';
-import { KeypairAccount } from '~/account';
-import { Pubkey } from '~/types/account';
+import { KeypairAccount, Pubkey } from '~/types/account';
+import { Account } from '~/account';
 
 let source: KeypairAccount;
 
@@ -24,8 +24,8 @@ test.before(async () => {
 });
 
 test('transfer feePayerPartialSign', async (t) => {
-  const tokenOwner = KeypairAccount.create();
-  const receipt = KeypairAccount.create();
+  const tokenOwner = Account.Keypair.create();
+  const receipt = Account.Keypair.create();
   t.log('# owner: ', tokenOwner.pubkey);
   t.log('# receipt: ', receipt.pubkey);
 

@@ -1,4 +1,4 @@
-export { OwnerInfo, Pubkey, Secret } from './account.mjs';
+export { KeypairAccount, OwnerInfo, Pubkey, Secret } from './account.mjs';
 export { InternalCollection, InternalCreators } from './converter.mjs';
 export { History, HistoryOptions } from './history.mjs';
 export { Find, Sortable } from './find.mjs';
@@ -8,7 +8,7 @@ export { P as PhantomProvider, c as connectOption } from './phantom-e9a40784.js'
 export { R as Result } from './result-b9d23549.js';
 export { AnyObject, OnErr, OnOk, OverwriteObject } from './shared.mjs';
 export { Attribute, BundlrSigner, FileType, Identity, Offchain, OnchainAndOffchain, PhantomWallet, Properties, StorageType, Tags, UploadableFileType } from './storage.mjs';
-export { Transaction } from './transaction.mjs';
+export { MintTransaction, PartialSignTransaction, Transaction } from './transaction.mjs';
 export { FilterOptions, FilterType, Memo, MintTo, MintToChecked, ModuleName, PostTokenAccount, Transfer, TransferChecked, WithMemo } from './transaction-filter.mjs';
 export { Collection, Creators, InputCollection, InputNftMetadata, InputTokenMetadata, MetaplexDataV2, NftMetadata, Option, Options, TokenMetadata, TokenStandard, UseMethod, Uses, bignum } from './regular-nft.mjs';
 export { Condition, Details, Limit } from './validator.mjs';

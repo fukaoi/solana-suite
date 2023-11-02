@@ -1,5 +1,5 @@
 import { Result } from '~/shared';
-import { Instruction } from '~/instruction';
+import { Transaction } from '~/transaction';
 import { Pubkey, Secret } from '~/types/account';
 import { SplToken } from '~/suite-spl-token';
 
@@ -12,7 +12,7 @@ export namespace RegularNft {
     owner: Pubkey,
     signer: Secret,
     feePayer?: Secret,
-  ): Result<Instruction, Error> => {
+  ): Result<Transaction, Error> => {
     return SplToken.burn(
       mint,
       owner,

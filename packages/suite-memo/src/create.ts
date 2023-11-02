@@ -1,5 +1,5 @@
 import { TransactionInstruction } from '@solana/web3.js';
-import { Instruction } from '~/instruction';
+import { Transaction } from '~/transaction';
 import { Constants } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 import bs from 'bs58';
@@ -16,7 +16,7 @@ export namespace Memo {
     owner: Pubkey,
     signer: Secret,
     feePayer?: Secret,
-  ): Instruction => {
+  ): Transaction => {
     const key = owner.toPublicKey()
       ? [
           {
@@ -35,7 +35,7 @@ export namespace Memo {
 
     const payer = feePayer || signer;
 
-    return new Instruction(
+    return new Transaction(
       [instruction],
       [signer.toKeypair()],
       payer.toKeypair(),

@@ -4,7 +4,8 @@ import { RandomAsset } from 'test-tools/setupAsset';
 import { SplToken } from '../src';
 import { Pubkey } from '~/types/account';
 import { Node } from '~/node';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/account';
+import { KeypairAccount } from '~/types/account';
 
 let feePayer: KeypairAccount;
 
@@ -15,8 +16,8 @@ test.before(async () => {
 
 test('Freezing and Thawing a target nft', async (t) => {
   // mint
-  const owner = KeypairAccount.create();
-  const freezeAuthority = KeypairAccount.create();
+  const owner = Account.Keypair.create();
+  const freezeAuthority = Account.Keypair.create();
   const inst1 = await SplToken.mint(
     owner.pubkey,
     owner.secret,
@@ -34,7 +35,7 @@ test('Freezing and Thawing a target nft', async (t) => {
   );
 
   const mint = inst1.unwrap().data as Pubkey;
-  t.true(KeypairAccount.isPubkey(mint));
+  t.true(Account.Keypair.isPubkey(mint));
 
   (await inst1.submit()).match(
     async (ok: string) => {

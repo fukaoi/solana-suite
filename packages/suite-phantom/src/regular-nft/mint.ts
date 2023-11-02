@@ -3,7 +3,7 @@ import { RegularNft } from '~/suite-regular-nft';
 import { Storage } from '~/storage';
 import { Node } from '~/node';
 import { debugLog, Result, Try } from '~/shared';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/account';
 import { Validator, ValidatorError } from '~/validator';
 import { Converter } from '~/converter';
 import { PhantomProvider } from '~/types/phantom';
@@ -64,7 +64,7 @@ export namespace PhantomMetaplex {
       );
 
       const connection = Node.getConnection();
-      const mint = KeypairAccount.create();
+      const mint = Account.Keypair.create();
       const isMutable = true;
 
       debugLog('# properties: ', properties);

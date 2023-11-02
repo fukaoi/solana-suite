@@ -1,7 +1,7 @@
 import { SystemProgram } from '@solana/web3.js';
 import { Pubkey, Secret } from '~/types/account';
 import { Result, Try } from '~/shared';
-import { Instruction } from '~/instruction';
+import { Transaction } from '~/transaction';
 
 export namespace SolNative {
   const RADIX = 10;
@@ -11,7 +11,7 @@ export namespace SolNative {
     signers: Secret[],
     amount: number,
     feePayer?: Secret,
-  ): Result<Instruction, Error> => {
+  ): Result<Transaction, Error> => {
     return Try(() => {
       const inst = SystemProgram.transfer({
         fromPubkey: source.toPublicKey(),
@@ -21,7 +21,7 @@ export namespace SolNative {
 
       const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
 
-      return new Instruction(
+      return new Transaction(
         [inst],
         signers.map((s) => s.toKeypair()),
         payer,

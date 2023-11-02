@@ -18,7 +18,7 @@ export type Transaction = {
     data?: unknown,
   ) => void;
   submit: () => Promise<Result<TransactionSignature, Error>>;
-  batchSubmit: (arr: Default[]) => Promise<TransactionSignature>;
+  batchSubmit: (arr: Transaction[]) => Promise<TransactionSignature>;
 };
 
 export type MintTransaction = {

@@ -4,7 +4,7 @@ import { Node } from '~/node';
 import { LayoutObject } from '@solana/buffer-layout';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { PublicKey } from '@solana/web3.js';
-import { MultisigInstruction } from '~/instruction';
+import { MultisigInstruction } from './create';
 
 export namespace Multisig {
   export const getInfo = async (

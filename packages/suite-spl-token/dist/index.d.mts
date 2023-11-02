@@ -1,7 +1,7 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
+import { TransactionSignature, PublicKey, TransactionInstruction, Keypair, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
-import * as _solana_buffer_layout from '@solana/buffer-layout';
+import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
 
 declare abstract class AbstractResult$1<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
@@ -206,6 +206,49 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
+declare enum Sortable {
+    Asc = "asc",
+    Desc = "desc"
+}
+type Find = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+
+type History = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+
+type OnOk<T extends History | Find> = (ok: T[]) => void;
+type OnErr = (err: Error) => void;
+
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
 type Pubkey$1 = (string & {
@@ -223,95 +266,6 @@ type OwnerInfo = {
     lamports: number;
     owner: string;
 };
-
-/**
- * Get Associated token Account.
- * if not created, create new token accouint
- *
- * @param {Pubkey} mint
- * @param {Pubkey} owner
- * @param {Secret} feePayer
- * @param {boolean} allowOwnerOffCurve
- * @returns Promise<string | Instruction>
- */
-declare namespace Account$3 {
-    namespace Associated {
-        /**
-         * Retry function if create new token accouint
-         *
-         * @param {Pubkey} mint
-         * @param {Pubkey} owner
-         * @param {Secret} feePayer
-         * @returns Promise<string>
-         */
-        const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret) => Promise<string>;
-        /**
-         * [Main logic]Get Associated token Account.
-         * if not created, create new token accouint
-         *
-         * @param {Pubkey} mint
-         * @param {Pubkey} owner
-         * @param {Pubkey} feePayer
-         * @returns Promise<string>
-         */
-        const makeOrCreateInstruction: (mint: Pubkey$1, owner: Pubkey$1, feePayer?: Pubkey$1, allowOwnerOffCurve?: boolean) => Promise<{
-            tokenAccount: string;
-            inst: TransactionInstruction | undefined;
-        }>;
-    }
-}
-
-declare namespace Account$2 {
-    class Keypair {
-        secret: Secret;
-        pubkey: Pubkey$1;
-        constructor(params: {
-            pubkey?: Pubkey$1;
-            secret: Secret;
-        });
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        static isPubkey: (value: string) => value is Pubkey$1;
-        static isSecret: (value: string) => value is Secret;
-        static create: () => Keypair;
-        static toKeyPair: (keypair: Keypair) => Keypair;
-    }
-}
-
-declare namespace Account$1 {
-    namespace Pda {
-        const getMetadata: (mint: Pubkey$1) => PublicKey;
-        const getMasterEdition: (mint: Pubkey$1) => PublicKey;
-    }
-}
-
-declare const Account: {
-    Pda: typeof Account$1.Pda;
-    Keypair: typeof Account$2.Keypair;
-    Associated: typeof Account$3.Associated;
-};
-
-declare namespace Node {
-    const getConnection: () => Connection;
-    const changeConnection: (param: {
-        cluster?: string;
-        commitment?: Commitment;
-        customClusterUrl?: string[];
-    }) => void;
-    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result$1.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Ok<never, any> | Result$1.Err<never, any>>;
-}
-
-type Condition = 'overMax' | 'underMin';
-interface Limit {
-    threshold: number;
-    condition: Condition;
-}
-interface Details {
-    key: string;
-    message: string;
-    actual: string | number;
-    limit?: Limit;
-}
 
 type FileType = string | File;
 
@@ -392,6 +346,13 @@ type MetaplexDataV2 = {
     collection: Option<InternalCollection>;
     uses: Option<Uses>;
 };
+declare enum TokenStandard {
+    NonFungible = 0,
+    FungibleAsset = 1,
+    Fungible = 2,
+    NonFungibleEdition = 3,
+    ProgrammableNonFungible = 4
+}
 type InputNftMetadata = {
     name: string;
     symbol: string;
@@ -411,150 +372,55 @@ type InputNftMetadata = {
     options?: Options;
 };
 
-declare namespace Validator {
-    export namespace Message {
-        const SUCCESS = "success";
-        const SMALL_NUMBER = "too small";
-        const BIG_NUMBER = "too big";
-        const LONG_LENGTH = "too long";
-        const EMPTY = "invalid empty value";
-        const INVALID_URL = "invalid url";
-        const ONLY_NODE_JS = "`string` type is only Node.js";
-    }
-    export const NAME_LENGTH = 32;
-    export const SYMBOL_LENGTH = 10;
-    export const URL_LENGTH = 200;
-    export const ROYALTY_MAX = 100;
-    export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
-    export const ROYALTY_MIN = 0;
-    export const isRoyalty: (royalty: number) => Result$1<string, ValidatorError>;
-    export const isSellerFeeBasisPoints: (royalty: number) => Result$1<string, ValidatorError>;
-    export const isName: (name: string) => Result$1<string, ValidatorError>;
-    export const isSymbol: (symbol: string) => Result$1<string, ValidatorError>;
-    export const isImageUrl: (image: string) => Result$1<string, ValidatorError>;
-    export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result$1<string, ValidatorError>;
-    type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
-    type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
-    export {};
-}
-declare class ValidatorError extends Error {
-    details: Details[];
-    constructor(message: string, details: Details[]);
-}
-
-declare enum FilterType {
-    Memo = "memo",
-    Mint = "mint",
-    OnlyMemo = "only-memo",
-    Transfer = "transfer"
-}
-declare enum ModuleName {
-    SolNative = "system",
-    SplToken = "spl-token"
-}
-declare const FilterOptions: {
-    Transfer: {
-        program: string[];
-        action: string[];
-    };
-    Memo: {
-        program: string[];
-        action: string[];
-    };
-    Mint: {
-        program: string[];
-        action: string[];
-    };
+type Collection = {
+    address: Pubkey$1;
+    verified: boolean;
 };
-type PostTokenAccount = {
-    account: string;
-    owner: string;
-};
-type WithMemo = {
-    sig: string[];
-    memo: string;
-};
-type Transfer = {
-    parsed: {
-        info: {
-            destination: Pubkey;
-            source: Pubkey;
-            lamports: number;
-        };
-        type: string;
-    };
-    program: string;
-    programId?: PublicKey;
-};
-type MintTo = {
-    parsed: {
-        info: {
-            account: Pubkey;
-            mint: Pubkey;
-            mintAuthority: Pubkey;
-            tokenAmount: string;
-        };
-        type: string;
-    };
-    program: string;
-    programId?: PublicKey;
-};
-type MintToChecked = MintTo;
-type TransferChecked = {
-    parsed: {
-        info: {
-            destination: Pubkey;
-            mint: Pubkey;
-            multisigAuthority: Pubkey;
-            signers: Pubkey[];
-            source: Pubkey;
-            tokenAmount: string;
-        };
-        type: string;
-    };
-    program: string;
-    programId?: PublicKey;
-};
-type Memo = {
-    parsed: string;
-    program: string;
-    programId: PublicKey;
+type NftMetadata = {
+    mint: string;
+    updateAuthority: string;
+    royalty: number;
+    name: string;
+    symbol: string;
+    uri: string;
+    isMutable: boolean;
+    primarySaleHappened: boolean;
+    editionNonce: Option<number>;
+    offchain: Offchain;
+    tokenAmount: string;
+    collection?: Collection | undefined;
+    creators?: Creators[] | undefined;
+    uses?: Uses | undefined;
+    dateTime?: Date | undefined;
 };
 
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm"
-}
+type InputTokenMetadata = {
+    name: string;
+    symbol: string;
+    filePath?: FileType;
+    uri?: string;
+    storageType?: StorageType;
+    description?: string;
+    royalty?: number;
+    uses?: Uses;
+    creators?: Creators[];
+    attributes?: Attribute[];
+    options?: Options;
+};
 
-declare class Transaction {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    data?: unknown;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
-    submit: () => Promise<Result$1<TransactionSignature, Error>>;
-}
+type TokenMetadata = {
+    mint: string;
+    name: string;
+    symbol: string;
+    uri: string;
+    royalty: number;
+    offchain: Offchain;
+    tokenAmount: string;
+    attributes?: Attribute | undefined;
+    creators?: Creators[] | undefined;
+    uses?: Uses | undefined;
+    dateTime?: Date | undefined;
+};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -759,16 +625,279 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-declare global {
-    interface Array<T> {
-        submit(): Promise<Result<TransactionSignature, Error>>;
+/**
+ * Get Associated token Account.
+ * if not created, create new token accouint
+ *
+ * @param {Pubkey} mint
+ * @param {Pubkey} owner
+ * @param {Secret} feePayer
+ * @param {boolean} allowOwnerOffCurve
+ * @returns Promise<string | Instruction>
+ */
+declare namespace Account$3 {
+    namespace Associated {
+        /**
+         * Retry function if create new token accouint
+         *
+         * @param {Pubkey} mint
+         * @param {Pubkey} owner
+         * @param {Secret} feePayer
+         * @returns Promise<string>
+         */
+        const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret) => Promise<string>;
+        /**
+         * [Main logic]Get Associated token Account.
+         * if not created, create new token accouint
+         *
+         * @param {Pubkey} mint
+         * @param {Pubkey} owner
+         * @param {Pubkey} feePayer
+         * @returns Promise<string>
+         */
+        const makeOrCreateInstruction: (mint: Pubkey$1, owner: Pubkey$1, feePayer?: Pubkey$1, allowOwnerOffCurve?: boolean) => Promise<{
+            tokenAccount: string;
+            inst: TransactionInstruction | undefined;
+        }>;
     }
 }
 
-declare const Multisig: {
-    isAddress: (multisig: Pubkey$1) => Promise<Result$1<boolean, Error>>;
-    getInfo: (multisig: Pubkey$1) => Promise<Result$1<_solana_buffer_layout.LayoutObject, Error>>;
-    create: (m: number, feePayer: Secret, signerPubkeys: Pubkey$1[]) => Promise<Result$1<Transaction, Error>>;
+declare namespace Account$2 {
+    class Keypair {
+        secret: Secret;
+        pubkey: Pubkey$1;
+        constructor(params: {
+            pubkey?: Pubkey$1;
+            secret: Secret;
+        });
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        static isPubkey: (value: string) => value is Pubkey$1;
+        static isSecret: (value: string) => value is Secret;
+        static create: () => Keypair;
+        static toKeyPair: (keypair: Keypair) => Keypair;
+    }
+}
+
+declare namespace Account$1 {
+    namespace Pda {
+        const getMetadata: (mint: Pubkey$1) => PublicKey;
+        const getMasterEdition: (mint: Pubkey$1) => PublicKey;
+    }
+}
+
+declare const Account: {
+    Pda: typeof Account$1.Pda;
+    Keypair: typeof Account$2.Keypair;
+    Associated: typeof Account$3.Associated;
 };
 
-export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Multisig, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };
+declare namespace Node {
+    const getConnection: () => Connection;
+    const changeConnection: (param: {
+        cluster?: string;
+        commitment?: Commitment;
+        customClusterUrl?: string[];
+    }) => void;
+    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
+}
+
+type Condition = 'overMax' | 'underMin';
+interface Limit {
+    threshold: number;
+    condition: Condition;
+}
+interface Details {
+    key: string;
+    message: string;
+    actual: string | number;
+    limit?: Limit;
+}
+
+declare namespace Validator {
+    export namespace Message {
+        const SUCCESS = "success";
+        const SMALL_NUMBER = "too small";
+        const BIG_NUMBER = "too big";
+        const LONG_LENGTH = "too long";
+        const EMPTY = "invalid empty value";
+        const INVALID_URL = "invalid url";
+        const ONLY_NODE_JS = "`string` type is only Node.js";
+    }
+    export const NAME_LENGTH = 32;
+    export const SYMBOL_LENGTH = 10;
+    export const URL_LENGTH = 200;
+    export const ROYALTY_MAX = 100;
+    export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
+    export const ROYALTY_MIN = 0;
+    export const isRoyalty: (royalty: number) => Result<string, ValidatorError>;
+    export const isSellerFeeBasisPoints: (royalty: number) => Result<string, ValidatorError>;
+    export const isName: (name: string) => Result<string, ValidatorError>;
+    export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
+    export const isImageUrl: (image: string) => Result<string, ValidatorError>;
+    export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
+    type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
+    type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
+    type PickMetaplex = Pick<MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
+    export {};
+}
+declare class ValidatorError extends Error {
+    details: Details[];
+    constructor(message: string, details: Details[]);
+}
+
+declare enum FilterType {
+    Memo = "memo",
+    Mint = "mint",
+    OnlyMemo = "only-memo",
+    Transfer = "transfer"
+}
+declare enum ModuleName {
+    SolNative = "system",
+    SplToken = "spl-token"
+}
+declare const FilterOptions: {
+    Transfer: {
+        program: string[];
+        action: string[];
+    };
+    Memo: {
+        program: string[];
+        action: string[];
+    };
+    Mint: {
+        program: string[];
+        action: string[];
+    };
+};
+type PostTokenAccount = {
+    account: string;
+    owner: string;
+};
+type WithMemo = {
+    sig: string[];
+    memo: string;
+};
+type Transfer = {
+    parsed: {
+        info: {
+            destination: Pubkey;
+            source: Pubkey;
+            lamports: number;
+        };
+        type: string;
+    };
+    program: string;
+    programId?: PublicKey;
+};
+type MintTo = {
+    parsed: {
+        info: {
+            account: Pubkey;
+            mint: Pubkey;
+            mintAuthority: Pubkey;
+            tokenAmount: string;
+        };
+        type: string;
+    };
+    program: string;
+    programId?: PublicKey;
+};
+type MintToChecked = MintTo;
+type TransferChecked = {
+    parsed: {
+        info: {
+            destination: Pubkey;
+            mint: Pubkey;
+            multisigAuthority: Pubkey;
+            signers: Pubkey[];
+            source: Pubkey;
+            tokenAmount: string;
+        };
+        type: string;
+    };
+    program: string;
+    programId?: PublicKey;
+};
+type Memo = {
+    parsed: string;
+    program: string;
+    programId: PublicKey;
+};
+
+declare global {
+    interface String {
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        toExplorerUrl(explorer?: Explorer): string;
+    }
+    interface Number {
+        toSol(): number;
+        toLamports(): number;
+    }
+    interface Console {
+        debug(data: unknown, data2?: unknown, data3?: unknown): void;
+    }
+    interface Secret {
+        toKeypair(): Keypair;
+    }
+    interface Pubkey {
+        toPublicKey(): PublicKey;
+    }
+}
+declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm"
+}
+
+declare class Transaction {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: unknown;
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    submit: () => Promise<Result<TransactionSignature, Error>>;
+}
+
+declare class MintTransaction {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: unknown;
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    submit: () => Promise<Result<TransactionSignature, Error>>;
+}
+
+declare class PartialSignTransaction {
+    hexInstruction: string;
+    data?: Pubkey$1;
+    constructor(instructions: string, mint?: Pubkey$1);
+    submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
+}
+
+declare global {
+    interface Array<T> {
+        submit(): Promise<Result$1<TransactionSignature, Error>>;
+    }
+}
+
+declare const SplToken: {
+    transfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, mintDecimal: number, feePayer?: Secret | undefined) => Promise<Result<Transaction, Error>>;
+    thaw: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, feePayer?: Secret | undefined) => Result<Transaction, Error>;
+    createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
+    createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
+    mint: (owner: Pubkey$1, signer: Secret, totalAmount: number, mintDecimal: number, input: InputTokenMetadata, feePayer?: Secret | undefined, freezeAuthority?: Pubkey$1 | undefined) => Promise<Result<MintTransaction, Error>>;
+    feePayerPartialSignTransfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], amount: number, mintDecimal: number, feePayer: Pubkey$1) => Promise<Result<PartialSignTransaction, Error>>;
+    freeze: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, feePayer?: Secret | undefined) => Result<Transaction, Error>;
+    genericFindByOwner: <T extends NftMetadata | TokenMetadata>(owner: Pubkey$1, callback: (result: Result<T[], Error>) => void, tokenStandard: TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
+    genericFindByMint: <T_1 extends NftMetadata | TokenMetadata>(mint: Pubkey$1, tokenStandard: TokenStandard) => Promise<Result<T_1, Error>>;
+    findByOwner: (owner: Pubkey$1, onOk: OnOk<TokenMetadata>, onErr: OnErr, options?: {
+        sortable?: Sortable | undefined;
+        isHolder?: boolean | undefined;
+    } | undefined) => void;
+    findByMint: (mint: Pubkey$1) => Promise<Result<TokenMetadata, Error>>;
+    burn: (mint: Pubkey$1, owner: Pubkey$1, signers: Secret[], burnAmount: number, tokenDecimals: number, feePayer?: Secret | undefined) => Result<Transaction, Error>;
+    add: (token: Pubkey$1, owner: Pubkey$1, signers: Secret[], totalAmount: number, mintDecimal: number, feePayer?: Secret | undefined) => Promise<Result<Transaction, Error>>;
+};
+
+export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, Secret, SplToken, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

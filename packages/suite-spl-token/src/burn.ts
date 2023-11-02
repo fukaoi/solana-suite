@@ -3,7 +3,7 @@ import {
   getAssociatedTokenAddressSync,
 } from '@solana/spl-token';
 import { Pubkey, Secret } from '~/types/account';
-import { Instruction } from '~/instruction';
+import { Transaction } from '~/transaction';
 import { Result, Try } from '~/shared';
 import { SplToken as _Calculate } from './calculate-amount';
 
@@ -15,7 +15,7 @@ export namespace SplToken {
     burnAmount: number,
     tokenDecimals: number,
     feePayer?: Secret,
-  ): Result<Instruction, Error> => {
+  ): Result<Transaction, Error> => {
     return Try(() => {
       const tokenAccount = getAssociatedTokenAddressSync(
         mint.toPublicKey(),
@@ -33,7 +33,7 @@ export namespace SplToken {
         keypairs,
       );
 
-      return new Instruction([inst], keypairs, payer);
+      return new Transaction([inst], keypairs, payer);
     });
   };
 }

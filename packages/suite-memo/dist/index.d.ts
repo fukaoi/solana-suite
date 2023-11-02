@@ -213,6 +213,10 @@ type Pubkey$1 = (string & {
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
+type KeypairAccount = {
+    pubkey: Pubkey$1;
+    secret: Secret;
+};
 type OwnerInfo = {
     sol: number;
     lamports: number;
@@ -229,50 +233,62 @@ type OwnerInfo = {
  * @param {boolean} allowOwnerOffCurve
  * @returns Promise<string | Instruction>
  */
-declare namespace AssociatedAccount {
-    /**
-     * Retry function if create new token accouint
-     *
-     * @param {Pubkey} mint
-     * @param {Pubkey} owner
-     * @param {Secret} feePayer
-     * @returns Promise<string>
-     */
-    const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret) => Promise<string>;
-    /**
-     * [Main logic]Get Associated token Account.
-     * if not created, create new token accouint
-     *
-     * @param {Pubkey} mint
-     * @param {Pubkey} owner
-     * @param {Pubkey} feePayer
-     * @returns Promise<string>
-     */
-    const makeOrCreateInstruction: (mint: Pubkey$1, owner: Pubkey$1, feePayer?: Pubkey$1, allowOwnerOffCurve?: boolean) => Promise<{
-        tokenAccount: string;
-        inst: TransactionInstruction | undefined;
-    }>;
+declare namespace Account$3 {
+    namespace Associated {
+        /**
+         * Retry function if create new token accouint
+         *
+         * @param {Pubkey} mint
+         * @param {Pubkey} owner
+         * @param {Secret} feePayer
+         * @returns Promise<string>
+         */
+        const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret) => Promise<string>;
+        /**
+         * [Main logic]Get Associated token Account.
+         * if not created, create new token accouint
+         *
+         * @param {Pubkey} mint
+         * @param {Pubkey} owner
+         * @param {Pubkey} feePayer
+         * @returns Promise<string>
+         */
+        const makeOrCreateInstruction: (mint: Pubkey$1, owner: Pubkey$1, feePayer?: Pubkey$1, allowOwnerOffCurve?: boolean) => Promise<{
+            tokenAccount: string;
+            inst: TransactionInstruction | undefined;
+        }>;
+    }
 }
 
-declare class KeypairAccount {
-    secret: Secret;
-    pubkey: Pubkey$1;
-    constructor(params: {
-        pubkey?: Pubkey$1;
+declare namespace Account$2 {
+    class Keypair {
         secret: Secret;
-    });
-    toPublicKey(): PublicKey;
-    toKeypair(): Keypair;
-    static isPubkey: (value: string) => value is Pubkey$1;
-    static isSecret: (value: string) => value is Secret;
-    static create: () => KeypairAccount;
-    static toKeyPair: (keypair: Keypair) => KeypairAccount;
+        pubkey: Pubkey$1;
+        constructor(params: {
+            pubkey?: Pubkey$1;
+            secret: Secret;
+        });
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        static isPubkey: (value: string) => value is Pubkey$1;
+        static isSecret: (value: string) => value is Secret;
+        static create: () => Keypair;
+        static toKeyPair: (keypair: Keypair) => Keypair;
+    }
 }
 
-declare namespace Pda {
-    const getMetadata: (mint: Pubkey$1) => PublicKey;
-    const getMasterEdition: (mint: Pubkey$1) => PublicKey;
+declare namespace Account$1 {
+    namespace Pda {
+        const getMetadata: (mint: Pubkey$1) => PublicKey;
+        const getMasterEdition: (mint: Pubkey$1) => PublicKey;
+    }
 }
+
+declare const Account: {
+    Pda: typeof Account$1.Pda;
+    Keypair: typeof Account$2.Keypair;
+    Associated: typeof Account$3.Associated;
+};
 
 declare namespace Node {
     const getConnection: () => Connection;
@@ -525,7 +541,7 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
-declare class Instruction {
+declare class Transaction {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
@@ -790,7 +806,7 @@ declare const Memo: {
     findByOwner: (target: Pubkey$1, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
-    create: (data: string, owner: Pubkey$1, signer: Secret, feePayer?: Secret | undefined) => Instruction;
+    create: (data: string, owner: Pubkey$1, signer: Secret, feePayer?: Secret | undefined) => Transaction;
 };
 
-export { AssociatedAccount, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, Pda, PostTokenAccount, Pubkey$1 as Pubkey, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };
+export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

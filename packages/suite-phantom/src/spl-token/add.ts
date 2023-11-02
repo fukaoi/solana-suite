@@ -8,7 +8,7 @@ import { Transaction, TransactionInstruction } from '@solana/web3.js';
 import { Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
-import { AssociatedAccount } from '~/account';
+import { Account } from '~/account';
 import { PhantomProvider } from '~/types/phantom';
 
 export namespace PhantomSplToken {
@@ -25,7 +25,7 @@ export namespace PhantomSplToken {
       const connection = Node.getConnection();
       const transaction = new Transaction();
 
-      const makeInstruction = await AssociatedAccount.makeOrCreateInstruction(
+      const makeInstruction = await Account.Associated.makeOrCreateInstruction(
         tokenKey,
         owner,
       );

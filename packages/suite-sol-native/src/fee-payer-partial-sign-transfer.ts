@@ -3,7 +3,7 @@ import { SystemProgram, Transaction } from '@solana/web3.js';
 import { Result, Try } from '~/shared';
 
 import { Node } from '~/node';
-import { PartialSignInstruction } from '~/instruction';
+import { PartialSignTransaction } from '~/transaction';
 import { Pubkey, Secret } from '~/types/account';
 
 export namespace SolNative {
@@ -14,7 +14,7 @@ export namespace SolNative {
     signers: Secret[],
     amount: number,
     feePayer: Pubkey,
-  ): Promise<Result<PartialSignInstruction, Error>> => {
+  ): Promise<Result<PartialSignTransaction, Error>> => {
     return Try(async () => {
       const blockHashObj = await Node.getConnection().getLatestBlockhash();
       const tx = new Transaction({
@@ -37,7 +37,7 @@ export namespace SolNative {
         requireAllSignatures: false,
       });
       const hex = serializedTx.toString('hex');
-      return new PartialSignInstruction(hex);
+      return new PartialSignTransaction(hex);
     });
   };
 }

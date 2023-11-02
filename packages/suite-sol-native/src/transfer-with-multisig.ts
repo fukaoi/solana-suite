@@ -6,10 +6,10 @@ import {
 } from '@solana/spl-token';
 
 import { debugLog, Result, Try } from '~/shared';
-import { Instruction } from '~/instruction';
+import { Transaction } from '~/transaction';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
-import { AssociatedAccount } from '~/account';
+import { Account } from '~/account';
 
 export namespace SolNative {
   const RADIX = 10;
@@ -22,7 +22,7 @@ export namespace SolNative {
     signers: Secret[],
     amount: number,
     feePayer?: Secret,
-  ): Promise<Result<Instruction, Error>> => {
+  ): Promise<Result<Transaction, Error>> => {
     return Try(async () => {
       const connection = Node.getConnection();
       const payer = feePayer ? feePayer : signers[0];
@@ -44,7 +44,7 @@ export namespace SolNative {
         0,
       );
 
-      const sourceToken = await AssociatedAccount.retryGetOrCreate(
+      const sourceToken = await Account.Associated.retryGetOrCreate(
         token.toString(),
         owner,
         payer,
@@ -52,7 +52,7 @@ export namespace SolNative {
 
       debugLog('# sourceToken: ', sourceToken);
 
-      const destToken = await AssociatedAccount.retryGetOrCreate(
+      const destToken = await Account.Associated.retryGetOrCreate(
         token.toString(),
         wrapped.toString(),
         payer,
@@ -75,7 +75,7 @@ export namespace SolNative {
         keypairs,
       );
 
-      return new Instruction(
+      return new Transaction(
         [inst1, inst2],
         signers.map((s) => s.toKeypair()),
         feePayer?.toKeypair(),

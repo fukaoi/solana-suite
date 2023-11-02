@@ -1,8 +1,8 @@
 import { createTransferCheckedInstruction } from '@solana/spl-token';
 import { Result, Try } from '~/shared';
 import { SplToken as _Calculator } from './calculate-amount';
-import { AssociatedAccount } from '~/account';
-import { Instruction } from '~/instruction';
+import { Account } from '~/account';
+import { Transaction } from '~/transaction';
 import { Pubkey, Secret } from '~/types/account';
 
 export namespace SplToken {
@@ -14,18 +14,18 @@ export namespace SplToken {
     amount: number,
     mintDecimal: number,
     feePayer?: Secret,
-  ): Promise<Result<Instruction, Error>> => {
+  ): Promise<Result<Transaction, Error>> => {
     return Try(async () => {
       const payer = feePayer ? feePayer : signers[0];
       const keypairs = signers.map((s) => s.toKeypair());
 
-      const sourceToken = await AssociatedAccount.retryGetOrCreate(
+      const sourceToken = await Account.Associated.retryGetOrCreate(
         mint,
         owner,
         payer,
       );
 
-      const destToken = await AssociatedAccount.retryGetOrCreate(
+      const destToken = await Account.Associated.retryGetOrCreate(
         mint,
         dest,
         payer,
@@ -41,7 +41,7 @@ export namespace SplToken {
         keypairs,
       );
 
-      return new Instruction([inst], keypairs, payer.toKeypair());
+      return new Transaction([inst], keypairs, payer.toKeypair());
     });
   };
 }

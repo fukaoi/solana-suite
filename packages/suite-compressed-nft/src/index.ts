@@ -1,7 +1,7 @@
 import { CompressedNft as Tree } from './tree';
 
-import '~/types/instruction';
-import '~/instruction';
+import '~/types/transaction';
+import '~/transaction';
 
 export const CompressedNft = { ...Tree };
 export * from '~/shared/exports';

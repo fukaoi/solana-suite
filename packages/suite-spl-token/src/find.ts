@@ -7,7 +7,7 @@ import { TokenMetadata } from '~/types/spl-token';
 import { Offchain } from '~/types/storage';
 import { OnErr, OnOk } from '~/types/shared';
 import { Converter } from '~/converter';
-import { Pda } from '~/account';
+import { Account } from '~/account';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ParsedAccountData } from '@solana/web3.js';
@@ -98,7 +98,7 @@ export namespace SplToken {
         try {
           const metadata = await Metadata.fromAccountAddress(
             connection,
-            Pda.getMetadata(mint),
+            Account.Pda.getMetadata(mint),
           );
           debugLog('# findByOwner metadata: ', metadata);
           // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
@@ -157,7 +157,7 @@ export namespace SplToken {
 
       const metadata = await Metadata.fromAccountAddress(
         connection,
-        Pda.getMetadata(mint),
+        Account.Pda.getMetadata(mint),
       );
       debugLog('# findByMint metadata: ', metadata);
       // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)

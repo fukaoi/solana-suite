@@ -7,7 +7,7 @@ import { MPL_BUBBLEGUM_PROGRAM_ID } from '@metaplex-foundation/mpl-bubblegum';
 import { PublicKey, SystemProgram } from '@solana/web3.js';
 import { debugLog, Try } from '~/shared';
 import { Node } from '~/node';
-import { Instruction } from '~/instruction';
+import { Transaction } from '~/transaction';
 import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
 
 /**
@@ -62,7 +62,7 @@ export namespace CompressedNft {
         MPL_BUBBLEGUM_PROGRAM_ID.toPublicKey(),
       );
 
-      return new Instruction(
+      return new Transaction(
         [inst1, inst2],
         [treeOwner.toKeypair()],
         feePayer.toKeypair(),

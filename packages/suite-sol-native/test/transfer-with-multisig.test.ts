@@ -1,7 +1,8 @@
 import { SolNative } from '../src';
 import test from 'ava';
 import { Setup } from 'test-tools/setup';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/account';
+import { KeypairAccount } from '~/types/account';
 import { Multisig } from '@solana-suite/multisig';
 
 let source: KeypairAccount;
@@ -14,8 +15,8 @@ test.before(async () => {
 });
 
 test('transfer transaction with multi sig', async (t) => {
-  const signer1 = KeypairAccount.create();
-  const signer2 = KeypairAccount.create();
+  const signer1 = Account.Keypair.create();
+  const signer2 = Account.Keypair.create();
   const inst1 = await Multisig.create(2, source.secret, [
     signer1.pubkey,
     signer2.pubkey,

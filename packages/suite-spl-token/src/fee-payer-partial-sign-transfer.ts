@@ -2,10 +2,10 @@ import { createTransferCheckedInstruction } from '@solana/spl-token';
 import { Transaction } from '@solana/web3.js';
 import { Node } from '~/node';
 import { Result, Try } from '~/shared';
-import { PartialSignInstruction } from '~/instruction';
+import { PartialSignTransaction } from '~/transaction';
 import { Pubkey, Secret } from '~/types/account';
 import { SplToken as _Calculator } from './calculate-amount';
-import { AssociatedAccount } from '~/account';
+import { Account } from '~/account';
 
 export namespace SplToken {
   export const feePayerPartialSignTransfer = async (
@@ -16,17 +16,17 @@ export namespace SplToken {
     amount: number,
     mintDecimal: number,
     feePayer: Pubkey,
-  ): Promise<Result<PartialSignInstruction, Error>> => {
+  ): Promise<Result<PartialSignTransaction, Error>> => {
     return Try(async () => {
       const keypairs = signers.map((s) => s.toKeypair());
 
-      const sourceToken = await AssociatedAccount.makeOrCreateInstruction(
+      const sourceToken = await Account.Associated.makeOrCreateInstruction(
         mint,
         owner,
         feePayer,
       );
 
-      const destToken = await AssociatedAccount.makeOrCreateInstruction(
+      const destToken = await Account.Associated.makeOrCreateInstruction(
         mint,
         dest,
         feePayer,
@@ -76,7 +76,7 @@ export namespace SplToken {
         requireAllSignatures: false,
       });
       const hex = serializedTx.toString('hex');
-      return new PartialSignInstruction(hex);
+      return new PartialSignTransaction(hex);
     });
   };
 }

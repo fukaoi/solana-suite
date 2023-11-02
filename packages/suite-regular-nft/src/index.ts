@@ -6,8 +6,8 @@ import { RegularNft as FeePayerTransfer } from './fee-payer-partial-sign-transfe
 import { RegularNft as Mint } from './mint';
 import { RegularNft as Thaw } from './thaw';
 import { RegularNft as Transfer } from './transfer';
-import '~/types/instruction';
-import '~/instruction';
+import '~/types/transaction';
+import '~/transaction';
 
 export const RegularNft = {
   ...Burn,

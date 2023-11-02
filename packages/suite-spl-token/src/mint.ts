@@ -23,12 +23,11 @@ import {
 import { debugLog, Result, Try } from '~/shared';
 
 import { Node } from '~/node';
-import { KeypairAccount } from '~/account';
-import { MintInstruction } from '~/instruction';
+import { Account } from '~/account';
+import { MintTransaction } from '~/transaction';
 import { Pubkey, Secret } from '~/types/account';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { InputTokenMetadata } from '~/types/spl-token';
-import { Pda } from '~/account';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
 import { SplToken as _Calculate } from './calculate-amount';
@@ -59,7 +58,7 @@ export namespace SplToken {
   ): Promise<TransactionInstruction[]> => {
     const connection = Node.getConnection();
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
-    const metadataPda = Pda.getMetadata(mint.toString());
+    const metadataPda = Account.Pda.getMetadata(mint.toString());
     const tokenAssociated = getAssociatedTokenAddressSync(mint, owner);
 
     const inst1 = SystemProgram.createAccount({
@@ -132,7 +131,7 @@ export namespace SplToken {
     input: InputTokenMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
-  ): Promise<Result<MintInstruction, Error>> => {
+  ): Promise<Result<MintTransaction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputTokenMetadata>(input);
       if (valid.isErr) {
@@ -182,7 +181,7 @@ export namespace SplToken {
       debugLog('# datav2: ', datav2);
       debugLog('# upload content url: ', uri);
 
-      const mint = KeypairAccount.create();
+      const mint = Account.Keypair.create();
       const insts = await createMintInstructions(
         mint.toPublicKey(),
         owner.toPublicKey(),
@@ -204,7 +203,7 @@ export namespace SplToken {
         );
       }
 
-      return new MintInstruction(
+      return new MintTransaction(
         insts,
         [signer.toKeypair(), mint.toKeypair()],
         payer.toKeypair(),

@@ -1,7 +1,7 @@
 import { SolNative } from '../src';
 import test from 'ava';
 import { Setup } from 'test-tools/setup';
-import { KeypairAccount } from '~/account';
+import { KeypairAccount } from '~/types/account';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
