@@ -3,7 +3,8 @@ import { Setup } from 'test-tools/setup';
 import { Memo } from '../src';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
-import { KeypairAccount } from '~/account';
+import { KeypairAccount } from '~/types/account';
+import { Account } from '~/account';
 import { SolNative } from '@solana-suite/sol-native';
 import { SplToken } from '@solana-suite/spl-token';
 
@@ -12,7 +13,7 @@ let dest: KeypairAccount;
 let datetime: Date;
 
 const DUMMY_DATA = 'dummy memo data';
-const MEMO_STOCK = new KeypairAccount({
+const MEMO_STOCK = new Account.Keypair({
   pubkey: 'Ebq72X3i8ug6AX2G3v2ZoLA4ZcxHurvMuJYorqJ6sALD',
   secret:
     '5f8pvPDETk4tGMN3takiXkty17UBba9xPr3coXEzUi6431UP9hrjDPmi7qhFJz49saKNUaDuWYk51xD924xSrDiD',

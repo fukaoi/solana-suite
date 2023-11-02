@@ -1,10 +1,9 @@
 import test from 'ava';
 import { Setup } from 'test-tools/setup';
-import { Pubkey } from '~/types/account';
+import { Account } from '~/account';
+import { KeypairAccount, Pubkey } from '~/types/account';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { SplToken } from '../src';
-import { Account } from '~/Account';
-import { KeypairAccount } from '~/types/account';
 
 let source: KeypairAccount;
 let mintStr: string;

@@ -1,7 +1,8 @@
 import test from 'ava';
 import { Setup } from 'test-tools/setup';
 import { CompressedNft } from '../src';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/account';
+import { KeypairAccount } from '~/types/account';
 
 let source: KeypairAccount;
 
@@ -11,7 +12,7 @@ test.before(async () => {
 });
 
 test('Create merkle tree', async (t) => {
-  const treeOwner = KeypairAccount.create();
+  const treeOwner = Account.Keypair.create();
   const inst = await CompressedNft.initTree(treeOwner.secret, source.secret);
   (await inst.submit()).match(
     (ok) => {

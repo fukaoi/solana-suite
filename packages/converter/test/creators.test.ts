@@ -1,17 +1,18 @@
 import test from 'ava';
-import { KeypairAccount } from '~/account';
+import { Account } from '~/account';
+import { KeypairAccount } from '~/types/account';
 import { Converter } from '../src/';
 
-test.only('test', async (t) => {
-  console.log((KeypairAccount.create().pubkey as string).toPublicKey());
+test('test', async (t) => {
+  console.log((Account.Keypair.create().pubkey as string).toPublicKey());
   t.pass();
 });
 
-test.skip('To input convert', async (t) => {
-  const creator1 = KeypairAccount.create();
-  const creator2 = KeypairAccount.create();
-  const creator3 = KeypairAccount.create();
-  const creator4 = KeypairAccount.create();
+test('To input convert', async (t) => {
+  const creator1 = Account.Keypair.create();
+  const creator2 = Account.Keypair.create();
+  const creator3 = Account.Keypair.create();
+  const creator4 = Account.Keypair.create();
   const input = [
     {
       address: creator1.pubkey,
