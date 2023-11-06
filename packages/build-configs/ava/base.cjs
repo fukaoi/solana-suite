@@ -7,5 +7,4 @@ module.exports = {
   verbose: false,
   serial: true,
   timeout: "30m",
-  compile: false,
 };
