@@ -1,10 +1,12 @@
 {
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "publish": "pnpm --filter '@solana-suite/*' publish --dry-run"
   },
   "devDependencies": {
+    "depcheck": "^1.4.6",
     "@types/node": "16.11.7",
     "ava": "^5.3.1",
     "eslint": "^8.50.0",
@@ -22,9 +24,5 @@
   "packageManager": "pnpm@8.5.1",
   "engines": {
     "npm": "Only pnpm"
-  },
-  "version": "0.0.1",
-  "dependencies": {
-    "depcheck": "^1.4.6"
   }
 }
