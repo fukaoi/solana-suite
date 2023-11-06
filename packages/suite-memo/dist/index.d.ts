@@ -205,14 +205,8 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey$1 = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret = (string & {
-    [secretNominality]: never;
-}) | string;
+type Pubkey$1 = string;
+type Secret = string;
 type KeypairAccount = {
     pubkey: Pubkey$1;
     secret: Secret;
@@ -270,8 +264,8 @@ declare namespace Account$2 {
         });
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
-        static isPubkey: (value: string) => value is Pubkey$1;
-        static isSecret: (value: string) => value is Secret;
+        static isPubkey: (value: string) => value is string;
+        static isSecret: (value: string) => value is string;
         static create: () => Keypair;
         static toKeyPair: (keypair: Keypair) => Keypair;
     }
@@ -803,10 +797,10 @@ declare global {
 }
 
 declare const Memo: {
-    findByOwner: (target: Pubkey$1, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    findByOwner: (target: string, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
-    create: (data: string, owner: Pubkey$1, signer: Secret, feePayer?: Secret | undefined) => Transaction;
+    create: (data: string, owner: string, signer: string, feePayer?: string | undefined) => Transaction;
 };
 
 export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

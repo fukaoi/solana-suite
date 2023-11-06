@@ -12,14 +12,8 @@ type InternalCreators = {
     share: number;
 };
 
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey$1 = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret = (string & {
-    [secretNominality]: never;
-}) | string;
+type Pubkey$1 = string;
+type Secret = string;
 
 type FileType = string | File;
 

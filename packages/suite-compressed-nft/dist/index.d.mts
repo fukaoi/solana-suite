@@ -205,14 +205,8 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey$1 = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret$1 = (string & {
-    [secretNominality]: never;
-}) | string;
+type Pubkey$1 = string;
+type Secret$1 = string;
 type KeypairAccount = {
     pubkey: Pubkey$1;
     secret: Secret$1;
@@ -270,8 +264,8 @@ declare namespace Account$2 {
         });
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
-        static isPubkey: (value: string) => value is Pubkey$1;
-        static isSecret: (value: string) => value is Secret$1;
+        static isPubkey: (value: string) => value is string;
+        static isSecret: (value: string) => value is string;
         static create: () => Keypair;
         static toKeyPair: (keypair: Keypair) => Keypair;
     }
@@ -555,6 +549,15 @@ declare class Transaction {
     submit: () => Promise<Result$1<TransactionSignature, Error>>;
 }
 
+declare class MintTransaction {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: unknown;
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    submit: () => Promise<Result$1<TransactionSignature, Error>>;
+}
+
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
@@ -765,6 +768,7 @@ declare global {
 }
 
 declare const CompressedNft: {
+    mintCollection: (owner: Pubkey, signer: Secret, input: InputNftMetadata, feePayer?: Secret | undefined, freezeAuthority?: Pubkey | undefined) => Promise<Result$1<MintTransaction, Error>>;
     initTree: (treeOwner: Secret, feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result$1<Transaction, Error>>;
 };
 

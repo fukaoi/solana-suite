@@ -205,14 +205,8 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey$1 = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret = (string & {
-    [secretNominality]: never;
-}) | string;
+type Pubkey$1 = string;
+type Secret = string;
 type KeypairAccount = {
     pubkey: Pubkey$1;
     secret: Secret;
@@ -270,8 +264,8 @@ declare namespace Account$2 {
         });
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
-        static isPubkey: (value: string) => value is Pubkey$1;
-        static isSecret: (value: string) => value is Secret;
+        static isPubkey: (value: string) => value is string;
+        static isSecret: (value: string) => value is string;
         static create: () => Keypair;
         static toKeyPair: (keypair: Keypair) => Keypair;
     }

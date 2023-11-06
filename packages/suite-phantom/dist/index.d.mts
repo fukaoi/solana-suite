@@ -1,10 +1,7 @@
 import { TransactionSignature, PublicKey, Transaction, Keypair } from '@solana/web3.js';
 import BN from 'bn.js';
 
-declare const pubKeyNominality: unique symbol;
-type Pubkey = (string & {
-    [pubKeyNominality]: never;
-}) | string;
+type Pubkey = string;
 
 declare abstract class AbstractResult$1<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
@@ -551,8 +548,8 @@ type InputTokenMetadata = {
 };
 
 declare const PhantomSplToken: {
-    mint: (input: InputTokenMetadata, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
-    add: (tokenKey: Pubkey, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
+    mint: (input: InputTokenMetadata, owner: string, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
+    add: (tokenKey: string, owner: string, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
 };
 
 export { Metaplex, PhantomSplToken };
