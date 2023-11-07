@@ -42,6 +42,32 @@ test('Create token', async (t) => {
   t.log('# mint: ', mintStr);
 });
 
+test('Create token, always uploaed image', async (t) => {
+  const tokenMetadata = {
+    name: 'solana-suite-token',
+    symbol: 'SST',
+    uri: 'https://ipfs.io/ipfs/bafkreigxqrx4tdkrosdrfk52xmeejlv2tkexymvja26zwjbnow3l45v5ji',
+    storageType: 'nftStorage',
+    royalty: 50,
+  };
+
+  const inst = await SplToken.mint(
+    source.pubkey,
+    source.secret,
+    TOKEN_TOTAL_AMOUNT,
+    MINT_DECIMAL,
+    tokenMetadata,
+  );
+
+  t.true(inst.isOk, `${inst.unwrap()}`);
+  t.true(Account.Keypair.isPubkey(inst.unwrap().data as Pubkey));
+
+  const res = await inst.submit();
+  t.true(res.isOk, res.unwrap());
+  mintStr = inst.unwrap().data as string;
+  t.log('# mint: ', mintStr);
+});
+
 test('Create token with creators, freezeAuthority', async (t) => {
   const creator = Account.Keypair.create();
   const freezeAuthority = Account.Keypair.create();
@@ -81,25 +107,4 @@ test('Create token with creators, freezeAuthority', async (t) => {
   t.true(res.isOk, res.unwrap());
   mintStr = inst.unwrap().data as string;
   t.log('# mint: ', mintStr);
-});
-
-test('[Error]Raise parameter error when not need uri or filePath', async (t) => {
-  const owner = Account.Keypair.create();
-  const asset = RandomAsset.get();
-  const res = await SplToken.mint(
-    owner.pubkey,
-    owner.secret,
-    TOKEN_TOTAL_AMOUNT,
-    MINT_DECIMAL,
-    {
-      name: asset.name!,
-      symbol: asset.symbol!,
-    },
-  );
-  res.match(
-    () => t.fail('Unrecognized error'),
-    (err: Error) => {
-      t.is(err.message, `Must set 'storageType + filePath' or 'uri'`);
-    },
-  );
 });

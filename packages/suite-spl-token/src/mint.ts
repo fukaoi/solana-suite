@@ -152,6 +152,7 @@ export namespace SplToken {
       tokenStorageMetadata.created_at = createdAt;
 
       let uri!: string;
+      // upload file
       if (input.filePath && input.storageType) {
         const uploaded = await Storage.upload(
           tokenStorageMetadata,
@@ -165,7 +166,16 @@ export namespace SplToken {
         }
         uri = uploaded.value;
       } else if (input.uri) {
-        uri = input.uri;
+        const image = { image: input.uri };
+        const uploaded = await Storage.uploadData(
+          { ...tokenStorageMetadata, ...image },
+          input.storageType,
+          payer,
+        );
+        if (uploaded.isErr) {
+          throw uploaded;
+        }
+        uri = uploaded.value;
       } else {
         throw Error("Must set 'storageType + filePath' or 'uri'");
       }

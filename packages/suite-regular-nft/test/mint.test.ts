@@ -15,6 +15,27 @@ test.before(async () => {
   source = obj.source;
 });
 
+test('[nftStorage] mint nft, already uploaed image', async (t) => {
+  const asset = RandomAsset.get();
+  const res = await RegularNft.mint(source.pubkey, source.secret, {
+    uri: 'https://ipfs.io/ipfs/bafkreibh6mv6zqvg2wopmtx3k4smavcfx55ob2pciuoob2z44acgtem754',
+    storageType: 'nftStorage',
+    name: asset.name!,
+    symbol: asset.symbol!,
+    royalty: 50,
+  });
+
+  t.true(Account.Keypair.isPubkey(res.unwrap().data as Pubkey));
+
+  (await res.submit()).match(
+    (ok: string) => {
+      t.log('# mint:', res.unwrap().data);
+      t.log('# sig:', ok);
+    },
+    (ng: Error) => t.fail(ng.message),
+  );
+});
+
 test('[Arweave] mint nft', async (t) => {
   const asset = RandomAsset.get();
   const res = await RegularNft.mint(source.pubkey, source.secret, {

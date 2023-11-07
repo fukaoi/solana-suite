@@ -1,7 +1,7 @@
 import { Pubkey } from '../account';
 import { Attribute, Properties, StorageType } from '../storage';
 import { FileType } from '../storage';
-import { InternalCreators, InternalCollection } from '../converter';
+import { InternalCollection, InternalCreators } from '../converter';
 import { bignum, Creators, Option, Uses } from './common';
 
 export type InputCollection = Pubkey;
@@ -28,7 +28,7 @@ export type InputNftMetadata = {
   name: string;
   symbol: string;
   royalty: number;
-  storageType?: StorageType;
+  storageType: StorageType;
   filePath?: FileType;
   uri?: string;
   isMutable?: boolean;
@@ -40,19 +40,5 @@ export type InputNftMetadata = {
   creators?: Creators[];
   uses?: Uses;
   collection?: InputCollection;
-  options?: Options;
-};
-
-export type InputTokenMetadata = {
-  name: string;
-  symbol: string;
-  filePath?: FileType;
-  uri?: string;
-  storageType?: StorageType;
-  description?: string;
-  royalty?: number;
-  uses?: Uses;
-  creators?: Creators[];
-  attributes?: Attribute[];
   options?: Options;
 };

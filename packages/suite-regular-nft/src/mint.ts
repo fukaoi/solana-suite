@@ -4,8 +4,6 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 
-import BN from 'bn.js';
-
 import {
   createApproveInstruction,
   createAssociatedTokenAccountInstruction,
@@ -126,7 +124,7 @@ export namespace RegularNft {
    *   symbol: string             // nft ticker symbol
    *   filePath: string | File    // nft ticker symbol
    *   royalty: number            // royalty percentage
-   *   storageType: 'arweave'|'nftStorage' // royalty percentage
+   *   storageType: 'arweave'|'nftStorage' // Decentralized storage
    *   description?: string       // nft content description
    *   external_url?: string      // landing page, home page uri, related url
    *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
@@ -186,6 +184,7 @@ export namespace RegularNft {
       nftStorageMetadata.created_at = createdAt;
 
       let uri!: string;
+      // upload file
       if (input.filePath && input.storageType) {
         const uploaded = await Storage.upload(
           nftStorageMetadata,
@@ -198,8 +197,18 @@ export namespace RegularNft {
           throw uploaded;
         }
         uri = uploaded.value;
+        // uploaded file
       } else if (input.uri) {
-        uri = input.uri;
+        const image = { image: input.uri };
+        const uploaded = await Storage.uploadData(
+          { ...nftStorageMetadata, ...image },
+          input.storageType,
+          payer,
+        );
+        if (uploaded.isErr) {
+          throw uploaded;
+        }
+        uri = uploaded.value;
       } else {
         throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
@@ -220,7 +229,6 @@ export namespace RegularNft {
       const isMutable = input.isMutable === undefined ? true : input.isMutable;
 
       debugLog('# input: ', input);
-      debugLog('# sellerFeeBasisPoints: ', sellerFeeBasisPoints);
       debugLog('# datav2: ', datav2);
 
       const mint = Account.Keypair.create();

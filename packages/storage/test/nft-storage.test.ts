@@ -2,7 +2,7 @@ import test from 'ava';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { NftStorage } from '../src/';
 
-test('Upload content data', async (t) => {
+test('Upload file', async (t) => {
   const asset = RandomAsset.get();
   const res = await NftStorage.uploadFile(asset.filePath!);
 

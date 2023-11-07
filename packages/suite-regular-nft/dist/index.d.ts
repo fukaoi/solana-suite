@@ -344,7 +344,7 @@ type InputNftMetadata = {
     name: string;
     symbol: string;
     royalty: number;
-    storageType?: StorageType;
+    storageType: StorageType;
     filePath?: FileType;
     uri?: string;
     isMutable?: boolean;

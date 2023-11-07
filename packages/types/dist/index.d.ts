@@ -10,7 +10,7 @@ export { AnyObject, OnErr, OnOk, OverwriteObject } from './shared.js';
 export { Attribute, BundlrSigner, FileType, Identity, Offchain, OnchainAndOffchain, PhantomWallet, Properties, StorageType, Tags, UploadableFileType } from './storage.js';
 export { MintTransaction, PartialSignTransaction, Transaction } from './transaction.js';
 export { FilterOptions, FilterType, Memo, MintTo, MintToChecked, ModuleName, PostTokenAccount, Transfer, TransferChecked, WithMemo } from './transaction-filter.js';
-export { Collection, Creators, InputCollection, InputNftMetadata, InputTokenMetadata, MetaplexDataV2, NftMetadata, Option, Options, TokenMetadata, TokenStandard, UseMethod, Uses, bignum } from './regular-nft.js';
+export { Collection, Creators, InputCollection, InputNftMetadata, MetaplexDataV2, NftMetadata, Option, Options, TokenMetadata, TokenStandard, UseMethod, Uses, bignum } from './regular-nft.js';
 export { Condition, Details, Limit } from './validator.js';
 import '@solana/web3.js';
 import '@metaplex-foundation/mpl-token-metadata';

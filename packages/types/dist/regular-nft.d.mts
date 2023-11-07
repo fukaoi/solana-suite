@@ -48,7 +48,7 @@ type InputNftMetadata = {
     name: string;
     symbol: string;
     royalty: number;
-    storageType?: StorageType;
+    storageType: StorageType;
     filePath?: FileType;
     uri?: string;
     isMutable?: boolean;
@@ -60,19 +60,6 @@ type InputNftMetadata = {
     creators?: Creators[];
     uses?: Uses;
     collection?: InputCollection;
-    options?: Options;
-};
-type InputTokenMetadata = {
-    name: string;
-    symbol: string;
-    filePath?: FileType;
-    uri?: string;
-    storageType?: StorageType;
-    description?: string;
-    royalty?: number;
-    uses?: Uses;
-    creators?: Creators[];
-    attributes?: Attribute[];
     options?: Options;
 };
 
@@ -111,4 +98,4 @@ type TokenMetadata = {
     dateTime?: Date | undefined;
 };
 
-export { Collection, Creators, InputCollection, InputNftMetadata, InputTokenMetadata, MetaplexDataV2, NftMetadata, Option, Options, TokenMetadata, TokenStandard, UseMethod, Uses, bignum };
+export { Collection, Creators, InputCollection, InputNftMetadata, MetaplexDataV2, NftMetadata, Option, Options, TokenMetadata, TokenStandard, UseMethod, Uses, bignum };

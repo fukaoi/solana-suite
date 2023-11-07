@@ -286,7 +286,7 @@ type InputNftMetadata = {
     name: string;
     symbol: string;
     royalty: number;
-    storageType?: StorageType;
+    storageType: StorageType;
     filePath?: FileType;
     uri?: string;
     isMutable?: boolean;
@@ -365,6 +365,7 @@ declare namespace NftStorage {
 declare namespace Storage {
     const toConvertOffchaindata: (input: InputNftMetadata, sellerFeeBasisPoints: number) => Offchain;
     const uploadFile: (filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const uploadData: (input: Offchain, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
     const upload: (input: Offchain, filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
 }
 
