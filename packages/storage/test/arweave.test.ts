@@ -1,5 +1,5 @@
 import test from 'ava';
-import { KeypairAccount } from '~/account';
+import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Arweave } from '../src';

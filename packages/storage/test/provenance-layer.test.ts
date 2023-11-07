@@ -3,7 +3,7 @@ import test from 'ava';
 import { ProvenanceLayer } from '../src/';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Setup } from 'test-tools/setup';
-import { KeypairAccount } from '~/account';
+import { KeypairAccount } from '~/types/account';
 
 let source: KeypairAccount;
 const uploadData = {
