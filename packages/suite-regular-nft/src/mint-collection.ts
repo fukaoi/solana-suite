@@ -1,11 +1,11 @@
 import { createSetCollectionSizeInstruction } from '@metaplex-foundation/mpl-token-metadata';
-import { debugLog, Try } from '~/shared';
+import { debugLog, Result, Try } from '~/shared';
 import { Converter } from '~/converter';
 import { Account } from '~/account';
 import { Storage } from '~/storage';
 import { Validator } from '~/validator';
 import { MintTransaction } from '~/transaction';
-import { InputNftMetadata } from '~/types/regular-nft';
+import { CollectionAccounts, InputNftMetadata } from '~/types/regular-nft';
 import { Secret } from '~/types/account';
 import { RegularNft as Mint } from './mint';
 
@@ -23,7 +23,7 @@ export namespace RegularNft {
     input: InputNftMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
-  ) => {
+  ): Promise<Result<MintTransaction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -121,7 +121,12 @@ export namespace RegularNft {
         collectionAuthority: payer.toKeypair().publicKey,
         collectionMint: collectionMint.toKeypair().publicKey,
       };
-
+      const collectionAccounts: CollectionAccounts = {
+        collectionMetadata: collections.collectionMetadata.toString(),
+        collectionAuthority: collections.collectionAuthority.toString(),
+        collectionMint: collections.collectionMint.toString(),
+      };
+      
       insts.push(
         createSetCollectionSizeInstruction(collections, {
           setCollectionSizeArgs: { size: 50 },
@@ -132,7 +137,7 @@ export namespace RegularNft {
         insts,
         [signer.toKeypair(), collectionMint.toKeypair()],
         payer.toKeypair(),
-        collections,
+        collectionAccounts,
       );
     });
   };

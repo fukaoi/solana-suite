@@ -29,7 +29,6 @@ import {
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 import { Account } from '~/account';
-import BN from 'bn.js';
 
 export namespace RegularNft {
   const NFT_AMOUNT = 1;
@@ -91,7 +90,7 @@ export namespace RegularNft {
         createMetadataAccountArgsV3: {
           data: nftMetadata,
           isMutable,
-          collectionDetails: { __kind: 'V1', size: new BN(1) },
+          collectionDetails: null,
         },
       },
     );
