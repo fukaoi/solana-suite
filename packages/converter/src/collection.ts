@@ -1,5 +1,5 @@
 import { InternalCollection } from '~/types/converter';
-import { InputCollection, Option, Collection } from '~/types/regular-nft';
+import { Collection, InputCollection, Option } from '~/types/regular-nft';
 
 export namespace Converter {
   export namespace Collection {
@@ -12,7 +12,7 @@ export namespace Converter {
 
       return {
         key: input.toPublicKey(),
-        verified: false,
+        verified: true,
       };
     };
 

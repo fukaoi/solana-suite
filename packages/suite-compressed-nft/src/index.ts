@@ -1,5 +1,5 @@
 import { CompressedNft as Tree } from './tree';
-import { CompressedNft as Collection } from './collection';
+import { CompressedNft as Collection } from './mint-collection';
 
 import '~/types/transaction';
 import '~/transaction';

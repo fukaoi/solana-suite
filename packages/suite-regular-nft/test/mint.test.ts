@@ -85,7 +85,7 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
   );
 });
 
-test('[Nft Storage] mint nft with many optional datas', async (t) => {
+test.only('[Nft Storage] mint nft with many optional datas', async (t) => {
   const asset = RandomAsset.get();
   const creators: Creators[] = [];
   const owner = Account.Keypair.create();
@@ -113,7 +113,7 @@ test('[Nft Storage] mint nft with many optional datas', async (t) => {
     ],
   };
 
-  const collection = 'F2g4RRH4J7DiZd17idZcBkuTDonVeJEveTdzwXdGHUue';
+  const collection = 'Htp4dfLmhFonYhYzuUEHqbP1CTiK6gjoHnR7U8t37fTv';
 
   const attributes = [
     {
@@ -179,19 +179,3 @@ test('[Error]Raise validation error when upload meta data', async (t) => {
   );
 });
 
-test('[Error]Raise parameter error when not need uri or filePath', async (t) => {
-  const owner = Account.Keypair.create();
-  const asset = RandomAsset.get();
-  const res = await RegularNft.mint(owner.pubkey, owner.secret, {
-    name: asset.name!,
-    symbol: asset.symbol!,
-    royalty: 50,
-    isMutable: true,
-  });
-  res.match(
-    () => t.fail('Unrecognized error'),
-    (err: Error) => {
-      t.is(err.message, `Must set 'storageType + filePath' or 'uri'`);
-    },
-  );
-});

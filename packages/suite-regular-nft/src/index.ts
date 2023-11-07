@@ -4,6 +4,7 @@ import { RegularNft as Freeze } from './freeze';
 import { RegularNft as FeePayer } from './fee-payer-partial-sign-mint';
 import { RegularNft as FeePayerTransfer } from './fee-payer-partial-sign-transfer';
 import { RegularNft as Mint } from './mint';
+import { RegularNft as MintCollection } from './mint-collection';
 import { RegularNft as Thaw } from './thaw';
 import { RegularNft as Transfer } from './transfer';
 import '~/types/transaction';
@@ -16,6 +17,7 @@ export const RegularNft = {
   ...FeePayer,
   ...FeePayerTransfer,
   ...Mint,
+  ...MintCollection,
   ...Thaw,
   ...Transfer,
 };

@@ -5,8 +5,8 @@ import { Account } from '~/account';
 import { Storage } from '~/storage';
 import { Validator } from '~/validator';
 import { MintTransaction } from '~/transaction';
-import { RegularNft } from '~/suite-regular-nft';
 import { InputNftMetadata } from '~/types/regular-nft';
+import { RegularNft as Mint } from './mint';
 
 /**
  * create a collection
@@ -15,7 +15,7 @@ import { InputNftMetadata } from '~/types/regular-nft';
  * @param {feePayer} Secret
  * @return Promise<Result<Instruction, Error>>
  */
-export namespace CompressedNft {
+export namespace RegularNft {
   export const mintCollection = (
     owner: Pubkey,
     signer: Secret,
@@ -70,7 +70,16 @@ export namespace CompressedNft {
         }
         uri = uploaded.value;
       } else if (input.uri) {
-        uri = input.uri;
+        const image = { image: input.uri };
+        const uploaded = await Storage.uploadData(
+          { ...nftStorageMetadata, ...image },
+          input.storageType,
+          payer,
+        );
+        if (uploaded.isErr) {
+          throw uploaded;
+        }
+        uri = uploaded.value;
       } else {
         throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
@@ -87,7 +96,7 @@ export namespace CompressedNft {
         collectionMint.pubkey,
       );
 
-      const insts = await RegularNft.createMintInstructions(
+      const insts = await Mint.createMintInstructions(
         collectionMint.toPublicKey(),
         owner.toPublicKey(),
         datav2,
@@ -98,7 +107,7 @@ export namespace CompressedNft {
       // freezeAuthority
       if (freezeAuthority) {
         insts.push(
-          RegularNft.createDeleagateInstruction(
+          Mint.createDeleagateInstruction(
             collectionMint.toPublicKey(),
             owner.toPublicKey(),
             freezeAuthority.toPublicKey(),
@@ -106,24 +115,23 @@ export namespace CompressedNft {
         );
       }
 
+      const collections = {
+        collectionMetadata: collectionMetadataAccount,
+        collectionAuthority: payer.toKeypair().publicKey,
+        collectionMint: collectionMint.toKeypair().publicKey,
+      };
+
       insts.push(
-        createSetCollectionSizeInstruction(
-          {
-            collectionMetadata: collectionMetadataAccount,
-            collectionAuthority: payer.toKeypair().publicKey,
-            collectionMint: collectionMint.toKeypair().publicKey,
-          },
-          {
-            setCollectionSizeArgs: { size: 100 },
-          },
-        ),
+        createSetCollectionSizeInstruction(collections, {
+          setCollectionSizeArgs: { size: 50 },
+        }),
       );
 
       return new MintTransaction(
         insts,
         [signer.toKeypair(), collectionMint.toKeypair()],
         payer.toKeypair(),
-        collectionMint.pubkey,
+        collections,
       );
     });
   };
