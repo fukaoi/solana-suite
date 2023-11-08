@@ -26,6 +26,7 @@ import { Validator } from '~/validator';
 import {
   createCreateMasterEditionV3Instruction,
   createCreateMetadataAccountV3Instruction,
+  createSignMetadataInstruction,
   createVerifySizedCollectionItemInstruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
@@ -33,6 +34,15 @@ import { Account } from '~/account';
 
 export namespace RegularNft {
   const NFT_AMOUNT = 1;
+
+  export const createVerifyCreator = (mint: PublicKey, creator: PublicKey) => {
+    const metadata = Account.Pda.getMetadata(mint.toString());
+    return createSignMetadataInstruction({
+      metadata: metadata,
+      creator: creator,
+    });
+  };
+
   export const createDeleagateInstruction = (
     mint: PublicKey,
     owner: PublicKey,
@@ -180,7 +190,7 @@ export namespace RegularNft {
 
       const payer = feePayer ? feePayer : signer;
 
-      //--- porperties, Upload content ---
+      // porperties, Upload content
       let properties;
       if (input.properties && input.storageType) {
         properties = await Converter.Properties.intoInfra(
@@ -197,7 +207,6 @@ export namespace RegularNft {
         ...input,
         properties,
       };
-      //--- porperties, Upload content ---
 
       const sellerFeeBasisPoints = Converter.Royalty.intoInfra(input.royalty);
       const nftStorageMetadata = Storage.toConvertOffchaindata(
