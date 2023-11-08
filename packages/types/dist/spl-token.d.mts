@@ -1,5 +1,5 @@
 import { FileType, StorageType, Attribute, Offchain } from './storage.mjs';
-import { d as Uses, C as Creators, O as Options, c as Option, e as Collection } from './output-13fdc0fd.js';
+import { Uses, Creators, Options, Option, Collection } from './regular-nft.mjs';
 import '@solana/web3.js';
 import './phantom-e9a40784.js';
 import './account.mjs';

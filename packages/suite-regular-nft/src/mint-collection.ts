@@ -5,7 +5,7 @@ import { Account } from '~/account';
 import { Storage } from '~/storage';
 import { Validator } from '~/validator';
 import { MintTransaction } from '~/transaction';
-import { CollectionAccounts, InputNftMetadata } from '~/types/regular-nft';
+import { InputNftMetadata } from '~/types/regular-nft';
 import { Secret } from '~/types/account';
 import { RegularNft as Mint } from './mint';
 
@@ -98,7 +98,7 @@ export namespace RegularNft {
         collectionMint.pubkey,
       );
 
-      const insts = await Mint.createMintInstructions(
+      const instructions = await Mint.createMintInstructions(
         collectionMint.toPublicKey(),
         owner.toPublicKey(),
         datav2,
@@ -108,7 +108,7 @@ export namespace RegularNft {
 
       // freezeAuthority
       if (freezeAuthority) {
-        insts.push(
+        instructions.push(
           Mint.createDeleagateInstruction(
             collectionMint.toPublicKey(),
             owner.toPublicKey(),
@@ -122,23 +122,18 @@ export namespace RegularNft {
         collectionAuthority: payer.toKeypair().publicKey,
         collectionMint: collectionMint.toKeypair().publicKey,
       };
-      const collectionAccounts: CollectionAccounts = {
-        collectionMetadata: collections.collectionMetadata.toString(),
-        collectionAuthority: collections.collectionAuthority.toString(),
-        collectionMint: collections.collectionMint.toString(),
-      };
 
-      insts.push(
+      instructions.push(
         createSetCollectionSizeInstruction(collections, {
           setCollectionSizeArgs: { size: collectionSize },
         }),
       );
 
       return new MintTransaction(
-        insts,
+        instructions,
         [signer.toKeypair(), collectionMint.toKeypair()],
         payer.toKeypair(),
-        collectionAccounts,
+        collectionMint.pubkey,
       );
     });
   };

@@ -2,7 +2,6 @@ import test from 'ava';
 import { Setup } from 'test-tools/setup';
 import { RegularNft } from '../src';
 import { KeypairAccount } from '~/types/account';
-import { CollectionAccounts } from '../../types/src/regular-nft/collection';
 let source: KeypairAccount;
 
 test.before(async () => {
@@ -20,11 +19,8 @@ test('Create collection', async (t) => {
   });
   (await inst.submit()).match(
     (ok) => {
-      const collectionAccounts = (inst.unwrap().data as CollectionAccounts)
       t.log('# sig: ', ok);
-      t.log('# collectionMint: ', collectionAccounts.collectionMint);
-      t.log('# collectionAuthority: ', collectionAccounts.collectionAuthority);
-      t.log('# collectionMetadata: ', collectionAccounts.collectionMetadata);
+      t.log('# collectionMint: ', inst.unwrap().data);
       t.pass();
     },
     (err) => {

@@ -11,6 +11,7 @@ import { RegularNft } from '../src/';
 let owner: Pubkey;
 const notFoundTokenOwner = '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFT';
 const nftMint = '5cjaV2QxSrZ3qESwsH49JmQqrcakThBZ9uZ5NVCcqzHt'; // nft
+const collectionMint = 'FMKm75Z9feXMrsKRT9Q6AqSrjHzFPYxpyrD4Hyfx4bup'; // nft
 const mint = 'EFgwtsm4azvQcnRPhDZ8yV9we1A12PgecpJ3im79o4x3'; // token
 
 /* eslint-disable */
@@ -40,6 +41,7 @@ test(
   'Find owner info',
   withCallback((t: any, end: any) => {
     const onOk: OnOk<NftMetadata> = async (ok) => {
+      console.log(ok);
       ok.forEach((res) => {
         t.not(res.name, '');
         t.not(res.mint, '');
@@ -106,7 +108,6 @@ test(
 test('Get token info by mint address', async (t) => {
   (await RegularNft.findByMint(nftMint)).match(
     (ok: NftMetadata) => {
-      console.log(ok);
       t.not(ok.name, '');
       t.not(ok.mint, '');
       t.not(ok.symbol, '');
@@ -114,6 +115,16 @@ test('Get token info by mint address', async (t) => {
       t.not(ok.royalty, '');
       t.not(ok.tokenAmount, '');
       t.not(ok.offchain, '');
+    },
+    (err: Error) => t.fail(err.message),
+  );
+});
+
+test('Get nft parent collection by mint address', async (t) => {
+  (await RegularNft.findByMint(collectionMint)).match(
+    (ok: NftMetadata) => {
+      console.log(ok.collectionDetails);
+      t.not(ok.collectionDetails, '');
     },
     (err: Error) => t.fail(err.message),
   );

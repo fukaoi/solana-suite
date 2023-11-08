@@ -1,5 +1,5 @@
 import { FileType, StorageType, Attribute, Offchain } from './storage.js';
-import { d as Uses, C as Creators, O as Options, c as Option, e as Collection } from './output-5d8fd37a.js';
+import { Uses, Creators, Options, Option, Collection } from './regular-nft.js';
 import '@solana/web3.js';
 import './phantom-e9a40784.js';
 import './account.js';

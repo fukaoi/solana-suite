@@ -26,6 +26,7 @@ import { Validator } from '~/validator';
 import {
   createCreateMasterEditionV3Instruction,
   createCreateMetadataAccountV3Instruction,
+  createVerifySizedCollectionItemInstruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 import { Account } from '~/account';
@@ -47,6 +48,27 @@ export namespace RegularNft {
     );
   };
 
+  export const createVerifySizedCollectionInstruction = (
+    collectionChild: PublicKey,
+    collectionParent: PublicKey,
+    feePayer: PublicKey,
+  ) => {
+    const collectionMetadata = Account.Pda.getMetadata(
+      collectionParent.toString(),
+    );
+    const collectionMasterEditionAccount = Account.Pda.getMasterEdition(
+      collectionParent.toString(),
+    );
+    return createVerifySizedCollectionItemInstruction({
+      collection: collectionMetadata,
+      collectionMasterEditionAccount: collectionMasterEditionAccount,
+      collectionMint: collectionParent,
+      metadata: Account.Pda.getMetadata(collectionChild.toString()),
+      payer: feePayer,
+      collectionAuthority: feePayer,
+    });
+  };
+
   export const createMintInstructions = async (
     mint: PublicKey,
     owner: PublicKey,
@@ -58,59 +80,63 @@ export namespace RegularNft {
     const tokenMetadataPubkey = Account.Pda.getMetadata(mint.toString());
     const masterEditionPubkey = Account.Pda.getMasterEdition(mint.toString());
     const connection = Node.getConnection();
+    const instructions = [];
 
-    const inst1 = SystemProgram.createAccount({
-      fromPubkey: feePayer,
-      newAccountPubkey: mint,
-      lamports: await getMinimumBalanceForRentExemptMint(connection),
-      space: MINT_SIZE,
-      programId: TOKEN_PROGRAM_ID,
-    });
-
-    const inst2 = createInitializeMintInstruction(mint, 0, owner, owner);
-
-    const inst3 = createAssociatedTokenAccountInstruction(
-      feePayer,
-      ata,
-      owner,
-      mint,
+    instructions.push(
+      SystemProgram.createAccount({
+        fromPubkey: feePayer,
+        newAccountPubkey: mint,
+        lamports: await getMinimumBalanceForRentExemptMint(connection),
+        space: MINT_SIZE,
+        programId: TOKEN_PROGRAM_ID,
+      }),
     );
 
-    const inst4 = createMintToCheckedInstruction(mint, ata, owner, 1, 0);
+    instructions.push(createInitializeMintInstruction(mint, 0, owner, owner));
 
-    const inst5 = createCreateMetadataAccountV3Instruction(
-      {
-        metadata: tokenMetadataPubkey,
-        mint,
-        mintAuthority: owner,
-        payer: feePayer,
-        updateAuthority: owner,
-      },
-      {
-        createMetadataAccountArgsV3: {
-          data: nftMetadata,
-          isMutable,
-          collectionDetails: null,
+    instructions.push(
+      createAssociatedTokenAccountInstruction(feePayer, ata, owner, mint),
+    );
+
+    instructions.push(createMintToCheckedInstruction(mint, ata, owner, 1, 0));
+
+    instructions.push(
+      createCreateMetadataAccountV3Instruction(
+        {
+          metadata: tokenMetadataPubkey,
+          mint,
+          mintAuthority: owner,
+          payer: feePayer,
+          updateAuthority: owner,
         },
-      },
+        {
+          createMetadataAccountArgsV3: {
+            data: nftMetadata,
+            isMutable,
+            collectionDetails: null,
+          },
+        },
+      ),
     );
 
-    const inst6 = createCreateMasterEditionV3Instruction(
-      {
-        edition: masterEditionPubkey,
-        mint,
-        updateAuthority: owner,
-        mintAuthority: owner,
-        payer: feePayer,
-        metadata: tokenMetadataPubkey,
-      },
-      {
-        createMasterEditionArgs: {
-          maxSupply: 0,
+    instructions.push(
+      createCreateMasterEditionV3Instruction(
+        {
+          edition: masterEditionPubkey,
+          mint,
+          updateAuthority: owner,
+          mintAuthority: owner,
+          payer: feePayer,
+          metadata: tokenMetadataPubkey,
         },
-      },
+        {
+          createMasterEditionArgs: {
+            maxSupply: 0,
+          },
+        },
+      ),
     );
-    return [inst1, inst2, inst3, inst4, inst5, inst6];
+    return instructions;
   };
 
   /**
@@ -219,13 +245,6 @@ export namespace RegularNft {
         sellerFeeBasisPoints,
       );
 
-      //--- collection ---
-      let collection;
-      if (input.collection && input.collection) {
-        collection = Converter.Collection.intoInfra(input.collection);
-        datav2 = { ...datav2, collection };
-      }
-
       const isMutable = input.isMutable === undefined ? true : input.isMutable;
 
       debugLog('# input: ', input);
@@ -233,7 +252,7 @@ export namespace RegularNft {
 
       const mint = Account.Keypair.create();
 
-      const insts = await createMintInstructions(
+      const instructions = await createMintInstructions(
         mint.toPublicKey(),
         owner.toPublicKey(),
         datav2,
@@ -243,7 +262,7 @@ export namespace RegularNft {
 
       // freezeAuthority
       if (freezeAuthority) {
-        insts.push(
+        instructions.push(
           createDeleagateInstruction(
             mint.toPublicKey(),
             owner.toPublicKey(),
@@ -252,8 +271,19 @@ export namespace RegularNft {
         );
       }
 
+      //--- collection ---
+      if (input.collection) {
+        instructions.push(
+          createVerifySizedCollectionInstruction(
+            mint.toPublicKey(),
+            input.collection.toPublicKey(),
+            payer.toKeypair().publicKey,
+          ),
+        );
+      }
+
       return new MintTransaction(
-        insts,
+        instructions,
         [signer.toKeypair(), mint.toKeypair()],
         payer.toKeypair(),
         mint.pubkey,
