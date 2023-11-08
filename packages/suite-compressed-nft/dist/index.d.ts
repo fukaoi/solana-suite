@@ -772,7 +772,7 @@ declare global {
 }
 
 declare const CompressedNft: {
-    mintCollection: (owner: Pubkey, signer: Secret, input: InputNftMetadata, feePayer?: Secret | undefined, freezeAuthority?: Pubkey | undefined) => Promise<Result$1<MintTransaction, Error>>;
+    mintCollection: (owner: Pubkey, signer: string, input: InputNftMetadata, feePayer?: string | undefined, freezeAuthority?: Pubkey | undefined) => Promise<Result$1<MintTransaction, Error>>;
     initTree: (treeOwner: Secret, feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result$1<Transaction, Error>>;
 };
 
