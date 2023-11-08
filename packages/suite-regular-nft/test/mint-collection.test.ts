@@ -18,12 +18,12 @@ test('Create collection', async (t) => {
     storageType: 'nftStorage',
   });
   (await inst.submit()).match(
-    (ok) => {
+    (ok: string) => {
       t.log('# sig: ', ok);
       t.log('# collectionMint: ', inst.unwrap().data);
       t.pass();
     },
-    (err) => {
+    (err: Error) => {
       console.log(err);
       t.fail(err.message);
     },
