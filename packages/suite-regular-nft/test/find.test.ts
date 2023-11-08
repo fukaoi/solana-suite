@@ -106,6 +106,7 @@ test(
 test('Get token info by mint address', async (t) => {
   (await RegularNft.findByMint(nftMint)).match(
     (ok: NftMetadata) => {
+      console.log(ok);
       t.not(ok.name, '');
       t.not(ok.mint, '');
       t.not(ok.symbol, '');

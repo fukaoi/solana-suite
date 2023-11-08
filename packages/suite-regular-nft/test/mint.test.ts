@@ -85,7 +85,7 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
   );
 });
 
-test.only('[Nft Storage] mint nft with many optional datas', async (t) => {
+test('[Nft Storage] mint nft with many optional datas', async (t) => {
   const asset = RandomAsset.get();
   const creators: Creators[] = [];
   const owner = Account.Keypair.create();
@@ -113,7 +113,7 @@ test.only('[Nft Storage] mint nft with many optional datas', async (t) => {
     ],
   };
 
-  const collection = 'Htp4dfLmhFonYhYzuUEHqbP1CTiK6gjoHnR7U8t37fTv';
+  const collection = 'G19buikREbCTH2SZovUijezUeFBV4qmBoaqmAW97H8Ua';
 
   const attributes = [
     {
@@ -178,4 +178,3 @@ test('[Error]Raise validation error when upload meta data', async (t) => {
     },
   );
 });
-

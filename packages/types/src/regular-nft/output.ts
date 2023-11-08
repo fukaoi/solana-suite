@@ -3,6 +3,7 @@ import { Attribute, Offchain } from '../storage';
 import { Creators, Option, Uses } from './common';
 
 export type Collection = { address: Pubkey; verified: boolean };
+export type CollectionDetails = { __kind: string; size: number };
 
 /////////// NFT //////////////
 export type NftMetadata = {
@@ -18,6 +19,7 @@ export type NftMetadata = {
   offchain: Offchain;
   tokenAmount: string;
   collection?: Collection | undefined;
+  collectionDetails?: CollectionDetails | undefined;
   creators?: Creators[] | undefined;
   uses?: Uses | undefined;
   dateTime?: Date | undefined;

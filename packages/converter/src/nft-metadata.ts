@@ -1,4 +1,5 @@
 import { Converter as _Collection } from './collection';
+import { Converter as _CollectionDetails } from './collection-details';
 import { Converter as _Creators } from './creators';
 import { Converter as _Uses } from './uses';
 import { Converter as _Token } from './token-metadata';
@@ -48,6 +49,9 @@ export namespace Converter {
         creators: _Creators.Creators.intoUser(output.onchain.data.creators),
         editionNonce: output.onchain.editionNonce,
         collection: _Collection.Collection.intoUser(output.onchain.collection),
+        collectionDetails: _CollectionDetails.CollectionDetails.intoUser(
+          output.onchain.collectionDetails,
+        ),
         uses: _Uses.Uses.intoUserSide(output.onchain.uses),
         dateTime: convertTimestampToDateTime(output.offchain.created_at),
         offchain: output.offchain,

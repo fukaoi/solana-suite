@@ -12,7 +12,7 @@ export namespace Converter {
 
       return {
         key: input.toPublicKey(),
-        verified: true,
+        verified: false,
       };
     };
 

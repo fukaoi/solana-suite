@@ -23,6 +23,7 @@ export namespace RegularNft {
     input: InputNftMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
+    collectionSize: number = 0,
   ): Promise<Result<MintTransaction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
@@ -126,10 +127,10 @@ export namespace RegularNft {
         collectionAuthority: collections.collectionAuthority.toString(),
         collectionMint: collections.collectionMint.toString(),
       };
-      
+
       insts.push(
         createSetCollectionSizeInstruction(collections, {
-          setCollectionSizeArgs: { size: 50 },
+          setCollectionSizeArgs: { size: collectionSize },
         }),
       );
 

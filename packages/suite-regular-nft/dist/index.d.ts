@@ -1,7 +1,7 @@
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, PublicKey, TransactionInstruction, Keypair, Connection, Commitment } from '@solana/web3.js';
-import BN from 'bn.js';
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
+import BN from 'bn.js';
 
 declare enum Sortable {
     Asc = "asc",
@@ -278,6 +278,10 @@ type Offchain = {
         family?: string;
         [key: string]: unknown;
     };
+    collectionDetails?: {
+        kind: string;
+        size: number;
+    };
     created_at?: number;
 };
 type Properties = {
@@ -363,6 +367,10 @@ type Collection = {
     address: Pubkey$1;
     verified: boolean;
 };
+type CollectionDetails = {
+    __kind: string;
+    size: number;
+};
 type NftMetadata = {
     mint: string;
     updateAuthority: string;
@@ -376,6 +384,7 @@ type NftMetadata = {
     offchain: Offchain;
     tokenAmount: string;
     collection?: Collection | undefined;
+    collectionDetails?: CollectionDetails | undefined;
     creators?: Creators[] | undefined;
     uses?: Uses | undefined;
     dateTime?: Date | undefined;
@@ -843,6 +852,7 @@ declare global {
 declare const RegularNft: {
     transfer: (mint: string, owner: string, dest: string, signers: string[], feePayer?: string | undefined) => Promise<Result<Transaction, Error>>;
     thaw: (mint: string, owner: string, freezeAuthority: string, feePayer?: string | undefined) => Result<Transaction, Error>;
+    mintCollection: (owner: Pubkey, signer: string, input: InputNftMetadata, feePayer?: string | undefined, freezeAuthority?: Pubkey | undefined, collectionSize?: number) => Promise<Result<MintTransaction, Error>>;
     createDeleagateInstruction: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, delegateAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, nftMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
     mint: (owner: string, signer: string, input: InputNftMetadata, feePayer?: string | undefined, freezeAuthority?: string | undefined) => Promise<Result<MintTransaction, Error>>;

@@ -278,6 +278,10 @@ type Offchain = {
         family?: string;
         [key: string]: unknown;
     };
+    collectionDetails?: {
+        kind: string;
+        size: number;
+    };
     created_at?: number;
 };
 type Properties = {
@@ -370,6 +374,10 @@ type Collection = {
     address: Pubkey$1;
     verified: boolean;
 };
+type CollectionDetails = {
+    __kind: string;
+    size: number;
+};
 type NftMetadata = {
     mint: string;
     updateAuthority: string;
@@ -383,6 +391,7 @@ type NftMetadata = {
     offchain: Offchain;
     tokenAmount: string;
     collection?: Collection | undefined;
+    collectionDetails?: CollectionDetails | undefined;
     creators?: Creators[] | undefined;
     uses?: Uses | undefined;
     dateTime?: Date | undefined;

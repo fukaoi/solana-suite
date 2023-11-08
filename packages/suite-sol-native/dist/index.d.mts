@@ -323,6 +323,10 @@ type Offchain = {
         family?: string;
         [key: string]: unknown;
     };
+    collectionDetails?: {
+        kind: string;
+        size: number;
+    };
     created_at?: number;
 };
 type Properties = {
