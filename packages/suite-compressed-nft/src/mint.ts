@@ -4,6 +4,10 @@ import {
   createMintToCollectionV1Instruction,
   PROGRAM_ID as BUBBLEGUM_PROGRAM_ID,
 } from 'mpl-bubblegum-instruction';
+import {
+  SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+  SPL_NOOP_PROGRAM_ID,
+} from '@solana/spl-account-compression';
 
 /**
  * Upload content and Compressed NFT mint
@@ -74,22 +78,6 @@ export namespace CompressedNft {
         }),
       },
     );
-    const tx = new Transaction().add(mintIx);
-    tx.feePayer = ownerKeypair.publicKey;
-    try {
-      const sig = await sendAndConfirmTransaction(
-        connectionWrapper,
-        tx,
-        [ownerKeypair],
-        {
-          commitment: 'confirmed',
-          skipPreflight: true,
-        },
-      );
-      return sig;
-    } catch (e) {
-      console.error('Failed to mint compressed NFT', e);
-      throw e;
-    }
+    return mintIx;
   };
 }
