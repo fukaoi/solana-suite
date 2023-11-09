@@ -2,7 +2,7 @@ import { Pubkey } from '../account';
 import { Attribute, Properties, StorageType } from '../storage';
 import { FileType } from '../storage';
 import { InternalCollection, InternalCreators } from '../converter';
-import { bignum, Creators, Option, Uses } from './common';
+import { bignum, Option, Uses, InputCreators } from './common';
 
 export type InputCollection = Pubkey;
 export type Options = { [key: string]: unknown };
@@ -37,7 +37,7 @@ export type InputNftMetadata = {
   attributes?: Attribute[];
   properties?: Properties;
   maxSupply?: bignum;
-  creators?: Creators[];
+  creators?: InputCreators[];
   uses?: Uses;
   collection?: InputCollection;
   options?: Options;

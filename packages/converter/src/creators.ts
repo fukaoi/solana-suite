@@ -1,11 +1,10 @@
-import { Creators, Option } from '~/types/regular-nft';
-
+import { Creators, InputCreators, Option } from '~/types/regular-nft';
 import { InternalCreators } from '~/types/converter';
 
 export namespace Converter {
   export namespace Creators {
     export const intoInfra = (
-      input: Option<Creators[]> | undefined,
+      input: Option<InputCreators[]> | undefined,
     ): Option<InternalCreators[]> => {
       if (!input) {
         return null;
@@ -15,7 +14,7 @@ export namespace Converter {
         modify = {
           address: data.address.toPublicKey(),
           share: data.share,
-          verified: data.verified,
+          verified: false,
         };
 
         return modify;

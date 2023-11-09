@@ -5,7 +5,7 @@ import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Pubkey } from '~/types/account';
-import { Creators } from '~/types/regular-nft';
+import { InputCreators } from '~/types/regular-nft';
 import { ValidatorError } from '~/validator';
 
 let source: KeypairAccount;
@@ -85,23 +85,24 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
   );
 });
 
-test.only('[Nft Storage] mint nft with many optional datas, verified collection', async (t) => {
+test('[Nft Storage] mint nft with many optional datas, verified collection', async (t) => {
   const asset = RandomAsset.get();
-  const creators: Creators[] = [];
-  // const owner = Account.Keypair.create();
+  const creators: InputCreators[] = [];
+  const unverifyCreator = Account.Keypair.create();
   const owner = source;
   const freezeAuthority = Account.Keypair.create();
 
   creators.push({
-    address: owner.pubkey,
-    share: 60,
-    verified: false,
+    address: 'H7WEabRV8vvCJxK8forAUfeXunoYpWFbhewGj9eC4Pj8',
+    secret:
+      '4DRpsEkwfAMc7268urkNu2AFC4tweXTLJArwXG9LGvjqcFUoy9mqmBZHLhf2yHEbj3AgrjVppEBQ5hfBTnDzLVSA',
+    share: 70,
   });
 
   creators.push({
-    address: 'G2Fjvm2ab1xxwMxLPFRSmuEDcX8jzsg2L1gFK4MKMkt5',
-    share: 40,
-    verified: false,
+    address: unverifyCreator.pubkey,
+    secret: '',
+    share: 30
   });
 
   const properties = {
@@ -151,15 +152,14 @@ test.only('[Nft Storage] mint nft with many optional datas, verified collection'
     freezeAuthority.pubkey,
   );
 
+  const mint = res.unwrap().data as Pubkey;
   (await res.submit()).match(
     (ok: string) => {
-      const mint = res.unwrap().data as Pubkey;
       t.true(Account.Keypair.isPubkey(mint));
       t.log('# mint:', mint);
       t.log('# sig:', ok);
     },
-    // (ng: Error) => t.fail(ng.message),
-    (ng: Error) => console.log(ng),
+    (ng: Error) => t.fail(ng.message),
   );
 });
 

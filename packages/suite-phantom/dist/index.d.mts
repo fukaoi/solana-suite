@@ -2,6 +2,7 @@ import { TransactionSignature, PublicKey, Transaction, Keypair } from '@solana/w
 import BN from 'bn.js';
 
 type Pubkey = string;
+type Secret = string;
 
 declare abstract class AbstractResult$1<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
@@ -470,10 +471,10 @@ type Uses = {
     remaining: bignum;
     total: bignum;
 };
-type Creators = {
+type InputCreators = {
     address: Pubkey;
+    secret: Secret;
     share: number;
-    verified: boolean;
 };
 
 type InputCollection = Pubkey;
@@ -493,7 +494,7 @@ type InputNftMetadata = {
     attributes?: Attribute[];
     properties?: Properties;
     maxSupply?: bignum;
-    creators?: Creators[];
+    creators?: InputCreators[];
     uses?: Uses;
     collection?: InputCollection;
     options?: Options;
@@ -542,7 +543,7 @@ type InputTokenMetadata = {
     description?: string;
     royalty?: number;
     uses?: Uses;
-    creators?: Creators[];
+    creators?: InputCreators[];
     attributes?: Attribute[];
     options?: Options;
 };

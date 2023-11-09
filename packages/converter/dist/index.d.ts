@@ -73,10 +73,10 @@ type Uses = {
     remaining: bignum;
     total: bignum;
 };
-type Creators = {
+type InputCreators = {
     address: Pubkey$1;
+    secret: Secret;
     share: number;
-    verified: boolean;
 };
 
 type InputCollection = Pubkey$1;
@@ -105,7 +105,7 @@ type InputNftMetadata = {
     attributes?: Attribute[];
     properties?: Properties;
     maxSupply?: bignum;
-    creators?: Creators[];
+    creators?: InputCreators[];
     uses?: Uses;
     collection?: InputCollection;
     options?: Options;
@@ -120,7 +120,7 @@ declare namespace Converter$b {
 
 declare namespace Converter$a {
     namespace Creators {
-        const intoInfra: (input: Option<Creators[]> | undefined) => Option<InternalCreators[]>;
+        const intoInfra: (input: Option<InputCreators[]> | undefined) => Option<InternalCreators[]>;
         const intoUser: (output: Option<InternalCreators[]>) => Creators[] | undefined;
     }
 }
@@ -445,7 +445,7 @@ type InputTokenMetadata = {
     description?: string;
     royalty?: number;
     uses?: Uses;
-    creators?: Creators[];
+    creators?: InputCreators[];
     attributes?: Attribute[];
     options?: Options;
 };

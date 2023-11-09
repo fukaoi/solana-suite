@@ -330,6 +330,11 @@ type Creators = {
     share: number;
     verified: boolean;
 };
+type InputCreators = {
+    address: Pubkey$1;
+    secret: Secret;
+    share: number;
+};
 
 type InputCollection = Pubkey$1;
 type Options = {
@@ -364,7 +369,7 @@ type InputNftMetadata = {
     attributes?: Attribute[];
     properties?: Properties;
     maxSupply?: bignum;
-    creators?: Creators[];
+    creators?: InputCreators[];
     uses?: Uses;
     collection?: InputCollection;
     options?: Options;
@@ -406,7 +411,7 @@ type InputTokenMetadata = {
     description?: string;
     royalty?: number;
     uses?: Uses;
-    creators?: Creators[];
+    creators?: InputCreators[];
     attributes?: Attribute[];
     options?: Options;
 };

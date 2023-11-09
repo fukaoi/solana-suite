@@ -1,5 +1,5 @@
 import { FileType, StorageType, Attribute, Offchain } from './storage.js';
-import { Uses, Creators, Options, Option, Collection } from './regular-nft.js';
+import { Uses, InputCreators, Options, Option, Collection, Creators } from './regular-nft.js';
 import '@solana/web3.js';
 import './phantom-e9a40784.js';
 import './account.js';
@@ -16,7 +16,7 @@ type InputTokenMetadata = {
     description?: string;
     royalty?: number;
     uses?: Uses;
-    creators?: Creators[];
+    creators?: InputCreators[];
     attributes?: Attribute[];
     options?: Options;
 };

@@ -276,10 +276,10 @@ type Uses = {
     remaining: bignum;
     total: bignum;
 };
-type Creators = {
+type InputCreators = {
     address: Pubkey;
+    secret: Secret;
     share: number;
-    verified: boolean;
 };
 
 type InputCollection = Pubkey;
@@ -299,7 +299,7 @@ type InputNftMetadata = {
     attributes?: Attribute[];
     properties?: Properties;
     maxSupply?: bignum;
-    creators?: Creators[];
+    creators?: InputCreators[];
     uses?: Uses;
     collection?: InputCollection;
     options?: Options;

@@ -205,6 +205,7 @@ type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
 type Pubkey = string;
+type Secret = string;
 
 declare global {
     interface String {
@@ -307,10 +308,10 @@ type Uses = {
     remaining: bignum;
     total: bignum;
 };
-type Creators = {
+type InputCreators = {
     address: Pubkey;
+    secret: Secret;
     share: number;
-    verified: boolean;
 };
 
 type InputCollection = Pubkey;
@@ -339,7 +340,7 @@ type InputNftMetadata = {
     attributes?: Attribute[];
     properties?: Properties;
     maxSupply?: bignum;
-    creators?: Creators[];
+    creators?: InputCreators[];
     uses?: Uses;
     collection?: InputCollection;
     options?: Options;

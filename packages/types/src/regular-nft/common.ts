@@ -1,4 +1,4 @@
-import { Pubkey } from '../account';
+import { Pubkey, Secret } from '../account';
 import BN from 'bn.js';
 
 export type bignum = number | BN;
@@ -21,4 +21,10 @@ export type Creators = {
   address: Pubkey;
   share: number;
   verified: boolean;
+};
+
+export type InputCreators = {
+  address: Pubkey;
+  secret: Secret;
+  share: number;
 };

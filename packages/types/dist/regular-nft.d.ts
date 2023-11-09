@@ -1,4 +1,4 @@
-import { Pubkey } from './account.js';
+import { Pubkey, Secret } from './account.js';
 import { StorageType, FileType, Attribute, Properties, Offchain } from './storage.js';
 import { InternalCreators, InternalCollection } from './converter.js';
 import BN from 'bn.js';
@@ -22,6 +22,11 @@ type Creators = {
     address: Pubkey;
     share: number;
     verified: boolean;
+};
+type InputCreators = {
+    address: Pubkey;
+    secret: Secret;
+    share: number;
 };
 
 type InputCollection = Pubkey;
@@ -57,7 +62,7 @@ type InputNftMetadata = {
     attributes?: Attribute[];
     properties?: Properties;
     maxSupply?: bignum;
-    creators?: Creators[];
+    creators?: InputCreators[];
     uses?: Uses;
     collection?: InputCollection;
     options?: Options;
@@ -103,4 +108,4 @@ type TokenMetadata = {
     dateTime?: Date | undefined;
 };
 
-export { Collection, CollectionDetails, Creators, InputCollection, InputNftMetadata, MetaplexDataV2, NftMetadata, Option, Options, TokenMetadata, TokenStandard, UseMethod, Uses, bignum };
+export { Collection, CollectionDetails, Creators, InputCollection, InputCreators, InputNftMetadata, MetaplexDataV2, NftMetadata, Option, Options, TokenMetadata, TokenStandard, UseMethod, Uses, bignum };

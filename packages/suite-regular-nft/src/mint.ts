@@ -22,6 +22,7 @@ import { Storage } from '~/storage';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
+import { Account } from '~/account';
 
 import {
   createCreateMasterEditionV3Instruction,
@@ -30,7 +31,6 @@ import {
   createVerifySizedCollectionItemInstruction,
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
-import { Account } from '~/account';
 
 export namespace RegularNft {
   const NFT_AMOUNT = 1;
@@ -280,7 +280,7 @@ export namespace RegularNft {
         );
       }
 
-      //--- collection ---
+      // collection ---
       if (input.collection) {
         instructions.push(
           createVerifySizedCollectionInstruction(
@@ -291,9 +291,23 @@ export namespace RegularNft {
         );
       }
 
+      const keypairs = [signer.toKeypair(), mint.toKeypair()];
+
+      // creator ---
+      if (input.creators) {
+        input.creators.forEach((creator) => {
+          if (Account.Keypair.isSecret(creator.secret)) {
+            const creatorPubkey = creator.address.toPublicKey();
+            const inst = createVerifyCreator(mint.toPublicKey(), creatorPubkey);
+            instructions.push(inst);
+            keypairs.push(creator.secret.toKeypair());
+          }
+        });
+      }
+
       return new MintTransaction(
         instructions,
-        [signer.toKeypair(), mint.toKeypair()],
+        keypairs,
         payer.toKeypair(),
         mint.pubkey,
       );
