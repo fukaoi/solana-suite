@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -44,6 +40,9 @@ importers:
 
   packages/account:
     dependencies:
+      '@metaplex-foundation/mpl-bubblegum':
+        specifier: ^3.0.0
+        version: 3.0.0(@metaplex-foundation/umi@0.8.9)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
         version: 2.13.0
@@ -9723,3 +9722,7 @@ packages:
       - supports-color
       - utf-8-validate
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false

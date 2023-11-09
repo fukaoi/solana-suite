@@ -13,14 +13,13 @@
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@solana/web3.js": "^1.78.5",
     "@solana-suite/config": "workspace:*",
-    "bs58": "^4.0.1"
-  },
-  "dependencies": {
+    "@metaplex-foundation/mpl-bubblegum": "^3.0.0",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
-    "@solana/spl-token": "^0.3.8"
+    "@solana/spl-token": "^0.3.8",
+    "bs58": "^4.0.1"
   },
   "devDependencies": {
     "@types/bs58": "^4.0.1",
