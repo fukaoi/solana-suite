@@ -12,11 +12,11 @@ test.before(async () => {
 });
 
 test('Create merkle tree', async (t) => {
-  const treeOwner = Account.Keypair.create();
-  const inst = await CompressedNft.initTree(treeOwner.secret, source.secret);
+  const inst = await CompressedNft.initTree(source.secret);
   (await inst.submit()).match(
     (ok) => {
       t.log('# sig: ', ok);
+      t.log('# treeOwner: ', inst.unwrap().data);
       t.pass();
     },
     (err) => {

@@ -5,7 +5,7 @@ import {
 } from '@solana/spl-account-compression';
 import { MPL_BUBBLEGUM_PROGRAM_ID } from '@metaplex-foundation/mpl-bubblegum';
 import { PublicKey, SystemProgram } from '@solana/web3.js';
-import { debugLog, Try } from '~/shared';
+import { Account, debugLog, Try } from '~/shared';
 import { Node } from '~/node';
 import { Transaction } from '~/transaction';
 import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
@@ -14,7 +14,6 @@ import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
  * create a new markle tree
  * This function needs only 1 call
  *
- * @param {treeOwner} Secret
  * @param {feePayer} Secret
  * @param {maxDepth} number
  * @param {maxBufferSize} number
@@ -22,12 +21,12 @@ import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
  */
 export namespace CompressedNft {
   export const initTree = (
-    treeOwner: Secret,
     feePayer: Secret,
     maxDepth: number = 14,
     maxBufferSize: number = 64,
   ) => {
     return Try(async () => {
+      const treeOwner = Account.Keypair.create();
       const space = getConcurrentMerkleTreeAccountSize(maxDepth, maxBufferSize);
       const [treeAuthority] = PublicKey.findProgramAddressSync(
         [treeOwner.toKeypair().publicKey.toBuffer()],
@@ -66,6 +65,7 @@ export namespace CompressedNft {
         [inst1, inst2],
         [treeOwner.toKeypair()],
         feePayer.toKeypair(),
+        treeOwner
       );
     });
   };
