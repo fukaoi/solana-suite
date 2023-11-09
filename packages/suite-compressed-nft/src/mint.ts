@@ -1,8 +1,9 @@
 import { InputNftMetadata } from '~/types/regular-nft';
+import { Account } from '~/account';
 import {
   createMintToCollectionV1Instruction,
   PROGRAM_ID as BUBBLEGUM_PROGRAM_ID,
-} from '@metaplex-foundation/mpl-bubblegum';
+} from 'mpl-bubblegum-instruction';
 
 /**
  * Upload content and Compressed NFT mint
@@ -31,7 +32,6 @@ import {
  * @return Promise<Result<MintInstruction, Error>>
  */
 export namespace CompressedNft {
-
   export const mint = async (
     input: InputNftMetadata,
     owner: Pubkey,
@@ -41,14 +41,15 @@ export namespace CompressedNft {
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
   ) => {
-    const [treeAuthority, _bump] = await PublicKey.findProgramAddress(
-      [treeKeypair.publicKey.toBuffer()],
-      BUBBLEGUM_PROGRAM_ID,
+    const treeKeypair = treeOwner.toKeypair();
+    const ownerKeypair = signer.toKeypair();
+
+    const treeAuthority = Account.Pda.getTreeAuthority(
+      treeKeypair.publicKey.toString(),
     );
-    const [bgumSigner, __] = await PublicKey.findProgramAddress(
-      [Buffer.from('collection_cpi', 'utf8')],
-      BUBBLEGUM_PROGRAM_ID,
-    );
+
+    const bgumSigner = Account.Pda.getBgumSigner();
+
     const mintIx = createMintToCollectionV1Instruction(
       {
         merkleTree: treeKeypair.publicKey,
