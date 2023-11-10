@@ -120,7 +120,7 @@ declare namespace Converter$b {
 
 declare namespace Converter$a {
     namespace Creators {
-        const intoInfra: (input: Option<InputCreators[]> | undefined) => Option<InternalCreators[]>;
+        const intoInfra: (input: Option<InputCreators[]> | undefined) => InternalCreators[];
         const intoUser: (output: Option<InternalCreators[]>) => Creators[] | undefined;
     }
 }

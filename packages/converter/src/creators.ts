@@ -21,6 +21,21 @@ export namespace Converter {
       });
     };
 
+    export const intoInfra2 = (
+      input: Option<InputCreators[]> | undefined,
+    ): InternalCreators[] => {
+      return input!.map((data) => {
+        let modify: InternalCreators;
+        modify = {
+          address: data.address.toPublicKey(),
+          share: data.share,
+          verified: false,
+        };
+
+        return modify;
+      });
+    };
+
     export const intoUser = (
       output: Option<InternalCreators[]>,
     ): Creators[] | undefined => {

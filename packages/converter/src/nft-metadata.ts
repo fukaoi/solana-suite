@@ -7,6 +7,7 @@ import { convertTimestampToDateTime } from '~/shared';
 import {
   InputNftMetadata,
   MetaplexDataV2,
+  MetaplexMetadataArgs,
   NftMetadata,
 } from '~/types/regular-nft';
 
@@ -30,6 +31,21 @@ export namespace Converter {
       };
     };
 
+    export const intoInfra2 = (
+      input: InputNftMetadata,
+      uri: string,
+      sellerFeeBasisPoints: number,
+    ): MetaplexMetadataArgs => {
+      return {
+        name: input.name,
+        symbol: input.symbol,
+        uri,
+        sellerFeeBasisPoints,
+        creators: _Creators.Creators.intoInfra2(input.creators),
+        collection: _Collection.Collection.intoInfra(input.collection),
+        uses: input.uses || null,
+      };
+    };
     export const intoUser = (
       output: OnchainAndOffchain,
       tokenAmount: string,
