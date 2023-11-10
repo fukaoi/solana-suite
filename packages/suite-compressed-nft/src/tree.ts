@@ -1,14 +1,17 @@
 import {
+  ConcurrentMerkleTreeAccount,
   getConcurrentMerkleTreeAccountSize,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
 } from '@solana/spl-account-compression';
 import { MPL_BUBBLEGUM_PROGRAM_ID } from '@metaplex-foundation/mpl-bubblegum';
 import { PublicKey, SystemProgram } from '@solana/web3.js';
-import { Account, debugLog, Try } from '~/shared';
+import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
+import { Account } from '~/account';
+import { Pubkey } from '~/types/account';
+import { debugLog, Try } from '~/shared';
 import { Node } from '~/node';
 import { Transaction } from '~/transaction';
-import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
 
 /**
  * create a new markle tree
@@ -20,6 +23,22 @@ import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
  * @return Promise<Result<Instruction, Error>>
  */
 export namespace CompressedNft {
+  export class Tree {
+    treeOwner: Pubkey;
+    constructor(treeOwner: Pubkey) {
+      this.treeOwner = treeOwner;
+    }
+
+    getAssetId = async (): Promise<Pubkey> => {
+      const treeAccount = await ConcurrentMerkleTreeAccount.fromAccountAddress(
+        Node.getConnection(),
+        this.treeOwner.toPublicKey(),
+      );
+      const leafIndex = treeAccount.tree.rightMostPath.index - 1;
+      return Account.Pda.getAssetId(this.treeOwner, leafIndex);
+    };
+  }
+
   export const initTree = (
     feePayer: Secret,
     maxDepth: number = 14,
@@ -65,7 +84,7 @@ export namespace CompressedNft {
         [inst1, inst2],
         [treeOwner.toKeypair()],
         feePayer.toKeypair(),
-        treeOwner
+        treeOwner,
       );
     });
   };

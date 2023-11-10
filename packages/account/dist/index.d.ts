@@ -59,8 +59,11 @@ declare namespace Account$2 {
 
 declare namespace Account$1 {
     namespace Pda {
-        const getMetadata: (mint: Pubkey) => PublicKey;
-        const getMasterEdition: (mint: Pubkey) => PublicKey;
+        const getMetadata: (address: Pubkey) => PublicKey;
+        const getMasterEdition: (address: Pubkey) => PublicKey;
+        const getTreeAuthority: (address: Pubkey) => PublicKey;
+        const getBgumSigner: () => PublicKey;
+        const getAssetId: (address: Pubkey, leafIndex: number) => PublicKey;
     }
 }
 

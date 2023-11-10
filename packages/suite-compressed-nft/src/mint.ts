@@ -1,8 +1,4 @@
-import {
-  Creators,
-  InputNftMetadata,
-  MetaplexMetadataArgs,
-} from '~/types/regular-nft';
+import { InputNftMetadata } from '~/types/regular-nft';
 import { Pubkey, Secret } from '~/types/account';
 import { Account } from '~/account';
 import { Converter } from '~/converter';

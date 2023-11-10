@@ -2,6 +2,7 @@ import { PublicKey } from '@solana/web3.js';
 import { PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
 import { Pubkey } from '~/types/account';
 import { MPL_BUBBLEGUM_PROGRAM_ID } from '@metaplex-foundation/mpl-bubblegum';
+import BN from 'bn.js';
 
 export namespace Account {
   export namespace Pda {
@@ -44,6 +45,19 @@ export namespace Account {
         MPL_BUBBLEGUM_PROGRAM_ID.toPublicKey(),
       );
       return publicKey;
+    };
+
+    export const getAssetId = (address: Pubkey, leafIndex: number): Pubkey => {
+      const node = new BN.BN(leafIndex);
+      const [assetId] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from('asset', 'utf8'),
+          address.toPublicKey().toBuffer(),
+          Uint8Array.from(node.toArray('le', 8)),
+        ],
+        MPL_BUBBLEGUM_PROGRAM_ID.toPublicKey(),
+      );
+      return assetId.toString();
     };
   }
 }
