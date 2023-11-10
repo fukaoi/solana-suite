@@ -12,19 +12,13 @@ let source: KeypairAccount;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
-  // source = obj.source;
-  source = new Account.Keypair({
-    secret:
-      'si6XUcRuJD9zGSvinDdJZUntW2y3DcUYu2JiQxCQ7gEbeDiJmxwEPzfKN5cGgyfVyHRo5hNgyiULNSxX4sbtbj4',
-  });
+  source = obj.source;
 });
 
 test('[nftStorage] mint nft, already uploaed image', async (t) => {
   const asset = RandomAsset.get();
-  // const collectionMint = 'FMKm75Z9feXMrsKRT9Q6AqSrjHzFPYxpyrD4Hyfx4bup';
-  const collectionMint = '4BFBPCkPPtWUEbRtRkvkEvFqbbpVoegPoFspN2V5EG1E';
-  const treeOwner = 'EKLAeDRiEPy91SDjNQ17cyBDnc9HAP9m47iowzzxza4b';
-  // const treeOwner = '2UnDiaZqMhhNXcFft1DYhof9mu1D9F68dSt8EQq1ENVc';
+  const collectionMint = 'FMKm75Z9feXMrsKRT9Q6AqSrjHzFPYxpyrD4Hyfx4bup';
+  const treeOwner = '3ThvFMB15aiKSmSP966183RybmDRXfCiedEJMsUEhfaM';
   const res = await CompressedNft.mint(
     source.pubkey,
     source.secret,
@@ -39,8 +33,6 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
     treeOwner,
     collectionMint,
   );
-
-  // t.true(Account.Keypair.isPubkey(res.unwrap().data as Pubkey));
 
   (await res.submit()).match(
     (ok: string) => {

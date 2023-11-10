@@ -58,7 +58,6 @@ export namespace CompressedNft {
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
   ) => {
-    const ownerKeypair = signer.toKeypair();
     const payer: Secret = feePayer ? feePayer : signer;
     const treeAuthority = Account.Pda.getTreeAuthority(
       treeOwner.toPublicKey().toString(),
@@ -153,22 +152,16 @@ export namespace CompressedNft {
 
     debugLog('# input: ', input);
     debugLog('# metadataArgs: ', metadataArgs);
-    // console.log('# collectionMint', collectionMint);
-    // console.log('# collectionMetadata', collectionMetadata);
-    // console.log(
-    //   '# collectionMasterEditionAccount',
-    //   collectionMasterEditionAccount,
-    // );
 
     const instruction = createMintToCollectionV1Instruction(
       {
         merkleTree: treeOwner.toPublicKey(),
         treeAuthority,
-        treeDelegate: ownerKeypair.publicKey,
+        treeDelegate: owner.toPublicKey(),
         payer: payer.toKeypair().publicKey,
-        leafOwner: ownerKeypair.publicKey, // receiver
-        leafDelegate: ownerKeypair.publicKey,
-        collectionAuthority: ownerKeypair.publicKey,
+        leafOwner: owner.toPublicKey(), // receiver
+        leafDelegate: owner.toPublicKey(),
+        collectionAuthority: owner.toPublicKey(),
         collectionMint: collectionMint.toPublicKey(),
         collectionMetadata: collectionMetadata,
         editionAccount: collectionMasterEditionAccount,
@@ -184,7 +177,8 @@ export namespace CompressedNft {
     );
     return new MintTransaction(
       [instruction],
-      [ownerKeypair],
+      [signer.toKeypair()],
+      payer.toKeypair(),
     );
   };
 }
