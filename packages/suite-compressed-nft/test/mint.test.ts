@@ -1,12 +1,14 @@
 import test from 'ava';
 import { CompressedNft } from '../src';
 import { Account } from '~/account';
+import { Node } from '~/node';
 import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Pubkey } from '~/types/account';
 import { InputCreators } from '~/types/regular-nft';
 import { ValidatorError } from '~/validator';
+import { sleep } from '@irys/sdk/build/cjs/common/upload';
 
 let source: KeypairAccount;
 
@@ -19,7 +21,7 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
   const asset = RandomAsset.get();
   const collectionMint = 'FMKm75Z9feXMrsKRT9Q6AqSrjHzFPYxpyrD4Hyfx4bup';
   const treeOwner = '3ThvFMB15aiKSmSP966183RybmDRXfCiedEJMsUEhfaM';
-  const res = await CompressedNft.mint(
+  const inst = await CompressedNft.mint(
     source.pubkey,
     source.secret,
     {
@@ -33,15 +35,19 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
     treeOwner,
     collectionMint,
   );
+  const assetId = await inst.data?.getAssetId();
+  t.log('# asset id: ', assetId);
 
-  (await res.submit()).match(
-    (ok: string) => {
-      console.log('# sig:', ok);
+  (await inst.submit()).match(
+    async (ok: string) => {
       t.log('# sig:', ok);
       t.pass();
     },
     (ng: Error) => t.fail(ng.message),
   );
+
+  const assetId2 = await inst.data?.getAssetId();
+  t.log('# asset id: ', assetId2);
 });
 
 // test('[Arweave] mint nft', async (t) => {

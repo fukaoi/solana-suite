@@ -5,6 +5,7 @@ import { Converter } from '~/converter';
 import { Storage } from '~/storage';
 import { MintTransaction } from '~/transaction';
 import { debugLog } from '~/shared';
+import { CompressedNft as Tree } from './tree';
 import {
   createMintToCollectionV1Instruction,
   MetadataArgs,
@@ -171,10 +172,11 @@ export namespace CompressedNft {
         metadataArgs: metadataArgs,
       },
     );
-    return new MintTransaction(
+    return new MintTransaction<Tree.Tree>(
       [instruction],
       [signer.toKeypair()],
       payer.toKeypair(),
+      new Tree.Tree(treeOwner),
     );
   };
 }

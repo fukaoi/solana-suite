@@ -11,17 +11,17 @@ import { Constants, debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { MAX_RETRIES } from './define';
 
-export class MintTransaction {
+export class MintTransaction<T> {
   instructions: TransactionInstruction[];
   signers: Keypair[];
   feePayer?: Keypair;
-  data?: unknown;
+  data?: T;
 
   constructor(
     instructions: TransactionInstruction[],
     signers: Keypair[],
     feePayer?: Keypair,
-    data?: unknown,
+    data?: T,
   ) {
     this.instructions = instructions;
     this.signers = signers;

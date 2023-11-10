@@ -13,15 +13,6 @@ import { debugLog, Try } from '~/shared';
 import { Node } from '~/node';
 import { Transaction } from '~/transaction';
 
-/**
- * create a new markle tree
- * This function needs only 1 call
- *
- * @param {feePayer} Secret
- * @param {maxDepth} number
- * @param {maxBufferSize} number
- * @return Promise<Result<Instruction, Error>>
- */
 export namespace CompressedNft {
   export class Tree {
     treeOwner: Pubkey;
@@ -39,6 +30,15 @@ export namespace CompressedNft {
     };
   }
 
+  /**
+   * create a new markle tree
+   * This function needs only 1 call
+   *
+   * @param {feePayer} Secret
+   * @param {maxDepth} number
+   * @param {maxBufferSize} number
+   * @return Promise<Result<Instruction, Error>>
+   */
   export const initTree = (
     feePayer: Secret,
     maxDepth: number = 14,
