@@ -20,7 +20,7 @@ export namespace Converter {
         symbol: input.symbol,
         uri,
         sellerFeeBasisPoints,
-        creators: _Creators.Creators.intoInfra2(input.creators),
+        creators: _Creators.Creators.intoCompressedNftInfra(input.creators),
         collection: _Collection.Collection.intoInfra(input.collection),
         uses: input.uses || null,
         primarySaleHappened: false,

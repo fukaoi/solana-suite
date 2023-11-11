@@ -126,14 +126,14 @@ export namespace CompressedNft {
       throw Error(`Must set 'storageType + filePath' or 'uri'`);
     }
 
-    let datav2 = Converter.CompressedNftMetadata.intoInfra(
+    let converted = Converter.CompressedNftMetadata.intoInfra(
       input,
       uri,
       sellerFeeBasisPoints,
     );
 
     const metadataArgs: MetadataArgs = {
-      ...datav2,
+      ...converted,
       collection: { key: collectionMint.toPublicKey(), verified: false },
     };
 

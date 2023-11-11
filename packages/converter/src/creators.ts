@@ -21,9 +21,12 @@ export namespace Converter {
       });
     };
 
-    export const intoInfra2 = (
+    export const intoCompressedNftInfra = (
       input: Option<InputCreators[]> | undefined,
     ): InternalCreators[] => {
+      if (!input) {
+        return [];
+      }
       return input!.map((data) => {
         let modify: InternalCreators;
         modify = {

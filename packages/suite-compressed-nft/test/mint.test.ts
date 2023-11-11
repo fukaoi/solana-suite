@@ -31,7 +31,6 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
       name: asset.name!,
       symbol: asset.symbol!,
       royalty: 50,
-      creators: [],
     },
     treeOwner,
     collectionMint,
@@ -42,12 +41,11 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
       t.log('# sig:', ok);
       t.pass();
     },
-    // (ng: Error) => t.fail(ng.message),
-    (ng: Error) => console.log(ng),
+    (ng: Error) => console.error(ng),
   );
 
-  const assetId2 = await inst.data?.getAssetId();
-  t.log('# asset id: ', assetId2);
+  const assetId = await inst.data?.getAssetId();
+  t.log('# asset id: ', assetId);
 });
 
 // test('[Arweave] mint nft', async (t) => {
@@ -72,33 +70,39 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
 //   );
 // });
 //
-// test('[Nft Storage] mint nft with fee payer', async (t) => {
-//   const owner = Account.Keypair.create();
-//   const asset = RandomAsset.get();
-//   const res = await RegularNft.mint(
-//     owner.pubkey,
-//     owner.secret,
-//     {
-//       filePath: asset.filePath as string,
-//       storageType: 'nftStorage',
-//       name: asset.name!,
-//       symbol: asset.symbol!,
-//       royalty: 0,
-//     },
-//     source.secret,
-//   );
-//
-//   t.true(Account.Keypair.isPubkey(res.unwrap().data as Pubkey));
-//
-//   (await res.submit()).match(
-//     (ok: string) => {
-//       t.log('# mint:', res.unwrap().data);
-//       t.log('# sig:', ok);
-//     },
-//     (ng: Error) => t.fail(ng.message),
-//   );
-// });
-//
+test.only('[Nft Storage] mint nft with fee payer', async (t) => {
+  const feePayer = new Account.Keypair({
+    secret:
+      '4dMvfbrzVPsKLhzGLx4uZ18myioH1JGYTNPnS3Lk2pkMv3rczJsCE2Byw9kvzjKkUQ12LcCaf4chJcgUNCqdtEB4',
+  });
+  const asset = RandomAsset.get();
+  const inst = await CompressedNft.mint(
+    source.pubkey,
+    source.secret,
+    {
+      filePath: asset.filePath,
+      storageType: 'nftStorage',
+      name: asset.name!,
+      symbol: asset.symbol!,
+      royalty: 0,
+    },
+    treeOwner,
+    collectionMint,
+    feePayer.secret,
+  );
+
+  (await inst.submit()).match(
+    async (ok: string) => {
+      t.log('# sig:', ok);
+      t.pass();
+    },
+    (ng: Error) => console.error(ng),
+  );
+
+  const assetId = await inst.data?.getAssetId();
+  t.log('# asset id: ', assetId);
+});
+
 // test('[Nft Storage] mint nft with many optional datas, verified collection', async (t) => {
 //   const asset = RandomAsset.get();
 //   const creators: InputCreators[] = [];
