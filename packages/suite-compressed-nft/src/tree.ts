@@ -9,9 +9,9 @@ import { PublicKey, SystemProgram } from '@solana/web3.js';
 import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
 import { Account } from '~/account';
 import { Pubkey } from '~/types/account';
-import { debugLog, Try } from '~/shared';
+import { debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
-import { Transaction } from '~/transaction';
+import { MintTransaction } from '~/transaction';
 
 export namespace CompressedNft {
   export class Tree {
@@ -43,7 +43,7 @@ export namespace CompressedNft {
     feePayer: Secret,
     maxDepth: number = 14,
     maxBufferSize: number = 64,
-  ) => {
+  ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
     return Try(async () => {
       const treeOwner = Account.Keypair.create();
       const space = getConcurrentMerkleTreeAccountSize(maxDepth, maxBufferSize);
@@ -80,11 +80,11 @@ export namespace CompressedNft {
         MPL_BUBBLEGUM_PROGRAM_ID.toPublicKey(),
       );
 
-      return new Transaction(
+      return new MintTransaction(
         [inst1, inst2],
         [treeOwner.toKeypair()],
         feePayer.toKeypair(),
-        treeOwner,
+        treeOwner.pubkey,
       );
     });
   };

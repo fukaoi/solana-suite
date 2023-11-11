@@ -8,6 +8,6 @@
       "~/*": ["../*/src/index.ts"]
     }
   },
-  "include": ["solana-suite.json"],
+  "include": ["./"],
   "exclude": ["node_modules", "dist"]
 }

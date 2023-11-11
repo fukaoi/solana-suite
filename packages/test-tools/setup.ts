@@ -1,10 +1,11 @@
 import fs from 'node:fs';
 import bs from 'bs58';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import { KeypairAccount } from '~/types/account';
 import { Constants, debugLog, Pubkey, Secret } from '~/shared';
 import { Node } from '~/node';
 import { Account } from '~/account';
-import { KeypairAccount } from '~/types/account';
+import { CompressedNft } from '~/suite-compressed-nft';
 
 console.log(`\u001b[33m === TEST START ===`);
 console.log(`\u001b[33m solana-network: ${Constants.currentCluster}`);
@@ -73,12 +74,31 @@ export namespace Setup {
       secret: bs.encode(dest.secretKey) as Secret,
     });
 
-    const data = templateKeyPair(sourceObject, destObject);
+    const inst = await CompressedNft.initTree(sourceObject.secret);
+    let data = {
+      source: { pubkey: '', secret: '' },
+      dest: { pubkey: '', secret: '' },
+      treeOwner: '',
+    };
+
+    (await inst.submit()).match(
+      () => {
+        data = templateKeyPair(sourceObject, destObject, inst.unwrap().data!);
+      },
+      (err) => {
+        console.error('Failed init tree: ', err);
+        data = templateKeyPair(sourceObject, destObject, '');
+      },
+    );
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));
     return data;
   };
 
-  const templateKeyPair = (source: KeypairAccount, dest: KeypairAccount) => {
+  const templateKeyPair = (
+    source: KeypairAccount,
+    dest: KeypairAccount,
+    treeOwner: Pubkey,
+  ) => {
     return {
       source: {
         pubkey: source.pubkey,
@@ -88,6 +108,7 @@ export namespace Setup {
         pubkey: dest.pubkey,
         secret: dest.secret,
       },
+      treeOwner,
     };
   };
 }

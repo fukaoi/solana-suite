@@ -10,10 +10,12 @@ import { InputCreators } from '~/types/regular-nft';
 import { ValidatorError } from '~/validator';
 
 let source: KeypairAccount;
+let treeOwner: Pubkey;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
+  // treeOwner = obj.treeOwner;
 });
 
 test('[nftStorage] mint nft, already uploaed image', async (t) => {
