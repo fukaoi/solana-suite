@@ -66,7 +66,7 @@ export namespace CompressedNft {
     const collectionMasterEditionAccount = Account.Pda.getMasterEdition(
       collectionMint.toString(),
     );
-    const bgumSigner = Account.Pda.getBgumSigner();
+    const bubblegumSigner = Account.Pda.getBgumSigner();
 
     // porperties, Upload content
     let properties;
@@ -150,16 +150,16 @@ export namespace CompressedNft {
         leafDelegate: owner.toPublicKey(),
         collectionAuthority: owner.toPublicKey(),
         collectionMint: collectionMint.toPublicKey(),
-        collectionMetadata: collectionMetadata,
+        collectionMetadata,
         editionAccount: collectionMasterEditionAccount,
-        bubblegumSigner: bgumSigner,
+        bubblegumSigner,
         logWrapper: SPL_NOOP_PROGRAM_ID,
         collectionAuthorityRecordPda: BUBBLEGUM_PROGRAM_ID,
         compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
         tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
       },
       {
-        metadataArgs: metadataArgs,
+        metadataArgs,
       },
     );
     return new MintTransaction<Tree.Tree>(
