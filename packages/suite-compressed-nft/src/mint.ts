@@ -10,8 +10,6 @@ import {
   createMintToCollectionV1Instruction,
   MetadataArgs,
   PROGRAM_ID as BUBBLEGUM_PROGRAM_ID,
-  TokenProgramVersion,
-  TokenStandard,
 } from 'mpl-bubblegum-instruction';
 import {
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
@@ -53,9 +51,12 @@ export namespace CompressedNft {
     treeOwner: Pubkey,
     collectionMint: Pubkey,
     feePayer?: Secret,
+    receiver?: Pubkey,
     freezeAuthority?: Pubkey,
   ) => {
     const payer: Secret = feePayer ? feePayer : signer;
+    const leafOwner: Pubkey = receiver ? receiver : owner;
+
     const treeAuthority = Account.Pda.getTreeAuthority(
       treeOwner.toPublicKey().toString(),
     );
@@ -131,19 +132,8 @@ export namespace CompressedNft {
       sellerFeeBasisPoints,
     );
 
-    const isMutable = input.isMutable === undefined ? true : input.isMutable;
-    const tokenProgramVersion = TokenProgramVersion.Original;
-    const primarySaleHappened = false;
-    const editionNonce = 0;
-    const tokenStandard = TokenStandard.NonFungible;
-
     const metadataArgs: MetadataArgs = {
       ...datav2,
-      isMutable,
-      tokenProgramVersion,
-      primarySaleHappened,
-      editionNonce,
-      tokenStandard,
       collection: { key: collectionMint.toPublicKey(), verified: false },
     };
 
@@ -156,7 +146,7 @@ export namespace CompressedNft {
         treeAuthority,
         treeDelegate: owner.toPublicKey(),
         payer: payer.toKeypair().publicKey,
-        leafOwner: owner.toPublicKey(), // receiver
+        leafOwner: leafOwner.toPublicKey(), // receiver
         leafDelegate: owner.toPublicKey(),
         collectionAuthority: owner.toPublicKey(),
         collectionMint: collectionMint.toPublicKey(),

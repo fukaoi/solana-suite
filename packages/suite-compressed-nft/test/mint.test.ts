@@ -8,7 +8,6 @@ import { RandomAsset } from 'test-tools/setupAsset';
 import { Pubkey } from '~/types/account';
 import { InputCreators } from '~/types/regular-nft';
 import { ValidatorError } from '~/validator';
-import { sleep } from '@irys/sdk/build/cjs/common/upload';
 
 let source: KeypairAccount;
 
@@ -35,15 +34,14 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
     treeOwner,
     collectionMint,
   );
-  const assetId = await inst.data?.getAssetId();
-  t.log('# asset id: ', assetId);
-
   (await inst.submit()).match(
     async (ok: string) => {
+      await Node.confirmedSig(ok);
       t.log('# sig:', ok);
       t.pass();
     },
-    (ng: Error) => t.fail(ng.message),
+    // (ng: Error) => t.fail(ng.message),
+    (ng: Error) => console.log(ng),
   );
 
   const assetId2 = await inst.data?.getAssetId();

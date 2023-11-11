@@ -28,7 +28,6 @@ test('Create collection', async (t) => {
       t.pass();
     },
     (err: Error) => {
-      console.log(err);
       t.fail(err.message);
     },
   );
