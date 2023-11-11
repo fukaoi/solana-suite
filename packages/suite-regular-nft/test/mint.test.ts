@@ -9,10 +9,12 @@ import { InputCreators } from '~/types/regular-nft';
 import { ValidatorError } from '~/validator';
 
 let source: KeypairAccount;
+let collection: Pubkey;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
+  collection = obj.collectionMint;
 });
 
 test('[nftStorage] mint nft, already uploaed image', async (t) => {
@@ -102,7 +104,7 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
   creators.push({
     address: unverifyCreator.pubkey,
     secret: '',
-    share: 30
+    share: 30,
   });
 
   const properties = {
@@ -114,8 +116,6 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
       },
     ],
   };
-
-  const collection = 'FMKm75Z9feXMrsKRT9Q6AqSrjHzFPYxpyrD4Hyfx4bup';
 
   const attributes = [
     {
