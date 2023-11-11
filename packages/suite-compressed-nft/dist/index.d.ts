@@ -528,15 +528,6 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
-declare class Transaction {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    data?: unknown;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
-    submit: () => Promise<Result$1<TransactionSignature, Error>>;
-}
-
 declare class MintTransaction<T> {
     instructions: TransactionInstruction[];
     signers: Keypair[];
@@ -561,7 +552,7 @@ declare namespace CompressedNft$1 {
      * @param {maxBufferSize} number
      * @return Promise<Result<Instruction, Error>>
      */
-    const initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result$1<Transaction, Error>>;
+    const initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result$1<MintTransaction<Pubkey$1>, Error>>;
 }
 
 declare abstract class AbstractResult<T, E extends Error> {
@@ -776,8 +767,8 @@ declare global {
 declare const CompressedNft: {
     mintCollection: (owner: Pubkey, signer: string, input: InputNftMetadata, feePayer?: string | undefined, freezeAuthority?: Pubkey | undefined) => Promise<Result$1<MintTransaction<Pubkey>, Error>>;
     Tree: typeof CompressedNft$1.Tree;
-    initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result$1<Transaction, Error>>;
-    mint: (owner: string, signer: string, input: InputNftMetadata, treeOwner: string, collectionMint: string, feePayer?: string | undefined, freezeAuthority?: string | undefined) => Promise<MintTransaction<CompressedNft$1.Tree>>;
+    initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result$1<MintTransaction<string>, Error>>;
+    mint: (owner: string, signer: string, input: InputNftMetadata, treeOwner: string, collectionMint: string, feePayer?: string | undefined, receiver?: string | undefined, freezeAuthority?: string | undefined) => Promise<MintTransaction<CompressedNft$1.Tree>>;
 };
 
 export { Account, CompressedNft, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, Secret$1 as Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

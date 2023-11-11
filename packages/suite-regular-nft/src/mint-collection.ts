@@ -86,7 +86,7 @@ export namespace RegularNft {
         throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
 
-      let datav2 = Converter.NftMetadata.intoInfra(input, uri, 0);
+      let datav2 = Converter.RegularNftMetadata.intoInfra(input, uri, 0);
 
       const isMutable = input.isMutable === undefined ? true : input.isMutable;
 

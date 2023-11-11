@@ -5,7 +5,7 @@ import { KeypairAccount } from '~/types/account';
 import { Constants, debugLog, Pubkey, Secret } from '~/shared';
 import { Node } from '~/node';
 import { Account } from '~/account';
-import { CompressedNft } from '~/suite-compressed-nft';
+// import { CompressedNft } from '~/suite-compressed-nft';
 
 console.log(`\u001b[33m === TEST START ===`);
 console.log(`\u001b[33m solana-network: ${Constants.currentCluster}`);
@@ -16,8 +16,11 @@ export namespace Setup {
   export const generateKeyPair = async (): Promise<{
     source: KeypairAccount;
     dest: KeypairAccount;
+    treeOwner: Pubkey;
+    collectionMint: Pubkey;
   }> => {
-    const { source, dest } = await fetchSourceAndDest();
+    const { source, dest, treeOwner, collectionMint } =
+      await fetchSourceAndDest();
     log(source, dest);
     return {
       source: new Account.Keypair({
@@ -25,6 +28,8 @@ export namespace Setup {
         secret: source.secret,
       }),
       dest: new Account.Keypair({ pubkey: dest.pubkey, secret: dest.secret }),
+      treeOwner: treeOwner,
+      collectionMint: collectionMint,
     };
   };
 
@@ -45,7 +50,9 @@ export namespace Setup {
 
   const loadTempFile = async () => {
     const obj = JSON.parse(fs.readFileSync(TEMP_KEYPAIR_FILE, 'utf8'));
-    return { source: obj.source, dest: obj.dest };
+    const treeOwner = obj.treeOwner;
+    const collectionMint = obj.collectionMint;
+    return { source: obj.source, dest: obj.dest, treeOwner, collectionMint };
   };
 
   const requestAirdrop = async (pubkey: PublicKey) => {
@@ -74,22 +81,24 @@ export namespace Setup {
       secret: bs.encode(dest.secretKey) as Secret,
     });
 
-    const inst = await CompressedNft.initTree(sourceObject.secret);
+    // const inst = await CompressedNft.initTree(sourceObject.secret);
     let data = {
       source: { pubkey: '', secret: '' },
       dest: { pubkey: '', secret: '' },
       treeOwner: '',
+      collectionMint: '',
     };
 
-    (await inst.submit()).match(
-      () => {
-        data = templateKeyPair(sourceObject, destObject, inst.unwrap().data!);
-      },
-      (err) => {
-        console.error('Failed init tree: ', err);
-        data = templateKeyPair(sourceObject, destObject, '');
-      },
-    );
+    // (await inst.submit()).match(
+    //   () => {
+    //     data = templateKeyPair(sourceObject, destObject, inst.unwrap().data!);
+    //   },
+    //   (err) => {
+    //     console.error('Failed init tree: ', err);
+    //     data = templateKeyPair(sourceObject, destObject, '');
+    //   },
+    // );
+    data = templateKeyPair(sourceObject, destObject, '', '');
     fs.writeFileSync(TEMP_KEYPAIR_FILE, JSON.stringify(data));
     return data;
   };
@@ -98,6 +107,7 @@ export namespace Setup {
     source: KeypairAccount,
     dest: KeypairAccount,
     treeOwner: Pubkey,
+    collectionMint: Pubkey,
   ) => {
     return {
       source: {
@@ -109,6 +119,7 @@ export namespace Setup {
         secret: dest.secret,
       },
       treeOwner,
+      collectionMint,
     };
   };
 }

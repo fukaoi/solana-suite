@@ -11,17 +11,17 @@ import { ValidatorError } from '~/validator';
 
 let source: KeypairAccount;
 let treeOwner: Pubkey;
+let collectionMint: Pubkey;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
-  // treeOwner = obj.treeOwner;
+  treeOwner = obj.treeOwner;
+  collectionMint = obj.collectionMint;
 });
 
 test('[nftStorage] mint nft, already uploaed image', async (t) => {
   const asset = RandomAsset.get();
-  const collectionMint = 'FMKm75Z9feXMrsKRT9Q6AqSrjHzFPYxpyrD4Hyfx4bup';
-  const treeOwner = '3ThvFMB15aiKSmSP966183RybmDRXfCiedEJMsUEhfaM';
   const inst = await CompressedNft.mint(
     source.pubkey,
     source.secret,
