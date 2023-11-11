@@ -1,16 +1,7 @@
-import { PublicKey, ParsedTransactionWithMeta, TransactionSignature, Keypair } from '@solana/web3.js';
-import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
+import { Metadata, DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import BN from 'bn.js';
-
-type InternalCollection = {
-    key: PublicKey;
-    verified: boolean;
-};
-type InternalCreators = {
-    address: PublicKey;
-    verified: boolean;
-    share: number;
-};
+import { MetadataArgs } from 'mpl-bubblegum-instruction';
+import { PublicKey, ParsedTransactionWithMeta, TransactionSignature, Keypair } from '@solana/web3.js';
 
 type Pubkey$1 = string;
 type Secret = string;
@@ -73,6 +64,11 @@ type Uses = {
     remaining: bignum;
     total: bignum;
 };
+type Creators = {
+    address: Pubkey$1;
+    share: number;
+    verified: boolean;
+};
 type InputCreators = {
     address: Pubkey$1;
     secret: Secret;
@@ -82,15 +78,6 @@ type InputCreators = {
 type InputCollection = Pubkey$1;
 type Options = {
     [key: string]: unknown;
-};
-type MetaplexDataV2 = {
-    name: string;
-    symbol: string;
-    uri: string;
-    sellerFeeBasisPoints: number;
-    creators: Option<InternalCreators[]>;
-    collection: Option<InternalCollection>;
-    uses: Option<Uses>;
 };
 type InputNftMetadata = {
     name: string;
@@ -111,6 +98,50 @@ type InputNftMetadata = {
     options?: Options;
 };
 
+type Collection = {
+    address: Pubkey$1;
+    verified: boolean;
+};
+type CollectionDetails = {
+    __kind: string;
+    size: number;
+};
+type NftMetadata = {
+    mint: string;
+    updateAuthority: string;
+    royalty: number;
+    name: string;
+    symbol: string;
+    uri: string;
+    isMutable: boolean;
+    primarySaleHappened: boolean;
+    editionNonce: Option<number>;
+    offchain: Offchain;
+    tokenAmount: string;
+    collection?: Collection | undefined;
+    collectionDetails?: CollectionDetails | undefined;
+    creators?: Creators[] | undefined;
+    uses?: Uses | undefined;
+    dateTime?: Date | undefined;
+};
+
+declare namespace Converter$c {
+    namespace CompressedNftMetadata {
+        const intoInfra: (input: InputNftMetadata, uri: string, sellerFeeBasisPoints: number) => MetadataArgs;
+        const intoUser: (output: OnchainAndOffchain, tokenAmount: string) => NftMetadata;
+    }
+}
+
+type InternalCollection = {
+    key: PublicKey;
+    verified: boolean;
+};
+type InternalCreators = {
+    address: PublicKey;
+    verified: boolean;
+    share: number;
+};
+
 declare namespace Converter$b {
     namespace Collection {
         const intoInfra: (input: Option<InputCollection> | undefined) => Option<InternalCollection>;
@@ -120,7 +151,8 @@ declare namespace Converter$b {
 
 declare namespace Converter$a {
     namespace Creators {
-        const intoInfra: (input: Option<InputCreators[]> | undefined) => InternalCreators[];
+        const intoInfra: (input: Option<InputCreators[]> | undefined) => Option<InternalCreators[]>;
+        const intoInfra2: (input: Option<InputCreators[]> | undefined) => InternalCreators[];
         const intoUser: (output: Option<InternalCreators[]>) => Creators[] | undefined;
     }
 }
@@ -189,8 +221,8 @@ declare namespace Converter$8 {
 }
 
 declare namespace Converter$7 {
-    namespace NftMetadata {
-        const intoInfra: (input: InputNftMetadata, uri: string, sellerFeeBasisPoints: number) => MetaplexDataV2;
+    namespace RegularNftMetadata {
+        const intoInfra: (input: InputNftMetadata, uri: string, sellerFeeBasisPoints: number) => DataV2;
         const intoUser: (output: OnchainAndOffchain, tokenAmount: string) => NftMetadata;
     }
 }
@@ -452,7 +484,7 @@ type InputTokenMetadata = {
 
 declare namespace Converter$4 {
     namespace TokenMetadata {
-        const intoInfra: (input: InputTokenMetadata, uri: string, sellerFeeBasisPoints: number) => MetaplexDataV2;
+        const intoInfra: (input: InputTokenMetadata, uri: string, sellerFeeBasisPoints: number) => DataV2;
         const intoUser: (output: OnchainAndOffchain, tokenAmount: string) => TokenMetadata;
         const deleteNullStrings: (str: string) => string;
     }
@@ -483,11 +515,12 @@ declare const Converter: {
     TokenMetadata: typeof Converter$4.TokenMetadata;
     Royalty: typeof Converter$5.Royalty;
     Properties: typeof Converter$6.Properties;
-    NftMetadata: typeof Converter$7.NftMetadata;
+    RegularNftMetadata: typeof Converter$7.RegularNftMetadata;
     Mint: typeof Converter$8.Mint;
     Memo: typeof Converter$9.Memo;
     Creators: typeof Converter$a.Creators;
     Collection: typeof Converter$b.Collection;
+    CompressedNftMetadata: typeof Converter$c.CompressedNftMetadata;
 };
 
 export { Converter };

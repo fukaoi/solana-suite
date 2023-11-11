@@ -1,6 +1,7 @@
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
+import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import * as _solana_buffer_layout from '@solana/buffer-layout';
 
 declare abstract class AbstractResult$1<T, E extends Error> {
@@ -274,8 +275,11 @@ declare namespace Account$2 {
 
 declare namespace Account$1 {
     namespace Pda {
-        const getMetadata: (mint: Pubkey$1) => PublicKey;
-        const getMasterEdition: (mint: Pubkey$1) => PublicKey;
+        const getMetadata: (address: Pubkey$1) => PublicKey;
+        const getMasterEdition: (address: Pubkey$1) => PublicKey;
+        const getTreeAuthority: (address: Pubkey$1) => PublicKey;
+        const getBgumSigner: () => PublicKey;
+        const getAssetId: (address: Pubkey$1, leafIndex: number) => Pubkey$1;
     }
 }
 
@@ -349,18 +353,7 @@ type Attribute = {
     [key: string]: unknown;
 };
 
-type InternalCollection = {
-    key: PublicKey;
-    verified: boolean;
-};
-type InternalCreators = {
-    address: PublicKey;
-    verified: boolean;
-    share: number;
-};
-
 type bignum = number | BN;
-type Option<T> = T | null;
 declare enum UseMethod {
     Burn = 0,
     Multiple = 1,
@@ -380,15 +373,6 @@ type InputCreators = {
 type InputCollection = Pubkey$1;
 type Options = {
     [key: string]: unknown;
-};
-type MetaplexDataV2 = {
-    name: string;
-    symbol: string;
-    uri: string;
-    sellerFeeBasisPoints: number;
-    creators: Option<InternalCreators[]>;
-    collection: Option<InternalCollection>;
-    uses: Option<Uses>;
 };
 type InputNftMetadata = {
     name: string;
@@ -433,7 +417,7 @@ declare namespace Validator {
     export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result$1<string, ValidatorError>;
     type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
     type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
+    type PickMetaplex = Pick<DataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
     export {};
 }
 declare class ValidatorError extends Error {

@@ -63,7 +63,7 @@ declare namespace Account$1 {
         const getMasterEdition: (address: Pubkey) => PublicKey;
         const getTreeAuthority: (address: Pubkey) => PublicKey;
         const getBgumSigner: () => PublicKey;
-        const getAssetId: (address: Pubkey, leafIndex: number) => PublicKey;
+        const getAssetId: (address: Pubkey, leafIndex: number) => Pubkey;
     }
 }
 

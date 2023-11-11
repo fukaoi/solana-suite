@@ -2,13 +2,13 @@ import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
 import { debugLog, Result } from '~/shared';
 import { Sortable } from '~/types/find';
-import { NftMetadata, TokenStandard } from '~/types/regular-nft';
+import { NftMetadata } from '~/types/regular-nft';
 import { TokenMetadata } from '~/types/spl-token';
 import { Offchain } from '~/types/storage';
 import { OnErr, OnOk } from '~/types/shared';
 import { Converter } from '~/converter';
 import { Account } from '~/account';
-import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
+import { Metadata, TokenStandard } from '@metaplex-foundation/mpl-token-metadata';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ParsedAccountData } from '@solana/web3.js';
 import fetch from 'cross-fetch';
@@ -50,7 +50,7 @@ export namespace SplToken {
         tokenAmount,
       ) as T;
     } else if (tokenStandard === TokenStandard.NonFungible) {
-      return Converter.NftMetadata.intoUser(
+      return Converter.RegularNftMetadata.intoUser(
         {
           onchain: metadata,
           offchain: json,

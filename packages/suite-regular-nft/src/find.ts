@@ -1,9 +1,12 @@
 import { Result } from '~/shared';
 import { Pubkey } from '~/types/account';
-import { NftMetadata, TokenStandard } from '~/types/regular-nft';
+import { NftMetadata } from '~/types/regular-nft';
 import { SplToken } from '~/suite-spl-token';
 import { Sortable } from '~/types/find';
 import { OnErr, OnOk } from '~/types/shared';
+import {
+  TokenStandard,
+} from '@metaplex-foundation/mpl-token-metadata';
 
 export namespace RegularNft {
   /**

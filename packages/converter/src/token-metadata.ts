@@ -1,9 +1,9 @@
 import { Converter as _Creators } from './creators';
 import { Converter as _Uses } from './uses';
 import { InputTokenMetadata, TokenMetadata } from '~/types/spl-token';
-import { MetaplexDataV2 } from '~/types/regular-nft';
 import { OnchainAndOffchain } from '~/types/storage';
 import { convertTimestampToDateTime } from '~/shared';
+import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
 export namespace Converter {
   export namespace TokenMetadata {
@@ -11,7 +11,7 @@ export namespace Converter {
       input: InputTokenMetadata,
       uri: string,
       sellerFeeBasisPoints: number,
-    ): MetaplexDataV2 => {
+    ): DataV2 => {
       return {
         name: input.name,
         symbol: input.symbol,

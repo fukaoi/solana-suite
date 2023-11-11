@@ -13,6 +13,9 @@
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
+  "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^2.13.0"
+  },
   "devDependencies": {
     "test-tools": "workspace:*",
     "build-configs/ava": "workspace:*",

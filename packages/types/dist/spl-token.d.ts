@@ -1,10 +1,9 @@
 import { FileType, StorageType, Attribute, Offchain } from './storage.js';
-import { Uses, InputCreators, Options, Option, Collection, Creators } from './regular-nft.js';
+import { d as Uses, e as InputCreators, O as Options, C as Creators } from './input-4b25dc34.js';
 import '@solana/web3.js';
 import './phantom-e9a40784.js';
 import './account.js';
 import '@metaplex-foundation/mpl-token-metadata';
-import './converter.js';
 import 'bn.js';
 
 type InputTokenMetadata = {
@@ -21,23 +20,6 @@ type InputTokenMetadata = {
     options?: Options;
 };
 
-type NftMetadata = {
-    mint: string;
-    updateAuthority: string;
-    royalty: number;
-    name: string;
-    symbol: string;
-    uri: string;
-    isMutable: boolean;
-    primarySaleHappened: boolean;
-    editionNonce: Option<number>;
-    offchain: Offchain;
-    tokenAmount: string;
-    collection?: Collection | undefined;
-    creators?: Creators[] | undefined;
-    uses?: Uses | undefined;
-    dateTime?: Date | undefined;
-};
 type TokenMetadata = {
     mint: string;
     name: string;
@@ -52,4 +34,4 @@ type TokenMetadata = {
     dateTime?: Date | undefined;
 };
 
-export { InputTokenMetadata, NftMetadata, TokenMetadata };
+export { InputTokenMetadata, TokenMetadata };

@@ -1,7 +1,8 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, PublicKey, TransactionInstruction, Keypair, Connection, Commitment } from '@solana/web3.js';
-import BN from 'bn.js';
+import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
+import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
+import BN from 'bn.js';
 
 declare abstract class AbstractResult$1<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
@@ -303,16 +304,6 @@ type Attribute = {
     [key: string]: unknown;
 };
 
-type InternalCollection = {
-    key: PublicKey;
-    verified: boolean;
-};
-type InternalCreators = {
-    address: PublicKey;
-    verified: boolean;
-    share: number;
-};
-
 type bignum = number | BN;
 type Option<T> = T | null;
 declare enum UseMethod {
@@ -340,22 +331,6 @@ type InputCollection = Pubkey$1;
 type Options = {
     [key: string]: unknown;
 };
-type MetaplexDataV2 = {
-    name: string;
-    symbol: string;
-    uri: string;
-    sellerFeeBasisPoints: number;
-    creators: Option<InternalCreators[]>;
-    collection: Option<InternalCollection>;
-    uses: Option<Uses>;
-};
-declare enum TokenStandard {
-    NonFungible = 0,
-    FungibleAsset = 1,
-    Fungible = 2,
-    NonFungibleEdition = 3,
-    ProgrammableNonFungible = 4
-}
 type InputNftMetadata = {
     name: string;
     symbol: string;
@@ -689,8 +664,11 @@ declare namespace Account$2 {
 
 declare namespace Account$1 {
     namespace Pda {
-        const getMetadata: (mint: Pubkey$1) => PublicKey;
-        const getMasterEdition: (mint: Pubkey$1) => PublicKey;
+        const getMetadata: (address: Pubkey$1) => PublicKey;
+        const getMasterEdition: (address: Pubkey$1) => PublicKey;
+        const getTreeAuthority: (address: Pubkey$1) => PublicKey;
+        const getBgumSigner: () => PublicKey;
+        const getAssetId: (address: Pubkey$1, leafIndex: number) => Pubkey$1;
     }
 }
 
@@ -746,7 +724,7 @@ declare namespace Validator {
     export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
     type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
     type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
+    type PickMetaplex = Pick<DataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
     export {};
 }
 declare class ValidatorError extends Error {
@@ -867,12 +845,12 @@ declare class Transaction {
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
-declare class MintTransaction {
+declare class MintTransaction<T> {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
-    data?: unknown;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    data?: T;
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
@@ -894,11 +872,11 @@ declare const SplToken: {
     thaw: (mint: string, owner: string, freezeAuthority: string, feePayer?: string | undefined) => Result<Transaction, Error>;
     createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
-    mint: (owner: string, signer: string, totalAmount: number, mintDecimal: number, input: InputTokenMetadata, feePayer?: string | undefined, freezeAuthority?: string | undefined) => Promise<Result<MintTransaction, Error>>;
+    mint: (owner: string, signer: string, totalAmount: number, mintDecimal: number, input: InputTokenMetadata, feePayer?: string | undefined, freezeAuthority?: string | undefined) => Promise<Result<MintTransaction<string>, Error>>;
     feePayerPartialSignTransfer: (mint: string, owner: string, dest: string, signers: string[], amount: number, mintDecimal: number, feePayer: string) => Promise<Result<PartialSignTransaction, Error>>;
     freeze: (mint: string, owner: string, freezeAuthority: string, feePayer?: string | undefined) => Result<Transaction, Error>;
-    genericFindByOwner: <T extends NftMetadata | TokenMetadata>(owner: string, callback: (result: Result<T[], Error>) => void, tokenStandard: TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
-    genericFindByMint: <T_1 extends NftMetadata | TokenMetadata>(mint: string, tokenStandard: TokenStandard) => Promise<Result<T_1, Error>>;
+    genericFindByOwner: <T extends NftMetadata | TokenMetadata>(owner: string, callback: (result: Result<T[], Error>) => void, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
+    genericFindByMint: <T_1 extends NftMetadata | TokenMetadata>(mint: string, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard) => Promise<Result<T_1, Error>>;
     findByOwner: (owner: string, onOk: OnOk<TokenMetadata>, onErr: OnErr, options?: {
         sortable?: Sortable | undefined;
         isHolder?: boolean | undefined;

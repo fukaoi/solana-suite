@@ -181,7 +181,7 @@ export namespace RegularNft {
     input: InputNftMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
-  ): Promise<Result<MintTransaction, Error>> => {
+  ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -248,7 +248,7 @@ export namespace RegularNft {
         throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
 
-      let datav2 = Converter.NftMetadata.intoInfra(
+      let datav2 = Converter.RegularNftMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints,

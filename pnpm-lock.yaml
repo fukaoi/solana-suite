@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -140,6 +136,9 @@ importers:
       bs58:
         specifier: ^4.0.1
         version: 4.0.1
+      mpl-bubblegum-instruction:
+        specifier: github:atonoy/mpl-bubblegum-instructions
+        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
     devDependencies:
       '@types/bs58':
         specifier: ^4.0.2
@@ -808,6 +807,10 @@ importers:
         version: link:../build-configs/tsup
 
   packages/validator:
+    dependencies:
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0
     devDependencies:
       build-configs/ava:
         specifier: workspace:*
@@ -9732,3 +9735,7 @@ packages:
       - supports-color
       - utf-8-validate
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false

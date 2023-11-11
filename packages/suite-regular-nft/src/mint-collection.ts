@@ -24,7 +24,7 @@ export namespace RegularNft {
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
     collectionSize: number = 0,
-  ): Promise<Result<MintTransaction, Error>> => {
+  ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {

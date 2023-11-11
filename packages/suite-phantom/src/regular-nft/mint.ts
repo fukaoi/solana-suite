@@ -57,7 +57,7 @@ export namespace PhantomMetaplex {
       }
       const uri = uploaded.value;
 
-      const datav2 = Converter.NftMetadata.intoInfra(
+      const datav2 = Converter.RegularNftMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints,

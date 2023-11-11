@@ -131,7 +131,7 @@ export namespace SplToken {
     input: InputTokenMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
-  ): Promise<Result<MintTransaction, Error>> => {
+  ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputTokenMetadata>(input);
       if (valid.isErr) {

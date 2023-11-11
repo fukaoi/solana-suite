@@ -1,6 +1,7 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, PublicKey, TransactionInstruction, Keypair, Connection, Commitment } from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
+import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import BN from 'bn.js';
 
 declare enum Sortable {
@@ -303,16 +304,6 @@ type Attribute = {
     [key: string]: unknown;
 };
 
-type InternalCollection = {
-    key: PublicKey;
-    verified: boolean;
-};
-type InternalCreators = {
-    address: PublicKey;
-    verified: boolean;
-    share: number;
-};
-
 type bignum = number | BN;
 type Option<T> = T | null;
 declare enum UseMethod {
@@ -339,15 +330,6 @@ type InputCreators = {
 type InputCollection = Pubkey$1;
 type Options = {
     [key: string]: unknown;
-};
-type MetaplexDataV2 = {
-    name: string;
-    symbol: string;
-    uri: string;
-    sellerFeeBasisPoints: number;
-    creators: Option<InternalCreators[]>;
-    collection: Option<InternalCollection>;
-    uses: Option<Uses>;
 };
 type InputNftMetadata = {
     name: string;
@@ -654,8 +636,11 @@ declare namespace Account$2 {
 
 declare namespace Account$1 {
     namespace Pda {
-        const getMetadata: (mint: Pubkey$1) => PublicKey;
-        const getMasterEdition: (mint: Pubkey$1) => PublicKey;
+        const getMetadata: (address: Pubkey$1) => PublicKey;
+        const getMasterEdition: (address: Pubkey$1) => PublicKey;
+        const getTreeAuthority: (address: Pubkey$1) => PublicKey;
+        const getBgumSigner: () => PublicKey;
+        const getAssetId: (address: Pubkey$1, leafIndex: number) => Pubkey$1;
     }
 }
 
@@ -711,7 +696,7 @@ declare namespace Validator {
     export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
     type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
     type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<MetaplexDataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
+    type PickMetaplex = Pick<DataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
     export {};
 }
 declare class ValidatorError extends Error {
@@ -832,12 +817,12 @@ declare class Transaction {
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
-declare class MintTransaction {
+declare class MintTransaction<T> {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
-    data?: unknown;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    data?: T;
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
@@ -857,12 +842,12 @@ declare global {
 declare const RegularNft: {
     transfer: (mint: string, owner: string, dest: string, signers: string[], feePayer?: string | undefined) => Promise<Result<Transaction, Error>>;
     thaw: (mint: string, owner: string, freezeAuthority: string, feePayer?: string | undefined) => Result<Transaction, Error>;
-    mintCollection: (owner: Pubkey, signer: string, input: InputNftMetadata, feePayer?: string | undefined, freezeAuthority?: Pubkey | undefined, collectionSize?: number) => Promise<Result<MintTransaction, Error>>;
+    mintCollection: (owner: Pubkey, signer: string, input: InputNftMetadata, feePayer?: string | undefined, freezeAuthority?: Pubkey | undefined, collectionSize?: number) => Promise<Result<MintTransaction<Pubkey>, Error>>;
     createVerifyCreator: (mint: _solana_web3_js.PublicKey, creator: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createDeleagateInstruction: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, delegateAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createVerifySizedCollectionInstruction: (collectionChild: _solana_web3_js.PublicKey, collectionParent: _solana_web3_js.PublicKey, feePayer: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, nftMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
-    mint: (owner: string, signer: string, input: InputNftMetadata, feePayer?: string | undefined, freezeAuthority?: string | undefined) => Promise<Result<MintTransaction, Error>>;
+    mint: (owner: string, signer: string, input: InputNftMetadata, feePayer?: string | undefined, freezeAuthority?: string | undefined) => Promise<Result<MintTransaction<string>, Error>>;
     feePayerPartialSignTransferNft: (mint: string, owner: string, dest: string, signers: string[], feePayer: string) => Promise<Result<PartialSignTransaction, Error>>;
     feePayerPartialSignMint: (owner: string, signer: string, input: InputNftMetadata, feePayer: string, freezeAuthority?: string | undefined) => Promise<Result<PartialSignTransaction, Error>>;
     freeze: (mint: string, owner: string, freezeAuthority: string, feePayer?: string | undefined) => Result<Transaction, Error>;

@@ -244,12 +244,12 @@ declare class BatchTransaction {
     static submit: (arr: Transaction[]) => Promise<TransactionSignature>;
 }
 
-declare class MintTransaction {
+declare class MintTransaction<T> {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
-    data?: unknown;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    data?: T;
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 

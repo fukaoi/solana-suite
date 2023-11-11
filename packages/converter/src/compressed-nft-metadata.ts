@@ -4,38 +4,17 @@ import { Converter as _Creators } from './creators';
 import { Converter as _Uses } from './uses';
 import { Converter as _Token } from './token-metadata';
 import { convertTimestampToDateTime } from '~/shared';
-import {
-  InputNftMetadata,
-  MetaplexDataV2,
-  MetaplexMetadataArgs,
-  NftMetadata,
-} from '~/types/regular-nft';
-
+import { InputNftMetadata, NftMetadata } from '~/types/regular-nft';
+import { MetadataArgs, TokenProgramVersion, TokenStandard } from 'mpl-bubblegum-instruction';
 import { OnchainAndOffchain } from '~/types/storage';
 
 export namespace Converter {
-  export namespace NftMetadata {
+  export namespace CompressedNftMetadata {
     export const intoInfra = (
       input: InputNftMetadata,
       uri: string,
       sellerFeeBasisPoints: number,
-    ): MetaplexDataV2 => {
-      return {
-        name: input.name,
-        symbol: input.symbol,
-        uri,
-        sellerFeeBasisPoints,
-        creators: _Creators.Creators.intoInfra(input.creators),
-        collection: _Collection.Collection.intoInfra(input.collection),
-        uses: input.uses || null,
-      };
-    };
-
-    export const intoInfra2 = (
-      input: InputNftMetadata,
-      uri: string,
-      sellerFeeBasisPoints: number,
-    ): MetaplexMetadataArgs => {
+    ): MetadataArgs => {
       return {
         name: input.name,
         symbol: input.symbol,
@@ -44,8 +23,14 @@ export namespace Converter {
         creators: _Creators.Creators.intoInfra2(input.creators),
         collection: _Collection.Collection.intoInfra(input.collection),
         uses: input.uses || null,
+        primarySaleHappened: false,
+        isMutable: input.isMutable ?? false,
+        editionNonce: 0,
+        tokenStandard: TokenStandard.NonFungible,
+        tokenProgramVersion: TokenProgramVersion.Original
       };
     };
+
     export const intoUser = (
       output: OnchainAndOffchain,
       tokenAmount: string,

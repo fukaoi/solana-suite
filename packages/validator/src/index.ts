@@ -1,8 +1,9 @@
 import { Result, Try } from '~/shared';
 import { Converter } from '~/converter';
 import { Details, Limit } from '~/types/validator';
-import { InputNftMetadata, MetaplexDataV2 } from '~/types/regular-nft';
+import { InputNftMetadata } from '~/types/regular-nft';
 import { Offchain } from '~/types/storage';
+import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
 export namespace Validator {
   export namespace Message {
@@ -167,7 +168,7 @@ export namespace Validator {
     'name' | 'symbol' | 'royalty' | 'filePath'
   >;
   type PickMetaplex = Pick<
-    MetaplexDataV2,
+    DataV2,
     'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'
   >;
 

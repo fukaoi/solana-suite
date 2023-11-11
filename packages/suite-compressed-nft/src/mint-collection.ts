@@ -18,7 +18,7 @@ export namespace CompressedNft {
     input: InputNftMetadata,
     feePayer?: Secret,
     freezeAuthority?: Pubkey,
-  ): Promise<Result<MintTransaction, Error>> => {
+  ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
     return RegularNft.mintCollection(
       owner,
       signer,
