@@ -166,6 +166,7 @@ test.only('[Nft Storage] mint nft with many optional datas, verified collection'
       name: asset.name!,
       symbol: asset.symbol!,
       description: asset.description,
+      external_url: 'https://atonoy.github.io/solana-suite/',
       royalty: 50,
       isMutable: false,
       creators,

@@ -31,7 +31,7 @@ export type Asset = {
   };
   grouping: { group_key: string; group_value: string }[];
   royalty: {
-    royalty_model: string;
+    royalty_model: 'creators' | 'fanout' | 'single';
     target: null;
     percent: number;
     basis_points: number;
@@ -43,7 +43,7 @@ export type Asset = {
     frozen: boolean;
     delegated: boolean;
     delegate: Pubkey;
-    ownership_model: string;
+    ownership_model: 'single' | 'token';
     owner: Pubkey;
   };
   supply: {
