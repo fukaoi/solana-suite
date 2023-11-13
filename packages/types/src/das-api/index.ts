@@ -54,3 +54,10 @@ export type Asset = {
   mutable: boolean;
   burnt: boolean;
 };
+
+export type Assets = {
+  total: number;
+  limit: number;
+  page: number;
+  items: Asset[];
+};
