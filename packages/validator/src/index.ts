@@ -1,7 +1,7 @@
 import { Result, Try } from '~/shared';
 import { Converter } from '~/converter';
 import { Details, Limit } from '~/types/validator';
-import { InputNftMetadata } from '~/types/regular-nft';
+import { InputNftMetadata } from '~/types/nft';
 import { Offchain } from '~/types/storage';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 

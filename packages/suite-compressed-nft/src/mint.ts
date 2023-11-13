@@ -1,4 +1,4 @@
-import { InputNftMetadata } from '~/types/regular-nft';
+import { InputNftMetadata } from '~/types/nft';
 import { Pubkey, Secret } from '~/types/account';
 import { Account } from '~/account';
 import { Node } from '~/node';

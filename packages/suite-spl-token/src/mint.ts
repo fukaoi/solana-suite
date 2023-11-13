@@ -26,7 +26,7 @@ import { Node } from '~/node';
 import { Account } from '~/account';
 import { MintTransaction } from '~/transaction';
 import { Pubkey, Secret } from '~/types/account';
-import { InputNftMetadata } from '~/types/regular-nft';
+import { InputNftMetadata } from '~/types/nft';
 import { InputTokenMetadata } from '~/types/spl-token';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';

@@ -1,5 +1,5 @@
 import { CollectionDetails as MetaplexCollectionDetails } from '@metaplex-foundation/mpl-token-metadata';
-import { CollectionDetails, Option } from '~/types/regular-nft';
+import { CollectionDetails, Option } from '~/types/nft';
 
 export namespace Converter {
   export namespace CollectionDetails {

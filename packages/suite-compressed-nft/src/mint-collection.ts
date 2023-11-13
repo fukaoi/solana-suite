@@ -1,7 +1,7 @@
 import { Result, Try } from '~/shared';
 import { Secret } from '~/types/account';
 import { RegularNft } from '~/suite-regular-nft';
-import { InputNftMetadata } from '~/types/regular-nft';
+import { InputNftMetadata } from '~/types/nft';
 import { MintTransaction } from '~/transaction';
 
 /**

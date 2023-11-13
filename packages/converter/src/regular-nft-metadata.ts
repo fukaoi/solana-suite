@@ -4,7 +4,7 @@ import { Converter as _Creators } from './creators';
 import { Converter as _Uses } from './uses';
 import { Converter as _Token } from './token-metadata';
 import { convertTimestampToDateTime } from '~/shared';
-import { InputNftMetadata, NftMetadata } from '~/types/regular-nft';
+import { InputNftMetadata, NftMetadata } from '~/types/nft';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
 import { OnchainAndOffchain } from '~/types/storage';

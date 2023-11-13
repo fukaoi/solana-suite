@@ -1,7 +1,7 @@
-import { c as Option, C as Creators, d as Uses } from './input-87190f29.js';
-export { I as InputCollection, e as InputCreators, a as InputNftMetadata, O as Options, U as UseMethod, b as bignum } from './input-87190f29.js';
-import { Pubkey } from './account.mjs';
-import { Offchain, Attribute } from './storage.mjs';
+import { c as Option, C as Creators, d as Uses } from './input-4b25dc34.js';
+export { I as InputCollection, e as InputCreators, a as InputNftMetadata, O as Options, U as UseMethod, b as bignum } from './input-4b25dc34.js';
+import { Pubkey } from './account.js';
+import { Offchain } from './storage.js';
 import 'bn.js';
 import '@solana/web3.js';
 import './phantom-e9a40784.js';
@@ -33,18 +33,5 @@ type NftMetadata = {
     uses?: Uses | undefined;
     dateTime?: Date | undefined;
 };
-type TokenMetadata = {
-    mint: string;
-    name: string;
-    symbol: string;
-    uri: string;
-    royalty: number;
-    offchain: Offchain;
-    tokenAmount: string;
-    attributes?: Attribute | undefined;
-    creators?: Creators[] | undefined;
-    uses?: Uses | undefined;
-    dateTime?: Date | undefined;
-};
 
-export { Collection, CollectionDetails, Creators, NftMetadata, Option, TokenMetadata, Uses };
+export { Collection, CollectionDetails, Creators, NftMetadata, Option, Uses };

@@ -1,4 +1,3 @@
-import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, PublicKey, Keypair } from '@solana/web3.js';
 
 declare abstract class AbstractResult<T, E extends Error> {
@@ -204,6 +203,8 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+type Pubkey$1 = string;
+
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -229,21 +230,81 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
-declare namespace Node$1 {
-    namespace DasApi {
-        const getAssetProof: (assetId: string) => void;
-    }
-}
-
-declare const Node: {
-    DasApi: typeof Node$1.DasApi;
-    getConnection: () => _solana_web3_js.Connection;
-    changeConnection: (param: {
-        cluster?: string | undefined;
-        commitment?: _solana_web3_js.Commitment | undefined;
-        customClusterUrl?: string[] | undefined;
-    }) => void;
-    confirmedSig: (signature: string, commitment?: _solana_web3_js.Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
+type InternalCreators = {
+    address: PublicKey;
+    verified: boolean;
+    share: number;
 };
 
-export { Node };
+type AssetProof = {
+    leaf: Pubkey$1;
+    node_index: number;
+    proof: Pubkey$1[];
+    root: Pubkey$1;
+    tree_id: Pubkey$1;
+};
+type Asset = {
+    interface: string;
+    id: Pubkey$1;
+    content: {
+        json_uri: string;
+        files: string[];
+        metadata: string[];
+        links: string[];
+    };
+    authorities: {
+        address: Pubkey$1;
+        scopes: string[];
+    }[];
+    compression: {
+        eligible: boolean;
+        compressed: boolean;
+        data_hash: Pubkey$1;
+        creator_hash: Pubkey$1;
+        asset_hash: Pubkey$1;
+        tree: Pubkey$1;
+        seq: number;
+        leaf_id: number;
+    };
+    grouping: {
+        group_key: string;
+        group_value: string;
+    }[];
+    royalty: {
+        royalty_model: 'creators' | 'fanout' | 'single';
+        target: null;
+        percent: number;
+        basis_points: number;
+        primary_sale_happened: boolean;
+        locked: boolean;
+    };
+    creators: InternalCreators[];
+    ownership: {
+        frozen: boolean;
+        delegated: boolean;
+        delegate: Pubkey$1;
+        ownership_model: 'single' | 'token';
+        owner: Pubkey$1;
+    };
+    supply: {
+        print_max_supply: number;
+        print_current_supply: number;
+        edition_nonce: number;
+    };
+    mutable: boolean;
+    burnt: boolean;
+};
+type Assets = {
+    total: number;
+    limit: number;
+    page: number;
+    items: Asset[];
+};
+
+declare namespace DasApi {
+    const getAssetProof: (assetId: string) => Promise<Result<AssetProof, Error>>;
+    const getAsset: (assetId: Pubkey) => Promise<Result<Asset, Error>>;
+    const getAssetsByOwner: (ownerAddress: Pubkey, limit?: number, page?: number, sortBy?: any, before?: string, after?: string) => Promise<Result<Assets, Error>>;
+}
+
+export { DasApi };

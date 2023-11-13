@@ -1,6 +1,6 @@
 import { debugLog, Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
-import { InputNftMetadata } from '~/types/regular-nft';
+import { InputNftMetadata } from '~/types/nft';
 import { Node } from '~/node';
 import { PartialSignTransaction } from '~/transaction';
 import { Storage } from '~/storage';

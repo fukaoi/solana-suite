@@ -6,6 +6,7 @@ const entry = {
   converter: 'src/converter/index.ts',
   'das-api': 'src/das-api/index.ts',
   find: 'src/find/index.ts',
+  nft: 'src/nft/index.ts',
   global: 'src/global/index.ts',
   history: 'src/history/index.ts',
   transaction: 'src/transaction/index.ts',
@@ -14,7 +15,6 @@ const entry = {
   storage: 'src/storage/index.ts',
   'spl-token': 'src/spl-token/index.ts',
   'transaction-filter': 'src/transaction-filter/index.ts',
-  'regular-nft': 'src/regular-nft/index.ts',
   validator: 'src/validator/index.ts',
 };
 

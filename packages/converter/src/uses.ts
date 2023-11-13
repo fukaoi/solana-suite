@@ -1,4 +1,4 @@
-import { Option, Uses } from '~/types/regular-nft';
+import { Option, Uses } from '~/types/nft';
 
 export namespace Converter {
   export namespace Uses {

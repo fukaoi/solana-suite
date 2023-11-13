@@ -19,7 +19,7 @@ import { Pubkey, Secret } from '~/types/account';
 import { MintTransaction } from '~/transaction';
 import { Node } from '~/node';
 import { Storage } from '~/storage';
-import { InputNftMetadata } from '~/types/regular-nft';
+import { InputNftMetadata } from '~/types/nft';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
 import { Account } from '~/account';

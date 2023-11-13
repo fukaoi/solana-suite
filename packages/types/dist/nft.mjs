@@ -1,0 +1,11 @@
+// src/nft/common.ts
+var UseMethod = /* @__PURE__ */ ((UseMethod2) => {
+  UseMethod2[UseMethod2["Burn"] = 0] = "Burn";
+  UseMethod2[UseMethod2["Multiple"] = 1] = "Multiple";
+  UseMethod2[UseMethod2["Single"] = 2] = "Single";
+  return UseMethod2;
+})(UseMethod || {});
+export {
+  UseMethod
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiLi4vc3JjL25mdC9jb21tb24udHMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImltcG9ydCB7IFB1YmtleSwgU2VjcmV0IH0gZnJvbSAnLi4vYWNjb3VudCc7XG5pbXBvcnQgQk4gZnJvbSAnYm4uanMnO1xuXG5leHBvcnQgdHlwZSBiaWdudW0gPSBudW1iZXIgfCBCTjtcblxuZXhwb3J0IHR5cGUgT3B0aW9uPFQ+ID0gVCB8IG51bGw7XG5cbmV4cG9ydCBlbnVtIFVzZU1ldGhvZCB7XG4gIEJ1cm4gPSAwLFxuICBNdWx0aXBsZSA9IDEsXG4gIFNpbmdsZSA9IDIsXG59XG5cbmV4cG9ydCB0eXBlIFVzZXMgPSB7XG4gIHVzZU1ldGhvZDogVXNlTWV0aG9kO1xuICByZW1haW5pbmc6IGJpZ251bTtcbiAgdG90YWw6IGJpZ251bTtcbn07XG5cbmV4cG9ydCB0eXBlIENyZWF0b3JzID0ge1xuICBhZGRyZXNzOiBQdWJrZXk7XG4gIHNoYXJlOiBudW1iZXI7XG4gIHZlcmlmaWVkOiBib29sZWFuO1xufTtcblxuZXhwb3J0IHR5cGUgSW5wdXRDcmVhdG9ycyA9IHtcbiAgYWRkcmVzczogUHVia2V5O1xuICBzZWNyZXQ6IFNlY3JldDtcbiAgc2hhcmU6IG51bWJlcjtcbn07XG4iXSwKICAibWFwcGluZ3MiOiAiO0FBT08sSUFBSyxZQUFMLGtCQUFLQSxlQUFMO0FBQ0wsRUFBQUEsc0JBQUEsVUFBTyxLQUFQO0FBQ0EsRUFBQUEsc0JBQUEsY0FBVyxLQUFYO0FBQ0EsRUFBQUEsc0JBQUEsWUFBUyxLQUFUO0FBSFUsU0FBQUE7QUFBQSxHQUFBOyIsCiAgIm5hbWVzIjogWyJVc2VNZXRob2QiXQp9Cg==

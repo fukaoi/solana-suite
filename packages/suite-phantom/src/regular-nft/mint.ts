@@ -7,7 +7,7 @@ import { Account } from '~/account';
 import { Validator, ValidatorError } from '~/validator';
 import { Converter } from '~/converter';
 import { PhantomProvider } from '~/types/phantom';
-import { InputNftMetadata } from '~/types/regular-nft';
+import { InputNftMetadata } from '~/types/nft';
 
 export namespace PhantomMetaplex {
   /**

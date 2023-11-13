@@ -5,7 +5,7 @@ import { Account } from '~/account';
 import { Storage } from '~/storage';
 import { Validator } from '~/validator';
 import { MintTransaction } from '~/transaction';
-import { InputNftMetadata } from '~/types/regular-nft';
+import { InputNftMetadata } from '~/types/nft';
 import { Secret } from '~/types/account';
 import { RegularNft as Mint } from './mint';
 

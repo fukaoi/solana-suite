@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import * as _solana_buffer_layout from '@solana/buffer-layout';
@@ -289,15 +289,22 @@ declare const Account: {
     Associated: typeof Account$3.Associated;
 };
 
-declare namespace Node {
-    const getConnection: () => Connection;
-    const changeConnection: (param: {
-        cluster?: string;
-        commitment?: Commitment;
-        customClusterUrl?: string[];
-    }) => void;
-    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result$1.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Ok<never, any> | Result$1.Err<never, any>>;
+declare namespace Node$1 {
+    namespace DasApi {
+        const getAssetProof: (assetId: string) => void;
+    }
 }
+
+declare const Node: {
+    DasApi: typeof Node$1.DasApi;
+    getConnection: () => _solana_web3_js.Connection;
+    changeConnection: (param: {
+        cluster?: string | undefined;
+        commitment?: _solana_web3_js.Commitment | undefined;
+        customClusterUrl?: string[] | undefined;
+    }) => void;
+    confirmedSig: (signature: string, commitment?: _solana_web3_js.Commitment) => Promise<Result$1.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Ok<never, any> | Result$1.Err<never, any>>;
+};
 
 type Condition = 'overMax' | 'underMin';
 interface Limit {

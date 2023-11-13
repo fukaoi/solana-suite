@@ -1,8 +1,8 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
+import BN from 'bn.js';
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
-import BN from 'bn.js';
 
 declare abstract class AbstractResult$1<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
@@ -305,7 +305,6 @@ type Attribute = {
 };
 
 type bignum = number | BN;
-type Option<T> = T | null;
 declare enum UseMethod {
     Burn = 0,
     Multiple = 1,
@@ -348,33 +347,6 @@ type InputNftMetadata = {
     uses?: Uses;
     collection?: InputCollection;
     options?: Options;
-};
-
-type Collection = {
-    address: Pubkey$1;
-    verified: boolean;
-};
-type CollectionDetails = {
-    __kind: string;
-    size: number;
-};
-type NftMetadata = {
-    mint: string;
-    updateAuthority: string;
-    royalty: number;
-    name: string;
-    symbol: string;
-    uri: string;
-    isMutable: boolean;
-    primarySaleHappened: boolean;
-    editionNonce: Option<number>;
-    offchain: Offchain;
-    tokenAmount: string;
-    collection?: Collection | undefined;
-    collectionDetails?: CollectionDetails | undefined;
-    creators?: Creators[] | undefined;
-    uses?: Uses | undefined;
-    dateTime?: Date | undefined;
 };
 
 type InputTokenMetadata = {
@@ -678,15 +650,22 @@ declare const Account: {
     Associated: typeof Account$3.Associated;
 };
 
-declare namespace Node {
-    const getConnection: () => Connection;
-    const changeConnection: (param: {
-        cluster?: string;
-        commitment?: Commitment;
-        customClusterUrl?: string[];
-    }) => void;
-    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
+declare namespace Node$1 {
+    namespace DasApi {
+        const getAssetProof: (assetId: string) => void;
+    }
 }
+
+declare const Node: {
+    DasApi: typeof Node$1.DasApi;
+    getConnection: () => _solana_web3_js.Connection;
+    changeConnection: (param: {
+        cluster?: string | undefined;
+        commitment?: _solana_web3_js.Commitment | undefined;
+        customClusterUrl?: string[] | undefined;
+    }) => void;
+    confirmedSig: (signature: string, commitment?: _solana_web3_js.Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
+};
 
 type Condition = 'overMax' | 'underMin';
 interface Limit {
@@ -875,8 +854,8 @@ declare const SplToken: {
     mint: (owner: string, signer: string, totalAmount: number, mintDecimal: number, input: InputTokenMetadata, feePayer?: string | undefined, freezeAuthority?: string | undefined) => Promise<Result<MintTransaction<string>, Error>>;
     feePayerPartialSignTransfer: (mint: string, owner: string, dest: string, signers: string[], amount: number, mintDecimal: number, feePayer: string) => Promise<Result<PartialSignTransaction, Error>>;
     freeze: (mint: string, owner: string, freezeAuthority: string, feePayer?: string | undefined) => Result<Transaction, Error>;
-    genericFindByOwner: <T extends NftMetadata | TokenMetadata>(owner: string, callback: (result: Result<T[], Error>) => void, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
-    genericFindByMint: <T_1 extends NftMetadata | TokenMetadata>(mint: string, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard) => Promise<Result<T_1, Error>>;
+    genericFindByOwner: <T extends unknown>(owner: string, callback: (result: Result<T[], Error>) => void, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
+    genericFindByMint: <T_1 extends unknown>(mint: string, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard) => Promise<Result<T_1, Error>>;
     findByOwner: (owner: string, onOk: OnOk<TokenMetadata>, onErr: OnErr, options?: {
         sortable?: Sortable | undefined;
         isHolder?: boolean | undefined;
