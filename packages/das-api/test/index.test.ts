@@ -15,3 +15,17 @@ test('Get asset proof', async (t) => {
     (err) => t.fail(err.message),
   );
 });
+
+test('Get asset', async (t) => {
+  const assetId = 'E6eXaU51PE9L46VboqWGUeubrhvR2pk3eTP6ZqAP4vhg';
+  const res = await DasApi.getAsset(assetId);
+  res.match(
+    (ok) => {
+      t.not(ok.content, '');
+      t.not(ok.creators, '');
+      t.not(ok.grouping, '');
+      t.not(ok.authorities, '');
+    },
+    (err) => t.fail(err.message),
+  );
+});
