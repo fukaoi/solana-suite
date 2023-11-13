@@ -4,7 +4,7 @@ import { Account } from '~/account';
 import { Converter } from '~/converter';
 import { Storage } from '~/storage';
 import { MintTransaction } from '~/transaction';
-import { debugLog } from '~/shared';
+import { debugLog, Try } from '~/shared';
 import { CompressedNft as Tree } from './tree';
 import {
   createMintToCollectionV1Instruction,
@@ -54,119 +54,121 @@ export namespace CompressedNft {
     receiver?: Pubkey,
     freezeAuthority?: Pubkey,
   ) => {
-    const payer: Secret = feePayer ? feePayer : signer;
-    const leafOwner: Pubkey = receiver ? receiver : owner;
+    return Try(async () => {
+      const payer: Secret = feePayer ? feePayer : signer;
+      const leafOwner: Pubkey = receiver ? receiver : owner;
 
-    const treeAuthority = Account.Pda.getTreeAuthority(
-      treeOwner.toPublicKey().toString(),
-    );
-    const collectionMetadata = Account.Pda.getMetadata(
-      collectionMint.toString(),
-    );
-    const collectionMasterEditionAccount = Account.Pda.getMasterEdition(
-      collectionMint.toString(),
-    );
-    const bubblegumSigner = Account.Pda.getBgumSigner();
-
-    // porperties, Upload content
-    let properties;
-    if (input.properties && input.storageType) {
-      properties = await Converter.Properties.intoInfra(
-        input.properties,
-        Storage.uploadFile,
-        input.storageType,
-        payer,
+      const treeAuthority = Account.Pda.getTreeAuthority(
+        treeOwner.toPublicKey().toString(),
       );
-    } else if (input.properties && !input.storageType) {
-      throw Error('Must set storageType if will use properties');
-    }
-
-    input = {
-      ...input,
-      properties,
-    };
-
-    const sellerFeeBasisPoints = Converter.Royalty.intoInfra(input.royalty);
-    const nftStorageMetadata = Storage.toConvertOffchaindata(
-      input,
-      sellerFeeBasisPoints,
-    );
-
-    // created at by unix timestamp
-    const createdAt = Math.floor(new Date().getTime() / 1000);
-    nftStorageMetadata.created_at = createdAt;
-
-    let uri!: string;
-    // upload file
-    if (input.filePath && input.storageType) {
-      const uploaded = await Storage.upload(
-        nftStorageMetadata,
-        input.filePath,
-        input.storageType,
-        payer,
+      const collectionMetadata = Account.Pda.getMetadata(
+        collectionMint.toString(),
       );
-      debugLog('# upload content url: ', uploaded);
-      if (uploaded.isErr) {
-        throw uploaded;
+      const collectionMasterEditionAccount = Account.Pda.getMasterEdition(
+        collectionMint.toString(),
+      );
+      const bubblegumSigner = Account.Pda.getBgumSigner();
+
+      // porperties, Upload content
+      let properties;
+      if (input.properties && input.storageType) {
+        properties = await Converter.Properties.intoInfra(
+          input.properties,
+          Storage.uploadFile,
+          input.storageType,
+          payer,
+        );
+      } else if (input.properties && !input.storageType) {
+        throw Error('Must set storageType if will use properties');
       }
-      uri = uploaded.value;
-      // uploaded file
-    } else if (input.uri) {
-      const image = { image: input.uri };
-      const uploaded = await Storage.uploadData(
-        { ...nftStorageMetadata, ...image },
-        input.storageType,
-        payer,
+
+      input = {
+        ...input,
+        properties,
+      };
+
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(input.royalty);
+      const nftStorageMetadata = Storage.toConvertOffchaindata(
+        input,
+        sellerFeeBasisPoints,
       );
-      if (uploaded.isErr) {
-        throw uploaded;
+
+      // created at by unix timestamp
+      const createdAt = Math.floor(new Date().getTime() / 1000);
+      nftStorageMetadata.created_at = createdAt;
+
+      let uri!: string;
+      // upload file
+      if (input.filePath && input.storageType) {
+        const uploaded = await Storage.upload(
+          nftStorageMetadata,
+          input.filePath,
+          input.storageType,
+          payer,
+        );
+        debugLog('# upload content url: ', uploaded);
+        if (uploaded.isErr) {
+          throw uploaded;
+        }
+        uri = uploaded.value;
+        // uploaded file
+      } else if (input.uri) {
+        const image = { image: input.uri };
+        const uploaded = await Storage.uploadData(
+          { ...nftStorageMetadata, ...image },
+          input.storageType,
+          payer,
+        );
+        if (uploaded.isErr) {
+          throw uploaded;
+        }
+        uri = uploaded.value;
+      } else {
+        throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
-      uri = uploaded.value;
-    } else {
-      throw Error(`Must set 'storageType + filePath' or 'uri'`);
-    }
 
-    let converted = Converter.CompressedNftMetadata.intoInfra(
-      input,
-      uri,
-      sellerFeeBasisPoints,
-    );
+      let converted = Converter.CompressedNftMetadata.intoInfra(
+        input,
+        uri,
+        sellerFeeBasisPoints,
+      );
 
-    const metadataArgs: MetadataArgs = {
-      ...converted,
-      collection: { key: collectionMint.toPublicKey(), verified: false },
-    };
+      const metadataArgs: MetadataArgs = {
+        ...converted,
+        collection: { key: collectionMint.toPublicKey(), verified: false },
+      };
 
-    debugLog('# input: ', input);
-    debugLog('# metadataArgs: ', metadataArgs);
+      debugLog('# input: ', input);
+      debugLog('# metadataArgs: ', metadataArgs);
 
-    const instruction = createMintToCollectionV1Instruction(
-      {
-        merkleTree: treeOwner.toPublicKey(),
-        treeAuthority,
-        treeDelegate: owner.toPublicKey(),
-        payer: payer.toKeypair().publicKey,
-        leafOwner: leafOwner.toPublicKey(), // receiver
-        leafDelegate: owner.toPublicKey(),
-        collectionAuthority: owner.toPublicKey(),
-        collectionMint: collectionMint.toPublicKey(),
-        collectionMetadata,
-        editionAccount: collectionMasterEditionAccount,
-        bubblegumSigner,
-        logWrapper: SPL_NOOP_PROGRAM_ID,
-        collectionAuthorityRecordPda: BUBBLEGUM_PROGRAM_ID,
-        compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-        tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
-      },
-      {
-        metadataArgs,
-      },
-    );
-    return new MintTransaction<Tree.Tree>(
-      [instruction],
-      [signer.toKeypair()],
-      payer.toKeypair(),
-      new Tree.Tree(treeOwner),
-    );
+      const instruction = createMintToCollectionV1Instruction(
+        {
+          merkleTree: treeOwner.toPublicKey(),
+          treeAuthority,
+          treeDelegate: owner.toPublicKey(),
+          payer: payer.toKeypair().publicKey,
+          leafOwner: leafOwner.toPublicKey(), // receiver
+          leafDelegate: owner.toPublicKey(),
+          collectionAuthority: owner.toPublicKey(),
+          collectionMint: collectionMint.toPublicKey(),
+          collectionMetadata,
+          editionAccount: collectionMasterEditionAccount,
+          bubblegumSigner,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          collectionAuthorityRecordPda: BUBBLEGUM_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+          tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+        },
+        {
+          metadataArgs,
+        },
+      );
+      return new MintTransaction<Tree.Tree>(
+        [instruction],
+        [signer.toKeypair()],
+        payer.toKeypair(),
+        new Tree.Tree(treeOwner),
+      );
+    });
   };
 }

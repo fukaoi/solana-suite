@@ -24,6 +24,7 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
     storageType: 'nftStorage',
     name: asset.name!,
     symbol: asset.symbol!,
+    description: asset.description,
     royalty: 50,
   });
 
@@ -46,6 +47,7 @@ test('[Arweave] mint nft', async (t) => {
     name: asset.name!,
     symbol: asset.symbol!,
     royalty: 50,
+    description: asset.description,
     isMutable: true,
   });
 
@@ -71,6 +73,7 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
       storageType: 'nftStorage',
       name: asset.name!,
       symbol: asset.symbol!,
+      description: asset.description,
       royalty: 0,
     },
     source.secret,
@@ -140,8 +143,10 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
       filePath: asset.filePath as string,
       storageType: 'nftStorage',
       name: asset.name!,
+      description: asset.description,
       symbol: asset.symbol!,
       royalty: 50,
+      isMutable: true,
       creators,
       properties,
       collection,
