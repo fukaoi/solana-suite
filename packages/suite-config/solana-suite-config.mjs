@@ -43,7 +43,6 @@ const searchForJsonFile = (dir) => {
       throw Error(`Not found ${JSON_FILE}`);
     }
     config = readFileSync(configPath).toString();
-
   } catch (e) {
     console.error("# Error don't read solana-suite-config.json, ", e.message);
     process.exit(0);
@@ -72,7 +71,6 @@ const updateClusterConfigFile = (type) => {
 
 const updateClusterUrlConfigFile = (customClusterUrl) => {
   const parsed = JSON.parse(config);
-  console.log('parsed: ', parsed, config);
   parsed['cluster'].customClusterUrl = customClusterUrl;
   writeFileSync(JSON_FILE, JSON.stringify(parsed));
   successMessage();
@@ -82,6 +80,14 @@ const updateClusterUrlConfigFile = (customClusterUrl) => {
 const updateNftStorageConfigFile = (key, value) => {
   const parsed = JSON.parse(config);
   parsed.nftstorage[key] = value;
+  writeFileSync(JSON_FILE, JSON.stringify(parsed));
+  successMessage();
+  clearCache();
+};
+
+const updateDasApiUrlConfigFile = (dasApiUrl) => {
+  const parsed = JSON.parse(config);
+  parsed['dasApiUrl'].dasApiUrl = dasApiUrl;
   writeFileSync(JSON_FILE, JSON.stringify(parsed));
   successMessage();
   clearCache();
@@ -124,6 +130,10 @@ program
   .option(
     '-n --nftstorage <apikey>',
     'Set apikey of nft.storage. "eyJhbGciO..."',
+  )
+  .option(
+    '-das --das-api-url <digital asset api url...>',
+    'connect to digital asset api url. "https://...", if you set more than one url, please separate them with a space',
   )
   .option('-s --show', 'Show value current solana-suite.json');
 
@@ -170,7 +180,6 @@ const execCustomCluster = (url) => {
     }
   });
 
-  console.log('aaa url: ', url);
   updateClusterUrlConfigFile(url);
 };
 
@@ -192,6 +201,23 @@ const execNftstorage = (arg) => {
   updateNftStorageConfigFile('apikey', arg);
 };
 
+const execDasApiUrl = (url) => {
+  const validation = (u) => {
+    return /https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(u);
+  };
+
+  url.forEach((element) => {
+    if (!validation(element)) {
+      warnMessage(
+        `Not found Digital asset api url: ${element}. e.g: https://...`,
+      );
+      process.exit(0);
+    }
+  });
+
+  updateDasApiUrlConfigFile(url);
+};
+
 const execShow = () => {
   showCurrentConfigFile();
 };
@@ -209,6 +235,8 @@ if (options.cluster) {
   execDebug(options.debug);
 } else if (options.nftstorage) {
   execNftstorage(options.nftstorage);
+} else if (options.dasApiUrl) {
+  execDasApiUrl(options.dasApiUrl);
 } else if (options.show) {
   execShow();
 } else {
