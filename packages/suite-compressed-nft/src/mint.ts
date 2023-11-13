@@ -1,6 +1,7 @@
 import { InputNftMetadata } from '~/types/regular-nft';
 import { Pubkey, Secret } from '~/types/account';
 import { Account } from '~/account';
+import { Node } from '~/node';
 import { Converter } from '~/converter';
 import { Storage } from '~/storage';
 import { MintTransaction } from '~/transaction';
@@ -16,7 +17,47 @@ import {
   SPL_NOOP_PROGRAM_ID,
 } from '@solana/spl-account-compression';
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
+import { PublicKey, TransactionInstruction } from '@solana/web3.js';
 
+// export const createDeleagateInstruction = (
+//   mint: PublicKey,
+//   owner: PublicKey,
+//   delegateAuthority: PublicKey,
+// ): TransactionInstruction => {
+//   let assetProof = await Node.getConnection().getAssetProof(assetId);
+//   const rpcAsset = await connectionWrapper.getAsset(assetId);
+//   const leafNonce = rpcAsset.compression.leaf_id;
+//   const treeAuthority = await getBubblegumAuthorityPDA(
+//     new PublicKey(assetProof.tree_id),
+//   );
+//   const previousLeafDelegate = rpcAsset.ownership.delegate
+//     ? new PublicKey(rpcAsset.ownership.delegate)
+//     : new PublicKey(rpcAsset.ownership.owner);
+//   const newLeafDelegate = previousLeafDelegate;
+//   const delegateIx = createDelegateInstruction(
+//     {
+//       treeAuthority,
+//       leafOwner: new PublicKey(rpcAsset.ownership.owner),
+//       previousLeafDelegate,
+//       newLeafDelegate,
+//       merkleTree: new PublicKey(assetProof.tree_id),
+//       logWrapper: SPL_NOOP_PROGRAM_ID,
+//       compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+//     },
+//     {
+//       root: bufferToArray(bs58.decode(assetProof.root)),
+//       dataHash: bufferToArray(
+//         bs58.decode(rpcAsset.compression.data_hash.trim()),
+//       ),
+//       creatorHash: bufferToArray(
+//         bs58.decode(rpcAsset.compression.creator_hash.trim()),
+//       ),
+//       nonce: leafNonce,
+//       index: leafNonce,
+//     },
+//   );
+// };
+//
 /**
  * Upload content and Compressed NFT mint
  *
@@ -141,30 +182,34 @@ export namespace CompressedNft {
       debugLog('# input: ', input);
       debugLog('# metadataArgs: ', metadataArgs);
 
-      const instruction = createMintToCollectionV1Instruction(
-        {
-          merkleTree: treeOwner.toPublicKey(),
-          treeAuthority,
-          treeDelegate: owner.toPublicKey(),
-          payer: payer.toKeypair().publicKey,
-          leafOwner: leafOwner.toPublicKey(), // receiver
-          leafDelegate: owner.toPublicKey(),
-          collectionAuthority: owner.toPublicKey(),
-          collectionMint: collectionMint.toPublicKey(),
-          collectionMetadata,
-          editionAccount: collectionMasterEditionAccount,
-          bubblegumSigner,
-          logWrapper: SPL_NOOP_PROGRAM_ID,
-          collectionAuthorityRecordPda: BUBBLEGUM_PROGRAM_ID,
-          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-          tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
-        },
-        {
-          metadataArgs,
-        },
+      const instructions = [];
+      instructions.push(
+        createMintToCollectionV1Instruction(
+          {
+            merkleTree: treeOwner.toPublicKey(),
+            treeAuthority,
+            treeDelegate: owner.toPublicKey(),
+            payer: payer.toKeypair().publicKey,
+            leafOwner: leafOwner.toPublicKey(), // receiver
+            leafDelegate: owner.toPublicKey(),
+            collectionAuthority: owner.toPublicKey(),
+            collectionMint: collectionMint.toPublicKey(),
+            collectionMetadata,
+            editionAccount: collectionMasterEditionAccount,
+            bubblegumSigner,
+            logWrapper: SPL_NOOP_PROGRAM_ID,
+            collectionAuthorityRecordPda: BUBBLEGUM_PROGRAM_ID,
+            compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+            tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+          },
+          {
+            metadataArgs,
+          },
+        ),
       );
+
       return new MintTransaction<Tree.Tree>(
-        [instruction],
+        instructions,
         [signer.toKeypair()],
         payer.toKeypair(),
         new Tree.Tree(treeOwner),

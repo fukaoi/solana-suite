@@ -1,5 +1,6 @@
 export * from './account';
 export * from './converter';
+export * from './das-api';
 export * from './history';
 export * from './find';
 export * from './global';

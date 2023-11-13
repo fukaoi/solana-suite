@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -161,6 +165,31 @@ importers:
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
+
+  packages/das-api:
+    dependencies:
+      '@solana-suite/config':
+        specifier: workspace:*
+        version: link:../suite-config
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.87.1
+    devDependencies:
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
 
   packages/global:
     dependencies:
@@ -9735,7 +9764,3 @@ packages:
       - supports-color
       - utf-8-validate
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false

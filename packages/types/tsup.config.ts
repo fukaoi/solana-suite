@@ -4,6 +4,7 @@ const entry = {
   index: 'src/index.ts',
   account: 'src/account/index.ts',
   converter: 'src/converter/index.ts',
+  'das-api': 'src/das-api/index.ts',
   find: 'src/find/index.ts',
   global: 'src/global/index.ts',
   history: 'src/history/index.ts',
