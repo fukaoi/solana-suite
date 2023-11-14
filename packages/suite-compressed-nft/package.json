@@ -53,6 +53,7 @@
     "@solana/spl-account-compression": "^0.2.0",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
+    "@types/bs58": "^4.0.4",
     "bignumber.js": "^9.1.2",
     "bn.js": "^5.2.1",
     "bs58": "^4.0.1",

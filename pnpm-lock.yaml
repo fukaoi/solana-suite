@@ -387,6 +387,9 @@ importers:
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.87.1
+      '@types/bs58':
+        specifier: ^4.0.4
+        version: 4.0.4
       bignumber.js:
         specifier: ^9.1.2
         version: 9.1.2
@@ -3249,6 +3252,13 @@ packages:
     dependencies:
       base-x: 3.0.9
     dev: true
+
+  /@types/bs58@4.0.4:
+    resolution: {integrity: sha512-0IEpMFXXQi2zXaXl9GJ3sRwQo0uEkD+yFOv+FnAU5lkPtcu6h61xb7jc2CFPEZ5BUOaiP13ThuGc9HD4R8lR5g==}
+    dependencies:
+      '@types/node': 16.11.7
+      base-x: 3.0.9
+    dev: false
 
   /@types/connect@3.4.36:
     resolution: {integrity: sha512-P63Zd/JUGq+PdrM1lv0Wv5SBYeA2+CORvbrXbngriYY0jzLUWfQMQQxOhjONEz/wlHOAxOdY7CY65rgQdTjq2w==}
