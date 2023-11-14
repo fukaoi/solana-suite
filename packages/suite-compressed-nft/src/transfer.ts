@@ -28,8 +28,8 @@ export namespace CompressedNft {
       } else if (assetProof.isOk && assetProof.value.proof.length === 0) {
         throw Error('Proof is empty');
       }
-      let proofPath = assetProof.unwrap().proof.map((node: string) => ({
-        pubkey: new PublicKey(node),
+      const proofPath = assetProof.value.proof.map((node: string) => ({
+        pubkey: node.toPublicKey(),
         isSigner: false,
         isWritable: false,
       }));
@@ -38,11 +38,13 @@ export namespace CompressedNft {
       if (asset.isErr) {
         throw asset.error;
       } else if (asset.isOk && asset.value.ownership.owner !== owner) {
-        debugLog(asset.value);
         throw Error(
           `NFT is not owned by the expected owner: ${asset.value.ownership.owner}, ${owner}`,
         );
       }
+
+      debugLog('# assetProof: ', assetProof.value);
+      debugLog('# asset: ', asset.value);
 
       const compression = asset.value.compression;
       const ownership = asset.value.ownership;
@@ -51,16 +53,16 @@ export namespace CompressedNft {
       const leafNonce = compression.leaf_id;
       const treeAuthority = Account.Pda.getTreeAuthority(treeOwner);
       const leafDelegate = ownership.delegate
-        ? new PublicKey(ownership.delegate)
-        : new PublicKey(ownership.owner);
+        ? ownership.delegate.toPublicKey()
+        : ownership.owner.toPublicKey();
 
       let inst = createTransferInstruction(
         {
           treeAuthority,
-          leafOwner: new PublicKey(ownership.owner),
+          leafOwner: ownership.owner.toPublicKey(),
           leafDelegate: leafDelegate,
           newLeafOwner: dest.toPublicKey(),
-          merkleTree: new PublicKey(treeId),
+          merkleTree: treeId.toPublicKey(),
           logWrapper: SPL_NOOP_PROGRAM_ID,
           compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
           anchorRemainingAccounts: proofPath,
