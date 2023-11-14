@@ -1,9 +1,10 @@
 import test from 'ava';
-import { CompressedNft } from '../src';
+import { CompressedNft, Node } from '../src';
 import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Pubkey } from '~/types/account';
+import { sleep } from '../../shared/src/shared';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
@@ -23,7 +24,7 @@ test('Transfer nft', async (t) => {
 
   const creator = {
     address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk',
-    share: 30,
+    share: 100,
     secret: '',
   };
 
@@ -43,13 +44,19 @@ test('Transfer nft', async (t) => {
     collectionMint,
   );
 
-  const resMint = await instMint.submit();
+  let assetId;
+  (await instMint.submit()).match(
+    async (ok) => {
+      await Node.confirmedSig(ok);
+      assetId = await instMint.unwrap().data?.getAssetId();
+    },
+    (err) => {
+      t.fail(err.message);
+    },
+  );
 
-  if (resMint.isErr) {
-    t.fail(resMint.error.message);
-  }
-
-  const assetId = await instMint.unwrap().data?.getAssetId();
+  await sleep(2);
+  console.log('# assetId: ', assetId);
 
   const res = await (
     await CompressedNft.transfer(

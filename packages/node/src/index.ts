@@ -30,8 +30,6 @@ export namespace Node {
       setted.commitment = Constants.COMMITMENT;
     }
 
-    debugLog('# setted:', setted);
-
     return new Connection(setted.clusterUrl, setted.commitment);
   };
 

@@ -1,6 +1,6 @@
 import { DasApi } from '~/das-api';
 import { Pubkey } from '~/types/account';
-import { Account, bufferToArray, Try } from '~/shared';
+import { Account, bufferToArray, debugLog, Try } from '~/shared';
 import { PublicKey } from '@solana/web3.js';
 import { createTransferInstruction } from 'mpl-bubblegum-instruction';
 import {
@@ -38,6 +38,7 @@ export namespace CompressedNft {
       if (asset.isErr) {
         throw asset.error;
       } else if (asset.isOk && asset.value.ownership.owner !== owner) {
+        debugLog(asset.value);
         throw Error(
           `NFT is not owned by the expected owner: ${asset.value.ownership.owner}, ${owner}`,
         );
