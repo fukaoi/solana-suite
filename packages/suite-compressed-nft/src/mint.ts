@@ -3,23 +3,33 @@ import { Pubkey, Secret } from '~/types/account';
 import { Account } from '~/account';
 import { Converter } from '~/converter';
 import { Storage } from '~/storage';
+import { Node } from '~/node';
 import { MintTransaction } from '~/transaction';
 import { debugLog, Try } from '~/shared';
 import { DasApi } from '~/das-api';
 import { CompressedNft as Tree } from './tree';
 import {
+  computeCreatorHash,
+  computeDataHash,
   createDelegateInstruction,
   createMintToCollectionV1Instruction,
+  createVerifyCreatorInstruction,
+  Creator,
   MetadataArgs,
   PROGRAM_ID as BUBBLEGUM_PROGRAM_ID,
 } from 'mpl-bubblegum-instruction';
 import {
+  ConcurrentMerkleTreeAccount,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
 } from '@solana/spl-account-compression';
 
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
-import { PublicKey, TransactionInstruction } from '@solana/web3.js';
+import {
+  AccountMeta,
+  PublicKey,
+  TransactionInstruction,
+} from '@solana/web3.js';
 import bs58 from 'bs58';
 
 export namespace CompressedNft {
@@ -29,6 +39,66 @@ export namespace CompressedNft {
       nums.push(buffer[byte]);
     }
     return nums;
+  };
+
+  export const createVerifyCreatorsInstruction = async (
+    creators: Creator[],
+    assetId: PublicKey,
+    treeOwner: PublicKey,
+    metadata: MetadataArgs,
+    feePayer: PublicKey,
+  ) => {
+    let rpcAssetProof = await DasApi.getAssetProof(assetId.toString());
+    const rpcAsset = await DasApi.getAsset(assetId.toString());
+    if (rpcAssetProof.isErr || rpcAsset.isErr) {
+      throw Error('Rise error when get asset proof or asset');
+    }
+    const compression = rpcAsset.unwrap().compression;
+    const ownership = rpcAsset.unwrap().ownership;
+    const assetProof = rpcAssetProof.unwrap();
+
+    const treeAccount = await ConcurrentMerkleTreeAccount.fromAccountAddress(
+      Node.getConnection(),
+      treeOwner,
+    );
+    const canopyDepth = treeAccount.getCanopyDepth();
+    const slicedProof: AccountMeta[] = assetProof.proof
+      .map((node: string) => ({
+        pubkey: new PublicKey(node),
+        isSigner: false,
+        isWritable: false,
+      }))
+      .slice(0, assetProof.proof.length - (!!canopyDepth ? canopyDepth : 0));
+
+    return createVerifyCreatorInstruction(
+      {
+        treeAuthority: treeOwner,
+        leafOwner: new PublicKey(ownership.owner),
+        leafDelegate: new PublicKey(ownership.delegate || ownership.owner),
+        merkleTree: new PublicKey(assetProof.tree_id),
+        payer: feePayer,
+
+        logWrapper: SPL_NOOP_PROGRAM_ID,
+        compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        creator: feePayer,
+
+        // provide the sliced proof
+        anchorRemainingAccounts: slicedProof,
+      },
+      {
+        // use the current root provided via the `getAssetProof`
+        root: [...new PublicKey(assetProof.root.trim()).toBytes()],
+        // compute the creator hash from the creators array
+        creatorHash: [...computeCreatorHash(creators)],
+        // compute the data hash from the metadata
+        dataHash: [...computeDataHash(metadata)],
+        nonce: compression.leaf_id,
+        index: compression.leaf_id,
+
+        // provide the full `metadataArgs` value for on-chain hash verification
+        message: metadata,
+      },
+    );
   };
 
   export const createDeleagateInstruction = async (
@@ -217,6 +287,19 @@ export namespace CompressedNft {
           },
         ),
       );
+      // creator --- Error transaction too large
+      // if (input.creators) {
+      //   const assetId = await new Tree.Tree(treeOwner).getAssetId();
+      //   instructions.push(
+      //     await createVerifyCreatorsInstruction(
+      //       metadataArgs.creators,
+      //       assetId.toPublicKey(),
+      //       treeOwner.toPublicKey(),
+      //       metadataArgs,
+      //       payer.toKeypair().publicKey,
+      //     ),
+      //   );
+      // }
 
       return new MintTransaction<Tree.Tree>(
         instructions,
