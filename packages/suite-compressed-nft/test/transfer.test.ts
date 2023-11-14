@@ -1,5 +1,5 @@
 import test from 'ava';
-import { RegularNft } from '../src';
+import { CompressedNft } from '../src';
 import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
@@ -7,11 +7,15 @@ import { Pubkey } from '~/types/account';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
+let collectionMint: Pubkey;
+let treeOwner: Pubkey;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
   dest = obj.dest;
+  collectionMint = obj.collectionMint;
+  treeOwner = obj.treeOwner;
 });
 
 test('Transfer nft', async (t) => {
@@ -23,37 +27,47 @@ test('Transfer nft', async (t) => {
     secret: '',
   };
 
-  const mint = await RegularNft.mint(source.pubkey, source.secret, {
-    filePath: asset.filePath as string,
-    storageType: 'arweave',
-    name: asset.name!,
-    symbol: asset.symbol!,
-    royalty: 50,
-    creators: [creator],
-    isMutable: true,
-  });
+  const instMint = await CompressedNft.mint(
+    source.pubkey,
+    source.secret,
+    {
+      filePath: asset.filePath as string,
+      storageType: 'arweave',
+      name: asset.name!,
+      symbol: asset.symbol!,
+      royalty: 50,
+      creators: [creator],
+      isMutable: true,
+    },
+    treeOwner,
+    collectionMint,
+  );
 
-  const resMint = await mint.submit();
+  const resMint = await instMint.submit();
 
   if (resMint.isErr) {
     t.fail(resMint.error.message);
   }
+
+  const assetId = await instMint.unwrap().data?.getAssetId();
+
   const res = await (
-    await RegularNft.transfer(
-      mint.unwrap().data as Pubkey,
+    await CompressedNft.transfer(
+      assetId!,
+      treeOwner,
       source.pubkey,
       dest.pubkey,
-      [source.secret],
+      source.secret,
     )
   ).submit();
 
   res.match(
     (ok: string) => {
-      t.log('# mint: ', mint.unwrap().data);
       t.log('# sig: ', ok);
       t.pass();
     },
     (err: Error) => {
+      console.error(err);
       t.fail(err.message);
     },
   );

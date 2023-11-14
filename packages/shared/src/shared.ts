@@ -3,6 +3,21 @@ import { Constants } from './constants';
 import { Result } from './result';
 
 /**
+ * convert buffer to Array
+ *
+ * @param {Buffer} buffer
+ * @returns number[]
+ */
+
+export const bufferToArray = (buffer: Buffer): number[] => {
+  const nums = [];
+  for (const byte of buffer) {
+    nums.push(buffer[byte]);
+  }
+  return nums;
+};
+
+/**
  * Overwrite JS Object
  *
  * @param {unknown} object

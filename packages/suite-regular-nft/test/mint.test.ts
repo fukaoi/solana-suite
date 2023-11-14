@@ -5,7 +5,7 @@ import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Pubkey } from '~/types/account';
-import { InputCreators } from '~/types/regular-nft';
+import { InputCreators } from '~/types/nft';
 import { ValidatorError } from '~/validator';
 
 let source: KeypairAccount;

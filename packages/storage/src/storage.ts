@@ -1,4 +1,4 @@
-import { debugLog, Result } from '~/shared';
+import { Result } from '~/shared';
 import { Secret } from '~/types/account';
 import { FileType, Offchain, StorageType } from '~/types/storage';
 import { InputNftMetadata } from '~/types/nft';

@@ -5,7 +5,7 @@ import { Converter } from '~/converter';
 import { Storage } from '~/storage';
 import { Node } from '~/node';
 import { MintTransaction } from '~/transaction';
-import { debugLog, Try } from '~/shared';
+import { debugLog, Try, bufferToArray } from '~/shared';
 import { DasApi } from '~/das-api';
 import { CompressedNft as Tree } from './tree';
 import {
@@ -33,14 +33,6 @@ import {
 import bs58 from 'bs58';
 
 export namespace CompressedNft {
-  export const bufferToArray = (buffer: Buffer): number[] => {
-    const nums = [];
-    for (const byte of buffer) {
-      nums.push(buffer[byte]);
-    }
-    return nums;
-  };
-
   export const createVerifyCreatorsInstruction = async (
     creators: Creator[],
     assetId: PublicKey,
@@ -53,9 +45,9 @@ export namespace CompressedNft {
     if (rpcAssetProof.isErr || rpcAsset.isErr) {
       throw Error('Rise error when get asset proof or asset');
     }
-    const compression = rpcAsset.unwrap().compression;
-    const ownership = rpcAsset.unwrap().ownership;
-    const assetProof = rpcAssetProof.unwrap();
+    const compression = rpcAsset.value.compression;
+    const ownership = rpcAsset.value.ownership;
+    const assetProof = rpcAssetProof.value;
 
     const treeAccount = await ConcurrentMerkleTreeAccount.fromAccountAddress(
       Node.getConnection(),
@@ -109,9 +101,9 @@ export namespace CompressedNft {
     if (rpcAssetProof.isErr || rpcAsset.isErr) {
       throw Error('Rise error when get asset proof or asset');
     }
-    const compression = rpcAsset.unwrap().compression;
-    const ownership = rpcAsset.unwrap().ownership;
-    const assetProof = rpcAssetProof.unwrap();
+    const compression = rpcAsset.value.compression;
+    const ownership = rpcAsset.value.ownership;
+    const assetProof = rpcAssetProof.value;
 
     const treeAuthority = Account.Pda.getTreeAuthority(assetProof.tree_id);
     const previousLeafDelegate = ownership.delegate
@@ -163,7 +155,6 @@ export namespace CompressedNft {
    *   options?: [key: string]?: unknown       // optional param, Usually not used.
    * }
    * @param {Secret} feePayer?         // fee payer
-   * @param {Pubkey} freezeAuthority?  // freeze authority
    * @return Promise<Result<MintInstruction, Error>>
    */
   export const mint = async (
