@@ -34,10 +34,10 @@ export namespace CompressedNft {
    * create a new markle tree
    * This function needs only 1 call
    *
-   * @param {feePayer} Secret
-   * @param {maxDepth} number
-   * @param {maxBufferSize} number
-   * @return Promise<Result<Instruction, Error>>
+   * @param {Secret} feePayer
+   * @param {number} maxDepth
+   * @param {number} maxBufferSize
+   * @return Promise<Result<MintTransaction, Error>>
    */
   export const initTree = (
     feePayer: Secret,

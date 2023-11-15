@@ -11,6 +11,17 @@ import {
 import { Transaction } from '~/transaction';
 
 export namespace CompressedNft {
+
+  /**
+   * transfer nft
+   *
+   * @param {Pubkey} assetId
+   * @param {Pubkey} owner
+   * @param {Pubkey} dest
+   * @param {Secret} signer
+   * @param {Secret} feePayer?
+   * @return Promise<Result<Transaction, Error>>
+   */
   export const transfer = async (
     assetId: Pubkey,
     owner: Pubkey,

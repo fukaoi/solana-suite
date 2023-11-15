@@ -9,6 +9,13 @@ export type Creators = {
 }[];
 
 export type CompressedNftMetadata = {
+  page: number;
+  total: number;
+  limit: number;
+  metadatas: NftMetadata[];
+};
+
+export type NftMetadata = {
   mint: Pubkey;
   collectionMint: Pubkey;
   authorities: Authority[];

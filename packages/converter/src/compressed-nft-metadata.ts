@@ -3,7 +3,7 @@ import { Converter as Creators } from './creators';
 import { Converter as Royalty } from './royalty';
 import { convertTimestampToDateTime } from '~/shared';
 import { InputNftMetadata } from '~/types/regular-nft';
-import { CompressedNftMetadata } from '~/types/compressed-nft';
+import { NftMetadata } from '~/types/compressed-nft';
 import {
   MetadataArgs,
   TokenProgramVersion,
@@ -35,9 +35,7 @@ export namespace Converter {
       };
     };
 
-    export const intoUser = (
-      output: AssetAndOffchain,
-    ): CompressedNftMetadata => {
+    export const intoUser = (output: AssetAndOffchain): NftMetadata => {
       return {
         mint: output.onchain.id.toString(),
         collectionMint: Collection.CollectionMint.intoUser(

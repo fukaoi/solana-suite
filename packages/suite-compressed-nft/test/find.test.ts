@@ -15,21 +15,15 @@ test.before(async () => {
 
 test('Find metadata by owner', async (t) => {
   const res = await CompressedNft.findByOwner(source.pubkey);
-  console.log(res);
-  t.pass();
-  // t.pass();
-  // res.match(
-  //   (ok) => {
-  //     t.log('# page: ', ok.page);
-  //     t.log('# total: ', ok.total);
-  //     t.log('# limit: ', ok.limit);
-  //     ok.items.forEach((item) => {
-  //       console.log(item);
-  //     });
-  //     t.pass();
-  //   },
-  //   (err) => {
-  //     t.fail(err.message);
-  //   },
-  // );
+  res.match(
+    (ok) => {
+      t.log('# findByOwner: ', ok);
+      t.true(ok.page === 1);
+      t.true(ok.total > 0);
+      t.pass();
+    },
+    (err) => {
+      t.fail(err.message);
+    },
+  );
 });

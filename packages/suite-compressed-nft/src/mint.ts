@@ -1,4 +1,4 @@
-import { InputNftMetadata } from '~/types/nft';
+import { InputNftMetadata } from '~/types/regular-nft';
 import { Pubkey, Secret } from '~/types/account';
 import { Account } from '~/account';
 import { Converter } from '~/converter';
@@ -144,12 +144,12 @@ export namespace CompressedNft {
    *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
    *   collection?: Pubkey           // collections of different colors, shapes, etc.
    *   creators?: InputCreators[]    // other creators than owner
-   *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()
    *   options?: [key: string]?: unknown       // optional param, Usually not used.
    * }
    * @param {Secret} feePayer?         // fee payer
-   * @return Promise<Result<MintInstruction, Error>>
+   * @param {Pubkey} receiver?         // receive minted nft
+   * @return Promise<Result<MintTransaction, Error>>
    */
   export const mint = async (
     owner: Pubkey,
@@ -272,6 +272,7 @@ export namespace CompressedNft {
           },
         ),
       );
+
       // creator --- Error transaction too large
       // if (input.creators) {
       //   const assetId = await new Tree.Tree(treeOwner).getAssetId();
