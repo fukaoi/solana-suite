@@ -29,7 +29,6 @@ export namespace Converter {
 
     export const intoUser = (
       output: OnchainAndOffchain,
-      tokenAmount: string,
     ): NftMetadata => {
       return {
         mint: output.onchain.mint.toString(),
@@ -39,7 +38,6 @@ export namespace Converter {
         symbol: _Token.TokenMetadata.deleteNullStrings(
           output.onchain.data.symbol,
         ),
-        tokenAmount: tokenAmount,
         uri: _Token.TokenMetadata.deleteNullStrings(output.onchain.data.uri),
         isMutable: output.onchain.isMutable,
         primarySaleHappened: output.onchain.primarySaleHappened,

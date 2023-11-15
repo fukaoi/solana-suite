@@ -1,7 +1,134 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
+import * as mpl_bubblegum_instruction from 'mpl-bubblegum-instruction';
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
+
+type Pubkey$1 = string;
+type Secret$1 = string;
+type KeypairAccount = {
+    pubkey: Pubkey$1;
+    secret: Secret$1;
+};
+type OwnerInfo = {
+    sol: number;
+    lamports: number;
+    owner: string;
+};
+
+type FileType = string | File;
+
+type StorageType = 'nftStorage' | 'arweave' | string;
+type Offchain = {
+    name?: string;
+    symbol?: string;
+    description?: string;
+    seller_fee_basis_points?: number;
+    image?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    collection?: {
+        name?: string;
+        family?: string;
+        [key: string]: unknown;
+    };
+    collectionDetails?: {
+        kind: string;
+        size: number;
+    };
+    created_at?: number;
+};
+type Properties = {
+    creators?: {
+        address?: string;
+        share?: number;
+        [key: string]: unknown;
+    }[];
+    files?: {
+        type?: string;
+        filePath?: FileType;
+        [key: string]: unknown;
+    }[];
+    [key: string]: unknown;
+};
+type Attribute = {
+    trait_type?: string;
+    value?: string;
+    [key: string]: unknown;
+};
+
+type bignum = number | BN;
+type Option<T> = T | null;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type Creators = {
+    address: Pubkey$1;
+    share: number;
+    verified: boolean;
+};
+type InputCreators = {
+    address: Pubkey$1;
+    secret: Secret$1;
+    share: number;
+};
+
+type InputCollection = Pubkey$1;
+type Options = {
+    [key: string]: unknown;
+};
+type InputNftMetadata = {
+    name: string;
+    symbol: string;
+    royalty: number;
+    storageType: StorageType;
+    filePath?: FileType;
+    uri?: string;
+    isMutable?: boolean;
+    description?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    maxSupply?: bignum;
+    creators?: InputCreators[];
+    uses?: Uses;
+    collection?: InputCollection;
+    options?: Options;
+};
+
+type Collection = {
+    address: Pubkey$1;
+    verified: boolean;
+};
+type CollectionDetails = {
+    __kind: string;
+    size: number;
+};
+type NftMetadata = {
+    mint: string;
+    updateAuthority: string;
+    royalty: number;
+    name: string;
+    symbol: string;
+    uri: string;
+    isMutable: boolean;
+    primarySaleHappened: boolean;
+    editionNonce: Option<number>;
+    offchain: Offchain;
+    collection?: Collection | undefined;
+    collectionDetails?: CollectionDetails | undefined;
+    creators?: Creators[] | undefined;
+    uses?: Uses | undefined;
+    dateTime?: Date | undefined;
+};
 
 declare abstract class AbstractResult$1<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
@@ -206,18 +333,6 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
-type Pubkey$1 = string;
-type Secret$1 = string;
-type KeypairAccount = {
-    pubkey: Pubkey$1;
-    secret: Secret$1;
-};
-type OwnerInfo = {
-    sol: number;
-    lamports: number;
-    owner: string;
-};
-
 /**
  * Get Associated token Account.
  * if not created, create new token accouint
@@ -288,22 +403,15 @@ declare const Account: {
     Associated: typeof Account$3.Associated;
 };
 
-declare namespace Node$1 {
-    namespace DasApi {
-        const getAssetProof: (assetId: string) => void;
-    }
-}
-
-declare const Node: {
-    DasApi: typeof Node$1.DasApi;
-    getConnection: () => _solana_web3_js.Connection;
-    changeConnection: (param: {
-        cluster?: string | undefined;
-        commitment?: _solana_web3_js.Commitment | undefined;
-        customClusterUrl?: string[] | undefined;
+declare namespace Node {
+    const getConnection: () => Connection;
+    const changeConnection: (param: {
+        cluster?: string;
+        commitment?: Commitment;
+        customClusterUrl?: string[];
     }) => void;
-    confirmedSig: (signature: string, commitment?: _solana_web3_js.Commitment) => Promise<Result$1.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Ok<never, any> | Result$1.Err<never, any>>;
-};
+    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result$1.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Ok<never, any> | Result$1.Err<never, any>>;
+}
 
 type Condition = 'overMax' | 'underMin';
 interface Limit {
@@ -316,88 +424,6 @@ interface Details {
     actual: string | number;
     limit?: Limit;
 }
-
-type FileType = string | File;
-
-type StorageType = 'nftStorage' | 'arweave' | string;
-type Offchain = {
-    name?: string;
-    symbol?: string;
-    description?: string;
-    seller_fee_basis_points?: number;
-    image?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    collection?: {
-        name?: string;
-        family?: string;
-        [key: string]: unknown;
-    };
-    collectionDetails?: {
-        kind: string;
-        size: number;
-    };
-    created_at?: number;
-};
-type Properties = {
-    creators?: {
-        address?: string;
-        share?: number;
-        [key: string]: unknown;
-    }[];
-    files?: {
-        type?: string;
-        filePath?: FileType;
-        [key: string]: unknown;
-    }[];
-    [key: string]: unknown;
-};
-type Attribute = {
-    trait_type?: string;
-    value?: string;
-    [key: string]: unknown;
-};
-
-type bignum = number | BN;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
-};
-type InputCreators = {
-    address: Pubkey$1;
-    secret: Secret$1;
-    share: number;
-};
-
-type InputCollection = Pubkey$1;
-type Options = {
-    [key: string]: unknown;
-};
-type InputNftMetadata = {
-    name: string;
-    symbol: string;
-    royalty: number;
-    storageType: StorageType;
-    filePath?: FileType;
-    uri?: string;
-    isMutable?: boolean;
-    description?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    maxSupply?: bignum;
-    creators?: InputCreators[];
-    uses?: Uses;
-    collection?: InputCollection;
-    options?: Options;
-};
 
 declare namespace Validator {
     export namespace Message {
@@ -533,6 +559,15 @@ declare global {
 declare enum Explorer {
     Solscan = "solscan",
     SolanaFM = "solanafm"
+}
+
+declare class Transaction {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: unknown;
+    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+    submit: () => Promise<Result$1<TransactionSignature, Error>>;
 }
 
 declare class MintTransaction<T> {
@@ -772,10 +807,15 @@ declare global {
 }
 
 declare const CompressedNft: {
+    transfer: (assetId: string, owner: string, dest: string, signer: Secret, feePayer?: Secret | undefined) => Promise<Result$1<Transaction, Error>>;
     mintCollection: (owner: Pubkey, signer: string, input: InputNftMetadata, feePayer?: string | undefined, freezeAuthority?: Pubkey | undefined) => Promise<Result$1<MintTransaction<Pubkey>, Error>>;
     Tree: typeof CompressedNft$1.Tree;
     initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result$1<MintTransaction<string>, Error>>;
-    mint: (owner: string, signer: string, input: InputNftMetadata, treeOwner: string, collectionMint: string, feePayer?: string | undefined, receiver?: string | undefined, freezeAuthority?: string | undefined) => Promise<Result$1<MintTransaction<CompressedNft$1.Tree>, Error>>;
+    createVerifyCreatorsInstruction: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
+    createDeleagateInstruction: (assetId: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
+    mint: (owner: string, signer: string, input: InputNftMetadata, treeOwner: string, collectionMint: string, feePayer?: string | undefined, receiver?: string | undefined) => Promise<Result$1<MintTransaction<CompressedNft$1.Tree>, Error>>;
+    fetchOffchain: (uri: string) => Promise<any>;
+    findByOwner: (owner: Pubkey, limit?: number, page?: number, sortBy?: any, before?: string | undefined, after?: string | undefined) => Promise<Result$1<NftMetadata[], Error>>;
 };
 
 export { Account, CompressedNft, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, Secret$1 as Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

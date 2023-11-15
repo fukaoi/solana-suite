@@ -4,7 +4,7 @@ import { Node } from '~/node';
 import { Result, Try } from '~/shared';
 import { PartialSignTransaction } from '~/transaction';
 import { Pubkey, Secret } from '~/types/account';
-import { SplToken as _Calculator } from './calculate-amount';
+import { SplToken as Calculator } from './calculate-amount';
 import { Account } from '~/account';
 
 export namespace SplToken {
@@ -48,7 +48,7 @@ export namespace SplToken {
           mint.toPublicKey(),
           destToken.tokenAccount.toPublicKey(),
           owner.toPublicKey(),
-          _Calculator.calculateAmount(amount, mintDecimal),
+          Calculator.calculateAmount(amount, mintDecimal),
           mintDecimal,
           keypairs,
         );
@@ -60,7 +60,7 @@ export namespace SplToken {
           mint.toPublicKey(),
           destToken.tokenAccount.toPublicKey(),
           owner.toPublicKey(),
-          _Calculator.calculateAmount(amount, mintDecimal),
+          Calculator.calculateAmount(amount, mintDecimal),
           mintDecimal,
           keypairs,
         );

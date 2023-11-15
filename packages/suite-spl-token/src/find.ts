@@ -2,7 +2,7 @@ import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
 import { debugLog, Result } from '~/shared';
 import { Sortable } from '~/types/find';
-import { NftMetadata } from '~/types/regular-nft';
+import { NftMetadata } from '~/types/nft';
 import { TokenMetadata } from '~/types/spl-token';
 import { Offchain } from '~/types/storage';
 import { OnErr, OnOk } from '~/types/shared';

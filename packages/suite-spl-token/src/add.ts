@@ -3,7 +3,7 @@ import { Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 import { Transaction } from '~/transaction';
 import { Account } from '~/account';
-import { SplToken as _Calculate } from './calculate-amount';
+import { SplToken as Calculate } from './calculate-amount';
 
 export namespace SplToken {
   export const add = async (
@@ -28,7 +28,7 @@ export namespace SplToken {
         token.toPublicKey(),
         tokenAssociated.toPublicKey(),
         owner.toPublicKey(),
-        _Calculate.calculateAmount(totalAmount, mintDecimal),
+        Calculate.calculateAmount(totalAmount, mintDecimal),
         mintDecimal,
         keypairs,
       );

@@ -26,7 +26,6 @@ type NftMetadata = {
     primarySaleHappened: boolean;
     editionNonce: Option<number>;
     offchain: Offchain;
-    tokenAmount: string;
     collection?: Collection | undefined;
     collectionDetails?: CollectionDetails | undefined;
     creators?: Creators[] | undefined;

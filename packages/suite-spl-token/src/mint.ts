@@ -30,7 +30,7 @@ import { InputNftMetadata } from '~/types/nft';
 import { InputTokenMetadata } from '~/types/spl-token';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
-import { SplToken as _Calculate } from './calculate-amount';
+import { SplToken as Calculate } from './calculate-amount';
 import { Storage } from '~/storage';
 
 export namespace SplToken {
@@ -88,7 +88,7 @@ export namespace SplToken {
       mint,
       tokenAssociated,
       owner,
-      _Calculate.calculateAmount(totalAmount, mintDecimal),
+      Calculate.calculateAmount(totalAmount, mintDecimal),
       mintDecimal,
     );
 

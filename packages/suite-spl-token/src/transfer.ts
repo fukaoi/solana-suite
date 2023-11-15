@@ -1,6 +1,6 @@
 import { createTransferCheckedInstruction } from '@solana/spl-token';
 import { Result, Try } from '~/shared';
-import { SplToken as _Calculator } from './calculate-amount';
+import { SplToken as Calculator } from './calculate-amount';
 import { Account } from '~/account';
 import { Transaction } from '~/transaction';
 import { Pubkey, Secret } from '~/types/account';
@@ -36,7 +36,7 @@ export namespace SplToken {
         mint.toPublicKey(),
         destToken.toPublicKey(),
         owner.toPublicKey(),
-        _Calculator.calculateAmount(amount, mintDecimal),
+        Calculator.calculateAmount(amount, mintDecimal),
         mintDecimal,
         keypairs,
       );

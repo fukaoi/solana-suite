@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, PublicKey, Keypair } from '@solana/web3.js';
+import { TransactionSignature, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -229,21 +229,14 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
-declare namespace Node$1 {
-    namespace DasApi {
-        const getAssetProof: (assetId: string) => void;
-    }
-}
-
-declare const Node: {
-    DasApi: typeof Node$1.DasApi;
-    getConnection: () => _solana_web3_js.Connection;
-    changeConnection: (param: {
-        cluster?: string | undefined;
-        commitment?: _solana_web3_js.Commitment | undefined;
-        customClusterUrl?: string[] | undefined;
+declare namespace Node {
+    const getConnection: () => Connection;
+    const changeConnection: (param: {
+        cluster?: string;
+        commitment?: Commitment;
+        customClusterUrl?: string[];
     }) => void;
-    confirmedSig: (signature: string, commitment?: _solana_web3_js.Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
-};
+    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
+}
 
 export { Node };

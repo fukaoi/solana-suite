@@ -117,7 +117,6 @@ type NftMetadata = {
     primarySaleHappened: boolean;
     editionNonce: Option<number>;
     offchain: Offchain;
-    tokenAmount: string;
     collection?: Collection | undefined;
     collectionDetails?: CollectionDetails | undefined;
     creators?: Creators[] | undefined;
@@ -128,7 +127,7 @@ type NftMetadata = {
 declare namespace Converter$c {
     namespace CompressedNftMetadata {
         const intoInfra: (input: InputNftMetadata, uri: string, sellerFeeBasisPoints: number) => MetadataArgs;
-        const intoUser: (output: OnchainAndOffchain, tokenAmount: string) => NftMetadata;
+        const intoUser: (output: OnchainAndOffchain) => NftMetadata;
     }
 }
 
@@ -223,7 +222,7 @@ declare namespace Converter$8 {
 declare namespace Converter$7 {
     namespace RegularNftMetadata {
         const intoInfra: (input: InputNftMetadata, uri: string, sellerFeeBasisPoints: number) => DataV2;
-        const intoUser: (output: OnchainAndOffchain, tokenAmount: string) => NftMetadata;
+        const intoUser: (output: OnchainAndOffchain) => NftMetadata;
     }
 }
 

@@ -5,7 +5,7 @@ import {
 import { Pubkey, Secret } from '~/types/account';
 import { Transaction } from '~/transaction';
 import { Result, Try } from '~/shared';
-import { SplToken as _Calculate } from './calculate-amount';
+import { SplToken as Calculate } from './calculate-amount';
 
 export namespace SplToken {
   export const burn = (
@@ -28,7 +28,7 @@ export namespace SplToken {
         tokenAccount,
         mint.toPublicKey(),
         owner.toPublicKey(),
-        _Calculate.calculateAmount(burnAmount, tokenDecimals),
+        Calculate.calculateAmount(burnAmount, tokenDecimals),
         tokenDecimals,
         keypairs,
       );

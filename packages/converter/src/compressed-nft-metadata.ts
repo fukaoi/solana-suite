@@ -1,11 +1,15 @@
-import { Converter as _Collection } from './collection';
-import { Converter as _CollectionDetails } from './collection-details';
-import { Converter as _Creators } from './creators';
-import { Converter as _Uses } from './uses';
-import { Converter as _Token } from './token-metadata';
+import { Converter as Collection } from './collection';
+import { Converter as CollectionDetails } from './collection-details';
+import { Converter as Creators } from './creators';
+import { Converter as Uses } from './uses';
+import { Converter as Token } from './token-metadata';
 import { convertTimestampToDateTime } from '~/shared';
 import { InputNftMetadata, NftMetadata } from '~/types/nft';
-import { MetadataArgs, TokenProgramVersion, TokenStandard } from 'mpl-bubblegum-instruction';
+import {
+  MetadataArgs,
+  TokenProgramVersion,
+  TokenStandard,
+} from 'mpl-bubblegum-instruction';
 import { OnchainAndOffchain } from '~/types/storage';
 
 export namespace Converter {
@@ -20,40 +24,36 @@ export namespace Converter {
         symbol: input.symbol,
         uri,
         sellerFeeBasisPoints,
-        creators: _Creators.Creators.intoCompressedNftInfra(input.creators),
-        collection: _Collection.Collection.intoInfra(input.collection),
+        creators: Creators.Creators.intoCompressedNftInfra(input.creators),
+        collection: Collection.Collection.intoInfra(input.collection),
         uses: input.uses || null,
         primarySaleHappened: false,
         isMutable: input.isMutable ?? false,
         editionNonce: 0,
         tokenStandard: TokenStandard.NonFungible,
-        tokenProgramVersion: TokenProgramVersion.Original
+        tokenProgramVersion: TokenProgramVersion.Original,
       };
     };
 
-    export const intoUser = (
-      output: OnchainAndOffchain,
-      tokenAmount: string,
-    ): NftMetadata => {
+    export const intoUser = (output: OnchainAndOffchain): NftMetadata => {
       return {
         mint: output.onchain.mint.toString(),
         updateAuthority: output.onchain.updateAuthority.toString(),
         royalty: output.onchain.data.sellerFeeBasisPoints,
-        name: _Token.TokenMetadata.deleteNullStrings(output.onchain.data.name),
-        symbol: _Token.TokenMetadata.deleteNullStrings(
+        name: Token.TokenMetadata.deleteNullStrings(output.onchain.data.name),
+        symbol: Token.TokenMetadata.deleteNullStrings(
           output.onchain.data.symbol,
         ),
-        tokenAmount: tokenAmount,
-        uri: _Token.TokenMetadata.deleteNullStrings(output.onchain.data.uri),
+        uri: Token.TokenMetadata.deleteNullStrings(output.onchain.data.uri),
         isMutable: output.onchain.isMutable,
         primarySaleHappened: output.onchain.primarySaleHappened,
-        creators: _Creators.Creators.intoUser(output.onchain.data.creators),
+        creators: Creators.Creators.intoUser(output.onchain.data.creators),
         editionNonce: output.onchain.editionNonce,
-        collection: _Collection.Collection.intoUser(output.onchain.collection),
-        collectionDetails: _CollectionDetails.CollectionDetails.intoUser(
+        collection: Collection.Collection.intoUser(output.onchain.collection),
+        collectionDetails: CollectionDetails.CollectionDetails.intoUser(
           output.onchain.collectionDetails,
         ),
-        uses: _Uses.Uses.intoUserSide(output.onchain.uses),
+        uses: Uses.Uses.intoUserSide(output.onchain.uses),
         dateTime: convertTimestampToDateTime(output.offchain.created_at),
         offchain: output.offchain,
       };
