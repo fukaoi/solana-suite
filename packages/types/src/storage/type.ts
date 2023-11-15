@@ -1,10 +1,16 @@
+import { Asset } from '../das-api';
 import { FileType } from './irys';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
 export type StorageType = 'nftStorage' | 'arweave' | string;
 
-export type OnchainAndOffchain = {
+export type MetadataAndOffchain = {
   onchain: Metadata;
+  offchain: Offchain;
+};
+
+export type AssetAndOffchain = {
+  onchain: Asset;
   offchain: Offchain;
 };
 

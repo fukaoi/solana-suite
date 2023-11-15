@@ -5,7 +5,7 @@ import { Creators, Option, Uses } from './common';
 export type Collection = { address: Pubkey; verified: boolean };
 export type CollectionDetails = { __kind: string; size: number };
 
-export type NftMetadata = {
+export type RegularNftMetadata = {
   mint: string;
   updateAuthority: string;
   royalty: number;

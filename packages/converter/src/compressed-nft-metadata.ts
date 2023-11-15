@@ -10,7 +10,7 @@ import {
   TokenProgramVersion,
   TokenStandard,
 } from 'mpl-bubblegum-instruction';
-import { OnchainAndOffchain } from '~/types/storage';
+import { AssetAndOffchain } from '~/types/storage';
 
 export namespace Converter {
   export namespace CompressedNftMetadata {
@@ -35,10 +35,10 @@ export namespace Converter {
       };
     };
 
-    export const intoUser = (output: OnchainAndOffchain): NftMetadata => {
+    export const intoUser = (output: AssetAndOffchain): NftMetadata => {
       return {
-        mint: output.onchain.mint.toString(),
-        updateAuthority: output.onchain.updateAuthority.toString(),
+        mint: output.onchain.id.toString(),
+        authorities: output.onchain.authorities,
         royalty: output.onchain.data.sellerFeeBasisPoints,
         name: Token.TokenMetadata.deleteNullStrings(output.onchain.data.name),
         symbol: Token.TokenMetadata.deleteNullStrings(

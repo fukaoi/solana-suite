@@ -1,6 +1,7 @@
 import { Converter } from '~/converter';
 import { DasApi } from '~/das-api';
 import { Try } from '~/shared';
+import { Offchain } from '~/types/storage';
 
 export namespace CompressedNft {
   //@internal
@@ -33,9 +34,9 @@ export namespace CompressedNft {
 
       return await Promise.all(
         assets.value.items.map(async (item) => {
-          const offchain = await fetchOffchain(item.content.json_uri);
+          const offchain: Offchain = await fetchOffchain(item.content.json_uri);
           console.log(item);
-          const merged = { ...item, ...offchain };
+          const merged = { onchain: item, offchain: offchain };
           return Converter.CompressedNftMetadata.intoUser(merged);
         }),
       );

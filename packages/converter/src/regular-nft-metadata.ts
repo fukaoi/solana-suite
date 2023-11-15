@@ -6,8 +6,7 @@ import { Converter as _Token } from './token-metadata';
 import { convertTimestampToDateTime } from '~/shared';
 import { InputNftMetadata, NftMetadata } from '~/types/nft';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
-
-import { OnchainAndOffchain } from '~/types/storage';
+import { MetadataAndOffchain } from '~/types/storage';
 
 export namespace Converter {
   export namespace RegularNftMetadata {
@@ -27,9 +26,7 @@ export namespace Converter {
       };
     };
 
-    export const intoUser = (
-      output: OnchainAndOffchain,
-    ): NftMetadata => {
+    export const intoUser = (output: MetadataAndOffchain): NftMetadata => {
       return {
         mint: output.onchain.mint.toString(),
         updateAuthority: output.onchain.updateAuthority.toString(),
