@@ -1,5 +1,5 @@
 import { Attribute, Offchain } from '../storage';
-import { Creators, Uses } from '../nft';
+import { Creators, Uses } from '../regular-nft';
 
 export type TokenMetadata = {
   mint: string;

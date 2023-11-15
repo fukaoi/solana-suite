@@ -441,19 +441,6 @@ type PhantomProvider = {
 type FileType = string | File;
 
 type StorageType = 'nftStorage' | 'arweave' | string;
-type Properties = {
-    creators?: {
-        address?: string;
-        share?: number;
-        [key: string]: unknown;
-    }[];
-    files?: {
-        type?: string;
-        filePath?: FileType;
-        [key: string]: unknown;
-    }[];
-    [key: string]: unknown;
-};
 type Attribute = {
     trait_type?: string;
     value?: string;
@@ -477,27 +464,8 @@ type InputCreators = {
     share: number;
 };
 
-type InputCollection = Pubkey;
 type Options = {
     [key: string]: unknown;
-};
-type InputNftMetadata = {
-    name: string;
-    symbol: string;
-    royalty: number;
-    storageType: StorageType;
-    filePath?: FileType;
-    uri?: string;
-    isMutable?: boolean;
-    description?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    maxSupply?: bignum;
-    creators?: InputCreators[];
-    uses?: Uses;
-    collection?: InputCollection;
-    options?: Options;
 };
 
 declare class ValidatorError extends Error {

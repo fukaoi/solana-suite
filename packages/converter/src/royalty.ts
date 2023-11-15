@@ -4,5 +4,9 @@ export namespace Converter {
     export const intoInfra = (percentage: number) => {
       return percentage * THRESHOLD;
     };
+
+    export const intoUser = (percentage: number) => {
+      return percentage * THRESHOLD;
+    };
   }
 }

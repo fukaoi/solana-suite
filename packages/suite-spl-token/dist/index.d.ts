@@ -1,8 +1,8 @@
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
+import BN from 'bn.js';
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
-import BN from 'bn.js';
 
 declare abstract class AbstractResult$1<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
@@ -207,6 +207,18 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
+type Pubkey = string;
+type Secret = string;
+type KeypairAccount = {
+    pubkey: Pubkey;
+    secret: Secret;
+};
+type OwnerInfo = {
+    sol: number;
+    lamports: number;
+    owner: string;
+};
+
 declare enum Sortable {
     Asc = "asc",
     Desc = "desc"
@@ -249,18 +261,6 @@ type History = {
 
 type OnOk<T extends History | Find> = (ok: T[]) => void;
 type OnErr = (err: Error) => void;
-
-type Pubkey$1 = string;
-type Secret = string;
-type KeypairAccount = {
-    pubkey: Pubkey$1;
-    secret: Secret;
-};
-type OwnerInfo = {
-    sol: number;
-    lamports: number;
-    owner: string;
-};
 
 type FileType = string | File;
 
@@ -305,7 +305,6 @@ type Attribute = {
 };
 
 type bignum = number | BN;
-type Option<T> = T | null;
 declare enum UseMethod {
     Burn = 0,
     Multiple = 1,
@@ -317,17 +316,17 @@ type Uses = {
     total: bignum;
 };
 type Creators = {
-    address: Pubkey$1;
+    address: Pubkey;
     share: number;
     verified: boolean;
 };
 type InputCreators = {
-    address: Pubkey$1;
+    address: Pubkey;
     secret: Secret;
     share: number;
 };
 
-type InputCollection = Pubkey$1;
+type InputCollection = Pubkey;
 type Options = {
     [key: string]: unknown;
 };
@@ -348,32 +347,6 @@ type InputNftMetadata = {
     uses?: Uses;
     collection?: InputCollection;
     options?: Options;
-};
-
-type Collection = {
-    address: Pubkey$1;
-    verified: boolean;
-};
-type CollectionDetails = {
-    __kind: string;
-    size: number;
-};
-type NftMetadata = {
-    mint: string;
-    updateAuthority: string;
-    royalty: number;
-    name: string;
-    symbol: string;
-    uri: string;
-    isMutable: boolean;
-    primarySaleHappened: boolean;
-    editionNonce: Option<number>;
-    offchain: Offchain;
-    collection?: Collection | undefined;
-    collectionDetails?: CollectionDetails | undefined;
-    creators?: Creators[] | undefined;
-    uses?: Uses | undefined;
-    dateTime?: Date | undefined;
 };
 
 type InputTokenMetadata = {
@@ -627,7 +600,7 @@ declare namespace Account$3 {
          * @param {Secret} feePayer
          * @returns Promise<string>
          */
-        const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret) => Promise<string>;
+        const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret) => Promise<string>;
         /**
          * [Main logic]Get Associated token Account.
          * if not created, create new token accouint
@@ -637,7 +610,7 @@ declare namespace Account$3 {
          * @param {Pubkey} feePayer
          * @returns Promise<string>
          */
-        const makeOrCreateInstruction: (mint: Pubkey$1, owner: Pubkey$1, feePayer?: Pubkey$1, allowOwnerOffCurve?: boolean) => Promise<{
+        const makeOrCreateInstruction: (mint: Pubkey, owner: Pubkey, feePayer?: Pubkey, allowOwnerOffCurve?: boolean) => Promise<{
             tokenAccount: string;
             inst: TransactionInstruction | undefined;
         }>;
@@ -647,9 +620,9 @@ declare namespace Account$3 {
 declare namespace Account$2 {
     class Keypair {
         secret: Secret;
-        pubkey: Pubkey$1;
+        pubkey: Pubkey;
         constructor(params: {
-            pubkey?: Pubkey$1;
+            pubkey?: Pubkey;
             secret: Secret;
         });
         toPublicKey(): PublicKey;
@@ -663,11 +636,11 @@ declare namespace Account$2 {
 
 declare namespace Account$1 {
     namespace Pda {
-        const getMetadata: (address: Pubkey$1) => PublicKey;
-        const getMasterEdition: (address: Pubkey$1) => PublicKey;
-        const getTreeAuthority: (address: Pubkey$1) => PublicKey;
+        const getMetadata: (address: Pubkey) => PublicKey;
+        const getMasterEdition: (address: Pubkey) => PublicKey;
+        const getTreeAuthority: (address: Pubkey) => PublicKey;
         const getBgumSigner: () => PublicKey;
-        const getAssetId: (address: Pubkey$1, leafIndex: number) => Pubkey$1;
+        const getAssetId: (address: Pubkey, leafIndex: number) => Pubkey;
     }
 }
 
@@ -855,8 +828,8 @@ declare class MintTransaction<T> {
 
 declare class PartialSignTransaction {
     hexInstruction: string;
-    data?: Pubkey$1;
-    constructor(instructions: string, mint?: Pubkey$1);
+    data?: Pubkey;
+    constructor(instructions: string, mint?: Pubkey);
     submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
 }
 
@@ -874,8 +847,8 @@ declare const SplToken: {
     mint: (owner: string, signer: string, totalAmount: number, mintDecimal: number, input: InputTokenMetadata, feePayer?: string | undefined, freezeAuthority?: string | undefined) => Promise<Result<MintTransaction<string>, Error>>;
     feePayerPartialSignTransfer: (mint: string, owner: string, dest: string, signers: string[], amount: number, mintDecimal: number, feePayer: string) => Promise<Result<PartialSignTransaction, Error>>;
     freeze: (mint: string, owner: string, freezeAuthority: string, feePayer?: string | undefined) => Result<Transaction, Error>;
-    genericFindByOwner: <T extends NftMetadata | TokenMetadata>(owner: string, callback: (result: Result<T[], Error>) => void, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
-    genericFindByMint: <T_1 extends NftMetadata | TokenMetadata>(mint: string, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard) => Promise<Result<T_1, Error>>;
+    genericFindByOwner: <T extends unknown>(owner: string, callback: (result: Result<T[], Error>) => void, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard, sortable?: Sortable | undefined, isHolder?: boolean | undefined) => Promise<void>;
+    genericFindByMint: <T_1 extends unknown>(mint: string, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard) => Promise<Result<T_1, Error>>;
     findByOwner: (owner: string, onOk: OnOk<TokenMetadata>, onErr: OnErr, options?: {
         sortable?: Sortable | undefined;
         isHolder?: boolean | undefined;
@@ -885,4 +858,4 @@ declare const SplToken: {
     add: (token: string, owner: string, signers: string[], totalAmount: number, mintDecimal: number, feePayer?: string | undefined) => Promise<Result<Transaction, Error>>;
 };
 
-export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, Secret, SplToken, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };
+export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, SplToken, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

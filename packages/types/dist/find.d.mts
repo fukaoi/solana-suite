@@ -1,3 +1,5 @@
+import { Pubkey } from './account.mjs';
+
 declare enum Sortable {
     Asc = "asc",
     Desc = "desc"

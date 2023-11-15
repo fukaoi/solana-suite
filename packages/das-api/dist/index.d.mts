@@ -218,13 +218,18 @@ type AssetProof = {
     root: Pubkey$1;
     tree_id: Pubkey$1;
 };
+type Metadata = {
+    name: string;
+    symbol: string;
+    token_standard: string;
+};
 type Asset = {
     interface: string;
     id: Pubkey$1;
     content: {
         json_uri: string;
         files: string[];
-        metadata: string[];
+        metadata: Metadata;
         links: string[];
     };
     authorities: {

@@ -1,7 +1,7 @@
 import { Result } from '~/shared';
 import { Secret } from '~/types/account';
 import { FileType, Offchain, StorageType } from '~/types/storage';
-import { InputNftMetadata } from '~/types/nft';
+import { InputNftMetadata } from '~/types/regular-nft';
 import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
 

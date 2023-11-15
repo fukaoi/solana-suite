@@ -1,3 +1,5 @@
+import { Pubkey } from '../account';
+
 export enum Sortable {
   Asc = 'asc',
   Desc = 'desc',

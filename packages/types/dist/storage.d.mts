@@ -1,7 +1,9 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { P as PhantomProvider } from './phantom-e9a40784.js';
 import { Secret } from './account.mjs';
+import { Asset } from './das-api.mjs';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
+import './converter.mjs';
 
 type BundlrSigner = Keypair | PhantomWallet | undefined;
 type PhantomWallet = {
@@ -16,8 +18,12 @@ type Tags = [{
 }];
 
 type StorageType = 'nftStorage' | 'arweave' | string;
-type OnchainAndOffchain = {
+type MetadataAndOffchain = {
     onchain: Metadata;
+    offchain: Offchain;
+};
+type AssetAndOffchain = {
+    onchain: Asset;
     offchain: Offchain;
 };
 type Offchain = {
@@ -59,4 +65,4 @@ type Attribute = {
     [key: string]: unknown;
 };
 
-export { Attribute, BundlrSigner, FileType, Identity, Offchain, OnchainAndOffchain, PhantomWallet, Properties, StorageType, Tags, UploadableFileType };
+export { AssetAndOffchain, Attribute, BundlrSigner, FileType, Identity, MetadataAndOffchain, Offchain, PhantomWallet, Properties, StorageType, Tags, UploadableFileType };

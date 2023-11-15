@@ -1,4 +1,4 @@
-import { Creators, InputCreators, Option } from '~/types/nft';
+import { Creators, InputCreators, Option } from '~/types/regular-nft';
 import { InternalCreators } from '~/types/converter';
 
 export namespace Converter {

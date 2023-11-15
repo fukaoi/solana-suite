@@ -1,4 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
+import { Pubkey } from './account.mjs';
 
 declare enum FilterType {
     Memo = "memo",

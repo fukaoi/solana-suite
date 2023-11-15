@@ -1,10 +1,9 @@
 import { Converter as Collection } from './collection';
-import { Converter as CollectionDetails } from './collection-details';
 import { Converter as Creators } from './creators';
-import { Converter as Uses } from './uses';
-import { Converter as Token } from './token-metadata';
+import { Converter as Royalty } from './royalty';
 import { convertTimestampToDateTime } from '~/shared';
-import { InputNftMetadata, NftMetadata } from '~/types/nft';
+import { InputNftMetadata } from '~/types/regular-nft';
+import { CompressedNftMetadata } from '~/types/compressed-nft';
 import {
   MetadataArgs,
   TokenProgramVersion,
@@ -35,26 +34,26 @@ export namespace Converter {
       };
     };
 
-    export const intoUser = (output: AssetAndOffchain): NftMetadata => {
+    export const intoUser = (
+      output: AssetAndOffchain,
+    ): CompressedNftMetadata => {
+      console.log(output.onchain.grouping);
+      console.log(output.onchain.creators);
       return {
         mint: output.onchain.id.toString(),
+        collectionMint: 'output.onchain.grouping[0].group_value',
         authorities: output.onchain.authorities,
-        royalty: output.onchain.data.sellerFeeBasisPoints,
-        name: Token.TokenMetadata.deleteNullStrings(output.onchain.data.name),
-        symbol: Token.TokenMetadata.deleteNullStrings(
-          output.onchain.data.symbol,
-        ),
-        uri: Token.TokenMetadata.deleteNullStrings(output.onchain.data.uri),
-        isMutable: output.onchain.isMutable,
-        primarySaleHappened: output.onchain.primarySaleHappened,
-        creators: Creators.Creators.intoUser(output.onchain.data.creators),
-        editionNonce: output.onchain.editionNonce,
-        collection: Collection.Collection.intoUser(output.onchain.collection),
-        collectionDetails: CollectionDetails.CollectionDetails.intoUser(
-          output.onchain.collectionDetails,
-        ),
-        uses: Uses.Uses.intoUserSide(output.onchain.uses),
-        dateTime: convertTimestampToDateTime(output.offchain.created_at),
+        royalty: Royalty.Royalty.intoUser(output.onchain.royalty.percent),
+        name: output.onchain.content.metadata.name,
+        symbol: output.onchain.content.metadata.symbol,
+        uri: output.onchain.content.json_uri,
+        creators: Creators.Creators.intoUser(output.onchain.creators)!,
+        treeAddress: output.onchain.compression.tree,
+        isMutable: output.onchain.mutable,
+        isBurn: output.onchain.burnt,
+        editionNonce: output.onchain.supply.edition_nonce,
+        primarySaleHappened: output.onchain.royalty.primary_sale_happened,
+        dateTime: convertTimestampToDateTime(output.offchain.created_at)!,
         offchain: output.offchain,
       };
     };

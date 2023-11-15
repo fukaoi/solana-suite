@@ -2,6 +2,7 @@ export { R as Result } from './result-b9d23549.js';
 import { Find } from './find.mjs';
 import { History } from './history.mjs';
 import '@solana/web3.js';
+import './account.mjs';
 
 type AnyObject = {
     [key: string]: unknown;

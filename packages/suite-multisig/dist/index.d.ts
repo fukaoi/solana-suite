@@ -207,10 +207,10 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
-type Pubkey$1 = string;
+type Pubkey = string;
 type Secret = string;
 type KeypairAccount = {
-    pubkey: Pubkey$1;
+    pubkey: Pubkey;
     secret: Secret;
 };
 type OwnerInfo = {
@@ -239,7 +239,7 @@ declare namespace Account$3 {
          * @param {Secret} feePayer
          * @returns Promise<string>
          */
-        const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret) => Promise<string>;
+        const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret) => Promise<string>;
         /**
          * [Main logic]Get Associated token Account.
          * if not created, create new token accouint
@@ -249,7 +249,7 @@ declare namespace Account$3 {
          * @param {Pubkey} feePayer
          * @returns Promise<string>
          */
-        const makeOrCreateInstruction: (mint: Pubkey$1, owner: Pubkey$1, feePayer?: Pubkey$1, allowOwnerOffCurve?: boolean) => Promise<{
+        const makeOrCreateInstruction: (mint: Pubkey, owner: Pubkey, feePayer?: Pubkey, allowOwnerOffCurve?: boolean) => Promise<{
             tokenAccount: string;
             inst: TransactionInstruction | undefined;
         }>;
@@ -259,9 +259,9 @@ declare namespace Account$3 {
 declare namespace Account$2 {
     class Keypair {
         secret: Secret;
-        pubkey: Pubkey$1;
+        pubkey: Pubkey;
         constructor(params: {
-            pubkey?: Pubkey$1;
+            pubkey?: Pubkey;
             secret: Secret;
         });
         toPublicKey(): PublicKey;
@@ -275,11 +275,11 @@ declare namespace Account$2 {
 
 declare namespace Account$1 {
     namespace Pda {
-        const getMetadata: (address: Pubkey$1) => PublicKey;
-        const getMasterEdition: (address: Pubkey$1) => PublicKey;
-        const getTreeAuthority: (address: Pubkey$1) => PublicKey;
+        const getMetadata: (address: Pubkey) => PublicKey;
+        const getMasterEdition: (address: Pubkey) => PublicKey;
+        const getTreeAuthority: (address: Pubkey) => PublicKey;
         const getBgumSigner: () => PublicKey;
-        const getAssetId: (address: Pubkey$1, leafIndex: number) => Pubkey$1;
+        const getAssetId: (address: Pubkey, leafIndex: number) => Pubkey;
     }
 }
 
@@ -365,12 +365,12 @@ type Uses = {
     total: bignum;
 };
 type InputCreators = {
-    address: Pubkey$1;
+    address: Pubkey;
     secret: Secret;
     share: number;
 };
 
-type InputCollection = Pubkey$1;
+type InputCollection = Pubkey;
 type Options = {
     [key: string]: unknown;
 };
@@ -753,4 +753,4 @@ declare const Multisig: {
     create: (m: number, feePayer: string, signerPubkeys: string[]) => Promise<Result$1<Transaction, Error>>;
 };
 
-export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Multisig, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };
+export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Multisig, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

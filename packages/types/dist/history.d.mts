@@ -1,3 +1,5 @@
+import { Pubkey } from './account.mjs';
+
 type History = {
     sol?: string;
     account?: string;

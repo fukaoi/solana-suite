@@ -9,13 +9,19 @@ export type AssetProof = {
   tree_id: Pubkey;
 };
 
+export type Metadata = {
+  name: string;
+  symbol: string;
+  token_standard: string;
+};
+
 export type Asset = {
   interface: string;
   id: Pubkey;
   content: {
     json_uri: string;
     files: string[];
-    metadata: string[];
+    metadata: Metadata;
     links: string[];
   };
   authorities: { address: Pubkey; scopes: string[] }[];

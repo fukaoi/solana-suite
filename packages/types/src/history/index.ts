@@ -1,3 +1,5 @@
+import { Pubkey } from '../account';
+
 export type History = {
   sol?: string;
   account?: string;

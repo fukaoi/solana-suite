@@ -1,6 +1,6 @@
 import { Attribute, StorageType } from '../storage';
 import { FileType } from '../storage';
-import { Options, Uses, InputCreators } from '../nft';
+import { InputCreators, Options, Uses } from '../regular-nft';
 
 export type InputTokenMetadata = {
   name: string;

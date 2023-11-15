@@ -1,7 +1,7 @@
 import { Converter as _Creators } from './creators';
 import { Converter as _Uses } from './uses';
 import { InputTokenMetadata, TokenMetadata } from '~/types/spl-token';
-import { OnchainAndOffchain } from '~/types/storage';
+import { MetadataAndOffchain } from '~/types/storage';
 import { convertTimestampToDateTime } from '~/shared';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
@@ -24,7 +24,7 @@ export namespace Converter {
     };
 
     export const intoUser = (
-      output: OnchainAndOffchain,
+      output: MetadataAndOffchain,
       tokenAmount: string,
     ): TokenMetadata => {
       return {

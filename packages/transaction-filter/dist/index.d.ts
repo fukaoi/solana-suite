@@ -203,7 +203,7 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-type Pubkey$1 = string;
+type Pubkey = string;
 
 declare enum FilterType {
     Memo = "memo",
@@ -260,7 +260,7 @@ type History = {
 };
 
 declare namespace Signatures {
-    const getForAdress: (pubkey: Pubkey$1, parser: (transaction: ParsedTransactionWithMeta) => History | undefined, callback: (history: Result<History[], Error>) => void, options: {
+    const getForAdress: (pubkey: Pubkey, parser: (transaction: ParsedTransactionWithMeta) => History | undefined, callback: (history: Result<History[], Error>) => void, options: {
         waitTime: number;
         narrowDown: number;
     }, histories?: History[]) => Promise<void>;

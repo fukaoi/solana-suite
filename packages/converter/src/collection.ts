@@ -1,5 +1,5 @@
 import { InternalCollection } from '~/types/converter';
-import { Collection, InputCollection, Option } from '~/types/nft';
+import { Collection, InputCollection, Option } from '~/types/regular-nft';
 
 export namespace Converter {
   export namespace Collection {

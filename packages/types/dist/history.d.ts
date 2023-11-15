@@ -1,3 +1,5 @@
+import { Pubkey } from './account.js';
+
 type History = {
     sol?: string;
     account?: string;
