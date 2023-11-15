@@ -10,6 +10,7 @@ import {
   TokenStandard,
 } from 'mpl-bubblegum-instruction';
 import { AssetAndOffchain } from '~/types/storage';
+import { Pubkey } from '~/types/account';
 
 export namespace Converter {
   export namespace CompressedNftMetadata {
@@ -37,11 +38,11 @@ export namespace Converter {
     export const intoUser = (
       output: AssetAndOffchain,
     ): CompressedNftMetadata => {
-      console.log(output.onchain.grouping);
-      console.log(output.onchain.creators);
       return {
         mint: output.onchain.id.toString(),
-        collectionMint: 'output.onchain.grouping[0].group_value',
+        collectionMint: Collection.CollectionMint.intoUser(
+          output.onchain.grouping,
+        ) as Pubkey,
         authorities: output.onchain.authorities,
         royalty: Royalty.Royalty.intoUser(output.onchain.royalty.percent),
         name: output.onchain.content.metadata.name,

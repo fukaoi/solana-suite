@@ -15,6 +15,8 @@ export type Metadata = {
   token_standard: string;
 };
 
+export type Grouping = { group_key: string; group_value: string };
+
 export type Asset = {
   interface: string;
   id: Pubkey;
@@ -35,7 +37,7 @@ export type Asset = {
     seq: number;
     leaf_id: number;
   };
-  grouping: { group_key: string; group_value: string }[];
+  grouping: Grouping[];
   royalty: {
     royalty_model: 'creators' | 'fanout' | 'single';
     target: null;
