@@ -55,13 +55,13 @@ test('Transfer nft', async (t) => {
     },
   );
 
+  // want to get new asset id
   await sleep(2);
   console.log('# assetId: ', assetId);
 
   const res = await (
     await CompressedNft.transfer(
       assetId!,
-      treeOwner,
       source.pubkey,
       dest.pubkey,
       source.secret,

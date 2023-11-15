@@ -5,7 +5,7 @@ import { Converter } from '~/converter';
 import { Storage } from '~/storage';
 import { Node } from '~/node';
 import { MintTransaction } from '~/transaction';
-import { debugLog, Try, bufferToArray } from '~/shared';
+import { debugLog, Try } from '~/shared';
 import { DasApi } from '~/das-api';
 import { CompressedNft as Tree } from './tree';
 import {
@@ -30,7 +30,6 @@ import {
   PublicKey,
   TransactionInstruction,
 } from '@solana/web3.js';
-import bs58 from 'bs58';
 
 export namespace CompressedNft {
   export const createVerifyCreatorsInstruction = async (
@@ -56,7 +55,7 @@ export namespace CompressedNft {
     const canopyDepth = treeAccount.getCanopyDepth();
     const slicedProof: AccountMeta[] = assetProof.proof
       .map((node: string) => ({
-        pubkey: new PublicKey(node),
+        pubkey: node.toPublicKey(),
         isSigner: false,
         isWritable: false,
       }))
@@ -65,9 +64,9 @@ export namespace CompressedNft {
     return createVerifyCreatorInstruction(
       {
         treeAuthority: treeOwner,
-        leafOwner: new PublicKey(ownership.owner),
-        leafDelegate: new PublicKey(ownership.delegate || ownership.owner),
-        merkleTree: new PublicKey(assetProof.tree_id),
+        leafOwner: ownership.owner.toPublicKey(),
+        leafDelegate: (ownership.delegate || ownership.owner).toPublicKey(),
+        merkleTree: assetProof.tree_id.toPublicKey(),
         payer: feePayer,
 
         logWrapper: SPL_NOOP_PROGRAM_ID,
@@ -78,16 +77,11 @@ export namespace CompressedNft {
         anchorRemainingAccounts: slicedProof,
       },
       {
-        // use the current root provided via the `getAssetProof`
-        root: [...new PublicKey(assetProof.root.trim()).toBytes()],
-        // compute the creator hash from the creators array
+        root: [...assetProof.root.trim().toPublicKey().toBytes()],
         creatorHash: [...computeCreatorHash(creators)],
-        // compute the data hash from the metadata
         dataHash: [...computeDataHash(metadata)],
         nonce: compression.leaf_id,
         index: compression.leaf_id,
-
-        // provide the full `metadataArgs` value for on-chain hash verification
         message: metadata,
       },
     );
@@ -107,25 +101,25 @@ export namespace CompressedNft {
 
     const treeAuthority = Account.Pda.getTreeAuthority(assetProof.tree_id);
     const previousLeafDelegate = ownership.delegate
-      ? new PublicKey(ownership.delegate)
-      : new PublicKey(ownership.owner);
+      ? ownership.delegate.toPublicKey()
+      : ownership.owner.toPublicKey();
     const newLeafDelegate = previousLeafDelegate;
     return createDelegateInstruction(
       {
         treeAuthority,
-        leafOwner: new PublicKey(ownership.owner),
+        leafOwner: ownership.owner.toPublicKey(),
         previousLeafDelegate,
         newLeafDelegate,
-        merkleTree: new PublicKey(assetProof.tree_id),
+        merkleTree: assetProof.tree_id.toPublicKey(),
         logWrapper: SPL_NOOP_PROGRAM_ID,
         compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
       },
       {
-        root: bufferToArray(bs58.decode(assetProof.root)),
-        dataHash: bufferToArray(bs58.decode(compression.data_hash.trim())),
-        creatorHash: bufferToArray(
-          bs58.decode(compression.creator_hash.trim()),
-        ),
+        root: [...assetProof.root.trim().toPublicKey().toBytes()],
+        dataHash: [...compression.data_hash.trim().toPublicKey().toBytes()],
+        creatorHash: [
+          ...compression.creator_hash.trim().toPublicKey().toBytes(),
+        ],
         nonce: compression.leaf_id,
         index: compression.leaf_id,
       },
