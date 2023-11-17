@@ -2,9 +2,19 @@ import { Converter } from '~/converter';
 import { DasApi } from '~/das-api';
 import { Result, Try } from '~/shared';
 import { Offchain } from '~/types/storage';
-import { CompressedNftMetadata, NftMetadata } from '~/types/compressed-nft';
+import {
+  CompressedNftMetadata,
+  NftMetadata,
+  SortBy,
+} from '~/types/compressed-nft';
 
 export namespace CompressedNft {
+  //@internal
+  export const defaultSortBy: SortBy = {
+    sortBy: 'recent_action',
+    sortDirection: 'desc',
+  };
+
   //@internal
   export const fetchOffchain = async (uri: string) => {
     const json = await (await fetch(uri)).json();
@@ -17,7 +27,7 @@ export namespace CompressedNft {
    * @param {Pubkey} owner
    * @param {number} limit
    * @param {number} page
-   * @param {any} sortBy?
+   * @param {SortBy} sortBy?
    * @param {string} before?
    * @param {string} after?
    * @return Promise<Result<CompressedNftMetadata, Error>>
@@ -26,7 +36,7 @@ export namespace CompressedNft {
     owner: Pubkey,
     limit: number = 1000,
     page: number = 1,
-    sortBy?: any,
+    sortBy: SortBy = defaultSortBy,
     before?: string,
     after?: string,
   ): Promise<Result<CompressedNftMetadata, Error>> => {
@@ -94,7 +104,7 @@ export namespace CompressedNft {
    * @param {Pubkey} collectionMint
    * @param {number} limit
    * @param {number} page
-   * @param {any} sortBy?
+   * @param {SortBy} sortBy?
    * @param {string} before?
    * @param {string} after?
    * @return Promise<Result<CompressedNftMetadata, Error>>
@@ -103,7 +113,7 @@ export namespace CompressedNft {
     collectionMint: Pubkey,
     limit: number = 1000,
     page: number = 1,
-    sortBy?: any,
+    sortBy: SortBy = defaultSortBy,
     before?: string,
     after?: string,
   ): Promise<Result<CompressedNftMetadata, Error>> => {
