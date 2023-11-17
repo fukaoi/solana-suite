@@ -13,13 +13,29 @@ test.before(async () => {
   collectionMint = obj.collectionMint;
 });
 
-test('Find metadata by owner', async (t) => {
+test('Find metadatas by owner', async (t) => {
   const res = await CompressedNft.findByOwner(source.pubkey);
   res.match(
     (ok) => {
       t.log('# findByOwner: ', ok);
       t.true(ok.page === 1);
       t.true(ok.total > 0);
+      t.pass();
+    },
+    (err) => {
+      t.fail(err.message);
+    },
+  );
+});
+
+test('Find metadata by mint', async (t) => {
+  const mint = '31cNHDDcxcrjALjABXrRLoSWoDQnwi9KtVSSxfLuyDWw';
+  const res = await CompressedNft.findByMint(mint);
+  res.match(
+    (ok) => {
+      t.log('# findByMint: ', ok);
+      t.not(ok.name, '');
+      t.not(ok.offchain, undefined);
       t.pass();
     },
     (err) => {

@@ -2,7 +2,7 @@ import { Converter } from '~/converter';
 import { DasApi } from '~/das-api';
 import { Result, Try } from '~/shared';
 import { Offchain } from '~/types/storage';
-import { CompressedNftMetadata } from '~/types/compressed-nft';
+import { CompressedNftMetadata, NftMetadata } from '~/types/compressed-nft';
 
 export namespace CompressedNft {
   //@internal
@@ -20,7 +20,7 @@ export namespace CompressedNft {
    * @param {any} sortBy?
    * @param {string} before?
    * @param {string} after?
-   * @return Promise<Result<Transaction, Error>>
+   * @return Promise<Result<CompressedNftMetadata, Error>>
    */
   export const findByOwner = async (
     owner: Pubkey,
@@ -59,6 +59,32 @@ export namespace CompressedNft {
         limit: assets.value.limit,
         metadatas,
       };
+    });
+  };
+
+  /**
+   * Find nft by mint address
+   *
+   * @param {Pubkey} mint
+   * @return Promise<Result<NftMetadata, Error>>
+   */
+  export const findByMint = async (
+    mint: Pubkey,
+  ): Promise<Result<NftMetadata, Error>> => {
+    return Try(async () => {
+      const asset = await DasApi.getAsset(mint);
+      if (asset.isErr) {
+        throw asset.error;
+      }
+
+      const offchain: Offchain = await fetchOffchain(
+        asset.value.content.json_uri,
+      );
+      const merged = {
+        onchain: asset.value,
+        offchain: offchain,
+      };
+      return Converter.CompressedNftMetadata.intoUser(merged);
     });
   };
 }
