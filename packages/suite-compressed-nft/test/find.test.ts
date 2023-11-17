@@ -24,6 +24,7 @@ test('Find metadatas by owner', async (t) => {
     },
     (err) => {
       t.fail(err.message);
+      t.fail(err.stack);
     },
   );
 });
@@ -40,6 +41,23 @@ test('Find metadata by mint', async (t) => {
     },
     (err) => {
       t.fail(err.message);
+      t.fail(err.stack);
+    },
+  );
+});
+
+test('Find metadatas by collectionMint', async (t) => {
+  const res = await CompressedNft.findByCollection(collectionMint);
+  res.match(
+    (ok) => {
+      t.log('# findByCollection: ', ok);
+      t.true(ok.page === 1);
+      t.true(ok.total > 0);
+      t.pass();
+    },
+    (err) => {
+      t.fail(err.message);
+      t.fail(err.stack);
     },
   );
 });

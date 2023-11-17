@@ -13,7 +13,7 @@ export namespace DasApi {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           jsonrpc: '2.0',
-          method: 'get_asset_proof',
+          method: 'getAssetProof',
           id: 'compression',
           params: [assetId],
         }),
@@ -31,7 +31,7 @@ export namespace DasApi {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           jsonrpc: '2.0',
-          method: 'get_asset',
+          method: 'getAsset',
           id: 'compression',
           params: [assetId],
         }),
@@ -54,7 +54,7 @@ export namespace DasApi {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           jsonrpc: '2.0',
-          method: 'get_assets_by_owner',
+          method: 'getAssetsByOwner',
           id: 'compression',
           params: [ownerAddress, sortBy, limit, page, before, after],
         }),

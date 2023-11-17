@@ -87,4 +87,56 @@ export namespace CompressedNft {
       return Converter.CompressedNftMetadata.intoUser(merged);
     });
   };
+
+  /**
+   * Find nft by collection mint
+   *
+   * @param {Pubkey} collectionMint
+   * @param {number} limit
+   * @param {number} page
+   * @param {any} sortBy?
+   * @param {string} before?
+   * @param {string} after?
+   * @return Promise<Result<CompressedNftMetadata, Error>>
+   */
+  export const findByCollection = async (
+    collectionMint: Pubkey,
+    limit: number = 1000,
+    page: number = 1,
+    sortBy?: any,
+    before?: string,
+    after?: string,
+  ): Promise<Result<CompressedNftMetadata, Error>> => {
+    return Try(async () => {
+      const assets = await DasApi.getAssetsByGroup(
+        'collection',
+        collectionMint,
+        limit,
+        page,
+        sortBy,
+        before,
+        after,
+      );
+      if (assets.isErr) {
+        throw assets.error;
+      }
+
+      const metadatas = await Promise.all(
+        assets.value.items.map(async (item) => {
+          const offchain: Offchain = await fetchOffchain(item.content.json_uri);
+          const merged = {
+            onchain: item,
+            offchain: offchain,
+          };
+          return Converter.CompressedNftMetadata.intoUser(merged);
+        }),
+      );
+      return {
+        page: assets.value.page,
+        total: assets.value.total,
+        limit: assets.value.limit,
+        metadatas,
+      };
+    });
+  };
 }
