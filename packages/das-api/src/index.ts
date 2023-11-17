@@ -62,4 +62,28 @@ export namespace DasApi {
       return (await response.json()).result;
     });
   };
+
+  export const getAssetsByGroup = async (
+    groupKey: string,
+    groupValue: Pubkey,
+    limit: number = 1000,
+    page: number = 1,
+    sortBy?: any,
+    before?: string,
+    after?: string,
+  ): Promise<Result<Assets, Error>> => {
+    return Try(async () => {
+      const response = await fetch(rpcUrl, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'getAssetsByGroup',
+          id: 'compression',
+          params: [groupKey, groupValue, sortBy, limit, page, before, after],
+        }),
+      });
+      return (await response.json()).result;
+    });
+  };
 }

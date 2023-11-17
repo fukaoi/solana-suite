@@ -4,10 +4,12 @@ import { Setup } from 'test-tools/setup';
 import { KeypairAccount } from '~/types/account';
 
 let source: KeypairAccount;
+let collectionMint: Pubkey;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
+  collectionMint = obj.collectionMint;
 });
 
 test('Get asset proof', async (t) => {
@@ -41,6 +43,22 @@ test('Get asset', async (t) => {
 
 test('Get assets by owner', async (t) => {
   const res = await DasApi.getAssetsByOwner(source.pubkey);
+  res.match(
+    (ok) => {
+      t.log('#total: ', ok.total);
+      ok.items.forEach((asset) => {
+        t.not(asset.content, '');
+        t.not(asset.creators, '');
+        t.not(asset.grouping, '');
+        t.not(asset.authorities, '');
+      });
+    },
+    (err) => t.fail(err.message),
+  );
+});
+
+test('Get assets by group', async (t) => {
+  const res = await DasApi.getAssetsByGroup('collection', collectionMint);
   res.match(
     (ok) => {
       t.log('#total: ', ok.total);
