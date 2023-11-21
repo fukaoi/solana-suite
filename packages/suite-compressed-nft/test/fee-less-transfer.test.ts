@@ -12,8 +12,9 @@ test.before(async () => {
   dest = obj.dest;
 });
 
-test('Transfer nft', async (t) => {
+test('Fee-Less Transfer nft', async (t) => {
   const assets = await CompressedNft.findByOwner(source.pubkey);
+  const feePayer = dest;
 
   if (assets.isErr) {
     t.fail(assets.error.message);
@@ -21,20 +22,19 @@ test('Transfer nft', async (t) => {
 
   const mint = assets.unwrap().metadatas[0].mint;
 
-  const res = await (
-    await CompressedNft.transfer(mint, source.pubkey, dest.pubkey, [
-      source.secret,
-    ])
-  ).submit();
-
-  res.match(
-    (ok: string) => {
-      t.log('# sig: ', ok);
-      t.pass();
-    },
-    (err: Error) => {
-      console.error(err);
-      t.fail(err.message);
-    },
+  const serialized = await CompressedNft.feeLessTransfer(
+    mint,
+    source.pubkey,
+    dest.pubkey,
+    [source.secret],
+    feePayer.pubkey,
   );
+
+  t.true(serialized.isOk, `${serialized.unwrap()}`);
+
+  if (serialized.isOk) {
+    const res = await serialized.value.submit(feePayer.secret);
+    t.true(res.isOk, `${res.unwrap()}`);
+    t.log('# tx signature: ', res.unwrap());
+  }
 });

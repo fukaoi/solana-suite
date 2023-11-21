@@ -53,15 +53,21 @@ export namespace CompressedNft {
         throw assets.error;
       }
 
+      const items = assets.value.items;
+
       const metadatas = await Promise.all(
-        assets.value.items.map(async (item) => {
-          const offchain: Offchain = await fetchOffchain(item.content.json_uri);
-          const merged = {
-            onchain: item,
-            offchain: offchain,
-          };
-          return Converter.CompressedNftMetadata.intoUser(merged);
-        }),
+        items
+          .filter((item) => item.compression.compressed === true)
+          .map(async (item) => {
+            const offchain: Offchain = await fetchOffchain(
+              item.content.json_uri,
+            );
+            const merged = {
+              onchain: item,
+              offchain: offchain,
+            };
+            return Converter.CompressedNftMetadata.intoUser(merged);
+          }),
       );
       return {
         page: assets.value.page,
@@ -131,15 +137,21 @@ export namespace CompressedNft {
         throw assets.error;
       }
 
+      const items = assets.value.items;
+
       const metadatas = await Promise.all(
-        assets.value.items.map(async (item) => {
-          const offchain: Offchain = await fetchOffchain(item.content.json_uri);
-          const merged = {
-            onchain: item,
-            offchain: offchain,
-          };
-          return Converter.CompressedNftMetadata.intoUser(merged);
-        }),
+        items
+          .filter((item) => item.compression.compressed === true)
+          .map(async (item) => {
+            const offchain: Offchain = await fetchOffchain(
+              item.content.json_uri,
+            );
+            const merged = {
+              onchain: item,
+              offchain: offchain,
+            };
+            return Converter.CompressedNftMetadata.intoUser(merged);
+          }),
       );
       return {
         page: assets.value.page,

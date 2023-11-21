@@ -30,6 +30,7 @@ export type NftMetadata = {
   uri: string;
   creators: Creators;
   treeAddress: Pubkey;
+  isCompressed: boolean;
   isMutable: boolean;
   isBurn: boolean;
   editionNonce: number;

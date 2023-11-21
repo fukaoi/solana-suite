@@ -5,7 +5,7 @@ import { PartialSignTransaction } from '~/transaction';
 import { Transaction } from '@solana/web3.js';
 import { CompressedNft as Transfer } from './transfer';
 
-export namespace ComppressedNft {
+export namespace CompressedNft {
   export const feeLessTransfer = async (
     assetId: Pubkey,
     owner: Pubkey,
@@ -14,11 +14,7 @@ export namespace ComppressedNft {
     feePayer: Pubkey,
   ): Promise<Result<PartialSignTransaction, Error>> => {
     return Try(async () => {
-      const inst = await Transfer.createTransferInstruction(
-        assetId,
-        owner,
-        dest,
-      );
+      const inst = await Transfer.createTransfer(assetId, owner, dest);
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
       const tx = new Transaction({
         lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
@@ -29,6 +25,7 @@ export namespace ComppressedNft {
       tx.add(inst);
       tx.recentBlockhash = blockhashObj.blockhash;
       const keypairs = signers.map((s) => s.toKeypair());
+      console.log(signers, owner);
 
       keypairs.forEach((signer) => {
         tx.partialSign(signer);

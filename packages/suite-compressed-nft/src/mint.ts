@@ -32,7 +32,7 @@ import {
 } from '@solana/web3.js';
 
 export namespace CompressedNft {
-  export const createVerifyCreatorsInstruction = async (
+  export const createVerifyCreator = async (
     creators: Creator[],
     assetId: PublicKey,
     treeOwner: PublicKey,
@@ -87,7 +87,7 @@ export namespace CompressedNft {
     );
   };
 
-  export const createDeleagateInstruction = async (
+  export const createDeleagate = async (
     assetId: PublicKey,
   ): Promise<TransactionInstruction> => {
     let rpcAssetProof = await DasApi.getAssetProof(assetId.toString());

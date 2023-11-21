@@ -2,7 +2,7 @@ import { DasApi } from '~/das-api';
 import { Pubkey } from '~/types/account';
 import { debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
-import { createTransferInstruction as createMplTransferInstruction } from 'mpl-bubblegum-instruction';
+import { createTransferInstruction } from 'mpl-bubblegum-instruction';
 import {
   ConcurrentMerkleTreeAccount,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
@@ -12,7 +12,7 @@ import { Transaction } from '~/transaction';
 import { TransactionInstruction } from '@solana/web3.js';
 
 export namespace CompressedNft {
-  export const createTransferInstruction = async (
+  export const createTransfer = async (
     assetId: Pubkey,
     owner: Pubkey,
     dest: Pubkey,
@@ -21,7 +21,7 @@ export namespace CompressedNft {
     if (assetProof.isErr) {
       throw assetProof.error;
     } else if (assetProof.isOk && assetProof.value.proof.length === 0) {
-      throw Error('Proof is empty');
+      throw Error('Proof is empty. May be set Regular NFT?');
     }
 
     const asset = await DasApi.getAsset(assetId);
@@ -62,7 +62,7 @@ export namespace CompressedNft {
       ? ownership.delegate.toPublicKey()
       : leafOwner;
 
-    return createMplTransferInstruction(
+    return createTransferInstruction(
       {
         merkleTree,
         treeAuthority,
@@ -105,7 +105,7 @@ export namespace CompressedNft {
     return Try(async () => {
       const payer = feePayer ? feePayer : signers[0];
       const keypairs = signers.map((s) => s.toKeypair());
-      const inst = await createTransferInstruction(assetId, owner, dest);
+      const inst = await createTransfer(assetId, owner, dest);
       return new Transaction([inst], keypairs, payer.toKeypair());
     });
   };

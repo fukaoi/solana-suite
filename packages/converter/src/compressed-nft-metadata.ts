@@ -48,6 +48,7 @@ export namespace Converter {
         uri: output.onchain.content.json_uri,
         creators: Creators.Creators.intoUser(output.onchain.creators)!,
         treeAddress: output.onchain.compression.tree,
+        isCompressed: output.onchain.compression.compressed,
         isMutable: output.onchain.mutable,
         isBurn: output.onchain.burnt,
         editionNonce: output.onchain.supply.edition_nonce,
