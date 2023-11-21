@@ -1,13 +1,13 @@
 import { debugLog, Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
-import { InputNftMetadata } from '~/types/nft';
+import { InputNftMetadata } from '~/types/regular-nft';
 import { Node } from '~/node';
 import { PartialSignTransaction } from '~/transaction';
 import { Storage } from '~/storage';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
 import { Account } from '~/account';
-import { RegularNft as _Mint } from './mint';
+import { RegularNft as Mint } from './mint';
 import { Transaction } from '@solana/web3.js';
 
 export namespace RegularNft {
@@ -83,7 +83,7 @@ export namespace RegularNft {
       }
       //--- porperties, Upload content ---
 
-      let datav2 = Converter.NftMetadata.intoInfra(
+      let datav2 = Converter.RegularNftMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints,
@@ -104,7 +104,7 @@ export namespace RegularNft {
       debugLog('# datav2: ', datav2);
 
       const mint = Account.Keypair.create();
-      const insts = await _Mint.createMintInstructions(
+      const insts = await Mint.createMintInstructions(
         mint.toPublicKey(),
         owner.toPublicKey(),
         datav2,
@@ -115,7 +115,7 @@ export namespace RegularNft {
       // freezeAuthority
       if (freezeAuthority) {
         insts.push(
-          _Mint.createDeleagateInstruction(
+          Mint.createDeleagateInstruction(
             mint.toPublicKey(),
             owner.toPublicKey(),
             freezeAuthority.toPublicKey(),

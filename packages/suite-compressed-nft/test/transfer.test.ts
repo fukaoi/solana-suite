@@ -25,7 +25,7 @@ test('Transfer nft', async (t) => {
       mint,
       source.pubkey,
       dest.pubkey,
-      source.secret,
+      [source.secret],
     )
   ).submit();
 
