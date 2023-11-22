@@ -16,6 +16,7 @@ export namespace CompressedNft {
     assetId: Pubkey,
     owner: Pubkey,
     dest: Pubkey,
+    delegate?: Pubkey,
   ): Promise<TransactionInstruction> => {
     let assetProof = await DasApi.getAssetProof(assetId);
     if (assetProof.isErr) {
@@ -29,7 +30,15 @@ export namespace CompressedNft {
       throw asset.error;
     } else if (asset.isOk && asset.value.ownership.owner !== owner) {
       throw Error(
-        `NFT is not owned by the expected owner(or delegate): ${asset.value.ownership.owner}, ${owner}`,
+        `NFT is not owned by the expected owner: current: ${asset.value.ownership.owner}, expected: ${owner}`,
+      );
+    } else if (
+      asset.isOk &&
+      delegate &&
+      asset.value.ownership.delegate !== delegate
+    ) {
+      throw Error(
+        `NFT is not delegated by the expected delegate: current: ${asset.value.ownership.delegate}, expected: ${delegate}`,
       );
     }
 

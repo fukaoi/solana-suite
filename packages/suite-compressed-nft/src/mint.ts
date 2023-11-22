@@ -159,10 +159,14 @@ export namespace CompressedNft {
     collectionMint: Pubkey,
     feePayer?: Secret,
     receiver?: Pubkey,
+    delegate?: Pubkey,
   ) => {
     return Try(async () => {
       const payer: Secret = feePayer ? feePayer : signer;
       const leafOwner: Pubkey = receiver ? receiver : owner;
+      const leafDelegate: Pubkey = delegate
+        ? delegate
+        : new Account.Keypair({ secret: payer }).pubkey;
 
       const treeAuthority = Account.Pda.getTreeAuthority(
         treeOwner.toPublicKey().toString(),
@@ -256,8 +260,7 @@ export namespace CompressedNft {
             treeDelegate: owner.toPublicKey(),
             payer: payer.toKeypair().publicKey,
             leafOwner: leafOwner.toPublicKey(), // receiver
-            // leafDelegate: owner.toPublicKey(),
-            leafDelegate: payer.toKeypair().publicKey,
+            leafDelegate: leafDelegate.toPublicKey(),
             collectionAuthority: owner.toPublicKey(),
             collectionMint: collectionMint.toPublicKey(),
             collectionMetadata,

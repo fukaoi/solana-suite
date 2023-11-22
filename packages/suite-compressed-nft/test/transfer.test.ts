@@ -1,5 +1,6 @@
 import test from 'ava';
 import { CompressedNft } from '../src';
+import { Account } from '~/account';
 import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 
@@ -37,4 +38,25 @@ test('Transfer nft', async (t) => {
       t.fail(err.message);
     },
   );
+});
+
+test('[Error] No match owner', async (t) => {
+  const assets = await CompressedNft.findByOwner(source.pubkey);
+  const noMatchDelegate = Account.Keypair.create();
+
+  if (assets.isErr) {
+    t.fail(assets.error.message);
+  }
+
+  const mint = assets.unwrap().metadatas[0].mint;
+  t.log('# mint: ', mint);
+
+  const serialized = await CompressedNft.transfer(
+    mint,
+    noMatchDelegate.pubkey,
+    dest.pubkey,
+    [noMatchDelegate.secret],
+  );
+
+  t.true(serialized.isErr);
 });

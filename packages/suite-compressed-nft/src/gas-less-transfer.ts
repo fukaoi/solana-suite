@@ -6,14 +6,19 @@ import { Transaction } from '@solana/web3.js';
 import { CompressedNft as Transfer } from './transfer';
 
 export namespace CompressedNft {
-  export const feeLessTransfer = async (
+  export const gasLessTransfer = async (
     assetId: Pubkey,
     owner: Pubkey,
     dest: Pubkey,
     feePayer: Pubkey,
   ): Promise<Result<PartialSignTransaction, Error>> => {
     return Try(async () => {
-      const inst = await Transfer.createTransfer(assetId, owner, dest);
+      const inst = await Transfer.createTransfer(
+        assetId,
+        owner,
+        dest,
+        feePayer,
+      );
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
       const tx = new Transaction({
         lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
