@@ -9,12 +9,14 @@ import { InputCreators } from '~/types/regular-nft';
 import { ValidatorError } from '~/validator';
 
 let source: KeypairAccount;
+let feePayer: KeypairAccount;
 let treeOwner: Pubkey;
 let collectionMint: Pubkey;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
+  feePayer = obj.feePayer;
   treeOwner = obj.treeOwner;
   collectionMint = obj.collectionMint;
 });
@@ -75,11 +77,7 @@ test('[Arweave] mint nft', async (t) => {
   t.log('# asset id: ', assetId);
 });
 
-test('[Nft Storage] mint nft with fee payer', async (t) => {
-  const feePayer = new Account.Keypair({
-    secret:
-      '4dMvfbrzVPsKLhzGLx4uZ18myioH1JGYTNPnS3Lk2pkMv3rczJsCE2Byw9kvzjKkUQ12LcCaf4chJcgUNCqdtEB4',
-  });
+test.only('[Nft Storage] mint nft with fee payer', async (t) => {
   const asset = RandomAsset.get();
   const inst = await CompressedNft.mint(
     source.pubkey,
@@ -109,11 +107,10 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
   t.log('# asset id: ', assetId);
 });
 
-test.only('[Nft Storage] mint nft with many optional datas, verified collection', async (t) => {
+test('[Nft Storage] mint nft with many optional datas, verified collection', async (t) => {
   const asset = RandomAsset.get();
   const creators: InputCreators[] = [];
   const unverifyCreator = Account.Keypair.create();
-  const owner = source;
   const receiver = Account.Keypair.create();
 
   creators.push({
@@ -158,8 +155,8 @@ test.only('[Nft Storage] mint nft with many optional datas, verified collection'
   };
 
   const inst = await CompressedNft.mint(
-    owner.pubkey,
-    owner.secret,
+    source.pubkey,
+    source.secret,
     {
       filePath: asset.filePath as string,
       storageType: 'nftStorage',
@@ -177,7 +174,7 @@ test.only('[Nft Storage] mint nft with many optional datas, verified collection'
     },
     treeOwner,
     collectionMint,
-    source.secret,
+    feePayer.secret,
     receiver.pubkey,
   );
 
