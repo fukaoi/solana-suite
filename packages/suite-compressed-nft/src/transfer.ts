@@ -29,12 +29,13 @@ export namespace CompressedNft {
       throw asset.error;
     } else if (asset.isOk && asset.value.ownership.owner !== owner) {
       throw Error(
-        `NFT is not owned by the expected owner: ${asset.value.ownership.owner}, ${owner}`,
+        `NFT is not owned by the expected owner(or delegate): ${asset.value.ownership.owner}, ${owner}`,
       );
     }
 
     debugLog('# assetProof: ', assetProof.value);
-    debugLog('# asset: ', asset.value);
+    debugLog('# ownership: ', asset.value.ownership);
+    debugLog('# authorities: ', asset.value.authorities);
 
     const compression = asset.value.compression;
     const ownership = asset.value.ownership;

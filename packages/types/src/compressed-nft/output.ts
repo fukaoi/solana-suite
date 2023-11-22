@@ -1,11 +1,6 @@
 import { Offchain } from '../storage';
 import { Pubkey } from '../account';
 
-export type SortBy = {
-  sortBy: string;
-  sortDirection: 'asc' | 'desc';
-};
-
 export type Authority = { address: Pubkey; scopes: string[] };
 export type Creators = {
   address: Pubkey;

@@ -6,7 +6,7 @@ import { Constants, debugLog, Pubkey, Secret } from '~/shared';
 import { Node } from '~/node';
 import { Account } from '~/account';
 
-console.log(`\u001a[33m === TEST START ===`);
+console.log(`\u001b[33a === TEST START ===`);
 console.log(`\u001b[33m solana-network: ${Constants.currentCluster}`);
 
 export namespace Setup {

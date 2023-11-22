@@ -1,6 +1,6 @@
 import { Result, Try } from '~/shared';
 import { Node } from '~/node';
-import { Pubkey, Secret } from '~/types/account';
+import { Pubkey } from '~/types/account';
 import { PartialSignTransaction } from '~/transaction';
 import { Transaction } from '@solana/web3.js';
 import { CompressedNft as Transfer } from './transfer';
@@ -10,7 +10,6 @@ export namespace CompressedNft {
     assetId: Pubkey,
     owner: Pubkey,
     dest: Pubkey,
-    signers: Secret[],
     feePayer: Pubkey,
   ): Promise<Result<PartialSignTransaction, Error>> => {
     return Try(async () => {
@@ -24,12 +23,6 @@ export namespace CompressedNft {
 
       tx.add(inst);
       tx.recentBlockhash = blockhashObj.blockhash;
-      const keypairs = signers.map((s) => s.toKeypair());
-      console.log(signers, owner);
-
-      keypairs.forEach((signer) => {
-        tx.partialSign(signer);
-      });
 
       const serializedTx = tx.serialize({
         requireAllSignatures: false,

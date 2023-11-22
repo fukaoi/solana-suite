@@ -2,17 +2,15 @@ import { Converter } from '~/converter';
 import { DasApi } from '~/das-api';
 import { Result, Try } from '~/shared';
 import { Offchain } from '~/types/storage';
-import {
-  CompressedNftMetadata,
-  NftMetadata,
-  SortBy,
-} from '~/types/compressed-nft';
+import { CompressedNftMetadata, NftMetadata } from '~/types/compressed-nft';
+
+import { FindOptions, Sortable, SortBy, SortDirection } from '~/types/find';
 
 export namespace CompressedNft {
   //@internal
-  export const defaultSortBy: SortBy = {
-    sortBy: 'recent_action',
-    sortDirection: 'desc',
+  export const defaultSortBy: Sortable = {
+    sortBy: SortBy.Recent,
+    sortDirection: SortDirection.Desc,
   };
 
   //@internal
@@ -25,22 +23,24 @@ export namespace CompressedNft {
    * Find nft by owner address
    *
    * @param {Pubkey} owner
-   * @param {number} limit
-   * @param {number} page
-   * @param {SortBy} sortBy?
-   * @param {string} before?
-   * @param {string} after?
+   * @param {FindOptions} options
    * @return Promise<Result<CompressedNftMetadata, Error>>
    */
   export const findByOwner = async (
     owner: Pubkey,
-    limit: number = 1000,
-    page: number = 1,
-    sortBy: SortBy = defaultSortBy,
-    before?: string,
-    after?: string,
+    options?: FindOptions,
   ): Promise<Result<CompressedNftMetadata, Error>> => {
     return Try(async () => {
+      const defaultOptions = {
+        limit: 1000,
+        page: 1,
+        sortBy: defaultSortBy,
+      };
+      const { limit, page, sortBy, before, after } = {
+        ...defaultOptions,
+        ...options,
+      };
+
       const assets = await DasApi.getAssetsByOwner(
         owner,
         limit,
@@ -108,22 +108,24 @@ export namespace CompressedNft {
    * Find nft by collection mint
    *
    * @param {Pubkey} collectionMint
-   * @param {number} limit
-   * @param {number} page
-   * @param {SortBy} sortBy?
-   * @param {string} before?
-   * @param {string} after?
+   * @param {FindOptions} options
    * @return Promise<Result<CompressedNftMetadata, Error>>
    */
   export const findByCollection = async (
     collectionMint: Pubkey,
-    limit: number = 1000,
-    page: number = 1,
-    sortBy: SortBy = defaultSortBy,
-    before?: string,
-    after?: string,
+    options?: FindOptions,
   ): Promise<Result<CompressedNftMetadata, Error>> => {
     return Try(async () => {
+      const defaultOptions = {
+        limit: 1000,
+        page: 1,
+        sortBy: defaultSortBy,
+      };
+      const { limit, page, sortBy, before, after } = {
+        ...defaultOptions,
+        ...options,
+      };
+
       const assets = await DasApi.getAssetsByGroup(
         'collection',
         collectionMint,

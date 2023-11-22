@@ -1,14 +1,17 @@
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
 import { debugLog, Result } from '~/shared';
-import { Sortable } from '~/types/find';
-import { NftMetadata } from '~/types/nft';
+import { SortDirection } from '~/types/find';
+import { RegularNftMetadata } from '~/types/regular-nft';
 import { TokenMetadata } from '~/types/spl-token';
 import { Offchain } from '~/types/storage';
 import { OnErr, OnOk } from '~/types/shared';
 import { Converter } from '~/converter';
 import { Account } from '~/account';
-import { Metadata, TokenStandard } from '@metaplex-foundation/mpl-token-metadata';
+import {
+  Metadata,
+  TokenStandard,
+} from '@metaplex-foundation/mpl-token-metadata';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ParsedAccountData } from '@solana/web3.js';
 import fetch from 'cross-fetch';
@@ -18,7 +21,7 @@ export namespace SplToken {
 
   // Sort by latest with unixtimestamp function
   const sortByUinixTimestamp =
-    <T extends NftMetadata | TokenMetadata>(sortable: Sortable) =>
+    <T extends RegularNftMetadata | TokenMetadata>(sortable: SortDirection) =>
     (a: T, b: T): number => {
       if (!a.offchain.created_at) {
         a.offchain.created_at = 0;
@@ -26,9 +29,9 @@ export namespace SplToken {
       if (!b.offchain.created_at) {
         b.offchain.created_at = 0;
       }
-      if (sortable === Sortable.Desc) {
+      if (sortable === SortDirection.Desc) {
         return b.offchain.created_at - a.offchain.created_at;
-      } else if (sortable === Sortable.Asc) {
+      } else if (sortable === SortDirection.Asc) {
         return a.offchain.created_at - b.offchain.created_at;
       } else {
         return b.offchain.created_at - a.offchain.created_at;
@@ -50,25 +53,22 @@ export namespace SplToken {
         tokenAmount,
       ) as T;
     } else if (tokenStandard === TokenStandard.NonFungible) {
-      return Converter.RegularNftMetadata.intoUser(
-        {
-          onchain: metadata,
-          offchain: json,
-        },
-        tokenAmount,
-      ) as T;
+      return Converter.RegularNftMetadata.intoUser({
+        onchain: metadata,
+        offchain: json,
+      }) as T;
     } else {
       throw Error(`No match tokenStandard: ${tokenStandard}`);
     }
   };
 
   export const genericFindByOwner = async <
-    T extends NftMetadata | TokenMetadata,
+    T extends RegularNftMetadata | TokenMetadata,
   >(
     owner: Pubkey,
     callback: (result: Result<T[], Error>) => void,
     tokenStandard: TokenStandard,
-    sortable?: Sortable,
+    sortable?: SortDirection,
     isHolder?: boolean,
   ): Promise<void> => {
     try {
@@ -119,11 +119,11 @@ export namespace SplToken {
                   callback(Result.err(e));
                 })
                 .finally(() => {
-                  const descAlgo = sortByUinixTimestamp<T>(Sortable.Desc);
-                  const ascAlgo = sortByUinixTimestamp<T>(Sortable.Asc);
-                  if (sortable === Sortable.Desc) {
+                  const descAlgo = sortByUinixTimestamp<T>(SortDirection.Desc);
+                  const ascAlgo = sortByUinixTimestamp<T>(SortDirection.Asc);
+                  if (sortable === SortDirection.Desc) {
                     data = data.sort(descAlgo);
-                  } else if (sortable === Sortable.Asc) {
+                  } else if (sortable === SortDirection.Asc) {
                     data = data.sort(ascAlgo);
                   }
                   callback(Result.ok(data));
@@ -147,7 +147,7 @@ export namespace SplToken {
   };
 
   export const genericFindByMint = async <
-    T extends NftMetadata | TokenMetadata,
+    T extends RegularNftMetadata | TokenMetadata,
   >(
     mint: Pubkey,
     tokenStandard: TokenStandard,
@@ -192,9 +192,9 @@ export namespace SplToken {
     owner: Pubkey,
     onOk: OnOk<TokenMetadata>,
     onErr: OnErr,
-    options?: { sortable?: Sortable; isHolder?: boolean },
+    options?: { sortDirection?: SortDirection; isHolder?: boolean },
   ): void => {
-    const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
+    const sortable = !options?.sortDirection ? SortDirection.Desc : options?.sortDirection;
     const isHolder = !options?.isHolder ? true : false;
 
     /* eslint-disable @typescript-eslint/no-floating-promises */

@@ -257,7 +257,7 @@ export namespace CompressedNft {
             payer: payer.toKeypair().publicKey,
             leafOwner: leafOwner.toPublicKey(), // receiver
             // leafDelegate: owner.toPublicKey(),
-            leafDelegate: payer.toPublicKey(),
+            leafDelegate: payer.toKeypair().publicKey,
             collectionAuthority: owner.toPublicKey(),
             collectionMint: collectionMint.toPublicKey(),
             collectionMetadata,

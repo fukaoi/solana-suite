@@ -1,9 +1,28 @@
 import { Pubkey } from '../account';
 
-export enum Sortable {
+export enum SortDirection {
   Asc = 'asc',
   Desc = 'desc',
 }
+
+export enum SortBy {
+  Created = 'created',
+  Updated = 'updated',
+  Recent = 'recent_action',
+}
+
+export type Sortable = {
+  sortBy: SortBy;
+  sortDirection: SortDirection;
+};
+
+export type FindOptions = {
+  limit?: number;
+  page?: number;
+  sortBy?: Sortable;
+  before?: string;
+  after?: string;
+};
 
 export type Find = {
   sol?: string;
