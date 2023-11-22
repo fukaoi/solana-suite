@@ -207,8 +207,14 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
-type Pubkey = string;
-type Secret = string;
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
 type KeypairAccount = {
     pubkey: Pubkey;
     secret: Secret;
@@ -266,8 +272,8 @@ declare namespace Account$2 {
         });
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
-        static isPubkey: (value: string) => value is string;
-        static isSecret: (value: string) => value is string;
+        static isPubkey: (value: string) => value is Pubkey;
+        static isSecret: (value: string) => value is Secret;
         static create: () => Keypair;
         static toKeyPair: (keypair: Keypair) => Keypair;
     }
@@ -748,9 +754,9 @@ declare global {
 }
 
 declare const Multisig: {
-    isAddress: (multisig: string) => Promise<Result$1<boolean, Error>>;
-    getInfo: (multisig: string) => Promise<Result$1<_solana_buffer_layout.LayoutObject, Error>>;
-    create: (m: number, feePayer: string, signerPubkeys: string[]) => Promise<Result$1<Transaction, Error>>;
+    isAddress: (multisig: Pubkey) => Promise<Result$1<boolean, Error>>;
+    getInfo: (multisig: Pubkey) => Promise<Result$1<_solana_buffer_layout.LayoutObject, Error>>;
+    create: (m: number, feePayer: Secret, signerPubkeys: Pubkey[]) => Promise<Result$1<Transaction, Error>>;
 };
 
 export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Multisig, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

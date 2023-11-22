@@ -6,11 +6,11 @@ import { Account } from '~/account';
 import { KeypairAccount } from '~/types/account';
 import { Pubkey } from '~/types/account';
 
-let source: KeypairAccount;
+let feePayer: KeypairAccount;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
-  source = obj.source;
+  feePayer = obj.feePayer;
 });
 
 test('[Nft Storage] mint nft and nft burn', async (t) => {
@@ -26,7 +26,7 @@ test('[Nft Storage] mint nft and nft burn', async (t) => {
       symbol: asset.symbol!,
       royalty: 0,
     },
-    source.secret,
+    feePayer.secret,
   );
 
   let mint: Pubkey;
@@ -41,12 +41,9 @@ test('[Nft Storage] mint nft and nft burn', async (t) => {
     (ng: Error) => t.fail(ng.message),
   );
 
-  const inst2 = RegularNft.burn(
-    mint!,
-    owner.pubkey,
-    owner.secret,
-    source.secret,
-  );
+  const inst2 = RegularNft.burn(mint!, owner.pubkey, owner.secret, {
+    feePayer: feePayer.secret,
+  });
   (await inst2.submit()).match(
     (ok: string) => {
       t.log('# sig:', ok);

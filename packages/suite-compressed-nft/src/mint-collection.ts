@@ -3,6 +3,7 @@ import { Secret } from '~/types/account';
 import { RegularNft } from '~/suite-regular-nft';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { MintTransaction } from '~/transaction';
+import { MintCollectionOptions } from '~/types/compressed-nft';
 
 /**
  * create a collection
@@ -11,8 +12,7 @@ import { MintTransaction } from '~/transaction';
  * @param {Pubkey} owner
  * @param {Secret} signer
  * @param {InputNftMetadata} input
- * @param {Secret} feePayer?
- * @param {Pubkey} freezeAuthority?
+ * @param {MintCollectionOptions} options
  * @return Promise<Result<MintTransaction, Error>>
  */
 export namespace CompressedNft {
@@ -20,9 +20,9 @@ export namespace CompressedNft {
     owner: Pubkey,
     signer: Secret,
     input: InputNftMetadata,
-    feePayer?: Secret,
-    freezeAuthority?: Pubkey,
+    options: Partial<MintCollectionOptions> = {},
   ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
+    const { feePayer, freezeAuthority } = options;
     return RegularNft.mintCollection(
       owner,
       signer,

@@ -23,12 +23,12 @@ export namespace CompressedNft {
    * Find nft by owner address
    *
    * @param {Pubkey} owner
-   * @param {FindOptions} options
+   * @param {Partial<FindOptions>} options
    * @return Promise<Result<CompressedNftMetadata, Error>>
    */
   export const findByOwner = async (
     owner: Pubkey,
-    options?: FindOptions,
+    options: Partial<FindOptions> = {},
   ): Promise<Result<CompressedNftMetadata, Error>> => {
     return Try(async () => {
       const defaultOptions = {
@@ -108,12 +108,12 @@ export namespace CompressedNft {
    * Find nft by collection mint
    *
    * @param {Pubkey} collectionMint
-   * @param {FindOptions} options
+   * @param {Partial<FindOptions>} options
    * @return Promise<Result<CompressedNftMetadata, Error>>
    */
   export const findByCollection = async (
     collectionMint: Pubkey,
-    options?: FindOptions,
+    options: Partial<FindOptions> = {},
   ): Promise<Result<CompressedNftMetadata, Error>> => {
     return Try(async () => {
       const defaultOptions = {

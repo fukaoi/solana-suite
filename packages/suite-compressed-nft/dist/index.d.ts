@@ -4,8 +4,14 @@ import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
-type Pubkey$1 = string;
-type Secret$1 = string;
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey$1 = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret$1 = (string & {
+    [secretNominality]: never;
+}) | string;
 type KeypairAccount = {
     pubkey: Pubkey$1;
     secret: Secret$1;
@@ -403,8 +409,8 @@ declare namespace Account$2 {
         });
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
-        static isPubkey: (value: string) => value is string;
-        static isSecret: (value: string) => value is string;
+        static isPubkey: (value: string) => value is Pubkey$1;
+        static isSecret: (value: string) => value is Secret$1;
         static create: () => Keypair;
         static toKeyPair: (keypair: Keypair) => Keypair;
     }
@@ -837,15 +843,15 @@ declare global {
 }
 
 declare const CompressedNft: {
-    createTransfer: (assetId: string, owner: string, dest: string, delegate?: string | undefined) => Promise<_solana_web3_js.TransactionInstruction>;
-    transfer: (assetId: string, owner: string, dest: string, signers: Secret[], feePayer?: Secret | undefined) => Promise<Result$1<Transaction, Error>>;
-    mintCollection: (owner: Pubkey, signer: string, input: InputNftMetadata, feePayer?: string | undefined, freezeAuthority?: Pubkey | undefined) => Promise<Result$1<MintTransaction<Pubkey>, Error>>;
+    createTransfer: (assetId: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, delegate?: Pubkey$1 | undefined) => Promise<_solana_web3_js.TransactionInstruction>;
+    transfer: (assetId: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], feePayer?: Secret | undefined) => Promise<Result$1<Transaction, Error>>;
+    mintCollection: (owner: Pubkey, signer: Secret$1, input: InputNftMetadata, feePayer?: Secret$1 | undefined, freezeAuthority?: Pubkey | undefined) => Promise<Result$1<MintTransaction<Pubkey>, Error>>;
     Tree: typeof CompressedNft$1.Tree;
-    initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result$1<MintTransaction<string>, Error>>;
+    initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result$1<MintTransaction<Pubkey$1>, Error>>;
     createVerifyCreator: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
     createDeleagate: (assetId: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
-    mint: (owner: string, signer: string, input: InputNftMetadata, treeOwner: string, collectionMint: string, feePayer?: string | undefined, receiver?: string | undefined, delegate?: string | undefined) => Promise<Result$1<MintTransaction<CompressedNft$1.Tree>, Error>>;
-    gasLessTransfer: (assetId: string, owner: string, dest: string, feePayer: string) => Promise<Result$1<PartialSignTransaction, Error>>;
+    mint: (owner: Pubkey$1, signer: Secret$1, input: InputNftMetadata, treeOwner: Pubkey$1, collectionMint: Pubkey$1, feePayer?: Secret$1 | undefined, receiver?: Pubkey$1 | undefined, delegate?: Pubkey$1 | undefined) => Promise<Result$1<MintTransaction<CompressedNft$1.Tree>, Error>>;
+    gasLessTransfer: (assetId: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, feePayer: Pubkey$1) => Promise<Result$1<PartialSignTransaction, Error>>;
     defaultSortBy: Sortable;
     fetchOffchain: (uri: string) => Promise<any>;
     findByOwner: (owner: Pubkey, options?: FindOptions | undefined) => Promise<Result$1<CompressedNftMetadata, Error>>;

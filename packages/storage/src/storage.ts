@@ -34,7 +34,7 @@ export namespace Storage {
         throw Error('Arweave needs to have feepayer');
       }
       return await Arweave.uploadFile(filePath, feePayer);
-    } else if (storageType === 'nftStorage') {
+    } else if (storageType === 'nftStorage' || !storageType) {
       return await NftStorage.uploadFile(filePath);
     } else {
       throw Error('Not found storageType');
@@ -43,7 +43,7 @@ export namespace Storage {
 
   export const uploadData = async (
     input: Offchain,
-    storageType: StorageType,
+    storageType?: StorageType,
     feePayer?: Secret,
   ): Promise<Result<string, Error>> => {
     if (storageType === 'arweave') {
@@ -51,7 +51,7 @@ export namespace Storage {
         throw Error('Arweave needs to have feepayer');
       }
       return await Arweave.uploadData(input, feePayer);
-    } else if (storageType === 'nftStorage') {
+    } else if (storageType === 'nftStorage' || !storageType) {
       return await NftStorage.uploadData(input);
     } else {
       throw Error('Not found storageType');
@@ -61,7 +61,7 @@ export namespace Storage {
   export const upload = async (
     input: Offchain,
     filePath: FileType,
-    storageType: StorageType,
+    storageType?: StorageType,
     feePayer?: Secret,
   ): Promise<Result<string, Error>> => {
     let storage;

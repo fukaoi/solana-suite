@@ -1,7 +1,13 @@
 import { TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
 
-type Pubkey = string;
-type Secret = string;
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
 
 /**
  * Get Associated token Account.
@@ -50,8 +56,8 @@ declare namespace Account$2 {
         });
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
-        static isPubkey: (value: string) => value is string;
-        static isSecret: (value: string) => value is string;
+        static isPubkey: (value: string) => value is Pubkey;
+        static isSecret: (value: string) => value is Secret;
         static create: () => Keypair;
         static toKeyPair: (keypair: Keypair) => Keypair;
     }

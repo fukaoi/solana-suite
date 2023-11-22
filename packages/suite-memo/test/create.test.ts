@@ -10,6 +10,7 @@ import { SplToken } from '@solana-suite/spl-token';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
+let feePayer: KeypairAccount;
 let datetime: Date;
 
 const DUMMY_DATA = 'dummy memo data';
@@ -23,6 +24,7 @@ test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
   dest = obj.dest;
+  feePayer = obj.feePayer;
 });
 
 test.beforeEach(function () {
@@ -46,7 +48,7 @@ test('send memo by owner with fee payer', async (t) => {
     `{"memo": "send memo by owner", "datetime": ${datetime}}`,
     MEMO_STOCK.pubkey,
     MEMO_STOCK.secret,
-    source.secret,
+    { feePayer: feePayer.secret },
   );
 
   const res = await inst.submit();
@@ -59,7 +61,7 @@ test('send memo and sol transfer by owner', async (t) => {
     `send memo and sol transfer: ${datetime}`,
     MEMO_STOCK.pubkey,
     MEMO_STOCK.secret,
-    dest.secret,
+    { feePayer: feePayer.secret },
   );
 
   const inst2 = SolNative.transfer(

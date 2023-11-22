@@ -28,7 +28,6 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
     source.secret,
     {
       uri: 'https://ipfs.io/ipfs/bafkreibh6mv6zqvg2wopmtx3k4smavcfx55ob2pciuoob2z44acgtem754',
-      storageType: 'nftStorage',
       name: asset.name!,
       description: asset.description,
       symbol: asset.symbol!,
@@ -77,7 +76,7 @@ test('[Arweave] mint nft', async (t) => {
   t.log('# asset id: ', assetId);
 });
 
-test.only('[Nft Storage] mint nft with fee payer', async (t) => {
+test('[Nft Storage] mint nft with fee payer', async (t) => {
   const asset = RandomAsset.get();
   const inst = await CompressedNft.mint(
     source.pubkey,
@@ -92,7 +91,7 @@ test.only('[Nft Storage] mint nft with fee payer', async (t) => {
     },
     treeOwner,
     collectionMint,
-    feePayer.secret,
+    { feePayer: feePayer.secret },
   );
 
   (await inst.submit()).match(
@@ -159,7 +158,6 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
     source.secret,
     {
       filePath: asset.filePath as string,
-      storageType: 'nftStorage',
       name: asset.name!,
       symbol: asset.symbol!,
       description: asset.description,
@@ -174,8 +172,10 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
     },
     treeOwner,
     collectionMint,
-    feePayer.secret,
-    receiver.pubkey,
+    {
+      feePayer: feePayer.secret,
+      receiver: receiver.pubkey,
+    },
   );
 
   (await inst.submit()).match(
@@ -199,7 +199,6 @@ test('[Error]Raise validation error when upload meta data', async (t) => {
       name: '',
       symbol: 'LONG-SYMBOL-LONG',
       royalty: -100,
-      storageType: 'nftStorage',
     },
     treeOwner,
     collectionMint,
@@ -213,4 +212,3 @@ test('[Error]Raise validation error when upload meta data', async (t) => {
     },
   );
 });
-

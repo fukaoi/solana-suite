@@ -3,8 +3,14 @@ import { Metadata as Metadata$1, DataV2 } from '@metaplex-foundation/mpl-token-m
 import BN from 'bn.js';
 import { MetadataArgs } from 'mpl-bubblegum-instruction';
 
-type Pubkey$1 = string;
-type Secret = string;
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey$1 = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
 
 type FileType = string | File;
 

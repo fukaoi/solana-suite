@@ -11,7 +11,7 @@ let feePayer: KeypairAccount;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
-  feePayer = obj.source;
+  feePayer = obj.feePayer;
 });
 
 test('Freezing and Thawing a target nft', async (t) => {
@@ -46,12 +46,9 @@ test('Freezing and Thawing a target nft', async (t) => {
   );
 
   // freeze
-  const inst2 = RegularNft.freeze(
-    mint,
-    owner.pubkey,
-    freezeAuthority.secret,
-    feePayer.secret,
-  );
+  const inst2 = RegularNft.freeze(mint, owner.pubkey, freezeAuthority.secret, {
+    feePayer: feePayer.secret,
+  });
   (await inst2.submit()).match(
     async (ok: string) => {
       await Node.confirmedSig(ok);

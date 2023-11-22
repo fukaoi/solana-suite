@@ -18,7 +18,7 @@ export type History = {
   innerInstruction?: boolean;
 };
 
-export type HistoryOptions = {
+export type FindOptions = {
   waitTime: number;
   narrowDown: number;
 };

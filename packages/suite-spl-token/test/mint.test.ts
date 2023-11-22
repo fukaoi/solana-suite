@@ -81,12 +81,12 @@ test('Create token with creators, freezeAuthority', async (t) => {
       {
         address: source.pubkey,
         share: 30,
-        verified: false,
+        secret: source.secret,
       },
       {
         address: creator.pubkey,
         share: 70,
-        verified: false,
+        secret: creator.secret,
       },
     ],
   };

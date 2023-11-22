@@ -2,7 +2,7 @@ import test from 'ava';
 import { Setup } from 'test-tools/setup';
 import { Pubkey } from '~/types/account';
 import { SplToken } from '../src/';
-import { Sortable } from '~/types/find';
+import { SortDirection } from '~/types/find';
 import { OnErr, OnOk } from '~/types/shared';
 import { TokenMetadata } from '~/types/spl-token';
 import { promisify } from 'node:util';
@@ -80,7 +80,9 @@ test(
       }
     };
     const onErr: OnErr = (err: Error) => t.fail(err.message);
-    SplToken.findByOwner(owner, onOk, onErr, { sortable: Sortable.Asc });
+    SplToken.findByOwner(owner, onOk, onErr, {
+      sortDirection: SortDirection.Asc,
+    });
   }),
 );
 

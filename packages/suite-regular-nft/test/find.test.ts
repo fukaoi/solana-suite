@@ -1,9 +1,9 @@
 import test from 'ava';
 import { Setup } from 'test-tools/setup';
 import { Pubkey } from '~/types/account';
-import { Sortable } from '~/types/find';
+import { SortDirection } from '~/types/find';
 import { OnErr, OnOk } from '~/types/shared';
-import { NftMetadata } from '~/types/regular-nft';
+import { RegularNftMetadata } from '~/types/regular-nft';
 import { promisify } from 'node:util';
 import { sleep } from '../../shared/src/shared';
 import { RegularNft } from '../src/';
@@ -30,7 +30,7 @@ test.before(async () => {
 test(
   'Not found nft',
   withCallback((t: any, end: any) => {
-    const onOk: OnOk<NftMetadata> = (ok) => t.true(Array.isArray(ok));
+    const onOk: OnOk<RegularNftMetadata> = (ok) => t.true(Array.isArray(ok));
     end();
     const onErr: OnErr = (err) => t.fail(err.message);
     RegularNft.findByOwner(notFoundTokenOwner, onOk, onErr);
@@ -40,7 +40,7 @@ test(
 test(
   'Find owner info',
   withCallback((t: any, end: any) => {
-    const onOk: OnOk<NftMetadata> = async (ok) => {
+    const onOk: OnOk<RegularNftMetadata> = async (ok) => {
       console.log(ok);
       ok.forEach((res) => {
         t.not(res.name, '');
@@ -49,7 +49,6 @@ test(
         t.not(res.uri, '');
         t.is(typeof res.royalty, 'number');
         t.not(res.offchain, '');
-        t.not(res.tokenAmount, '');
       });
       if (ok.length > 5 || (await sleep(10)) > 0) {
         end();
@@ -63,7 +62,7 @@ test(
 test(
   'Find owner info with Asc',
   withCallback((t: any, end: any) => {
-    const onOk: OnOk<NftMetadata> = async (ok) => {
+    const onOk: OnOk<RegularNftMetadata> = async (ok) => {
       ok.forEach((res) => {
         t.not(res.name, '');
         t.not(res.mint, '');
@@ -71,21 +70,20 @@ test(
         t.not(res.uri, '');
         t.is(typeof res.royalty, 'number');
         t.not(res.offchain, '');
-        t.not(res.tokenAmount, '');
       });
       if (ok.length > 5 || (await sleep(10)) > 0) {
         end();
       }
     };
     const onErr: OnErr = (err: Error) => t.fail(err.message);
-    RegularNft.findByOwner(owner, onOk, onErr, { sortable: Sortable.Asc });
+    RegularNft.findByOwner(owner, onOk, onErr, { sortable: SortDirection.Asc });
   }),
 );
 
 test(
   'Find owner info with no Hold',
   withCallback((t: any, end: any) => {
-    const onOk: OnOk<NftMetadata> = async (ok) => {
+    const onOk: OnOk<RegularNftMetadata> = async (ok) => {
       ok.forEach((res) => {
         t.not(res.name, '');
         t.not(res.mint, '');
@@ -93,7 +91,6 @@ test(
         t.not(res.uri, '');
         t.is(typeof res.royalty, 'number');
         t.not(res.offchain, '');
-        t.not(res.tokenAmount, '');
       });
       if (ok.length > 5 || (await sleep(10)) > 0) {
         end();
@@ -107,13 +104,12 @@ test(
 
 test('Get token info by mint address', async (t) => {
   (await RegularNft.findByMint(nftMint)).match(
-    (ok: NftMetadata) => {
+    (ok: RegularNftMetadata) => {
       t.not(ok.name, '');
       t.not(ok.mint, '');
       t.not(ok.symbol, '');
       t.not(ok.uri, '');
       t.not(ok.royalty, '');
-      t.not(ok.tokenAmount, '');
       t.not(ok.offchain, '');
     },
     (err: Error) => t.fail(err.message),
@@ -122,7 +118,7 @@ test('Get token info by mint address', async (t) => {
 
 test('Get nft parent collection by mint address', async (t) => {
   (await RegularNft.findByMint(collectionMint)).match(
-    (ok: NftMetadata) => {
+    (ok: RegularNftMetadata) => {
       console.log(ok.collectionDetails);
       t.not(ok.collectionDetails, '');
     },

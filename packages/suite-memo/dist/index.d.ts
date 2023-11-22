@@ -206,8 +206,14 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
-type Pubkey = string;
-type Secret = string;
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
 type KeypairAccount = {
     pubkey: Pubkey;
     secret: Secret;
@@ -265,8 +271,8 @@ declare namespace Account$2 {
         });
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
-        static isPubkey: (value: string) => value is string;
-        static isSecret: (value: string) => value is string;
+        static isPubkey: (value: string) => value is Pubkey;
+        static isSecret: (value: string) => value is Secret;
         static create: () => Keypair;
         static toKeyPair: (keypair: Keypair) => Keypair;
     }
@@ -532,6 +538,49 @@ declare class Transaction {
     submit: () => Promise<Result$1<TransactionSignature, Error>>;
 }
 
+type Find = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+
+type History = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+type HistoryOptions = {
+    waitTime: number;
+    narrowDown: number;
+};
+
+type OnOk<T extends History | Find> = (ok: T[]) => void;
+type OnErr = (err: Error) => void;
+
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
@@ -735,49 +784,6 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-type Find = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-
-type History = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-type HistoryOptions = {
-    waitTime: number;
-    narrowDown: number;
-};
-
-type OnOk<T extends History | Find> = (ok: T[]) => void;
-type OnErr = (err: Error) => void;
-
 declare global {
     interface Array<T> {
         submit(): Promise<Result<TransactionSignature, Error>>;
@@ -785,10 +791,10 @@ declare global {
 }
 
 declare const Memo: {
-    findByOwner: (target: string, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    findByOwner: (target: Pubkey, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
-    create: (data: string, owner: string, signer: string, feePayer?: string | undefined) => Transaction;
+    create: (data: string, owner: Pubkey, signer: Secret, feePayer?: Secret | undefined) => Transaction;
 };
 
 export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

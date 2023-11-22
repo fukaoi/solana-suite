@@ -30,6 +30,7 @@ import {
   PublicKey,
   TransactionInstruction,
 } from '@solana/web3.js';
+import { MintOptions } from '~/types/compressed-nft';
 
 export namespace CompressedNft {
   export const createVerifyCreator = async (
@@ -147,8 +148,7 @@ export namespace CompressedNft {
    *   isMutable?: boolean           // enable update()
    *   options?: [key: string]?: unknown       // optional param, Usually not used.
    * }
-   * @param {Secret} feePayer?         // fee payer
-   * @param {Pubkey} receiver?         // receive minted nft
+   * @param {Partial<MintOptions>} options         // mint options
    * @return Promise<Result<MintTransaction, Error>>
    */
   export const mint = async (
@@ -157,14 +157,13 @@ export namespace CompressedNft {
     input: InputNftMetadata,
     treeOwner: Pubkey,
     collectionMint: Pubkey,
-    feePayer?: Secret,
-    receiver?: Pubkey,
-    delegate?: Pubkey,
+    options: Partial<MintOptions> = {},
   ) => {
     return Try(async () => {
-      const payer: Secret = feePayer ? feePayer : signer;
-      const leafOwner: Pubkey = receiver ? receiver : owner;
-      const leafDelegate: Pubkey = delegate
+      const { feePayer, receiver, delegate } = options;
+      const payer = feePayer ? feePayer : signer;
+      const leafOwner = receiver ? receiver : owner;
+      const leafDelegate = delegate
         ? delegate
         : new Account.Keypair({ secret: payer }).pubkey;
 

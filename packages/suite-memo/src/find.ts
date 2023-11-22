@@ -1,5 +1,5 @@
 import { Pubkey } from '~/types/account';
-import { History, HistoryOptions } from '~/types/history';
+import { FindOptions, History } from '~/types/memo';
 import { OnErr, OnOk } from '~/types/shared';
 import { FilterType, ModuleName } from '~/types/transaction-filter';
 import { Signatures, TransactionFilter } from '~/transaction-filter';
@@ -9,10 +9,10 @@ export namespace Memo {
     target: Pubkey,
     onOk: OnOk<History>,
     onErr: OnErr,
-    options: Partial<HistoryOptions> = {},
+    options: Partial<FindOptions> = {},
   ): Promise<void> => {
     try {
-      const defaultValues: HistoryOptions = {
+      const defaultValues: FindOptions = {
         waitTime: 0.03,
         narrowDown: 100,
       };

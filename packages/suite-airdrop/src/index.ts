@@ -1,6 +1,7 @@
 import { debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
+import { AirdropOptions } from '~/types/airdrop';
 
 export namespace Airdrop {
   const DEFAULT_AIRDROP_AMOUNT = 1;
@@ -8,14 +9,14 @@ export namespace Airdrop {
 
   export const request = async (
     pubkey: Pubkey,
-    airdropAmount?: number,
+    options: Partial<AirdropOptions> = {},
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
       debugLog('Now airdropping...please wait');
 
-      airdropAmount = !airdropAmount
+      const airdropAmount = !options.dropAmount
         ? DEFAULT_AIRDROP_AMOUNT.toLamports()
-        : airdropAmount.toLamports();
+        : options.dropAmount.toLamports();
 
       if (airdropAmount > MAX_AIRDROP_SOL.toLamports()) {
         throw Error(

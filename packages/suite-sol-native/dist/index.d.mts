@@ -3,18 +3,6 @@ import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Conne
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
-type Pubkey = string;
-type Secret = string;
-type KeypairAccount = {
-    pubkey: Pubkey;
-    secret: Secret;
-};
-type OwnerInfo = {
-    sol: number;
-    lamports: number;
-    owner: string;
-};
-
 declare abstract class AbstractResult$1<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
     unwrap(): T;
@@ -218,6 +206,24 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
+type KeypairAccount = {
+    pubkey: Pubkey;
+    secret: Secret;
+};
+type OwnerInfo = {
+    sol: number;
+    lamports: number;
+    owner: string;
+};
+
 /**
  * Get Associated token Account.
  * if not created, create new token accouint
@@ -265,8 +271,8 @@ declare namespace Account$2 {
         });
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
-        static isPubkey: (value: string) => value is string;
-        static isSecret: (value: string) => value is string;
+        static isPubkey: (value: string) => value is Pubkey;
+        static isSecret: (value: string) => value is Secret;
         static create: () => Keypair;
         static toKeyPair: (keypair: Keypair) => Keypair;
     }
@@ -754,10 +760,10 @@ declare global {
 }
 
 declare const SolNative: {
-    transferWithMultisig: (owner: string, dest: string, signers: string[], amount: number, feePayer?: string | undefined) => Promise<Result$1<Transaction, Error>>;
-    transfer: (source: string, dest: string, signers: string[], amount: number, feePayer?: string | undefined) => Result$1<Transaction, Error>;
-    gasLessTransfer: (owner: string, dest: string, signers: string[], amount: number, feePayer: string) => Promise<Result$1<PartialSignTransaction, Error>>;
-    findByOwner: (owner: string) => Promise<Result$1<OwnerInfo, Error>>;
+    transferWithMultisig: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, feePayer?: Secret | undefined) => Promise<Result$1<Transaction, Error>>;
+    transfer: (source: Pubkey, dest: Pubkey, signers: Secret[], amount: number, feePayer?: Secret | undefined) => Result$1<Transaction, Error>;
+    gasLessTransfer: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, feePayer: Pubkey) => Promise<Result$1<PartialSignTransaction, Error>>;
+    findByOwner: (owner: Pubkey) => Promise<Result$1<OwnerInfo, Error>>;
 };
 
 export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, SolNative, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

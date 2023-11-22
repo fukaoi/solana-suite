@@ -1,5 +1,6 @@
-import { DasApi } from '~/das-api';
+import { AuthorityOptions } from '~/types/shared';
 import { Pubkey } from '~/types/account';
+import { DasApi } from '~/das-api';
 import { debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { createTransferInstruction } from 'mpl-bubblegum-instruction';
@@ -102,7 +103,7 @@ export namespace CompressedNft {
    * @param {Pubkey} owner
    * @param {Pubkey} dest
    * @param {Secret[]} signers
-   * @param {Secret} feePayer?
+   * @param {Partial<AuthorityOptions>} options
    * @return Promise<Result<Transaction, Error>>
    */
   export const transfer = async (
@@ -110,12 +111,20 @@ export namespace CompressedNft {
     owner: Pubkey,
     dest: Pubkey,
     signers: Secret[],
-    feePayer?: Secret,
+    options: Partial<AuthorityOptions> = {},
   ): Promise<Result<Transaction, Error>> => {
     return Try(async () => {
-      const payer = feePayer ? feePayer : signers[0];
+      const payer = options.feePayer ? options.feePayer : signers[0];
       const keypairs = signers.map((s) => s.toKeypair());
-      const inst = await createTransfer(assetId, owner, dest);
+      const inst = await createTransfer(
+        assetId,
+        owner,
+        dest,
+        payer.toKeypair().publicKey.toString(),
+      );
+      console.log(keypairs[0].publicKey.toString());
+      console.log(keypairs[0].secretKey.toString());
+      console.log(payer);
       return new Transaction([inst], keypairs, payer.toKeypair());
     });
   };
