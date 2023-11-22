@@ -1,7 +1,6 @@
 import defineConfig from '../build-configs/tsup/base';
 
 const entry = {
-  index: 'src/index.ts',
   account: 'src/account/index.ts',
   converter: 'src/converter/index.ts',
   'compressed-nft': 'src/compressed-nft/index.ts',

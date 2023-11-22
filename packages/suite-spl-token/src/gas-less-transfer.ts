@@ -8,7 +8,7 @@ import { SplToken as Calculator } from './calculate-amount';
 import { Account } from '~/account';
 
 export namespace SplToken {
-  export const feePayerPartialSignTransfer = async (
+  export const gasLessTransfer = async (
     mint: Pubkey,
     owner: Pubkey,
     dest: Pubkey,

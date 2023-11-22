@@ -3,7 +3,7 @@ import { Metadata as Metadata$1, DataV2 } from '@metaplex-foundation/mpl-token-m
 import BN from 'bn.js';
 import { MetadataArgs } from 'mpl-bubblegum-instruction';
 
-type Pubkey = string;
+type Pubkey$1 = string;
 type Secret = string;
 
 type FileType = string | File;
@@ -23,9 +23,13 @@ type Metadata = {
     symbol: string;
     token_standard: string;
 };
+type Grouping = {
+    group_key: string;
+    group_value: string;
+};
 type Asset = {
     interface: string;
-    id: Pubkey;
+    id: Pubkey$1;
     content: {
         json_uri: string;
         files: string[];
@@ -33,23 +37,20 @@ type Asset = {
         links: string[];
     };
     authorities: {
-        address: Pubkey;
+        address: Pubkey$1;
         scopes: string[];
     }[];
     compression: {
         eligible: boolean;
         compressed: boolean;
-        data_hash: Pubkey;
-        creator_hash: Pubkey;
-        asset_hash: Pubkey;
-        tree: Pubkey;
+        data_hash: Pubkey$1;
+        creator_hash: Pubkey$1;
+        asset_hash: Pubkey$1;
+        tree: Pubkey$1;
         seq: number;
         leaf_id: number;
     };
-    grouping: {
-        group_key: string;
-        group_value: string;
-    }[];
+    grouping: Grouping[];
     royalty: {
         royalty_model: 'creators' | 'fanout' | 'single';
         target: null;
@@ -62,9 +63,9 @@ type Asset = {
     ownership: {
         frozen: boolean;
         delegated: boolean;
-        delegate: Pubkey;
+        delegate: Pubkey$1;
         ownership_model: 'single' | 'token';
-        owner: Pubkey;
+        owner: Pubkey$1;
     };
     supply: {
         print_max_supply: number;
@@ -136,12 +137,12 @@ type Uses = {
     total: bignum;
 };
 type InputCreators = {
-    address: Pubkey;
+    address: Pubkey$1;
     secret: Secret;
     share: number;
 };
 
-type InputCollection = Pubkey;
+type InputCollection = Pubkey$1;
 type Options = {
     [key: string]: unknown;
 };
@@ -164,10 +165,38 @@ type InputNftMetadata = {
     options?: Options;
 };
 
+type Authority = {
+    address: Pubkey$1;
+    scopes: string[];
+};
+type Creators = {
+    address: Pubkey$1;
+    share: number;
+    verified: boolean;
+}[];
+type NftMetadata = {
+    mint: Pubkey$1;
+    collectionMint: Pubkey$1;
+    authorities: Authority[];
+    royalty: number;
+    name: string;
+    symbol: string;
+    uri: string;
+    creators: Creators;
+    treeAddress: Pubkey$1;
+    isCompressed: boolean;
+    isMutable: boolean;
+    isBurn: boolean;
+    editionNonce: number;
+    primarySaleHappened: boolean;
+    dateTime: Date;
+    offchain: Offchain;
+};
+
 declare namespace Converter$c {
     namespace CompressedNftMetadata {
         const intoInfra: (input: InputNftMetadata, uri: string, sellerFeeBasisPoints: number) => MetadataArgs;
-        const intoUser: (output: AssetAndOffchain) => CompressedNftMetadata;
+        const intoUser: (output: AssetAndOffchain) => NftMetadata;
     }
 }
 
@@ -175,6 +204,9 @@ declare namespace Converter$b {
     namespace Collection {
         const intoInfra: (input: Option<InputCollection> | undefined) => Option<InternalCollection>;
         const intoUser: (output: Option<InternalCollection>) => Collection | undefined;
+    }
+    namespace CollectionMint {
+        const intoUser: (output: Grouping[]) => Pubkey;
     }
 }
 
@@ -193,9 +225,9 @@ type PostTokenAccount = {
 type MintTo = {
     parsed: {
         info: {
-            account: Pubkey;
-            mint: Pubkey;
-            mintAuthority: Pubkey;
+            account: Pubkey$1;
+            mint: Pubkey$1;
+            mintAuthority: Pubkey$1;
             tokenAmount: string;
         };
         type: string;
@@ -206,11 +238,11 @@ type MintTo = {
 type TransferChecked = {
     parsed: {
         info: {
-            destination: Pubkey;
-            mint: Pubkey;
-            multisigAuthority: Pubkey;
-            signers: Pubkey[];
-            source: Pubkey;
+            destination: Pubkey$1;
+            mint: Pubkey$1;
+            multisigAuthority: Pubkey$1;
+            signers: Pubkey$1[];
+            source: Pubkey$1;
             tokenAmount: string;
         };
         type: string;
@@ -222,13 +254,13 @@ type TransferChecked = {
 type History = {
     sol?: string;
     account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
+    destination?: Pubkey$1;
+    source?: Pubkey$1;
+    authority?: Pubkey$1;
+    multisigAuthority?: Pubkey$1;
+    signers?: Pubkey$1[];
+    mint?: Pubkey$1;
+    mintAuthority?: Pubkey$1;
     tokenAmount?: string;
     memo?: string;
     dateTime?: Date;
@@ -550,6 +582,7 @@ declare const Converter: {
     Memo: typeof Converter$9.Memo;
     Creators: typeof Converter$a.Creators;
     Collection: typeof Converter$b.Collection;
+    CollectionMint: typeof Converter$b.CollectionMint;
     CompressedNftMetadata: typeof Converter$c.CompressedNftMetadata;
 };
 

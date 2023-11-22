@@ -8,7 +8,7 @@ import { Pubkey, Secret } from '~/types/account';
 
 export namespace SolNative {
   const RADIX = 10;
-  export const feePayerPartialSignTransfer = async (
+  export const gasLessTransfer = async (
     owner: Pubkey,
     dest: Pubkey,
     signers: Secret[],

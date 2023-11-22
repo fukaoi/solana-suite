@@ -223,6 +223,10 @@ type Metadata = {
     symbol: string;
     token_standard: string;
 };
+type Grouping = {
+    group_key: string;
+    group_value: string;
+};
 type Asset = {
     interface: string;
     id: Pubkey$1;
@@ -246,10 +250,7 @@ type Asset = {
         seq: number;
         leaf_id: number;
     };
-    grouping: {
-        group_key: string;
-        group_value: string;
-    }[];
+    grouping: Grouping[];
     royalty: {
         royalty_model: 'creators' | 'fanout' | 'single';
         target: null;
@@ -310,6 +311,7 @@ declare namespace DasApi {
     const getAssetProof: (assetId: string) => Promise<Result<AssetProof, Error>>;
     const getAsset: (assetId: Pubkey) => Promise<Result<Asset, Error>>;
     const getAssetsByOwner: (ownerAddress: Pubkey, limit?: number, page?: number, sortBy?: any, before?: string, after?: string) => Promise<Result<Assets, Error>>;
+    const getAssetsByGroup: (groupKey: string, groupValue: Pubkey, limit?: number, page?: number, sortBy?: any, before?: string, after?: string) => Promise<Result<Assets, Error>>;
 }
 
 export { DasApi };

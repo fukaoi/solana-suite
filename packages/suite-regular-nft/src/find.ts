@@ -1,12 +1,10 @@
 import { Result } from '~/shared';
 import { Pubkey } from '~/types/account';
-import { NftMetadata } from '~/types/regular-nft';
+import { RegularNftMetadata } from '~/types/regular-nft';
 import { SplToken } from '~/suite-spl-token';
-import { Sortable } from '~/types/find';
+import { SortDirection } from '~/types/find';
 import { OnErr, OnOk } from '~/types/shared';
-import {
-  TokenStandard,
-} from '@metaplex-foundation/mpl-token-metadata';
+import { TokenStandard } from '@metaplex-foundation/mpl-token-metadata';
 
 export namespace RegularNft {
   /**
@@ -20,11 +18,13 @@ export namespace RegularNft {
    */
   export const findByOwner = async (
     owner: Pubkey,
-    onOk: OnOk<NftMetadata>,
+    onOk: OnOk<RegularNftMetadata>,
     onErr: OnErr,
-    options?: { sortable?: Sortable; isHolder?: boolean },
+    options?: { sortable?: SortDirection; isHolder?: boolean },
   ): Promise<void> => {
-    const sortable = !options?.sortable ? Sortable.Desc : options?.sortable;
+    const sortable = !options?.sortable
+      ? SortDirection.Desc
+      : options?.sortable;
     const isHolder = !options?.isHolder ? true : false;
     await SplToken.genericFindByOwner(
       owner,
@@ -43,7 +43,7 @@ export namespace RegularNft {
    */
   export const findByMint = async (
     mint: Pubkey,
-  ): Promise<Result<NftMetadata, Error>> => {
+  ): Promise<Result<RegularNftMetadata, Error>> => {
     // return await SplToken.genericFindByMint<NftMetadata>(
     return await SplToken.genericFindByMint(mint, TokenStandard.NonFungible);
   };

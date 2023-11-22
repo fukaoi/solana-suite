@@ -7,14 +7,14 @@ export namespace RegularNft {
   const NFT_AMOUNT = 1;
   const NFT_DECIMALS = 0;
 
-  export const feePayerPartialSignTransferNft = async (
+  export const gasLessTransfer = async (
     mint: Pubkey,
     owner: Pubkey,
     dest: Pubkey,
     signers: Secret[],
     feePayer: Pubkey,
   ): Promise<Result<PartialSignTransaction, Error>> => {
-    return SplToken.feePayerPartialSignTransfer(
+    return SplToken.gasLessTransfer(
       mint,
       owner,
       dest,

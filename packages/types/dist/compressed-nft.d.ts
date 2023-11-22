@@ -16,6 +16,12 @@ type Creators = {
     verified: boolean;
 }[];
 type CompressedNftMetadata = {
+    page: number;
+    total: number;
+    limit: number;
+    metadatas: NftMetadata[];
+};
+type NftMetadata = {
     mint: Pubkey;
     collectionMint: Pubkey;
     authorities: Authority[];
@@ -25,6 +31,7 @@ type CompressedNftMetadata = {
     uri: string;
     creators: Creators;
     treeAddress: Pubkey;
+    isCompressed: boolean;
     isMutable: boolean;
     isBurn: boolean;
     editionNonce: number;
@@ -33,4 +40,4 @@ type CompressedNftMetadata = {
     offchain: Offchain;
 };
 
-export { Authority, CompressedNftMetadata, Creators };
+export { Authority, CompressedNftMetadata, Creators, NftMetadata };

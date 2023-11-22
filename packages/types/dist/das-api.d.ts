@@ -14,6 +14,10 @@ type Metadata = {
     symbol: string;
     token_standard: string;
 };
+type Grouping = {
+    group_key: string;
+    group_value: string;
+};
 type Asset = {
     interface: string;
     id: Pubkey;
@@ -37,10 +41,7 @@ type Asset = {
         seq: number;
         leaf_id: number;
     };
-    grouping: {
-        group_key: string;
-        group_value: string;
-    }[];
+    grouping: Grouping[];
     royalty: {
         royalty_model: 'creators' | 'fanout' | 'single';
         target: null;
@@ -72,4 +73,4 @@ type Assets = {
     items: Asset[];
 };
 
-export { Asset, AssetProof, Assets, Metadata };
+export { Asset, AssetProof, Assets, Grouping, Metadata };

@@ -1,7 +1,7 @@
-import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import * as mpl_bubblegum_instruction from 'mpl-bubblegum-instruction';
 import BN from 'bn.js';
+import * as _solana_web3_js from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
 type Pubkey$1 = string;
@@ -68,6 +68,12 @@ type Creators = {
     verified: boolean;
 }[];
 type CompressedNftMetadata = {
+    page: number;
+    total: number;
+    limit: number;
+    metadatas: NftMetadata[];
+};
+type NftMetadata = {
     mint: Pubkey$1;
     collectionMint: Pubkey$1;
     authorities: Authority[];
@@ -77,12 +83,74 @@ type CompressedNftMetadata = {
     uri: string;
     creators: Creators;
     treeAddress: Pubkey$1;
+    isCompressed: boolean;
     isMutable: boolean;
     isBurn: boolean;
     editionNonce: number;
     primarySaleHappened: boolean;
     dateTime: Date;
     offchain: Offchain;
+};
+
+declare enum SortDirection {
+    Asc = "asc",
+    Desc = "desc"
+}
+declare enum SortBy {
+    Created = "created",
+    Updated = "updated",
+    Recent = "recent_action"
+}
+type Sortable = {
+    sortBy: SortBy;
+    sortDirection: SortDirection;
+};
+type FindOptions = {
+    limit?: number;
+    page?: number;
+    sortBy?: Sortable;
+    before?: string;
+    after?: string;
+};
+
+type bignum = number | BN;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type InputCreators = {
+    address: Pubkey$1;
+    secret: Secret$1;
+    share: number;
+};
+
+type InputCollection = Pubkey$1;
+type Options = {
+    [key: string]: unknown;
+};
+type InputNftMetadata = {
+    name: string;
+    symbol: string;
+    royalty: number;
+    storageType: StorageType;
+    filePath?: FileType;
+    uri?: string;
+    isMutable?: boolean;
+    description?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    maxSupply?: bignum;
+    creators?: InputCreators[];
+    uses?: Uses;
+    collection?: InputCollection;
+    options?: Options;
 };
 
 declare abstract class AbstractResult$1<T, E extends Error> {
@@ -380,46 +448,6 @@ interface Details {
     limit?: Limit;
 }
 
-type bignum = number | BN;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
-};
-type InputCreators = {
-    address: Pubkey$1;
-    secret: Secret$1;
-    share: number;
-};
-
-type InputCollection = Pubkey$1;
-type Options = {
-    [key: string]: unknown;
-};
-type InputNftMetadata$1 = {
-    name: string;
-    symbol: string;
-    royalty: number;
-    storageType: StorageType;
-    filePath?: FileType;
-    uri?: string;
-    isMutable?: boolean;
-    description?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    maxSupply?: bignum;
-    creators?: InputCreators[];
-    uses?: Uses;
-    collection?: InputCollection;
-    options?: Options;
-};
-
 declare namespace Validator {
     export namespace Message {
         const SUCCESS = "success";
@@ -443,7 +471,7 @@ declare namespace Validator {
     export const isImageUrl: (image: string) => Result$1<string, ValidatorError>;
     export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result$1<string, ValidatorError>;
     type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
-    type PickNftStorageMetaplex = Pick<InputNftMetadata$1, 'name' | 'symbol' | 'royalty' | 'filePath'>;
+    type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
     type PickMetaplex = Pick<DataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
     export {};
 }
@@ -574,6 +602,13 @@ declare class MintTransaction<T> {
     submit: () => Promise<Result$1<TransactionSignature, Error>>;
 }
 
+declare class PartialSignTransaction {
+    hexInstruction: string;
+    data?: Pubkey$1;
+    constructor(instructions: string, mint?: Pubkey$1);
+    submit: (feePayer: Secret$1) => Promise<Result$1<TransactionSignature, Error>>;
+}
+
 declare namespace CompressedNft$1 {
     class Tree {
         treeOwner: Pubkey$1;
@@ -584,10 +619,10 @@ declare namespace CompressedNft$1 {
      * create a new markle tree
      * This function needs only 1 call
      *
-     * @param {feePayer} Secret
-     * @param {maxDepth} number
-     * @param {maxBufferSize} number
-     * @return Promise<Result<Instruction, Error>>
+     * @param {Secret} feePayer
+     * @param {number} maxDepth
+     * @param {number} maxBufferSize
+     * @return Promise<Result<MintTransaction, Error>>
      */
     const initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result$1<MintTransaction<Pubkey$1>, Error>>;
 }
@@ -802,15 +837,20 @@ declare global {
 }
 
 declare const CompressedNft: {
-    transfer: (assetId: string, owner: string, dest: string, signer: Secret, feePayer?: Secret | undefined) => Promise<Result$1<Transaction, Error>>;
+    createTransfer: (assetId: string, owner: string, dest: string, delegate?: string | undefined) => Promise<_solana_web3_js.TransactionInstruction>;
+    transfer: (assetId: string, owner: string, dest: string, signers: Secret[], feePayer?: Secret | undefined) => Promise<Result$1<Transaction, Error>>;
     mintCollection: (owner: Pubkey, signer: string, input: InputNftMetadata, feePayer?: string | undefined, freezeAuthority?: Pubkey | undefined) => Promise<Result$1<MintTransaction<Pubkey>, Error>>;
     Tree: typeof CompressedNft$1.Tree;
     initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result$1<MintTransaction<string>, Error>>;
-    createVerifyCreatorsInstruction: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
-    createDeleagateInstruction: (assetId: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
-    mint: (owner: string, signer: string, input: InputNftMetadata, treeOwner: string, collectionMint: string, feePayer?: string | undefined, receiver?: string | undefined) => Promise<Result$1<MintTransaction<CompressedNft$1.Tree>, Error>>;
+    createVerifyCreator: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
+    createDeleagate: (assetId: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
+    mint: (owner: string, signer: string, input: InputNftMetadata, treeOwner: string, collectionMint: string, feePayer?: string | undefined, receiver?: string | undefined, delegate?: string | undefined) => Promise<Result$1<MintTransaction<CompressedNft$1.Tree>, Error>>;
+    gasLessTransfer: (assetId: string, owner: string, dest: string, feePayer: string) => Promise<Result$1<PartialSignTransaction, Error>>;
+    defaultSortBy: Sortable;
     fetchOffchain: (uri: string) => Promise<any>;
-    findByOwner: (owner: Pubkey, limit?: number, page?: number, sortBy?: any, before?: string | undefined, after?: string | undefined) => Promise<Result$1<CompressedNftMetadata[], Error>>;
+    findByOwner: (owner: Pubkey, options?: FindOptions | undefined) => Promise<Result$1<CompressedNftMetadata, Error>>;
+    findByMint: (mint: Pubkey) => Promise<Result$1<NftMetadata, Error>>;
+    findByCollection: (collectionMint: Pubkey, options?: FindOptions | undefined) => Promise<Result$1<CompressedNftMetadata, Error>>;
 };
 
 export { Account, CompressedNft, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, Secret$1 as Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

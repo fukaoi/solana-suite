@@ -17,7 +17,7 @@ test('[Nft Storage] mint nft with partial sing fee payer', async (t) => {
   const owner = Account.Keypair.create();
   const freezeAuthority = Account.Keypair.create();
   const asset = RandomAsset.get();
-  const serialized = await RegularNft.feePayerPartialSignMint(
+  const serialized = await RegularNft.gasLessMint(
     owner.pubkey,
     owner.secret,
     {
@@ -69,7 +69,7 @@ test('[Arweave] use case arweave', async (t) => {
   }
   const uri = uploaded.value;
 
-  const serialized = await RegularNft.feePayerPartialSignMint(
+  const serialized = await RegularNft.gasLessMint(
     owner.pubkey,
     owner.secret,
     {
@@ -78,6 +78,7 @@ test('[Arweave] use case arweave', async (t) => {
       symbol: asset.symbol!,
       royalty,
       isMutable: true,
+      storageType: 'nftStorage',
     },
     source.pubkey,
   );
@@ -98,7 +99,7 @@ test('[Arweave] use case arweave', async (t) => {
 test('[Error]Raise parameter error when not need uri or filePath', async (t) => {
   const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
-  const res = await RegularNft.feePayerPartialSignMint(
+  const res = await RegularNft.gasLessMint(
     owner.pubkey,
     owner.secret,
     {
@@ -106,6 +107,7 @@ test('[Error]Raise parameter error when not need uri or filePath', async (t) => 
       symbol: asset.symbol!,
       royalty: 50,
       isMutable: true,
+      storageType: 'nftStorage',
     },
     source.pubkey,
   );

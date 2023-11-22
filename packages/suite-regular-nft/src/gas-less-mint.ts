@@ -37,7 +37,7 @@ export namespace RegularNft {
    * @param {Pubkey} freezeAuthority?  // freeze authority
    * @return Promise<Result<PartialSignInstruction, Error>>
    */
-  export const feePayerPartialSignMint = async (
+  export const gasLessMint = async (
     owner: Pubkey,
     signer: Secret,
     input: InputNftMetadata,

@@ -14,7 +14,7 @@ test.before(async () => {
 
 test('transfer feePayerPartialSign', async (t) => {
   const solAmount = 0.01;
-  const serialized = await SolNative.feePayerPartialSignTransfer(
+  const serialized = await SolNative.gasLessTransfer(
     source.pubkey,
     dest.pubkey,
     [source.secret],

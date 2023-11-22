@@ -756,7 +756,7 @@ declare global {
 declare const SolNative: {
     transferWithMultisig: (owner: string, dest: string, signers: string[], amount: number, feePayer?: string | undefined) => Promise<Result$1<Transaction, Error>>;
     transfer: (source: string, dest: string, signers: string[], amount: number, feePayer?: string | undefined) => Result$1<Transaction, Error>;
-    feePayerPartialSignTransfer: (owner: string, dest: string, signers: string[], amount: number, feePayer: string) => Promise<Result$1<PartialSignTransaction, Error>>;
+    gasLessTransfer: (owner: string, dest: string, signers: string[], amount: number, feePayer: string) => Promise<Result$1<PartialSignTransaction, Error>>;
     findByOwner: (owner: string) => Promise<Result$1<OwnerInfo, Error>>;
 };
 

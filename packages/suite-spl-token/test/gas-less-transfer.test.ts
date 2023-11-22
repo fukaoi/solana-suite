@@ -43,7 +43,7 @@ test('transfer feePayerPartialSign', async (t) => {
   const token = inst1.unwrap().data as Pubkey;
   t.log('# mint: ', token);
 
-  const serialized = await SplToken.feePayerPartialSignTransfer(
+  const serialized = await SplToken.gasLessTransfer(
     token,
     tokenOwner.pubkey,
     receipt.pubkey,

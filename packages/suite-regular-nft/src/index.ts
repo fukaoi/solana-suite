@@ -1,8 +1,8 @@
 import { RegularNft as Burn } from './burn';
 import { RegularNft as Find } from './find';
 import { RegularNft as Freeze } from './freeze';
-import { RegularNft as FeePayer } from './fee-payer-partial-sign-mint';
-import { RegularNft as FeePayerTransfer } from './fee-payer-partial-sign-transfer';
+import { RegularNft as GasLessMint } from './gas-less-mint';
+import { RegularNft as GasLessTransfer } from './gas-less-transfer';
 import { RegularNft as Mint } from './mint';
 import { RegularNft as MintCollection } from './mint-collection';
 import { RegularNft as Thaw } from './thaw';
@@ -14,8 +14,8 @@ export const RegularNft = {
   ...Burn,
   ...Find,
   ...Freeze,
-  ...FeePayer,
-  ...FeePayerTransfer,
+  ...GasLessMint,
+  ...GasLessTransfer,
   ...Mint,
   ...MintCollection,
   ...Thaw,
