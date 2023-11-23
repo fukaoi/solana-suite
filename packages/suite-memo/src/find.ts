@@ -1,5 +1,5 @@
 import { Pubkey } from '~/types/account';
-import { FindOptions, History } from '~/types/memo';
+import { FindOptions, History } from '~/types/history';
 import { OnErr, OnOk } from '~/types/shared';
 import { FilterType, ModuleName } from '~/types/transaction-filter';
 import { Signatures, TransactionFilter } from '~/transaction-filter';

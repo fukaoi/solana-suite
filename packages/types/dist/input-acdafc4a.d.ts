@@ -1,5 +1,5 @@
-import { Pubkey, Secret } from './account.js';
-import { StorageType, FileType, Attribute, Properties } from './storage.js';
+import { Pubkey, Secret } from './account.mjs';
+import { StorageType, FileType, Attribute, Properties } from './storage.mjs';
 import BN from 'bn.js';
 
 type bignum = number | BN;
@@ -33,7 +33,7 @@ type InputNftMetadata = {
     name: string;
     symbol: string;
     royalty: number;
-    storageType: StorageType;
+    storageType?: StorageType;
     filePath?: FileType;
     uri?: string;
     isMutable?: boolean;

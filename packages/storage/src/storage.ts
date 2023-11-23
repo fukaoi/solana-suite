@@ -26,7 +26,7 @@ export namespace Storage {
 
   export const uploadFile = async (
     filePath: FileType,
-    storageType: StorageType,
+    storageType?: StorageType,
     feePayer?: Secret,
   ): Promise<Result<string, Error>> => {
     if (storageType === 'arweave') {

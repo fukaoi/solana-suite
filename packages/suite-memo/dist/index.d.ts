@@ -383,7 +383,7 @@ type InputNftMetadata = {
     name: string;
     symbol: string;
     royalty: number;
-    storageType: StorageType;
+    storageType?: StorageType;
     filePath?: FileType;
     uri?: string;
     isMutable?: boolean;
@@ -573,13 +573,16 @@ type History = {
     sig?: string;
     innerInstruction?: boolean;
 };
-type HistoryOptions = {
+type FindOptions = {
     waitTime: number;
     narrowDown: number;
 };
 
 type OnOk<T extends History | Find> = (ok: T[]) => void;
 type OnErr = (err: Error) => void;
+type AuthorityOptions = {
+    feePayer: Pubkey;
+};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -791,10 +794,10 @@ declare global {
 }
 
 declare const Memo: {
-    findByOwner: (target: Pubkey, onOk: OnOk<History>, onErr: OnErr, options?: Partial<HistoryOptions>) => Promise<void>;
+    findByOwner: (target: Pubkey, onOk: OnOk<History>, onErr: OnErr, options?: Partial<FindOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
-    create: (data: string, owner: Pubkey, signer: Secret, feePayer?: Secret | undefined) => Transaction;
+    create: (data: string, owner: Pubkey, signer: Secret, options?: Partial<AuthorityOptions>) => Result$1<Transaction, Error>;
 };
 
 export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

@@ -233,8 +233,12 @@ declare enum Explorer {
     SolanaFM = "solanafm"
 }
 
+type AirdropOptions = {
+    dropAmount: number;
+};
+
 declare namespace Airdrop {
-    const request: (pubkey: Pubkey, airdropAmount?: number) => Promise<Result<string, Error>>;
+    const request: (pubkey: Pubkey, options?: Partial<AirdropOptions>) => Promise<Result<string, Error>>;
 }
 
 export { Airdrop };

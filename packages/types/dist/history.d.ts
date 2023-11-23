@@ -17,9 +17,9 @@ type History = {
     sig?: string;
     innerInstruction?: boolean;
 };
-type HistoryOptions = {
+type FindOptions = {
     waitTime: number;
     narrowDown: number;
 };
 
-export { History, HistoryOptions };
+export { FindOptions, History };

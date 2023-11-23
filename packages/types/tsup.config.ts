@@ -9,7 +9,6 @@ const entry = {
   find: 'src/find/index.ts',
   global: 'src/global/index.ts',
   history: 'src/history/index.ts',
-  memo: 'src/memo/index.ts',
   phantom: 'src/phantom/index.ts',
   'regular-nft': 'src/regular-nft/index.ts',
   shared: 'src/shared/index.ts',

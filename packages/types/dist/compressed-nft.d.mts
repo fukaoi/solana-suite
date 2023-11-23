@@ -1,10 +1,22 @@
 import { Pubkey } from './account.mjs';
+import { c as AuthorityOptions } from './shared-e7a4e323.js';
 import { Offchain } from './storage.mjs';
+import './find.mjs';
+import './history.mjs';
 import '@solana/web3.js';
 import './phantom-e9a40784.js';
 import './das-api.mjs';
 import './converter.mjs';
 import '@metaplex-foundation/mpl-token-metadata';
+
+type MintOptions = {
+    receiver: Pubkey;
+    delegate: Pubkey;
+} & AuthorityOptions;
+
+type MintCollectionOptions = {
+    freezeAuthority: Pubkey;
+} & AuthorityOptions;
 
 type Authority = {
     address: Pubkey;
@@ -40,4 +52,4 @@ type NftMetadata = {
     offchain: Offchain;
 };
 
-export { Authority, CompressedNftMetadata, Creators, NftMetadata };
+export { Authority, CompressedNftMetadata, Creators, MintCollectionOptions, MintOptions, NftMetadata };

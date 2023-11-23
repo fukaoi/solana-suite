@@ -1,23 +1,6 @@
-import { Pubkey } from './account.js';
-import { Find } from './find.js';
-import { History } from './history.js';
+export { A as AnyObject, c as AuthorityOptions, b as OnErr, a as OnOk, O as OverwriteObject } from './shared-ecb29866.js';
 export { R as Result } from './result-b9d23549.js';
+import './account.js';
+import './find.js';
+import './history.js';
 import '@solana/web3.js';
-
-type AnyObject = {
-    [key: string]: unknown;
-};
-type OverwriteObject = {
-    existsKey: string;
-    will: {
-        key: string;
-        value: unknown;
-    };
-};
-type OnOk<T extends History | Find> = (ok: T[]) => void;
-type OnErr = (err: Error) => void;
-type AuthorityOptions = {
-    feePayer: Pubkey;
-};
-
-export { AnyObject, AuthorityOptions, OnErr, OnOk, OverwriteObject };

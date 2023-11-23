@@ -64,6 +64,9 @@ type History = {
 
 type OnOk<T extends History | Find> = (ok: T[]) => void;
 type OnErr = (err: Error) => void;
+type AuthorityOptions = {
+    feePayer: Pubkey$1;
+};
 
 declare abstract class AbstractResult$1<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
@@ -341,7 +344,7 @@ type InputNftMetadata$1 = {
     name: string;
     symbol: string;
     royalty: number;
-    storageType: StorageType;
+    storageType?: StorageType;
     filePath?: FileType;
     uri?: string;
     isMutable?: boolean;
@@ -855,13 +858,13 @@ declare const RegularNft: {
     mint: (owner: Pubkey$1, signer: Secret, input: InputNftMetadata, feePayer?: Secret | undefined, freezeAuthority?: Pubkey$1 | undefined) => Promise<Result<MintTransaction<Pubkey$1>, Error>>;
     gasLessTransfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], feePayer: Pubkey$1) => Promise<Result<PartialSignTransaction, Error>>;
     gasLessMint: (owner: Pubkey$1, signer: Secret, input: InputNftMetadata$1, feePayer: Pubkey$1, freezeAuthority?: Secret | undefined) => Promise<Result<PartialSignTransaction, Error>>;
-    freeze: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, feePayer?: Secret | undefined) => Result<Transaction, Error>;
+    freeze: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, options?: Partial<AuthorityOptions>) => Result<Transaction, Error>;
     findByOwner: (owner: Pubkey$1, onOk: OnOk<RegularNftMetadata>, onErr: OnErr, options?: {
         sortable?: SortDirection | undefined;
         isHolder?: boolean | undefined;
     } | undefined) => Promise<void>;
     findByMint: (mint: Pubkey$1) => Promise<Result<RegularNftMetadata, Error>>;
-    burn: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret, feePayer?: Secret | undefined) => Result<Transaction, Error>;
+    burn: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret, options: Partial<AuthorityOptions>) => Result<Transaction, Error>;
 };
 
 export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, RegularNft, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };
