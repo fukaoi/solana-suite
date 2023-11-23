@@ -1,7 +1,7 @@
 import * as mpl_bubblegum_instruction from 'mpl-bubblegum-instruction';
-import BN from 'bn.js';
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
+import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
 declare const pubKeyNominality: unique symbol;

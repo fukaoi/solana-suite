@@ -1,8 +1,8 @@
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
+import BN from 'bn.js';
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
-import BN from 'bn.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -268,6 +268,29 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
+type bignum = number | BN;
+type Option<T> = T | null;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type Creators = {
+    address: Pubkey;
+    share: number;
+    verified: boolean;
+};
+type InputCreators = {
+    address: Pubkey;
+    secret: Secret;
+    share: number;
+};
+
 type FileType = string | File;
 
 type StorageType = 'nftStorage' | 'arweave' | string;
@@ -310,52 +333,6 @@ type Attribute = {
     [key: string]: unknown;
 };
 
-type bignum = number | BN;
-type Option<T> = T | null;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
-};
-type Creators = {
-    address: Pubkey;
-    share: number;
-    verified: boolean;
-};
-type InputCreators = {
-    address: Pubkey;
-    secret: Secret;
-    share: number;
-};
-
-type InputCollection = Pubkey;
-type Options = {
-    [key: string]: unknown;
-};
-type InputNftMetadata = {
-    name: string;
-    symbol: string;
-    royalty: number;
-    storageType?: StorageType;
-    filePath?: FileType;
-    uri?: string;
-    isMutable?: boolean;
-    description?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    maxSupply?: bignum;
-    creators?: InputCreators[];
-    uses?: Uses;
-    collection?: InputCollection;
-    options?: Options;
-};
-
 type Collection = {
     address: Pubkey;
     verified: boolean;
@@ -382,17 +359,26 @@ type RegularNftMetadata = {
     dateTime?: Date | undefined;
 };
 
-type InputTokenMetadata = {
+type InputCollection = Pubkey;
+type Options = {
+    [key: string]: unknown;
+};
+type InputNftMetadata = {
     name: string;
     symbol: string;
+    royalty: number;
+    storageType?: StorageType;
     filePath?: FileType;
     uri?: string;
-    storageType: StorageType;
+    isMutable?: boolean;
     description?: string;
-    royalty?: number;
-    uses?: Uses;
-    creators?: InputCreators[];
+    external_url?: string;
     attributes?: Attribute[];
+    properties?: Properties;
+    maxSupply?: bignum;
+    creators?: InputCreators[];
+    uses?: Uses;
+    collection?: InputCollection;
     options?: Options;
 };
 
@@ -408,6 +394,20 @@ type TokenMetadata = {
     creators?: Creators[] | undefined;
     uses?: Uses | undefined;
     dateTime?: Date | undefined;
+};
+
+type InputTokenMetadata = {
+    name: string;
+    symbol: string;
+    filePath?: FileType;
+    uri?: string;
+    storageType: StorageType;
+    description?: string;
+    royalty?: number;
+    uses?: Uses;
+    creators?: InputCreators[];
+    attributes?: Attribute[];
+    options?: Options;
 };
 
 declare abstract class AbstractResult<T, E extends Error> {

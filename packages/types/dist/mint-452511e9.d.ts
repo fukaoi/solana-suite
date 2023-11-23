@@ -48,4 +48,4 @@ type InputNftMetadata = {
     options?: Options;
 };
 
-export { Creators as C, InputCollection as I, Option as O, Uses as U, Options as a, InputNftMetadata as b, bignum as c, UseMethod as d, InputCreators as e };
+export { Creators as C, InputCreators as I, Option as O, Uses as U, UseMethod as a, bignum as b, InputCollection as c, Options as d, InputNftMetadata as e };

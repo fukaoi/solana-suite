@@ -271,6 +271,29 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
+type bignum = number | BN;
+type Option<T> = T | null;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type Creators = {
+    address: Pubkey$1;
+    share: number;
+    verified: boolean;
+};
+type InputCreators = {
+    address: Pubkey$1;
+    secret: Secret;
+    share: number;
+};
+
 type FileType = string | File;
 
 type StorageType = 'nftStorage' | 'arweave' | string;
@@ -313,52 +336,6 @@ type Attribute = {
     [key: string]: unknown;
 };
 
-type bignum = number | BN;
-type Option<T> = T | null;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
-};
-type Creators = {
-    address: Pubkey$1;
-    share: number;
-    verified: boolean;
-};
-type InputCreators = {
-    address: Pubkey$1;
-    secret: Secret;
-    share: number;
-};
-
-type InputCollection = Pubkey$1;
-type Options = {
-    [key: string]: unknown;
-};
-type InputNftMetadata$1 = {
-    name: string;
-    symbol: string;
-    royalty: number;
-    storageType?: StorageType;
-    filePath?: FileType;
-    uri?: string;
-    isMutable?: boolean;
-    description?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    maxSupply?: bignum;
-    creators?: InputCreators[];
-    uses?: Uses;
-    collection?: InputCollection;
-    options?: Options;
-};
-
 type Collection = {
     address: Pubkey$1;
     verified: boolean;
@@ -383,6 +360,29 @@ type RegularNftMetadata = {
     creators?: Creators[] | undefined;
     uses?: Uses | undefined;
     dateTime?: Date | undefined;
+};
+
+type InputCollection = Pubkey$1;
+type Options = {
+    [key: string]: unknown;
+};
+type InputNftMetadata$1 = {
+    name: string;
+    symbol: string;
+    royalty: number;
+    storageType?: StorageType;
+    filePath?: FileType;
+    uri?: string;
+    isMutable?: boolean;
+    description?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    maxSupply?: bignum;
+    creators?: InputCreators[];
+    uses?: Uses;
+    collection?: InputCollection;
+    options?: Options;
 };
 
 declare abstract class AbstractResult<T, E extends Error> {

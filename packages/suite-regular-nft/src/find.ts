@@ -28,7 +28,7 @@ export namespace RegularNft {
     const isHolder = !options?.isHolder ? true : false;
     await SplToken.genericFindByOwner(
       owner,
-      (result: Result<[], Error>) => result.match(onOk, onErr),
+      (result: Result<never[], Error>) => result.match(onOk, onErr),
       TokenStandard.NonFungible,
       sortable,
       isHolder,
@@ -44,7 +44,6 @@ export namespace RegularNft {
   export const findByMint = async (
     mint: Pubkey,
   ): Promise<Result<RegularNftMetadata, Error>> => {
-    // return await SplToken.genericFindByMint<NftMetadata>(
     return await SplToken.genericFindByMint(mint, TokenStandard.NonFungible);
   };
 }

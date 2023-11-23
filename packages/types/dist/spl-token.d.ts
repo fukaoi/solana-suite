@@ -1,5 +1,5 @@
-import { FileType, StorageType, Attribute, Offchain } from './storage.js';
-import { U as Uses, e as InputCreators, a as Options, C as Creators } from './input-3d6350ea.js';
+import { Offchain, Attribute, FileType, StorageType } from './storage.js';
+import { C as Creators, U as Uses, I as InputCreators, d as Options } from './mint-452511e9.js';
 import '@solana/web3.js';
 import './phantom-e9a40784.js';
 import './account.js';
@@ -7,20 +7,6 @@ import './das-api.js';
 import './converter.js';
 import '@metaplex-foundation/mpl-token-metadata';
 import 'bn.js';
-
-type InputTokenMetadata = {
-    name: string;
-    symbol: string;
-    filePath?: FileType;
-    uri?: string;
-    storageType: StorageType;
-    description?: string;
-    royalty?: number;
-    uses?: Uses;
-    creators?: InputCreators[];
-    attributes?: Attribute[];
-    options?: Options;
-};
 
 type TokenMetadata = {
     mint: string;
@@ -34,6 +20,20 @@ type TokenMetadata = {
     creators?: Creators[] | undefined;
     uses?: Uses | undefined;
     dateTime?: Date | undefined;
+};
+
+type InputTokenMetadata = {
+    name: string;
+    symbol: string;
+    filePath?: FileType;
+    uri?: string;
+    storageType: StorageType;
+    description?: string;
+    royalty?: number;
+    uses?: Uses;
+    creators?: InputCreators[];
+    attributes?: Attribute[];
+    options?: Options;
 };
 
 export { InputTokenMetadata, TokenMetadata };

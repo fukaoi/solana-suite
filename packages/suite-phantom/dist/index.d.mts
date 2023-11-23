@@ -434,6 +434,23 @@ interface Details {
     limit?: Limit;
 }
 
+type bignum = number | BN;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type InputCreators = {
+    address: Pubkey;
+    secret: Secret;
+    share: number;
+};
+
 type PhantomProvider = {
     isPhantom?: boolean;
     publicKey: PublicKey | null;
@@ -451,23 +468,6 @@ type Attribute = {
     trait_type?: string;
     value?: string;
     [key: string]: unknown;
-};
-
-type bignum = number | BN;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
-};
-type InputCreators = {
-    address: Pubkey;
-    secret: Secret;
-    share: number;
 };
 
 type Options = {

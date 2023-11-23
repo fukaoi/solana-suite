@@ -12,6 +12,24 @@ type Secret = (string & {
     [secretNominality]: never;
 }) | string;
 
+type bignum = number | BN;
+type Option<T> = T | null;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type InputCreators = {
+    address: Pubkey$1;
+    secret: Secret;
+    share: number;
+};
+
 type FileType = string | File;
 
 type InternalCollection = {
@@ -128,24 +146,6 @@ type Attribute = {
     trait_type?: string;
     value?: string;
     [key: string]: unknown;
-};
-
-type bignum = number | BN;
-type Option<T> = T | null;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
-};
-type InputCreators = {
-    address: Pubkey$1;
-    secret: Secret;
-    share: number;
 };
 
 type InputCollection = Pubkey$1;
