@@ -15,7 +15,6 @@ test('Create collection', async (t) => {
     symbol: 'CNFT',
     royalty: 0,
     uri: 'https://arweave.net/5dfVI6R6bjT241pEUsUHVa1uzSzu8tMUfs1tAnFwikk',
-    storageType: 'nftStorage',
   });
   (await inst.submit()).match(
     (ok: string) => {

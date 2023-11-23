@@ -34,6 +34,7 @@ import { SplToken as Calculate } from './calculate-amount';
 import { Storage } from '~/storage';
 
 export namespace SplToken {
+  const DEFAULT_STORAGE_TYPE = 'nftStorage';
   export const createFreezeAuthority = (
     mint: PublicKey,
     owner: PublicKey,
@@ -148,7 +149,7 @@ export namespace SplToken {
       }
 
       const { feePayer, freezeAuthority } = options;
-
+      const storageType = input.storageType || DEFAULT_STORAGE_TYPE;
       const payer = feePayer ? feePayer : signer;
       input.royalty = 0;
       const sellerFeeBasisPoints = 0;
@@ -164,11 +165,11 @@ export namespace SplToken {
 
       let uri!: string;
       // upload file
-      if (input.filePath && input.storageType) {
+      if (input.filePath) {
         const uploaded = await Storage.upload(
           tokenStorageMetadata,
           input.filePath,
-          input.storageType,
+          storageType,
           payer,
         );
 
@@ -180,7 +181,7 @@ export namespace SplToken {
         const image = { image: input.uri };
         const uploaded = await Storage.uploadData(
           { ...tokenStorageMetadata, ...image },
-          input.storageType,
+          storageType,
           payer,
         );
         if (uploaded.isErr) {
@@ -188,7 +189,7 @@ export namespace SplToken {
         }
         uri = uploaded.value;
       } else {
-        throw Error("Must set 'storageType + filePath' or 'uri'");
+        throw Error(`Must set filePath' or 'uri'`);
       }
 
       const isMutable = true;

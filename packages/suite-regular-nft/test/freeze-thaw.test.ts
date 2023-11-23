@@ -24,9 +24,8 @@ test('Freezing and Thawing a target nft', async (t) => {
     owner.secret,
     {
       filePath: asset.filePath as string,
-      storageType: 'nftStorage',
-      name: asset.name!,
-      symbol: asset.symbol!,
+      name: asset.name,
+      symbol: asset.symbol,
       royalty: 0,
     },
     {

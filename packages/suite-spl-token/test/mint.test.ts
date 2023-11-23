@@ -21,7 +21,6 @@ test('Create token', async (t) => {
     name: 'solana-suite-token',
     symbol: 'SST',
     filePath: RandomAsset.get().filePath as string,
-    storageType: 'nftStorage',
     royalty: 50,
   };
 
@@ -47,7 +46,6 @@ test('Create token, always uploaed image', async (t) => {
     name: 'solana-suite-token',
     symbol: 'SST',
     uri: 'https://ipfs.io/ipfs/bafkreigxqrx4tdkrosdrfk52xmeejlv2tkexymvja26zwjbnow3l45v5ji',
-    storageType: 'nftStorage',
     royalty: 50,
   };
 
@@ -75,7 +73,6 @@ test('Create token with creators, freezeAuthority', async (t) => {
     name: 'solana-suite-token',
     symbol: 'SST',
     filePath: RandomAsset.get().filePath as string,
-    storageType: 'nftStorage',
     royalty: 50,
     creators: [
       {

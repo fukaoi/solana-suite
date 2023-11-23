@@ -7,7 +7,7 @@ import { Storage } from '~/storage';
 import { SplToken } from '~/suite-spl-token';
 import { PhantomProvider } from '~/types/phantom';
 import { InputTokenMetadata } from '~/types/spl-token';
-import { InputNftMetadata } from '~/types/nft';
+import { InputNftMetadata } from '~/types/regular-nft';
 import { Converter } from '~/converter';
 
 export namespace PhantomSplToken {
@@ -61,7 +61,7 @@ export namespace PhantomSplToken {
       debugLog('# datav2: ', datav2);
       debugLog('# upload content url: ', uri);
 
-      const insturctions = await SplToken.createMintInstructions(
+      const insturctions = await SplToken.createMint(
         mint.publicKey,
         owner.toPublicKey(),
         totalAmount,

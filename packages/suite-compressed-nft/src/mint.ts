@@ -33,6 +33,7 @@ import {
 import { MintOptions } from '~/types/compressed-nft';
 
 export namespace CompressedNft {
+  const DEFAULT_STORAGE_TYPE = 'nftStorage';
   export const createVerifyCreator = async (
     creators: Creator[],
     assetId: PublicKey,
@@ -162,6 +163,7 @@ export namespace CompressedNft {
     return Try(async () => {
       const { feePayer, receiver, delegate } = options;
       const payer = feePayer ? feePayer : signer;
+      const storageType = input.storageType || DEFAULT_STORAGE_TYPE;
       const leafOwner = receiver ? receiver : owner;
       const leafDelegate = delegate
         ? delegate
@@ -180,20 +182,21 @@ export namespace CompressedNft {
 
       // porperties, Upload content
       let properties;
-      if (input.properties && input.storageType) {
+      if (input.properties) {
         properties = await Converter.Properties.intoInfra(
           input.properties,
           Storage.uploadFile,
-          input.storageType,
+          storageType,
           payer,
         );
       } else if (input.properties && !input.storageType) {
-        throw Error('Must set storageType if will use properties');
+        throw Error(`Must set filePath' or 'uri'`);
       }
 
       input = {
         ...input,
         properties,
+        storageType,
       };
 
       const sellerFeeBasisPoints = Converter.Royalty.intoInfra(input.royalty);
@@ -208,11 +211,11 @@ export namespace CompressedNft {
 
       let uri!: string;
       // upload file
-      if (input.filePath && input.storageType) {
+      if (input.filePath) {
         const uploaded = await Storage.upload(
           nftStorageMetadata,
           input.filePath,
-          input.storageType,
+          storageType,
           payer,
         );
         debugLog('# upload content url: ', uploaded);
@@ -225,7 +228,7 @@ export namespace CompressedNft {
         const image = { image: input.uri };
         const uploaded = await Storage.uploadData(
           { ...nftStorageMetadata, ...image },
-          input.storageType,
+          storageType,
           payer,
         );
         if (uploaded.isErr) {
@@ -233,7 +236,7 @@ export namespace CompressedNft {
         }
         uri = uploaded.value;
       } else {
-        throw Error(`Must set 'storageType + filePath' or 'uri'`);
+        throw Error(`Must set filePath' or 'uri'`);
       }
 
       let converted = Converter.CompressedNftMetadata.intoInfra(

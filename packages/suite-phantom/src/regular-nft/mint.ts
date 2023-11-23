@@ -7,7 +7,7 @@ import { Account } from '~/account';
 import { Validator, ValidatorError } from '~/validator';
 import { Converter } from '~/converter';
 import { PhantomProvider } from '~/types/phantom';
-import { InputNftMetadata } from '~/types/nft';
+import { InputNftMetadata } from '~/types/regular-nft';
 
 export namespace PhantomMetaplex {
   /**
@@ -73,7 +73,7 @@ export namespace PhantomMetaplex {
 
       const tx = new Transaction();
 
-      const insts = await RegularNft.createMintInstructions(
+      const insts = await RegularNft.createMint(
         mint.toPublicKey(),
         phantom.publicKey!,
         datav2,

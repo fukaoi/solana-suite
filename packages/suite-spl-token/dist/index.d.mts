@@ -408,7 +408,7 @@ type InputTokenMetadata = {
     symbol: string;
     filePath?: FileType;
     uri?: string;
-    storageType: StorageType;
+    storageType?: StorageType;
     description?: string;
     royalty?: number;
     uses?: Uses;

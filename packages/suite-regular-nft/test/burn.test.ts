@@ -21,9 +21,8 @@ test('[Nft Storage] mint nft and nft burn', async (t) => {
     owner.secret,
     {
       filePath: asset.filePath as string,
-      storageType: 'nftStorage',
-      name: asset.name!,
-      symbol: asset.symbol!,
+      name: asset.name,
+      symbol: asset.symbol,
       royalty: 0,
     },
     { feePayer: feePayer.secret },

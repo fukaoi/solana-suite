@@ -27,7 +27,6 @@ test('Freezing and Thawing a target nft', async (t) => {
       name: 'solana-suite-token',
       symbol: 'SST',
       filePath: RandomAsset.get().filePath as string,
-      storageType: 'nftStorage',
       royalty: 50,
     },
     {

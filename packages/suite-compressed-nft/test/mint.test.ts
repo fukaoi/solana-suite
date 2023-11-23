@@ -83,7 +83,6 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
     source.secret,
     {
       filePath: asset.filePath,
-      storageType: 'nftStorage',
       name: asset.name!,
       symbol: asset.symbol!,
       description: asset.description,

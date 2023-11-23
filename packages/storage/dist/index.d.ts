@@ -374,9 +374,9 @@ declare namespace NftStorage {
 
 declare namespace Storage {
     const toConvertOffchaindata: (input: InputNftMetadata, sellerFeeBasisPoints: number) => Offchain;
-    const uploadFile: (filePath: FileType, storageType?: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
-    const uploadData: (input: Offchain, storageType?: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
-    const upload: (input: Offchain, filePath: FileType, storageType?: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const uploadFile: (filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const uploadData: (input: Offchain, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const upload: (input: Offchain, filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
 }
 
 export { Arweave, NftStorage, ProvenanceLayer, Storage };

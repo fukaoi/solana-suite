@@ -44,7 +44,7 @@ export namespace RegularNft {
     });
   };
 
-  export const createDeleagateInstruction = (
+  export const createDeleagate = (
     mint: PublicKey,
     owner: PublicKey,
     delegateAuthority: PublicKey,
@@ -59,7 +59,7 @@ export namespace RegularNft {
     );
   };
 
-  export const createVerifySizedCollectionInstruction = (
+  export const createVerifySizedCollection = (
     collectionChild: PublicKey,
     collectionParent: PublicKey,
     feePayer: PublicKey,
@@ -80,7 +80,7 @@ export namespace RegularNft {
     });
   };
 
-  export const createMintInstructions = async (
+  export const createMint = async (
     mint: PublicKey,
     owner: PublicKey,
     nftMetadata: DataV2,
@@ -260,7 +260,7 @@ export namespace RegularNft {
 
       const mint = Account.Keypair.create();
 
-      const instructions = await createMintInstructions(
+      const instructions = await createMint(
         mint.toPublicKey(),
         owner.toPublicKey(),
         datav2,
@@ -271,7 +271,7 @@ export namespace RegularNft {
       // freezeAuthority
       if (freezeAuthority) {
         instructions.push(
-          createDeleagateInstruction(
+          createDeleagate(
             mint.toPublicKey(),
             owner.toPublicKey(),
             freezeAuthority.toPublicKey(),
@@ -282,7 +282,7 @@ export namespace RegularNft {
       // collection ---
       if (input.collection) {
         instructions.push(
-          createVerifySizedCollectionInstruction(
+          createVerifySizedCollection(
             mint.toPublicKey(),
             input.collection.toPublicKey(),
             payer.toKeypair().publicKey,

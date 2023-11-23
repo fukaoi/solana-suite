@@ -23,12 +23,9 @@ export namespace CompressedNft {
     options: Partial<MintCollectionOptions> = {},
   ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
     const { feePayer, freezeAuthority } = options;
-    return RegularNft.mintCollection(
-      owner,
-      signer,
-      input,
+    return RegularNft.mintCollection(owner, signer, input, {
       feePayer,
       freezeAuthority,
-    );
+    });
   };
 }
