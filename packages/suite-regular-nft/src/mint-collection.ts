@@ -1,5 +1,5 @@
 import { createSetCollectionSizeInstruction } from '@metaplex-foundation/mpl-token-metadata';
-import { debugLog, Result, Try } from '~/shared';
+import { debugLog, Result, Try, unixTimestamp } from '~/shared';
 import { Converter } from '~/converter';
 import { Account } from '~/account';
 import { Storage } from '~/storage';
@@ -53,16 +53,15 @@ export namespace RegularNft {
       };
       //--- porperties, Upload content ---
 
-      const nftStorageMetadata = Storage.toConvertOffchaindata(input, 0);
+      const storageMetadata = Storage.toConvertOffchaindata(input, 0);
 
       // created at by unix timestamp
-      const createdAt = Math.floor(new Date().getTime() / 1000);
-      nftStorageMetadata.created_at = createdAt;
+      storageMetadata.created_at = unixTimestamp();
 
       let uri!: string;
       if (input.filePath && input.storageType) {
         const uploaded = await Storage.upload(
-          nftStorageMetadata,
+          storageMetadata,
           input.filePath,
           storageType,
           payer,
@@ -75,7 +74,7 @@ export namespace RegularNft {
       } else if (input.uri) {
         const image = { image: input.uri };
         const uploaded = await Storage.uploadData(
-          { ...nftStorageMetadata, ...image },
+          { ...storageMetadata, ...image },
           storageType,
           payer,
         );
@@ -99,7 +98,7 @@ export namespace RegularNft {
         collectionMint.pubkey,
       );
 
-      const instructions = await Mint.createMintInstructions(
+      const instructions = await Mint.createMint(
         collectionMint.toPublicKey(),
         owner.toPublicKey(),
         datav2,
@@ -110,7 +109,7 @@ export namespace RegularNft {
       // freezeAuthority
       if (freezeAuthority) {
         instructions.push(
-          Mint.createDeleagateInstruction(
+          Mint.createDeleagate(
             collectionMint.toPublicKey(),
             owner.toPublicKey(),
             freezeAuthority.toPublicKey(),

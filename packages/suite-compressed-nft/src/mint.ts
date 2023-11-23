@@ -5,7 +5,7 @@ import { Converter } from '~/converter';
 import { Storage } from '~/storage';
 import { Node } from '~/node';
 import { MintTransaction } from '~/transaction';
-import { debugLog, Try } from '~/shared';
+import { debugLog, Try, unixTimestamp} from '~/shared';
 import { DasApi } from '~/das-api';
 import { CompressedNft as Tree } from './tree';
 import {
@@ -200,20 +200,19 @@ export namespace CompressedNft {
       };
 
       const sellerFeeBasisPoints = Converter.Royalty.intoInfra(input.royalty);
-      const nftStorageMetadata = Storage.toConvertOffchaindata(
+      const storageMetadata = Storage.toConvertOffchaindata(
         input,
         sellerFeeBasisPoints,
       );
 
       // created at by unix timestamp
-      const createdAt = Math.floor(new Date().getTime() / 1000);
-      nftStorageMetadata.created_at = createdAt;
+      storageMetadata.created_at = unixTimestamp();
 
       let uri!: string;
       // upload file
       if (input.filePath) {
         const uploaded = await Storage.upload(
-          nftStorageMetadata,
+          storageMetadata,
           input.filePath,
           storageType,
           payer,
@@ -227,7 +226,7 @@ export namespace CompressedNft {
       } else if (input.uri) {
         const image = { image: input.uri };
         const uploaded = await Storage.uploadData(
-          { ...nftStorageMetadata, ...image },
+          { ...storageMetadata, ...image },
           storageType,
           payer,
         );

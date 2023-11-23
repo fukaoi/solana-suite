@@ -14,7 +14,7 @@ import {
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { debugLog, Result, Try } from '~/shared';
+import { debugLog, Result, Try, unixTimestamp } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 import { MintTransaction } from '~/transaction';
 import { Node } from '~/node';
@@ -208,20 +208,19 @@ export namespace RegularNft {
       };
 
       const sellerFeeBasisPoints = Converter.Royalty.intoInfra(input.royalty);
-      const nftStorageMetadata = Storage.toConvertOffchaindata(
+      const storageMetadata = Storage.toConvertOffchaindata(
         input,
         sellerFeeBasisPoints,
       );
 
       // created at by unix timestamp
-      const createdAt = Math.floor(new Date().getTime() / 1000);
-      nftStorageMetadata.created_at = createdAt;
+      storageMetadata.created_at = unixTimestamp();
 
       let uri!: string;
       // upload file
       if (input.filePath) {
         const uploaded = await Storage.upload(
-          nftStorageMetadata,
+          storageMetadata,
           input.filePath,
           storageType,
           payer,
@@ -235,7 +234,7 @@ export namespace RegularNft {
       } else if (input.uri) {
         const image = { image: input.uri };
         const uploaded = await Storage.uploadData(
-          { ...nftStorageMetadata, ...image },
+          { ...storageMetadata, ...image },
           storageType,
           payer,
         );

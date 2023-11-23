@@ -109,5 +109,11 @@ declare function Try<T, E extends Error>(block: () => T): Result<T, E>;
  * @returns Date | undefined
  */
 declare const convertTimestampToDateTime: (created_at: number | undefined) => Date | undefined;
+/**
+ * Get unix timestamp
+ *
+ * @returns number
+ */
+declare const unixTimestamp: () => number;
 
-export { Constants, Result, Try, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep };
+export { Constants, Result, Try, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };

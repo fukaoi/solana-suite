@@ -1,4 +1,4 @@
-import { debugLog, Result, Try } from '~/shared';
+import { debugLog, Result, Try, unixTimestamp } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 import { GasLessMintOptions, InputNftMetadata } from '~/types/regular-nft';
 import { Node } from '~/node';
@@ -64,13 +64,15 @@ export namespace RegularNft {
           storageType,
         );
 
-        const nftStorageMetadata = Storage.toConvertOffchaindata(
+        const storageMetadata = Storage.toConvertOffchaindata(
           { ...input, properties },
           sellerFeeBasisPoints,
         );
 
+        storageMetadata.created_at = unixTimestamp();
+
         const uploaded = await Storage.upload(
-          nftStorageMetadata,
+          storageMetadata,
           input.filePath,
           storageType,
         );
@@ -107,7 +109,7 @@ export namespace RegularNft {
       debugLog('# datav2: ', datav2);
 
       const mint = Account.Keypair.create();
-      const insts = await Mint.createMintInstructions(
+      const insts = await Mint.createMint(
         mint.toPublicKey(),
         owner.toPublicKey(),
         datav2,
@@ -118,7 +120,7 @@ export namespace RegularNft {
       // freezeAuthority
       if (options.freezeAuthority) {
         insts.push(
-          Mint.createDeleagateInstruction(
+          Mint.createDeleagate(
             mint.toPublicKey(),
             owner.toPublicKey(),
             options.freezeAuthority.toPublicKey(),

@@ -20,7 +20,7 @@ import {
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 
-import { debugLog, Result, Try } from '~/shared';
+import { debugLog, Result, Try, unixTimestamp } from '~/shared';
 
 import { Node } from '~/node';
 import { Account } from '~/account';
@@ -154,20 +154,19 @@ export namespace SplToken {
       input.royalty = 0;
       const sellerFeeBasisPoints = 0;
 
-      const tokenStorageMetadata = Storage.toConvertOffchaindata(
+      const storageMetadata = Storage.toConvertOffchaindata(
         input as InputNftMetadata,
         input.royalty,
       );
 
       // created at by unix timestamp
-      const createdAt = Math.floor(new Date().getTime() / 1000);
-      tokenStorageMetadata.created_at = createdAt;
+      storageMetadata.created_at = unixTimestamp();
 
       let uri!: string;
       // upload file
       if (input.filePath) {
         const uploaded = await Storage.upload(
-          tokenStorageMetadata,
+          storageMetadata,
           input.filePath,
           storageType,
           payer,
@@ -180,7 +179,7 @@ export namespace SplToken {
       } else if (input.uri) {
         const image = { image: input.uri };
         const uploaded = await Storage.uploadData(
-          { ...tokenStorageMetadata, ...image },
+          { ...storageMetadata, ...image },
           storageType,
           payer,
         );

@@ -160,3 +160,12 @@ export const convertTimestampToDateTime = (
   }
   return;
 };
+
+/**
+ * Get unix timestamp
+ *
+ * @returns number
+ */
+export const unixTimestamp = (): number => {
+  return Math.floor(new Date().getTime() / 1000);
+};
