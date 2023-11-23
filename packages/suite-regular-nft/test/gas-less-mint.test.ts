@@ -16,7 +16,7 @@ test.before(async () => {
   feePayer = obj.feePayer;
 });
 
-test('[Nft Storage] mint nft with partial sing fee payer', async (t) => {
+test('[Nft Storage] mint nft with fee payer', async (t) => {
   const owner = Account.Keypair.create();
   const freezeAuthority = Account.Keypair.create();
   const asset = RandomAsset.get();
@@ -40,7 +40,7 @@ test('[Nft Storage] mint nft with partial sing fee payer', async (t) => {
   t.true(serialized.isOk, `${serialized.unwrap()}`);
 
   if (serialized.isOk) {
-    (await serialized.value.submit(source.secret)).match(
+    (await serialized.value.submit(feePayer.secret)).match(
       (ok: string) => {
         t.log('# mint:', serialized.value.data);
         t.log('# sig:', ok);
@@ -91,7 +91,7 @@ test('[Arweave] use case arweave', async (t) => {
   t.true(serialized.isOk, `${serialized.unwrap()}`);
 
   if (serialized.isOk) {
-    (await serialized.value.submit(source.secret)).match(
+    (await serialized.value.submit(feePayer.secret)).match(
       (ok: string) => {
         t.log('# mint:', serialized.value.data);
         t.log('# sig:', ok);

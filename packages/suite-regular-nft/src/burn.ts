@@ -14,14 +14,9 @@ export namespace RegularNft {
     signer: Secret,
     options: Partial<AuthorityOptions> = {},
   ): Result<Transaction, Error> => {
-    const feePayer = options.feePayer;
-    return SplToken.burn(
-      mint,
-      owner,
-      [signer],
-      NFT_AMOUNT,
-      NFT_DECIMALS,
+    const feePayer = options.feePayer ? options.feePayer : signer;
+    return SplToken.burn(mint, owner, [signer], NFT_AMOUNT, NFT_DECIMALS, {
       feePayer,
-    );
+    });
   };
 }
