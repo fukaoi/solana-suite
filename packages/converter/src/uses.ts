@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Option, Uses } from '~/types/regular-nft';
 
 export namespace Converter {

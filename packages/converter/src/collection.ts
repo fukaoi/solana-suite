@@ -1,5 +1,6 @@
 import { InternalCollection } from '~/types/converter';
 import { Grouping } from '~/types/das-api';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Collection, InputCollection, Option } from '~/types/regular-nft';
 
 export namespace Converter {

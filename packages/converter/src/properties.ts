@@ -1,6 +1,7 @@
 import { overwriteObject, Result } from '~/shared';
 import { Secret } from '~/types/account';
 import {} from '~/types/converter';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FileType, Properties, StorageType } from '~/types/storage';
 
 export namespace Converter {

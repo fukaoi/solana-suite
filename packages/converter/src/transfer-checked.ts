@@ -1,6 +1,7 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
 import { PostTokenAccount } from '~/types/transaction-filter';
 import { History } from '~/types/history';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { TransferChecked } from '~/types/transaction-filter';
 import { convertTimestampToDateTime } from '~/shared';
 

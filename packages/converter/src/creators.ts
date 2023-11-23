@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Creators, InputCreators, Option } from '~/types/regular-nft';
 import { InternalCreators } from '~/types/converter';
 

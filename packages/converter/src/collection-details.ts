@@ -1,4 +1,5 @@
 import { CollectionDetails as MetaplexCollectionDetails } from '@metaplex-foundation/mpl-token-metadata';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CollectionDetails, Option } from '~/types/regular-nft';
 
 export namespace Converter {

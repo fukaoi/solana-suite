@@ -4,6 +4,7 @@ import { Converter as Creators } from './creators';
 import { Converter as Uses } from './uses';
 import { Converter as Token } from './token-metadata';
 import { convertTimestampToDateTime } from '~/shared';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { InputNftMetadata, RegularNftMetadata } from '~/types/regular-nft';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import { MetadataAndOffchain } from '~/types/storage';

@@ -10,13 +10,13 @@ import { ValidatorError } from '~/validator';
 
 let source: KeypairAccount;
 let feePayer: KeypairAccount;
-let collection: Pubkey;
+// let collection: Pubkey;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
   feePayer = obj.feePayer;
-  collection = obj.collectionMint;
+  // collection = obj.collectionMint;
 });
 
 test('[nftStorage] mint nft, already uploaed image', async (t) => {

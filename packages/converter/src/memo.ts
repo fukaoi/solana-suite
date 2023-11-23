@@ -2,6 +2,7 @@ import { ParsedTransactionWithMeta } from '@solana/web3.js';
 import { convertTimestampToDateTime } from '~/shared';
 import { PostTokenAccount } from '~/types/transaction-filter';
 import { History } from '~/types/history';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Memo, TransferChecked } from '~/types/transaction-filter';
 
 export namespace Converter {

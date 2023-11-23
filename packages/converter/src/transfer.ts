@@ -1,4 +1,5 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Transfer } from '~/types/transaction-filter';
 import { History } from '~/types/history';
 import { convertTimestampToDateTime } from '~/shared';
