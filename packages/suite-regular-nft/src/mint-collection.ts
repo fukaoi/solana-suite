@@ -19,6 +19,7 @@ import { MintCollectionOptions } from '~/types/regular-nft';
  */
 export namespace RegularNft {
   export const DEFAULT_COLLECTION_SIZE = 0;
+  const DEFAULT_STORAGE_TYPE = 'nftStorage';
   export const mintCollection = (
     owner: Pubkey,
     signer: Secret,
@@ -26,25 +27,24 @@ export namespace RegularNft {
     options: Partial<MintCollectionOptions> = {},
   ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
     return Try(async () => {
-      const { freezeAuthority, feePayer, collectionSize } = options;
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
 
+      const { freezeAuthority, feePayer, collectionSize } = options;
       const payer = feePayer ? feePayer : signer;
+      const storageType = input.storageType || DEFAULT_STORAGE_TYPE;
 
       //--- porperties, Upload content ---
       let properties;
-      if (input.properties && input.storageType) {
+      if (input.properties) {
         properties = await Converter.Properties.intoInfra(
           input.properties,
           Storage.uploadFile,
-          input.storageType,
+          storageType,
           payer,
         );
-      } else if (input.properties && !input.storageType) {
-        throw Error('Must set storageType if will use properties');
       }
 
       input = {
@@ -64,7 +64,7 @@ export namespace RegularNft {
         const uploaded = await Storage.upload(
           nftStorageMetadata,
           input.filePath,
-          input.storageType,
+          storageType,
           payer,
         );
         debugLog('# upload content url: ', uploaded);
@@ -76,7 +76,7 @@ export namespace RegularNft {
         const image = { image: input.uri };
         const uploaded = await Storage.uploadData(
           { ...nftStorageMetadata, ...image },
-          input.storageType,
+          storageType,
           payer,
         );
         if (uploaded.isErr) {
@@ -84,7 +84,7 @@ export namespace RegularNft {
         }
         uri = uploaded.value;
       } else {
-        throw Error(`Must set 'storageType + filePath' or 'uri'`);
+        throw Error(`Must set filePath' or 'uri'`);
       }
 
       let datav2 = Converter.RegularNftMetadata.intoInfra(input, uri, 0);

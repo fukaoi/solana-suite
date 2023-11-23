@@ -167,8 +167,7 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
       t.log('# mint:', mint);
       t.log('# sig:', ok);
     },
-    // (ng: Error) => t.fail(ng.message),
-    (ng: Error) => console.error(ng.message),
+    (ng: Error) => t.fail(ng.message),
   );
 });
 

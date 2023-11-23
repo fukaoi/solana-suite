@@ -25,7 +25,6 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
     owner.secret,
     {
       filePath: asset.filePath as string,
-      storageType: 'nftStorage',
       name: asset.name!,
       symbol: asset.symbol!,
       royalty: 50,
@@ -83,7 +82,6 @@ test('[Arweave] use case arweave', async (t) => {
       symbol: asset.symbol!,
       royalty,
       isMutable: true,
-      storageType: 'nftStorage',
     },
     feePayer.pubkey,
   );
@@ -112,17 +110,13 @@ test('[Error]Raise parameter error when not need uri or filePath', async (t) => 
       symbol: asset.symbol!,
       royalty: 50,
       isMutable: true,
-      storageType: 'nftStorage',
     },
     source.pubkey,
   );
   res.match(
     () => t.fail('Unrecognized error'),
     (err: Error) => {
-      t.is(
-        err.message,
-        `Must set 'storageType=nftStorage + filePath' or 'uri'`,
-      );
+      t.is(err.message, "Must set filePath' or 'uri'");
     },
   );
 });

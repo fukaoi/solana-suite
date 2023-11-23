@@ -11,6 +11,8 @@ import { RegularNft as Mint } from './mint';
 import { Transaction } from '@solana/web3.js';
 
 export namespace RegularNft {
+  const DEFAULT_STORAGE_TYPE = 'nftStorage';
+
   /**
    * Upload content and NFT mint with Partial Sign
    *
@@ -50,15 +52,16 @@ export namespace RegularNft {
         throw valid.error;
       }
 
+      const storageType = input.storageType || DEFAULT_STORAGE_TYPE;
       const sellerFeeBasisPoints = Converter.Royalty.intoInfra(input.royalty);
 
       //--- porperties, Upload content ---
       let uri = '';
-      if (input.filePath && input.storageType === 'nftStorage') {
+      if (input.filePath) {
         const properties = await Converter.Properties.intoInfra(
           input.properties,
           Storage.uploadFile,
-          input.storageType,
+          storageType,
         );
 
         const nftStorageMetadata = Storage.toConvertOffchaindata(
@@ -69,7 +72,7 @@ export namespace RegularNft {
         const uploaded = await Storage.upload(
           nftStorageMetadata,
           input.filePath,
-          input.storageType,
+          storageType,
         );
         if (uploaded.isErr) {
           throw uploaded;
@@ -79,7 +82,7 @@ export namespace RegularNft {
       } else if (input.uri) {
         uri = input.uri;
       } else {
-        throw Error(`Must set 'storageType=nftStorage + filePath' or 'uri'`);
+        throw Error(`Must set filePath' or 'uri'`);
       }
       //--- porperties, Upload content ---
 
