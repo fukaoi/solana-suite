@@ -6,6 +6,8 @@ import { KeypairAccount } from '~/types/account';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
+let feePayer: KeypairAccount;
+
 const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
 const TOKEN_METADATA = {
@@ -21,6 +23,7 @@ test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
   dest = obj.dest;
+  feePayer = obj.feePayer;
 });
 
 test('Create token, batch transfer', async (t) => {
@@ -51,7 +54,9 @@ test('Create token, batch transfer', async (t) => {
     [source.secret],
     1,
     MINT_DECIMAL,
-    source.secret,
+    {
+      feePayer: feePayer.secret,
+    },
   );
 
   const inst3 = await SplToken.transfer(
@@ -61,7 +66,9 @@ test('Create token, batch transfer', async (t) => {
     [source.secret],
     1,
     MINT_DECIMAL,
-    source.secret,
+    {
+      feePayer: feePayer.secret,
+    },
   );
 
   (await [inst2, inst3].submit()).match(

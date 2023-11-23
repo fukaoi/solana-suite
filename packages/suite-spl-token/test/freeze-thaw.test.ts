@@ -47,12 +47,9 @@ test('Freezing and Thawing a target nft', async (t) => {
   );
 
   // freeze
-  const inst2 = SplToken.freeze(
-    mint,
-    owner.pubkey,
-    freezeAuthority.secret,
-    feePayer.secret,
-  );
+  const inst2 = SplToken.freeze(mint, owner.pubkey, freezeAuthority.secret, {
+    feePayer: feePayer.secret,
+  });
   (await inst2.submit()).match(
     async (ok: string) => {
       await Node.confirmedSig(ok);
@@ -62,12 +59,9 @@ test('Freezing and Thawing a target nft', async (t) => {
   );
 
   // thaw
-  const inst3 = SplToken.thaw(
-    mint,
-    owner.pubkey,
-    freezeAuthority.secret,
-    feePayer.secret,
-  );
+  const inst3 = SplToken.thaw(mint, owner.pubkey, freezeAuthority.secret, {
+    feePayer: feePayer.secret,
+  });
   (await inst3.submit()).match(
     async (ok: string) => {
       await Node.confirmedSig(ok);

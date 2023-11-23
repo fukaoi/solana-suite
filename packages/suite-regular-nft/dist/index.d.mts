@@ -1,8 +1,8 @@
+import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
+import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
-import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
-import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -42,6 +42,33 @@ type Find = {
     type?: string;
     sig?: string;
     innerInstruction?: boolean;
+};
+
+type bignum = number | BN;
+type Option<T> = T | null;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type Creators = {
+    address: Pubkey$1;
+    share: number;
+    verified: boolean;
+};
+type InputCreators = {
+    address: Pubkey$1;
+    secret: Secret;
+    share: number;
+};
+
+type GasLessMintOptions = {
+    freezeAuthority: Pubkey$1;
 };
 
 type History = {
@@ -271,29 +298,6 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
-type bignum = number | BN;
-type Option<T> = T | null;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
-};
-type Creators = {
-    address: Pubkey$1;
-    share: number;
-    verified: boolean;
-};
-type InputCreators = {
-    address: Pubkey$1;
-    secret: Secret;
-    share: number;
-};
-
 type FileType = string | File;
 
 type StorageType = 'nftStorage' | 'arweave' | string;
@@ -361,12 +365,15 @@ type RegularNftMetadata = {
     uses?: Uses | undefined;
     dateTime?: Date | undefined;
 };
+type MintOptions = {
+    freezeAuthority: Pubkey$1;
+} & AuthorityOptions;
 
 type InputCollection = Pubkey$1;
 type Options = {
     [key: string]: unknown;
 };
-type InputNftMetadata$1 = {
+type InputNftMetadata = {
     name: string;
     symbol: string;
     royalty: number;
@@ -384,6 +391,11 @@ type InputNftMetadata$1 = {
     collection?: InputCollection;
     options?: Options;
 };
+
+type MintCollectionOptions = {
+    freezeAuthority: Pubkey$1;
+    collectionSize: number;
+} & AuthorityOptions;
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -703,7 +715,7 @@ declare namespace Validator {
     export const isImageUrl: (image: string) => Result<string, ValidatorError>;
     export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
     type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
-    type PickNftStorageMetaplex = Pick<InputNftMetadata$1, 'name' | 'symbol' | 'royalty' | 'filePath'>;
+    type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
     type PickMetaplex = Pick<DataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
     export {};
 }
@@ -848,23 +860,24 @@ declare global {
 }
 
 declare const RegularNft: {
-    transfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], feePayer?: Secret | undefined) => Promise<Result<Transaction, Error>>;
-    thaw: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, feePayer?: Secret | undefined) => Result<Transaction, Error>;
-    mintCollection: (owner: Pubkey, signer: Secret, input: InputNftMetadata, feePayer?: Secret | undefined, freezeAuthority?: Pubkey | undefined, collectionSize?: number) => Promise<Result<MintTransaction<Pubkey>, Error>>;
+    transfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], options?: Partial<AuthorityOptions>) => Promise<Result<Transaction, Error>>;
+    thaw: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, options?: Partial<AuthorityOptions>) => Result<Transaction, Error>;
+    DEFAULT_COLLECTION_SIZE: 0;
+    mintCollection: (owner: Pubkey, signer: Secret, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintTransaction<Pubkey>, Error>>;
     createVerifyCreator: (mint: _solana_web3_js.PublicKey, creator: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createDeleagateInstruction: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, delegateAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createVerifySizedCollectionInstruction: (collectionChild: _solana_web3_js.PublicKey, collectionParent: _solana_web3_js.PublicKey, feePayer: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMintInstructions: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, nftMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
-    mint: (owner: Pubkey$1, signer: Secret, input: InputNftMetadata$1, feePayer?: Secret | undefined, freezeAuthority?: Pubkey$1 | undefined) => Promise<Result<MintTransaction<Pubkey$1>, Error>>;
+    mint: (owner: Pubkey$1, signer: Secret, input: InputNftMetadata, options?: Partial<MintOptions>) => Promise<Result<MintTransaction<Pubkey$1>, Error>>;
     gasLessTransfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], feePayer: Pubkey$1) => Promise<Result<PartialSignTransaction, Error>>;
-    gasLessMint: (owner: Pubkey$1, signer: Secret, input: InputNftMetadata$1, feePayer: Pubkey$1, freezeAuthority?: Secret | undefined) => Promise<Result<PartialSignTransaction, Error>>;
+    gasLessMint: (owner: Pubkey$1, signer: Secret, input: InputNftMetadata, feePayer: Pubkey$1, options?: Partial<GasLessMintOptions>) => Promise<Result<PartialSignTransaction, Error>>;
     freeze: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, options?: Partial<AuthorityOptions>) => Result<Transaction, Error>;
     findByOwner: (owner: Pubkey$1, onOk: OnOk<RegularNftMetadata>, onErr: OnErr, options?: {
         sortable?: SortDirection | undefined;
         isHolder?: boolean | undefined;
     } | undefined) => Promise<void>;
     findByMint: (mint: Pubkey$1) => Promise<Result<RegularNftMetadata, Error>>;
-    burn: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret, options: Partial<AuthorityOptions>) => Result<Transaction, Error>;
+    burn: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret, options?: Partial<AuthorityOptions>) => Result<Transaction, Error>;
 };
 
 export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, RegularNft, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

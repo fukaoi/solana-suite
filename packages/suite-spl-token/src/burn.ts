@@ -6,6 +6,7 @@ import { Pubkey, Secret } from '~/types/account';
 import { Transaction } from '~/transaction';
 import { Result, Try } from '~/shared';
 import { SplToken as Calculate } from './calculate-amount';
+import { AuthorityOptions } from '~/types/shared';
 
 export namespace SplToken {
   export const burn = (
@@ -14,14 +15,14 @@ export namespace SplToken {
     signers: Secret[],
     burnAmount: number,
     tokenDecimals: number,
-    feePayer?: Secret,
+    options: Partial<AuthorityOptions> = {},
   ): Result<Transaction, Error> => {
     return Try(() => {
       const tokenAccount = getAssociatedTokenAddressSync(
         mint.toPublicKey(),
         owner.toPublicKey(),
       );
-      const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
+      const payer = options.feePayer ? options.feePayer : signers[0];
       const keypairs = signers.map((s) => s.toKeypair());
 
       const inst = createBurnCheckedInstruction(
@@ -33,7 +34,7 @@ export namespace SplToken {
         keypairs,
       );
 
-      return new Transaction([inst], keypairs, payer);
+      return new Transaction([inst], keypairs, payer.toKeypair());
     });
   };
 }

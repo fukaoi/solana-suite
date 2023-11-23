@@ -1,8 +1,8 @@
 import { Offchain, Attribute, FileType, StorageType } from './storage.js';
-import { C as Creators, U as Uses, I as InputCreators, d as Options } from './mint-452511e9.js';
+import { C as Creators, U as Uses, I as InputCreators, O as Options } from './mint-8aee5f82.js';
+import { Secret, Pubkey } from './account.js';
 import '@solana/web3.js';
 import './phantom-e9a40784.js';
-import './account.js';
 import './das-api.js';
 import './converter.js';
 import '@metaplex-foundation/mpl-token-metadata';
@@ -22,6 +22,10 @@ type TokenMetadata = {
     dateTime?: Date | undefined;
 };
 
+type MintOptions = {
+    feePayer: Secret;
+    freezeAuthority: Pubkey;
+};
 type InputTokenMetadata = {
     name: string;
     symbol: string;
@@ -36,4 +40,4 @@ type InputTokenMetadata = {
     options?: Options;
 };
 
-export { InputTokenMetadata, TokenMetadata };
+export { InputTokenMetadata, MintOptions, TokenMetadata };

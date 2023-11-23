@@ -1,5 +1,5 @@
-import { SolNative } from '../src';
 import test from 'ava';
+import { SolNative } from '../src';
 import { Setup } from 'test-tools/setup';
 import { Account } from '~/account';
 import { KeypairAccount } from '~/types/account';
@@ -7,11 +7,13 @@ import { Multisig } from '@solana-suite/multisig';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
+let feePayer: KeypairAccount;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
   dest = obj.dest;
+  feePayer = obj.feePayer;
 });
 
 test('transfer transaction with multi sig', async (t) => {
@@ -37,7 +39,7 @@ test('transfer transaction with multi sig', async (t) => {
     dest.pubkey,
     [signer1.secret, signer2.secret],
     0.01,
-    source.secret,
+    { feePayer: feePayer.secret },
   );
 
   (await inst2.submit()).match(

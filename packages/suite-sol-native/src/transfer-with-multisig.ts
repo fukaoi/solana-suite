@@ -10,6 +10,7 @@ import { Transaction } from '~/transaction';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
 import { Account } from '~/account';
+import { AuthorityOptions } from '~/types/shared';
 
 export namespace SolNative {
   const RADIX = 10;
@@ -21,11 +22,11 @@ export namespace SolNative {
     dest: Pubkey,
     signers: Secret[],
     amount: number,
-    feePayer?: Secret,
+    options: Partial<AuthorityOptions> = {},
   ): Promise<Result<Transaction, Error>> => {
     return Try(async () => {
       const connection = Node.getConnection();
-      const payer = feePayer ? feePayer : signers[0];
+      const payer = options.feePayer ? options.feePayer : signers[0];
       const keypairs = signers.map((s) => s.toKeypair());
       const wrapped = await createWrappedNativeAccount(
         connection,
@@ -35,6 +36,8 @@ export namespace SolNative {
       );
 
       debugLog('# wrapped sol: ', wrapped.toBase58());
+
+      const instructions = [];
 
       const token = await createMint(
         connection,
@@ -60,25 +63,29 @@ export namespace SolNative {
 
       debugLog('# destToken: ', destToken);
 
-      const inst1 = createTransferInstruction(
-        sourceToken.toPublicKey(),
-        destToken.toPublicKey(),
-        owner.toPublicKey(),
-        parseInt(`${amount}`, RADIX), // No lamports, its sol
-        keypairs,
+      instructions.push(
+        createTransferInstruction(
+          sourceToken.toPublicKey(),
+          destToken.toPublicKey(),
+          owner.toPublicKey(),
+          parseInt(`${amount}`, RADIX), // No lamports, its sol
+          keypairs,
+        ),
       );
 
-      const inst2 = createCloseAccountInstruction(
-        wrapped,
-        dest.toPublicKey(),
-        owner.toPublicKey(),
-        keypairs,
+      instructions.push(
+        createCloseAccountInstruction(
+          wrapped,
+          dest.toPublicKey(),
+          owner.toPublicKey(),
+          keypairs,
+        ),
       );
 
       return new Transaction(
-        [inst1, inst2],
+        instructions,
         signers.map((s) => s.toKeypair()),
-        feePayer?.toKeypair(),
+        payer.toKeypair(),
       );
     });
   };

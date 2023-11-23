@@ -208,6 +208,24 @@ type Pubkey = (string & {
     [pubKeyNominality]: never;
 }) | string;
 
+type History = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+
 declare enum FilterType {
     Memo = "memo",
     Mint = "mint",
@@ -243,24 +261,6 @@ declare enum Explorer {
     Solscan = "solscan",
     SolanaFM = "solanafm"
 }
-
-type History = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
 
 declare namespace Signatures {
     const getForAdress: (pubkey: Pubkey, parser: (transaction: ParsedTransactionWithMeta) => History | undefined, callback: (history: Result<History[], Error>) => void, options: {

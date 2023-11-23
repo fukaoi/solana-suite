@@ -1,13 +1,20 @@
-import { O as Option, C as Creators, U as Uses } from './mint-452511e9.js';
-export { c as InputCollection, I as InputCreators, e as InputNftMetadata, d as Options, a as UseMethod, b as bignum } from './mint-452511e9.js';
+import { a as Option, C as Creators, U as Uses } from './mint-8aee5f82.js';
+export { d as InputCollection, I as InputCreators, e as InputNftMetadata, O as Options, c as UseMethod, b as bignum } from './mint-8aee5f82.js';
 import { Pubkey } from './account.js';
+import { c as AuthorityOptions } from './shared-ecb29866.js';
 import { Offchain } from './storage.js';
 import 'bn.js';
+import './find.js';
+import './history.js';
 import '@solana/web3.js';
 import './phantom-e9a40784.js';
 import './das-api.js';
 import './converter.js';
 import '@metaplex-foundation/mpl-token-metadata';
+
+type GasLessMintOptions = {
+    freezeAuthority: Pubkey;
+};
 
 type Collection = {
     address: Pubkey;
@@ -34,5 +41,13 @@ type RegularNftMetadata = {
     uses?: Uses | undefined;
     dateTime?: Date | undefined;
 };
+type MintOptions = {
+    freezeAuthority: Pubkey;
+} & AuthorityOptions;
 
-export { Collection, CollectionDetails, Creators, Option, RegularNftMetadata, Uses };
+type MintCollectionOptions = {
+    freezeAuthority: Pubkey;
+    collectionSize: number;
+} & AuthorityOptions;
+
+export { Collection, CollectionDetails, Creators, GasLessMintOptions, MintCollectionOptions, MintOptions, Option, RegularNftMetadata, Uses };

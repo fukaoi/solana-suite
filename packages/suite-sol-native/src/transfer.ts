@@ -2,6 +2,7 @@ import { SystemProgram } from '@solana/web3.js';
 import { Pubkey, Secret } from '~/types/account';
 import { Result, Try } from '~/shared';
 import { Transaction } from '~/transaction';
+import { AuthorityOptions } from '~/types/shared';
 
 export namespace SolNative {
   const RADIX = 10;
@@ -10,7 +11,7 @@ export namespace SolNative {
     dest: Pubkey,
     signers: Secret[],
     amount: number,
-    feePayer?: Secret,
+    options: Partial<AuthorityOptions> = {},
   ): Result<Transaction, Error> => {
     return Try(() => {
       const inst = SystemProgram.transfer({
@@ -19,7 +20,9 @@ export namespace SolNative {
         lamports: parseInt(`${amount.toLamports()}`, RADIX),
       });
 
-      const payer = feePayer ? feePayer.toKeypair() : signers[0].toKeypair();
+      const payer = options.feePayer
+        ? options.feePayer.toKeypair()
+        : signers[0].toKeypair();
 
       return new Transaction(
         [inst],

@@ -4,6 +4,7 @@ import { Pubkey, Secret } from '~/types/account';
 import { Transaction } from '~/transaction';
 import { Account } from '~/account';
 import { SplToken as Calculate } from './calculate-amount';
+import { AuthorityOptions } from '~/types/shared';
 
 export namespace SplToken {
   export const add = async (
@@ -12,10 +13,10 @@ export namespace SplToken {
     signers: Secret[],
     totalAmount: number,
     mintDecimal: number,
-    feePayer?: Secret,
+    options: Partial<AuthorityOptions> = {},
   ): Promise<Result<Transaction, Error>> => {
     return Try(async () => {
-      const payer = !feePayer ? signers[0] : feePayer;
+      const payer = options.feePayer ? options.feePayer : signers[0];
       const keypairs = signers.map((s) => s.toKeypair());
 
       const tokenAssociated = await Account.Associated.retryGetOrCreate(

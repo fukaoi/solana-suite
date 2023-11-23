@@ -26,8 +26,8 @@ import { Node } from '~/node';
 import { Account } from '~/account';
 import { MintTransaction } from '~/transaction';
 import { Pubkey, Secret } from '~/types/account';
-import { InputNftMetadata } from '~/types/nft';
-import { InputTokenMetadata } from '~/types/spl-token';
+import { InputNftMetadata } from '~/types/regular-nft';
+import { InputTokenMetadata, MintOptions } from '~/types/spl-token';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
 import { SplToken as Calculate } from './calculate-amount';
@@ -47,7 +47,7 @@ export namespace SplToken {
     );
   };
 
-  export const createMintInstructions = async (
+  export const createMint = async (
     mint: PublicKey,
     owner: PublicKey,
     totalAmount: number,
@@ -60,55 +60,66 @@ export namespace SplToken {
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
     const metadataPda = Account.Pda.getMetadata(mint.toString());
     const tokenAssociated = getAssociatedTokenAddressSync(mint, owner);
+    const instructions = [];
 
-    const inst1 = SystemProgram.createAccount({
-      fromPubkey: feePayer,
-      newAccountPubkey: mint,
-      space: MINT_SIZE,
-      lamports: lamports,
-      programId: TOKEN_PROGRAM_ID,
-    });
-
-    const inst2 = createInitializeMintInstruction(
-      mint,
-      mintDecimal,
-      owner,
-      owner,
-      TOKEN_PROGRAM_ID,
+    instructions.push(
+      SystemProgram.createAccount({
+        fromPubkey: feePayer,
+        newAccountPubkey: mint,
+        space: MINT_SIZE,
+        lamports: lamports,
+        programId: TOKEN_PROGRAM_ID,
+      }),
     );
 
-    const inst3 = createAssociatedTokenAccountInstruction(
-      feePayer,
-      tokenAssociated,
-      owner,
-      mint,
-    );
-
-    const inst4 = createMintToCheckedInstruction(
-      mint,
-      tokenAssociated,
-      owner,
-      Calculate.calculateAmount(totalAmount, mintDecimal),
-      mintDecimal,
-    );
-
-    const inst5 = createCreateMetadataAccountV3Instruction(
-      {
-        metadata: metadataPda,
+    instructions.push(
+      createInitializeMintInstruction(
         mint,
-        mintAuthority: owner,
-        payer: feePayer,
-        updateAuthority: owner,
-      },
-      {
-        createMetadataAccountArgsV3: {
-          data: tokenMetadata,
-          isMutable,
-          collectionDetails: null,
-        },
-      },
+        mintDecimal,
+        owner,
+        owner,
+        TOKEN_PROGRAM_ID,
+      ),
     );
-    return [inst1, inst2, inst3, inst4, inst5];
+
+    instructions.push(
+      createAssociatedTokenAccountInstruction(
+        feePayer,
+        tokenAssociated,
+        owner,
+        mint,
+      ),
+    );
+
+    instructions.push(
+      createMintToCheckedInstruction(
+        mint,
+        tokenAssociated,
+        owner,
+        Calculate.calculateAmount(totalAmount, mintDecimal),
+        mintDecimal,
+      ),
+    );
+
+    instructions.push(
+      createCreateMetadataAccountV3Instruction(
+        {
+          metadata: metadataPda,
+          mint,
+          mintAuthority: owner,
+          payer: feePayer,
+          updateAuthority: owner,
+        },
+        {
+          createMetadataAccountArgsV3: {
+            data: tokenMetadata,
+            isMutable,
+            collectionDetails: null,
+          },
+        },
+      ),
+    );
+    return instructions;
   };
 
   /**
@@ -119,8 +130,7 @@ export namespace SplToken {
    * @param {number} totalAmount // total number
    * @param {number} mintDecimal // token decimal
    * @param {InputTokenMetadata} input       // token metadata
-   * @param {Secret} feePayer?   // fee payer
-   * @param {Pubkey} freezeAuthority? // freeze authority
+   * @param {Partial<MintOptions>} options   // options
    * @return Promise<Result<MintInstruction, Error>>
    */
   export const mint = async (
@@ -129,14 +139,15 @@ export namespace SplToken {
     totalAmount: number,
     mintDecimal: number,
     input: InputTokenMetadata,
-    feePayer?: Secret,
-    freezeAuthority?: Pubkey,
+    options: Partial<MintOptions> = {},
   ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputTokenMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
       }
+
+      const { feePayer, freezeAuthority } = options;
 
       const payer = feePayer ? feePayer : signer;
       input.royalty = 0;
@@ -192,7 +203,7 @@ export namespace SplToken {
       debugLog('# upload content url: ', uri);
 
       const mint = Account.Keypair.create();
-      const insts = await createMintInstructions(
+      const insts = await createMint(
         mint.toPublicKey(),
         owner.toPublicKey(),
         totalAmount,

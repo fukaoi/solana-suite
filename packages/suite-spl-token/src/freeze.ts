@@ -7,6 +7,7 @@ import {
   createFreezeAccountInstruction,
   getAssociatedTokenAddressSync,
 } from '@solana/spl-token';
+import { AuthorityOptions } from '~/types/shared';
 
 export namespace SplToken {
   /**
@@ -14,17 +15,16 @@ export namespace SplToken {
    * it should set to freezeAuthority when mint()
    * @param {Pubkey} mint             // mint address
    * @param {Pubkey} owner            // current owner
-   * @param {Secret} freezeAuthority  // setted freeze authority of nft
-   * @param {Secret} feePayer?       // fee payer
+   * @param {Partial<AuthorityOptions>} options // options
    */
   export const freeze = (
     mint: Pubkey,
     owner: Pubkey,
     freezeAuthority: Secret,
-    feePayer?: Secret,
+    options: Partial<AuthorityOptions> = {},
   ): Result<Transaction, Error> => {
-    const payer = feePayer ? feePayer : freezeAuthority;
     return Try(() => {
+      const payer = options.feePayer ? options.feePayer : freezeAuthority;
       const tokenAccount = getAssociatedTokenAddressSync(
         mint.toPublicKey(),
         owner.toPublicKey(),

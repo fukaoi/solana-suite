@@ -96,8 +96,9 @@ test('Create token with creators, freezeAuthority', async (t) => {
     TOKEN_TOTAL_AMOUNT,
     MINT_DECIMAL,
     tokenMetadata,
-    undefined,
-    freezeAuthority.pubkey,
+    {
+      freezeAuthority: freezeAuthority.pubkey,
+    },
   );
 
   t.true(inst.isOk, `${inst.unwrap()}`);
