@@ -194,7 +194,7 @@ test('[Error]Raise validation error when upload meta data', async (t) => {
     source.pubkey,
     source.secret,
     {
-      filePath: '',
+      filePath: 'not found',
       name: '',
       symbol: 'LONG-SYMBOL-LONG',
       royalty: -100,

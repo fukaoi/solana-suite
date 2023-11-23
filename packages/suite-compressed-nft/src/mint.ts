@@ -5,7 +5,7 @@ import { Converter } from '~/converter';
 import { Storage } from '~/storage';
 import { Node } from '~/node';
 import { MintTransaction } from '~/transaction';
-import { debugLog, Try, unixTimestamp} from '~/shared';
+import { debugLog, Try, unixTimestamp, Validator } from '~/shared';
 import { DasApi } from '~/das-api';
 import { CompressedNft as Tree } from './tree';
 import {
@@ -41,7 +41,7 @@ export namespace CompressedNft {
     metadata: MetadataArgs,
     feePayer: PublicKey,
   ) => {
-    let rpcAssetProof = await DasApi.getAssetProof(assetId.toString());
+    const rpcAssetProof = await DasApi.getAssetProof(assetId.toString());
     const rpcAsset = await DasApi.getAsset(assetId.toString());
     if (rpcAssetProof.isErr || rpcAsset.isErr) {
       throw Error('Rise error when get asset proof or asset');
@@ -61,7 +61,7 @@ export namespace CompressedNft {
         isSigner: false,
         isWritable: false,
       }))
-      .slice(0, assetProof.proof.length - (!!canopyDepth ? canopyDepth : 0));
+      .slice(0, assetProof.proof.length - (canopyDepth ? canopyDepth : 0));
 
     return createVerifyCreatorInstruction(
       {
@@ -92,7 +92,7 @@ export namespace CompressedNft {
   export const createDeleagate = async (
     assetId: PublicKey,
   ): Promise<TransactionInstruction> => {
-    let rpcAssetProof = await DasApi.getAssetProof(assetId.toString());
+    const rpcAssetProof = await DasApi.getAssetProof(assetId.toString());
     const rpcAsset = await DasApi.getAsset(assetId.toString());
     if (rpcAssetProof.isErr || rpcAsset.isErr) {
       throw Error('Rise error when get asset proof or asset');
@@ -161,6 +161,10 @@ export namespace CompressedNft {
     options: Partial<MintOptions> = {},
   ) => {
     return Try(async () => {
+      const valid = Validator.checkAll<InputNftMetadata>(input);
+      if (valid.isErr) {
+        throw valid.error;
+      }
       const { feePayer, receiver, delegate } = options;
       const payer = feePayer ? feePayer : signer;
       const storageType = input.storageType || DEFAULT_STORAGE_TYPE;
@@ -189,8 +193,6 @@ export namespace CompressedNft {
           storageType,
           payer,
         );
-      } else if (input.properties && !input.storageType) {
-        throw Error(`Must set filePath' or 'uri'`);
       }
 
       input = {
@@ -238,7 +240,7 @@ export namespace CompressedNft {
         throw Error(`Must set filePath' or 'uri'`);
       }
 
-      let converted = Converter.CompressedNftMetadata.intoInfra(
+      const converted = Converter.CompressedNftMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints,

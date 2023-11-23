@@ -194,7 +194,9 @@ export namespace SplToken {
     onErr: OnErr,
     options?: { sortDirection?: SortDirection; isHolder?: boolean },
   ): void => {
-    const sortable = !options?.sortDirection ? SortDirection.Desc : options?.sortDirection;
+    const sortable = !options?.sortDirection
+      ? SortDirection.Desc
+      : options?.sortDirection;
     const isHolder = !options?.isHolder ? true : false;
 
     /* eslint-disable @typescript-eslint/no-floating-promises */

@@ -38,7 +38,7 @@ export namespace Converter {
           return value.group_value;
         }
       });
-      return res ? res.group_value : ''
+      return res ? res.group_value : '';
     };
   }
 }

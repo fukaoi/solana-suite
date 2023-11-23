@@ -1,5 +1,6 @@
 import { Result, Try } from '~/shared';
 import { Asset, AssetProof, Assets } from '~/types/das-api';
+import { Sortable } from '~/types/find';
 
 const rpcUrl =
   'https://rpc-devnet.helius.xyz?api-key=9f70a843-3274-4ffd-a0a9-323f8b7c0639';
@@ -44,7 +45,7 @@ export namespace DasApi {
     ownerAddress: Pubkey,
     limit: number = 1000,
     page: number = 1,
-    sortBy?: any,
+    sortBy?: Sortable,
     before?: string,
     after?: string,
   ): Promise<Result<Assets, Error>> => {
@@ -68,7 +69,7 @@ export namespace DasApi {
     groupValue: Pubkey,
     limit: number = 1000,
     page: number = 1,
-    sortBy?: any,
+    sortBy?: Sortable,
     before?: string,
     after?: string,
   ): Promise<Result<Assets, Error>> => {

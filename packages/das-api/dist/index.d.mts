@@ -208,6 +208,20 @@ type Pubkey$1 = (string & {
     [pubKeyNominality]: never;
 }) | string;
 
+declare enum SortDirection {
+    Asc = "asc",
+    Desc = "desc"
+}
+declare enum SortBy {
+    Created = "created",
+    Updated = "updated",
+    Recent = "recent_action"
+}
+type Sortable = {
+    sortBy: SortBy;
+    sortDirection: SortDirection;
+};
+
 type InternalCreators = {
     address: PublicKey;
     verified: boolean;
@@ -313,8 +327,8 @@ declare enum Explorer {
 declare namespace DasApi {
     const getAssetProof: (assetId: string) => Promise<Result<AssetProof, Error>>;
     const getAsset: (assetId: Pubkey) => Promise<Result<Asset, Error>>;
-    const getAssetsByOwner: (ownerAddress: Pubkey, limit?: number, page?: number, sortBy?: any, before?: string, after?: string) => Promise<Result<Assets, Error>>;
-    const getAssetsByGroup: (groupKey: string, groupValue: Pubkey, limit?: number, page?: number, sortBy?: any, before?: string, after?: string) => Promise<Result<Assets, Error>>;
+    const getAssetsByOwner: (ownerAddress: Pubkey, limit?: number, page?: number, sortBy?: Sortable, before?: string, after?: string) => Promise<Result<Assets, Error>>;
+    const getAssetsByGroup: (groupKey: string, groupValue: Pubkey, limit?: number, page?: number, sortBy?: Sortable, before?: string, after?: string) => Promise<Result<Assets, Error>>;
 }
 
 export { DasApi };

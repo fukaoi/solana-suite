@@ -10,14 +10,11 @@ export namespace Converter {
         return null;
       }
       return input.map((data) => {
-        let modify: Option<InternalCreators> = null;
-        modify = {
+        return {
           address: data.address.toPublicKey(),
           share: data.share,
           verified: false,
         };
-
-        return modify;
       });
     };
 
@@ -28,14 +25,11 @@ export namespace Converter {
         return [];
       }
       return input!.map((data) => {
-        let modify: InternalCreators;
-        modify = {
+        return {
           address: data.address.toPublicKey(),
           share: data.share,
           verified: false,
         };
-
-        return modify;
       });
     };
 
@@ -47,12 +41,11 @@ export namespace Converter {
       }
 
       return output.map((data) => {
-        const modify = {
+        return {
           address: data.address.toString(),
           share: data.share,
           verified: data.verified,
         };
-        return modify;
       });
     };
   }

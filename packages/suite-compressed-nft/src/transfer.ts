@@ -18,7 +18,7 @@ export namespace CompressedNft {
     dest: Pubkey,
     delegate?: Pubkey,
   ): Promise<TransactionInstruction> => {
-    let assetProof = await DasApi.getAssetProof(assetId);
+    const assetProof = await DasApi.getAssetProof(assetId);
     if (assetProof.isErr) {
       throw assetProof.error;
     } else if (assetProof.isOk && assetProof.value.proof.length === 0) {
@@ -63,7 +63,7 @@ export namespace CompressedNft {
         isSigner: false,
         isWritable: false,
       }))
-      .slice(0, proof.length - (!!canopyDepth ? canopyDepth : 0));
+      .slice(0, proof.length - (canopyDepth ? canopyDepth : 0));
 
     const leafOwner = ownership.owner.toPublicKey();
     const newLeafOwner = dest.toPublicKey();

@@ -246,7 +246,7 @@ export namespace RegularNft {
         throw Error(`Must set filePath' or 'uri'`);
       }
 
-      let datav2 = Converter.RegularNftMetadata.intoInfra(
+      const datav2 = Converter.RegularNftMetadata.intoInfra(
         input,
         uri,
         sellerFeeBasisPoints,

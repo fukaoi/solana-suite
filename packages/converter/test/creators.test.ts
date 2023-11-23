@@ -1,6 +1,5 @@
 import test from 'ava';
 import { Account } from '~/account';
-import { KeypairAccount } from '~/types/account';
 import { Converter } from '../src/';
 
 test('test', async (t) => {
@@ -17,22 +16,22 @@ test('To input convert', async (t) => {
     {
       address: creator1.pubkey,
       share: 20,
-      verified: false,
+      secret: '',
     },
     {
       address: creator2.pubkey,
       share: 30,
-      verified: false,
+      secret: '',
     },
     {
       address: creator3.pubkey,
       share: 40,
-      verified: false,
+      secret: '',
     },
     {
       address: creator4.pubkey,
       share: 10,
-      verified: false,
+      secret: '',
     },
   ];
   const results = Converter.Creators.intoInfra(input);

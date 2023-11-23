@@ -64,11 +64,10 @@ export namespace Storage {
     storageType: StorageType,
     feePayer?: Secret,
   ): Promise<Result<string, Error>> => {
-    let storage;
     if (storageType === 'arweave' && !feePayer) {
       throw Error('Arweave needs to have feepayer');
     }
-    storage = await (
+    const storage = await (
       await uploadFile(filePath, storageType, feePayer)
     ).unwrap(
       async (ok: string) => {
