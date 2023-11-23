@@ -12,7 +12,7 @@ export namespace RegularNft {
     mint: Pubkey,
     owner: Pubkey,
     signer: Secret,
-    options: Partial<AuthorityOptions>,
+    options: Partial<AuthorityOptions> = {},
   ): Result<Transaction, Error> => {
     const feePayer = options.feePayer;
     return SplToken.burn(
