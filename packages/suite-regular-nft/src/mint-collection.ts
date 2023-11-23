@@ -5,9 +5,10 @@ import { Account } from '~/account';
 import { Storage } from '~/storage';
 import { Validator } from '~/validator';
 import { MintTransaction } from '~/transaction';
-import { InputNftMetadata } from '~/types/nft';
+import { InputNftMetadata } from '~/types/regular-nft';
 import { Secret } from '~/types/account';
 import { RegularNft as Mint } from './mint';
+import { MintCollectionOptions } from '~/types/regular-nft';
 
 /**
  * create a collection
@@ -17,15 +18,15 @@ import { RegularNft as Mint } from './mint';
  * @return Promise<Result<Instruction, Error>>
  */
 export namespace RegularNft {
+  export const DEFAULT_COLLECTION_SIZE = 0;
   export const mintCollection = (
     owner: Pubkey,
     signer: Secret,
     input: InputNftMetadata,
-    feePayer?: Secret,
-    freezeAuthority?: Pubkey,
-    collectionSize: number = 0,
+    options: Partial<MintCollectionOptions> = {},
   ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
     return Try(async () => {
+      const { freezeAuthority, feePayer, collectionSize } = options;
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
@@ -125,7 +126,9 @@ export namespace RegularNft {
 
       instructions.push(
         createSetCollectionSizeInstruction(collections, {
-          setCollectionSizeArgs: { size: collectionSize },
+          setCollectionSizeArgs: {
+            size: collectionSize || DEFAULT_COLLECTION_SIZE,
+          },
         }),
       );
 

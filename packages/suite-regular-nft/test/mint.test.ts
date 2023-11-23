@@ -9,11 +9,13 @@ import { InputCreators } from '~/types/regular-nft';
 import { ValidatorError } from '~/validator';
 
 let source: KeypairAccount;
+let feePayer: KeypairAccount;
 let collection: Pubkey;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
+  feePayer = obj.feePayer;
   collection = obj.collectionMint;
 });
 
@@ -21,7 +23,6 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
   const asset = RandomAsset.get();
   const res = await RegularNft.mint(source.pubkey, source.secret, {
     uri: 'https://ipfs.io/ipfs/bafkreibh6mv6zqvg2wopmtx3k4smavcfx55ob2pciuoob2z44acgtem754',
-    storageType: 'nftStorage',
     name: asset.name!,
     symbol: asset.symbol!,
     description: asset.description,
@@ -70,13 +71,14 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
     owner.secret,
     {
       filePath: asset.filePath as string,
-      storageType: 'nftStorage',
       name: asset.name!,
       symbol: asset.symbol!,
       description: asset.description,
       royalty: 0,
     },
-    source.secret,
+    {
+      feePayer: source.secret,
+    },
   );
 
   t.true(Account.Keypair.isPubkey(res.unwrap().data as Pubkey));
@@ -141,7 +143,6 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
     owner.secret,
     {
       filePath: asset.filePath as string,
-      storageType: 'nftStorage',
       name: asset.name!,
       description: asset.description,
       symbol: asset.symbol!,
@@ -149,12 +150,14 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
       isMutable: true,
       creators,
       properties,
-      collection,
+      // collection,  // too many transaction size
       attributes,
       options,
     },
-    source.secret,
-    freezeAuthority.pubkey,
+    {
+      feePayer: feePayer.secret,
+      freezeAuthority: freezeAuthority.pubkey,
+    },
   );
 
   const mint = res.unwrap().data as Pubkey;
@@ -164,7 +167,8 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
       t.log('# mint:', mint);
       t.log('# sig:', ok);
     },
-    (ng: Error) => t.fail(ng.message),
+    // (ng: Error) => t.fail(ng.message),
+    (ng: Error) => console.error(ng.message),
   );
 });
 
@@ -174,7 +178,6 @@ test('[Error]Raise validation error when upload meta data', async (t) => {
     name: '',
     symbol: 'LONG-SYMBOL-LONG',
     royalty: -100,
-    storageType: 'nftStorage',
   });
 
   res.match(

@@ -2,6 +2,7 @@ import { SplToken } from '~/suite-spl-token';
 import { Result } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 import { Transaction } from '~/transaction';
+import { AuthorityOptions } from '../../types/src/shared/shared';
 
 export namespace RegularNft {
   const NFT_AMOUNT = 1;
@@ -12,7 +13,7 @@ export namespace RegularNft {
     owner: Pubkey,
     dest: Pubkey,
     signers: Secret[],
-    feePayer?: Secret,
+    options: Partial<AuthorityOptions> = {},
   ): Promise<Result<Transaction, Error>> => {
     return SplToken.transfer(
       mint,
@@ -21,7 +22,7 @@ export namespace RegularNft {
       signers,
       NFT_AMOUNT,
       NFT_DECIMALS,
-      feePayer,
+      options.feePayer,
     );
   };
 }

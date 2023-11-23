@@ -4,6 +4,7 @@ import { Transaction } from '~/transaction';
 import { Account } from '~/account';
 import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createThawDelegatedAccountInstruction } from '@metaplex-foundation/mpl-token-metadata';
+import { AuthorityOptions } from '../../types/src/shared/shared';
 
 export namespace RegularNft {
   /**
@@ -13,16 +14,16 @@ export namespace RegularNft {
    * @param {Pubkey} mint             // mint address
    * @param {Pubkey} owner            // current owner
    * @param {Secret} freezeAuthority  // setted freeze authority of nft
-   * @param {Secret} feePayer?       // fee payer
+   * @param {AuthorityOptions} options          // options
    */
   export const thaw = (
     mint: Pubkey,
     owner: Pubkey,
     freezeAuthority: Secret,
-    feePayer?: Secret,
+    options: Partial<AuthorityOptions> = {},
   ): Result<Transaction, Error> => {
-    const payer = feePayer ? feePayer : freezeAuthority;
     return Try(() => {
+      const payer = options.feePayer ? options.feePayer : freezeAuthority;
       const tokenAccount = getAssociatedTokenAddressSync(
         mint.toPublicKey(),
         owner.toPublicKey(),

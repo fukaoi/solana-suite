@@ -19,7 +19,7 @@ import { Pubkey, Secret } from '~/types/account';
 import { MintTransaction } from '~/transaction';
 import { Node } from '~/node';
 import { Storage } from '~/storage';
-import { InputNftMetadata } from '~/types/nft';
+import { InputNftMetadata, MintOptions } from '~/types/regular-nft';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
 import { Account } from '~/account';
@@ -171,18 +171,17 @@ export namespace RegularNft {
    *   isMutable?: boolean           // enable update()
    *   options?: [key: string]?: unknown       // optional param, Usually not used.
    * }
-   * @param {Secret} feePayer?         // fee payer
-   * @param {Pubkey} freezeAuthority?  // freeze authority
+   * @param {Partial<MintOptions>} options         // options
    * @return Promise<Result<MintInstruction, Error>>
    */
   export const mint = async (
     owner: Pubkey,
     signer: Secret,
     input: InputNftMetadata,
-    feePayer?: Secret,
-    freezeAuthority?: Pubkey,
+    options: Partial<MintOptions> = {},
   ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
     return Try(async () => {
+      const { feePayer, freezeAuthority } = options;
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
         throw valid.error;
@@ -199,8 +198,6 @@ export namespace RegularNft {
           input.storageType,
           payer,
         );
-      } else if (input.properties && !input.storageType) {
-        throw Error('Must set storageType if will use properties');
       }
 
       input = {
@@ -220,7 +217,7 @@ export namespace RegularNft {
 
       let uri!: string;
       // upload file
-      if (input.filePath && input.storageType) {
+      if (input.filePath) {
         const uploaded = await Storage.upload(
           nftStorageMetadata,
           input.filePath,
@@ -244,8 +241,6 @@ export namespace RegularNft {
           throw uploaded;
         }
         uri = uploaded.value;
-      } else {
-        throw Error(`Must set 'storageType + filePath' or 'uri'`);
       }
 
       let datav2 = Converter.RegularNftMetadata.intoInfra(

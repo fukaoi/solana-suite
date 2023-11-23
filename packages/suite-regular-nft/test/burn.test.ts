@@ -26,7 +26,7 @@ test('[Nft Storage] mint nft and nft burn', async (t) => {
       symbol: asset.symbol!,
       royalty: 0,
     },
-    feePayer.secret,
+    { feePayer: feePayer.secret },
   );
 
   let mint: Pubkey;

@@ -8,9 +8,12 @@ import { Storage } from '~/storage';
 import { Converter } from '~/converter';
 
 let source: KeypairAccount;
+let feePayer: KeypairAccount;
+
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
+  feePayer = obj.feePayer;
 });
 
 test('[Nft Storage] mint nft with partial sing fee payer', async (t) => {
@@ -28,8 +31,10 @@ test('[Nft Storage] mint nft with partial sing fee payer', async (t) => {
       royalty: 50,
       isMutable: true,
     },
-    source.pubkey,
-    freezeAuthority.pubkey,
+    feePayer.pubkey,
+    {
+      freezeAuthority: freezeAuthority.pubkey,
+    },
   );
 
   t.true(serialized.isOk, `${serialized.unwrap()}`);
@@ -80,7 +85,7 @@ test('[Arweave] use case arweave', async (t) => {
       isMutable: true,
       storageType: 'nftStorage',
     },
-    source.pubkey,
+    feePayer.pubkey,
   );
 
   t.true(serialized.isOk, `${serialized.unwrap()}`);

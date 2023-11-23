@@ -1,6 +1,6 @@
 import { debugLog, Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
-import { InputNftMetadata } from '~/types/regular-nft';
+import { GasLessMintOptions, InputNftMetadata } from '~/types/regular-nft';
 import { Node } from '~/node';
 import { PartialSignTransaction } from '~/transaction';
 import { Storage } from '~/storage';
@@ -33,8 +33,8 @@ export namespace RegularNft {
    *   uses?: Uses                   // usage feature: burn, single, multiple
    *   isMutable?: boolean           // enable update()
    * }
-   * @param {Secret} feePayer?         // fee payer
-   * @param {Pubkey} freezeAuthority?  // freeze authority
+   * @param {Secret} feePayer        // fee payer
+   * @param {Partial<GasLessMintOptions>} options         // options
    * @return Promise<Result<PartialSignInstruction, Error>>
    */
   export const gasLessMint = async (
@@ -42,7 +42,7 @@ export namespace RegularNft {
     signer: Secret,
     input: InputNftMetadata,
     feePayer: Pubkey,
-    freezeAuthority?: Secret,
+    options: Partial<GasLessMintOptions> = {},
   ): Promise<Result<PartialSignTransaction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
@@ -113,12 +113,12 @@ export namespace RegularNft {
       );
 
       // freezeAuthority
-      if (freezeAuthority) {
+      if (options.freezeAuthority) {
         insts.push(
           Mint.createDeleagateInstruction(
             mint.toPublicKey(),
             owner.toPublicKey(),
-            freezeAuthority.toPublicKey(),
+            options.freezeAuthority.toPublicKey(),
           ),
         );
       }

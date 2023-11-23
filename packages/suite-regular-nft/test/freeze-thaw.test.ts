@@ -29,8 +29,10 @@ test('Freezing and Thawing a target nft', async (t) => {
       symbol: asset.symbol!,
       royalty: 0,
     },
-    feePayer.secret,
-    freezeAuthority.pubkey,
+    {
+      feePayer: feePayer.secret,
+      freezeAuthority: freezeAuthority.pubkey,
+    },
   );
 
   const mint = inst1.unwrap().data as Pubkey;
@@ -58,12 +60,9 @@ test('Freezing and Thawing a target nft', async (t) => {
   );
 
   // thaw
-  const inst3 = RegularNft.thaw(
-    mint,
-    owner.pubkey,
-    freezeAuthority.secret,
-    feePayer.secret,
-  );
+  const inst3 = RegularNft.thaw(mint, owner.pubkey, freezeAuthority.secret, {
+    feePayer: feePayer.secret,
+  });
   (await inst3.submit()).match(
     async (ok: string) => {
       await Node.confirmedSig(ok);
