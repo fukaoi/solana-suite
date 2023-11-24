@@ -5,13 +5,12 @@ import { Converter } from '~/converter';
 import { Storage } from '~/storage';
 import { Node } from '~/node';
 import { MintTransaction } from '~/transaction';
-import { debugLog, Try, unixTimestamp, Validator } from '~/shared';
+import { debugLog, Result, Try, unixTimestamp, Validator } from '~/shared';
 import { DasApi } from '~/das-api';
 import { CompressedNft as Tree } from './tree';
 import {
   computeCreatorHash,
   computeDataHash,
-  createDelegateInstruction,
   createMintToCollectionV1Instruction,
   createVerifyCreatorInstruction,
   Creator,
@@ -40,7 +39,7 @@ export namespace CompressedNft {
     treeOwner: PublicKey,
     metadata: MetadataArgs,
     feePayer: PublicKey,
-  ) => {
+  ): Promise<TransactionInstruction> => {
     const rpcAssetProof = await DasApi.getAssetProof(assetId.toString());
     const rpcAsset = await DasApi.getAsset(assetId.toString());
     if (rpcAssetProof.isErr || rpcAsset.isErr) {
@@ -89,45 +88,6 @@ export namespace CompressedNft {
     );
   };
 
-  export const createDeleagate = async (
-    assetId: PublicKey,
-  ): Promise<TransactionInstruction> => {
-    const rpcAssetProof = await DasApi.getAssetProof(assetId.toString());
-    const rpcAsset = await DasApi.getAsset(assetId.toString());
-    if (rpcAssetProof.isErr || rpcAsset.isErr) {
-      throw Error('Rise error when get asset proof or asset');
-    }
-    const compression = rpcAsset.value.compression;
-    const ownership = rpcAsset.value.ownership;
-    const assetProof = rpcAssetProof.value;
-
-    const treeAuthority = Account.Pda.getTreeAuthority(assetProof.tree_id);
-    const previousLeafDelegate = ownership.delegate
-      ? ownership.delegate.toPublicKey()
-      : ownership.owner.toPublicKey();
-    const newLeafDelegate = previousLeafDelegate;
-    return createDelegateInstruction(
-      {
-        treeAuthority,
-        leafOwner: ownership.owner.toPublicKey(),
-        previousLeafDelegate,
-        newLeafDelegate,
-        merkleTree: assetProof.tree_id.toPublicKey(),
-        logWrapper: SPL_NOOP_PROGRAM_ID,
-        compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-      },
-      {
-        root: [...assetProof.root.trim().toPublicKey().toBytes()],
-        dataHash: [...compression.data_hash.trim().toPublicKey().toBytes()],
-        creatorHash: [
-          ...compression.creator_hash.trim().toPublicKey().toBytes(),
-        ],
-        nonce: compression.leaf_id,
-        index: compression.leaf_id,
-      },
-    );
-  };
-
   /**
    * Upload content and Compressed NFT mint
    *
@@ -159,7 +119,7 @@ export namespace CompressedNft {
     treeOwner: Pubkey,
     collectionMint: Pubkey,
     options: Partial<MintOptions> = {},
-  ) => {
+  ): Promise<Result<MintTransaction<Tree.Tree>, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {

@@ -1,6 +1,7 @@
 import test from 'ava';
+
 import { Memo } from '../src/';
-import { History } from '~/types/memo';
+import { History } from '~/types/history';
 import { OnErr, OnOk } from '~/types/shared';
 
 test('Get Only memo history', async (t) => {
