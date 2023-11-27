@@ -6,10 +6,15 @@ import {
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
 } from '@solana/spl-account-compression';
+import { Result, Try } from '~/shared';
+import { Transaction } from '~/transaction';
+import { DelegateOptions } from '~/types/compressed-nft';
+import { Pubkey, Secret } from '~/types/account';
 
 export namespace CompressedNft {
   export const createDeleagate = async (
     assetId: PublicKey,
+    newDelegate: PublicKey | null,
   ): Promise<TransactionInstruction> => {
     const rpcAssetProof = await DasApi.getAssetProof(assetId.toString());
     const rpcAsset = await DasApi.getAsset(assetId.toString());
@@ -24,7 +29,9 @@ export namespace CompressedNft {
     const previousLeafDelegate = ownership.delegate
       ? ownership.delegate.toPublicKey()
       : ownership.owner.toPublicKey();
-    const newLeafDelegate = previousLeafDelegate;
+    console.log('previousLeafDelegate', previousLeafDelegate);
+    const newLeafDelegate = newDelegate ? newDelegate : previousLeafDelegate;
+    console.log('newLeafDelegate', newLeafDelegate);
     return createDelegateInstruction(
       {
         treeAuthority,
@@ -45,5 +52,27 @@ export namespace CompressedNft {
         index: compression.leaf_id,
       },
     );
+  };
+
+  /**
+   * Set delegate
+   *
+   * @param {Pubkey} assetId
+   * @param {Secret} signer // new delegate or previous delegate signer
+   * @param {Partial<DelegateOptions>} options
+   * @return Promise<Result<Transaction, Error>>
+   */
+  export const setDelegate = async (
+    assetId: Pubkey,
+    signer: Secret,
+    options: Partial<DelegateOptions> = {},
+  ): Promise<Result<Transaction, Error>> => {
+    return Try(async () => {
+      const newDelegate = options.delegate
+        ? options.delegate.toPublicKey()
+        : null;
+      const inst = await createDeleagate(assetId.toPublicKey(), newDelegate);
+      return new Transaction([inst], [signer.toKeypair()]);
+    });
   };
 }

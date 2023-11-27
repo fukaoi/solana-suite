@@ -2,8 +2,10 @@ import { Result, Try } from '~/shared';
 import { Asset, AssetProof, Assets } from '~/types/das-api';
 import { Sortable } from '~/types/find';
 
-const rpcUrl =
-  'https://rpc-devnet.helius.xyz?api-key=9f70a843-3274-4ffd-a0a9-323f8b7c0639';
+ const rpcUrl = 'https://rpc-devnet.hellomoon.io/5fb81998-6aaa-4d3c-976e-73070b75adee';
+
+// const rpcUrl = 'https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
+// const rpcUrl = 'https://rpc-devnet.helius.xyz?api-key=9f70a843-3274-4ffd-a0a9-323f8b7c0639';
 export namespace DasApi {
   export const getAssetProof = async (
     assetId: string,

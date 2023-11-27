@@ -23,8 +23,8 @@ test('Find metadatas by owner', async (t) => {
       t.pass();
     },
     (err) => {
+      console.error(err);
       t.fail(err.message);
-      t.fail(err.stack);
     },
   );
 });
@@ -40,8 +40,8 @@ test('Find metadata by mint', async (t) => {
       t.pass();
     },
     (err) => {
+      console.error(err);
       t.fail(err.message);
-      t.fail(err.stack);
     },
   );
 });
@@ -56,8 +56,8 @@ test('Find metadatas by collectionMint', async (t) => {
       t.pass();
     },
     (err) => {
+      console.error(err);
       t.fail(err.message);
-      t.fail(err.stack);
     },
   );
 });
