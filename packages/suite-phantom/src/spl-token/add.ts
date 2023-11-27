@@ -48,7 +48,7 @@ export namespace PhantomSplToken {
 
       const signed = await phantom.signAllTransactions([transaction]);
 
-      // todo: refactoring
+      // TODO: refactoring
       for (const sign of signed) {
         const sig = await connection.sendRawTransaction(sign.serialize());
         await Node.confirmedSig(sig);

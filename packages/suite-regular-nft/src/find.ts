@@ -26,6 +26,7 @@ export namespace RegularNft {
       ? SortDirection.Desc
       : options?.sortable;
     const isHolder = !options?.isHolder ? true : false;
+    // HACK: check performance
     await SplToken.genericFindByOwner(
       owner,
       (result: Result<never[], Error>) => result.match(onOk, onErr),
