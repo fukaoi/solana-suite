@@ -1,8 +1,14 @@
-import { PublicKey, TransactionInstruction } from '@solana/web3.js';
+import {
+  AccountMeta,
+  PublicKey,
+  TransactionInstruction,
+} from '@solana/web3.js';
+import { Node } from '~/node';
 import { Account } from '~/account';
 import { DasApi } from '~/das-api';
 import { createDelegateInstruction } from 'mpl-bubblegum-instruction';
 import {
+  ConcurrentMerkleTreeAccount,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
 } from '@solana/spl-account-compression';
@@ -24,14 +30,26 @@ export namespace CompressedNft {
     const compression = rpcAsset.value.compression;
     const ownership = rpcAsset.value.ownership;
     const assetProof = rpcAssetProof.value;
+    const treeOwner = assetProof.tree_id.toPublicKey();
 
     const treeAuthority = Account.Pda.getTreeAuthority(assetProof.tree_id);
     const previousLeafDelegate = ownership.delegate
       ? ownership.delegate.toPublicKey()
       : ownership.owner.toPublicKey();
-    console.log('previousLeafDelegate', previousLeafDelegate);
     const newLeafDelegate = newDelegate ? newDelegate : previousLeafDelegate;
-    console.log('newLeafDelegate', newLeafDelegate);
+    const treeAccount = await ConcurrentMerkleTreeAccount.fromAccountAddress(
+      Node.getConnection(),
+      treeOwner,
+    );
+    const canopyDepth = treeAccount.getCanopyDepth();
+    const slicedProof: AccountMeta[] = assetProof.proof
+      .map((node: string) => ({
+        pubkey: node.toPublicKey(),
+        isSigner: false,
+        isWritable: false,
+      }))
+      .slice(0, assetProof.proof.length - (canopyDepth ? canopyDepth : 0));
+
     return createDelegateInstruction(
       {
         treeAuthority,
@@ -41,6 +59,7 @@ export namespace CompressedNft {
         merkleTree: assetProof.tree_id.toPublicKey(),
         logWrapper: SPL_NOOP_PROGRAM_ID,
         compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        anchorRemainingAccounts: slicedProof,
       },
       {
         root: [...assetProof.root.trim().toPublicKey().toBytes()],
