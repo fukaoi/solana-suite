@@ -30,6 +30,7 @@ export namespace CompressedNft {
         ),
       );
 
+      // BUG:  Missing signing
       second.add(await Transfer.createTransfer(assetId, owner, dest, feePayer));
 
       first.recentBlockhash = blockhashObj.blockhash;

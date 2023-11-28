@@ -25,6 +25,7 @@ test.beforeEach(async (t) => {
   t.log('# mint: ', mint);
 });
 
+// TODO: Move to gas-less-delegate.ts
 test.only('Gas-less new delegate signer', async (t) => {
   const blockhashObj = await Node.getConnection().getLatestBlockhash();
   const tx = new Transaction({
