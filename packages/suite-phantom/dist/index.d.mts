@@ -215,7 +215,7 @@ type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer 
 
 declare global {
     interface Array<T> {
-        submit(): Promise<Result$1<TransactionSignature, Error>>;
+        submit(feePayer?: Secret): Promise<Result$1<TransactionSignature, Error>>;
     }
 }
 

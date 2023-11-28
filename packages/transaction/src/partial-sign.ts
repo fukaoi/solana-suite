@@ -41,3 +41,33 @@ export class PartialSignTransaction {
     });
   };
 }
+
+/**
+ * senTransaction() TransactionInstruction
+ *
+ * @see {@link types/global.ts}
+ * @returns Promise<Result<string, Error>>
+ */
+
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* @ts-ignore */
+Array.prototype.submit = async function (feePayer: Secret) {
+  return Try(async () => {
+    let i = 0;
+    for await (const obj of this) {
+      if (obj.isErr) {
+        const errorMess: string = obj.error.message as string;
+        throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
+      } else if (this.length - 1 > i) {
+        // Except for the last transaction
+        console.log('Except for the last transaction');
+        await obj.submit(feePayer);
+      } else {
+        // only last transaction
+        console.log('last transaction');
+        return await obj.submit(feePayer);
+      }
+      i++;
+    }
+  });
+};

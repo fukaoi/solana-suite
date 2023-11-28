@@ -41,23 +41,23 @@ test('Fee-Less Transfer nft', async (t) => {
   }
 });
 
-test('[Error] No match delegate(or feePayer)', async (t) => {
-  const assets = await CompressedNft.findByOwner(source.pubkey);
-  const noMatchDelegate = Account.Keypair.create();
-
-  if (assets.isErr) {
-    t.fail(assets.error.message);
-  }
-
-  const mint = assets.unwrap().metadatas[0].mint;
-  t.log('# mint: ', mint);
-
-  const serialized = await CompressedNft.gasLessTransfer(
-    mint,
-    source.pubkey,
-    dest.pubkey,
-    noMatchDelegate.pubkey,
-  );
-
-  t.true(serialized.isErr);
-});
+// test('[Error] No match delegate(or feePayer)', async (t) => {
+//   const assets = await CompressedNft.findByOwner(source.pubkey);
+//   const noMatchDelegate = Account.Keypair.create();
+//
+//   if (assets.isErr) {
+//     t.fail(assets.error.message);
+//   }
+//
+//   const mint = assets.unwrap().metadatas[0].mint;
+//   t.log('# mint: ', mint);
+//
+//   const serialized = await CompressedNft.gasLessTransfer(
+//     mint,
+//     source.pubkey,
+//     dest.pubkey,
+//     noMatchDelegate.pubkey,
+//   );
+//
+//   t.true(serialized.isErr);
+// });

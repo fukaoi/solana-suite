@@ -9,6 +9,10 @@ import './das-api.js';
 import './converter.js';
 import '@metaplex-foundation/mpl-token-metadata';
 
+type DelegateOptions = {
+    delegate: Pubkey;
+} & AuthorityOptions;
+
 type MintOptions = {
     receiver: Pubkey;
     delegate: Pubkey;
@@ -52,4 +56,4 @@ type NftMetadata = {
     offchain: Offchain;
 };
 
-export { Authority, CompressedNftMetadata, Creators, MintCollectionOptions, MintOptions, NftMetadata };
+export { Authority, CompressedNftMetadata, Creators, DelegateOptions, MintCollectionOptions, MintOptions, NftMetadata };

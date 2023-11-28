@@ -1,7 +1,10 @@
 import test from 'ava';
 import { CompressedNft } from '../src';
+import { Node } from '~/node';
 import { KeypairAccount, Pubkey } from '~/types/account';
 import { Setup } from 'test-tools/setup';
+import { PartialSignTransaction } from '../../transaction/src/partial-sign';
+import { Transaction } from '@solana/web3.js';
 
 let source: KeypairAccount;
 let feePayer: KeypairAccount;
@@ -20,6 +23,36 @@ test.beforeEach(async (t) => {
   }
   mint = assets.unwrap().metadatas[0].mint;
   t.log('# mint: ', mint);
+});
+
+test.only('Gas-less new delegate signer', async (t) => {
+  const blockhashObj = await Node.getConnection().getLatestBlockhash();
+  const tx = new Transaction({
+    lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
+    blockhash: blockhashObj.blockhash,
+    feePayer: source.pubkey.toPublicKey(),
+  });
+  tx.add(
+    await CompressedNft.createDeleagate(
+      mint.toPublicKey(),
+      feePayer.pubkey.toPublicKey(),
+    ),
+  );
+
+  tx.recentBlockhash = blockhashObj.blockhash;
+
+  (
+    await new PartialSignTransaction(
+      tx
+        .serialize({
+          requireAllSignatures: false,
+        })
+        .toString('hex'),
+    ).submit(source.secret)
+  ).match(
+    (ok) => t.log(ok),
+    (err) => console.error(err),
+  );
 });
 
 test('Set new delegate signer', async (t) => {

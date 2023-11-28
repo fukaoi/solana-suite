@@ -41,6 +41,6 @@ export type PartialSignTransaction = {
 declare global {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   interface Array<T> {
-    submit(): Promise<Result<TransactionSignature, Error>>;
+    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
   }
 }

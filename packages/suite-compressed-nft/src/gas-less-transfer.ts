@@ -12,31 +12,44 @@ export namespace CompressedNft {
     owner: Pubkey,
     dest: Pubkey,
     feePayer: Pubkey,
-  ): Promise<Result<PartialSignTransaction, Error>> => {
+  ): Promise<Result<PartialSignTransaction[], Error>> => {
     return Try(async () => {
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
-      const tx = new Transaction({
+      const first = new Transaction({
         lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
         blockhash: blockhashObj.blockhash,
         feePayer: feePayer.toPublicKey(),
       });
 
-      tx.add(await Transfer.createTransfer(assetId, owner, dest, feePayer));
+      const second = first;
 
-      tx.add(
+      first.add(
         await Delegate.createDeleagate(
           assetId.toPublicKey(),
           feePayer.toPublicKey(),
         ),
       );
 
-      tx.recentBlockhash = blockhashObj.blockhash;
+      second.add(await Transfer.createTransfer(assetId, owner, dest, feePayer));
 
-      const serializedTx = tx.serialize({
-        requireAllSignatures: false,
-      });
-      const hex = serializedTx.toString('hex');
-      return new PartialSignTransaction(hex);
+      first.recentBlockhash = blockhashObj.blockhash;
+      second.recentBlockhash = blockhashObj.blockhash;
+
+      const firstTransaction = new PartialSignTransaction(
+        first
+          .serialize({
+            requireAllSignatures: false,
+          })
+          .toString('hex'),
+      );
+      const secondTransaction = new PartialSignTransaction(
+        second
+          .serialize({
+            requireAllSignatures: false,
+          })
+          .toString('hex'),
+      );
+      return [firstTransaction, secondTransaction];
     });
   };
 }

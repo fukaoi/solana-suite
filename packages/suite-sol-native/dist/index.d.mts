@@ -759,7 +759,7 @@ declare class PartialSignTransaction {
 
 declare global {
     interface Array<T> {
-        submit(): Promise<Result<TransactionSignature, Error>>;
+        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
     }
 }
 

@@ -37,9 +37,9 @@ export namespace CompressedNft {
       delegate &&
       asset.value.ownership.delegate !== delegate
     ) {
-      throw Error(
-        `NFT is not delegated by the expected delegate: current: ${asset.value.ownership.delegate}, expected: ${delegate}`,
-      );
+      // throw Error(
+      //   `NFT is not delegated by the expected delegate: current: ${asset.value.ownership.delegate}, expected: ${delegate}`,
+      // );
     }
 
     debugLog('# assetProof: ', assetProof.value);

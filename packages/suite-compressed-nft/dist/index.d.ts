@@ -250,6 +250,10 @@ type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, 
 type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
 type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
 
+type DelegateOptions = {
+    delegate: Pubkey$1;
+} & AuthorityOptions;
+
 type MintOptions = {
     receiver: Pubkey$1;
     delegate: Pubkey$1;
@@ -851,7 +855,7 @@ declare namespace CompressedNft$1 {
 
 declare global {
     interface Array<T> {
-        submit(): Promise<Result$1<TransactionSignature, Error>>;
+        submit(feePayer?: Secret$1): Promise<Result$1<TransactionSignature, Error>>;
     }
 }
 
@@ -863,12 +867,14 @@ declare const CompressedNft: {
     initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result<MintTransaction<Pubkey$1>, Error>>;
     createVerifyCreator: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
     mint: (owner: Pubkey$1, signer: Secret$1, input: InputNftMetadata, treeOwner: Pubkey$1, collectionMint: Pubkey$1, options?: Partial<MintOptions>) => Promise<Result<MintTransaction<CompressedNft$1.Tree>, Error>>;
-    gasLessTransfer: (assetId: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, feePayer: Pubkey$1) => Promise<Result<PartialSignTransaction, Error>>;
+    gasLessTransfer: (assetId: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, feePayer: Pubkey$1) => Promise<Result<PartialSignTransaction[], Error>>;
     defaultSortBy: Sortable;
     fetchOffchain: (uri: string) => Promise<any>;
     findByOwner: (owner: Pubkey, options?: Partial<FindOptions>) => Promise<Result<CompressedNftMetadata, Error>>;
     findByMint: (mint: Pubkey) => Promise<Result<NftMetadata, Error>>;
     findByCollection: (collectionMint: Pubkey, options?: Partial<FindOptions>) => Promise<Result<CompressedNftMetadata, Error>>;
+    createDeleagate: (assetId: _solana_web3_js.PublicKey, newDelegate: _solana_web3_js.PublicKey | null) => Promise<_solana_web3_js.TransactionInstruction>;
+    setDelegate: (assetId: Pubkey$1, signer: Secret$1, options?: Partial<DelegateOptions>) => Promise<Result<Transaction, Error>>;
 };
 
 export { Account, CompressedNft, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, Secret$1 as Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

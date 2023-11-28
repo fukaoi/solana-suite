@@ -789,7 +789,7 @@ declare class Transaction {
 
 declare global {
     interface Array<T> {
-        submit(): Promise<Result<TransactionSignature, Error>>;
+        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
     }
 }
 
