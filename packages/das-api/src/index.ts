@@ -1,20 +1,13 @@
-import { Result, Try } from '~/shared';
+import { Constants, Result, Try } from '~/shared';
 import { Asset, AssetProof, Assets } from '~/types/das-api';
 import { Sortable } from '~/types/find';
 
-// todo: Move to shared module
-
-// const rpcUrl = 'https://rpc-devnet.hellomoon.io/5fb81998-6aaa-4d3c-976e-73070b75adee';
-
-const rpcUrl =
-  'https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
-// const rpcUrl = 'https://rpc-devnet.helius.xyz?api-key=9f70a843-3274-4ffd-a0a9-323f8b7c0639';
 export namespace DasApi {
   export const getAssetProof = async (
     assetId: string,
   ): Promise<Result<AssetProof, Error>> => {
     return Try(async () => {
-      const response = await fetch(rpcUrl, {
+      const response = await fetch(Constants.DAS_API_URL, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -32,7 +25,7 @@ export namespace DasApi {
     assetId: Pubkey,
   ): Promise<Result<Asset, Error>> => {
     return Try(async () => {
-      const response = await fetch(rpcUrl, {
+      const response = await fetch(Constants.DAS_API_URL, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -55,7 +48,7 @@ export namespace DasApi {
     after?: string,
   ): Promise<Result<Assets, Error>> => {
     return Try(async () => {
-      const response = await fetch(rpcUrl, {
+      const response = await fetch(Constants.DAS_API_URL, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -79,7 +72,7 @@ export namespace DasApi {
     after?: string,
   ): Promise<Result<Assets, Error>> => {
     return Try(async () => {
-      const response = await fetch(rpcUrl, {
+      const response = await fetch(Constants.DAS_API_URL, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({

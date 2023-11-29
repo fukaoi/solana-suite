@@ -23,6 +23,15 @@ export namespace Constants {
     localhost = 'http://api.devnet.solana.com',
   }
 
+  export enum BundlrUrl {
+    prd = 'https://node1.irys.xyz,https://node2.irys.xyz',
+    dev = 'https://devnet.irys.xyz',
+  }
+
+  export enum DasApiUrl {
+    dev = 'https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92,https://rpc-devnet.helius.xyz?api-key=9f70a843-3274-4ffd-a0a9-323f8b7c0639',
+  }
+
   export const switchCluster = (param: {
     cluster?: string;
     customClusterUrl?: string[];
@@ -51,14 +60,25 @@ export namespace Constants {
 
   export const switchBundlr = (env: string): string => {
     switch (env) {
-      case Constants.Cluster.dev:
-      case Constants.Cluster.test:
-      case Constants.Cluster.localhost:
-        return 'https://devnet.irys.xyz';
+      case Constants.Cluster.prd:
+        const urls = Constants.BundlrUrl.prd.split(',');
+        const index = Date.now() % urls.length;
+        return urls[index];
       default: {
-        const index = Date.now() % 2;
-        const clusters = ['https://node1.irys.xyz', 'https://node2.irys.xyz'];
-        return clusters[index];
+        return Constants.BundlrUrl.dev;
+      }
+    }
+  };
+
+  export const switchDasApi = (env: string): string => {
+    switch (env) {
+      case Constants.Cluster.prd:
+        // TODO: Replace WarningMessage modules
+        throw Error('Set DAS API');
+      default: {
+        const urls = Constants.DasApiUrl.dev.split(',');
+        const index = Date.now() % urls.length;
+        return urls[index];
       }
     }
   };
@@ -78,6 +98,7 @@ export namespace Constants {
   export const NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
   export const IRYS_GATEWAY_URL = 'https://gateway.irys.xyz';
   export const BUNDLR_NETWORK_URL = switchBundlr(Config.cluster.type);
+  export const DAS_API_URL = switchDasApi(Config.cluster.type);
   export const EXPLORER_SOLSCAN_URL = 'https://solscan.io';
   export const EXPLORER_SOLANAFM_URL = 'https://solana.fm';
   export const EXPLORER_XRAY_URL = 'https://xray.helius.xyz';
