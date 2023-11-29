@@ -15,7 +15,7 @@ import bs from 'bs58';
 String.prototype.toExplorerUrl = function (
   explorer: Explorer = Explorer.Solscan,
 ) {
-  // TODO: add xray.xyz 
+  // TODO: add xray.xyz
   const endPointUrl = Node.getConnection().rpcEndpoint;
   debugLog('# toExplorerUrl rpcEndpoint:', endPointUrl);
   let cluster = '';

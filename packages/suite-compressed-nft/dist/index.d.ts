@@ -860,14 +860,15 @@ declare global {
 }
 
 declare const CompressedNft: {
-    createTransfer: (assetId: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, delegate?: Pubkey$1 | undefined) => Promise<_solana_web3_js.TransactionInstruction>;
-    transfer: (assetId: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[]) => Promise<Result<Transaction, Error>>;
+    createTransfer: (assetId: Pubkey$1, assetIdOwner: Pubkey$1, dest: Pubkey$1) => Promise<_solana_web3_js.TransactionInstruction>;
+    transfer: (assetId: Pubkey$1, assetIdOwner: Pubkey$1, dest: Pubkey$1, signers: Secret[]) => Promise<Result<Transaction, Error>>;
     mintCollection: (owner: Pubkey, signer: Secret$1, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintTransaction<Pubkey>, Error>>;
     Tree: typeof CompressedNft$1.Tree;
     initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result<MintTransaction<Pubkey$1>, Error>>;
     createVerifyCreator: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
     mint: (owner: Pubkey$1, signer: Secret$1, input: InputNftMetadata, treeOwner: Pubkey$1, collectionMint: Pubkey$1, options?: Partial<MintOptions>) => Promise<Result<MintTransaction<CompressedNft$1.Tree>, Error>>;
-    gasLessTransfer: (assetId: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, feePayer: Pubkey$1) => Promise<Result<PartialSignTransaction[], Error>>;
+    gasLessTransfer: (assetId: Pubkey$1, assetIdOwner: Secret$1, dest: Pubkey$1, feePayer: Pubkey$1) => Promise<Result<PartialSignTransaction[], Error>>;
+    gasLessDelegate: (assetId: Pubkey$1, assetIdOwner: Secret$1, newDelegate: Pubkey$1) => Promise<Result<PartialSignTransaction, Error>>;
     defaultSortBy: Sortable;
     fetchOffchain: (uri: string) => Promise<any>;
     findByOwner: (owner: Pubkey, options?: Partial<FindOptions>) => Promise<Result<CompressedNftMetadata, Error>>;

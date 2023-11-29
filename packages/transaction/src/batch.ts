@@ -78,7 +78,7 @@ Array.prototype.submit = async function () {
       }
       i++;
     }
-    // TODO: enough object 
+    // TODO: enough object
     return BatchTransaction.submit(instructions);
   });
 };
