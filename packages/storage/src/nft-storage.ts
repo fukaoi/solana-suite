@@ -8,6 +8,7 @@ export namespace NftStorage {
   const getNftStorageApiKey = (): string => {
     if (!Constants.nftStorageApiKey) {
       if (!isDisplayWarning) {
+        //TODO: Move to Constants module
         console.warn(
           `
         [Warning]
