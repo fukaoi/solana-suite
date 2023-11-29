@@ -3,7 +3,7 @@ import { Node } from '~/node';
 import { Constants, debugLog } from '~/shared';
 import { Account } from '~/account';
 import { BigNumber } from 'bignumber.js';
-import { Explorer } from '~/types/global';
+import { Explorer, ExplorerOptions } from '~/types/global';
 import bs from 'bs58';
 
 /**
@@ -14,8 +14,8 @@ import bs from 'bs58';
  */
 String.prototype.toExplorerUrl = function (
   explorer: Explorer = Explorer.Solscan,
+  options: Partial<ExplorerOptions> = {},
 ) {
-  // TODO: add xray.xyz
   const endPointUrl = Node.getConnection().rpcEndpoint;
   debugLog('# toExplorerUrl rpcEndpoint:', endPointUrl);
   let cluster = '';
@@ -31,22 +31,40 @@ String.prototype.toExplorerUrl = function (
 
   const addressOrSignature: string = this.toString();
   let url = '';
+
+  if (options.replacePath) {
+    if (explorer === Explorer.SolanaFM) {
+      url = `${Constants.EXPLORER_SOLANAFM_URL}/${options.replacePath}/${addressOrSignature}?cluster=${cluster}`;
+    } else if (explorer === Explorer.Xray) {
+      url = `${Constants.EXPLORER_XRAY_URL}/${options.replacePath}/${addressOrSignature}?network=${cluster}`;
+    } else {
+      url = `${Constants.EXPLORER_SOLSCAN_URL}/${options.replacePath}/${addressOrSignature}?cluster=${cluster}`;
+    }
+    return url;
+  }
+
   if (Account.Keypair.isPubkey(addressOrSignature)) {
     // address
     if (explorer === Explorer.SolanaFM) {
-      url = `https://solana.fm/address/${addressOrSignature}?cluster=${cluster}`;
+      url = `${Constants.EXPLORER_SOLANAFM_URL}/address/${addressOrSignature}?cluster=${cluster}`;
+    } else if (explorer === Explorer.Xray) {
+      url = `${Constants.EXPLORER_XRAY_URL}/account/${addressOrSignature}?network=${cluster}`;
     } else {
-      url = `https://solscan.io/account/${addressOrSignature}?cluster=${cluster}`;
+      url = `${Constants.EXPLORER_SOLSCAN_URL}/account/${addressOrSignature}?cluster=${cluster}`;
     }
-    // signature
   } else {
+    // signature
     // for Invalid type "never" of addressOrSignature, so `as string`
     if (explorer === Explorer.SolanaFM) {
-      url = `https://solana.fm/tx/${
+      url = `${Constants.EXPLORER_SOLANAFM_URL}/tx/${
         addressOrSignature as string
       }?cluster=${cluster}`;
+    } else if (explorer === Explorer.Xray) {
+      url = `${Constants.EXPLORER_XRAY_URL}/tx/${
+        addressOrSignature as string
+      }?network=${cluster}`;
     } else {
-      url = `https://solscan.io/tx/${
+      url = `${Constants.EXPLORER_SOLSCAN_URL}/tx/${
         addressOrSignature as string
       }?cluster=${cluster}`;
     }

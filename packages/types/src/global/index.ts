@@ -3,7 +3,7 @@ declare global {
   interface String {
     toPublicKey(): PublicKey;
     toKeypair(): Keypair;
-    toExplorerUrl(explorer?: Explorer): string;
+    toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
   }
   interface Number {
     toSol(): number;
@@ -26,4 +26,9 @@ declare global {
 export enum Explorer {
   Solscan = 'solscan',
   SolanaFM = 'solanafm',
+  Xray = 'xray',
 }
+
+export type ExplorerOptions = {
+  replacePath: string;
+};

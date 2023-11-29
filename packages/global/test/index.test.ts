@@ -5,6 +5,7 @@ import { Node } from '~/node';
 import { Explorer } from '~/types/global';
 
 const PUBKEY = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
+const MINT = 'J2DUquFhToJbkEc4YSPuTjhZDXZvRaBUgUX5RW3cSsdr';
 const SIG =
   '3Gs7pb8C9aZ8vkS5k1HrRB24TU4vofCZWM9JtUbMipof1hBmD6rT11css4gYGrgLZ1bp7chyqD7W7Gm8ZdvF9pF8';
 
@@ -44,6 +45,21 @@ test('[SolanaFM][Devnet, localhost]Create explorer url', (t) => {
   const url = SIG.toExplorerUrl(Explorer.SolanaFM);
   const res = /devnet/.test(url);
   t.true(res);
+});
+
+test('[Xray]Create explorer url by signature', (t) => {
+  const res = SIG.toExplorerUrl(Explorer.Xray);
+  t.not(res, undefined);
+});
+
+test('[Xray]Create explorer url by address', (t) => {
+  const res = PUBKEY.toExplorerUrl(Explorer.Xray);
+  t.not(res, undefined);
+});
+
+test('[Xray]Create explorer url by mint address', (t) => {
+  const res = MINT.toExplorerUrl(Explorer.Xray, { replacePath: 'token' });
+  t.not(res, undefined);
 });
 
 test('[SolanaFM][Devnet, custom]Create explorer url', (t) => {

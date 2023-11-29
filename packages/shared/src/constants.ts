@@ -78,4 +78,7 @@ export namespace Constants {
   export const NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
   export const IRYS_GATEWAY_URL = 'https://gateway.irys.xyz';
   export const BUNDLR_NETWORK_URL = switchBundlr(Config.cluster.type);
+  export const EXPLORER_SOLSCAN_URL = 'https://solscan.io';
+  export const EXPLORER_SOLANAFM_URL = 'https://solana.fm';
+  export const EXPLORER_XRAY_URL = 'https://xray.helius.xyz';
 }
