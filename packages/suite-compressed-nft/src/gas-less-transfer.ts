@@ -4,7 +4,6 @@ import { Pubkey } from '~/types/account';
 import { PartialSignTransaction } from '~/transaction';
 import { Transaction } from '@solana/web3.js';
 import { CompressedNft as Transfer } from './transfer';
-import { CompressedNft as Delegate } from './delegate';
 
 export namespace CompressedNft {
   export const gasLessTransfer = async (
@@ -15,42 +14,24 @@ export namespace CompressedNft {
   ): Promise<Result<PartialSignTransaction[], Error>> => {
     return Try(async () => {
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
-      const first = new Transaction({
+      const inst = new Transaction({
         lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
         blockhash: blockhashObj.blockhash,
         feePayer: feePayer.toPublicKey(),
       });
 
-      const second = first;
+      inst.add(await Transfer.createTransfer(assetId, owner, dest, feePayer));
 
-      first.add(
-        await Delegate.createDeleagate(
-          assetId.toPublicKey(),
-          feePayer.toPublicKey(),
-        ),
-      );
+      inst.recentBlockhash = blockhashObj.blockhash;
 
-      // BUG:  Missing signing
-      second.add(await Transfer.createTransfer(assetId, owner, dest, feePayer));
-
-      first.recentBlockhash = blockhashObj.blockhash;
-      second.recentBlockhash = blockhashObj.blockhash;
-
-      const firstTransaction = new PartialSignTransaction(
-        first
-          .serialize({
-            requireAllSignatures: false,
-          })
-          .toString('hex'),
-      );
       const secondTransaction = new PartialSignTransaction(
-        second
+        inst
           .serialize({
             requireAllSignatures: false,
           })
           .toString('hex'),
       );
-      return [firstTransaction, secondTransaction];
+      return [secondTransaction];
     });
   };
 }

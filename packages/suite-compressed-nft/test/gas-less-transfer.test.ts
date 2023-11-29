@@ -1,6 +1,5 @@
 import test from 'ava';
 import { CompressedNft } from '../src';
-import { Account } from '~/account';
 import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 
@@ -32,13 +31,9 @@ test('Fee-Less Transfer nft', async (t) => {
     feePayer.pubkey,
   );
 
-  t.true(serialized.isOk, `${serialized.unwrap()}`);
-
-  if (serialized.isOk) {
-    const res = await serialized.value.submit(feePayer.secret);
-    t.true(res.isOk, `${res.unwrap()}`);
-    t.log('# tx signature: ', res.unwrap());
-  }
+  const res = await serialized.unwrap().submit(feePayer.secret);
+  t.true(res.isOk, `${res.unwrap()}`);
+  t.log('# tx signature: ', res.unwrap());
 });
 
 // test('[Error] No match delegate(or feePayer)', async (t) => {

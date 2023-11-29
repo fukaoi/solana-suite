@@ -1,6 +1,7 @@
 import { CompressedNft as Delegate } from './delegate';
 import { CompressedNft as Find } from './find';
-import { CompressedNft as GasLess } from './gas-less-transfer';
+import { CompressedNft as GasLessDelegate } from './gas-less-delegate';
+import { CompressedNft as GasLessTransfer } from './gas-less-transfer';
 import { CompressedNft as Mint } from './mint';
 import { CompressedNft as Collection } from './mint-collection';
 import { CompressedNft as Tree } from './tree';
@@ -12,7 +13,8 @@ import '~/transaction';
 export const CompressedNft = {
   ...Delegate,
   ...Find,
-  ...GasLess,
+  ...GasLessDelegate,
+  ...GasLessTransfer,
   ...Mint,
   ...Tree,
   ...Collection,

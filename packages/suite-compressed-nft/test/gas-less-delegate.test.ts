@@ -22,21 +22,21 @@ test.beforeEach(async (t) => {
   t.log('# mint: ', mint);
 });
 
-test('Set new delegate signer', async (t) => {
-  const res = await (
-    await CompressedNft.setDelegate(mint, source.secret, {
-      delegate: feePayer.pubkey,
-    })
-  ).submit();
+test('Gas-less new delegate signer', async (t) => {
+  const obj = await CompressedNft.gasLessDelegate(
+    mint,
+    source.secret,
+    feePayer.pubkey,
+  );
 
-  res.match(
-    (ok: string) => {
+  (await obj.unwrap().submit(feePayer.secret)).match(
+    (ok) => {
       t.log('# sig: ', ok);
       t.pass();
     },
-    (err: Error) => {
+    (err) => {
       console.error(err);
-      t.fail(err.message);
+      t.fail(err.name);
     },
   );
 });
