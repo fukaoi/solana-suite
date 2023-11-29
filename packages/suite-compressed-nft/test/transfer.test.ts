@@ -48,8 +48,7 @@ test('Transfer nft', async (t) => {
   );
 });
 
-test.only('Transfer nft with fee payer', async (t) => {
-  const mint = 'Av5s9d9btx5LqHHwKmqK7T1WS7XsPD6aD9BF826JrGb1';
+test('Transfer nft with fee payer', async (t) => {
   const res = await (
     await CompressedNft.transfer(mint, source.pubkey, dest.pubkey, [
       source.secret,

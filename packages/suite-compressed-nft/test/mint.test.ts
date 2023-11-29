@@ -76,7 +76,7 @@ test('[Arweave] mint nft', async (t) => {
   t.log('# asset id: ', assetId);
 });
 
-test.only('[Nft Storage] mint nft with fee payer', async (t) => {
+test('[Nft Storage] mint nft with fee payer', async (t) => {
   const asset = RandomAsset.get();
   const inst = await CompressedNft.mint(
     source.pubkey,
