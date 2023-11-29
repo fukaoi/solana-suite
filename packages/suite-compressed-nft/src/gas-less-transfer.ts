@@ -1,18 +1,29 @@
 import { Result, Try } from '~/shared';
 import { Node } from '~/node';
-import { Pubkey } from '~/types/account';
+import { Account } from '~/account';
+import { Pubkey, Secret } from '~/types/account';
 import { PartialSignTransaction } from '~/transaction';
 import { Transaction } from '@solana/web3.js';
 import { CompressedNft as Transfer } from './transfer';
+import { CompressedNft as Delegate } from './gas-less-delegate';
 
 export namespace CompressedNft {
   export const gasLessTransfer = async (
     assetId: Pubkey,
-    owner: Pubkey,
+    assetIdOwner: Secret,
     dest: Pubkey,
     feePayer: Pubkey,
   ): Promise<Result<PartialSignTransaction[], Error>> => {
     return Try(async () => {
+      const delegate = await Delegate.gasLessDelegate(
+        assetId,
+        assetIdOwner,
+        feePayer,
+      );
+      if (delegate.isErr) {
+        throw delegate.error;
+      }
+      const first = delegate.value;
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
       const inst = new Transaction({
         lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
@@ -20,18 +31,24 @@ export namespace CompressedNft {
         feePayer: feePayer.toPublicKey(),
       });
 
-      inst.add(await Transfer.createTransfer(assetId, owner, dest, feePayer));
-
+      const assetIdOwnerKeypair = new Account.Keypair({ secret: assetIdOwner });
+      inst.add(
+        await Transfer.createTransfer(
+          assetId,
+          assetIdOwnerKeypair.pubkey,
+          dest,
+        ),
+      );
       inst.recentBlockhash = blockhashObj.blockhash;
 
-      const secondTransaction = new PartialSignTransaction(
+      const second = new PartialSignTransaction(
         inst
           .serialize({
             requireAllSignatures: false,
           })
           .toString('hex'),
       );
-      return [secondTransaction];
+      return [first, second];
     });
   };
 }

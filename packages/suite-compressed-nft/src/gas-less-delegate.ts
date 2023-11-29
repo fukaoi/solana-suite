@@ -8,7 +8,7 @@ import { Result, Try } from '~/shared';
 export namespace CompressedNft {
   export const gasLessDelegate = async (
     assetId: Pubkey,
-    assetOwner: Secret,
+    assetIdOwner: Secret,
     newDelegate: Pubkey,
   ): Promise<Result<PartialSignTransaction, Error>> => {
     return Try(async () => {
@@ -24,7 +24,7 @@ export namespace CompressedNft {
         feePayer: newDelegate.toPublicKey(),
       });
       tx.add(inst);
-      tx.partialSign(assetOwner.toKeypair());
+      tx.partialSign(assetIdOwner.toKeypair());
       tx.recentBlockhash = blockhashObj.blockhash;
 
       return new PartialSignTransaction(

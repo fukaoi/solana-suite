@@ -14,9 +14,8 @@ import { TransactionInstruction } from '@solana/web3.js';
 export namespace CompressedNft {
   export const createTransfer = async (
     assetId: Pubkey,
-    owner: Pubkey,
+    assetIdOwner: Pubkey,
     dest: Pubkey,
-    delegate?: Pubkey,
   ): Promise<TransactionInstruction> => {
     const assetProof = await DasApi.getAssetProof(assetId);
     if (assetProof.isErr) {
@@ -28,18 +27,10 @@ export namespace CompressedNft {
     const asset = await DasApi.getAsset(assetId);
     if (asset.isErr) {
       throw asset.error;
-    } else if (asset.isOk && asset.value.ownership.owner !== owner) {
+    } else if (asset.isOk && asset.value.ownership.owner !== assetIdOwner) {
       throw Error(
-        `NFT is not owned by the expected owner: current: ${asset.value.ownership.owner}, expected: ${owner}`,
+        `NFT is not owned by the expected owner: current: ${asset.value.ownership.owner}, expected: ${assetIdOwner}`,
       );
-    } else if (
-      asset.isOk &&
-      delegate &&
-      asset.value.ownership.delegate !== delegate
-    ) {
-      // throw Error(
-      //   `NFT is not delegated by the expected delegate: current: ${asset.value.ownership.delegate}, expected: ${delegate}`,
-      // );
     }
 
     debugLog('# assetProof: ', assetProof.value);
@@ -99,20 +90,20 @@ export namespace CompressedNft {
    * transfer nft
    *
    * @param {Pubkey} assetId
-   * @param {Pubkey} owner
+   * @param {Pubkey} assetIdOwner
    * @param {Pubkey} dest
    * @param {Secret[]} signers
    * @return Promise<Result<Transaction, Error>>
    */
   export const transfer = async (
     assetId: Pubkey,
-    owner: Pubkey,
+    assetIdOwner: Pubkey,
     dest: Pubkey,
     signers: Secret[],
   ): Promise<Result<Transaction, Error>> => {
     return Try(async () => {
       const keypairs = signers.map((s) => s.toKeypair());
-      const inst = await createTransfer(assetId, owner, dest);
+      const inst = await createTransfer(assetId, assetIdOwner, dest);
       return new Transaction([inst], keypairs);
     });
   };

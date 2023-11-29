@@ -26,7 +26,7 @@ test('Fee-Less Transfer nft', async (t) => {
 
   const serialized = await CompressedNft.gasLessTransfer(
     mint,
-    source.pubkey,
+    source.secret,
     dest.pubkey,
     feePayer.pubkey,
   );
