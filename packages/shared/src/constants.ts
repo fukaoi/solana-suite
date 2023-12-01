@@ -20,7 +20,7 @@ export namespace Constants {
         -------------------------------------- 
         `;
 
-    export const calculateProbability = (): Boolean => {
+    export const calculateProbability = (): boolean => {
       const randomValue = Math.random();
       const probability = 1 / THRESHHOLD;
       if (!isDisplay && randomValue < probability) {
@@ -95,10 +95,11 @@ export namespace Constants {
 
   export const switchBundlr = (env: string): string => {
     switch (env) {
-      case Constants.Cluster.prd:
+      case Constants.Cluster.prd: {
         const urls = Constants.BundlrUrl.prd.split(',');
         const index = Date.now() % urls.length;
         return urls[index];
+      }
       default: {
         return Constants.BundlrUrl.dev;
       }

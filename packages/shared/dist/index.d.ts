@@ -5,6 +5,13 @@ import 'bn.js';
 import '@metaplex-foundation/mpl-token-metadata';
 
 declare namespace Constants {
+    namespace WarnningMessage {
+        const NFT_STORAGE_API_KEY = "\n        [Warning]\n        --------------------------------------\n        You need to update nftStorage.apiKey define parameter in solana-suite.json.\n        Can get api key from https://nft.storage/\n        --------------------------------------\n        ";
+        const DAS_API_URL = "\n        [Warning]\n        --------------------------------------\n        You need to update dasApiUrl define parameter in solana-suite.json.\n        can get api url from https://www.helius.dev/\n        -------------------------------------- \n        ";
+        const calculateProbability: () => boolean;
+    }
+}
+declare namespace Constants {
     const currentCluster: string;
     const customClusterUrl: never[];
     const isDebugging: string;
@@ -52,13 +59,6 @@ declare namespace Constants {
     const EXPLORER_SOLSCAN_URL = "https://solscan.io";
     const EXPLORER_SOLANAFM_URL = "https://solana.fm";
     const EXPLORER_XRAY_URL = "https://xray.helius.xyz";
-}
-declare namespace Constants {
-    namespace WarnningMessage {
-        const NFT_STORAGE_API_KEY = "\n        [Warning]\n        --------------------------------------\n        You need to update nftStorage.apiKey define parameter in solana-suite.json.\n        Can get api key from https://nft.storage/\n        --------------------------------------\n        ";
-        const DAS_API_URL = "\n        [Warning]\n        --------------------------------------\n        You need to update dasApiUrl define parameter in solana-suite.json.\n        can get api url from https://www.helius.dev/\n        -------------------------------------- \n        ";
-        const calculateProbability: () => Boolean;
-    }
 }
 
 /**
