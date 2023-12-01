@@ -5,7 +5,7 @@
   "main": "./solana-suite.json",
   "module": "./solana-suite.json",
   "bin": {
-    "solana-suite-config": "./dist/index.js"
+    "solana-suite-config": "./dist/config-script.js"
   },
   "keywords": [
     "api",
@@ -39,7 +39,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup --config build-configs/tsup/base.ts",
+    "build": "tsup --config ./tsup.config.ts",
     "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, ava, build-configs'",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
