@@ -32,6 +32,10 @@ export namespace Constants {
     dev = 'https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92,https://rpc-devnet.helius.xyz?api-key=9f70a843-3274-4ffd-a0a9-323f8b7c0639',
   }
 
+  export enum NftstorageApiKey {
+    dev = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE',
+  }
+
   export const switchCluster = (param: {
     cluster?: string;
     customClusterUrl?: string[];
@@ -71,14 +75,30 @@ export namespace Constants {
   };
 
   export const switchDasApi = (env: string): string => {
+    const warning = WarnningMessage.DAS_API_URL;
     switch (env) {
       case Constants.Cluster.prd:
-        // TODO: Replace WarningMessage modules
-        throw Error('Set DAS API');
+        throw Error(warning);
       default: {
+        Constants.WarnningMessage.calculateProbability() &&
+          console.warn(warning);
+        console.warn(Constants.WarnningMessage);
         const urls = Constants.DasApiUrl.dev.split(',');
         const index = Date.now() % urls.length;
         return urls[index];
+      }
+    }
+  };
+
+  export const switchNftStorage = (env: string): string => {
+    const warning = WarnningMessage.NFT_STORAGE_API_KEY;
+    switch (env) {
+      case Constants.Cluster.prd:
+        throw Error(warning);
+      default: {
+        Constants.WarnningMessage.calculateProbability() &&
+          console.warn(warning);
+        return Constants.NftstorageApiKey.dev;
       }
     }
   };
@@ -93,13 +113,38 @@ export namespace Constants {
     'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
   );
   export const COMMITMENT: Commitment = 'confirmed';
-  export const NFT_STORAGE_API_KEY =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE';
   export const NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
   export const IRYS_GATEWAY_URL = 'https://gateway.irys.xyz';
   export const BUNDLR_NETWORK_URL = switchBundlr(Config.cluster.type);
   export const DAS_API_URL = switchDasApi(Config.cluster.type);
+  export const NFT_STORAGE_API_KEY = switchNftStorage(Config.cluster.type);
+  Config.cluster.type;
   export const EXPLORER_SOLSCAN_URL = 'https://solscan.io';
   export const EXPLORER_SOLANAFM_URL = 'https://solana.fm';
   export const EXPLORER_XRAY_URL = 'https://xray.helius.xyz';
+}
+
+export namespace Constants {
+  export namespace WarnningMessage {
+    export const NFT_STORAGE_API_KEY = `
+        [Warning]
+        --------------------------------------
+        You need to update nftStorage.apiKey define parameter in solana-suite.json.
+        Can get api key from https://nft.storage/
+        --------------------------------------
+        `;
+    export const DAS_API_URL = `
+        [Warning]
+        --------------------------------------
+        You need to update dasApiUrl define parameter in solana-suite.json.
+        can get api url from https://www.helius.dev/
+        -------------------------------------- 
+        `;
+
+    export const calculateProbability = (): Boolean => {
+      const randomValue = Math.random();
+      const probability = 1 / 3;
+      return randomValue < probability;
+    };
+  }
 }

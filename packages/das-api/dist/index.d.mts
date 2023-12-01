@@ -303,7 +303,7 @@ declare global {
     interface String {
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer): string;
+        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
     }
     interface Number {
         toSol(): number;
@@ -321,8 +321,12 @@ declare global {
 }
 declare enum Explorer {
     Solscan = "solscan",
-    SolanaFM = "solanafm"
+    SolanaFM = "solanafm",
+    Xray = "xray"
 }
+type ExplorerOptions = {
+    replacePath: string;
+};
 
 declare namespace DasApi {
     const getAssetProof: (assetId: string) => Promise<Result<AssetProof, Error>>;

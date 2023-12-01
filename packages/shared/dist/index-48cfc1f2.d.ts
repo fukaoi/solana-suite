@@ -513,7 +513,7 @@ declare global {
     interface String {
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer): string;
+        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
     }
     interface Number {
         toSol(): number;
@@ -531,7 +531,11 @@ declare global {
 }
 declare enum Explorer {
     Solscan = "solscan",
-    SolanaFM = "solanafm"
+    SolanaFM = "solanafm",
+    Xray = "xray"
 }
+type ExplorerOptions = {
+    replacePath: string;
+};
 
 export { Account as A, FilterType as F, KeypairAccount as K, ModuleName as M, Node as N, OwnerInfo as O, Pubkey as P, Result as R, Secret as S, Transfer as T, Validator as V, WithMemo as W, ValidatorError as a, FilterOptions as b, PostTokenAccount as c, MintTo as d, MintToChecked as e, TransferChecked as f, Memo as g };

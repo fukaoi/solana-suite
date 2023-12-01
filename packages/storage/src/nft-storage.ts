@@ -4,33 +4,11 @@ import { ProvenanceLayer } from './provenance-layer';
 import { FileType, Offchain } from '~/types/storage';
 
 export namespace NftStorage {
-  let isDisplayWarning = false;
-  const getNftStorageApiKey = (): string => {
-    if (!Constants.nftStorageApiKey) {
-      if (!isDisplayWarning) {
-        //TODO: Move to Constants module
-        console.warn(
-          `
-        [Warning]
-        --------------------------------------
-        If will use @solana-suite/nft package
-        your need to update nftStorage.apiKey define parameter in solana-suite.json.
-        can get apiKey from https://nft.storage/
-        --------------------------------------
-        `,
-        );
-        isDisplayWarning = true;
-      }
-      return Constants.NFT_STORAGE_API_KEY;
-    } else {
-      return Constants.nftStorageApiKey;
-    }
-  };
-
   const createGatewayUrl = (cid: string): string =>
     `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
 
-  const connect = () => new NFTStorage({ token: getNftStorageApiKey() });
+  const connect = () =>
+    new NFTStorage({ token: Constants.NFT_STORAGE_API_KEY });
 
   export const uploadFile = async (
     fileType: FileType,

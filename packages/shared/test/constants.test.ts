@@ -53,3 +53,14 @@ test('DasApiUrl use dev', (t) => {
   const url = Constants.switchDasApi(Constants.Cluster.dev);
   t.true(Constants.DasApiUrl.dev.includes(url));
 });
+
+test('NftStorageApiKey use prd', (t) => {
+  t.throws(() => {
+    Constants.switchNftStorage(Constants.Cluster.prd);
+  });
+});
+
+test('NftStorageApiKey use dev', (t) => {
+  const url = Constants.switchNftStorage(Constants.Cluster.dev);
+  t.true(Constants.NftstorageApiKey.dev.includes(url));
+});
