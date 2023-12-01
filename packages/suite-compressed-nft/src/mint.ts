@@ -239,7 +239,8 @@ export namespace CompressedNft {
           },
         ),
       );
-
+      
+      // TODO: Work
       // creator --- Error transaction too large
       // if (input.creators) {
       //   const assetId = await new Tree.Tree(treeOwner).getAssetId();
