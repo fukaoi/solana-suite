@@ -19,7 +19,7 @@ test('Transfer nft', async (t) => {
 
   const creator = {
     address: '93MwWVSZHiPS9VLay4ywPcTWmT4twgN2nxdCgSx6uFTk',
-    share: 30,
+    share: 100,
     secret: '',
   };
 

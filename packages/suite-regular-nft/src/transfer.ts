@@ -22,7 +22,7 @@ export namespace RegularNft {
       signers,
       NFT_AMOUNT,
       NFT_DECIMALS,
-      options.feePayer,
+      options,
     );
   };
 }
