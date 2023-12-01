@@ -10,6 +10,27 @@ import {
 } from 'node:fs';
 import { Command } from 'commander';
 import { join } from 'node:path';
+
+export namespace Config {
+  export const searchForSolanaSuiteConfig = (
+    dir: string,
+  ): string | undefined => {
+    const files = readdirSync(dir);
+    for (const file of files) {
+      const filePath = join(dir, file);
+      if (statSync(filePath).isFile() && file === JSON_FILE_NAME) {
+        return filePath;
+      } else if (statSync(filePath).isDirectory()) {
+        const res = searchForSolanaSuiteConfig(filePath);
+        if (res) {
+          return res;
+        }
+      }
+    }
+    return undefined;
+  };
+}
+
 const program = new Command();
 
 let configPath: string;
@@ -29,25 +50,9 @@ const successMessage = () => console.log('# Update solana suite config.');
 const showMessage = (mess: string) => console.log(`# ${mess}`);
 const warnMessage = (mess: string) => console.error(`# ${mess}`);
 
-const searchForSolanaSuiteConfig = (dir: string): string | undefined => {
-  const files = readdirSync(dir);
-  for (const file of files) {
-    const filePath = join(dir, file);
-    if (statSync(filePath).isFile() && file === JSON_FILE_NAME) {
-      return filePath;
-    } else if (statSync(filePath).isDirectory()) {
-      const res = searchForSolanaSuiteConfig(filePath);
-      if (res) {
-        return res;
-      }
-    }
-  }
-  return undefined;
-};
-
 (() => {
   try {
-    const path = searchForSolanaSuiteConfig('./');
+    const path = Config.searchForSolanaSuiteConfig('./');
     if (!path) {
       throw Error(`Not found ${JSON_FILE_NAME}`);
     }

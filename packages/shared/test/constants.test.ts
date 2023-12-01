@@ -1,9 +1,10 @@
 import test from 'ava';
 import { Constants } from '../src/';
 import { execSync } from 'child_process';
+import { Config } from '~/suite-config/searchConfig';
 
 test.after(() => {
-  console.log(process.env);
+  console.log(Config);
   // execSync('git clone ../../suite-config/solana-suite.json');
 });
 
@@ -53,7 +54,7 @@ test.only('DasApiUrl use prd', (t) => {
   execSync('pnpm solana-suite-config -das "https://das.demo.org"');
   const url = Constants.switchDasApi(Constants.Cluster.prd);
   console.log(url);
-  t.log(url)
+  t.log(url);
 });
 
 test('[Error]DasApiUrl use prd', (t) => {
