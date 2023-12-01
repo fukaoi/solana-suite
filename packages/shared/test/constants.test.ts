@@ -1,10 +1,10 @@
 import test from 'ava';
 import { Constants } from '../src/';
 import { execSync } from 'child_process';
-import { Config } from '~/suite-config/searchConfig';
+import { Config } from '~/suite-config/';
 
 test.after(() => {
-  console.log(Config);
+  console.log('#config', Config);
   // execSync('git clone ../../suite-config/solana-suite.json');
 });
 

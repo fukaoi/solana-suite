@@ -1,4 +1,5 @@
 import { Commitment, PublicKey } from '@solana/web3.js';
+// TODO: Load script
 import Config from '@solana-suite/config';
 
 export namespace Constants {

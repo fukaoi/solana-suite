@@ -59,12 +59,5 @@
     "build-configs/tsconfig": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*"
-  },
-  "exports": {
-    "./searchConfig": {
-      "require": "./src/index.ts",
-      "import": "./src/index.ts",
-      "types": "./src/index.ts"
-    }
   }
 }
