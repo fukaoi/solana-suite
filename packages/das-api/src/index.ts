@@ -3,21 +3,30 @@ import { Asset, AssetProof, Assets } from '~/types/das-api';
 import { Sortable } from '~/types/find';
 
 export namespace DasApi {
+  const connect = async (
+    method: string,
+    params: (string | Pubkey | Sortable | number | undefined)[],
+  ) => {
+    Constants.WarnningMessage.calculateProbability() &&
+      console.warn(Constants.WarnningMessage.DAS_API_URL);
+    const response = await fetch(Constants.DAS_API_URL, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        method,
+        id: 'compression',
+        params,
+      }),
+    });
+    return (await response.json()).result;
+  };
+
   export const getAssetProof = async (
     assetId: string,
   ): Promise<Result<AssetProof, Error>> => {
     return Try(async () => {
-      const response = await fetch(Constants.DAS_API_URL, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          jsonrpc: '2.0',
-          method: 'getAssetProof',
-          id: 'compression',
-          params: [assetId],
-        }),
-      });
-      return (await response.json()).result;
+      return await connect('getAssetProof', [assetId]);
     });
   };
 
@@ -25,17 +34,7 @@ export namespace DasApi {
     assetId: Pubkey,
   ): Promise<Result<Asset, Error>> => {
     return Try(async () => {
-      const response = await fetch(Constants.DAS_API_URL, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          jsonrpc: '2.0',
-          method: 'getAsset',
-          id: 'compression',
-          params: [assetId],
-        }),
-      });
-      return (await response.json()).result;
+      return await connect('getAsset', [assetId]);
     });
   };
 
@@ -48,17 +47,14 @@ export namespace DasApi {
     after?: string,
   ): Promise<Result<Assets, Error>> => {
     return Try(async () => {
-      const response = await fetch(Constants.DAS_API_URL, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          jsonrpc: '2.0',
-          method: 'getAssetsByOwner',
-          id: 'compression',
-          params: [ownerAddress, sortBy, limit, page, before, after],
-        }),
-      });
-      return (await response.json()).result;
+      return await connect('getAssetsByOwner', [
+        ownerAddress,
+        sortBy,
+        limit,
+        page,
+        before,
+        after,
+      ]);
     });
   };
 
@@ -72,17 +68,15 @@ export namespace DasApi {
     after?: string,
   ): Promise<Result<Assets, Error>> => {
     return Try(async () => {
-      const response = await fetch(Constants.DAS_API_URL, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          jsonrpc: '2.0',
-          method: 'getAssetsByGroup',
-          id: 'compression',
-          params: [groupKey, groupValue, sortBy, limit, page, before, after],
-        }),
-      });
-      return (await response.json()).result;
+      return await connect('getAssetsByGroup', [
+        groupKey,
+        groupValue,
+        sortBy,
+        limit,
+        page,
+        before,
+        after,
+      ]);
     });
   };
 }

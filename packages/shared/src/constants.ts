@@ -2,6 +2,37 @@ import { Commitment, PublicKey } from '@solana/web3.js';
 import Config from '@solana-suite/config';
 
 export namespace Constants {
+  export namespace WarnningMessage {
+    const THRESHHOLD = 5;
+    let isDisplay = false;
+    export const NFT_STORAGE_API_KEY = `
+        [Warning]
+        --------------------------------------
+        You need to update nftStorage.apiKey define parameter in solana-suite.json.
+        Can get api key from https://nft.storage/
+        --------------------------------------
+        `;
+    export const DAS_API_URL = `
+        [Warning]
+        --------------------------------------
+        You need to update dasApiUrl define parameter in solana-suite.json.
+        can get api url from https://www.helius.dev/
+        -------------------------------------- 
+        `;
+
+    export const calculateProbability = (): Boolean => {
+      const randomValue = Math.random();
+      const probability = 1 / THRESHHOLD;
+      if (!isDisplay && randomValue < probability) {
+        isDisplay = true;
+        return true;
+      }
+      return false;
+    };
+  }
+}
+
+export namespace Constants {
   export const currentCluster = Config.cluster.type;
   export const customClusterUrl = Config.cluster.customClusterUrl;
   export const isDebugging = Config.debugging;
@@ -75,14 +106,10 @@ export namespace Constants {
   };
 
   export const switchDasApi = (env: string): string => {
-    const warning = WarnningMessage.DAS_API_URL;
     switch (env) {
       case Constants.Cluster.prd:
-        throw Error(warning);
+        throw Error(Constants.WarnningMessage.DAS_API_URL);
       default: {
-        Constants.WarnningMessage.calculateProbability() &&
-          console.warn(warning);
-        console.warn(Constants.WarnningMessage);
         const urls = Constants.DasApiUrl.dev.split(',');
         const index = Date.now() % urls.length;
         return urls[index];
@@ -91,13 +118,10 @@ export namespace Constants {
   };
 
   export const switchNftStorage = (env: string): string => {
-    const warning = WarnningMessage.NFT_STORAGE_API_KEY;
     switch (env) {
       case Constants.Cluster.prd:
-        throw Error(warning);
+        throw Error(WarnningMessage.NFT_STORAGE_API_KEY);
       default: {
-        Constants.WarnningMessage.calculateProbability() &&
-          console.warn(warning);
         return Constants.NftstorageApiKey.dev;
       }
     }
@@ -122,29 +146,4 @@ export namespace Constants {
   export const EXPLORER_SOLSCAN_URL = 'https://solscan.io';
   export const EXPLORER_SOLANAFM_URL = 'https://solana.fm';
   export const EXPLORER_XRAY_URL = 'https://xray.helius.xyz';
-}
-
-export namespace Constants {
-  export namespace WarnningMessage {
-    export const NFT_STORAGE_API_KEY = `
-        [Warning]
-        --------------------------------------
-        You need to update nftStorage.apiKey define parameter in solana-suite.json.
-        Can get api key from https://nft.storage/
-        --------------------------------------
-        `;
-    export const DAS_API_URL = `
-        [Warning]
-        --------------------------------------
-        You need to update dasApiUrl define parameter in solana-suite.json.
-        can get api url from https://www.helius.dev/
-        -------------------------------------- 
-        `;
-
-    export const calculateProbability = (): Boolean => {
-      const randomValue = Math.random();
-      const probability = 1 / 3;
-      return randomValue < probability;
-    };
-  }
 }

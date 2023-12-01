@@ -7,8 +7,11 @@ export namespace NftStorage {
   const createGatewayUrl = (cid: string): string =>
     `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;
 
-  const connect = () =>
-    new NFTStorage({ token: Constants.NFT_STORAGE_API_KEY });
+  const connect = () => {
+    Constants.WarnningMessage.calculateProbability() &&
+      console.warn(Constants.WarnningMessage.NFT_STORAGE_API_KEY);
+    return new NFTStorage({ token: Constants.NFT_STORAGE_API_KEY });
+  };
 
   export const uploadFile = async (
     fileType: FileType,
