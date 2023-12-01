@@ -41,8 +41,8 @@ export namespace CompressedNft {
    */
   export const initTree = (
     feePayer: Secret,
-    maxDepth: number = 14,
-    maxBufferSize: number = 64,
+    maxDepth: number = 14, // TODO: more simple parameter
+    maxBufferSize: number = 64, // TODO: more simple parameter
   ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
     return Try(async () => {
       const treeOwner = Account.Keypair.create();
@@ -51,37 +51,42 @@ export namespace CompressedNft {
         [treeOwner.toKeypair().publicKey.toBuffer()],
         MPL_BUBBLEGUM_PROGRAM_ID.toPublicKey(),
       );
+      const instructions = [];
 
       debugLog('# tree space: ', space);
 
-      const inst1 = SystemProgram.createAccount({
-        fromPubkey: feePayer.toKeypair().publicKey,
-        newAccountPubkey: treeOwner.toKeypair().publicKey,
-        lamports:
-          await Node.getConnection().getMinimumBalanceForRentExemption(space),
-        space: space,
-        programId: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-      });
+      instructions.push(
+        SystemProgram.createAccount({
+          fromPubkey: feePayer.toKeypair().publicKey,
+          newAccountPubkey: treeOwner.toKeypair().publicKey,
+          lamports:
+            await Node.getConnection().getMinimumBalanceForRentExemption(space),
+          space: space,
+          programId: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        }),
+      );
 
-      const inst2 = createCreateTreeInstruction(
-        {
-          merkleTree: treeOwner.toKeypair().publicKey,
-          treeAuthority,
-          treeCreator: feePayer.toKeypair().publicKey,
-          payer: feePayer.toKeypair().publicKey,
-          logWrapper: SPL_NOOP_PROGRAM_ID,
-          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-        },
-        {
-          maxBufferSize,
-          maxDepth,
-          public: false,
-        },
-        MPL_BUBBLEGUM_PROGRAM_ID.toPublicKey(),
+      instructions.push(
+        createCreateTreeInstruction(
+          {
+            merkleTree: treeOwner.toKeypair().publicKey,
+            treeAuthority,
+            treeCreator: feePayer.toKeypair().publicKey,
+            payer: feePayer.toKeypair().publicKey,
+            logWrapper: SPL_NOOP_PROGRAM_ID,
+            compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+          },
+          {
+            maxBufferSize,
+            maxDepth,
+            public: false,
+          },
+          MPL_BUBBLEGUM_PROGRAM_ID.toPublicKey(),
+        ),
       );
 
       return new MintTransaction(
-        [inst1, inst2],
+        instructions,
         [treeOwner.toKeypair()],
         feePayer.toKeypair(),
         treeOwner.pubkey,
