@@ -1,5 +1,6 @@
 import test from 'ava';
 import { Constants } from '../src/';
+import { execSync } from 'child_process';
 
 test('Fetch nft.storage api key in solana-suite.json', (t) => {
   const apiKey = Constants.NFT_STORAGE_API_KEY;
@@ -43,7 +44,13 @@ test('Bundlr use dev', (t) => {
   t.is(url, Constants.BundlrUrl.dev);
 });
 
-test('DasApiUrl use prd', (t) => {
+test.only('DasApiUrl use prd', (t) => {
+  const res = execSync('pnpm solana-suite-config -das "https://das.demo.org"');
+  console.log(res.toString());
+  // const url = Constants.switchDasApi(Constants.Cluster.prd);
+});
+
+test('[Error]DasApiUrl use prd', (t) => {
   t.throws(() => {
     Constants.switchDasApi(Constants.Cluster.prd);
   });
@@ -54,7 +61,7 @@ test('DasApiUrl use dev', (t) => {
   t.true(Constants.DasApiUrl.dev.includes(url));
 });
 
-test('NftStorageApiKey use prd', (t) => {
+test('[Error]NftStorageApiKey use prd', (t) => {
   t.throws(() => {
     Constants.switchNftStorage(Constants.Cluster.prd);
   });

@@ -13,18 +13,20 @@ import { join } from 'node:path';
 const program = new Command();
 
 let config;
-const JSON_FILE = 'solana-suite.json';
+const JSON_FILE_NAME = 'solana-suite.json';
 
 ////////////////////////////////////////////////////////////////
 // local functions
 ////////////////////////////////////////////////////////////////
+const successMessage = () => console.log('# Update solana suite config.');
+const showMessage = (mess) => console.log(`# ${mess}`);
+const warnMessage = (mess) => console.error(`# ${mess}`);
 
 const searchForJsonFile = (dir) => {
   const files = readdirSync(dir);
   for (const file of files) {
     const filePath = join(dir, file);
-    if (statSync(filePath).isFile() && file === JSON_FILE) {
-      console.log(filePath);
+    if (statSync(filePath).isFile() && file === JSON_FILE_NAME) {
       return filePath;
     } else if (statSync(filePath).isDirectory()) {
       const res = searchForJsonFile(filePath);
@@ -40,23 +42,20 @@ const searchForJsonFile = (dir) => {
   try {
     const configPath = searchForJsonFile('./');
     if (!configPath) {
-      throw Error(`Not found ${JSON_FILE}`);
+      throw Error(`Not found ${JSON_FILE_NAME}`);
     }
+    showMessage(`config path: ${configPath}`);
     config = readFileSync(configPath).toString();
   } catch (e) {
-    console.error("# Error don't read solana-suite-config.json, ", e.message);
+    warnMessage(`Error don't read solana-suite-config.json, ${e.message}`);
     process.exit(0);
   }
 })();
 
-const successMessage = () => console.log('Update solana suite config.');
-const warnMessage = (mess) => console.error(mess);
-const showMessage = (mess) => console.log(mess);
-
 const updateConfigFile = (key, value) => {
   const parsed = JSON.parse(config);
   parsed[key] = value;
-  writeFileSync(JSON_FILE, JSON.stringify(parsed));
+  writeFileSync(config, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
@@ -64,7 +63,7 @@ const updateConfigFile = (key, value) => {
 const updateClusterConfigFile = (type) => {
   const parsed = JSON.parse(config);
   parsed['cluster'].type = type;
-  writeFileSync(JSON_FILE, JSON.stringify(parsed));
+  writeFileSync(config, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
@@ -72,7 +71,7 @@ const updateClusterConfigFile = (type) => {
 const updateClusterUrlConfigFile = (customClusterUrl) => {
   const parsed = JSON.parse(config);
   parsed['cluster'].customClusterUrl = customClusterUrl;
-  writeFileSync(JSON_FILE, JSON.stringify(parsed));
+  writeFileSync(config, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
@@ -80,29 +79,30 @@ const updateClusterUrlConfigFile = (customClusterUrl) => {
 const updateNftStorageConfigFile = (key, value) => {
   const parsed = JSON.parse(config);
   parsed.nftstorage[key] = value;
-  writeFileSync(JSON_FILE, JSON.stringify(parsed));
+  writeFileSync(config, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
 
 const updateDasApiUrlConfigFile = (dasApiUrl) => {
   const parsed = JSON.parse(config);
-  parsed['dasApiUrl'].dasApiUrl = dasApiUrl;
-  writeFileSync(JSON_FILE, JSON.stringify(parsed));
+  parsed['dasApiUrl'] = dasApiUrl;
+  console.log(JSON_FILE_NAME, parsed);
+  writeFileSync(config, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
 
 const showCurrentConfigFile = () => {
-  const cjs = readFileSync(JSON_FILE);
-  showMessage(`# Current cjs\n${cjs.toString()}\n`);
+  const cjs = readFileSync(JSON_FILE_NAME);
+  showMessage(`Current cjs\n${cjs.toString()}\n`);
 };
 
 const clearCache = () => {
   const dir = '../../node_modules/.cache';
   if (dir !== undefined && existsSync(dir)) {
     rmdirSync(dir, { recursive: true, force: true });
-    showMessage(`# clear cache`);
+    showMessage('clear cache');
   }
 };
 
@@ -240,5 +240,5 @@ if (options.cluster) {
 } else if (options.show) {
   execShow();
 } else {
-  warnMessage(`No match parameter`);
+  warnMessage('No match parameter');
 }
