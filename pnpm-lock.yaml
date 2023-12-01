@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -449,6 +445,9 @@ importers:
       build-configs/tsconfig:
         specifier: workspace:*
         version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
 
   packages/suite-memo:
     dependencies:
@@ -9777,3 +9776,7 @@ packages:
       - supports-color
       - utf-8-validate
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false

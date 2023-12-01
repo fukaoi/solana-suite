@@ -8,7 +8,7 @@ export namespace Constants {
     export const NFT_STORAGE_API_KEY = `
         [Warning]
         --------------------------------------
-        You need to update nftStorage.apiKey define parameter in solana-suite.json.
+        You need to update nftStorageApiKey define parameter in solana-suite.json.
         Can get api key from https://nft.storage/
         --------------------------------------
         `;

@@ -12,18 +12,24 @@ import { Command } from 'commander';
 import { join } from 'node:path';
 const program = new Command();
 
-let configPath;
-let parsed;
+let configPath: string;
+let parsed: {
+  cluster: { type: string; customClusterUrl: string[] };
+  debugging: string;
+  nftStorageApiKey: string;
+  dasApiUrl: string[];
+};
 const JSON_FILE_NAME = 'solana-suite.json';
+const VERSION = '0.5';
 
 ////////////////////////////////////////////////////////////////
 // local functions
 ////////////////////////////////////////////////////////////////
 const successMessage = () => console.log('# Update solana suite config.');
-const showMessage = (mess) => console.log(`# ${mess}`);
-const warnMessage = (mess) => console.error(`# ${mess}`);
+const showMessage = (mess: string) => console.log(`# ${mess}`);
+const warnMessage = (mess: string) => console.error(`# ${mess}`);
 
-const searchForSolanaSuiteConfig = (dir) => {
+const searchForSolanaSuiteConfig = (dir: string): string | undefined => {
   const files = readdirSync(dir);
   for (const file of files) {
     const filePath = join(dir, file);
@@ -49,47 +55,49 @@ const searchForSolanaSuiteConfig = (dir) => {
     showMessage(`config path: ${configPath}`);
     parsed = JSON.parse(readFileSync(configPath).toString());
   } catch (e) {
-    warnMessage(`Error don't read solana-suite-config.json, ${e.message}`);
+    if (e instanceof Error) {
+      warnMessage(`Error don't read solana-suite-config.json, ${e.message}`);
+    }
     process.exit(0);
   }
 })();
 
-const updateConfigFile = (key, value) => {
-  parsed[key] = value;
+const updateDebugConfigFile = (debugging: string): void => {
+  parsed['debugging'] = debugging;
   writeFileSync(configPath, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
 
-const updateClusterConfigFile = (type) => {
+const updateClusterConfigFile = (type: string): void => {
   parsed['cluster'].type = type;
   writeFileSync(configPath, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
 
-const updateClusterUrlConfigFile = (customClusterUrl) => {
+const updateClusterUrlConfigFile = (customClusterUrl: string[]): void => {
   parsed['cluster'].customClusterUrl = customClusterUrl;
   writeFileSync(configPath, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
 
-const updateNftStorageConfigFile = (key, value) => {
-  parsed.nftstorage[key] = value;
+const updateNftStorageConfigFile = (apiKey: string): void => {
+  parsed['nftStorageApiKey'] = apiKey;
   writeFileSync(configPath, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
 
-const updateDasApiUrlConfigFile = (dasApiUrl) => {
+const updateDasApiUrlConfigFile = (dasApiUrl: string[]): void => {
   parsed['dasApiUrl'] = dasApiUrl;
   writeFileSync(configPath, JSON.stringify(parsed));
   successMessage();
   clearCache();
 };
 
-const showCurrentConfigFile = () => {
+const showCurrentConfigFile = (): void => {
   const cjs = readFileSync(JSON_FILE_NAME);
   showMessage(`Current cjs\n${cjs.toString()}\n`);
 };
@@ -97,7 +105,7 @@ const showCurrentConfigFile = () => {
 const clearCache = () => {
   const dir = '../../node_modules/.cache';
   if (dir !== undefined && existsSync(dir)) {
-    rmdirSync(dir, { recursive: true, force: true });
+    rmdirSync(dir, { recursive: true });
     showMessage('clear cache');
   }
 };
@@ -107,8 +115,8 @@ const clearCache = () => {
 ////////////////////////////////////////////////////////////////
 program
   .name('solana-suite-config')
-  .description('Setup solana-suite.json')
-  .version('0.4');
+  .description(`Setup ${JSON_FILE_NAME}`)
+  .version(VERSION);
 
 program
   .option(
@@ -139,8 +147,8 @@ program.parse();
 // actions
 ////////////////////////////////////////////////////////////////
 
-const execCluser = (type) => {
-  let convertedType;
+const execCluser = (type: string): void => {
+  let convertedType = '';
   switch (type) {
     case 'prd':
       convertedType = 'mainnet-beta';
@@ -162,12 +170,12 @@ const execCluser = (type) => {
   updateClusterConfigFile(convertedType);
 };
 
-const execCustomCluster = (url) => {
-  const validation = (u) => {
+const execCustomCluster = (url: string[]): void => {
+  const validation = (u: string) => {
     return /https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(u);
   };
 
-  url.forEach((element) => {
+  url.forEach((element: string) => {
     if (!validation(element)) {
       warnMessage(
         `Not found custom cluster url: ${element}. e.g: custom https://...`,
@@ -179,30 +187,30 @@ const execCustomCluster = (url) => {
   updateClusterUrlConfigFile(url);
 };
 
-const execDebug = (bool) => {
+const execDebug = (bool: string): void => {
   if (bool != 'true' && bool != 'false') {
     warnMessage(
       `No match parameter: need parameter is "true", "false". any one of them`,
     );
     process.exit(0);
   }
-  updateConfigFile('debugging', bool);
+  updateDebugConfigFile(bool);
 };
 
-const execNftstorage = (arg) => {
-  if (arg.length < 230) {
+const execNftstorage = (apiKey: string): void => {
+  if (apiKey.length < 230) {
     warnMessage('Not found api key');
     process.exit(0);
   }
-  updateNftStorageConfigFile('apikey', arg);
+  updateNftStorageConfigFile(apiKey);
 };
 
-const execDasApiUrl = (url) => {
-  const validation = (u) => {
+const execDasApiUrl = (url: string[]): void => {
+  const validation = (u: string) => {
     return /https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(u);
   };
 
-  url.forEach((element) => {
+  url.forEach((element: string) => {
     if (!validation(element)) {
       warnMessage(
         `Not found Digital asset api url: ${element}. e.g: https://...`,
@@ -214,7 +222,7 @@ const execDasApiUrl = (url) => {
   updateDasApiUrlConfigFile(url);
 };
 
-const execShow = () => {
+const execShow = (): void => {
   showCurrentConfigFile();
 };
 
