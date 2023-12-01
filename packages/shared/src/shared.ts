@@ -8,7 +8,6 @@ import { Result } from './result';
  * @param {Buffer} buffer
  * @returns number[]
  */
-
 export const bufferToArray = (buffer: Buffer): number[] => {
   const nums = [];
   for (const byte of buffer) {
