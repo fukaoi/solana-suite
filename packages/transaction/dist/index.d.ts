@@ -251,7 +251,7 @@ declare class Transaction {
 }
 
 declare class BatchTransaction {
-    static submit: (arr: Transaction[]) => Promise<TransactionSignature>;
+    submit: (arr: Transaction[]) => Promise<TransactionSignature>;
 }
 
 declare class MintTransaction<T> {

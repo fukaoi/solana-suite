@@ -11,7 +11,7 @@ import { MAX_RETRIES } from './define';
 import { Transaction } from './default';
 
 export class BatchTransaction {
-  static submit = async (arr: Transaction[]): Promise<TransactionSignature> => {
+  submit = async (arr: Transaction[]): Promise<TransactionSignature> => {
     let i = 0;
     for (const a of arr) {
       if (!a.instructions && !a.signers) {
@@ -78,7 +78,6 @@ Array.prototype.submit = async function () {
       }
       i++;
     }
-    // TODO: enough object
-    return BatchTransaction.submit(instructions);
+    return new BatchTransaction().submit(instructions);
   });
 };

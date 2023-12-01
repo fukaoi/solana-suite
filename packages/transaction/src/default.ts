@@ -10,7 +10,6 @@ import {
 import { Node } from '~/node';
 import { Result, Try } from '~/shared';
 import { MAX_RETRIES } from './define';
-import { BatchTransaction } from './batch';
 
 export class Transaction {
   instructions: TransactionInstruction[];
@@ -62,33 +61,3 @@ export class Transaction {
     });
   };
 }
-
-/**
- * senTransaction() TransactionInstruction
- *
- * @see {@link types/global.ts}
- * @returns Promise<Result<string, Error>>
- */
-
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* @ts-ignore */
-Array.prototype.submit = async function () {
-  const instructions: Transaction[] = [];
-  // dont use forEach
-  // It is not possible to stop the process by RETURN in the middle of the process.
-  return Try(async () => {
-    let i = 0;
-    for (const obj of this) {
-      if (obj.isErr) {
-        const errorMess: string = obj.error.message as string;
-        throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
-      } else if (obj.isOk) {
-        instructions.push(obj.value as Transaction);
-      } else {
-        instructions.push(obj as Transaction);
-      }
-      i++;
-    }
-    return BatchTransaction.submit(instructions);
-  });
-};
