@@ -2,6 +2,11 @@ import test from 'ava';
 import { Constants } from '../src/';
 import { execSync } from 'child_process';
 
+test.after(() => {
+  console.log(process.env);
+  // execSync('git clone ../../suite-config/solana-suite.json');
+});
+
 test('Fetch nft.storage api key in solana-suite.json', (t) => {
   const apiKey = Constants.NFT_STORAGE_API_KEY;
   t.is(
@@ -45,9 +50,10 @@ test('Bundlr use dev', (t) => {
 });
 
 test.only('DasApiUrl use prd', (t) => {
-  const res = execSync('pnpm solana-suite-config -das "https://das.demo.org"');
-  console.log(res.toString());
-  // const url = Constants.switchDasApi(Constants.Cluster.prd);
+  execSync('pnpm solana-suite-config -das "https://das.demo.org"');
+  const url = Constants.switchDasApi(Constants.Cluster.prd);
+  console.log(url);
+  t.log(url)
 });
 
 test('[Error]DasApiUrl use prd', (t) => {
