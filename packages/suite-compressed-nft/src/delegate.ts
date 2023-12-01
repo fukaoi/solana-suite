@@ -18,6 +18,7 @@ import { DelegateOptions } from '~/types/compressed-nft';
 import { Pubkey, Secret } from '~/types/account';
 
 export namespace CompressedNft {
+  //@internal
   export const createDeleagate = async (
     assetId: PublicKey,
     newDelegate: PublicKey | null,

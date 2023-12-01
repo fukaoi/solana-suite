@@ -13,8 +13,7 @@ export namespace CompressedNft {
     sortDirection: SortDirection.Desc,
   };
 
-  //@internal
-  export const fetchOffchain = async (uri: string) => {
+  const fetchOffchain = async (uri: string) => {
     const json = await (await fetch(uri)).json();
     return json;
   };
