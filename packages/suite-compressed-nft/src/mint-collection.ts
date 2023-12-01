@@ -13,7 +13,7 @@ import { MintCollectionOptions } from '~/types/compressed-nft';
  * @param {Secret} signer
  * @param {InputNftMetadata} input
  * @param {MintCollectionOptions} options
- * @return Promise<Result<MintTransaction, Error>>
+ * @returns Promise<Result<MintTransaction, Error>>
  */
 export namespace CompressedNft {
   export const mintCollection = (

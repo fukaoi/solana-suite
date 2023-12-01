@@ -8,6 +8,14 @@ import { CompressedNft as Transfer } from './transfer';
 import { CompressedNft as Delegate } from './gas-less-delegate';
 
 export namespace CompressedNft {
+  /**
+   * Transfer with gas-less
+   * @param {Pubkey} assetId
+   * @param {Secret} assetIdOwner
+   * @param {Pubkey} dest
+   * @param {Pubkey} feePayer
+   * @returns {Promise<Result<PartialSignTransaction[], Error>>}
+   */
   export const gasLessTransfer = async (
     assetId: Pubkey,
     assetIdOwner: Secret,

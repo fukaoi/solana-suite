@@ -6,6 +6,13 @@ import { PartialSignTransaction } from '~/transaction';
 import { Result, Try } from '~/shared';
 
 export namespace CompressedNft {
+  /**
+   * Create delegate with gas-less
+   * @param {Pubkey} assetId
+   * @param {Secret} assetIdOwner
+   * @param {Pubkey} newDelegate
+   * @return {Promise<Result<PartialSignTransaction, Error>>}
+   */
   export const gasLessDelegate = async (
     assetId: Pubkey,
     assetIdOwner: Secret,
