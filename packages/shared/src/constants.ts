@@ -37,6 +37,7 @@ export namespace Constants {
   export const customClusterUrl = Config.cluster.customClusterUrl;
   export const isDebugging = Config.debugging;
   export const nftStorageApiKey = Config.nftstorage.apikey;
+  export const dasApiUrl = Config.dasApiUrl;
 
   export enum Cluster {
     prd = 'mainnet-beta',
@@ -109,7 +110,12 @@ export namespace Constants {
   export const switchDasApi = (env: string): string => {
     switch (env) {
       case Constants.Cluster.prd:
-        throw Error(Constants.WarnningMessage.DAS_API_URL);
+        if (dasApiUrl.length < 1) {
+          throw Error(Constants.WarnningMessage.DAS_API_URL);
+        }
+        const urls = Constants.BundlrUrl.prd.split(',');
+        const index = Date.now() % urls.length;
+        return urls[index];
       default: {
         const urls = Constants.DasApiUrl.dev.split(',');
         const index = Date.now() % urls.length;
@@ -121,7 +127,10 @@ export namespace Constants {
   export const switchNftStorage = (env: string): string => {
     switch (env) {
       case Constants.Cluster.prd:
-        throw Error(WarnningMessage.NFT_STORAGE_API_KEY);
+        if (!nftStorageApiKey) {
+          throw Error(WarnningMessage.NFT_STORAGE_API_KEY);
+        }
+        return nftStorageApiKey;
       default: {
         return Constants.NftstorageApiKey.dev;
       }
@@ -143,7 +152,6 @@ export namespace Constants {
   export const BUNDLR_NETWORK_URL = switchBundlr(Config.cluster.type);
   export const DAS_API_URL = switchDasApi(Config.cluster.type);
   export const NFT_STORAGE_API_KEY = switchNftStorage(Config.cluster.type);
-  Config.cluster.type;
   export const EXPLORER_SOLSCAN_URL = 'https://solscan.io';
   export const EXPLORER_SOLANAFM_URL = 'https://solana.fm';
   export const EXPLORER_XRAY_URL = 'https://xray.helius.xyz';
