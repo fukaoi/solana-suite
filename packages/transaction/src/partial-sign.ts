@@ -12,10 +12,12 @@ import { MAX_RETRIES } from './define';
 export class PartialSignTransaction {
   hexInstruction: string;
   data?: Pubkey;
+  canSubmit?: boolean;
 
-  constructor(instructions: string, mint?: Pubkey) {
+  constructor(instructions: string, mint?: Pubkey, canSubmit = false) {
     this.hexInstruction = instructions;
     this.data = mint;
+    this.canSubmit = canSubmit;
   }
 
   submit = async (
@@ -58,13 +60,9 @@ Array.prototype.submit = async function (feePayer: Secret) {
       if (obj.isErr) {
         const errorMess: string = obj.error.message as string;
         throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
-      } else if (this.length - 1 > i) {
-        // Except for the last transaction
-        console.log('Except for the last transaction');
+      } else if (obj.canSubmit) {
         await obj.submit(feePayer);
       } else {
-        // only last transaction
-        console.log('last transaction');
         return await obj.submit(feePayer);
       }
       i++;

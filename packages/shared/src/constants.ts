@@ -3,8 +3,6 @@ import SolanaJsonConfig from '@solana-suite/config/load';
 
 let Config = SolanaJsonConfig;
 
-console.log('# Config', Config);
-
 export namespace Constants {
   export namespace WarnningMessage {
     const THRESHHOLD = 5;

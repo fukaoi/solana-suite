@@ -32,6 +32,7 @@ export namespace CompressedNft {
         throw delegate.error;
       }
       const first = delegate.value;
+      first.canSubmit = true;
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
       const inst = new Transaction({
         lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
