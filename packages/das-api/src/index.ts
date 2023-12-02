@@ -1,4 +1,4 @@
-import { Constants, Result, Try } from '~/shared';
+import { Constants, Result, Try, debugLog } from '~/shared';
 import { Asset, AssetProof, Assets } from '~/types/das-api';
 import { Sortable } from '~/types/find';
 
@@ -9,6 +9,7 @@ export namespace DasApi {
   ) => {
     Constants.WarnningMessage.calculateProbability() &&
       console.warn(Constants.WarnningMessage.DAS_API_URL);
+    debugLog('# das api url: ', Constants.DAS_API_URL);
     const response = await fetch(Constants.DAS_API_URL, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },

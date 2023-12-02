@@ -4,7 +4,7 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import { Result, Try } from '~/shared';
+import { Result, sleep, Try } from '~/shared';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
 import { MAX_RETRIES } from './define';
@@ -61,7 +61,11 @@ Array.prototype.submit = async function (feePayer: Secret) {
         const errorMess: string = obj.error.message as string;
         throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
       } else if (obj.canSubmit) {
+        console.log('# canSubmit');
         await obj.submit(feePayer);
+        console.log('# canSubmit finish');
+        await sleep(30);
+        console.log('# sleep finish');
       } else {
         return await obj.submit(feePayer);
       }
