@@ -835,7 +835,8 @@ declare class MintTransaction<T> {
 declare class PartialSignTransaction {
     hexInstruction: string;
     data?: Pubkey$1;
-    constructor(instructions: string, mint?: Pubkey$1);
+    canSubmit?: boolean;
+    constructor(instructions: string, mint?: Pubkey$1, canSubmit?: boolean);
     submit: (feePayer: Secret$1) => Promise<Result<TransactionSignature, Error>>;
 }
 
