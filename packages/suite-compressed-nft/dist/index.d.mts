@@ -874,7 +874,6 @@ declare const CompressedNft: {
     gasLessTransfer: (assetId: Pubkey$1, assetIdOwner: Secret$1, dest: Pubkey$1, feePayer: Pubkey$1) => Promise<Result<PartialSignTransaction[], Error>>;
     gasLessDelegate: (assetId: Pubkey$1, assetIdOwner: Secret$1, newDelegate: Pubkey$1) => Promise<Result<PartialSignTransaction, Error>>;
     defaultSortBy: Sortable;
-    fetchOffchain: (uri: string) => Promise<any>;
     findByOwner: (owner: Pubkey, options?: Partial<FindOptions>) => Promise<Result<CompressedNftMetadata, Error>>;
     findByMint: (mint: Pubkey) => Promise<Result<NftMetadata, Error>>;
     findByCollection: (collectionMint: Pubkey, options?: Partial<FindOptions>) => Promise<Result<CompressedNftMetadata, Error>>;

@@ -6,7 +6,7 @@ import '@metaplex-foundation/mpl-token-metadata';
 
 declare namespace Constants {
     namespace WarnningMessage {
-        const NFT_STORAGE_API_KEY = "\n        [Warning]\n        --------------------------------------\n        You need to update nftStorage.apiKey define parameter in solana-suite.json.\n        Can get api key from https://nft.storage/\n        --------------------------------------\n        ";
+        const NFT_STORAGE_API_KEY = "\n        [Warning]\n        --------------------------------------\n        You need to update nftStorageApiKey define parameter in solana-suite.json.\n        Can get api key from https://nft.storage/\n        --------------------------------------\n        ";
         const DAS_API_URL = "\n        [Warning]\n        --------------------------------------\n        You need to update dasApiUrl define parameter in solana-suite.json.\n        can get api url from https://www.helius.dev/\n        -------------------------------------- \n        ";
         const calculateProbability: () => boolean;
     }
@@ -16,6 +16,7 @@ declare namespace Constants {
     const customClusterUrl: never[];
     const isDebugging: string;
     const nftStorageApiKey: string;
+    const dasApiUrl: never[];
     enum Cluster {
         prd = "mainnet-beta",
         prdMetaplex = "mainnet-beta-metaplex",

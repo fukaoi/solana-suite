@@ -24,7 +24,7 @@ const warnMessage = (mess: string) => console.error(`# ${mess}`);
 
 (() => {
   try {
-    const path = Config.searchForSolanaSuiteConfig('./');
+    const path = Config.searchConfigJson('./');
     if (!path) {
       throw Error(`Not found ${Config.JSON_FILE_NAME}`);
     }

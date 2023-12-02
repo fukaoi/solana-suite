@@ -1,12 +1,5 @@
 import test from 'ava';
 import { Constants } from '../src/';
-import { execSync } from 'child_process';
-import { Config } from '~/suite-config/';
-
-test.after(() => {
-  console.log('#config', Config);
-  // execSync('git clone ../../suite-config/solana-suite.json');
-});
 
 test('Fetch nft.storage api key in solana-suite.json', (t) => {
   const apiKey = Constants.NFT_STORAGE_API_KEY;
@@ -48,13 +41,6 @@ test('Bundlr use prd', (t) => {
 test('Bundlr use dev', (t) => {
   const url = Constants.switchBundlr(Constants.Cluster.dev);
   t.is(url, Constants.BundlrUrl.dev);
-});
-
-test.only('DasApiUrl use prd', (t) => {
-  execSync('pnpm solana-suite-config -das "https://das.demo.org"');
-  const url = Constants.switchDasApi(Constants.Cluster.prd);
-  console.log(url);
-  t.log(url);
 });
 
 test('[Error]DasApiUrl use prd', (t) => {

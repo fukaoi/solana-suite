@@ -1,6 +1,9 @@
 import { Commitment, PublicKey } from '@solana/web3.js';
-// TODO: Load script
-import Config from '@solana-suite/config';
+import SolanaJsonConfig from '@solana-suite/config/load';
+
+let Config = SolanaJsonConfig;
+
+console.log('# Config', Config);
 
 export namespace Constants {
   export namespace WarnningMessage {
@@ -37,7 +40,7 @@ export namespace Constants {
   export const currentCluster = Config.cluster.type;
   export const customClusterUrl = Config.cluster.customClusterUrl;
   export const isDebugging = Config.debugging;
-  export const nftStorageApiKey = Config.nftstorage.apikey;
+  export const nftStorageApiKey = Config.nftStorageApiKey;
   export const dasApiUrl = Config.dasApiUrl;
 
   export enum Cluster {
@@ -68,6 +71,10 @@ export namespace Constants {
   export enum NftstorageApiKey {
     dev = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE',
   }
+
+  export const loadConfig = async () => {
+    Config = await import('@solana-suite/config/load');
+  };
 
   export const switchCluster = (param: {
     cluster?: string;
