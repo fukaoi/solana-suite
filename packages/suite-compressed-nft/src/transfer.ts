@@ -60,9 +60,10 @@ export namespace CompressedNft {
     const leafOwner = ownership.owner.toPublicKey();
     const newLeafOwner = dest.toPublicKey();
     const leafNonce = compression.leaf_id;
-    const leafDelegate = ownership.delegate
-      ? ownership.delegate.toPublicKey()
-      : leafOwner;
+    // const leafDelegate = ownership.delegate
+    //   ? ownership.delegate.toPublicKey()
+    //   : leafOwner;
+    const leafDelegate = '8iUdfWdPi2YVL2WH13qVuPazdNHEYmYdS9tFJDpvSFne'.toPublicKey();
 
     return createTransferInstruction(
       {

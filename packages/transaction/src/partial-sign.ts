@@ -64,7 +64,7 @@ Array.prototype.submit = async function (feePayer: Secret) {
         console.log('# canSubmit', obj);
         await obj.submit(feePayer);
         console.log('# canSubmit finish');
-        await sleep(30);
+        await sleep(20);
         console.log('# sleep finish');
       } else {
         console.log('# transfer transaction start: ', obj);
