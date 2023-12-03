@@ -14,19 +14,16 @@ test.before(async () => {
   feePayer = obj.feePayer;
 });
 
-test('Fee-Less Transfer nft', async (t) => {
+test('Gas-Less Transfer nft', async (t) => {
   const assets = await CompressedNft.findByOwner(source.pubkey);
 
   if (assets.isErr) {
     console.error(assets);
     t.fail(assets.error.message);
   } else if (assets.isOk && assets.value.metadatas.length < 1) {
-    t.fail(
-      'Your assets is empty'
-    );
+    t.fail('Your assets is empty');
   }
 
-  console.log(assets);
   const mint = assets.unwrap().metadatas[0].mint;
   t.log('# mint: ', mint);
 
@@ -38,6 +35,14 @@ test('Fee-Less Transfer nft', async (t) => {
   );
 
   const res = await serialized.unwrap().submit(feePayer.secret);
-  t.true(res.isOk, `${res.unwrap()}`);
-  t.log('# tx signature: ', res.unwrap());
+  res.match(
+    (ok) => {
+      t.log('# tx signature: ', ok);
+      t.pass();
+    },
+    (err) => {
+      console.error(err);
+      t.fail(err.message);
+    },
+  );
 });

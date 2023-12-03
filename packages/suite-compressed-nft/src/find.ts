@@ -1,6 +1,6 @@
 import { Converter } from '~/converter';
 import { DasApi } from '~/das-api';
-import { Result, Try } from '~/shared';
+import { Result, Try, debugLog } from '~/shared';
 import { Offchain } from '~/types/storage';
 import { CompressedNftMetadata, NftMetadata } from '~/types/compressed-nft';
 
@@ -58,14 +58,22 @@ export namespace CompressedNft {
         items
           .filter((item) => item.compression.compressed === true)
           .map(async (item) => {
-            const offchain: Offchain = await fetchOffchain(
-              item.content.json_uri,
-            );
-            const merged = {
-              onchain: item,
-              offchain: offchain,
-            };
-            return Converter.CompressedNftMetadata.intoUser(merged);
+            try {
+              const offchain: Offchain = await fetchOffchain(
+                item.content.json_uri,
+              );
+              const merged = {
+                onchain: item,
+                offchain: offchain,
+              };
+              return Converter.CompressedNftMetadata.intoUser(merged);
+            } catch (err) {
+              debugLog('# Failed fetch offchain url: ', item.content.json_uri);
+              return Converter.CompressedNftMetadata.intoUser({
+                onchain: item,
+                offchain: {},
+              });
+            }
           }),
       );
       return {

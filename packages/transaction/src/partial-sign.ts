@@ -61,12 +61,13 @@ Array.prototype.submit = async function (feePayer: Secret) {
         const errorMess: string = obj.error.message as string;
         throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
       } else if (obj.canSubmit) {
-        console.log('# canSubmit');
+        console.log('# canSubmit', obj);
         await obj.submit(feePayer);
         console.log('# canSubmit finish');
         await sleep(30);
         console.log('# sleep finish');
       } else {
+        console.log('# transfer transaction start: ', obj);
         return await obj.submit(feePayer);
       }
       i++;
