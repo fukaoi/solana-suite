@@ -39,6 +39,7 @@ export type PartialSignTransaction = {
 };
 
 declare global {
+  // TODO: refactoring
   // Batch transaction
   /* eslint-disable @typescript-eslint/no-unused-vars */
   interface Array<T> {

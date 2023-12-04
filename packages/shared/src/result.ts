@@ -67,6 +67,7 @@ abstract class AbstractResult<T, E extends Error> {
 
   /// submit (alias Instruction.submit) ////
   /* eslint-disable @typescript-eslint/no-explicit-any */
+  // TODO: refactoring
   async submit(feePayer?: any): Promise<Result<TransactionSignature, Error>> {
     try {
       const instruction = this.unwrap() as any;
