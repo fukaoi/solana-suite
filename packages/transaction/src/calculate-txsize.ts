@@ -1,10 +1,35 @@
+import { PublicKey, Transaction as Tx } from '@solana/web3.js';
+
+// @internal
 export namespace Transaction {
+  const LOW_VALUE = 127; // 0x7f
+  const HIGH_VALUE = 16383; // 0x3fff
+  const MAX_TRANSACTION_SIZE = 1232;
+
   /**
+   * Compact u16 array header size
+   * @param n elements in the compact array
+   * @returns size in bytes of array header
+   */
+  const compactHeader = (n: number) =>
+    n <= LOW_VALUE ? 1 : n <= HIGH_VALUE ? 2 : 3;
+
+  /**
+   * Compact u16 array size
+   * @param n elements in the compact array
+   * @param size bytes per each element
+   * @returns size in bytes of array
+   */
+  const compactArraySize = (n: number, size: number) =>
+    compactHeader(n) + n * size;
+
+  /**
+   * Calculate txsize
    * @param tx a solana transaction
    * @param feePayer the publicKey of the signer
    * @returns size in bytes of the transaction
    */
-  export const getTxSize = (tx: Tx, feePayer: PublicKey): number => {
+  export const calculateTxSize = (tx: Tx, feePayer: PublicKey): number => {
     const feePayerPk = [feePayer.toBase58()];
 
     const signers = new Set<string>(feePayerPk);
@@ -40,25 +65,7 @@ export namespace Transaction {
     );
   };
 
-  // COMPACT ARRAY
-
-  const LOW_VALUE = 127; // 0x7f
-  const HIGH_VALUE = 16383; // 0x3fff
-
-  /**
-   * Compact u16 array header size
-   * @param n elements in the compact array
-   * @returns size in bytes of array header
-   */
-  const compactHeader = (n: number) =>
-    n <= LOW_VALUE ? 1 : n <= HIGH_VALUE ? 2 : 3;
-
-  /**
-   * Compact u16 array size
-   * @param n elements in the compact array
-   * @param size bytes per each element
-   * @returns size in bytes of array
-   */
-  const compactArraySize = (n: number, size: number) =>
-    compactHeader(n) + n * size;
+  export const isMaxTransactionSize = (): boolean => {
+    return true;
+  };
 }

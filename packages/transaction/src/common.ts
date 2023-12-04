@@ -13,7 +13,6 @@ import { Result, Try } from '~/shared';
 // TODO: create class type, rename class name:  Transaction.Common
 export class Transaction {
   static MAX_RETRIES = 3;
-  static MAX_TRANSACTION_SIZE = 1232;
 
   instructions: TransactionInstruction[];
   signers: Keypair[];
