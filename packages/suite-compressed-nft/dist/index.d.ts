@@ -390,7 +390,7 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(): Promise<Result<TransactionSignature, Error>>;
+    submit(feePayer?: any): Promise<Result<TransactionSignature, Error>>;
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
     readonly value: T;
@@ -865,7 +865,7 @@ declare global {
 }
 
 declare const CompressedNft: {
-    createTransfer: (assetId: Pubkey$1, assetIdOwner: Pubkey$1, dest: Pubkey$1) => Promise<_solana_web3_js.TransactionInstruction>;
+    createTransfer: (assetId: Pubkey$1, assetIdOwner: Pubkey$1, dest: Pubkey$1, delegate?: Pubkey$1 | undefined) => Promise<_solana_web3_js.TransactionInstruction>;
     transfer: (assetId: Pubkey$1, assetIdOwner: Pubkey$1, dest: Pubkey$1, signers: Secret[]) => Promise<Result<Transaction, Error>>;
     mintCollection: (owner: Pubkey, signer: Secret$1, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintTransaction<Pubkey>, Error>>;
     Tree: typeof CompressedNft$1.Tree;

@@ -14,7 +14,7 @@ declare abstract class AbstractResult$1<T, E extends Error> {
     chain<X>(ok: (value: T) => Result$1<X, E>): Result$1<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(): Promise<Result$1<TransactionSignature, Error>>;
+    submit(feePayer?: any): Promise<Result$1<TransactionSignature, Error>>;
 }
 declare class InternalOk$1<T, E extends Error> extends AbstractResult$1<T, E> {
     readonly value: T;

@@ -22,8 +22,12 @@ test.beforeEach(async (t) => {
       sortDirection: SortDirection.Asc,
     },
   });
+
   if (assets.isErr) {
+    console.error(assets);
     t.fail(assets.error.message);
+  } else if (assets.isOk && assets.value.metadatas.length < 1) {
+    t.fail('Your assets is empty');
   }
   mint = assets.unwrap().metadatas[0].mint;
   t.log('# mint: ', mint);

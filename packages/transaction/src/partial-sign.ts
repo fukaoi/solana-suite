@@ -4,7 +4,7 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import { Result, sleep, Try } from '~/shared';
+import { Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
 import { MAX_RETRIES } from './define';
@@ -54,23 +54,18 @@ export class PartialSignTransaction {
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* @ts-ignore */
 Array.prototype.submit = async function (feePayer: Secret) {
-  return Try(async () => {
-    let i = 0;
-    for await (const obj of this) {
-      if (obj.isErr) {
-        const errorMess: string = obj.error.message as string;
-        throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
-      } else if (obj.canSubmit) {
-        console.log('# canSubmit', obj);
-        await obj.submit(feePayer);
-        console.log('# canSubmit finish');
-        await sleep(20);
-        console.log('# sleep finish');
-      } else {
-        console.log('# transfer transaction start: ', obj);
-        return await obj.submit(feePayer);
-      }
-      i++;
+  for await (const obj of this) {
+    const partialSignTx: PartialSignTransaction = obj;
+
+    if (partialSignTx.canSubmit) {
+      (await partialSignTx.submit(feePayer)).match(
+        (ok) => Node.confirmedSig(ok, 'finalized'),
+        (err) => {
+          throw err;
+        },
+      );
+    } else {
+      return await partialSignTx.submit(feePayer);
     }
-  });
+  }
 };

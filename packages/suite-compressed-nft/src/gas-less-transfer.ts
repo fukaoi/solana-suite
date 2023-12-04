@@ -46,6 +46,7 @@ export namespace CompressedNft {
           assetId,
           assetIdOwnerKeypair.pubkey,
           dest,
+          feePayer
         ),
       );
       inst.recentBlockhash = blockhashObj.blockhash;

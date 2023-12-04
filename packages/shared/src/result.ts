@@ -66,12 +66,17 @@ abstract class AbstractResult<T, E extends Error> {
   }
 
   /// submit (alias Instruction.submit) ////
-  async submit(): Promise<Result<TransactionSignature, Error>> {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  async submit(feePayer?: any): Promise<Result<TransactionSignature, Error>> {
     try {
-      /* eslint-disable @typescript-eslint/no-explicit-any */
       const instruction = this.unwrap() as any;
-      if (instruction.instructions && instruction.signers) {
-        return await instruction.submit();
+      if (
+        instruction.instructions ||
+        instruction.hexInstruction ||
+        instruction[0].instructions ||
+        instruction[0].hexInstruction
+      ) {
+        return await instruction.submit(feePayer);
       }
       return Result.err(Error('Only Instruction object'));
     } catch (err) {

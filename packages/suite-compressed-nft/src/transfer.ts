@@ -9,7 +9,8 @@ import {
   SPL_NOOP_PROGRAM_ID,
 } from '@solana/spl-account-compression';
 import { Transaction } from '~/transaction';
-import { TransactionInstruction } from '@solana/web3.js';
+import { PublicKey, TransactionInstruction } from '@solana/web3.js';
+import { delegate } from '@metaplex-foundation/mpl-bubblegum';
 
 export namespace CompressedNft {
   // @internal
@@ -17,6 +18,7 @@ export namespace CompressedNft {
     assetId: Pubkey,
     assetIdOwner: Pubkey,
     dest: Pubkey,
+    delegate?: Pubkey,
   ): Promise<TransactionInstruction> => {
     const assetProof = await DasApi.getAssetProof(assetId);
     if (assetProof.isErr) {
@@ -60,11 +62,14 @@ export namespace CompressedNft {
     const leafOwner = ownership.owner.toPublicKey();
     const newLeafOwner = dest.toPublicKey();
     const leafNonce = compression.leaf_id;
-    // const leafDelegate = ownership.delegate
-    //   ? ownership.delegate.toPublicKey()
-    //   : leafOwner;
-    const leafDelegate = '8iUdfWdPi2YVL2WH13qVuPazdNHEYmYdS9tFJDpvSFne'.toPublicKey();
-
+    let leafDelegate: PublicKey;
+    if (delegate) {
+      leafDelegate = delegate.toPublicKey();
+    } else {
+      leafDelegate = ownership.delegate
+        ? ownership.delegate.toPublicKey()
+        : leafOwner;
+    }
     return createTransferInstruction(
       {
         merkleTree,
