@@ -11,6 +11,7 @@ import { Constants, debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { MAX_RETRIES } from './define';
 
+// TODO: rename Trasaction.Mint
 export class MintTransaction<T> {
   instructions: TransactionInstruction[];
   signers: Keypair[];

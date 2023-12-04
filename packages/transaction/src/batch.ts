@@ -8,8 +8,9 @@ import {
 import { Node } from '~/node';
 import { Try } from '~/shared';
 import { MAX_RETRIES } from './define';
-import { Transaction } from './default';
+import { Transaction } from './common';
 
+// TODO: rename Trasaction.Batch
 export class BatchTransaction {
   submit = async (arr: Transaction[]): Promise<TransactionSignature> => {
     let i = 0;

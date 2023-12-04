@@ -9,6 +9,8 @@ import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
 import { MAX_RETRIES } from './define';
 
+// TODO: 
+// TODO: rename Trasaction.PartialSign
 export class PartialSignTransaction {
   hexInstruction: string;
   data?: Pubkey;
