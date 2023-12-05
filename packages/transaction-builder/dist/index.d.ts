@@ -259,6 +259,7 @@ interface StructTransaction {
     data?: unknown;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
+
 declare namespace TransactionBuilder$4 {
     class Common implements StructTransaction {
         static MAX_TRANSACTION_SIZE: number;
@@ -312,4 +313,4 @@ declare const TransactionBuilder: {
     BatchTransaction: typeof TransactionBuilder$3.BatchTransaction;
 };
 
-export { StructTransaction, TransactionBuilder };
+export { TransactionBuilder };

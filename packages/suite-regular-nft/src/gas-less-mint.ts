@@ -2,13 +2,14 @@ import { debugLog, Result, Try, unixTimestamp } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 import { GasLessMintOptions, InputNftMetadata } from '~/types/regular-nft';
 import { Node } from '~/node';
-import { PartialSignTransaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { Storage } from '~/storage';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
 import { Account } from '~/account';
 import { RegularNft as Mint } from './mint';
 import { Transaction } from '@solana/web3.js';
+import { StructPartialSignTransaction } from '~/types/transaction-builder';
 
 export namespace RegularNft {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
@@ -37,7 +38,7 @@ export namespace RegularNft {
    * }
    * @param {Secret} feePayer        // fee payer
    * @param {Partial<GasLessMintOptions>} options         // options
-   * @return Promise<Result<PartialSignInstruction, Error>>
+   * @return Promise<Result<StructPartialSignTransaction, Error>>
    */
   export const gasLessMint = async (
     owner: Pubkey,
@@ -45,7 +46,7 @@ export namespace RegularNft {
     input: InputNftMetadata,
     feePayer: Pubkey,
     options: Partial<GasLessMintOptions> = {},
-  ): Promise<Result<PartialSignTransaction, Error>> => {
+  ): Promise<Result<StructPartialSignTransaction, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -143,7 +144,7 @@ export namespace RegularNft {
         requireAllSignatures: false,
       });
       const hex = serializedTx.toString('hex');
-      return new PartialSignTransaction(hex, mint.pubkey);
+      return new TransactionBuilder.PartialSign(hex, mint.pubkey);
     });
   };
 }

@@ -1,7 +1,8 @@
 import { TransactionInstruction } from '@solana/web3.js';
 import { debugLog, sleep } from '~/shared';
 import { Node } from '~/node';
-import { StructTransaction, TransactionBuilder } from '~/transaction-builder';
+import { TransactionBuilder } from '~/transaction-builder';
+import { StructTransaction } from '~/types/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';
 
 import {

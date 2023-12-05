@@ -14,7 +14,7 @@ const entry = {
   shared: 'src/shared/index.ts',
   storage: 'src/storage/index.ts',
   'spl-token': 'src/spl-token/index.ts',
-  transaction: 'src/transaction/index.ts',
+  'transaction-builder': 'src/transaction-builder/index.ts',
   'transaction-filter': 'src/transaction-filter/index.ts',
   validator: 'src/validator/index.ts',
 };

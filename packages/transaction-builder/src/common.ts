@@ -10,21 +10,9 @@ import {
 
 import { Node } from '~/node';
 import { Result, Try } from '~/shared';
-import { Secret } from '~/types/account';
+import { StructTransaction } from '~/types/transaction-builder';
 
 export const MAX_RETRIES = 3;
-
-export interface StructPartialSignTransaction {
-  hexInstruction: string;
-  submit: (feePayer: Secret) => Promise<Result<string, Error>>;
-}
-export interface StructTransaction {
-  instructions: TransactionInstruction[];
-  signers: Keypair[];
-  feePayer?: Keypair;
-  data?: unknown;
-  submit: () => Promise<Result<TransactionSignature, Error>>;
-}
 
 export namespace TransactionBuilder {
   export class Common implements StructTransaction {

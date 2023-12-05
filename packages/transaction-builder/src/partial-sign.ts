@@ -7,10 +7,11 @@ import {
 import { Result, sleep, Try } from '~/shared';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
-import { MAX_RETRIES, StructPartialSignTransaction } from './common';
+import { MAX_RETRIES } from './common';
+import { StructPartialSignTransaction } from '~/types/transaction-builder';
 
 export namespace TransactionBuilder {
-  export class PartialSignTransaction implements StructPartialSignTransaction {
+  export class PartialSign implements StructPartialSignTransaction {
     hexInstruction: string;
     data?: Pubkey;
     canSubmit?: boolean;

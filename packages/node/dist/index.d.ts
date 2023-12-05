@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, PublicKey, Keypair, TransactionInstruction, Transaction } from '@solana/web3.js';
+import { TransactionSignature, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -210,15 +210,6 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret$1 = (string & {
-    [secretNominality]: never;
-}) | string;
-
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -248,69 +239,14 @@ type ExplorerOptions = {
     replacePath: string;
 };
 
-interface StructPartialSignTransaction {
-    hexInstruction: string;
-    submit: (feePayer: Secret$1) => Promise<Result<string, Error>>;
-}
-interface StructTransaction {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    data?: unknown;
-    submit: () => Promise<Result<TransactionSignature, Error>>;
+declare namespace Node {
+    const getConnection: () => Connection;
+    const changeConnection: (param: {
+        cluster?: string;
+        commitment?: Commitment;
+        customClusterUrl?: string[];
+    }) => void;
+    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
 }
 
-declare namespace TransactionBuilder$4 {
-    class Common implements StructTransaction {
-        static MAX_TRANSACTION_SIZE: number;
-        instructions: TransactionInstruction[];
-        signers: Keypair[];
-        feePayer?: Keypair;
-        data?: unknown;
-        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
-        submit: () => Promise<Result<TransactionSignature, Error>>;
-    }
-    /**
-     * @param tx a solana transaction
-     * @param feePayer the publicKey of the signer
-     * @returns size in bytes of the transaction
-     */
-    const getTxSize: (tx: Transaction, feePayer: PublicKey) => number;
-}
-
-declare namespace TransactionBuilder$3 {
-    class BatchTransaction {
-        submit: (arr: TransactionBuilder$4.Common[]) => Promise<TransactionSignature>;
-    }
-}
-
-declare namespace TransactionBuilder$2 {
-    class Mint<T> implements StructTransaction {
-        instructions: TransactionInstruction[];
-        signers: Keypair[];
-        feePayer?: Keypair;
-        data?: T;
-        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
-        submit: () => Promise<Result<TransactionSignature, Error>>;
-    }
-}
-
-declare namespace TransactionBuilder$1 {
-    class PartialSignTransaction implements StructPartialSignTransaction {
-        hexInstruction: string;
-        data?: Pubkey;
-        canSubmit?: boolean;
-        constructor(instructions: string, mint?: Pubkey, canSubmit?: boolean);
-        submit: (feePayer: Secret$1) => Promise<Result<TransactionSignature, Error>>;
-    }
-}
-
-declare const TransactionBuilder: {
-    PartialSignTransaction: typeof TransactionBuilder$1.PartialSignTransaction;
-    Common: typeof TransactionBuilder$4.Common;
-    getTxSize: (tx: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => number;
-    Mint: typeof TransactionBuilder$2.Mint;
-    BatchTransaction: typeof TransactionBuilder$3.BatchTransaction;
-};
-
-export { TransactionBuilder };
+export { Node };

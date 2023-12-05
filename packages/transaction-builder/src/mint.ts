@@ -9,7 +9,8 @@ import {
 
 import { Constants, debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
-import { MAX_RETRIES, StructTransaction } from './common';
+import { MAX_RETRIES } from './common';
+import { StructTransaction } from '~/types/transaction-builder';
 
 export namespace TransactionBuilder {
   export class Mint<T> implements StructTransaction {

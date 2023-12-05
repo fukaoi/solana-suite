@@ -10,10 +10,8 @@ import { Try } from '~/shared';
 import { MAX_RETRIES, TransactionBuilder as Common } from './common';
 
 export namespace TransactionBuilder {
-  export class BatchTransaction {
-    submit = async (
-      arr: Common.Common[],
-    ): Promise<TransactionSignature> => {
+  export class Batch {
+    submit = async (arr: Common.Common[]): Promise<TransactionSignature> => {
       let i = 0;
       for (const a of arr) {
         if (!a.instructions && !a.signers) {

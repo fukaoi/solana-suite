@@ -1,11 +1,12 @@
 import { Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
-import { Transaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 
 import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createFreezeDelegatedAccountInstruction } from '@metaplex-foundation/mpl-token-metadata';
 import { Account } from '~/account';
 import { AuthorityOptions } from '~/types/shared';
+import { StructTransaction } from '~/types/transaction-builder';
 
 export namespace RegularNft {
   /**
@@ -21,7 +22,7 @@ export namespace RegularNft {
     owner: Pubkey,
     freezeAuthority: Secret,
     options: Partial<AuthorityOptions> = {},
-  ): Result<Transaction, Error> => {
+  ): Result<StructTransaction, Error> => {
     return Try(() => {
       const payer = options.feePayer ? options.feePayer : freezeAuthority;
       const tokenAccount = getAssociatedTokenAddressSync(
@@ -38,7 +39,7 @@ export namespace RegularNft {
         edition: editionAddress,
         mint: mint.toPublicKey(),
       });
-      return new Transaction(
+      return new TransactionBuilder.Common(
         [inst],
         [freezeAuthority.toKeypair()],
         payer.toKeypair(),

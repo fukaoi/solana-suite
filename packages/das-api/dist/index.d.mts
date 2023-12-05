@@ -210,9 +210,100 @@ type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
 declare const pubKeyNominality: unique symbol;
-type Pubkey = (string & {
+type Pubkey$1 = (string & {
     [pubKeyNominality]: never;
 }) | string;
+
+declare enum SortDirection {
+    Asc = "asc",
+    Desc = "desc"
+}
+declare enum SortBy {
+    Created = "created",
+    Updated = "updated",
+    Recent = "recent_action"
+}
+type Sortable = {
+    sortBy: SortBy;
+    sortDirection: SortDirection;
+};
+
+type InternalCreators = {
+    address: PublicKey;
+    verified: boolean;
+    share: number;
+};
+
+type AssetProof = {
+    leaf: Pubkey$1;
+    node_index: number;
+    proof: Pubkey$1[];
+    root: Pubkey$1;
+    tree_id: Pubkey$1;
+};
+type Metadata = {
+    name: string;
+    symbol: string;
+    token_standard: string;
+};
+type Grouping = {
+    group_key: string;
+    group_value: string;
+};
+type Asset = {
+    interface: string;
+    id: Pubkey$1;
+    content: {
+        json_uri: string;
+        files: string[];
+        metadata: Metadata;
+        links: string[];
+    };
+    authorities: {
+        address: Pubkey$1;
+        scopes: string[];
+    }[];
+    compression: {
+        eligible: boolean;
+        compressed: boolean;
+        data_hash: Pubkey$1;
+        creator_hash: Pubkey$1;
+        asset_hash: Pubkey$1;
+        tree: Pubkey$1;
+        seq: number;
+        leaf_id: number;
+    };
+    grouping: Grouping[];
+    royalty: {
+        royalty_model: 'creators' | 'fanout' | 'single';
+        target: null;
+        percent: number;
+        basis_points: number;
+        primary_sale_happened: boolean;
+        locked: boolean;
+    };
+    creators: InternalCreators[];
+    ownership: {
+        frozen: boolean;
+        delegated: boolean;
+        delegate: Pubkey$1;
+        ownership_model: 'single' | 'token';
+        owner: Pubkey$1;
+    };
+    supply: {
+        print_max_supply: number;
+        print_current_supply: number;
+        edition_nonce: number;
+    };
+    mutable: boolean;
+    burnt: boolean;
+};
+type Assets = {
+    total: number;
+    limit: number;
+    page: number;
+    items: Asset[];
+};
 
 declare global {
     interface String {
@@ -243,12 +334,11 @@ type ExplorerOptions = {
     replacePath: string;
 };
 
-type AirdropOptions = {
-    dropAmount: number;
-};
-
-declare namespace Airdrop {
-    const request: (pubkey: Pubkey, options?: Partial<AirdropOptions>) => Promise<Result<string, Error>>;
+declare namespace DasApi {
+    const getAssetProof: (assetId: string) => Promise<Result<AssetProof, Error>>;
+    const getAsset: (assetId: Pubkey) => Promise<Result<Asset, Error>>;
+    const getAssetsByOwner: (ownerAddress: Pubkey, limit?: number, page?: number, sortBy?: Sortable, before?: string, after?: string) => Promise<Result<Assets, Error>>;
+    const getAssetsByGroup: (groupKey: string, groupValue: Pubkey, limit?: number, page?: number, sortBy?: Sortable, before?: string, after?: string) => Promise<Result<Assets, Error>>;
 }
 
-export { Airdrop };
+export { DasApi };
