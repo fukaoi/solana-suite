@@ -1,14 +1,15 @@
+import * as _solana_buffer_layout from '@solana/buffer-layout';
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
-import * as _solana_buffer_layout from '@solana/buffer-layout';
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
     unwrap<U>(ok: (value: T) => U): U;
     unwrap<U, V>(ok: (value: T) => U, err: (error: E) => V): U | V;
+    unwrap<U>(ok: (value: T) => U, err: (error: E) => U): U;
     map<U>(ok: (value: T) => U): Result<U, E>;
     map<U, F extends Error>(ok: (value: T) => U, err: (error: E) => F): Result<U, F>;
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
@@ -543,16 +544,6 @@ declare enum Explorer {
 type ExplorerOptions = {
     replacePath: string;
 };
-
-declare class Transaction {
-    static MAX_RETRIES: number;
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    data?: unknown;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
-    submit: () => Promise<Result<TransactionSignature, Error>>;
-}
 
 declare const Multisig: {
     isAddress: (multisig: Pubkey) => Promise<Result<boolean, Error>>;

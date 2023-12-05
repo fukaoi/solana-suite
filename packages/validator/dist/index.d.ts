@@ -7,6 +7,7 @@ declare abstract class AbstractResult<T, E extends Error> {
     unwrap(): T;
     unwrap<U>(ok: (value: T) => U): U;
     unwrap<U, V>(ok: (value: T) => U, err: (error: E) => V): U | V;
+    unwrap<U>(ok: (value: T) => U, err: (error: E) => U): U;
     map<U>(ok: (value: T) => U): Result<U, E>;
     map<U, F extends Error>(ok: (value: T) => U, err: (error: E) => F): Result<U, F>;
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;

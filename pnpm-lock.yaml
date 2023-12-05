@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -765,7 +769,7 @@ importers:
         specifier: workspace:*
         version: link:../build-configs/tsconfig
 
-  packages/transaction:
+  packages/transaction-builder:
     dependencies:
       '@solana/buffer-layout':
         specifier: ^4.0.1
@@ -9776,7 +9780,3 @@ packages:
       - supports-color
       - utf-8-validate
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false

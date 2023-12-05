@@ -1,7 +1,7 @@
 import { TransactionInstruction } from '@solana/web3.js';
 import { debugLog, sleep } from '~/shared';
 import { Node } from '~/node';
-import { Transaction } from '~/transaction';
+import { StructTransaction, TransactionBuilder } from '~/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';
 
 import {
@@ -36,7 +36,7 @@ export namespace Account {
       owner: Pubkey,
       feePayer: Secret,
       allowOwnerOffCurve = false,
-    ): Promise<string | Transaction> => {
+    ): Promise<string | StructTransaction> => {
       const res = await makeOrCreateInstruction(
         mint,
         owner,
@@ -48,7 +48,7 @@ export namespace Account {
         return res.tokenAccount;
       }
 
-      return new Transaction(
+      return new TransactionBuilder.Common(
         [res.inst],
         [],
         feePayer.toKeypair(),
@@ -77,13 +77,13 @@ export namespace Account {
           if (inst && typeof inst === 'string') {
             debugLog('# associatedTokenAccount: ', inst);
             return inst;
-          } else if (inst instanceof Transaction) {
+          } else if (inst instanceof TransactionBuilder.Common) {
             (await inst.submit()).map(
-              async (ok) => {
+              async (ok: string) => {
                 await Node.confirmedSig(ok);
                 return inst.data as string;
               },
-              (err) => {
+              (err: Error) => {
                 debugLog('# Error submit retryGetOrCreate: ', err);
                 throw err;
               },
