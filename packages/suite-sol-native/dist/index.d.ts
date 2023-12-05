@@ -1,341 +1,7 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
+import { TransactionInstruction, PublicKey, Keypair, Connection, Commitment, TransactionSignature } from '@solana/web3.js';
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
-
-declare abstract class AbstractResult$1<T, E extends Error> {
-    protected abstract _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
-    unwrap(): T;
-    unwrap<U>(ok: (value: T) => U): U;
-    unwrap<U, V>(ok: (value: T) => U, err: (error: E) => V): U | V;
-    map<U>(ok: (value: T) => U): Result$1<U, E>;
-    map<U, F extends Error>(ok: (value: T) => U, err: (error: E) => F): Result$1<U, F>;
-    chain<X>(ok: (value: T) => Result$1<X, E>): Result$1<X, E>;
-    chain<X>(ok: (value: T) => Result$1<X, E>): Result$1<X, E>;
-    chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
-    match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: any): Promise<Result$1<TransactionSignature, Error>>;
-}
-declare class InternalOk$1<T, E extends Error> extends AbstractResult$1<T, E> {
-    readonly value: T;
-    readonly isOk = true;
-    readonly isErr = false;
-    constructor(value: T);
-    protected _chain<X, U extends Error>(ok: (value: T) => Result$1<X, U>, _err: (error: E) => Result$1<X, U>): Result$1<X, U>;
-}
-declare class InternalErr$1<T, E extends Error> extends AbstractResult$1<T, E> {
-    readonly error: E;
-    readonly isOk = false;
-    readonly isErr = true;
-    constructor(error: E);
-    protected _chain<X, U extends Error>(_ok: (value: T) => Result$1<X, U>, err: (error: E) => Result$1<X, U>): Result$1<X, U>;
-}
-declare namespace Result$1 {
-    export type Ok<T, E extends Error> = InternalOk$1<T, E>;
-    export type Err<T, E extends Error> = InternalErr$1<T, E>;
-    export function ok<T, E extends Error>(value: T): Result$1<T, E>;
-    export function err<E extends Error, T = never>(error?: E): Result$1<T, E>;
-    type U = Result$1<unknown>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U, R10 extends U, R11 extends U, R12 extends U, R13 extends U, R14 extends U, R15 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>,
-        OkType$1<R4>,
-        OkType$1<R5>,
-        OkType$1<R6>,
-        OkType$1<R7>,
-        OkType$1<R8>,
-        OkType$1<R9>,
-        OkType$1<R10>,
-        OkType$1<R11>,
-        OkType$1<R12>,
-        OkType$1<R13>,
-        OkType$1<R14>,
-        OkType$1<R15>
-    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 | R11 | R12 | R13 | R14 | R15>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U, R10 extends U, R11 extends U, R12 extends U, R13 extends U, R14 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>,
-        OkType$1<R4>,
-        OkType$1<R5>,
-        OkType$1<R6>,
-        OkType$1<R7>,
-        OkType$1<R8>,
-        OkType$1<R9>,
-        OkType$1<R10>,
-        OkType$1<R11>,
-        OkType$1<R12>,
-        OkType$1<R13>,
-        OkType$1<R14>
-    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 | R11 | R12 | R13 | R14>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U, R10 extends U, R11 extends U, R12 extends U, R13 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>,
-        OkType$1<R4>,
-        OkType$1<R5>,
-        OkType$1<R6>,
-        OkType$1<R7>,
-        OkType$1<R8>,
-        OkType$1<R9>,
-        OkType$1<R10>,
-        OkType$1<R11>,
-        OkType$1<R12>,
-        OkType$1<R13>
-    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 | R11 | R12 | R13>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U, R10 extends U, R11 extends U, R12 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>,
-        OkType$1<R4>,
-        OkType$1<R5>,
-        OkType$1<R6>,
-        OkType$1<R7>,
-        OkType$1<R8>,
-        OkType$1<R9>,
-        OkType$1<R10>,
-        OkType$1<R11>
-    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 | R11>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U, R10 extends U, R11 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>,
-        OkType$1<R4>,
-        OkType$1<R5>,
-        OkType$1<R6>,
-        OkType$1<R7>,
-        OkType$1<R8>,
-        OkType$1<R9>,
-        OkType$1<R10>,
-        OkType$1<R11>
-    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 | R11>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U, R10 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>,
-        OkType$1<R4>,
-        OkType$1<R5>,
-        OkType$1<R6>,
-        OkType$1<R7>,
-        OkType$1<R8>,
-        OkType$1<R9>,
-        OkType$1<R10>
-    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U, R9 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8, R9]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>,
-        OkType$1<R4>,
-        OkType$1<R5>,
-        OkType$1<R6>,
-        OkType$1<R7>,
-        OkType$1<R8>,
-        OkType$1<R9>
-    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U, R8 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7, R8]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>,
-        OkType$1<R4>,
-        OkType$1<R5>,
-        OkType$1<R6>,
-        OkType$1<R7>,
-        OkType$1<R8>
-    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U, R7 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6, R7]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>,
-        OkType$1<R4>,
-        OkType$1<R5>,
-        OkType$1<R6>,
-        OkType$1<R7>
-    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U, R6 extends U>(obj: [R0, R1, R2, R3, R4, R5, R6]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>,
-        OkType$1<R4>,
-        OkType$1<R5>,
-        OkType$1<R6>
-    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5 | R6>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U, R5 extends U>(obj: [R0, R1, R2, R3, R4, R5]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>,
-        OkType$1<R4>,
-        OkType$1<R5>
-    ], ErrType$1<R0 | R1 | R2 | R3 | R4 | R5>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U, R4 extends U>(obj: [R0, R1, R2, R3, R4]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>,
-        OkType$1<R4>
-    ], ErrType$1<R0 | R1 | R2 | R3 | R4>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U, R3 extends U>(obj: [R0, R1, R2, R3]): Result$1<[
-        OkType$1<R0>,
-        OkType$1<R1>,
-        OkType$1<R2>,
-        OkType$1<R3>
-    ], ErrType$1<R0 | R1 | R2 | R3>>;
-    export function all<R0 extends U, R1 extends U, R2 extends U>(obj: [R0, R1, R2]): Result$1<[OkType$1<R0>, OkType$1<R1>, OkType$1<R2>], ErrType$1<R0 | R1 | R2>>;
-    export function all<R0 extends U, R1 extends U>(obj: [R0, R1]): Result$1<[OkType$1<R0>, OkType$1<R1>], ErrType$1<R0 | R1>>;
-    export function all<R0 extends U>(obj: [R0]): Result$1<[OkType$1<R0>], ErrType$1<R0>>;
-    export function all(obj: []): Result$1<[]>;
-    export function all<T extends U[] | Record<string, U>>(obj: T): Result$1<{
-        [K in keyof T]: T[K] extends Result$1<infer I> ? I : never;
-    }, {
-        [K in keyof T]: T[K] extends Result$1<unknown, infer E> ? E : never;
-    }[keyof T]>;
-    export {};
-}
-type Result$1<T, E extends Error = Error> = Result$1.Ok<T, E> | Result$1.Err<T, E>;
-type OkType$1<R extends Result$1<unknown>> = R extends Result$1<infer O> ? O : never;
-type ErrType$1<R extends Result$1<unknown>> = R extends Result$1<unknown, infer E> ? E : never;
-
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret = (string & {
-    [secretNominality]: never;
-}) | string;
-type KeypairAccount = {
-    pubkey: Pubkey;
-    secret: Secret;
-};
-type OwnerInfo = {
-    sol: number;
-    lamports: number;
-    owner: string;
-};
-
-/**
- * Get Associated token Account.
- * if not created, create new token accouint
- *
- * @param {Pubkey} mint
- * @param {Pubkey} owner
- * @param {Secret} feePayer
- * @param {boolean} allowOwnerOffCurve
- * @returns Promise<string | Instruction>
- */
-declare namespace Account$3 {
-    namespace Associated {
-        /**
-         * Retry function if create new token accouint
-         *
-         * @param {Pubkey} mint
-         * @param {Pubkey} owner
-         * @param {Secret} feePayer
-         * @returns Promise<string>
-         */
-        const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret) => Promise<string>;
-        /**
-         * [Main logic]Get Associated token Account.
-         * if not created, create new token accouint
-         *
-         * @param {Pubkey} mint
-         * @param {Pubkey} owner
-         * @param {Pubkey} feePayer
-         * @returns Promise<string>
-         */
-        const makeOrCreateInstruction: (mint: Pubkey, owner: Pubkey, feePayer?: Pubkey, allowOwnerOffCurve?: boolean) => Promise<{
-            tokenAccount: string;
-            inst: TransactionInstruction | undefined;
-        }>;
-    }
-}
-
-declare namespace Account$2 {
-    class Keypair {
-        secret: Secret;
-        pubkey: Pubkey;
-        constructor(params: {
-            pubkey?: Pubkey;
-            secret: Secret;
-        });
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        static isPubkey: (value: string) => value is Pubkey;
-        static isSecret: (value: string) => value is Secret;
-        static create: () => Keypair;
-        static toKeyPair: (keypair: Keypair) => Keypair;
-    }
-}
-
-declare namespace Account$1 {
-    namespace Pda {
-        const getMetadata: (address: Pubkey) => PublicKey;
-        const getMasterEdition: (address: Pubkey) => PublicKey;
-        const getTreeAuthority: (address: Pubkey) => PublicKey;
-        const getBgumSigner: () => PublicKey;
-        const getAssetId: (address: Pubkey, leafIndex: number) => Pubkey;
-    }
-}
-
-declare const Account: {
-    Pda: typeof Account$1.Pda;
-    Keypair: typeof Account$2.Keypair;
-    Associated: typeof Account$3.Associated;
-};
-
-declare namespace Node {
-    const getConnection: () => Connection;
-    const changeConnection: (param: {
-        cluster?: string;
-        commitment?: Commitment;
-        customClusterUrl?: string[];
-    }) => void;
-    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result$1.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result$1.Ok<never, any> | Result$1.Err<never, any>>;
-}
-
-type Condition = 'overMax' | 'underMin';
-interface Limit {
-    threshold: number;
-    condition: Condition;
-}
-interface Details {
-    key: string;
-    message: string;
-    actual: string | number;
-    limit?: Limit;
-}
-
-type bignum = number | BN;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
-};
-type InputCreators = {
-    address: Pubkey;
-    secret: Secret;
-    share: number;
-};
-
-type AuthorityOptions = {
-    feePayer: Pubkey;
-};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -348,7 +14,6 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(): Promise<Result<TransactionSignature, Error>>;
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
     readonly value: T;
@@ -540,6 +205,137 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
+type KeypairAccount = {
+    pubkey: Pubkey;
+    secret: Secret;
+};
+type OwnerInfo = {
+    sol: number;
+    lamports: number;
+    owner: string;
+};
+
+/**
+ * Get Associated token Account.
+ * if not created, create new token accouint
+ *
+ * @param {Pubkey} mint
+ * @param {Pubkey} owner
+ * @param {Secret} feePayer
+ * @param {boolean} allowOwnerOffCurve
+ * @returns Promise<string | Instruction>
+ */
+declare namespace Account$3 {
+    namespace Associated {
+        /**
+         * Retry function if create new token accouint
+         *
+         * @param {Pubkey} mint
+         * @param {Pubkey} owner
+         * @param {Secret} feePayer
+         * @returns Promise<string>
+         */
+        const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret) => Promise<string>;
+        /**
+         * [Main logic]Get Associated token Account.
+         * if not created, create new token accouint
+         *
+         * @param {Pubkey} mint
+         * @param {Pubkey} owner
+         * @param {Pubkey} feePayer
+         * @returns Promise<string>
+         */
+        const makeOrCreateInstruction: (mint: Pubkey, owner: Pubkey, feePayer?: Pubkey, allowOwnerOffCurve?: boolean) => Promise<{
+            tokenAccount: string;
+            inst: TransactionInstruction | undefined;
+        }>;
+    }
+}
+
+declare namespace Account$2 {
+    class Keypair {
+        secret: Secret;
+        pubkey: Pubkey;
+        constructor(params: {
+            pubkey?: Pubkey;
+            secret: Secret;
+        });
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        static isPubkey: (value: string) => value is Pubkey;
+        static isSecret: (value: string) => value is Secret;
+        static create: () => Keypair;
+        static toKeyPair: (keypair: Keypair) => Keypair;
+    }
+}
+
+declare namespace Account$1 {
+    namespace Pda {
+        const getMetadata: (address: Pubkey) => PublicKey;
+        const getMasterEdition: (address: Pubkey) => PublicKey;
+        const getTreeAuthority: (address: Pubkey) => PublicKey;
+        const getBgumSigner: () => PublicKey;
+        const getAssetId: (address: Pubkey, leafIndex: number) => Pubkey;
+    }
+}
+
+declare const Account: {
+    Pda: typeof Account$1.Pda;
+    Keypair: typeof Account$2.Keypair;
+    Associated: typeof Account$3.Associated;
+};
+
+declare namespace Node {
+    const getConnection: () => Connection;
+    const changeConnection: (param: {
+        cluster?: string;
+        commitment?: Commitment;
+        customClusterUrl?: string[];
+    }) => void;
+    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
+}
+
+type Condition = 'overMax' | 'underMin';
+interface Limit {
+    threshold: number;
+    condition: Condition;
+}
+interface Details {
+    key: string;
+    message: string;
+    actual: string | number;
+    limit?: Limit;
+}
+
+type bignum = number | BN;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type InputCreators = {
+    address: Pubkey;
+    secret: Secret;
+    share: number;
+};
+
+type AuthorityOptions = {
+    feePayer: Pubkey;
+};
+
 type FileType = string | File;
 
 type StorageType = 'nftStorage' | 'arweave' | string;
@@ -621,12 +417,12 @@ declare namespace Validator {
     export const ROYALTY_MAX = 100;
     export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
     export const ROYALTY_MIN = 0;
-    export const isRoyalty: (royalty: number) => Result$1<string, ValidatorError>;
-    export const isSellerFeeBasisPoints: (royalty: number) => Result$1<string, ValidatorError>;
-    export const isName: (name: string) => Result$1<string, ValidatorError>;
-    export const isSymbol: (symbol: string) => Result$1<string, ValidatorError>;
-    export const isImageUrl: (image: string) => Result$1<string, ValidatorError>;
-    export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result$1<string, ValidatorError>;
+    export const isRoyalty: (royalty: number) => Result<string, ValidatorError>;
+    export const isSellerFeeBasisPoints: (royalty: number) => Result<string, ValidatorError>;
+    export const isName: (name: string) => Result<string, ValidatorError>;
+    export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
+    export const isImageUrl: (image: string) => Result<string, ValidatorError>;
+    export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
     type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
     type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
     type PickMetaplex = Pick<DataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
@@ -746,12 +542,13 @@ type ExplorerOptions = {
 };
 
 declare class Transaction {
+    static MAX_RETRIES: number;
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
     data?: unknown;
     constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
-    submit: () => Promise<Result$1<TransactionSignature, Error>>;
+    submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
 declare class PartialSignTransaction {
@@ -759,20 +556,23 @@ declare class PartialSignTransaction {
     data?: Pubkey;
     canSubmit?: boolean;
     constructor(instructions: string, mint?: Pubkey, canSubmit?: boolean);
-    submit: (feePayer: Secret) => Promise<Result$1<TransactionSignature, Error>>;
+    submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
 }
 
 declare global {
     interface Array<T> {
         submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
     }
+    interface Result<T, Error> {
+        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    }
 }
 
 declare const SolNative: {
-    transferWithMultisig: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, options?: Partial<AuthorityOptions>) => Promise<Result$1<Transaction, Error>>;
-    transfer: (source: Pubkey, dest: Pubkey, signers: Secret[], amount: number, options?: Partial<AuthorityOptions>) => Result$1<Transaction, Error>;
-    gasLessTransfer: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, feePayer: Pubkey) => Promise<Result$1<PartialSignTransaction, Error>>;
-    findByOwner: (owner: Pubkey) => Promise<Result$1<OwnerInfo, Error>>;
+    transferWithMultisig: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, options?: Partial<AuthorityOptions>) => Promise<Result<Transaction, Error>>;
+    transfer: (source: Pubkey, dest: Pubkey, signers: Secret[], amount: number, options?: Partial<AuthorityOptions>) => Result<Transaction, Error>;
+    gasLessTransfer: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, feePayer: Pubkey) => Promise<Result<PartialSignTransaction, Error>>;
+    findByOwner: (owner: Pubkey) => Promise<Result<OwnerInfo, Error>>;
 };
 
 export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, SolNative, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

@@ -45,4 +45,8 @@ declare global {
   interface Array<T> {
     submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
   }
+
+  interface Result<T, Error> {
+    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+  }
 }

@@ -68,22 +68,22 @@ abstract class AbstractResult<T, E extends Error> {
   /// submit (alias Instruction.submit) ////
   /* eslint-disable @typescript-eslint/no-explicit-any */
   // TODO: refactoring
-  async submit(feePayer?: any): Promise<Result<TransactionSignature, Error>> {
-    try {
-      const instruction = this.unwrap() as any;
-      if (
-        instruction.instructions ||
-        instruction.hexInstruction ||
-        instruction[0].instructions ||
-        instruction[0].hexInstruction
-      ) {
-        return await instruction.submit(feePayer);
-      }
-      return Result.err(Error('Only Instruction object'));
-    } catch (err) {
-      return Result.err(err as Error);
-    }
-  }
+  //   async submit(feePayer?: any): Promise<Result<TransactionSignature, Error>> {
+  //     try {
+  //       const instruction = this.unwrap() as any;
+  //       if (
+  //         instruction.instructions ||
+  //         instruction.hexInstruction ||
+  //         instruction[0].instructions ||
+  //         instruction[0].hexInstruction
+  //       ) {
+  //         return await instruction.submit(feePayer);
+  //       }
+  //       return Result.err(Error('Only Instruction object'));
+  //     } catch (err) {
+  //       return Result.err(err as Error);
+  //     }
+  //   }
 }
 
 class InternalOk<T, E extends Error> extends AbstractResult<T, E> {

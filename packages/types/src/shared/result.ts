@@ -19,7 +19,7 @@ declare abstract class AbstractResult<T, E extends Error> {
     err: (error: E) => Result<X, U>,
   ): Result<X, U>;
   match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-  submit(): Promise<Result<TransactionSignature, Error>>;
+  // submit(): Promise<Result<TransactionSignature, Error>>;
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
   readonly value: T;

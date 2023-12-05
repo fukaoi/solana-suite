@@ -1,4 +1,4 @@
-import { TransactionSignature, PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
+import { PublicKey, Keypair, TransactionInstruction, TransactionSignature } from '@solana/web3.js';
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -11,7 +11,6 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: any): Promise<Result<TransactionSignature, Error>>;
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
     readonly value: T;
@@ -242,6 +241,7 @@ type ExplorerOptions = {
 };
 
 declare class Transaction {
+    static MAX_RETRIES: number;
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;

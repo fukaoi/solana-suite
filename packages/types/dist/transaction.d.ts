@@ -1,6 +1,6 @@
 import { TransactionSignature, TransactionInstruction, Keypair } from '@solana/web3.js';
 import { Secret, Pubkey } from './account.js';
-import { R as Result } from './result-b9d23549.js';
+import { R as Result } from './result-32cd4c7b.js';
 
 type Transaction = {
     instructions: TransactionInstruction[];
@@ -23,6 +23,9 @@ type PartialSignTransaction = {
 };
 declare global {
     interface Array<T> {
+        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    }
+    interface Result<T, Error> {
         submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
     }
 }
