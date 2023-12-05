@@ -52,7 +52,7 @@ export namespace TransactionBuilder {
    * @see {@link types/global.ts}
    * @returns Promise<Result<string, Error>>
    */
-
+// TODO: move to common
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   /* @ts-ignore */
   Array.prototype.submit = async function (feePayer: Secret) {
