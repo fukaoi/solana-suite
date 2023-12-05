@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "build-configs/tsconfig/base.json",
 
-  "display": "transaction",
+  "display": "transaction-builder",
   "compilerOptions": {
     "paths": {
       "~/types/*": [

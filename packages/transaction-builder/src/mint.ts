@@ -11,7 +11,7 @@ import { Constants, debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { MAX_RETRIES, StructTransaction } from './common';
 
-export namespace TransactionGenerator {
+export namespace TransactionBuilder {
   export class Mint<T> implements StructTransaction {
     instructions: TransactionInstruction[];
     signers: Keypair[];

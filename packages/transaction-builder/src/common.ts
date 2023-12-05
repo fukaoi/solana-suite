@@ -26,7 +26,7 @@ export interface StructTransaction {
   submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
-export namespace TransactionGenerator {
+export namespace TransactionBuilder {
   export class Common implements StructTransaction {
     static MAX_TRANSACTION_SIZE = 1232;
 

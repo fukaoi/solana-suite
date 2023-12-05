@@ -1,7 +1,7 @@
 import { TransactionInstruction } from '@solana/web3.js';
 import { debugLog, sleep } from '~/shared';
 import { Node } from '~/node';
-import { TransactionGenerator, StructTransaction } from '~/transaction';
+import { StructTransaction, TransactionBuilder } from '~/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';
 
 import {
@@ -48,7 +48,7 @@ export namespace Account {
         return res.tokenAccount;
       }
 
-      return new TransactionGenerator.Common(
+      return new TransactionBuilder.Common(
         [res.inst],
         [],
         feePayer.toKeypair(),
@@ -77,7 +77,7 @@ export namespace Account {
           if (inst && typeof inst === 'string') {
             debugLog('# associatedTokenAccount: ', inst);
             return inst;
-          } else if (inst instanceof TransactionGenerator.Common) {
+          } else if (inst instanceof TransactionBuilder.Common) {
             (await inst.submit()).map(
               async (ok: string) => {
                 await Node.confirmedSig(ok);

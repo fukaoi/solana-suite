@@ -7,9 +7,9 @@ import {
 
 import { Node } from '~/node';
 import { Try } from '~/shared';
-import { MAX_RETRIES, TransactionGenerator as Common } from './common';
+import { MAX_RETRIES, TransactionBuilder as Common } from './common';
 
-export namespace TransactionGenerator {
+export namespace TransactionBuilder {
   export class BatchTransaction {
     submit = async (
       arr: Common.Common[],

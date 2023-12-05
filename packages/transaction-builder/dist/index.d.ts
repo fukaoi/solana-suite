@@ -1,4 +1,5 @@
-import { TransactionSignature, PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
+import * as _solana_web3_js from '@solana/web3.js';
+import { TransactionSignature, PublicKey, Keypair, TransactionInstruction, Transaction } from '@solana/web3.js';
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -241,19 +242,6 @@ type ExplorerOptions = {
     replacePath: string;
 };
 
-declare class Transaction {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    data?: unknown;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
-    submit: () => Promise<Result<TransactionSignature, Error>>;
-}
-
-declare class BatchTransaction {
-    submit: (arr: Transaction[]) => Promise<TransactionSignature>;
-}
-
 interface StructPartialSignTransaction {
     hexInstruction: string;
     submit: (feePayer: Secret) => Promise<Result<string, Error>>;
@@ -265,22 +253,57 @@ interface StructTransaction {
     data?: unknown;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
-
-declare class MintTransaction<T> implements StructTransaction {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    data?: T;
-    constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
-    submit: () => Promise<Result<TransactionSignature, Error>>;
+declare namespace TransactionBuilder$4 {
+    class Common implements StructTransaction {
+        static MAX_TRANSACTION_SIZE: number;
+        instructions: TransactionInstruction[];
+        signers: Keypair[];
+        feePayer?: Keypair;
+        data?: unknown;
+        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+        submit: () => Promise<Result<TransactionSignature, Error>>;
+    }
+    /**
+     * @param tx a solana transaction
+     * @param feePayer the publicKey of the signer
+     * @returns size in bytes of the transaction
+     */
+    const getTxSize: (tx: Transaction, feePayer: PublicKey) => number;
 }
 
-declare class PartialSignTransaction implements StructPartialSignTransaction {
-    hexInstruction: string;
-    data?: Pubkey;
-    canSubmit?: boolean;
-    constructor(instructions: string, mint?: Pubkey, canSubmit?: boolean);
-    submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
+declare namespace TransactionBuilder$3 {
+    class BatchTransaction {
+        submit: (arr: TransactionBuilder$4.Common[]) => Promise<TransactionSignature>;
+    }
 }
 
-export { BatchTransaction, MintTransaction, PartialSignTransaction, Transaction };
+declare namespace TransactionBuilder$2 {
+    class Mint<T> implements StructTransaction {
+        instructions: TransactionInstruction[];
+        signers: Keypair[];
+        feePayer?: Keypair;
+        data?: T;
+        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
+        submit: () => Promise<Result<TransactionSignature, Error>>;
+    }
+}
+
+declare namespace TransactionBuilder$1 {
+    class PartialSignTransaction implements StructPartialSignTransaction {
+        hexInstruction: string;
+        data?: Pubkey;
+        canSubmit?: boolean;
+        constructor(instructions: string, mint?: Pubkey, canSubmit?: boolean);
+        submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
+    }
+}
+
+declare const TransactionBuilder: {
+    PartialSignTransaction: typeof TransactionBuilder$1.PartialSignTransaction;
+    Common: typeof TransactionBuilder$4.Common;
+    getTxSize: (tx: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => number;
+    Mint: typeof TransactionBuilder$2.Mint;
+    BatchTransaction: typeof TransactionBuilder$3.BatchTransaction;
+};
+
+export { StructTransaction, TransactionBuilder };

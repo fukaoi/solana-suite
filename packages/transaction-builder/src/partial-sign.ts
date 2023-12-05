@@ -9,7 +9,7 @@ import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
 import { MAX_RETRIES, StructPartialSignTransaction } from './common';
 
-export namespace TransactionGenerator {
+export namespace TransactionBuilder {
   export class PartialSignTransaction implements StructPartialSignTransaction {
     hexInstruction: string;
     data?: Pubkey;
