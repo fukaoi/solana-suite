@@ -7,78 +7,80 @@ import {
 
 import { Node } from '~/node';
 import { Try } from '~/shared';
-import { TransactionGenerator, MAX_RETRIES } from './common';
+import { MAX_RETRIES, TransactionGenerator as Common } from './common';
 
-export class BatchTransaction {
-  submit = async (
-    arr: TransactionGenerator.Transaction[],
-  ): Promise<TransactionSignature> => {
-    let i = 0;
-    for (const a of arr) {
-      if (!a.instructions && !a.signers) {
-        throw Error(
-          `only Instruction object that can use batchSubmit().
+export namespace TransactionGenerator {
+  export class BatchTransaction {
+    submit = async (
+      arr: Common.Common[],
+    ): Promise<TransactionSignature> => {
+      let i = 0;
+      for (const a of arr) {
+        if (!a.instructions && !a.signers) {
+          throw Error(
+            `only Instruction object that can use batchSubmit().
             Index: ${i}, Set value: ${JSON.stringify(a)}`,
-        );
+          );
+        }
+        i++;
       }
-      i++;
-    }
 
-    const instructions = arr.flatMap((a) => a.instructions);
-    const signers = arr.flatMap((a) => a.signers);
-    const feePayers = arr.filter((a) => a.feePayer !== undefined);
-    let feePayer = signers[0];
-    if (feePayers.length > 0 && feePayers[0].feePayer) {
-      feePayer = feePayers[0].feePayer;
-    }
+      const instructions = arr.flatMap((a) => a.instructions);
+      const signers = arr.flatMap((a) => a.signers);
+      const feePayers = arr.filter((a) => a.feePayer !== undefined);
+      let feePayer = signers[0];
+      if (feePayers.length > 0 && feePayers[0].feePayer) {
+        feePayer = feePayers[0].feePayer;
+      }
 
-    const transaction = new Tx();
-    let finalSigners = signers;
-    if (feePayer) {
-      transaction.feePayer = feePayer.publicKey;
-      finalSigners = [feePayer, ...signers];
-    }
-    instructions.map((inst) => transaction.add(inst));
+      const transaction = new Tx();
+      let finalSigners = signers;
+      if (feePayer) {
+        transaction.feePayer = feePayer.publicKey;
+        finalSigners = [feePayer, ...signers];
+      }
+      instructions.map((inst) => transaction.add(inst));
 
-    const options: ConfirmOptions = {
-      maxRetries: MAX_RETRIES,
+      const options: ConfirmOptions = {
+        maxRetries: MAX_RETRIES,
+      };
+
+      return await sendAndConfirmTransaction(
+        Node.getConnection(),
+        transaction,
+        finalSigners,
+        options,
+      );
     };
+  }
 
-    return await sendAndConfirmTransaction(
-      Node.getConnection(),
-      transaction,
-      finalSigners,
-      options,
-    );
+  /**
+   * senTransaction() TransactionInstruction
+   *
+   * @see {@link types/global.ts}
+   * @returns Promise<Result<string, Error>>
+   */
+
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  /* @ts-ignore */
+  Array.prototype.submit = async function () {
+    const instructions: Common.Common[] = [];
+    // dont use forEach
+    // It is not possible to stop the process by RETURN in the middle of the process.
+    return Try(async () => {
+      let i = 0;
+      for (const obj of this) {
+        if (obj.isErr) {
+          const errorMess: string = obj.error.message as string;
+          throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
+        } else if (obj.isOk) {
+          instructions.push(obj.value as Common.Common);
+        } else {
+          instructions.push(obj as Common.Common);
+        }
+        i++;
+      }
+      return new BatchTransaction().submit(instructions);
+    });
   };
 }
-
-/**
- * senTransaction() TransactionInstruction
- *
- * @see {@link types/global.ts}
- * @returns Promise<Result<string, Error>>
- */
-
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* @ts-ignore */
-Array.prototype.submit = async function () {
-  const instructions: TransactionGenerator.Transaction[] = [];
-  // dont use forEach
-  // It is not possible to stop the process by RETURN in the middle of the process.
-  return Try(async () => {
-    let i = 0;
-    for (const obj of this) {
-      if (obj.isErr) {
-        const errorMess: string = obj.error.message as string;
-        throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
-      } else if (obj.isOk) {
-        instructions.push(obj.value as TransactionGenerator.Transaction);
-      } else {
-        instructions.push(obj as TransactionGenerator.Transaction);
-      }
-      i++;
-    }
-    return new BatchTransaction().submit(instructions);
-  });
-};

@@ -27,7 +27,7 @@ export interface StructTransaction {
 }
 
 export namespace TransactionGenerator {
-  export class Transaction implements StructTransaction {
+  export class Common implements StructTransaction {
     static MAX_TRANSACTION_SIZE = 1232;
 
     instructions: TransactionInstruction[];
@@ -49,7 +49,7 @@ export namespace TransactionGenerator {
 
     submit = async (): Promise<Result<TransactionSignature, Error>> => {
       return Try(async () => {
-        if (!(this instanceof Transaction)) {
+        if (!(this instanceof Common)) {
           throw Error('only Instruction object that can use this');
         }
         const transaction = new Tx();

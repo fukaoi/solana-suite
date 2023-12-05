@@ -9,59 +9,61 @@ import {
 
 import { Constants, debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
-import { StructTransaction, MAX_RETRIES } from './common';
+import { MAX_RETRIES, StructTransaction } from './common';
 
-export class MintTransaction<T> implements StructTransaction {
-  instructions: TransactionInstruction[];
-  signers: Keypair[];
-  feePayer?: Keypair;
-  data?: T;
+export namespace TransactionGenerator {
+  export class Mint<T> implements StructTransaction {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: T;
 
-  constructor(
-    instructions: TransactionInstruction[],
-    signers: Keypair[],
-    feePayer?: Keypair,
-    data?: T,
-  ) {
-    this.instructions = instructions;
-    this.signers = signers;
-    this.feePayer = feePayer;
-    this.data = data;
+    constructor(
+      instructions: TransactionInstruction[],
+      signers: Keypair[],
+      feePayer?: Keypair,
+      data?: T,
+    ) {
+      this.instructions = instructions;
+      this.signers = signers;
+      this.feePayer = feePayer;
+      this.data = data;
+    }
+
+    submit = async (): Promise<Result<TransactionSignature, Error>> => {
+      return Try(async () => {
+        if (!(this instanceof Mint)) {
+          throw Error('only MintInstruction object that can use this');
+        }
+        const transaction = new Tx();
+        const blockhashObj = await Node.getConnection().getLatestBlockhash();
+        transaction.lastValidBlockHeight = blockhashObj.lastValidBlockHeight;
+        transaction.recentBlockhash = blockhashObj.blockhash;
+        let finalSigners = this.signers;
+
+        if (this.feePayer) {
+          transaction.feePayer = this.feePayer.publicKey;
+          finalSigners = [this.feePayer, ...this.signers];
+        }
+
+        this.instructions.forEach((inst) => transaction.add(inst));
+
+        const options: ConfirmOptions = {
+          maxRetries: MAX_RETRIES,
+        };
+
+        if (Node.getConnection().rpcEndpoint === Constants.EndPointUrl.prd) {
+          debugLog('# Change metaplex cluster on mainnet-beta');
+          Node.changeConnection({ cluster: Constants.Cluster.prdMetaplex });
+        }
+
+        return await sendAndConfirmTransaction(
+          Node.getConnection(),
+          transaction,
+          finalSigners,
+          options,
+        );
+      });
+    };
   }
-
-  submit = async (): Promise<Result<TransactionSignature, Error>> => {
-    return Try(async () => {
-      if (!(this instanceof MintTransaction)) {
-        throw Error('only MintInstruction object that can use this');
-      }
-      const transaction = new Tx();
-      const blockhashObj = await Node.getConnection().getLatestBlockhash();
-      transaction.lastValidBlockHeight = blockhashObj.lastValidBlockHeight;
-      transaction.recentBlockhash = blockhashObj.blockhash;
-      let finalSigners = this.signers;
-
-      if (this.feePayer) {
-        transaction.feePayer = this.feePayer.publicKey;
-        finalSigners = [this.feePayer, ...this.signers];
-      }
-
-      this.instructions.forEach((inst) => transaction.add(inst));
-
-      const options: ConfirmOptions = {
-        maxRetries: MAX_RETRIES,
-      };
-
-      if (Node.getConnection().rpcEndpoint === Constants.EndPointUrl.prd) {
-        debugLog('# Change metaplex cluster on mainnet-beta');
-        Node.changeConnection({ cluster: Constants.Cluster.prdMetaplex });
-      }
-
-      return await sendAndConfirmTransaction(
-        Node.getConnection(),
-        transaction,
-        finalSigners,
-        options,
-      );
-    });
-  };
 }
