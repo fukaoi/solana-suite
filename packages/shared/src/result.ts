@@ -11,7 +11,7 @@ abstract class AbstractResult<T, E extends Error> {
   unwrap<U>(ok: (value: T) => U): U;
   unwrap<U, V>(ok: (value: T) => U, err: (error: E) => V): U | V;
   // unified-signatures. into line 10
-  // unwrap<U>(ok: (value: T) => U, err: (error: E) => U): U;
+  unwrap<U>(ok: (value: T) => U, err: (error: E) => U): U;
   unwrap(ok?: (value: T) => unknown, err?: (error: E) => unknown): unknown {
     const r = this._chain(
       (value) => Result.ok(ok ? ok(value) : value),
@@ -38,9 +38,7 @@ abstract class AbstractResult<T, E extends Error> {
 
   //// chain ////
   chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
-  chain<X>(ok: (value: T) => Result<X, E>): // unified-signatures. into line 37
-  // err: (error: E) => Result<X, E>
-  Result<X, E>;
+  chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
   chain<X, U extends Error>(
     ok: (value: T) => Result<X, U>,
     err: (error: E) => Result<X, U>,
@@ -67,23 +65,26 @@ abstract class AbstractResult<T, E extends Error> {
 
   /// submit (alias Instruction.submit) ////
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  // TODO: refactoring
-  //   async submit(feePayer?: any): Promise<Result<TransactionSignature, Error>> {
-  //     try {
-  //       const instruction = this.unwrap() as any;
-  //       if (
-  //         instruction.instructions ||
-  //         instruction.hexInstruction ||
-  //         instruction[0].instructions ||
-  //         instruction[0].hexInstruction
-  //       ) {
-  //         return await instruction.submit(feePayer);
-  //       }
-  //       return Result.err(Error('Only Instruction object'));
-  //     } catch (err) {
-  //       return Result.err(err as Error);
-  //     }
-  //   }
+  async submit(feePayer?: any): Promise<Result<TransactionSignature, Error>> {
+    try {
+      const instruction = this.unwrap() as any;
+      if (instruction.instructions || instruction.hexInstruction) {
+        return await instruction.submit(feePayer);
+      } else if (Array.isArray(instruction)) {
+        return await instruction.submit(feePayer);
+      }
+      return Result.err(Error('Only Instruction object'));
+    } catch (err) {
+      return Result.err(err as Error);
+    }
+  }
+}
+
+declare global {
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  interface Array<T> {
+    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+  }
 }
 
 class InternalOk<T, E extends Error> extends AbstractResult<T, E> {

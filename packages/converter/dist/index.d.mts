@@ -1,4 +1,4 @@
-import { PublicKey, ParsedTransactionWithMeta, Keypair } from '@solana/web3.js';
+import { PublicKey, ParsedTransactionWithMeta, TransactionSignature, Keypair } from '@solana/web3.js';
 import { Metadata as Metadata$1, DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import BN from 'bn.js';
 import { MetadataArgs } from 'mpl-bubblegum-instruction';
@@ -8,7 +8,7 @@ declare const secretNominality: unique symbol;
 type Pubkey$1 = (string & {
     [pubKeyNominality]: never;
 }) | string;
-type Secret = (string & {
+type Secret$1 = (string & {
     [secretNominality]: never;
 }) | string;
 
@@ -26,7 +26,7 @@ type Uses = {
 };
 type InputCreators = {
     address: Pubkey$1;
-    secret: Secret;
+    secret: Secret$1;
     share: number;
 };
 
@@ -305,6 +305,12 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
+    submit(feePayer?: any): Promise<Result<TransactionSignature, Error>>;
+}
+declare global {
+    interface Array<T> {
+        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    }
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
     readonly value: T;
@@ -527,7 +533,7 @@ type ExplorerOptions = {
 
 declare namespace Converter$6 {
     namespace Properties {
-        const intoInfra: (input: Properties | undefined, callbackFunc: (filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>, storageType: StorageType, feePayer?: Secret) => Promise<Properties>;
+        const intoInfra: (input: Properties | undefined, callbackFunc: (filePath: FileType, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>, storageType: StorageType, feePayer?: Secret$1) => Promise<Properties>;
     }
 }
 

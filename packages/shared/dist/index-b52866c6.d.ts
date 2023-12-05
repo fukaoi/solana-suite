@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
@@ -14,6 +14,12 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
+    submit(feePayer?: any): Promise<Result<TransactionSignature, Error>>;
+}
+declare global {
+    interface Array<T> {
+        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    }
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
     readonly value: T;
@@ -210,12 +216,12 @@ declare const secretNominality: unique symbol;
 type Pubkey = (string & {
     [pubKeyNominality]: never;
 }) | string;
-type Secret = (string & {
+type Secret$1 = (string & {
     [secretNominality]: never;
 }) | string;
 type KeypairAccount = {
     pubkey: Pubkey;
-    secret: Secret;
+    secret: Secret$1;
 };
 type OwnerInfo = {
     sol: number;
@@ -243,7 +249,7 @@ declare namespace Account$3 {
          * @param {Secret} feePayer
          * @returns Promise<string>
          */
-        const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret) => Promise<string>;
+        const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret$1) => Promise<string>;
         /**
          * [Main logic]Get Associated token Account.
          * if not created, create new token accouint
@@ -262,16 +268,16 @@ declare namespace Account$3 {
 
 declare namespace Account$2 {
     class Keypair {
-        secret: Secret;
+        secret: Secret$1;
         pubkey: Pubkey;
         constructor(params: {
             pubkey?: Pubkey;
-            secret: Secret;
+            secret: Secret$1;
         });
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
         static isPubkey: (value: string) => value is Pubkey;
-        static isSecret: (value: string) => value is Secret;
+        static isSecret: (value: string) => value is Secret$1;
         static create: () => Keypair;
         static toKeyPair: (keypair: Keypair) => Keypair;
     }
@@ -328,7 +334,7 @@ type Uses = {
 };
 type InputCreators = {
     address: Pubkey;
-    secret: Secret;
+    secret: Secret$1;
     share: number;
 };
 
@@ -537,4 +543,4 @@ type ExplorerOptions = {
     replacePath: string;
 };
 
-export { Account as A, FilterType as F, KeypairAccount as K, ModuleName as M, Node as N, OwnerInfo as O, Pubkey as P, Result as R, Secret as S, Transfer as T, Validator as V, WithMemo as W, ValidatorError as a, FilterOptions as b, PostTokenAccount as c, MintTo as d, MintToChecked as e, TransferChecked as f, Memo as g };
+export { Account as A, FilterType as F, KeypairAccount as K, ModuleName as M, Node as N, OwnerInfo as O, Pubkey as P, Result as R, Secret$1 as S, Transfer as T, Validator as V, WithMemo as W, ValidatorError as a, FilterOptions as b, PostTokenAccount as c, MintTo as d, MintToChecked as e, TransferChecked as f, Memo as g };

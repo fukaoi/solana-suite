@@ -6,7 +6,7 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "bin": {
-    "solana-suite-config": "./dist/config-script.js"
+    "solana-suite-config": "./dist/config-script.mjs"
   },
   "keywords": [
     "api",

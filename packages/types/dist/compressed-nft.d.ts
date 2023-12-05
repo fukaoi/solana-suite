@@ -1,5 +1,5 @@
 import { Pubkey } from './account.js';
-import { c as AuthorityOptions } from './shared-ecb29866.js';
+import { AuthorityOptions } from './shared.js';
 import { Offchain } from './storage.js';
 import './find.js';
 import './history.js';

@@ -1,6 +1,6 @@
 import * as mpl_bubblegum_instruction from 'mpl-bubblegum-instruction';
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionInstruction, PublicKey, Keypair, Connection, Commitment, TransactionSignature } from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
@@ -187,6 +187,12 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
+    submit(feePayer?: any): Promise<Result<TransactionSignature, Error>>;
+}
+declare global {
+    interface Array<T> {
+        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    }
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
     readonly value: T;
@@ -653,15 +659,6 @@ declare namespace CompressedNft$1 {
      * @return Promise<Result<MintTransaction, Error>>
      */
     const initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result<MintTransaction<Pubkey$1>, Error>>;
-}
-
-declare global {
-    interface Array<T> {
-        submit(feePayer?: Secret$1): Promise<Result<TransactionSignature, Error>>;
-    }
-    interface Result<T, Error> {
-        submit(feePayer?: Secret$1): Promise<Result<TransactionSignature, Error>>;
-    }
 }
 
 declare const CompressedNft: {

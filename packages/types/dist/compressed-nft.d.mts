@@ -1,5 +1,5 @@
 import { Pubkey } from './account.mjs';
-import { c as AuthorityOptions } from './shared-e7a4e323.js';
+import { AuthorityOptions } from './shared.mjs';
 import { Offchain } from './storage.mjs';
 import './find.mjs';
 import './history.mjs';

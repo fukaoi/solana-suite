@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionInstruction, PublicKey, Keypair, Connection, Commitment, TransactionSignature } from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
@@ -14,6 +14,12 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
+    submit(feePayer?: any): Promise<Result<TransactionSignature, Error>>;
+}
+declare global {
+    interface Array<T> {
+        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    }
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
     readonly value: T;
@@ -210,12 +216,12 @@ declare const secretNominality: unique symbol;
 type Pubkey = (string & {
     [pubKeyNominality]: never;
 }) | string;
-type Secret = (string & {
+type Secret$1 = (string & {
     [secretNominality]: never;
 }) | string;
 type KeypairAccount = {
     pubkey: Pubkey;
-    secret: Secret;
+    secret: Secret$1;
 };
 type OwnerInfo = {
     sol: number;
@@ -243,7 +249,7 @@ declare namespace Account$3 {
          * @param {Secret} feePayer
          * @returns Promise<string>
          */
-        const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret) => Promise<string>;
+        const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret$1) => Promise<string>;
         /**
          * [Main logic]Get Associated token Account.
          * if not created, create new token accouint
@@ -262,16 +268,16 @@ declare namespace Account$3 {
 
 declare namespace Account$2 {
     class Keypair {
-        secret: Secret;
+        secret: Secret$1;
         pubkey: Pubkey;
         constructor(params: {
             pubkey?: Pubkey;
-            secret: Secret;
+            secret: Secret$1;
         });
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
         static isPubkey: (value: string) => value is Pubkey;
-        static isSecret: (value: string) => value is Secret;
+        static isSecret: (value: string) => value is Secret$1;
         static create: () => Keypair;
         static toKeyPair: (keypair: Keypair) => Keypair;
     }
@@ -328,7 +334,7 @@ type Uses = {
 };
 type InputCreators = {
     address: Pubkey;
-    secret: Secret;
+    secret: Secret$1;
     share: number;
 };
 
@@ -588,20 +594,11 @@ declare class Transaction {
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
-declare global {
-    interface Array<T> {
-        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
-    }
-    interface Result<T, Error> {
-        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
-    }
-}
-
 declare const Memo: {
     findByOwner: (target: Pubkey, onOk: OnOk<History>, onErr: OnErr, options?: Partial<FindOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
-    create: (data: string, owner: Pubkey, signer: Secret, options?: Partial<AuthorityOptions>) => Result<Transaction, Error>;
+    create: (data: string, owner: Pubkey, signer: Secret$1, options?: Partial<AuthorityOptions>) => Result<Transaction, Error>;
 };
 
-export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };
+export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret$1 as Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

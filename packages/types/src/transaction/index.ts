@@ -4,7 +4,7 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 import { Pubkey, Secret } from '../account';
-import { Result } from '../shared';
+import { Result } from '~/shared';
 
 export type Transaction = {
   instructions: TransactionInstruction[];
@@ -38,15 +38,3 @@ export type PartialSignTransaction = {
   submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
 };
 
-declare global {
-  // TODO: refactoring
-  // Batch transaction
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  interface Array<T> {
-    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
-  }
-
-  interface Result<T, Error> {
-    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
-  }
-}

@@ -1,7 +1,7 @@
 import { a as Option, C as Creators, U as Uses } from './mint-8aee5f82.js';
 export { d as InputCollection, I as InputCreators, e as InputNftMetadata, O as Options, c as UseMethod, b as bignum } from './mint-8aee5f82.js';
 import { Pubkey } from './account.js';
-import { c as AuthorityOptions } from './shared-ecb29866.js';
+import { AuthorityOptions } from './shared.js';
 import { Offchain } from './storage.js';
 import 'bn.js';
 import './find.js';
