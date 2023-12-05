@@ -254,7 +254,19 @@ declare class BatchTransaction {
     submit: (arr: Transaction[]) => Promise<TransactionSignature>;
 }
 
-declare class MintTransaction<T> {
+interface StructPartialSignTransaction {
+    hexInstruction: string;
+    submit: (feePayer: Secret) => Promise<Result<string, Error>>;
+}
+interface StructTransaction {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: unknown;
+    submit: () => Promise<Result<TransactionSignature, Error>>;
+}
+
+declare class MintTransaction<T> implements StructTransaction {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
@@ -263,7 +275,7 @@ declare class MintTransaction<T> {
     submit: () => Promise<Result<TransactionSignature, Error>>;
 }
 
-declare class PartialSignTransaction {
+declare class PartialSignTransaction implements StructPartialSignTransaction {
     hexInstruction: string;
     data?: Pubkey;
     canSubmit?: boolean;

@@ -9,9 +9,9 @@ import {
 
 import { Constants, debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
-import { MAX_RETRIES } from './define';
+import { StructTransaction, MAX_RETRIES } from './common';
 
-export class MintTransaction<T> {
+export class MintTransaction<T> implements StructTransaction {
   instructions: TransactionInstruction[];
   signers: Keypair[];
   feePayer?: Keypair;

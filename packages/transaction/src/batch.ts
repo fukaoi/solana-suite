@@ -7,11 +7,12 @@ import {
 
 import { Node } from '~/node';
 import { Try } from '~/shared';
-import { MAX_RETRIES } from './define';
-import { Transaction } from './default';
+import { TransactionGenerator, MAX_RETRIES } from './common';
 
 export class BatchTransaction {
-  submit = async (arr: Transaction[]): Promise<TransactionSignature> => {
+  submit = async (
+    arr: TransactionGenerator.Transaction[],
+  ): Promise<TransactionSignature> => {
     let i = 0;
     for (const a of arr) {
       if (!a.instructions && !a.signers) {
@@ -62,7 +63,7 @@ export class BatchTransaction {
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* @ts-ignore */
 Array.prototype.submit = async function () {
-  const instructions: Transaction[] = [];
+  const instructions: TransactionGenerator.Transaction[] = [];
   // dont use forEach
   // It is not possible to stop the process by RETURN in the middle of the process.
   return Try(async () => {
@@ -72,9 +73,9 @@ Array.prototype.submit = async function () {
         const errorMess: string = obj.error.message as string;
         throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
       } else if (obj.isOk) {
-        instructions.push(obj.value as Transaction);
+        instructions.push(obj.value as TransactionGenerator.Transaction);
       } else {
-        instructions.push(obj as Transaction);
+        instructions.push(obj as TransactionGenerator.Transaction);
       }
       i++;
     }

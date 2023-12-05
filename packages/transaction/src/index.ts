@@ -1,5 +1,5 @@
 export * from './batch';
-export * from './default';
+export * from './common';
 export * from './mint';
 export * from './partial-sign';
 

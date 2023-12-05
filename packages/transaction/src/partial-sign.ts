@@ -7,9 +7,9 @@ import {
 import { Result, sleep, Try } from '~/shared';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
-import { MAX_RETRIES } from './define';
+import { MAX_RETRIES, StructPartialSignTransaction } from './common';
 
-export class PartialSignTransaction {
+export class PartialSignTransaction implements StructPartialSignTransaction {
   hexInstruction: string;
   data?: Pubkey;
   canSubmit?: boolean;
