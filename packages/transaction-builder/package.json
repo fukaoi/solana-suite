@@ -10,8 +10,7 @@
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
-    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
-    "test": "ava --config node_modules/build-configs/ava/base.cjs"
+    "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write"
   },
   "dependencies": {
     "@solana/web3.js": "^1.78.5",
@@ -19,7 +18,6 @@
     "@solana/spl-token": "^0.3.8"
   },
   "devDependencies": {
-    "build-configs/ava": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
