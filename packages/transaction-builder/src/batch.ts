@@ -1,7 +1,7 @@
 import {
   ConfirmOptions,
   sendAndConfirmTransaction,
-  Transaction as Tx,
+  Transaction,
   TransactionSignature,
 } from '@solana/web3.js';
 
@@ -36,7 +36,7 @@ export namespace TransactionBuilder {
           feePayer = feePayers[0].feePayer;
         }
 
-        const transaction = new Tx();
+        const transaction = new Transaction();
         let finalSigners = signers;
         if (feePayer) {
           transaction.feePayer = feePayer.publicKey;

@@ -2,7 +2,7 @@ import {
   ConfirmOptions,
   Keypair,
   sendAndConfirmTransaction,
-  Transaction as Tx,
+  Transaction,
   TransactionInstruction,
   TransactionSignature,
 } from '@solana/web3.js';
@@ -37,7 +37,7 @@ export namespace TransactionBuilder {
         if (!(this instanceof Mint)) {
           throw Error('only MintInstruction object that can use this');
         }
-        const transaction = new Tx();
+        const transaction = new Transaction();
         const blockhashObj = await Node.getConnection().getLatestBlockhash();
         transaction.lastValidBlockHeight = blockhashObj.lastValidBlockHeight;
         transaction.recentBlockhash = blockhashObj.blockhash;

@@ -1,7 +1,7 @@
-import { PublicKey, Transaction as Tx } from '@solana/web3.js';
+import { PublicKey, Transaction } from '@solana/web3.js';
 
 // @internal
-export namespace Transaction {
+export namespace TransactionBuilder {
   const LOW_VALUE = 127; // 0x7f
   const HIGH_VALUE = 16383; // 0x3fff
   // const MAX_TRANSACTION_SIZE = 1232;
@@ -29,7 +29,7 @@ export namespace Transaction {
    * @param feePayer the publicKey of the signer
    * @returns size in bytes of the transaction
    */
-  export const calculateTxSize = (tx: Tx, feePayer: PublicKey): number => {
+  export const calculateTxSize = (tx: Transaction, feePayer: PublicKey): number => {
     const feePayerPk = [feePayer.toBase58()];
 
     const signers = new Set<string>(feePayerPk);

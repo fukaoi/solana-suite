@@ -34,6 +34,7 @@ import { MintStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
+
   export const createVerifyCreator = async (
     creators: Creator[],
     assetId: PublicKey,
@@ -241,20 +242,18 @@ export namespace CompressedNft {
         ),
       );
 
-      // TODO: Work
-      // creator --- Error transaction too large
-      // if (input.creators) {
-      //   const assetId = await new Tree.Tree(treeOwner).getAssetId();
-      //   instructions.push(
-      //     await createVerifyCreatorsInstruction(
-      //       metadataArgs.creators,
-      //       assetId.toPublicKey(),
-      //       treeOwner.toPublicKey(),
-      //       metadataArgs,
-      //       payer.toKeypair().publicKey,
-      //     ),
-      //   );
-      // }
+      if (input.creators) {
+        const assetId = await new Tree.Tree(treeOwner).getAssetId();
+        instructions.push(
+          await createVerifyCreator(
+            metadataArgs.creators,
+            assetId.toPublicKey(),
+            treeOwner.toPublicKey(),
+            metadataArgs,
+            payer.toKeypair().publicKey,
+          ),
+        );
+      }
 
       return new TransactionBuilder.Mint(
         instructions,

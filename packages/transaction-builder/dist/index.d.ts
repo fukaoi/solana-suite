@@ -1,5 +1,4 @@
-import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, PublicKey, Keypair, TransactionInstruction, Transaction } from '@solana/web3.js';
+import { TransactionSignature, PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -279,12 +278,6 @@ declare namespace TransactionBuilder$4 {
         constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
         submit: () => Promise<Result<TransactionSignature, Error>>;
     }
-    /**
-     * @param tx a solana transaction
-     * @param feePayer the publicKey of the signer
-     * @returns size in bytes of the transaction
-     */
-    const getTxSize: (tx: Transaction, feePayer: PublicKey) => number;
 }
 
 declare namespace TransactionBuilder$3 {
@@ -317,7 +310,6 @@ declare namespace TransactionBuilder$1 {
 declare const TransactionBuilder: {
     PartialSign: typeof TransactionBuilder$1.PartialSign;
     Common: typeof TransactionBuilder$4.Common;
-    getTxSize: (tx: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => number;
     Mint: typeof TransactionBuilder$3.Mint;
     Batch: typeof TransactionBuilder$2.Batch;
 };

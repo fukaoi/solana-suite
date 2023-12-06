@@ -796,6 +796,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      test-tools:
+        specifier: workspace:*
+        version: link:../test-tools
 
   packages/transaction-filter:
     dependencies:

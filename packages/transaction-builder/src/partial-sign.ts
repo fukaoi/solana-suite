@@ -1,6 +1,6 @@
 import {
   ConfirmOptions,
-  Transaction as Tx,
+  Transaction,
   TransactionSignature,
 } from '@solana/web3.js';
 
@@ -31,7 +31,7 @@ export namespace TransactionBuilder {
         }
 
         const decode = Buffer.from(this.hexInstruction, 'hex');
-        const transactionFromJson = Tx.from(decode);
+        const transactionFromJson = Transaction.from(decode);
         transactionFromJson.partialSign(feePayer.toKeypair());
 
         const options: ConfirmOptions = {
