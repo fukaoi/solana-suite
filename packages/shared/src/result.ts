@@ -110,6 +110,7 @@ declare global {
 
 Array.prototype.submit = async function (feePayer?: Secret) {
   if (feePayer) {
+    let i = 1;
     for await (const obj of this) {
       if (obj.isErr) {
         return obj;
@@ -122,8 +123,13 @@ Array.prototype.submit = async function (feePayer?: Secret) {
         await Node.confirmedSig(sig.value);
       } else {
         debugLog('# Result batch other than canSubmit');
-        return obj.submit(feePayer);
+        if (this.length == i) {
+          // last object
+          return obj.submit(feePayer);
+        }
+        obj.submit(feePayer);
       }
+      i++;
     }
   } else {
     const instructions: CommonStructure | MintStructure[] = [];
