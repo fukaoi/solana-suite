@@ -6,10 +6,7 @@ import { TransactionBuilder } from '~/transaction-builder';
 import { Transaction } from '@solana/web3.js';
 import { CompressedNft as Transfer } from './transfer';
 import { CompressedNft as Delegate } from './gas-less-delegate';
-import {
-  CommonStructure,
-  PartialSignStructure,
-} from '~/types/transaction-builder';
+import { PartialSignStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   /**
@@ -25,16 +22,15 @@ export namespace CompressedNft {
     assetIdOwner: Secret,
     dest: Pubkey,
     feePayer: Pubkey,
-  ): Promise<Result<PartialSignStructure, Error>>[] => {
-    const delegate = Delegate.gasLessDelegate(
+  ): Promise<Result<PartialSignStructure, Error>[]> => {
+    const delegate = await Delegate.gasLessDelegate(
       assetId,
       assetIdOwner,
       feePayer,
     );
     delegate.unwrap().canSubmit = true;
-    const obj = delegate;
 
-    const second = Try(async () => {
+    const transfer = await Try(async () => {
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
       const inst = new Transaction({
         lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
@@ -61,7 +57,6 @@ export namespace CompressedNft {
           .toString('hex'),
       );
     });
-    return [obj second];
-
+    return [delegate, transfer];
   };
 }

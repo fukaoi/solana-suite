@@ -4,7 +4,7 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import { Result, sleep, Try } from '~/shared';
+import { Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
 import { MAX_RETRIES } from './common';
@@ -45,29 +45,4 @@ export namespace TransactionBuilder {
       });
     };
   }
-
-  /**
-   * senTransaction() TransactionInstruction
-   *
-   * @see {@link types/global.ts}
-   * @returns Promise<Result<string, Error>>
-   */
-  // TODO: move to common
-  /* eslint-disable @typescript-eslint/ban-ts-comment */
-  /* @ts-ignore */
-  Array.prototype.submit = async function (feePayer: Secret) {
-    let i = 0;
-    for await (const obj of this) {
-      if (obj.isErr) {
-        const errorMess: string = obj.error.message as string;
-        throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
-      } else if (obj.canSubmit) {
-        await obj.submit(feePayer);
-        await sleep(30);
-      } else {
-        return await obj.submit(feePayer);
-      }
-      i++;
-    }
-  };
 }

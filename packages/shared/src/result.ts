@@ -9,6 +9,7 @@ import { Secret } from '~/types/account';
 
 import { TransactionBuilder } from '~/transaction-builder';
 import { debugLog } from './shared';
+import { Node } from '~/node';
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
@@ -107,19 +108,37 @@ declare global {
   }
 }
 
-Array.prototype.submit = async function () {
-  const instructions: CommonStructure | MintStructure[] = [];
-  for (const obj of this) {
-    if (obj.isErr) {
-      return obj;
-    } else if (obj.isOk) {
-      instructions.push(obj.value);
-    } else {
-      return Result.err(Error('Only Array Instruction object'));
+Array.prototype.submit = async function (feePayer?: Secret) {
+  if (feePayer) {
+    for await (const obj of this) {
+      if (obj.isErr) {
+        return obj;
+      } else if (obj.value.canSubmit) {
+        debugLog('# Result batch canSubmit');
+        const sig = await (obj as PartialSignStructure).submit(feePayer);
+        if (sig.isErr) {
+          return sig;
+        }
+        await Node.confirmedSig(sig.value);
+      } else {
+        debugLog('# Result batch other than canSubmit');
+        return obj.submit(feePayer);
+      }
     }
+  } else {
+    const instructions: CommonStructure | MintStructure[] = [];
+    for (const obj of this) {
+      if (obj.isErr) {
+        return obj;
+      } else if (obj.isOk) {
+        instructions.push(obj.value);
+      } else {
+        return Result.err(Error('Only Array Instruction object'));
+      }
+    }
+    debugLog('# Result batch submit: ', instructions);
+    return new TransactionBuilder.Batch().submit(instructions);
   }
-  debugLog('# Result batch submit: ', instructions);
-  return new TransactionBuilder.Batch().submit(instructions);
 };
 
 class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
