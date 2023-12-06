@@ -4,7 +4,7 @@ import { PublicKey, Transaction } from '@solana/web3.js';
 export namespace TransactionBuilder {
   const LOW_VALUE = 127; // 0x7f
   const HIGH_VALUE = 16383; // 0x3fff
-  // const MAX_TRANSACTION_SIZE = 1232;
+  const MAX_TRANSACTION_SIZE = 1232;
 
   /**
    * Compact u16 array header size
@@ -29,7 +29,10 @@ export namespace TransactionBuilder {
    * @param feePayer the publicKey of the signer
    * @returns size in bytes of the transaction
    */
-  export const calculateTxSize = (transaction: Transaction, feePayer: PublicKey): number => {
+  export const calculateTxSize = (
+    transaction: Transaction,
+    feePayer: PublicKey,
+  ): number => {
     const feePayerPk = [feePayer.toBase58()];
 
     const signers = new Set<string>(feePayerPk);
@@ -65,7 +68,16 @@ export namespace TransactionBuilder {
     );
   };
 
-  export const isMaxTransactionSize = (): boolean => {
-    return true;
+  /**
+   * Is max transaction size
+   * @param transaction a solana transaction
+   * @param feePayer the publicKey of the signer
+   * @returns size in bytes of the transaction
+   */
+  export const isMaxTransactionSize = (
+    transaction: Transaction,
+    feePayer: PublicKey,
+  ): boolean => {
+    return calculateTxSize(transaction, feePayer) < MAX_TRANSACTION_SIZE;
   };
 }
