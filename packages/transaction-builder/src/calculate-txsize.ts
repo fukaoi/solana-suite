@@ -25,17 +25,17 @@ export namespace TransactionBuilder {
 
   /**
    * Calculate txsize
-   * @param tx a solana transaction
+   * @param transaction a solana transaction
    * @param feePayer the publicKey of the signer
    * @returns size in bytes of the transaction
    */
-  export const calculateTxSize = (tx: Transaction, feePayer: PublicKey): number => {
+  export const calculateTxSize = (transaction: Transaction, feePayer: PublicKey): number => {
     const feePayerPk = [feePayer.toBase58()];
 
     const signers = new Set<string>(feePayerPk);
     const accounts = new Set<string>(feePayerPk);
 
-    const ixsSize = tx.instructions.reduce((acc, ix) => {
+    const ixsSize = transaction.instructions.reduce((acc, ix) => {
       ix.keys.forEach(({ pubkey, isSigner }) => {
         const pk = pubkey.toBase58();
         if (isSigner) signers.add(pk);
@@ -60,7 +60,7 @@ export namespace TransactionBuilder {
       3 + // header
       compactArraySize(accounts.size, 32) + // accounts
       32 + // blockhash
-      compactHeader(tx.instructions.length) + // instructions
+      compactHeader(transaction.instructions.length) + // instructions
       ixsSize
     );
   };

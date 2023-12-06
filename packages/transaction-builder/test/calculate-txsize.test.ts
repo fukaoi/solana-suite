@@ -2,11 +2,12 @@ import test from 'ava';
 import { CompressedNft } from '~/suite-compressed-nft';
 import { Account } from '~/account';
 import { KeypairAccount } from '~/types/account';
-import { Setup } from 'test-tools/setup';
-import { RandomAsset } from 'test-tools/setupAsset';
 import { Pubkey } from '~/types/account';
 import { InputCreators } from '~/types/regular-nft';
+import { Setup } from 'test-tools/setup';
+import { RandomAsset } from 'test-tools/setupAsset';
 import { Transaction } from '@solana/web3.js';
+import { TransactionBuilder } from '../src';
 
 let source: KeypairAccount;
 let feePayer: KeypairAccount;
@@ -93,6 +94,11 @@ test('Calculate transaction size', async (t) => {
     },
   );
   const transaction = new Transaction();
-
-  // inst.instructions.forEach((inst) => transaction.add(inst));
+  inst.unwrap().instructions.forEach((inst) => transaction.add(inst));
+  const size = TransactionBuilder.calculateTxSize(
+    transaction,
+    feePayer.pubkey.toPublicKey(),
+  );
+  t.log('# transaction size: ', size);
+  t.true(size > 0);
 });
