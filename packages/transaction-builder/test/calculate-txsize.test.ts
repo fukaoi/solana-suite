@@ -22,7 +22,7 @@ test.before(async () => {
   collectionMint = obj.collectionMint;
 });
 
-test('Calculate transaction size', async (t) => {
+test('[Over size]Calculate transaction size', async (t) => {
   const asset = RandomAsset.get();
   const creators: InputCreators[] = [];
   const unverifyCreator = Account.Keypair.create();
@@ -101,9 +101,14 @@ test('Calculate transaction size', async (t) => {
   );
   t.log('# transaction size: ', size);
   t.true(size > 0);
+  const bool = TransactionBuilder.isMaxTransactionSize(
+    transaction,
+    feePayer.pubkey.toPublicKey(),
+  );
+  t.false(bool);
 });
 
-test('Is max transaction size', async (t) => {
+test('[Under size]Calculate transaction size', async (t) => {
   const asset = RandomAsset.get();
   const creators: InputCreators[] = [];
   const unverifyCreator = Account.Keypair.create();
@@ -161,6 +166,7 @@ test('Is max transaction size', async (t) => {
       external_url: 'https://atonoy.github.io/solana-suite/',
       royalty: 50,
       isMutable: false,
+      // creators,
       properties,
       collection,
       attributes,
@@ -175,6 +181,12 @@ test('Is max transaction size', async (t) => {
   );
   const transaction = new Transaction();
   inst.unwrap().instructions.forEach((inst) => transaction.add(inst));
+  const size = TransactionBuilder.calculateTxSize(
+    transaction,
+    feePayer.pubkey.toPublicKey(),
+  );
+  t.log('# transaction size: ', size);
+  t.true(size > 0);
   const bool = TransactionBuilder.isMaxTransactionSize(
     transaction,
     feePayer.pubkey.toPublicKey(),
