@@ -5,7 +5,7 @@ let Config = SolanaJsonConfig;
 
 export namespace Constants {
   export namespace WarnningMessage {
-    const THRESHHOLD = 5;
+    const THRESHHOLD = 7;
     let isDisplay = false;
     export const NFT_STORAGE_API_KEY = `
         [Warning]
