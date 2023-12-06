@@ -14,17 +14,17 @@ import { MintStructure } from '~/types/transaction-builder';
 import { Pubkey } from '~/types/account';
 
 export namespace TransactionBuilder {
-  export class Mint implements MintStructure {
+  export class Mint<T = Pubkey> implements MintStructure<T> {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
-    data?: Pubkey;
+    data?: T;
 
     constructor(
       instructions: TransactionInstruction[],
       signers: Keypair[],
       feePayer?: Keypair,
-      data?: Pubkey,
+      data?: T,
     ) {
       this.instructions = instructions;
       this.signers = signers;

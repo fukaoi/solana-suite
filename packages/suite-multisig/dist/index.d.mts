@@ -1,8 +1,26 @@
-import * as _solana_buffer_layout from '@solana/buffer-layout';
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
+import * as _solana_buffer_layout from '@solana/buffer-layout';
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
+
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret$1 = (string & {
+    [secretNominality]: never;
+}) | string;
+type KeypairAccount = {
+    pubkey: Pubkey;
+    secret: Secret$1;
+};
+type OwnerInfo = {
+    sol: number;
+    lamports: number;
+    owner: string;
+};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -212,24 +230,6 @@ declare namespace Result {
 type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
-
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret$1 = (string & {
-    [secretNominality]: never;
-}) | string;
-type KeypairAccount = {
-    pubkey: Pubkey;
-    secret: Secret$1;
-};
-type OwnerInfo = {
-    sol: number;
-    lamports: number;
-    owner: string;
-};
 
 /**
  * Get Associated token Account.
@@ -545,10 +545,18 @@ type ExplorerOptions = {
     replacePath: string;
 };
 
+type CommonStructure<T = undefined> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: T;
+    submit: () => Promise<Result<TransactionSignature, Error>>;
+};
+
 declare const Multisig: {
     isAddress: (multisig: Pubkey) => Promise<Result<boolean, Error>>;
     getInfo: (multisig: Pubkey) => Promise<Result<_solana_buffer_layout.LayoutObject, Error>>;
-    create: (m: number, feePayer: Secret$1, signerPubkeys: Pubkey[]) => Promise<Result<Transaction, Error>>;
+    create: (m: number, feePayer: Secret$1, signerPubkeys: Pubkey[]) => Promise<Result<CommonStructure<Pubkey>, Error>>;
 };
 
 export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Multisig, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret$1 as Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

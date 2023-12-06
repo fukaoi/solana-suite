@@ -294,12 +294,12 @@ declare namespace TransactionBuilder$3 {
 }
 
 declare namespace TransactionBuilder$2 {
-    class Mint implements MintStructure {
+    class Mint<T = Pubkey> implements MintStructure<T> {
         instructions: TransactionInstruction[];
         signers: Keypair[];
         feePayer?: Keypair;
-        data?: Pubkey;
-        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: Pubkey);
+        data?: T;
+        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
         submit: () => Promise<Result<TransactionSignature, Error>>;
     }
 }
