@@ -5,9 +5,10 @@ import {
   MintStructure,
   PartialSignStructure,
 } from '~/types/transaction-builder';
+import { Secret } from '~/types/account';
 
 import { TransactionBuilder } from '~/transaction-builder';
-import { Try } from './shared';
+import { debugLog } from './shared';
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
@@ -73,13 +74,28 @@ abstract class AbstractResult<T, E extends Error> {
 
   /// single TransactionBuilder ////
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  async submit(): Promise<Result<TransactionSignature, Error>> {
-    const obj = this.unwrap() as CommonStructure | MintStructure;
-    if (obj.instructions) {
-      console.log('# result single');
-      return await obj.submit();
+  async submit(
+    feePayer?: Secret,
+  ): Promise<Result<TransactionSignature, Error>> {
+    const res = this.map(
+      async (ok) => {
+        debugLog('# result single submit: ', ok);
+        if (feePayer) {
+          const obj = ok as PartialSignStructure;
+          return await obj.submit(feePayer);
+        } else {
+          const obj = ok as CommonStructure | MintStructure;
+          return await obj.submit();
+        }
+      },
+      (err) => {
+        return err;
+      },
+    );
+    if (res.isErr) {
+      return Result.err(res.error);
     }
-    return Result.err(Error('Only Instruction object'));
+    return res.value;
   }
 }
 
@@ -92,7 +108,6 @@ declare global {
 }
 
 Array.prototype.submit = async function () {
-  console.log('#batch', this);
   const instructions: CommonStructure | MintStructure[] = [];
   for (const obj of this) {
     if (obj.isErr) {
@@ -103,6 +118,7 @@ Array.prototype.submit = async function () {
       return Result.err(Error('Only Array Instruction object'));
     }
   }
+  debugLog('# Result batch submit: ', instructions);
   return new TransactionBuilder.Batch().submit(instructions);
 };
 

@@ -9,12 +9,12 @@ declare const secretNominality: unique symbol;
 type Pubkey$1 = (string & {
     [pubKeyNominality]: never;
 }) | string;
-type Secret$1 = (string & {
+type Secret = (string & {
     [secretNominality]: never;
 }) | string;
 type KeypairAccount = {
     pubkey: Pubkey$1;
-    secret: Secret$1;
+    secret: Secret;
 };
 type OwnerInfo = {
     sol: number;
@@ -63,7 +63,7 @@ type Creators = {
 };
 type InputCreators = {
     address: Pubkey$1;
-    secret: Secret$1;
+    secret: Secret;
     share: number;
 };
 
@@ -206,7 +206,7 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: any): Promise<Result<TransactionSignature, Error>>;
+    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
 }
 declare global {
     interface Array<T> {
@@ -423,7 +423,7 @@ declare namespace Account$3 {
          * @param {Secret} feePayer
          * @returns Promise<string>
          */
-        const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret$1) => Promise<string>;
+        const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret) => Promise<string>;
         /**
          * [Main logic]Get Associated token Account.
          * if not created, create new token accouint
@@ -442,16 +442,16 @@ declare namespace Account$3 {
 
 declare namespace Account$2 {
     class Keypair {
-        secret: Secret$1;
+        secret: Secret;
         pubkey: Pubkey$1;
         constructor(params: {
             pubkey?: Pubkey$1;
-            secret: Secret$1;
+            secret: Secret;
         });
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
         static isPubkey: (value: string) => value is Pubkey$1;
-        static isSecret: (value: string) => value is Secret$1;
+        static isSecret: (value: string) => value is Secret;
         static create: () => Keypair;
         static toKeyPair: (keypair: Keypair) => Keypair;
     }
@@ -653,28 +653,28 @@ type PartialSignStructure<T = Pubkey$1> = {
     hexInstruction: string;
     canSubmit?: boolean;
     data?: T;
-    submit: (feePayer: Secret$1) => Promise<Result<string, Error>>;
+    submit: (feePayer: Secret) => Promise<Result<string, Error>>;
 };
 
 declare const RegularNft: {
-    transfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret$1[], options?: Partial<AuthorityOptions>) => Promise<Result<CommonStructure, Error>>;
-    thaw: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret$1, options?: Partial<AuthorityOptions>) => Result<CommonStructure<unknown>, Error>;
+    transfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], options?: Partial<AuthorityOptions>) => Promise<Result<CommonStructure, Error>>;
+    thaw: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, options?: Partial<AuthorityOptions>) => Result<CommonStructure<unknown>, Error>;
     DEFAULT_COLLECTION_SIZE: 0;
-    mintCollection: (owner: Pubkey, signer: Secret$1, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
+    mintCollection: (owner: Pubkey, signer: Secret, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
     createVerifyCreator: (mint: _solana_web3_js.PublicKey, creator: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createDeleagate: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, delegateAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createVerifySizedCollection: (collectionChild: _solana_web3_js.PublicKey, collectionParent: _solana_web3_js.PublicKey, feePayer: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMint: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, nftMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
-    mint: (owner: Pubkey$1, signer: Secret$1, input: InputNftMetadata, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
-    gasLessTransfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret$1[], feePayer: Pubkey$1) => Promise<Result<PartialSignStructure, Error>>;
-    gasLessMint: (owner: Pubkey$1, signer: Secret$1, input: InputNftMetadata, feePayer: Pubkey$1, options?: Partial<GasLessMintOptions>) => Promise<Result<PartialSignStructure, Error>>;
-    freeze: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret$1, options?: Partial<AuthorityOptions>) => Result<CommonStructure, Error>;
+    mint: (owner: Pubkey$1, signer: Secret, input: InputNftMetadata, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
+    gasLessTransfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], feePayer: Pubkey$1) => Promise<Result<PartialSignStructure, Error>>;
+    gasLessMint: (owner: Pubkey$1, signer: Secret, input: InputNftMetadata, feePayer: Pubkey$1, options?: Partial<GasLessMintOptions>) => Promise<Result<PartialSignStructure, Error>>;
+    freeze: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, options?: Partial<AuthorityOptions>) => Result<CommonStructure, Error>;
     findByOwner: (owner: Pubkey$1, onOk: OnOk<RegularNftMetadata>, onErr: OnErr, options?: {
         sortable?: SortDirection | undefined;
         isHolder?: boolean | undefined;
     } | undefined) => Promise<void>;
     findByMint: (mint: Pubkey$1) => Promise<Result<RegularNftMetadata, Error>>;
-    burn: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret$1, options?: Partial<AuthorityOptions>) => Result<StructCommonTransaction, Error>;
+    burn: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret, options?: Partial<AuthorityOptions>) => Result<StructCommonTransaction, Error>;
 };
 
-export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, RegularNft, Secret$1 as Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };
+export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, RegularNft, Secret, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };

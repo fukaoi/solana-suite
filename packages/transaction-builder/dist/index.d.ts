@@ -1,6 +1,15 @@
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, PublicKey, Keypair, TransactionInstruction, Transaction } from '@solana/web3.js';
 
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
+
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
@@ -13,7 +22,7 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: any): Promise<Result<TransactionSignature, Error>>;
+    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
 }
 declare global {
     interface Array<T> {
@@ -210,15 +219,6 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret$1 = (string & {
-    [secretNominality]: never;
-}) | string;
-
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -266,7 +266,7 @@ type PartialSignStructure<T = Pubkey> = {
     hexInstruction: string;
     canSubmit?: boolean;
     data?: T;
-    submit: (feePayer: Secret$1) => Promise<Result<string, Error>>;
+    submit: (feePayer: Secret) => Promise<Result<string, Error>>;
 };
 
 declare namespace TransactionBuilder$4 {
@@ -288,12 +288,6 @@ declare namespace TransactionBuilder$4 {
 }
 
 declare namespace TransactionBuilder$3 {
-    class Batch {
-        submit: (arr: TransactionBuilder$4.Common[]) => Promise<TransactionSignature>;
-    }
-}
-
-declare namespace TransactionBuilder$2 {
     class Mint<T = Pubkey> implements MintStructure<T> {
         instructions: TransactionInstruction[];
         signers: Keypair[];
@@ -304,13 +298,19 @@ declare namespace TransactionBuilder$2 {
     }
 }
 
+declare namespace TransactionBuilder$2 {
+    class Batch {
+        submit: (arr: TransactionBuilder$4.Common[] | TransactionBuilder$3.Mint[]) => Promise<Result<TransactionSignature, Error>>;
+    }
+}
+
 declare namespace TransactionBuilder$1 {
     class PartialSign implements PartialSignStructure {
         hexInstruction: string;
         data?: Pubkey;
         canSubmit?: boolean;
         constructor(instructions: string, mint?: Pubkey, canSubmit?: boolean);
-        submit: (feePayer: Secret$1) => Promise<Result<TransactionSignature, Error>>;
+        submit: (feePayer: Secret) => Promise<Result<TransactionSignature, Error>>;
     }
 }
 
@@ -318,8 +318,8 @@ declare const TransactionBuilder: {
     PartialSign: typeof TransactionBuilder$1.PartialSign;
     Common: typeof TransactionBuilder$4.Common;
     getTxSize: (tx: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => number;
-    Mint: typeof TransactionBuilder$2.Mint;
-    Batch: typeof TransactionBuilder$3.Batch;
+    Mint: typeof TransactionBuilder$3.Mint;
+    Batch: typeof TransactionBuilder$2.Batch;
 };
 
 export { TransactionBuilder };

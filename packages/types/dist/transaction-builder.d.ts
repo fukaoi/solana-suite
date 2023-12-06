@@ -1,4 +1,4 @@
-import { Pubkey, Secret as Secret$1 } from './account.js';
+import { Secret, Pubkey } from './account.js';
 import { TransactionSignature, TransactionInstruction, Keypair } from '@solana/web3.js';
 import './global.js';
 
@@ -14,7 +14,7 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: any): Promise<Result<TransactionSignature, Error>>;
+    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
 }
 declare global {
     interface Array<T> {
@@ -229,7 +229,7 @@ type PartialSignStructure<T = Pubkey> = {
     hexInstruction: string;
     canSubmit?: boolean;
     data?: T;
-    submit: (feePayer: Secret$1) => Promise<Result<string, Error>>;
+    submit: (feePayer: Secret) => Promise<Result<string, Error>>;
 };
 
 export { CommonStructure, MintStructure, PartialSignStructure };

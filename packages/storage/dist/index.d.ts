@@ -1,6 +1,15 @@
 import { TransactionSignature, PublicKey, Transaction, Keypair } from '@solana/web3.js';
 import BN from 'bn.js';
 
+declare const pubKeyNominality: unique symbol;
+declare const secretNominality: unique symbol;
+type Pubkey = (string & {
+    [pubKeyNominality]: never;
+}) | string;
+type Secret = (string & {
+    [secretNominality]: never;
+}) | string;
+
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
@@ -13,7 +22,7 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: any): Promise<Result<TransactionSignature, Error>>;
+    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
 }
 declare global {
     interface Array<T> {
@@ -210,15 +219,6 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-declare const pubKeyNominality: unique symbol;
-declare const secretNominality: unique symbol;
-type Pubkey = (string & {
-    [pubKeyNominality]: never;
-}) | string;
-type Secret$1 = (string & {
-    [secretNominality]: never;
-}) | string;
-
 type bignum = number | BN;
 declare enum UseMethod {
     Burn = 0,
@@ -232,7 +232,7 @@ type Uses = {
 };
 type InputCreators = {
     address: Pubkey;
-    secret: Secret$1;
+    secret: Secret;
     share: number;
 };
 
@@ -248,7 +248,7 @@ type PhantomProvider = {
 
 type FileType = string | File;
 type UploadableFileType = string & File;
-type Identity = Secret$1 | PhantomProvider;
+type Identity = Secret | PhantomProvider;
 type Tags = [{
     name: string;
     value: string;
@@ -347,8 +347,8 @@ type ExplorerOptions = {
 };
 
 declare namespace Arweave {
-    const uploadFile: (filePath: FileType, feePayer: Secret$1) => Promise<Result<string, Error>>;
-    const uploadData: (metadata: Offchain, feePayer: Secret$1) => Promise<Result<string, Error>>;
+    const uploadFile: (filePath: FileType, feePayer: Secret) => Promise<Result<string, Error>>;
+    const uploadData: (metadata: Offchain, feePayer: Secret) => Promise<Result<string, Error>>;
 }
 
 declare namespace ProvenanceLayer {
@@ -384,9 +384,9 @@ declare namespace NftStorage {
 
 declare namespace Storage {
     const toConvertOffchaindata: (input: InputNftMetadata, sellerFeeBasisPoints: number) => Offchain;
-    const uploadFile: (filePath: FileType, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
-    const uploadData: (input: Offchain, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
-    const upload: (input: Offchain, filePath: FileType, storageType: StorageType, feePayer?: Secret$1) => Promise<Result<string, Error>>;
+    const uploadFile: (filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const uploadData: (input: Offchain, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
+    const upload: (input: Offchain, filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
 }
 
 export { Arweave, NftStorage, ProvenanceLayer, Storage };

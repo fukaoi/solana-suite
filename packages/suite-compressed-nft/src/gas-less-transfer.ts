@@ -6,7 +6,10 @@ import { TransactionBuilder } from '~/transaction-builder';
 import { Transaction } from '@solana/web3.js';
 import { CompressedNft as Transfer } from './transfer';
 import { CompressedNft as Delegate } from './gas-less-delegate';
-import { PartialSignStructure } from '~/types/transaction-builder';
+import {
+  CommonStructure,
+  PartialSignStructure,
+} from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   /**
@@ -22,18 +25,16 @@ export namespace CompressedNft {
     assetIdOwner: Secret,
     dest: Pubkey,
     feePayer: Pubkey,
-  ): Promise<Result<PartialSignStructure[], Error>> => {
-    return Try(async () => {
-      const delegate = await Delegate.gasLessDelegate(
-        assetId,
-        assetIdOwner,
-        feePayer,
-      );
-      if (delegate.isErr) {
-        throw delegate.error;
-      }
-      const first = delegate.value;
-      first.canSubmit = true;
+  ): Promise<Result<PartialSignStructure, Error>>[] => {
+    const delegate = Delegate.gasLessDelegate(
+      assetId,
+      assetIdOwner,
+      feePayer,
+    );
+    delegate.unwrap().canSubmit = true;
+    const obj = delegate;
+
+    const second = Try(async () => {
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
       const inst = new Transaction({
         lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
@@ -52,14 +53,15 @@ export namespace CompressedNft {
       );
       inst.recentBlockhash = blockhashObj.blockhash;
 
-      const second = new TransactionBuilder.PartialSign(
+      return new TransactionBuilder.PartialSign(
         inst
           .serialize({
             requireAllSignatures: false,
           })
           .toString('hex'),
       );
-      return [first, second];
     });
+    return [obj second];
+
   };
 }

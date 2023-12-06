@@ -6,7 +6,7 @@ declare const secretNominality: unique symbol;
 type Pubkey = (string & {
     [pubKeyNominality]: never;
 }) | string;
-type Secret$1 = (string & {
+type Secret = (string & {
     [secretNominality]: never;
 }) | string;
 
@@ -22,7 +22,7 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: any): Promise<Result<TransactionSignature, Error>>;
+    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
 }
 declare global {
     interface Array<T> {
@@ -244,7 +244,7 @@ type Uses = {
 };
 type InputCreators = {
     address: Pubkey;
-    secret: Secret$1;
+    secret: Secret;
     share: number;
 };
 
