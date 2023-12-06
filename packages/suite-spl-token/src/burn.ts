@@ -35,11 +35,7 @@ export namespace SplToken {
         keypairs,
       );
 
-      return new TransactionBuilder.Common(
-        [inst],
-        keypairs,
-        payer.toKeypair(),
-      );
+      return new TransactionBuilder.Common([inst], keypairs, payer.toKeypair());
     });
   };
 }

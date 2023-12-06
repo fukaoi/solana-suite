@@ -1,5 +1,5 @@
 import test from 'ava';
-import config from '../';
+import config from '../solana-suite.json';
 
 test('load solana-suite.json', (t) => {
   t.like(config, {

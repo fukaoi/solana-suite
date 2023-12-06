@@ -58,7 +58,7 @@ export namespace TransactionBuilder {
    * @see {@link types/global.ts}
    * @returns Promise<Result<string, Error>>
    */
-// TODO Direct call result
+  // TODO Direct call result
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   /* @ts-ignore */
   Array.prototype.submit = async function () {

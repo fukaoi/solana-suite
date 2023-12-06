@@ -149,7 +149,7 @@ const execCluser = (type: string): void => {
 
 const execCustomCluster = (url: string[]): void => {
   const validation = (u: string) => {
-    return /https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(u);
+    return /https?:\/\/[-_.!~*\\()a-zA-Z0-9;/?:@&=+$,%#]+/g.test(u);
   };
 
   url.forEach((element: string) => {
@@ -184,7 +184,7 @@ const execNftstorage = (apiKey: string): void => {
 
 const execDasApiUrl = (url: string[]): void => {
   const validation = (u: string) => {
-    return /https?:\/\/[-_.!~*\\()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g.test(u);
+    return /https?:\/\/[-_.!~*\\()a-zA-Z0-9;/?:@&=+$,%#]+/g.test(u);
   };
 
   url.forEach((element: string) => {

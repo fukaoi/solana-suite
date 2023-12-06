@@ -4,7 +4,7 @@ import { PublicKey, Transaction as Tx } from '@solana/web3.js';
 export namespace Transaction {
   const LOW_VALUE = 127; // 0x7f
   const HIGH_VALUE = 16383; // 0x3fff
-  const MAX_TRANSACTION_SIZE = 1232;
+  // const MAX_TRANSACTION_SIZE = 1232;
 
   /**
    * Compact u16 array header size

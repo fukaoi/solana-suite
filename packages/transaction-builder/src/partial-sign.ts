@@ -16,11 +16,7 @@ export namespace TransactionBuilder {
     data?: Pubkey;
     canSubmit?: boolean;
 
-    constructor(
-      instructions: string, 
-      mint?: Pubkey, 
-      canSubmit = false
-    ) {
+    constructor(instructions: string, mint?: Pubkey, canSubmit = false) {
       this.hexInstruction = instructions;
       this.data = mint;
       this.canSubmit = canSubmit;
@@ -56,7 +52,7 @@ export namespace TransactionBuilder {
    * @see {@link types/global.ts}
    * @returns Promise<Result<string, Error>>
    */
-// TODO: move to common
+  // TODO: move to common
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   /* @ts-ignore */
   Array.prototype.submit = async function (feePayer: Secret) {

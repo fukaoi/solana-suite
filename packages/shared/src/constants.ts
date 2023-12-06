@@ -115,13 +115,14 @@ export namespace Constants {
 
   export const switchDasApi = (env: string): string => {
     switch (env) {
-      case Constants.Cluster.prd:
+      case Constants.Cluster.prd: {
         if (dasApiUrl.length < 1) {
           throw Error(Constants.WarnningMessage.DAS_API_URL);
         }
         const urls = Constants.BundlrUrl.prd.split(',');
         const index = Date.now() % urls.length;
         return urls[index];
+      }
       default: {
         const urls = Constants.DasApiUrl.dev.split(',');
         const index = Date.now() % urls.length;

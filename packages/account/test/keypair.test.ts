@@ -32,11 +32,10 @@ test('Failed convert string to SecretKey', (t) => {
   t.not(error, undefined);
 });
 
-test.only('toPublicKey()', async (t) => {
+test('toPublicKey()', async (t) => {
   for (let index = 0; index < 50; index++) {
     const pubkey = Account.Keypair.create().pubkey;
-    t.log(pubkey.toPublicKey());
-    t.pass();
+    t.not(pubkey, '');
   }
 });
 

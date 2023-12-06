@@ -29,10 +29,8 @@ test('Retry getOrCreate', async (t) => {
 
   await mintInst.submit();
 
-  console.log(mintInst);
   t.true(mintInst.isOk);
-  const mint = mintInst.unwrap().data;
-
+  const mint = mintInst.unwrap().data!;
   const res = await Account.Associated.retryGetOrCreate(
     mint,
     source.pubkey,

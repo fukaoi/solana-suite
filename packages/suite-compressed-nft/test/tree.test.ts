@@ -4,11 +4,11 @@ import { CompressedNft } from '../src';
 import { Account } from '~/account';
 import { KeypairAccount } from '~/types/account';
 
-let source: KeypairAccount;
+let feePayer: KeypairAccount;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
-  source = obj.source;
+  feePayer = obj.feePayer;
 });
 
 test('Get asset id', async (t) => {
@@ -20,7 +20,7 @@ test('Get asset id', async (t) => {
 });
 
 test('Create merkle tree', async (t) => {
-  const inst = await CompressedNft.initTree(source.secret);
+  const inst = await CompressedNft.initTree(feePayer.secret);
   (await inst.submit()).match(
     (ok) => {
       t.log('# sig: ', ok);
