@@ -1,10 +1,11 @@
 import { createMintToCheckedInstruction } from '@solana/spl-token';
 import { Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
-import { Transaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { Account } from '~/account';
 import { SplToken as Calculate } from './calculate-amount';
 import { AuthorityOptions } from '~/types/shared';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
   export const add = async (
@@ -14,7 +15,7 @@ export namespace SplToken {
     totalAmount: number,
     mintDecimal: number,
     options: Partial<AuthorityOptions> = {},
-  ): Promise<Result<Transaction, Error>> => {
+  ): Promise<Result<CommonStructure<Pubkey>, Error>> => {
     return Try(async () => {
       const payer = options.feePayer ? options.feePayer : signers[0];
       const keypairs = signers.map((s) => s.toKeypair());
@@ -34,7 +35,12 @@ export namespace SplToken {
         keypairs,
       );
 
-      return new Transaction([inst], keypairs, payer.toKeypair(), token);
+      return new TransactionBuilder.Common<Pubkey>(
+        [inst],
+        keypairs,
+        payer.toKeypair(),
+        token,
+      );
     });
   };
 }

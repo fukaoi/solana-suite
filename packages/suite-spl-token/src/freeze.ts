@@ -1,5 +1,5 @@
 import { Account } from '~/account';
-import { Transaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 
@@ -8,6 +8,7 @@ import {
   getAssociatedTokenAddressSync,
 } from '@solana/spl-token';
 import { AuthorityOptions } from '~/types/shared';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
   /**
@@ -22,7 +23,7 @@ export namespace SplToken {
     owner: Pubkey,
     freezeAuthority: Secret,
     options: Partial<AuthorityOptions> = {},
-  ): Result<Transaction, Error> => {
+  ): Result<CommonStructure, Error> => {
     return Try(() => {
       const payer = options.feePayer ? options.feePayer : freezeAuthority;
       const tokenAccount = getAssociatedTokenAddressSync(
@@ -35,7 +36,7 @@ export namespace SplToken {
         new Account.Keypair({ secret: freezeAuthority }).toPublicKey(),
       );
 
-      return new Transaction(
+      return new TransactionBuilder.Common(
         [inst],
         [freezeAuthority.toKeypair()],
         payer.toKeypair(),

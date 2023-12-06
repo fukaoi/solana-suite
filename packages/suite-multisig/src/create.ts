@@ -10,14 +10,15 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
-import { Transaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace Multisig {
   export const create = async (
     m: number,
     feePayer: Secret,
     signerPubkeys: Pubkey[],
-  ): Promise<Result<Transaction, Error>> => {
+  ): Promise<Result<CommonStructure<Pubkey>, Error>> => {
     return Try(async () => {
       if (m > signerPubkeys.length) {
         throw Error('signers number less than m number');
@@ -41,7 +42,7 @@ export namespace Multisig {
         signerPubkeys.map((pubkey: Pubkey) => pubkey.toPublicKey()),
       );
 
-      return new Transaction(
+      return new TransactionBuilder.Common<Pubkey>(
         [inst1, inst2],
         [account],
         feePayer.toKeypair(),

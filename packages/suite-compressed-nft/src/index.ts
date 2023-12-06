@@ -7,8 +7,8 @@ import { CompressedNft as Collection } from './mint-collection';
 import { CompressedNft as Tree } from './tree';
 import { CompressedNft as Transfer } from './transfer';
 
-import '~/types/transaction';
-import '~/transaction';
+import '~/types/transaction-builder';
+import '~/transaction-builder';
 
 export const CompressedNft = {
   ...Delegate,

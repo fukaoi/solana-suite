@@ -3,10 +3,11 @@ import {
   getAssociatedTokenAddressSync,
 } from '@solana/spl-token';
 import { Pubkey, Secret } from '~/types/account';
-import { Transaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { Result, Try } from '~/shared';
 import { SplToken as Calculate } from './calculate-amount';
 import { AuthorityOptions } from '~/types/shared';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
   export const burn = (
@@ -16,7 +17,7 @@ export namespace SplToken {
     burnAmount: number,
     tokenDecimals: number,
     options: Partial<AuthorityOptions> = {},
-  ): Result<Transaction, Error> => {
+  ): Result<CommonStructure, Error> => {
     return Try(() => {
       const tokenAccount = getAssociatedTokenAddressSync(
         mint.toPublicKey(),
@@ -34,7 +35,11 @@ export namespace SplToken {
         keypairs,
       );
 
-      return new Transaction([inst], keypairs, payer.toKeypair());
+      return new TransactionBuilder.Common(
+        [inst],
+        keypairs,
+        payer.toKeypair(),
+      );
     });
   };
 }

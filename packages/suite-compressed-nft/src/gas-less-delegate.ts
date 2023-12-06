@@ -2,8 +2,9 @@ import { Pubkey, Secret } from '~/types/account';
 import { CompressedNft as Delegate } from './delegate';
 import { Node } from '~/node';
 import { Transaction } from '@solana/web3.js';
-import { PartialSignTransaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { Result, Try } from '~/shared';
+import { PartialSignStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   /**
@@ -17,7 +18,7 @@ export namespace CompressedNft {
     assetId: Pubkey,
     assetIdOwner: Secret,
     newDelegate: Pubkey,
-  ): Promise<Result<PartialSignTransaction, Error>> => {
+  ): Promise<Result<PartialSignStructure, Error>> => {
     return Try(async () => {
       const inst = await Delegate.createDeleagate(
         assetId.toPublicKey(),
@@ -34,7 +35,7 @@ export namespace CompressedNft {
       tx.partialSign(assetIdOwner.toKeypair());
       tx.recentBlockhash = blockhashObj.blockhash;
 
-      return new PartialSignTransaction(
+      return new TransactionBuilder.PartialSign(
         tx
           .serialize({
             requireAllSignatures: false,

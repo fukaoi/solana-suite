@@ -26,7 +26,7 @@ export namespace RegularNft {
     signer: Secret,
     input: InputNftMetadata,
     options: Partial<MintCollectionOptions> = {},
-  ): Promise<Result<MintStructure<Pubkey>, Error>> => {
+  ): Promise<Result<MintStructure, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {

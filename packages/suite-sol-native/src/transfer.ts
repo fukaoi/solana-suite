@@ -1,8 +1,9 @@
 import { SystemProgram } from '@solana/web3.js';
 import { Pubkey, Secret } from '~/types/account';
 import { Result, Try } from '~/shared';
-import { Transaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { AuthorityOptions } from '~/types/shared';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SolNative {
   const RADIX = 10;
@@ -12,7 +13,7 @@ export namespace SolNative {
     signers: Secret[],
     amount: number,
     options: Partial<AuthorityOptions> = {},
-  ): Result<Transaction, Error> => {
+  ): Result<CommonStructure, Error> => {
     return Try(() => {
       const inst = SystemProgram.transfer({
         fromPubkey: source.toPublicKey(),
@@ -24,7 +25,7 @@ export namespace SolNative {
         ? options.feePayer.toKeypair()
         : signers[0].toKeypair();
 
-      return new Transaction(
+      return new TransactionBuilder.Common(
         [inst],
         signers.map((s) => s.toKeypair()),
         payer,

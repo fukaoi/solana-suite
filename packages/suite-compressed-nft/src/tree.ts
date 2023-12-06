@@ -11,7 +11,8 @@ import { Account } from '~/account';
 import { Pubkey } from '~/types/account';
 import { debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
-import { MintTransaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
+import { MintStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   export class Tree {
@@ -43,7 +44,7 @@ export namespace CompressedNft {
     feePayer: Secret,
     maxDepth: number = 14, // TODO: more simple parameter
     maxBufferSize: number = 64, // TODO: more simple parameter
-  ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
+  ): Promise<Result<MintStructure, Error>> => {
     return Try(async () => {
       const treeOwner = Account.Keypair.create();
       const space = getConcurrentMerkleTreeAccountSize(maxDepth, maxBufferSize);
@@ -85,7 +86,7 @@ export namespace CompressedNft {
         ),
       );
 
-      return new MintTransaction(
+      return new TransactionBuilder.Mint(
         instructions,
         [treeOwner.toKeypair()],
         feePayer.toKeypair(),

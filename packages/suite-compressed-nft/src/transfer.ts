@@ -8,9 +8,9 @@ import {
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
 } from '@solana/spl-account-compression';
-import { Transaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { PublicKey, TransactionInstruction } from '@solana/web3.js';
-import { delegate } from '@metaplex-foundation/mpl-bubblegum';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   // @internal
@@ -107,11 +107,11 @@ export namespace CompressedNft {
     assetIdOwner: Pubkey,
     dest: Pubkey,
     signers: Secret[],
-  ): Promise<Result<Transaction, Error>> => {
+  ): Promise<Result<CommonStructure, Error>> => {
     return Try(async () => {
       const keypairs = signers.map((s) => s.toKeypair());
       const inst = await createTransfer(assetId, assetIdOwner, dest);
-      return new Transaction([inst], keypairs);
+      return new TransactionBuilder.Common([inst], keypairs);
     });
   };
 }

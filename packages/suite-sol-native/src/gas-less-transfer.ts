@@ -3,8 +3,9 @@ import { SystemProgram, Transaction } from '@solana/web3.js';
 import { Result, Try } from '~/shared';
 
 import { Node } from '~/node';
-import { PartialSignTransaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';
+import { PartialSignStructure } from '~/types/transaction-builder';
 
 export namespace SolNative {
   const RADIX = 10;
@@ -14,7 +15,7 @@ export namespace SolNative {
     signers: Secret[],
     amount: number,
     feePayer: Pubkey,
-  ): Promise<Result<PartialSignTransaction, Error>> => {
+  ): Promise<Result<PartialSignStructure, Error>> => {
     return Try(async () => {
       const blockHashObj = await Node.getConnection().getLatestBlockhash();
       const tx = new Transaction({
@@ -37,7 +38,7 @@ export namespace SolNative {
         requireAllSignatures: false,
       });
       const hex = serializedTx.toString('hex');
-      return new PartialSignTransaction(hex);
+      return new TransactionBuilder.PartialSign(hex);
     });
   };
 }

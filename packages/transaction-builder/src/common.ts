@@ -15,7 +15,7 @@ import { CommonStructure } from '~/types/transaction-builder';
 export const MAX_RETRIES = 3;
 
 export namespace TransactionBuilder {
-  export class Common<T extends undefined> implements CommonStructure {
+  export class Common<T = undefined> implements CommonStructure<T> {
     static MAX_TRANSACTION_SIZE = 1232;
 
     instructions: TransactionInstruction[];

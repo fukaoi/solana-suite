@@ -2,10 +2,11 @@ import { createTransferCheckedInstruction } from '@solana/spl-token';
 import { Transaction } from '@solana/web3.js';
 import { Node } from '~/node';
 import { Result, Try } from '~/shared';
-import { PartialSignTransaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';
 import { SplToken as Calculator } from './calculate-amount';
 import { Account } from '~/account';
+import { PartialSignStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
   export const gasLessTransfer = async (
@@ -16,7 +17,7 @@ export namespace SplToken {
     amount: number,
     mintDecimal: number,
     feePayer: Pubkey,
-  ): Promise<Result<PartialSignTransaction, Error>> => {
+  ): Promise<Result<PartialSignStructure, Error>> => {
     return Try(async () => {
       const keypairs = signers.map((s) => s.toKeypair());
 
@@ -76,7 +77,7 @@ export namespace SplToken {
         requireAllSignatures: false,
       });
       const hex = serializedTx.toString('hex');
-      return new PartialSignTransaction(hex);
+      return new TransactionBuilder.PartialSign(hex);
     });
   };
 }

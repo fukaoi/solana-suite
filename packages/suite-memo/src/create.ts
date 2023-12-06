@@ -1,9 +1,10 @@
 import { TransactionInstruction } from '@solana/web3.js';
-import { Transaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { Constants, Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 import bs from 'bs58';
 import { AuthorityOptions } from '~/types/shared';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace Memo {
   export const decode = (encoded: string): string =>
@@ -16,7 +17,7 @@ export namespace Memo {
     owner: Pubkey,
     signer: Secret,
     options: Partial<AuthorityOptions> = {},
-  ): Result<Transaction, Error> => {
+  ): Result<CommonStructure, Error> => {
     return Try(() => {
       const feePayer = options.feePayer;
 
@@ -38,7 +39,7 @@ export namespace Memo {
 
       const payer = feePayer || signer;
 
-      return new Transaction(
+      return new TransactionBuilder.Common(
         [instruction],
         [signer.toKeypair()],
         payer.toKeypair(),

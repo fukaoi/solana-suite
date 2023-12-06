@@ -6,11 +6,12 @@ import {
 } from '@solana/spl-token';
 
 import { debugLog, Result, Try } from '~/shared';
-import { Transaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
 import { Account } from '~/account';
 import { AuthorityOptions } from '~/types/shared';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SolNative {
   const RADIX = 10;
@@ -23,7 +24,7 @@ export namespace SolNative {
     signers: Secret[],
     amount: number,
     options: Partial<AuthorityOptions> = {},
-  ): Promise<Result<Transaction, Error>> => {
+  ): Promise<Result<CommonStructure, Error>> => {
     return Try(async () => {
       const connection = Node.getConnection();
       const payer = options.feePayer ? options.feePayer : signers[0];
@@ -82,7 +83,7 @@ export namespace SolNative {
         ),
       );
 
-      return new Transaction(
+      return new TransactionBuilder.Common(
         instructions,
         signers.map((s) => s.toKeypair()),
         payer.toKeypair(),

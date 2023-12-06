@@ -248,26 +248,35 @@ type ExplorerOptions = {
     replacePath: string;
 };
 
-interface StructPartialSignTransaction {
-    hexInstruction: string;
-    submit: (feePayer: Secret$1) => Promise<Result<string, Error>>;
-}
-interface StructTransaction {
+type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
-    data?: unknown;
+    data?: T;
     submit: () => Promise<Result<TransactionSignature, Error>>;
-}
+};
+type MintStructure<T = Pubkey> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: T;
+    submit: () => Promise<Result<TransactionSignature, Error>>;
+};
+type PartialSignStructure<T = Pubkey> = {
+    hexInstruction: string;
+    canSubmit?: boolean;
+    data?: T;
+    submit: (feePayer: Secret$1) => Promise<Result<string, Error>>;
+};
 
 declare namespace TransactionBuilder$4 {
-    class Common implements StructTransaction {
+    class Common<T = undefined> implements CommonStructure<T> {
         static MAX_TRANSACTION_SIZE: number;
         instructions: TransactionInstruction[];
         signers: Keypair[];
         feePayer?: Keypair;
-        data?: unknown;
-        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: unknown);
+        data?: T;
+        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
         submit: () => Promise<Result<TransactionSignature, Error>>;
     }
     /**
@@ -285,18 +294,18 @@ declare namespace TransactionBuilder$3 {
 }
 
 declare namespace TransactionBuilder$2 {
-    class Mint<T> implements StructTransaction {
+    class Mint implements MintStructure {
         instructions: TransactionInstruction[];
         signers: Keypair[];
         feePayer?: Keypair;
-        data?: T;
-        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
+        data?: Pubkey;
+        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: Pubkey);
         submit: () => Promise<Result<TransactionSignature, Error>>;
     }
 }
 
 declare namespace TransactionBuilder$1 {
-    class PartialSign implements StructPartialSignTransaction {
+    class PartialSign implements PartialSignStructure {
         hexInstruction: string;
         data?: Pubkey;
         canSubmit?: boolean;

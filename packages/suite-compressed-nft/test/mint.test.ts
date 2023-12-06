@@ -182,8 +182,10 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
       t.log('# sig:', ok);
       t.pass();
     },
-    // (ng: Error) => .fail(ng.message),
-    (ng: Error) => console.error(ng),
+    (ng: Error) => {
+      console.error(ng);
+      t.fail(ng.message);
+    },
   );
   const assetId = await inst.unwrap().data?.getAssetId();
   t.log('# asset id: ', assetId);

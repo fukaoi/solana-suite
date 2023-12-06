@@ -24,7 +24,7 @@ import { debugLog, Result, Try, unixTimestamp } from '~/shared';
 
 import { Node } from '~/node';
 import { Account } from '~/account';
-import { MintTransaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { InputTokenMetadata, MintOptions } from '~/types/spl-token';
@@ -32,6 +32,7 @@ import { Converter } from '~/converter';
 import { Validator } from '~/validator';
 import { SplToken as Calculate } from './calculate-amount';
 import { Storage } from '~/storage';
+import { MintStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
@@ -141,7 +142,7 @@ export namespace SplToken {
     mintDecimal: number,
     input: InputTokenMetadata,
     options: Partial<MintOptions> = {},
-  ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
+  ): Promise<Result<MintStructure, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputTokenMetadata>(input);
       if (valid.isErr) {
@@ -224,7 +225,7 @@ export namespace SplToken {
         );
       }
 
-      return new MintTransaction(
+      return new TransactionBuilder.Mint(
         insts,
         [signer.toKeypair(), mint.toKeypair()],
         payer.toKeypair(),

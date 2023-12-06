@@ -4,7 +4,7 @@ import { Account } from '~/account';
 import { Converter } from '~/converter';
 import { Storage } from '~/storage';
 import { Node } from '~/node';
-import { MintTransaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { debugLog, Result, Try, unixTimestamp, Validator } from '~/shared';
 import { DasApi } from '~/das-api';
 import { CompressedNft as Tree } from './tree';
@@ -30,6 +30,7 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 import { MintOptions } from '~/types/compressed-nft';
+import { MintStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
@@ -119,7 +120,7 @@ export namespace CompressedNft {
     treeOwner: Pubkey,
     collectionMint: Pubkey,
     options: Partial<MintOptions> = {},
-  ): Promise<Result<MintTransaction<Tree.Tree>, Error>> => {
+  ): Promise<Result<MintStructure<Tree.Tree>, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -239,7 +240,7 @@ export namespace CompressedNft {
           },
         ),
       );
-      
+
       // TODO: Work
       // creator --- Error transaction too large
       // if (input.creators) {
@@ -255,7 +256,7 @@ export namespace CompressedNft {
       //   );
       // }
 
-      return new MintTransaction<Tree.Tree>(
+      return new TransactionBuilder.Mint(
         instructions,
         [signer.toKeypair()],
         payer.toKeypair(),

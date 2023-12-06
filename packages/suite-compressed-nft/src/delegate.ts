@@ -13,9 +13,10 @@ import {
   SPL_NOOP_PROGRAM_ID,
 } from '@solana/spl-account-compression';
 import { Result, Try } from '~/shared';
-import { Transaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { DelegateOptions } from '~/types/compressed-nft';
 import { Pubkey, Secret } from '~/types/account';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   //@internal
@@ -86,13 +87,13 @@ export namespace CompressedNft {
     assetId: Pubkey,
     signer: Secret,
     options: Partial<DelegateOptions> = {},
-  ): Promise<Result<Transaction, Error>> => {
+  ): Promise<Result<CommonStructure, Error>> => {
     return Try(async () => {
       const newDelegate = options.delegate
         ? options.delegate.toPublicKey()
         : null;
       const inst = await createDeleagate(assetId.toPublicKey(), newDelegate);
-      return new Transaction([inst], [signer.toKeypair()]);
+      return new TransactionBuilder.Common([inst], [signer.toKeypair()]);
     });
   };
 }
