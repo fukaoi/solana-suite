@@ -101,11 +101,11 @@ test('[Over size]Calculate transaction size', async (t) => {
   );
   t.log('# transaction size: ', size);
   t.true(size > 0);
-  const bool = TransactionBuilder.isMaxTransactionSize(
+  const bool = TransactionBuilder.isOverTransactionSize(
     transaction,
     feePayer.pubkey.toPublicKey(),
   );
-  t.false(bool);
+  t.true(bool);
 });
 
 test('[Under size]Calculate transaction size', async (t) => {
@@ -187,9 +187,9 @@ test('[Under size]Calculate transaction size', async (t) => {
   );
   t.log('# transaction size: ', size);
   t.true(size > 0);
-  const bool = TransactionBuilder.isMaxTransactionSize(
+  const bool = TransactionBuilder.isOverTransactionSize(
     transaction,
     feePayer.pubkey.toPublicKey(),
   );
-  t.true(bool);
+  t.false(bool);
 });

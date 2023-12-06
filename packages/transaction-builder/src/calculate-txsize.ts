@@ -74,10 +74,10 @@ export namespace TransactionBuilder {
    * @param feePayer the publicKey of the signer
    * @returns size in bytes of the transaction
    */
-  export const isMaxTransactionSize = (
+  export const isOverTransactionSize = (
     transaction: Transaction,
     feePayer: PublicKey,
   ): boolean => {
-    return calculateTxSize(transaction, feePayer) < MAX_TRANSACTION_SIZE;
+    return calculateTxSize(transaction, feePayer) > MAX_TRANSACTION_SIZE;
   };
 }

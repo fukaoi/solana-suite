@@ -8,6 +8,7 @@ import {
 import { Node } from '~/node';
 import { MAX_RETRIES, TransactionBuilder as Common } from './common';
 import { TransactionBuilder as Mint } from './mint';
+import { TransactionBuilder as CalculateTxsize } from './calculate-txsize';
 import { Try } from '../../shared/src/shared';
 import { Result } from '../../shared/src/result';
 
@@ -43,6 +44,8 @@ export namespace TransactionBuilder {
           finalSigners = [feePayer, ...signers];
         }
         instructions.map((inst) => transaction.add(inst));
+
+        // CalculateTxsize.isMaxTransactionSize(transaction, feePayer.publicKey);
 
         const options: ConfirmOptions = {
           maxRetries: MAX_RETRIES,
