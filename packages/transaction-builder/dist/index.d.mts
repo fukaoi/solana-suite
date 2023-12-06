@@ -279,7 +279,7 @@ declare namespace TransactionBuilder$4 {
 }
 
 declare namespace TransactionBuilder$3 {
-    class BatchTransaction {
+    class Batch {
         submit: (arr: TransactionBuilder$4.Common[]) => Promise<TransactionSignature>;
     }
 }
@@ -296,7 +296,7 @@ declare namespace TransactionBuilder$2 {
 }
 
 declare namespace TransactionBuilder$1 {
-    class PartialSignTransaction implements StructPartialSignTransaction {
+    class PartialSign implements StructPartialSignTransaction {
         hexInstruction: string;
         data?: Pubkey;
         canSubmit?: boolean;
@@ -306,11 +306,11 @@ declare namespace TransactionBuilder$1 {
 }
 
 declare const TransactionBuilder: {
-    PartialSignTransaction: typeof TransactionBuilder$1.PartialSignTransaction;
+    PartialSign: typeof TransactionBuilder$1.PartialSign;
     Common: typeof TransactionBuilder$4.Common;
     getTxSize: (tx: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => number;
     Mint: typeof TransactionBuilder$2.Mint;
-    BatchTransaction: typeof TransactionBuilder$3.BatchTransaction;
+    Batch: typeof TransactionBuilder$3.Batch;
 };
 
 export { TransactionBuilder };

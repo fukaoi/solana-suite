@@ -10,24 +10,24 @@ import {
 
 import { Node } from '~/node';
 import { Result, Try } from '~/shared';
-import { StructTransaction } from '~/types/transaction-builder';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export const MAX_RETRIES = 3;
 
 export namespace TransactionBuilder {
-  export class Common implements StructTransaction {
+  export class Common<T extends undefined> implements CommonStructure {
     static MAX_TRANSACTION_SIZE = 1232;
 
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
-    data?: unknown;
+    data?: T;
 
     constructor(
       instructions: TransactionInstruction[],
       signers: Keypair[],
       feePayer?: Keypair,
-      data?: unknown,
+      data?: T,
     ) {
       this.instructions = instructions;
       this.signers = signers;

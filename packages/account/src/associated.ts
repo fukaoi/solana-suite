@@ -2,7 +2,7 @@ import { TransactionInstruction } from '@solana/web3.js';
 import { debugLog, sleep } from '~/shared';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
-import { StructTransaction } from '~/types/transaction-builder';
+import { CommonStructure } from '~/types/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';
 
 import {
@@ -37,7 +37,7 @@ export namespace Account {
       owner: Pubkey,
       feePayer: Secret,
       allowOwnerOffCurve = false,
-    ): Promise<string | StructTransaction> => {
+    ): Promise<string | CommonStructure<Pubkey>> => {
       const res = await makeOrCreateInstruction(
         mint,
         owner,
@@ -49,11 +49,11 @@ export namespace Account {
         return res.tokenAccount;
       }
 
-      return new TransactionBuilder.Common(
+      return new TransactionBuilder.Common<Pubkey>(
         [res.inst],
         [],
         feePayer.toKeypair(),
-        res.tokenAccount,
+        res.tokenAccount!,
       );
     };
 
@@ -82,7 +82,7 @@ export namespace Account {
             (await inst.submit()).map(
               async (ok: string) => {
                 await Node.confirmedSig(ok);
-                return inst.data as string;
+                return inst.data;
               },
               (err: Error) => {
                 debugLog('# Error submit retryGetOrCreate: ', err);

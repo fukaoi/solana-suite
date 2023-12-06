@@ -1,8 +1,8 @@
 import { Result } from '~/shared';
-import { Transaction } from '~/transaction';
 import { Pubkey, Secret } from '~/types/account';
 import { SplToken } from '~/suite-spl-token';
 import { AuthorityOptions } from '~/types/shared';
+import { StructCommonTransaction } from '~/types/transaction-builder';
 
 export namespace RegularNft {
   const NFT_AMOUNT = 1;
@@ -13,7 +13,7 @@ export namespace RegularNft {
     owner: Pubkey,
     signer: Secret,
     options: Partial<AuthorityOptions> = {},
-  ): Result<Transaction, Error> => {
+  ): Result<StructCommonTransaction, Error> => {
     const feePayer = options.feePayer ? options.feePayer : signer;
     return SplToken.burn(mint, owner, [signer], NFT_AMOUNT, NFT_DECIMALS, {
       feePayer,

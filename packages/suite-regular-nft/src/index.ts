@@ -7,8 +7,8 @@ import { RegularNft as Mint } from './mint';
 import { RegularNft as MintCollection } from './mint-collection';
 import { RegularNft as Thaw } from './thaw';
 import { RegularNft as Transfer } from './transfer';
-import '~/types/transaction';
-import '~/transaction';
+import '~/types/transaction-builder'; // TODO: need? or Result
+import '~/transaction-builder';
 
 export const RegularNft = {
   ...Burn,

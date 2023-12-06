@@ -8,15 +8,19 @@ import { Result, sleep, Try } from '~/shared';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
 import { MAX_RETRIES } from './common';
-import { StructPartialSignTransaction } from '~/types/transaction-builder';
+import { PartialSignStructure } from '~/types/transaction-builder';
 
 export namespace TransactionBuilder {
-  export class PartialSign implements StructPartialSignTransaction {
+  export class PartialSign implements PartialSignStructure {
     hexInstruction: string;
     data?: Pubkey;
     canSubmit?: boolean;
 
-    constructor(instructions: string, mint?: Pubkey, canSubmit = false) {
+    constructor(
+      instructions: string, 
+      mint?: Pubkey, 
+      canSubmit = false
+    ) {
       this.hexInstruction = instructions;
       this.data = mint;
       this.canSubmit = canSubmit;
@@ -26,7 +30,7 @@ export namespace TransactionBuilder {
       feePayer: Secret,
     ): Promise<Result<TransactionSignature, Error>> => {
       return Try(async () => {
-        if (!(this instanceof PartialSignTransaction)) {
+        if (!(this instanceof PartialSign)) {
           throw Error('only PartialSignInstruction object that can use this');
         }
 

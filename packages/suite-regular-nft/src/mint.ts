@@ -16,7 +16,8 @@ import {
 } from '@solana/spl-token';
 import { debugLog, Result, Try, unixTimestamp } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
-import { MintTransaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
+import { MintStructure } from '~/types/transaction-builder';
 import { Node } from '~/node';
 import { Storage } from '~/storage';
 import { InputNftMetadata, MintOptions } from '~/types/regular-nft';
@@ -180,7 +181,7 @@ export namespace RegularNft {
     signer: Secret,
     input: InputNftMetadata,
     options: Partial<MintOptions> = {},
-  ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
+  ): Promise<Result<MintStructure, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -303,7 +304,7 @@ export namespace RegularNft {
         });
       }
 
-      return new MintTransaction(
+      return new TransactionBuilder.Mint(
         instructions,
         keypairs,
         payer.toKeypair(),

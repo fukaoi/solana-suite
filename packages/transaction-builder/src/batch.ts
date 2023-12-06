@@ -78,7 +78,7 @@ export namespace TransactionBuilder {
         }
         i++;
       }
-      return new BatchTransaction().submit(instructions);
+      return new Batch().submit(instructions);
     });
   };
 }

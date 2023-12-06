@@ -4,11 +4,12 @@ import { Converter } from '~/converter';
 import { Account } from '~/account';
 import { Storage } from '~/storage';
 import { Validator } from '~/validator';
-import { MintTransaction } from '~/transaction';
+import { TransactionBuilder } from '~/transaction-builder';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { Secret } from '~/types/account';
 import { RegularNft as Mint } from './mint';
 import { MintCollectionOptions } from '~/types/regular-nft';
+import { MintStructure } from '~/types/transaction-builder';
 
 /**
  * create a collection
@@ -25,7 +26,7 @@ export namespace RegularNft {
     signer: Secret,
     input: InputNftMetadata,
     options: Partial<MintCollectionOptions> = {},
-  ): Promise<Result<MintTransaction<Pubkey>, Error>> => {
+  ): Promise<Result<MintStructure<Pubkey>, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -131,7 +132,7 @@ export namespace RegularNft {
         }),
       );
 
-      return new MintTransaction(
+      return new TransactionBuilder.Mint(
         instructions,
         [signer.toKeypair(), collectionMint.toKeypair()],
         payer.toKeypair(),

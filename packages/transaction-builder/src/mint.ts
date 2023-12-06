@@ -10,20 +10,21 @@ import {
 import { Constants, debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { MAX_RETRIES } from './common';
-import { StructTransaction } from '~/types/transaction-builder';
+import { MintStructure } from '~/types/transaction-builder';
+import { Pubkey } from '~/types/account';
 
 export namespace TransactionBuilder {
-  export class Mint<T> implements StructTransaction {
+  export class Mint implements MintStructure {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
-    data?: T;
+    data?: Pubkey;
 
     constructor(
       instructions: TransactionInstruction[],
       signers: Keypair[],
       feePayer?: Keypair,
-      data?: T,
+      data?: Pubkey,
     ) {
       this.instructions = instructions;
       this.signers = signers;

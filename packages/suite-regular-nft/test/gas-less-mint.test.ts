@@ -39,7 +39,7 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
   t.true(serialized.isOk, `${serialized.unwrap()}`);
 
   if (serialized.isOk) {
-    (await serialized.value.submit(feePayer.secret)).match(
+    (await serialized.submit(feePayer.secret)).match(
       (ok: string) => {
         t.log('# mint:', serialized.value.data);
         t.log('# sig:', ok);

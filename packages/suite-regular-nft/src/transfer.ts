@@ -1,8 +1,8 @@
 import { SplToken } from '~/suite-spl-token';
 import { Result } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
-import { Transaction } from '~/transaction';
-import { AuthorityOptions } from '../../types/src/shared/shared';
+import { AuthorityOptions } from '~/types/shared';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace RegularNft {
   const NFT_AMOUNT = 1;
@@ -14,7 +14,7 @@ export namespace RegularNft {
     dest: Pubkey,
     signers: Secret[],
     options: Partial<AuthorityOptions> = {},
-  ): Promise<Result<Transaction, Error>> => {
+  ): Promise<Result<CommonStructure, Error>> => {
     return SplToken.transfer(
       mint,
       owner,

@@ -9,7 +9,7 @@ import { Validator } from '~/validator';
 import { Account } from '~/account';
 import { RegularNft as Mint } from './mint';
 import { Transaction } from '@solana/web3.js';
-import { StructPartialSignTransaction } from '~/types/transaction-builder';
+import { PartialSignStructure } from '~/types/transaction-builder';
 
 export namespace RegularNft {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
@@ -46,7 +46,7 @@ export namespace RegularNft {
     input: InputNftMetadata,
     feePayer: Pubkey,
     options: Partial<GasLessMintOptions> = {},
-  ): Promise<Result<StructPartialSignTransaction, Error>> => {
+  ): Promise<Result<PartialSignStructure, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {

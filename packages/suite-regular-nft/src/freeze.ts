@@ -6,7 +6,7 @@ import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createFreezeDelegatedAccountInstruction } from '@metaplex-foundation/mpl-token-metadata';
 import { Account } from '~/account';
 import { AuthorityOptions } from '~/types/shared';
-import { StructTransaction } from '~/types/transaction-builder';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace RegularNft {
   /**
@@ -22,7 +22,7 @@ export namespace RegularNft {
     owner: Pubkey,
     freezeAuthority: Secret,
     options: Partial<AuthorityOptions> = {},
-  ): Result<StructTransaction, Error> => {
+  ): Result<CommonStructure, Error> => {
     return Try(() => {
       const payer = options.feePayer ? options.feePayer : freezeAuthority;
       const tokenAccount = getAssociatedTokenAddressSync(
