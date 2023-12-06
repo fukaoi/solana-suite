@@ -56,24 +56,18 @@ export namespace TransactionBuilder {
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   /* @ts-ignore */
   Array.prototype.submit = async function (feePayer: Secret) {
-    return Try(async () => {
-      let i = 0;
-      for await (const obj of this) {
-        if (obj.isErr) {
-          const errorMess: string = obj.error.message as string;
-          throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
-        } else if (obj.canSubmit) {
-          console.log('# canSubmit', obj);
-          await obj.submit(feePayer);
-          console.log('# canSubmit finish');
-          await sleep(30);
-          console.log('# sleep finish');
-        } else {
-          console.log('# transfer transaction start: ', obj);
-          return await obj.submit(feePayer);
-        }
-        i++;
+    let i = 0;
+    for await (const obj of this) {
+      if (obj.isErr) {
+        const errorMess: string = obj.error.message as string;
+        throw Error(`[Array index of caught 'Result.err': ${i}]${errorMess}`);
+      } else if (obj.canSubmit) {
+        await obj.submit(feePayer);
+        await sleep(30);
+      } else {
+        return await obj.submit(feePayer);
       }
-    });
+      i++;
+    }
   };
 }

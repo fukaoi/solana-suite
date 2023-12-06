@@ -1,5 +1,13 @@
 // forked: https://github.com/badrap/result, thank you advice  @jviide
 import { TransactionSignature } from '@solana/web3.js';
+import {
+  CommonStructure,
+  MintStructure,
+  PartialSignStructure,
+} from '~/types/transaction-builder';
+
+import { TransactionBuilder } from '~/transaction-builder';
+import { Try } from './shared';
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
@@ -63,29 +71,40 @@ abstract class AbstractResult<T, E extends Error> {
     );
   }
 
-  /// submit (alias Instruction.submit) ////
+  /// single TransactionBuilder ////
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  async submit(feePayer?: any): Promise<Result<TransactionSignature, Error>> {
-    try {
-      const instruction = this.unwrap() as any;
-      if (instruction.instructions || instruction.hexInstruction) {
-        return await instruction.submit(feePayer);
-      } else if (Array.isArray(instruction)) {
-        return await instruction.submit(feePayer);
-      }
-      return Result.err(Error('Only Instruction object'));
-    } catch (err) {
-      return Result.err(err as Error);
+  async submit(): Promise<Result<TransactionSignature, Error>> {
+    const obj = this.unwrap() as CommonStructure | MintStructure;
+    if (obj.instructions) {
+      console.log('# result single');
+      return await obj.submit();
     }
+    return Result.err(Error('Only Instruction object'));
   }
 }
 
+/// Multiple TransactionBuilder ////
 declare global {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   interface Array<T> {
     submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
   }
 }
+
+Array.prototype.submit = async function () {
+  console.log('#batch', this);
+  const instructions: CommonStructure | MintStructure[] = [];
+  for (const obj of this) {
+    if (obj.isErr) {
+      return obj;
+    } else if (obj.isOk) {
+      instructions.push(obj.value);
+    } else {
+      return Result.err(Error('Only Array Instruction object'));
+    }
+  }
+  return new TransactionBuilder.Batch().submit(instructions);
+};
 
 class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
   readonly isOk = true;

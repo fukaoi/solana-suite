@@ -5,8 +5,8 @@ import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
 import { KeypairAccount } from '~/types/account';
 import { Account } from '~/account';
-import { SolNative } from '@solana-suite/sol-native';
-import { SplToken } from '@solana-suite/spl-token';
+import { SolNative } from '~/suite-sol-native';
+import { SplToken } from '~/suite-spl-token';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
