@@ -42,12 +42,17 @@ export namespace CompressedNft {
    */
   export const initTree = (
     feePayer: Secret,
-    maxDepth: number = 14, // TODO: more simple parameter
-    maxBufferSize: number = 64, // TODO: more simple parameter
+    maxDepth: number = 14,
+    maxBufferSize: number = 64,
   ): Promise<Result<MintStructure, Error>> => {
     return Try(async () => {
       const treeOwner = Account.Keypair.create();
-      const space = getConcurrentMerkleTreeAccountSize(maxDepth, maxBufferSize);
+      const canopyDepth = maxDepth - 5;
+      const space = getConcurrentMerkleTreeAccountSize(
+        maxDepth,
+        maxBufferSize,
+        canopyDepth,
+      );
       const [treeAuthority] = PublicKey.findProgramAddressSync(
         [treeOwner.toKeypair().publicKey.toBuffer()],
         MPL_BUBBLEGUM_PROGRAM_ID.toPublicKey(),
@@ -93,5 +98,15 @@ export namespace CompressedNft {
         treeOwner.pubkey,
       );
     });
+  };
+
+  export const createNumberNft = async (
+    wantNumber: number,
+    feePayer: Secret,
+  ): Promise<Result<MintStructure, Error>> => {
+    const log2 = Math.log2(wantNumber);
+    const maxDepth = 2 ** log2;
+    const maxBufferSize = 64;
+    return initTree(feePayer, maxDepth, maxBufferSize);
   };
 }
