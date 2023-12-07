@@ -242,7 +242,7 @@ export namespace CompressedNft {
         ),
       );
 
-      // TODO: refactoring. update version transaction, address look uptable
+      // TODO: refactoring. move to creator.ts 
       // if (input.creators) {
       //   const assetId = await new Tree.Tree(treeOwner).getAssetId();
       //   instructions.push(
