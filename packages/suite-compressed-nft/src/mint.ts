@@ -242,18 +242,18 @@ export namespace CompressedNft {
         ),
       );
 
-      if (input.creators) {
-        const assetId = await new Tree.Tree(treeOwner).getAssetId();
-        instructions.push(
-          await createVerifyCreator(
-            metadataArgs.creators,
-            assetId.toPublicKey(),
-            treeOwner.toPublicKey(),
-            metadataArgs,
-            payer.toKeypair().publicKey,
-          ),
-        );
-      }
+      // if (input.creators) {
+      //   const assetId = await new Tree.Tree(treeOwner).getAssetId();
+      //   instructions.push(
+      //     await createVerifyCreator(
+      //       metadataArgs.creators,
+      //       assetId.toPublicKey(),
+      //       treeOwner.toPublicKey(),
+      //       metadataArgs,
+      //       payer.toKeypair().publicKey,
+      //     ),
+      //   );
+      // }
 
       return new TransactionBuilder.Mint(
         instructions,
