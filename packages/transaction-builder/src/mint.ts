@@ -62,7 +62,7 @@ export namespace TransactionBuilder {
         return await sendAndConfirmTransaction(
           Node.getConnection(),
           transaction,
-          finalSigners,
+          [finalSigners[0]],
           options,
         );
       });

@@ -10,7 +10,6 @@ import {
 import { Node } from '~/node';
 import { Result, Try } from '~/shared';
 import { CommonStructure } from '~/types/transaction-builder';
-import { TransactionBuilder as CalculateTxsize } from './calculate-txsize';
 
 export const MAX_RETRIES = 3;
 
@@ -53,13 +52,6 @@ export namespace TransactionBuilder {
         }
 
         this.instructions.forEach((inst) => transaction.add(inst));
-
-        if (CalculateTxsize.isMaxTransactionSize(
-          transaction,
-          finalSigners[0].publicKey,
-        )) {
-
-        }
 
         const options: ConfirmOptions = {
           maxRetries: MAX_RETRIES,
