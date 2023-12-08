@@ -74,7 +74,7 @@ export namespace CompressedNft {
 
         logWrapper: SPL_NOOP_PROGRAM_ID,
         compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-        creator: creators,
+        creator: feePayer,
 
         // provide the sliced proof
         anchorRemainingAccounts: slicedProof,

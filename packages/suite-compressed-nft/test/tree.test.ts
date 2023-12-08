@@ -20,7 +20,21 @@ test('Get asset id', async (t) => {
 });
 
 test('Create merkle tree', async (t) => {
-  const inst = await CompressedNft.initTree(feePayer.secret);
+  const inst = await CompressedNft.initTree(feePayer.secret, 14, 64);
+  (await inst.submit()).match(
+    (ok) => {
+      t.log('# sig: ', ok);
+      t.log('# treeOwner: ', inst.unwrap().data);
+      t.pass();
+    },
+    (err) => {
+      t.fail(err.message);
+    },
+  );
+});
+
+test('Create merkle tree by mint total number', async (t) => {
+  const inst = await CompressedNft.initMintTotal(10000, feePayer.secret);
   (await inst.submit()).match(
     (ok) => {
       t.log('# sig: ', ok);

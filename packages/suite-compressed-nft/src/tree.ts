@@ -1,8 +1,10 @@
 import {
+  ALL_DEPTH_SIZE_PAIRS,
   ConcurrentMerkleTreeAccount,
   getConcurrentMerkleTreeAccountSize,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
+  ValidDepthSizePair,
 } from '@solana/spl-account-compression';
 import { MPL_BUBBLEGUM_PROGRAM_ID } from '@metaplex-foundation/mpl-bubblegum';
 import { PublicKey, SystemProgram } from '@solana/web3.js';
@@ -13,6 +15,7 @@ import { debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { MintStructure } from '~/types/transaction-builder';
+import { max } from 'bn.js';
 
 export namespace CompressedNft {
   export class Tree {
@@ -42,8 +45,8 @@ export namespace CompressedNft {
    */
   export const initTree = (
     feePayer: Secret,
-    maxDepth: number = 14,
-    maxBufferSize: number = 64,
+    maxDepth: number,
+    maxBufferSize: number,
   ): Promise<Result<MintStructure, Error>> => {
     return Try(async () => {
       const treeOwner = Account.Keypair.create();
@@ -59,6 +62,7 @@ export namespace CompressedNft {
       );
       const instructions = [];
 
+      debugLog(`# maxDepth: ${maxDepth}, maxBufferSize: ${maxBufferSize}`);
       debugLog('# tree space: ', space);
 
       instructions.push(
@@ -100,13 +104,15 @@ export namespace CompressedNft {
     });
   };
 
-  export const createNumberNft = async (
-    wantNumber: number,
+  export const initMintTotal = async (
+    total: number,
     feePayer: Secret,
   ): Promise<Result<MintStructure, Error>> => {
-    const log2 = Math.log2(wantNumber);
-    const maxDepth = 2 ** log2;
-    const maxBufferSize = 64;
-    return initTree(feePayer, maxDepth, maxBufferSize);
+    const log2 = Math.ceil(Math.log2(total));
+    debugLog('# log2: ', log2, 2 ** log2);
+    const matched = ALL_DEPTH_SIZE_PAIRS.filter(
+      (pair) => pair.maxDepth === log2,
+    )[0];
+    return initTree(feePayer, matched.maxDepth, matched.maxBufferSize);
   };
 }
