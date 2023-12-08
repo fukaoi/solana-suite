@@ -134,8 +134,6 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
     ],
   };
 
-  const collection = 'FMKm75Z9feXMrsKRT9Q6AqSrjHzFPYxpyrD4Hyfx4bup';
-
   const attributes = [
     {
       trait_type: 'hair',
@@ -163,9 +161,9 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
       external_url: 'https://atonoy.github.io/solana-suite/',
       royalty: 50,
       isMutable: false,
-      creators,
+      // creators,
       properties,
-      collection,
+      collection: collectionMint,
       attributes,
       options,
     },

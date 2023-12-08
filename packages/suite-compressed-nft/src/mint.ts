@@ -3,25 +3,92 @@ import { Pubkey, Secret } from '~/types/account';
 import { Account } from '~/account';
 import { Converter } from '~/converter';
 import { Storage } from '~/storage';
+import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { debugLog, Result, Try, unixTimestamp, Validator } from '~/shared';
+import { DasApi } from '~/das-api';
 import { CompressedNft as Tree } from './tree';
 import {
+  computeCreatorHash,
+  computeDataHash,
   createMintToCollectionV1Instruction,
+  createVerifyCreatorInstruction,
+  Creator,
   MetadataArgs,
   PROGRAM_ID as BUBBLEGUM_PROGRAM_ID,
 } from 'mpl-bubblegum-instruction';
 import {
+  ConcurrentMerkleTreeAccount,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
 } from '@solana/spl-account-compression';
 
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
+import {
+  AccountMeta,
+  PublicKey,
+  TransactionInstruction,
+} from '@solana/web3.js';
 import { MintOptions } from '~/types/compressed-nft';
 import { MintStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
+
+  export const createVerifyCreator = async (
+    creators: Creator[],
+    assetId: PublicKey,
+    treeOwner: PublicKey,
+    metadata: MetadataArgs,
+    feePayer: PublicKey,
+  ): Promise<TransactionInstruction> => {
+    const rpcAssetProof = await DasApi.getAssetProof(assetId.toString());
+    const rpcAsset = await DasApi.getAsset(assetId.toString());
+    if (rpcAssetProof.isErr || rpcAsset.isErr) {
+      throw Error('Rise error when get asset proof or asset');
+    }
+    const compression = rpcAsset.value.compression;
+    const ownership = rpcAsset.value.ownership;
+    const assetProof = rpcAssetProof.value;
+
+    const treeAccount = await ConcurrentMerkleTreeAccount.fromAccountAddress(
+      Node.getConnection(),
+      treeOwner,
+    );
+    const canopyDepth = treeAccount.getCanopyDepth();
+    const slicedProof: AccountMeta[] = assetProof.proof
+      .map((node: string) => ({
+        pubkey: node.toPublicKey(),
+        isSigner: false,
+        isWritable: false,
+      }))
+      .slice(0, assetProof.proof.length - (canopyDepth ? canopyDepth : 0));
+
+    return createVerifyCreatorInstruction(
+      {
+        treeAuthority: treeOwner,
+        leafOwner: ownership.owner.toPublicKey(),
+        leafDelegate: (ownership.delegate || ownership.owner).toPublicKey(),
+        merkleTree: assetProof.tree_id.toPublicKey(),
+        payer: feePayer,
+
+        logWrapper: SPL_NOOP_PROGRAM_ID,
+        compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        creator: creators,
+
+        // provide the sliced proof
+        anchorRemainingAccounts: slicedProof,
+      },
+      {
+        root: [...assetProof.root.trim().toPublicKey().toBytes()],
+        creatorHash: [...computeCreatorHash(creators)],
+        dataHash: [...computeDataHash(metadata)],
+        nonce: compression.leaf_id,
+        index: compression.leaf_id,
+        message: metadata,
+      },
+    );
+  };
 
   /**
    * Upload content and Compressed NFT mint
@@ -173,6 +240,19 @@ export namespace CompressedNft {
           },
         ),
       );
+
+      if (input.creators) {
+        const assetId = await new Tree.Tree(treeOwner).getAssetId();
+        instructions.push(
+          await createVerifyCreator(
+            metadataArgs.creators,
+            assetId.toPublicKey(),
+            treeOwner.toPublicKey(),
+            metadataArgs,
+            payer.toKeypair().publicKey,
+          ),
+        );
+      }
 
       return new TransactionBuilder.Mint(
         instructions,
