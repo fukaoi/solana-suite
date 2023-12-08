@@ -46,3 +46,9 @@ test('Create merkle tree by mint total number', async (t) => {
     },
   );
 });
+
+test('Calculate space cost', async (t) => {
+  const res = await CompressedNft.calculateSpaceCost(6452);
+  t.log('# cost: ', res);
+  t.not(res, undefined);
+});

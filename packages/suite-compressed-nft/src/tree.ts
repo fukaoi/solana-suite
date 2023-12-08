@@ -4,18 +4,16 @@ import {
   getConcurrentMerkleTreeAccountSize,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
-  ValidDepthSizePair,
 } from '@solana/spl-account-compression';
 import { MPL_BUBBLEGUM_PROGRAM_ID } from '@metaplex-foundation/mpl-bubblegum';
 import { PublicKey, SystemProgram } from '@solana/web3.js';
 import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
 import { Account } from '~/account';
 import { Pubkey } from '~/types/account';
-import { debugLog, Result, Try } from '~/shared';
+import { Constants, debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { MintStructure } from '~/types/transaction-builder';
-import { max } from 'bn.js';
 
 export namespace CompressedNft {
   export class Tree {
@@ -64,6 +62,10 @@ export namespace CompressedNft {
 
       debugLog(`# maxDepth: ${maxDepth}, maxBufferSize: ${maxBufferSize}`);
       debugLog('# tree space: ', space);
+
+      if (Constants.isDebugging === 'true' || process.env.DEBUG === 'true') {
+        debugLog('# space cost: ', await calculateSpaceCost(space));
+      }
 
       instructions.push(
         SystemProgram.createAccount({
@@ -114,5 +116,11 @@ export namespace CompressedNft {
       (pair) => pair.maxDepth === log2,
     )[0];
     return initTree(feePayer, matched.maxDepth, matched.maxBufferSize);
+  };
+
+  export const calculateSpaceCost = async (space: number) => {
+    const lamports =
+      await Node.getConnection().getMinimumBalanceForRentExemption(space);
+    return { sol: lamports.toSol() };
   };
 }
