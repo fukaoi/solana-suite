@@ -6,7 +6,6 @@ import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
 import {
   Account,
-  FilterType,
   Node,
   Pubkey,
   SplToken,

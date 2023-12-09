@@ -18,7 +18,7 @@ export const requestTransferByKeypair = async (
   console.log('Now load...please wait');
   const keypair: { pubkey: Pubkey; secret: Secret } = JSON.parse(
     fs.readFileSync(LOCAL_KEYPAIR_FILE, 'utf8'),
-  ).source;
+  ).feePayer;
   const sig = SolNative.transfer(keypair.pubkey, pubkey, [keypair.secret], sol);
 
   (await sig.submit()).match(

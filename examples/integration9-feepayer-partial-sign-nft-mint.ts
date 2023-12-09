@@ -39,7 +39,7 @@ import { Account, RegularNft } from '@solana-suite/regular-nft';
     isMutable: false,
   };
 
-  const inst = await RegularNft.feePayerPartialSignMint(
+  const inst = await RegularNft.gasLessMint(
     owner.pubkey,
     owner.secret,
     metadata,

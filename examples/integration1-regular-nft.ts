@@ -50,7 +50,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
       isMutable: true,
       external_url: 'https://github.com/atonoy/solana-suite',
     },
-    feePayer.secret,
+    { feePayer: feePayer.secret },
   );
 
   // this is NFT ID
@@ -82,7 +82,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     owner.pubkey,
     receipt.pubkey,
     [owner.secret],
-    feePayer.secret,
+    { feePayer: feePayer.secret },
   );
 
   // submit instructions

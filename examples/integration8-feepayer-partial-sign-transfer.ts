@@ -35,7 +35,7 @@ import { RandomAsset } from 'test-tools/setupAsset';
   // CREATE HEX INSTRUCTION(Client side)
   //////////////////////////////////////////////
 
-  const inst = await SolNative.feePayerPartialSignTransfer(
+  const inst = await SolNative.gasLessTransfer(
     owner.pubkey,
     dest.pubkey,
     [owner.secret],
@@ -77,12 +77,12 @@ import { RandomAsset } from 'test-tools/setupAsset';
     10000,
     decimals,
     tokenMetadata,
-    feePayer.secret,
+    { feePayer: feePayer.secret },
   );
 
   await mintInst.submit();
 
-  const inst2 = await SplToken.feePayerPartialSignTransfer(
+  const inst2 = await SplToken.gasLessTransfer(
     mintInst.unwrap().data as Pubkey,
     tokenOwner.pubkey,
     dest.pubkey,

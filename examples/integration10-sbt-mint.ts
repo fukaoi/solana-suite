@@ -48,8 +48,10 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
       royalty: 0,
       storageType: 'nftStorage',
     },
-    feePayer.secret,
-    freeze.pubkey, // Pubkey !!
+    {
+      feePayer: feePayer.secret,
+      freezeAuthority: freeze.pubkey, // Pubkey !!
+    },
   );
 
   // this is NFT ID
@@ -63,7 +65,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     mint,
     owner.pubkey,
     freeze.secret,
-    feePayer.secret,
+    {feePayer: feePayer.secret},
   );
 
   (await [inst1, inst2].submit()).match(
