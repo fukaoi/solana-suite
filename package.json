@@ -6,9 +6,9 @@
     "publish": "pnpm --filter '@solana-suite/*' publish --dry-run"
   },
   "devDependencies": {
-    "depcheck": "^1.4.6",
     "@types/node": "16.11.7",
     "ava": "^5.3.1",
+    "depcheck": "^1.4.6",
     "eslint": "^8.50.0",
     "prettier": "3.0.3",
     "ts-node": "^10.9.1",
@@ -16,7 +16,7 @@
     "tslib": "^2.6.2",
     "tsup": "^7.2.0",
     "tsx": "^3.13.0",
-    "turbo": "^1.10.16"
+    "turbo": "^1.11.1"
   },
   "repository": "git@github.com:atonoy/solana-suite.git",
   "author": "fukaoi <usapyon2022@gmail.com>",
