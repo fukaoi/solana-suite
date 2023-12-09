@@ -659,6 +659,7 @@ type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
+    canSubmit?: boolean;
     data?: T;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };
@@ -666,6 +667,7 @@ type MintStructure<T = Pubkey> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
+    canSubmit?: boolean;
     data?: T;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };

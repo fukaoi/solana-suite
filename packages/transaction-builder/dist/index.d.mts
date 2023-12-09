@@ -1,3 +1,4 @@
+import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
@@ -251,6 +252,7 @@ type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
+    canSubmit?: boolean;
     data?: T;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };
@@ -258,6 +260,7 @@ type MintStructure<T = Pubkey> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
+    canSubmit?: boolean;
     data?: T;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };
@@ -311,6 +314,8 @@ declare const TransactionBuilder: {
     PartialSign: typeof TransactionBuilder$1.PartialSign;
     Common: typeof TransactionBuilder$4.Common;
     Mint: typeof TransactionBuilder$3.Mint;
+    calculateTxSize: (transaction: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => number;
+    isOverTransactionSize: (transaction: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => boolean;
     Batch: typeof TransactionBuilder$2.Batch;
 };
 

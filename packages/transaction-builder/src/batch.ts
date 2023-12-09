@@ -8,7 +8,6 @@ import {
 import { Node } from '~/node';
 import { MAX_RETRIES, TransactionBuilder as Common } from './common';
 import { TransactionBuilder as Mint } from './mint';
-import { TransactionBuilder as CalculateTxsize } from './calculate-txsize';
 import { Try } from '../../shared/src/shared';
 import { Result } from '../../shared/src/result';
 

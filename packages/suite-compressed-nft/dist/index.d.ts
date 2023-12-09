@@ -621,6 +621,7 @@ type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
+    canSubmit?: boolean;
     data?: T;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };
@@ -628,6 +629,7 @@ type MintStructure<T = Pubkey$1> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
+    canSubmit?: boolean;
     data?: T;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };
@@ -653,7 +655,11 @@ declare namespace CompressedNft$1 {
      * @param {number} maxBufferSize
      * @return Promise<Result<MintTransaction, Error>>
      */
-    const initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result<MintStructure, Error>>;
+    const initTree: (feePayer: Secret, maxDepth: number, maxBufferSize: number) => Promise<Result<MintStructure, Error>>;
+    const initMintTotal: (total: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
+    const calculateSpaceCost: (space: number) => Promise<{
+        sol: number;
+    }>;
 }
 
 declare const CompressedNft: {
@@ -661,7 +667,11 @@ declare const CompressedNft: {
     transfer: (assetId: Pubkey$1, assetIdOwner: Pubkey$1, dest: Pubkey$1, signers: Secret[]) => Promise<Result<CommonStructure, Error>>;
     mintCollection: (owner: Pubkey, signer: Secret$1, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
     Tree: typeof CompressedNft$1.Tree;
-    initTree: (feePayer: Secret, maxDepth?: number, maxBufferSize?: number) => Promise<Result<MintStructure, Error>>;
+    initTree: (feePayer: Secret, maxDepth: number, maxBufferSize: number) => Promise<Result<MintStructure, Error>>;
+    initMintTotal: (total: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
+    calculateSpaceCost: (space: number) => Promise<{
+        sol: number;
+    }>;
     createVerifyCreator: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
     mint: (owner: Pubkey$1, signer: Secret$1, input: InputNftMetadata, treeOwner: Pubkey$1, collectionMint: Pubkey$1, options?: Partial<MintOptions>) => Promise<Result<MintStructure<CompressedNft$1.Tree>, Error>>;
     gasLessTransfer: (assetId: Pubkey$1, assetIdOwner: Secret$1, dest: Pubkey$1, feePayer: Pubkey$1) => Promise<Result<PartialSignStructure, Error>[]>;
