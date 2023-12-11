@@ -145,6 +145,18 @@ export namespace CompressedNft {
     return { sol: lamports.toSol() };
   };
 
+  /// Initialization parameters for an SPL ConcurrentMerkleTree.
+  ///
+  /// Only the following permutations are valid:
+  ///
+  /// | max_depth | max_buffer_size       |
+  /// | --------- | --------------------- |
+  /// | 3         | (8)                   | node: 8
+  /// | 14        | (64, 256, 1024, 2048) | node: 16,384
+  /// | 20        | (64, 256, 1024, 2048) | node: 131,072
+  /// | 24        | (64, 256, 512, 1024, 2048) | node: 1,048,576
+  /// | 26        | (64, 256, 512, 1024, 2048) | node: ???
+  /// | 30        | (512, 1024, 2048) | node: 1,073,741,824
   const calculateSpaceNumberToDepth = (space: number) => {
     const log2 = Math.ceil(Math.log2(space));
     debugLog('# log2: ', log2, 2 ** log2);
