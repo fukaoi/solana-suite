@@ -1,4 +1,4 @@
-import { Pubkey } from '../account';
+import { Pubkey, Secret } from '../account';
 
 export type MintCollectionOptions = {
   freezeAuthority: Pubkey;

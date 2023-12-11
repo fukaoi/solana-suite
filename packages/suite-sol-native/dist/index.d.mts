@@ -231,6 +231,84 @@ type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
 /**
+ * convert buffer to Array
+ *
+ * @param {Buffer} buffer
+ * @returns number[]
+ */
+declare const bufferToArray: (buffer: Buffer) => number[];
+/**
+ * Overwrite JS Object
+ *
+ * @param {unknown} object
+ * @param {OverwriteObject[]} targets
+ * @returns Object
+ */
+declare const overwriteObject: (object: unknown, targets: {
+    existsKey: string;
+    will: {
+        key: string;
+        value: unknown;
+    };
+}[]) => unknown;
+/**
+ * Display log for solana-suite-config.js
+ *
+ * @param {unknown} data1
+ * @param {unknown} data2
+ * @param {unknown} data3
+ * @param {unknown} data4
+ * @returns void
+ */
+declare const debugLog: (data1: unknown, data2?: unknown, data3?: unknown, data4?: unknown) => void;
+/**
+ * sleep timer
+ *
+ * @param {number} sec
+ * @returns Promise<number>
+ */
+declare const sleep: (sec: number) => Promise<number>;
+/**
+ * Node.js or Browser js
+ *
+ * @returns boolean
+ */
+declare const isBrowser: () => boolean;
+/**
+ * Node.js or Browser js
+ *
+ * @returns boolean
+ */
+declare const isNode: () => boolean;
+/**
+ * argument is promise or other
+ *
+ * @param {unknown} obj
+ * @returns boolean
+ */
+declare const isPromise: (obj: unknown) => obj is Promise<unknown>;
+/**
+ * Try async monad
+ *
+ * @returns Promise<Result<T, E>>
+ */
+declare function Try<T, E extends Error>(asyncblock: () => Promise<T>, finallyInput?: () => void): Promise<Result<T, E>>;
+declare function Try<T, E extends Error>(block: () => T): Result<T, E>;
+/**
+ * argument is promise or other
+ *
+ * @param {number|undefined} created_at
+ * @returns Date | undefined
+ */
+declare const convertTimestampToDateTime: (created_at: number | undefined) => Date | undefined;
+/**
+ * Get unix timestamp
+ *
+ * @returns number
+ */
+declare const unixTimestamp: () => number;
+
+/**
  * Get Associated token Account.
  * if not created, create new token accouint
  *
@@ -440,6 +518,35 @@ declare class ValidatorError extends Error {
     constructor(message: string, details: Details[]);
 }
 
+declare global {
+    interface String {
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
+    }
+    interface Number {
+        toSol(): number;
+        toLamports(): number;
+    }
+    interface Console {
+        debug(data: unknown, data2?: unknown, data3?: unknown): void;
+    }
+    interface Secret {
+        toKeypair(): Keypair;
+    }
+    interface Pubkey {
+        toPublicKey(): PublicKey;
+    }
+}
+declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm",
+    Xray = "xray"
+}
+type ExplorerOptions = {
+    replacePath: string;
+};
+
 declare enum FilterType {
     Memo = "memo",
     Mint = "mint",
@@ -519,35 +626,6 @@ type Memo = {
     programId: PublicKey;
 };
 
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm",
-    Xray = "xray"
-}
-type ExplorerOptions = {
-    replacePath: string;
-};
-
 type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
@@ -570,4 +648,4 @@ declare const SolNative: {
     findByOwner: (owner: Pubkey) => Promise<Result<OwnerInfo, Error>>;
 };
 
-export { Account, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, SolNative, Transfer, TransferChecked, Validator, ValidatorError, WithMemo };
+export { Account, Explorer, ExplorerOptions, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, SolNative, Transfer, TransferChecked, Try, Validator, ValidatorError, WithMemo, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };

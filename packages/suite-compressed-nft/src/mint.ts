@@ -110,6 +110,8 @@ export namespace CompressedNft {
    *   isMutable?: boolean           // enable update()
    *   options?: [key: string]?: unknown       // optional param, Usually not used.
    * }
+   * @param {Pubkey} treeOwner      // Previously created treeOwner
+   * @param {Pubkey} collectionMint // Previously created collectionMint
    * @param {Partial<MintOptions>} options         // mint options
    * @return Promise<Result<MintTransaction, Error>>
    */

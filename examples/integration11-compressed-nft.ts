@@ -6,9 +6,9 @@ import assert from 'assert';
 import {
   Account,
   CompressedNft,
+  Explorer,
   Node,
-  // Pubkey,
-  // Secret,
+  sleep,
 } from '@solana-suite/compressed-nft';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
@@ -39,7 +39,8 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
 
   console.log('# space cost: ', cost);
 
-  await requestTransferByKeypair(feePayer.pubkey, cost.sol + 0.05); // need add sol for insufficient fee
+  await requestTransferByKeypair(feePayer.pubkey, cost.sol + 0.5); // need add sol for insufficient fee
+  await sleep(3);
 
   const space = await CompressedNft.createMintSpace(
     abountMintTotal,
@@ -74,7 +75,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
       isMutable: true,
     },
     {
-      feePayer: feePayer.pubkey,
+      feePayer: feePayer.secret,
     },
   );
 
@@ -85,7 +86,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     (error) => assert.fail(error.message),
   );
 
-  const mintCollection = space.unwrap().data;
+  const mintCollection = collection.unwrap().data;
   console.log('# mintCollection: ', mintCollection);
 
   //////////////////////////////////////////////
@@ -94,31 +95,35 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
 
   // Only test that call this function
   // Usually set custom param
-  //
-  // const inst1 = await CompressedNft.mint(
-  //   owner.pubkey,
-  //   owner.secret,
-  //   {
-  //     filePath: asset.filePath!,
-  //     name: asset.name!,
-  //     symbol: 'SAMPLE',
-  //     royalty: 7,
-  //     storageType: 'nftStorage',
-  //     isMutable: true,
-  //     external_url: 'https://external_url',
-  //   },
-  //   treeOwner,
-  //   // { delegate: feePayer.pubkey },
-  // );
-  //
-  // // this is NFT ID
-  // (await inst1.submit()).match(
-  //   async (value) => await Node.confirmedSig(value, 'finalized'),
-  //   (error) => assert.fail(error),
-  // );
-  //
-  // const mint = inst1.unwrap().data;
-  // console.log('# mint: ', mint);
+
+  const inst1 = await CompressedNft.mint(
+    owner.pubkey,
+    owner.secret,
+    {
+      filePath: asset.filePath!,
+      name: asset.name!,
+      symbol: 'SAMPLE',
+      royalty: 20,
+      storageType: 'nftStorage',
+      isMutable: true,
+      external_url: 'https://external_url',
+    },
+    treeOwner,
+    mintCollection,
+    { delegate: feePayer.secret, receiver: nftReceiver.pubkey },
+  );
+
+  // this is NFT ID
+  (await inst1.submit()).match(
+    async (value) => {
+      await Node.confirmedSig(value, 'finalized');
+      console.log('# sig: ', value.toExplorerUrl(Explorer.Xray));
+    },
+    (error) => assert.fail(error),
+  );
+
+  const mint = inst1.unwrap().data;
+  console.log('# mint: ', await mint.getAssetId());
 
   // //////////////////////////////////////////////
   // // TRANSFER RECEIPTS USER FROM THIS LINE

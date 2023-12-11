@@ -236,17 +236,6 @@ type History = {
     innerInstruction?: boolean;
 };
 
-declare enum FilterType {
-    Memo = "memo",
-    Mint = "mint",
-    OnlyMemo = "only-memo",
-    Transfer = "transfer"
-}
-declare enum ModuleName {
-    SolNative = "system",
-    SplToken = "spl-token"
-}
-
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -275,6 +264,17 @@ declare enum Explorer {
 type ExplorerOptions = {
     replacePath: string;
 };
+
+declare enum FilterType {
+    Memo = "memo",
+    Mint = "mint",
+    OnlyMemo = "only-memo",
+    Transfer = "transfer"
+}
+declare enum ModuleName {
+    SolNative = "system",
+    SplToken = "spl-token"
+}
 
 declare namespace Signatures {
     const getForAdress: (pubkey: Pubkey, parser: (transaction: ParsedTransactionWithMeta) => History | undefined, callback: (history: Result<History[], Error>) => void, options: {

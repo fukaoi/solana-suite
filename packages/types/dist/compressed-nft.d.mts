@@ -1,4 +1,4 @@
-import { Pubkey } from './account.mjs';
+import { Pubkey, Secret } from './account.mjs';
 import { AuthorityOptions } from './shared.mjs';
 import { Offchain } from './storage.mjs';
 import './find.mjs';
@@ -20,7 +20,8 @@ type MintOptions = {
 
 type MintCollectionOptions = {
     freezeAuthority: Pubkey;
-} & AuthorityOptions;
+    feePayer: Secret;
+};
 
 type Authority = {
     address: Pubkey;

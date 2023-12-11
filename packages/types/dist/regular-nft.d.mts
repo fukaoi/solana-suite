@@ -1,6 +1,6 @@
 import { a as Option, C as Creators, U as Uses } from './mint-7437d5a6.js';
 export { d as InputCollection, I as InputCreators, e as InputNftMetadata, O as Options, c as UseMethod, b as bignum } from './mint-7437d5a6.js';
-import { Pubkey } from './account.mjs';
+import { Pubkey, Secret } from './account.mjs';
 import { AuthorityOptions } from './shared.mjs';
 import { Offchain } from './storage.mjs';
 import 'bn.js';
@@ -46,8 +46,9 @@ type MintOptions = {
 } & AuthorityOptions;
 
 type MintCollectionOptions = {
+    feePayer: Secret;
     freezeAuthority: Pubkey;
     collectionSize: number;
-} & AuthorityOptions;
+};
 
 export { Collection, CollectionDetails, Creators, GasLessMintOptions, MintCollectionOptions, MintOptions, Option, RegularNftMetadata, Uses };
