@@ -20,7 +20,7 @@ test('Get asset id', async (t) => {
 });
 
 test('Create merkle tree', async (t) => {
-  const inst = await CompressedNft.initTree(feePayer.secret, 14, 64);
+  const inst = await CompressedNft.initTree(14, 64, 9, feePayer.secret);
   (await inst.submit()).match(
     (ok) => {
       t.log('# sig: ', ok);
@@ -48,7 +48,7 @@ test('Create merkle tree by mint total number', async (t) => {
 });
 
 test('Calculate space cost', async (t) => {
-  const res = await CompressedNft.calculateSpaceCost(6452);
+  const res = await CompressedNft.calculateSpaceCost(10000);
   t.log('# cost: ', res);
   t.not(res, undefined);
 });

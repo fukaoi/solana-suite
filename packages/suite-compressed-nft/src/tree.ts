@@ -36,19 +36,20 @@ export namespace CompressedNft {
    * create a new markle tree
    * This function needs only 1 call
    *
-   * @param {Secret} feePayer
    * @param {number} maxDepth
    * @param {number} maxBufferSize
+   * @param {number} canopyDepth
+   * @param {Secret} feePayer
    * @return Promise<Result<MintTransaction, Error>>
    */
   export const initTree = (
-    feePayer: Secret,
     maxDepth: number,
     maxBufferSize: number,
+    canopyDepth: number,
+    feePayer: Secret,
   ): Promise<Result<MintStructure, Error>> => {
     return Try(async () => {
       const treeOwner = Account.Keypair.create();
-      const canopyDepth = maxDepth - 5;
       const space = getConcurrentMerkleTreeAccountSize(
         maxDepth,
         maxBufferSize,
@@ -106,21 +107,55 @@ export namespace CompressedNft {
     });
   };
 
+  /**
+   * create a new nft space
+   * This function needs only 1 call
+   *
+   * @param {number} spaceSize
+   * @param {Secret} feePayer
+   * @return Promise<Result<MintTransaction, Error>>
+   */
   export const createMintSpace = async (
-    total: number,
+    spaceSize: number,
     feePayer: Secret,
   ): Promise<Result<MintStructure, Error>> => {
-    const log2 = Math.ceil(Math.log2(total));
+    const { maxDepth, maxBufferSize, canopyDepth } =
+      calculateSpaceNumberToDepth(spaceSize);
+    return initTree(maxDepth, maxBufferSize, canopyDepth, feePayer);
+  };
+
+  /**
+   * Calculate space cost
+   *
+   * @param {number} spaceSize
+   * @return Promise<{sol: number}>
+   */
+  export const calculateSpaceCost = async (spaceSize: number) => {
+    const { maxDepth, maxBufferSize, canopyDepth } =
+      calculateSpaceNumberToDepth(spaceSize);
+    const requiredSpace = getConcurrentMerkleTreeAccountSize(
+      maxDepth,
+      maxBufferSize,
+      canopyDepth,
+    );
+    const lamports =
+      await Node.getConnection().getMinimumBalanceForRentExemption(
+        requiredSpace,
+      );
+    return { sol: lamports.toSol() };
+  };
+
+  const calculateSpaceNumberToDepth = (space: number) => {
+    const log2 = Math.ceil(Math.log2(space));
     debugLog('# log2: ', log2, 2 ** log2);
     const matched = ALL_DEPTH_SIZE_PAIRS.filter(
       (pair) => pair.maxDepth === log2,
     )[0];
-    return initTree(feePayer, matched.maxDepth, matched.maxBufferSize);
-  };
-
-  export const calculateSpaceCost = async (space: number) => {
-    const lamports =
-      await Node.getConnection().getMinimumBalanceForRentExemption(space);
-    return { sol: lamports.toSol() };
+    const canopyDepth = matched.maxDepth - 5;
+    return {
+      maxDepth: matched.maxDepth,
+      maxBufferSize: matched.maxBufferSize,
+      canopyDepth,
+    };
   };
 }

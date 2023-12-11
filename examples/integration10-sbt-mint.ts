@@ -4,7 +4,7 @@
 
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
-import { Account, Pubkey, RegularNft } from '@solana-suite/regular-nft';
+import { Account, RegularNft } from '@solana-suite/regular-nft';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
 
@@ -55,18 +55,15 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   );
 
   // this is NFT ID
-  const mint = inst1.unwrap().data as Pubkey;
+  const mint = inst1.unwrap().data;
   console.log('# mint: ', mint);
 
   //////////////////////////////////////////////
   // CHANGE STATE TO SBT
   //////////////////////////////////////////////
-  const inst2 = RegularNft.freeze(
-    mint,
-    owner.pubkey,
-    freeze.secret,
-    {feePayer: feePayer.secret},
-  );
+  const inst2 = RegularNft.freeze(mint, owner.pubkey, freeze.secret, {
+    feePayer: feePayer.secret,
+  });
 
   (await [inst1, inst2].submit()).match(
     (value) => console.log(value.toExplorerUrl()),
