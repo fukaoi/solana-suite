@@ -134,7 +134,7 @@ export namespace CompressedNft {
       const leafOwner = receiver ? receiver : owner;
       const leafDelegate = delegate
         ? delegate
-        : new Account.Keypair({ secret: payer }).pubkey;
+        : new Account.Keypair({ secret: payer! }).pubkey;
 
       const treeAuthority = Account.Pda.getTreeAuthority(
         treeOwner.toPublicKey().toString(),

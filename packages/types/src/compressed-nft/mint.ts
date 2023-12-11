@@ -1,7 +1,7 @@
-import { Pubkey } from '../account';
-import { AuthorityOptions } from '../shared';
+import { Pubkey, Secret } from '../account';
 
 export type MintOptions = {
   receiver: Pubkey;
   delegate: Pubkey;
-} & AuthorityOptions;
+  feePayer: Secret;
+};

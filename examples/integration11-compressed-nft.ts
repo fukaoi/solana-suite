@@ -33,13 +33,14 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // CREATE NFT SPACE, ONCE CALL
   //////////////////////////////////////////////
 
-  const abountMintTotal = 10000; // abount mint total number
+  const abountMintTotal = 100; // abount mint total number
 
   const cost = await CompressedNft.calculateSpaceCost(abountMintTotal); // [optional]calculate space cost
 
   console.log('# space cost: ', cost);
 
-  await requestTransferByKeypair(feePayer.pubkey, cost.sol + 0.5); // need add sol for insufficient fee
+  // await requestTransferByKeypair(feePayer.pubkey, cost.sol + 0.5); // need add sol for insufficient fee
+  await requestTransferByKeypair(owner.pubkey, cost.sol + 0.5); // need add sol for insufficient fee
   await sleep(3);
 
   const space = await CompressedNft.createMintSpace(
@@ -74,9 +75,9 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
       storageType: 'nftStorage',
       isMutable: true,
     },
-    {
-      feePayer: feePayer.secret,
-    },
+    // {
+    //   feePayer: feePayer.secret,
+    // },
   );
 
   (await collection.submit()).match(
@@ -110,7 +111,11 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     },
     treeOwner,
     mintCollection,
-    { delegate: feePayer.secret, receiver: nftReceiver.pubkey },
+    // {
+    //   feePayer: feePayer.secret,
+    //   delegate: feePayer.pubkey,
+    //   receiver: nftReceiver.pubkey,
+    // },
   );
 
   // this is NFT ID

@@ -54,7 +54,8 @@ type DelegateOptions = {
 type MintOptions = {
     receiver: Pubkey$1;
     delegate: Pubkey$1;
-} & AuthorityOptions;
+    feePayer: Secret$1;
+};
 
 type MintCollectionOptions = {
     freezeAuthority: Pubkey$1;
