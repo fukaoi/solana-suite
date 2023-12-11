@@ -106,7 +106,7 @@ export namespace CompressedNft {
     });
   };
 
-  export const initMintTotal = async (
+  export const createMintSpace = async (
     total: number,
     feePayer: Secret,
   ): Promise<Result<MintStructure, Error>> => {

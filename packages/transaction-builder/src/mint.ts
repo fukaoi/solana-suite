@@ -17,19 +17,19 @@ export namespace TransactionBuilder {
   export class Mint<T = Pubkey> implements MintStructure<T> {
     instructions: TransactionInstruction[];
     signers: Keypair[];
-    feePayer?: Keypair;
-    data?: T;
+    feePayer: Keypair;
+    data: T;
 
     constructor(
       instructions: TransactionInstruction[],
       signers: Keypair[],
-      feePayer?: Keypair,
-      data?: T,
+      feePayer: Keypair,
+      data: T,
     ) {
       this.instructions = instructions;
       this.signers = signers;
-      this.feePayer = feePayer;
       this.data = data;
+      this.feePayer = feePayer;
     }
 
     submit = async (): Promise<Result<TransactionSignature, Error>> => {

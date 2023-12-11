@@ -646,9 +646,9 @@ type CommonStructure<T = undefined> = {
 type MintStructure<T = Pubkey$1> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
-    feePayer?: Keypair;
+    data: T;
+    feePayer: Keypair;
     canSubmit?: boolean;
-    data?: T;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };
 type PartialSignStructure<T = Pubkey$1> = {

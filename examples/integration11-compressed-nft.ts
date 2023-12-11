@@ -20,6 +20,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
 
   // create nft owner wallet.
   const owner = Account.Keypair.create();
+  const nftReceiver = Account.Keypair.create();
   const receipt = Account.Keypair.create();
   const feePayer = Account.Keypair.create();
 
@@ -27,10 +28,11 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   if (process.env.AIR_DROP) {
     await Airdrop.request(feePayer.pubkey);
   } else {
-    await requestTransferByKeypair(feePayer.pubkey);
+    await requestTransferByKeypair(feePayer.pubkey, 0.5);
   }
 
   console.log('# owner: ', owner.pubkey);
+  console.log('# nftReceiver: ', nftReceiver.pubkey);
   console.log('# receipt: ', receipt.pubkey);
   console.log('# feePayer: ', feePayer.pubkey);
 
@@ -40,59 +42,87 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   console.log('# demo data: ', asset);
 
   //////////////////////////////////////////////
+  // CREATE NFT SPACE, ONCE CALL
+  //////////////////////////////////////////////
+
+  const abountMintTotal = 10000; // abount mint total number
+
+  // const cost = await CompressedNft.calculateSpaceCost(abountMintTotal); // [optional]calculate space cost
+
+  // console.log('# space cost: ', cost);
+
+  // await requestTransferByKeypair(feePayer.pubkey, 0.1); // need add sol for insufficient fee
+
+  const inst0 = await CompressedNft.createMintSpace(
+    abountMintTotal,
+    feePayer.secret,
+  );
+
+  let treeOwner!: Pubkey;
+  (await inst0.submit()).match(
+    async (value) => {
+      await Node.confirmedSig(value);
+      treeOwner = inst0.unwrap().data;
+    },
+    (error) => assert.fail(error.message),
+  );
+
+  console.log('# treeOwner: ', treeOwner);
+
+  //////////////////////////////////////////////
   // CREATE NFT, MINT NFT FROM THIS LINE
   //////////////////////////////////////////////
 
-  const inst1 = await CompressedNft.mint(
-    owner.pubkey,
-    owner.secret,
-    {
-      filePath: asset.filePath!,
-      name: asset.name!,
-      symbol: 'SAMPLE',
-      royalty: 7,
-      storageType: 'nftStorage',
-      isMutable: true,
-      external_url: 'https://github.com/atonoy/solana-suite',
-    },
-    { feePayer: feePayer.secret },
-  );
-
-  // this is NFT ID
-  (await inst1.submit()).match(
-    async (value) => await Node.confirmedSig(value, 'finalized'),
-    (error) => assert.fail(error),
-  );
-
-  const mint = inst1.unwrap().data as Pubkey;
-  console.log('# mint: ', mint);
-
-  //////////////////////////////////////////////
-  // Display metadata from blockchain(optional)
-  //////////////////////////////////////////////
-
-  await CompressedNft.findByOwner(
-    owner.pubkey,
-    (value) => console.log('# metadata: ', value),
-    (error) => assert.fail(error),
-  );
-
-  //////////////////////////////////////////////
-  // TRANSFER RECEIPTS USER FROM THIS LINE
-  //////////////////////////////////////////////
-
-  //transfer nft owner => receipt
-  const inst2 = await CompressedNft.transfer(
-    mint,
-    owner.pubkey,
-    receipt.pubkey,
-    [owner.secret],
-    { feePayer: feePayer.secret },
-  );
-
-  // submit instructions
-  (await inst2.submit()).match(
-    (value) => console.log('# sig: ', value),
-    (error) => assert.fail(error),
-  );
+  // const inst1 = await CompressedNft.mint(
+  //   owner.pubkey,
+  //   owner.secret,
+  //   {
+  //     filePath: asset.filePath!,
+  //     name: asset.name!,
+  //     symbol: 'SAMPLE',
+  //     royalty: 7,
+  //     storageType: 'nftStorage',
+  //     isMutable: true,
+  //     external_url: 'https://github.com/atonoy/solana-suite',
+  //   },
+  //   { feePayer: feePayer.secret },
+  // );
+  //
+  // // this is NFT ID
+  // (await inst1.submit()).match(
+  //   async (value) => await Node.confirmedSig(value, 'finalized'),
+  //   (error) => assert.fail(error),
+  // );
+  //
+  // const mint = inst1.unwrap().data as Pubkey;
+  // console.log('# mint: ', mint);
+  //
+  // //////////////////////////////////////////////
+  // // Display metadata from blockchain(optional)
+  // //////////////////////////////////////////////
+  //
+  // await CompressedNft.findByOwner(
+  //   owner.pubkey,
+  //   (value) => console.log('# metadata: ', value),
+  //   (error) => assert.fail(error),
+  // );
+  //
+  // //////////////////////////////////////////////
+  // // TRANSFER RECEIPTS USER FROM THIS LINE
+  // //////////////////////////////////////////////
+  //
+  // //transfer nft owner => receipt
+  // const inst2 = await CompressedNft.transfer(
+  //   mint,
+  //   owner.pubkey,
+  //   receipt.pubkey,
+  //   [owner.secret],
+  //   { feePayer: feePayer.secret },
+  // );
+  //
+  // // submit instructions
+  // (await inst2.submit()).match(
+  //   (value) => console.log('# sig: ', value),
+  //   (error) => assert.fail(error),
+  // );
 })();

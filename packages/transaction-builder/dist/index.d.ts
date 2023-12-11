@@ -259,9 +259,9 @@ type CommonStructure<T = undefined> = {
 type MintStructure<T = Pubkey> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
-    feePayer?: Keypair;
+    data: T;
+    feePayer: Keypair;
     canSubmit?: boolean;
-    data?: T;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };
 type PartialSignStructure<T = Pubkey> = {
@@ -287,9 +287,9 @@ declare namespace TransactionBuilder$3 {
     class Mint<T = Pubkey> implements MintStructure<T> {
         instructions: TransactionInstruction[];
         signers: Keypair[];
-        feePayer?: Keypair;
-        data?: T;
-        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
+        feePayer: Keypair;
+        data: T;
+        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer: Keypair, data: T);
         submit: () => Promise<Result<TransactionSignature, Error>>;
     }
 }

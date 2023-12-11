@@ -628,9 +628,9 @@ type CommonStructure<T = undefined> = {
 type MintStructure<T = Pubkey$1> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
-    feePayer?: Keypair;
+    data: T;
+    feePayer: Keypair;
     canSubmit?: boolean;
-    data?: T;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };
 type PartialSignStructure<T = Pubkey$1> = {
@@ -656,7 +656,7 @@ declare namespace CompressedNft$1 {
      * @return Promise<Result<MintTransaction, Error>>
      */
     const initTree: (feePayer: Secret, maxDepth: number, maxBufferSize: number) => Promise<Result<MintStructure, Error>>;
-    const initMintTotal: (total: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
+    const createMintSpace: (total: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
     const calculateSpaceCost: (space: number) => Promise<{
         sol: number;
     }>;
@@ -668,7 +668,7 @@ declare const CompressedNft: {
     mintCollection: (owner: Pubkey, signer: Secret$1, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
     Tree: typeof CompressedNft$1.Tree;
     initTree: (feePayer: Secret, maxDepth: number, maxBufferSize: number) => Promise<Result<MintStructure, Error>>;
-    initMintTotal: (total: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
+    createMintSpace: (total: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
     calculateSpaceCost: (space: number) => Promise<{
         sol: number;
     }>;

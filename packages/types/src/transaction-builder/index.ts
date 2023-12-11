@@ -18,9 +18,9 @@ export type CommonStructure<T = undefined> = {
 export type MintStructure<T = Pubkey> = {
   instructions: TransactionInstruction[];
   signers: Keypair[];
-  feePayer?: Keypair;
+  data: T;
+  feePayer: Keypair;
   canSubmit?: boolean;
-  data?: T;
   submit: () => Promise<Result<TransactionSignature, Error>>;
 };
 
