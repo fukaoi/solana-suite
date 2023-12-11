@@ -48,7 +48,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
       royalty: 7,
       storageType: 'nftStorage',
       isMutable: true,
-      external_url: 'https://github.com/atonoy/solana-suite',
+      external_url: 'https://external_url',
     },
     { feePayer: feePayer.secret },
   );

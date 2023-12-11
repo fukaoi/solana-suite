@@ -3,7 +3,6 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Airdrop } from '@solana-suite/airdrop';
 import {
   Account,
   CompressedNft,
@@ -24,22 +23,10 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   const receipt = Account.Keypair.create();
   const feePayer = Account.Keypair.create();
 
-  // faucet
-  if (process.env.AIR_DROP) {
-    await Airdrop.request(feePayer.pubkey);
-  } else {
-    await requestTransferByKeypair(feePayer.pubkey, 0.5);
-  }
-
   console.log('# owner: ', owner.pubkey);
   console.log('# nftReceiver: ', nftReceiver.pubkey);
   console.log('# receipt: ', receipt.pubkey);
   console.log('# feePayer: ', feePayer.pubkey);
-
-  // Only test that call this function
-  // Usually set custom param
-  const asset = RandomAsset.get();
-  console.log('# demo data: ', asset);
 
   //////////////////////////////////////////////
   // CREATE NFT SPACE, ONCE CALL
@@ -47,11 +34,11 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
 
   const abountMintTotal = 10000; // abount mint total number
 
-  // const cost = await CompressedNft.calculateSpaceCost(abountMintTotal); // [optional]calculate space cost
+  const cost = await CompressedNft.calculateSpaceCost(abountMintTotal); // [optional]calculate space cost
 
-  // console.log('# space cost: ', cost);
+  console.log('# space cost: ', cost);
 
-  // await requestTransferByKeypair(feePayer.pubkey, 0.1); // need add sol for insufficient fee
+  await requestTransferByKeypair(feePayer.pubkey, cost.sol + 0.05); // need add sol for insufficient fee
 
   const inst0 = await CompressedNft.createMintSpace(
     abountMintTotal,
@@ -70,9 +57,18 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   console.log('# treeOwner: ', treeOwner);
 
   //////////////////////////////////////////////
+  // CREATE COLLECTION NFT
+  //////////////////////////////////////////////
+
+  //////////////////////////////////////////////
   // CREATE NFT, MINT NFT FROM THIS LINE
   //////////////////////////////////////////////
 
+  // Only test that call this function
+  // Usually set custom param
+  // const asset = RandomAsset.get();
+  // console.log('# demo data: ', asset);
+  //
   // const inst1 = await CompressedNft.mint(
   //   owner.pubkey,
   //   owner.secret,
@@ -83,9 +79,10 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //     royalty: 7,
   //     storageType: 'nftStorage',
   //     isMutable: true,
-  //     external_url: 'https://github.com/atonoy/solana-suite',
+  //     external_url: 'https://external_url',
   //   },
-  //   { feePayer: feePayer.secret },
+  //   treeOwner,
+  //   // { delegate: feePayer.pubkey },
   // );
   //
   // // this is NFT ID
@@ -94,9 +91,9 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //   (error) => assert.fail(error),
   // );
   //
-  // const mint = inst1.unwrap().data as Pubkey;
+  // const mint = inst1.unwrap().data;
   // console.log('# mint: ', mint);
-  //
+
   // //////////////////////////////////////////////
   // // Display metadata from blockchain(optional)
   // //////////////////////////////////////////////

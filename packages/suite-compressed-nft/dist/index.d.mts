@@ -650,14 +650,29 @@ declare namespace CompressedNft$1 {
      * create a new markle tree
      * This function needs only 1 call
      *
-     * @param {Secret} feePayer
      * @param {number} maxDepth
      * @param {number} maxBufferSize
+     * @param {number} canopyDepth
+     * @param {Secret} feePayer
      * @return Promise<Result<MintTransaction, Error>>
      */
-    const initTree: (feePayer: Secret, maxDepth: number, maxBufferSize: number) => Promise<Result<MintStructure, Error>>;
-    const createMintSpace: (total: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
-    const calculateSpaceCost: (space: number) => Promise<{
+    const initTree: (maxDepth: number, maxBufferSize: number, canopyDepth: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
+    /**
+     * create a new nft space
+     * This function needs only 1 call
+     *
+     * @param {number} spaceSize
+     * @param {Secret} feePayer
+     * @return Promise<Result<MintTransaction, Error>>
+     */
+    const createMintSpace: (spaceSize: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
+    /**
+     * Calculate space cost
+     *
+     * @param {number} spaceSize
+     * @return Promise<{sol: number}>
+     */
+    const calculateSpaceCost: (spaceSize: number) => Promise<{
         sol: number;
     }>;
 }
@@ -667,9 +682,9 @@ declare const CompressedNft: {
     transfer: (assetId: Pubkey$1, assetIdOwner: Pubkey$1, dest: Pubkey$1, signers: Secret[]) => Promise<Result<CommonStructure, Error>>;
     mintCollection: (owner: Pubkey, signer: Secret$1, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
     Tree: typeof CompressedNft$1.Tree;
-    initTree: (feePayer: Secret, maxDepth: number, maxBufferSize: number) => Promise<Result<MintStructure, Error>>;
-    createMintSpace: (total: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
-    calculateSpaceCost: (space: number) => Promise<{
+    initTree: (maxDepth: number, maxBufferSize: number, canopyDepth: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
+    createMintSpace: (spaceSize: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
+    calculateSpaceCost: (spaceSize: number) => Promise<{
         sol: number;
     }>;
     createVerifyCreator: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
