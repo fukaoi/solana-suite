@@ -680,7 +680,7 @@ declare namespace CompressedNft$1 {
 declare const CompressedNft: {
     createTransfer: (assetId: Pubkey$1, assetIdOwner: Pubkey$1, dest: Pubkey$1, delegate?: Pubkey$1 | undefined) => Promise<_solana_web3_js.TransactionInstruction>;
     transfer: (assetId: Pubkey$1, assetIdOwner: Pubkey$1, dest: Pubkey$1, signers: Secret[]) => Promise<Result<CommonStructure, Error>>;
-    mintCollection: (owner: Pubkey, signer: Secret$1, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
+    mintCollection: (owner: Pubkey$1, signer: Secret$1, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
     Tree: typeof CompressedNft$1.Tree;
     initTree: (maxDepth: number, maxBufferSize: number, canopyDepth: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;
     createMintSpace: (spaceSize: number, feePayer: Secret) => Promise<Result<MintStructure, Error>>;

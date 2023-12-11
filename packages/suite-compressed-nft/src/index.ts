@@ -9,6 +9,7 @@ import { CompressedNft as Tree } from './tree';
 import { CompressedNft as Transfer } from './transfer';
 
 import '~/types/transaction-builder';
+import '~/types/account';
 import '~/transaction-builder';
 
 export const CompressedNft = {

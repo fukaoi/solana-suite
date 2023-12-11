@@ -1,5 +1,5 @@
 import { Result } from '~/shared';
-import { Secret } from '~/types/account';
+import { Pubkey, Secret } from '~/types/account';
 import { RegularNft } from '~/suite-regular-nft';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { MintCollectionOptions } from '~/types/compressed-nft';

@@ -3,10 +3,12 @@ import { Setup } from 'test-tools/setup';
 import { CompressedNft } from '../src';
 import { KeypairAccount } from '~/types/account';
 let source: KeypairAccount;
+let feePayer: KeypairAccount;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
+  feePayer = obj.feePayer;
 });
 
 test('Create collection', async (t) => {
@@ -19,6 +21,7 @@ test('Create collection', async (t) => {
       royalty: 0,
       uri: 'https://arweave.net/5dfVI6R6bjT241pEUsUHVa1uzSzu8tMUfs1tAnFwikk',
     },
+    {feePayer: feePayer.secret}
   );
   (await inst.submit()).match(
     (ok: string) => {

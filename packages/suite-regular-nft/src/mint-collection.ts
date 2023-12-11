@@ -15,7 +15,10 @@ import { MintStructure } from '~/types/transaction-builder';
  * create a collection
  * This function needs only 1 call
  *
- * @param {feePayer} Secret
+ * @param {Pubkey} owner
+ * @param {Secret} signer
+ * @param {InputNftMetadata} input
+ * @param {Partial<MintCollectionOptions>} options
  * @return Promise<Result<Instruction, Error>>
  */
 export namespace RegularNft {
@@ -120,7 +123,7 @@ export namespace RegularNft {
 
       const collections = {
         collectionMetadata: collectionMetadataAccount,
-        collectionAuthority: payer.toKeypair().publicKey,
+        collectionAuthority: signer.toKeypair().publicKey,
         collectionMint: collectionMint.toKeypair().publicKey,
       };
 

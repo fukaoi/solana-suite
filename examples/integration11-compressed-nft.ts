@@ -7,7 +7,8 @@ import {
   Account,
   CompressedNft,
   Node,
-  Pubkey,
+  // Pubkey,
+  // Secret,
 } from '@solana-suite/compressed-nft';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { requestTransferByKeypair } from './requestTransferByKeypair';
@@ -40,25 +41,52 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
 
   await requestTransferByKeypair(feePayer.pubkey, cost.sol + 0.05); // need add sol for insufficient fee
 
-  const inst0 = await CompressedNft.createMintSpace(
+  const space = await CompressedNft.createMintSpace(
     abountMintTotal,
     feePayer.secret,
   );
 
-  let treeOwner!: Pubkey;
-  (await inst0.submit()).match(
+  (await space.submit()).match(
     async (value) => {
       await Node.confirmedSig(value);
-      treeOwner = inst0.unwrap().data;
     },
     (error) => assert.fail(error.message),
   );
 
+  const treeOwner = space.unwrap().data;
   console.log('# treeOwner: ', treeOwner);
 
   //////////////////////////////////////////////
   // CREATE COLLECTION NFT
   //////////////////////////////////////////////
+  const asset = RandomAsset.get();
+  console.log('# demo data: ', asset);
+
+  const collection = await CompressedNft.mintCollection(
+    owner.pubkey,
+    owner.secret,
+    {
+      filePath: asset.filePath!,
+      name: 'NFTCollection',
+      symbol: 'Ingr11',
+      royalty: 0,
+      storageType: 'nftStorage',
+      isMutable: true,
+    },
+    {
+      feePayer: feePayer.pubkey,
+    },
+  );
+
+  (await collection.submit()).match(
+    async (value) => {
+      await Node.confirmedSig(value);
+    },
+    (error) => assert.fail(error.message),
+  );
+
+  const mintCollection = space.unwrap().data;
+  console.log('# mintCollection: ', mintCollection);
 
   //////////////////////////////////////////////
   // CREATE NFT, MINT NFT FROM THIS LINE
@@ -66,8 +94,6 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
 
   // Only test that call this function
   // Usually set custom param
-  // const asset = RandomAsset.get();
-  // console.log('# demo data: ', asset);
   //
   // const inst1 = await CompressedNft.mint(
   //   owner.pubkey,
@@ -94,16 +120,6 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // const mint = inst1.unwrap().data;
   // console.log('# mint: ', mint);
 
-  // //////////////////////////////////////////////
-  // // Display metadata from blockchain(optional)
-  // //////////////////////////////////////////////
-  //
-  // await CompressedNft.findByOwner(
-  //   owner.pubkey,
-  //   (value) => console.log('# metadata: ', value),
-  //   (error) => assert.fail(error),
-  // );
-  //
   // //////////////////////////////////////////////
   // // TRANSFER RECEIPTS USER FROM THIS LINE
   // //////////////////////////////////////////////
