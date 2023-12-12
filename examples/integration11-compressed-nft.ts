@@ -42,14 +42,14 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   await requestTransferByKeypair(feePayer.pubkey, cost.sol + 0.1); // need add sol for insufficient fee
   await sleep(2);
 
-  const space = await CompressedNft.createMintSpace(
+  const spaceInst = await CompressedNft.createMintSpace(
     owner.pubkey,
     owner.secret,
     abountMintTotal,
     { feePayer: feePayer.secret },
   );
 
-  (await space.submit()).match(
+  (await spaceInst.submit()).match(
     async (value) => {
       await Node.confirmedSig(value);
     },
@@ -59,7 +59,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     },
   );
 
-  const treeOwner = space.unwrap().data;
+  const treeOwner = spaceInst.unwrap().data;
   console.log('# treeOwner: ', treeOwner);
 
   //////////////////////////////////////////////
@@ -68,7 +68,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   const asset = RandomAsset.get();
   console.log('# demo data: ', asset);
 
-  const collection = await CompressedNft.mintCollection(
+  const collectionInst = await CompressedNft.mintCollection(
     owner.pubkey,
     owner.secret,
     {
@@ -84,14 +84,14 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     },
   );
 
-  (await collection.submit()).match(
+  (await collectionInst.submit()).match(
     async (value) => {
       await Node.confirmedSig(value);
     },
     (error) => assert.fail(error.message),
   );
 
-  const mintCollection = collection.unwrap().data;
+  const mintCollection = collectionInst.unwrap().data;
   console.log('# mintCollection: ', mintCollection);
 
   //////////////////////////////////////////////
@@ -101,7 +101,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   // Only test that call this function
   // Usually set custom param
 
-  const inst1 = await CompressedNft.mint(
+  const mintInst = await CompressedNft.mint(
     owner.pubkey,
     owner.secret,
     {
@@ -123,7 +123,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   );
 
   // this is NFT ID
-  (await inst1.submit()).match(
+  (await mintInst.submit()).match(
     async (value) => {
       await Node.confirmedSig(value, 'finalized');
       console.log('# sig: ', value.toExplorerUrl(Explorer.Xray));
@@ -131,23 +131,23 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     (error) => assert.fail(error),
   );
 
-  const mint = await inst1.unwrap().data.getAssetId();
+  const mint = await mintInst.unwrap().data.getAssetId();
   console.log('# mint: ', mint);
 
   // //////////////////////////////////////////////
   // // TRANSFER RECEIPTS USER FROM THIS LINE
   // //////////////////////////////////////////////
-  //
-  // //transfer nftReceiver => receipt
-  const inst2 = await CompressedNft.transfer(
+
+  //transfer nftReceiver => receipt
+  const transferInst = await CompressedNft.gasLessTransfer(
     mint,
-    nftReceiver.pubkey,
+    nftReceiver.secret,
     receipt.pubkey,
-    [nftReceiver.secret],
+    feePayer.pubkey,
   );
 
   // submit instructions
-  (await inst2.submit()).match(
+  (await transferInst.submit(feePayer.secret)).match(
     (value) => console.log('# sig: ', value),
     (error) => assert.fail(error),
   );
