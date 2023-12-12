@@ -19,23 +19,15 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
 
   // create nft owner wallet.
-  // const owner = Account.Keypair.create();
-  // const owner = new Account.Keypair({
-  //   secret:
-  //     '2AL4RyRzUuju4KqzFssnhqBBv8hxGMWAxVK7sybPpTiYvsc71wg5xtXmjJcGfuRTuxiqraB9hBYQbZuXMsg8q6js',
-  // });
+  const owner = Account.Keypair.create();
   const nftReceiver = Account.Keypair.create();
   const receipt = Account.Keypair.create();
-  const owner = new Account.Keypair({
-    secret:
-      'si6XUcRuJD9zGSvinDdJZUntW2y3DcUYu2JiQxCQ7gEbeDiJmxwEPzfKN5cGgyfVyHRo5hNgyiULNSxX4sbtbj4',
-  });
-  // const feePayer = Account.Keypair.create();
+  const feePayer = Account.Keypair.create();
 
   console.log('# owner: ', owner.pubkey);
   console.log('# nftReceiver: ', nftReceiver.pubkey);
   console.log('# receipt: ', receipt.pubkey);
-  // console.log('# feePayer: ', feePayer.pubkey);
+  console.log('# feePayer: ', feePayer.pubkey);
 
   //////////////////////////////////////////////
   // CREATE NFT SPACE, ONCE CALL
@@ -47,21 +39,24 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
 
   console.log('# space cost: ', cost);
 
-  // await requestTransferByKeypair(feePayer.pubkey, cost.sol + 0.5); // need add sol for insufficient fee
-  // await requestTransferByKeypair(owner.pubkey, cost.sol + 0.3); // need add sol for insufficient fee
-  // await sleep(3);
+  await requestTransferByKeypair(feePayer.pubkey, cost.sol + 0.1); // need add sol for insufficient fee
+  await sleep(2);
 
   const space = await CompressedNft.createMintSpace(
-    abountMintTotal,
-    // feePayer.secret,
+    owner.pubkey,
     owner.secret,
+    abountMintTotal,
+    { feePayer: feePayer.secret },
   );
 
   (await space.submit()).match(
     async (value) => {
       await Node.confirmedSig(value);
     },
-    (error) => assert.fail(error.message),
+    (error) => {
+      console.error(error);
+      assert.fail(error.message);
+    },
   );
 
   const treeOwner = space.unwrap().data;
@@ -84,9 +79,9 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
       storageType: 'nftStorage',
       isMutable: true,
     },
-    // {
-    //   feePayer: feePayer.secret,
-    // },
+    {
+      feePayer: feePayer.secret,
+    },
   );
 
   (await collection.submit()).match(
@@ -120,11 +115,11 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     },
     treeOwner,
     mintCollection,
-    // {
-    //   feePayer: feePayer.secret,
-    //   delegate: feePayer.pubkey,
-    //   receiver: nftReceiver.pubkey,
-    // },
+    {
+      feePayer: feePayer.secret,
+      delegate: feePayer.pubkey,
+      receiver: nftReceiver.pubkey,
+    },
   );
 
   // this is NFT ID
@@ -136,25 +131,24 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
     (error) => assert.fail(error),
   );
 
-  const mint = inst1.unwrap().data;
-  console.log('# mint: ', await mint.getAssetId());
+  const mint = await inst1.unwrap().data.getAssetId();
+  console.log('# mint: ', mint);
 
   // //////////////////////////////////////////////
   // // TRANSFER RECEIPTS USER FROM THIS LINE
   // //////////////////////////////////////////////
   //
-  // //transfer nft owner => receipt
-  // const inst2 = await CompressedNft.transfer(
-  //   mint,
-  //   owner.pubkey,
-  //   receipt.pubkey,
-  //   [owner.secret],
-  //   { feePayer: feePayer.secret },
-  // );
-  //
-  // // submit instructions
-  // (await inst2.submit()).match(
-  //   (value) => console.log('# sig: ', value),
-  //   (error) => assert.fail(error),
-  // );
+  // //transfer nftReceiver => receipt
+  const inst2 = await CompressedNft.transfer(
+    mint,
+    nftReceiver.pubkey,
+    receipt.pubkey,
+    [nftReceiver.secret],
+  );
+
+  // submit instructions
+  (await inst2.submit()).match(
+    (value) => console.log('# sig: ', value),
+    (error) => assert.fail(error),
+  );
 })();
