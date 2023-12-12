@@ -13,7 +13,3 @@ export type OverwriteObject = {
 
 export type OnOk<T extends History | Find> = (ok: T[]) => void;
 export type OnErr = (err: Error) => void;
-
-export type AuthorityOptions = {
-  feePayer: Pubkey;
-};

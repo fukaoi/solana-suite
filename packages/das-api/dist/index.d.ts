@@ -218,20 +218,6 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-declare enum SortDirection {
-    Asc = "asc",
-    Desc = "desc"
-}
-declare enum SortBy {
-    Created = "created",
-    Updated = "updated",
-    Recent = "recent_action"
-}
-type Sortable = {
-    sortBy: SortBy;
-    sortDirection: SortDirection;
-};
-
 type InternalCreators = {
     address: PublicKey;
     verified: boolean;
@@ -336,6 +322,20 @@ declare enum Explorer {
 }
 type ExplorerOptions = {
     replacePath: string;
+};
+
+declare enum SortDirection {
+    Asc = "asc",
+    Desc = "desc"
+}
+declare enum SortBy {
+    Created = "created",
+    Updated = "updated",
+    Recent = "recent_action"
+}
+type Sortable = {
+    sortBy: SortBy;
+    sortDirection: SortDirection;
 };
 
 declare namespace DasApi {

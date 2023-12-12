@@ -44,6 +44,27 @@ type Find = {
     innerInstruction?: boolean;
 };
 
+type History = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey$1;
+    source?: Pubkey$1;
+    authority?: Pubkey$1;
+    multisigAuthority?: Pubkey$1;
+    signers?: Pubkey$1[];
+    mint?: Pubkey$1;
+    mintAuthority?: Pubkey$1;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+
+type OnOk<T extends History | Find> = (ok: T[]) => void;
+type OnErr = (err: Error) => void;
+
 type bignum = number | BN;
 type Option<T> = T | null;
 declare enum UseMethod {
@@ -69,30 +90,6 @@ type InputCreators = {
 
 type GasLessMintOptions = {
     freezeAuthority: Pubkey$1;
-};
-
-type History = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey$1;
-    source?: Pubkey$1;
-    authority?: Pubkey$1;
-    multisigAuthority?: Pubkey$1;
-    signers?: Pubkey$1[];
-    mint?: Pubkey$1;
-    mintAuthority?: Pubkey$1;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-
-type OnOk<T extends History | Find> = (ok: T[]) => void;
-type OnErr = (err: Error) => void;
-type AuthorityOptions = {
-    feePayer: Pubkey$1;
 };
 
 type FileType = string | File;
@@ -162,9 +159,6 @@ type RegularNftMetadata = {
     uses?: Uses | undefined;
     dateTime?: Date | undefined;
 };
-type MintOptions = {
-    freezeAuthority: Pubkey$1;
-} & AuthorityOptions;
 
 type InputCollection = Pubkey$1;
 type Options = {
@@ -187,6 +181,10 @@ type InputNftMetadata = {
     uses?: Uses;
     collection?: InputCollection;
     options?: Options;
+};
+type MintOptions = {
+    freezeAuthority: Pubkey$1;
+    feePayer: Secret;
 };
 
 type MintCollectionOptions = {
@@ -738,8 +736,8 @@ type PartialSignStructure<T = Pubkey$1> = {
 };
 
 declare const RegularNft: {
-    transfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], options?: Partial<AuthorityOptions>) => Promise<Result<CommonStructure, Error>>;
-    thaw: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, options?: Partial<AuthorityOptions>) => Result<CommonStructure<unknown>, Error>;
+    transfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], options?: AuthorityOptions) => Promise<Result<CommonStructure, Error>>;
+    thaw: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, options?: AuthorityOptions) => Result<CommonStructure<unknown>, Error>;
     DEFAULT_COLLECTION_SIZE: 0;
     mintCollection: (owner: Pubkey, signer: Secret, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
     createVerifyCreator: (mint: _solana_web3_js.PublicKey, creator: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
@@ -749,13 +747,13 @@ declare const RegularNft: {
     mint: (owner: Pubkey$1, signer: Secret, input: InputNftMetadata, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
     gasLessTransfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], feePayer: Pubkey$1) => Promise<Result<PartialSignStructure, Error>>;
     gasLessMint: (owner: Pubkey$1, signer: Secret, input: InputNftMetadata, feePayer: Pubkey$1, options?: Partial<GasLessMintOptions>) => Promise<Result<PartialSignStructure, Error>>;
-    freeze: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, options?: Partial<AuthorityOptions>) => Result<CommonStructure, Error>;
+    freeze: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
     findByOwner: (owner: Pubkey$1, onOk: OnOk<RegularNftMetadata>, onErr: OnErr, options?: {
         sortable?: SortDirection | undefined;
         isHolder?: boolean | undefined;
     } | undefined) => Promise<void>;
     findByMint: (mint: Pubkey$1) => Promise<Result<RegularNftMetadata, Error>>;
-    burn: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret, options?: Partial<AuthorityOptions>) => Result<StructCommonTransaction, Error>;
+    burn: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
 };
 
 export { Account, Explorer, ExplorerOptions, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, RegularNft, Secret, Transfer, TransferChecked, Try, Validator, ValidatorError, WithMemo, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };

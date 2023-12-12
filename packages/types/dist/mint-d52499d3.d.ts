@@ -1,5 +1,5 @@
-import { Pubkey, Secret } from './account.mjs';
-import { StorageType, FileType, Attribute, Properties } from './storage.mjs';
+import { Pubkey, Secret } from './account.js';
+import { StorageType, FileType, Attribute, Properties } from './storage.js';
 import BN from 'bn.js';
 
 type bignum = number | BN;
@@ -47,5 +47,9 @@ type InputNftMetadata = {
     collection?: InputCollection;
     options?: Options;
 };
+type MintOptions = {
+    freezeAuthority: Pubkey;
+    feePayer: Secret;
+};
 
-export { Creators as C, InputCreators as I, Options as O, Uses as U, Option as a, bignum as b, UseMethod as c, InputCollection as d, InputNftMetadata as e };
+export { Creators as C, InputCreators as I, MintOptions as M, Options as O, Uses as U, Option as a, bignum as b, UseMethod as c, InputCollection as d, InputNftMetadata as e };

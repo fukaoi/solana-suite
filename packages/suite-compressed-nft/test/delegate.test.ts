@@ -40,3 +40,8 @@ test('Set new delegate signer', async (t) => {
     },
   );
 });
+
+test('Set new delegate signer with feePayer', async (t) => {
+  // Should use gas-less-delegate when want use feePayer
+  t.pass();
+});

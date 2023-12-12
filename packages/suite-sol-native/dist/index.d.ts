@@ -417,10 +417,6 @@ type InputCreators = {
     share: number;
 };
 
-type AuthorityOptions = {
-    feePayer: Pubkey;
-};
-
 type FileType = string | File;
 
 type StorageType = 'nftStorage' | 'arweave' | string;
@@ -642,8 +638,8 @@ type PartialSignStructure<T = Pubkey> = {
 };
 
 declare const SolNative: {
-    transferWithMultisig: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, options?: Partial<AuthorityOptions>) => Promise<Result<CommonStructure, Error>>;
-    transfer: (source: Pubkey, dest: Pubkey, signers: Secret[], amount: number, options?: Partial<AuthorityOptions>) => Result<CommonStructure, Error>;
+    transferWithMultisig: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, options?: AuthorityOptions) => Promise<Result<CommonStructure, Error>>;
+    transfer: (source: Pubkey, dest: Pubkey, signers: Secret[], amount: number, options?: AuthorityOptions) => Result<CommonStructure, Error>;
     gasLessTransfer: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, feePayer: Pubkey) => Promise<Result<PartialSignStructure, Error>>;
     findByOwner: (owner: Pubkey) => Promise<Result<OwnerInfo, Error>>;
 };

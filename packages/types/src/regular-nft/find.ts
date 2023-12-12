@@ -1,4 +1,3 @@
-import { AuthorityOptions } from '../shared';
 import { Pubkey } from '../account';
 import { Offchain } from '../storage';
 import { Creators, Option, Uses } from './common';
@@ -24,6 +23,3 @@ export type RegularNftMetadata = {
   dateTime?: Date | undefined;
 };
 
-export type MintOptions = {
-  freezeAuthority: Pubkey;
-} & AuthorityOptions;

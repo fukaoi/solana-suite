@@ -1,4 +1,4 @@
-import { Pubkey } from '../account';
+import { Pubkey, Secret } from '../account';
 import { Attribute, Properties, StorageType } from '../storage';
 import { FileType } from '../storage';
 import { bignum, InputCreators, Uses } from './common';
@@ -22,4 +22,9 @@ export type InputNftMetadata = {
   uses?: Uses;
   collection?: InputCollection;
   options?: Options;
+};
+
+export type MintOptions = {
+  freezeAuthority: Pubkey;
+  feePayer: Secret;
 };

@@ -218,24 +218,6 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-type History = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -275,6 +257,24 @@ declare enum ModuleName {
     SolNative = "system",
     SplToken = "spl-token"
 }
+
+type History = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
 
 declare namespace Signatures {
     const getForAdress: (pubkey: Pubkey, parser: (transaction: ParsedTransactionWithMeta) => History | undefined, callback: (history: Result<History[], Error>) => void, options: {

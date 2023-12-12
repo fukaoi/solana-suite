@@ -19,33 +19,42 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //////////////////////////////////////////////
 
   // create nft owner wallet.
-  const owner = Account.Keypair.create();
+  // const owner = Account.Keypair.create();
+  // const owner = new Account.Keypair({
+  //   secret:
+  //     '2AL4RyRzUuju4KqzFssnhqBBv8hxGMWAxVK7sybPpTiYvsc71wg5xtXmjJcGfuRTuxiqraB9hBYQbZuXMsg8q6js',
+  // });
   const nftReceiver = Account.Keypair.create();
   const receipt = Account.Keypair.create();
-  const feePayer = Account.Keypair.create();
+  const owner = new Account.Keypair({
+    secret:
+      'si6XUcRuJD9zGSvinDdJZUntW2y3DcUYu2JiQxCQ7gEbeDiJmxwEPzfKN5cGgyfVyHRo5hNgyiULNSxX4sbtbj4',
+  });
+  // const feePayer = Account.Keypair.create();
 
   console.log('# owner: ', owner.pubkey);
   console.log('# nftReceiver: ', nftReceiver.pubkey);
   console.log('# receipt: ', receipt.pubkey);
-  console.log('# feePayer: ', feePayer.pubkey);
+  // console.log('# feePayer: ', feePayer.pubkey);
 
   //////////////////////////////////////////////
   // CREATE NFT SPACE, ONCE CALL
   //////////////////////////////////////////////
 
-  const abountMintTotal = 100; // abount mint total number
+  const abountMintTotal = 8; // abount mint total number
 
   const cost = await CompressedNft.calculateSpaceCost(abountMintTotal); // [optional]calculate space cost
 
   console.log('# space cost: ', cost);
 
   // await requestTransferByKeypair(feePayer.pubkey, cost.sol + 0.5); // need add sol for insufficient fee
-  await requestTransferByKeypair(owner.pubkey, cost.sol + 0.5); // need add sol for insufficient fee
-  await sleep(3);
+  // await requestTransferByKeypair(owner.pubkey, cost.sol + 0.3); // need add sol for insufficient fee
+  // await sleep(3);
 
   const space = await CompressedNft.createMintSpace(
     abountMintTotal,
-    feePayer.secret,
+    // feePayer.secret,
+    owner.secret,
   );
 
   (await space.submit()).match(

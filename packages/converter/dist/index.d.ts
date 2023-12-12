@@ -30,24 +30,6 @@ type InputCreators = {
     share: number;
 };
 
-type History = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey$1;
-    source?: Pubkey$1;
-    authority?: Pubkey$1;
-    multisigAuthority?: Pubkey$1;
-    signers?: Pubkey$1[];
-    mint?: Pubkey$1;
-    mintAuthority?: Pubkey$1;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-
 type FileType = string | File;
 
 type InternalCollection = {
@@ -273,6 +255,24 @@ type TransferChecked = {
     };
     program: string;
     programId?: PublicKey;
+};
+
+type History = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey$1;
+    source?: Pubkey$1;
+    authority?: Pubkey$1;
+    multisigAuthority?: Pubkey$1;
+    signers?: Pubkey$1[];
+    mint?: Pubkey$1;
+    mintAuthority?: Pubkey$1;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
 };
 
 declare namespace Converter$9 {

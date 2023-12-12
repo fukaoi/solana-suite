@@ -14,6 +14,7 @@ import { Constants, debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { MintStructure } from '~/types/transaction-builder';
+import { TreeOptions } from '~/types/compressed-nft';
 
 export namespace CompressedNft {
   export class Tree {
@@ -36,19 +37,24 @@ export namespace CompressedNft {
    * create a new markle tree
    * This function needs only 1 call
    *
+   * @param {Pubkey} owner
+   * @param {Secret} signer
    * @param {number} maxDepth
    * @param {number} maxBufferSize
    * @param {number} canopyDepth
-   * @param {Secret} feePayer
+   * @param {Partial<TreeOptions>} options
    * @return Promise<Result<MintTransaction, Error>>
    */
   export const initTree = (
+    owner: Pubkey,
+    signer: Secret,
     maxDepth: number,
     maxBufferSize: number,
     canopyDepth: number,
-    feePayer: Secret,
+    options: Partial<TreeOptions> = {},
   ): Promise<Result<MintStructure, Error>> => {
     return Try(async () => {
+      const payer = options.feePayer ? options.feePayer : signer;
       const treeOwner = Account.Keypair.create();
       const space = getConcurrentMerkleTreeAccountSize(
         maxDepth,
@@ -70,7 +76,7 @@ export namespace CompressedNft {
 
       instructions.push(
         SystemProgram.createAccount({
-          fromPubkey: feePayer.toKeypair().publicKey,
+          fromPubkey: payer.toKeypair().publicKey,
           newAccountPubkey: treeOwner.toKeypair().publicKey,
           lamports:
             await Node.getConnection().getMinimumBalanceForRentExemption(space),
@@ -84,8 +90,8 @@ export namespace CompressedNft {
           {
             merkleTree: treeOwner.toKeypair().publicKey,
             treeAuthority,
-            treeCreator: feePayer.toKeypair().publicKey,
-            payer: feePayer.toKeypair().publicKey,
+            treeCreator: owner.toPublicKey(),
+            payer: payer.toKeypair().publicKey,
             logWrapper: SPL_NOOP_PROGRAM_ID,
             compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
           },
@@ -100,8 +106,8 @@ export namespace CompressedNft {
 
       return new TransactionBuilder.Mint(
         instructions,
-        [treeOwner.toKeypair()],
-        feePayer.toKeypair(),
+        [treeOwner.toKeypair(), signer.toKeypair()],
+        payer.toKeypair(),
         treeOwner.pubkey,
       );
     });
@@ -111,17 +117,29 @@ export namespace CompressedNft {
    * create a new nft space
    * This function needs only 1 call
    *
+   * @param {Pubkey} owner
+   * @param {Secret} signer
    * @param {number} spaceSize
-   * @param {Secret} feePayer
+   * @param {Partial<TreeOptions>} options
+   *
    * @return Promise<Result<MintTransaction, Error>>
    */
   export const createMintSpace = async (
+    owner: Pubkey,
+    signer: Secret,
     spaceSize: number,
-    feePayer: Secret,
+    options: Partial<TreeOptions> = {},
   ): Promise<Result<MintStructure, Error>> => {
     const { maxDepth, maxBufferSize, canopyDepth } =
       calculateSpaceNumberToDepth(spaceSize);
-    return initTree(maxDepth, maxBufferSize, canopyDepth, feePayer);
+    return initTree(
+      owner,
+      signer,
+      maxDepth,
+      maxBufferSize,
+      canopyDepth,
+      options,
+    );
   };
 
   /**

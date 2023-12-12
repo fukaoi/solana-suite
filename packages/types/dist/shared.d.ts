@@ -1,6 +1,6 @@
-import { Pubkey } from './account.js';
 import { Find } from './find.js';
 import { History } from './history.js';
+import './account.js';
 
 type AnyObject = {
     [key: string]: unknown;
@@ -14,8 +14,5 @@ type OverwriteObject = {
 };
 type OnOk<T extends History | Find> = (ok: T[]) => void;
 type OnErr = (err: Error) => void;
-type AuthorityOptions = {
-    feePayer: Pubkey;
-};
 
-export { AnyObject, AuthorityOptions, OnErr, OnOk, OverwriteObject };
+export { AnyObject, OnErr, OnOk, OverwriteObject };

@@ -1,11 +1,8 @@
-import { a as Option, C as Creators, U as Uses } from './mint-7437d5a6.js';
-export { d as InputCollection, I as InputCreators, e as InputNftMetadata, O as Options, c as UseMethod, b as bignum } from './mint-7437d5a6.js';
+import { a as Option, C as Creators, U as Uses } from './mint-e12754f2.js';
+export { d as InputCollection, I as InputCreators, e as InputNftMetadata, M as MintOptions, O as Options, c as UseMethod, b as bignum } from './mint-e12754f2.js';
 import { Pubkey, Secret } from './account.mjs';
-import { AuthorityOptions } from './shared.mjs';
 import { Offchain } from './storage.mjs';
 import 'bn.js';
-import './find.mjs';
-import './history.mjs';
 import '@solana/web3.js';
 import './phantom-e9a40784.js';
 import './das-api.mjs';
@@ -41,9 +38,6 @@ type RegularNftMetadata = {
     uses?: Uses | undefined;
     dateTime?: Date | undefined;
 };
-type MintOptions = {
-    freezeAuthority: Pubkey;
-} & AuthorityOptions;
 
 type MintCollectionOptions = {
     feePayer: Secret;
@@ -51,4 +45,4 @@ type MintCollectionOptions = {
     collectionSize: number;
 };
 
-export { Collection, CollectionDetails, Creators, GasLessMintOptions, MintCollectionOptions, MintOptions, Option, RegularNftMetadata, Uses };
+export { Collection, CollectionDetails, Creators, GasLessMintOptions, MintCollectionOptions, Option, RegularNftMetadata, Uses };

@@ -1,8 +1,5 @@
 import { Pubkey, Secret } from './account.mjs';
-import { AuthorityOptions } from './shared.mjs';
 import { Offchain } from './storage.mjs';
-import './find.mjs';
-import './history.mjs';
 import '@solana/web3.js';
 import './phantom-e9a40784.js';
 import './das-api.mjs';
@@ -11,7 +8,7 @@ import '@metaplex-foundation/mpl-token-metadata';
 
 type DelegateOptions = {
     delegate: Pubkey;
-} & AuthorityOptions;
+};
 
 type MintOptions = {
     receiver: Pubkey;
@@ -58,4 +55,8 @@ type NftMetadata = {
     offchain: Offchain;
 };
 
-export { Authority, CompressedNftMetadata, Creators, DelegateOptions, MintCollectionOptions, MintOptions, NftMetadata };
+type TreeOptions = {
+    feePayer: Secret;
+};
+
+export { Authority, CompressedNftMetadata, Creators, DelegateOptions, MintCollectionOptions, MintOptions, NftMetadata, TreeOptions };

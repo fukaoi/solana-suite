@@ -44,6 +44,27 @@ type Find = {
     innerInstruction?: boolean;
 };
 
+type History = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+
+type OnOk<T extends History | Find> = (ok: T[]) => void;
+type OnErr = (err: Error) => void;
+
 type bignum = number | BN;
 type Option<T> = T | null;
 declare enum UseMethod {
@@ -65,30 +86,6 @@ type InputCreators = {
     address: Pubkey;
     secret: Secret;
     share: number;
-};
-
-type History = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-
-type OnOk<T extends History | Find> = (ok: T[]) => void;
-type OnErr = (err: Error) => void;
-type AuthorityOptions = {
-    feePayer: Pubkey;
 };
 
 type FileType = string | File;
@@ -757,13 +754,13 @@ type PartialSignStructure<T = Pubkey> = {
 };
 
 declare const SplToken: {
-    transfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, mintDecimal: number, options?: Partial<AuthorityOptions>) => Promise<Result<CommonStructure, Error>>;
-    thaw: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<AuthorityOptions>) => Result<CommonStructure, Error>;
+    transfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, mintDecimal: number, options?: AuthorityOptions) => Promise<Result<CommonStructure, Error>>;
+    thaw: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
     createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMint: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
     mint: (owner: Pubkey, signer: Secret, totalAmount: number, mintDecimal: number, input: InputTokenMetadata, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
     gasLessTransfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, mintDecimal: number, feePayer: Pubkey) => Promise<Result<PartialSignStructure, Error>>;
-    freeze: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<AuthorityOptions>) => Result<CommonStructure, Error>;
+    freeze: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
     genericFindByOwner: <T extends RegularNftMetadata | TokenMetadata>(owner: Pubkey, callback: (result: Result<T[], Error>) => void, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard, sortable?: SortDirection | undefined, isHolder?: boolean | undefined) => Promise<void>;
     genericFindByMint: <T_1 extends RegularNftMetadata | TokenMetadata>(mint: Pubkey, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard) => Promise<Result<T_1, Error>>;
     findByOwner: (owner: Pubkey, onOk: OnOk<TokenMetadata>, onErr: OnErr, options?: {
@@ -771,8 +768,8 @@ declare const SplToken: {
         isHolder?: boolean | undefined;
     } | undefined) => void;
     findByMint: (mint: Pubkey) => Promise<Result<TokenMetadata, Error>>;
-    burn: (mint: Pubkey, owner: Pubkey, signers: Secret[], burnAmount: number, tokenDecimals: number, options?: Partial<AuthorityOptions>) => Result<CommonStructure, Error>;
-    add: (token: Pubkey, owner: Pubkey, signers: Secret[], totalAmount: number, mintDecimal: number, options?: Partial<AuthorityOptions>) => Promise<Result<CommonStructure<Pubkey>, Error>>;
+    burn: (mint: Pubkey, owner: Pubkey, signers: Secret[], burnAmount: number, tokenDecimals: number, options?: AuthorityOptions) => Result<CommonStructure, Error>;
+    add: (token: Pubkey, owner: Pubkey, signers: Secret[], totalAmount: number, mintDecimal: number, options?: AuthorityOptions) => Promise<Result<CommonStructure<Pubkey>, Error>>;
 };
 
 export { Account, Explorer, ExplorerOptions, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, SplToken, Transfer, TransferChecked, Try, Validator, ValidatorError, WithMemo, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };

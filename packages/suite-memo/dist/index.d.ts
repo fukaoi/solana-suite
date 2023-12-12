@@ -417,52 +417,6 @@ type InputCreators = {
     share: number;
 };
 
-type Find = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-
-type History = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-type FindOptions = {
-    waitTime: number;
-    narrowDown: number;
-};
-
-type OnOk<T extends History | Find> = (ok: T[]) => void;
-type OnErr = (err: Error) => void;
-type AuthorityOptions = {
-    feePayer: Pubkey;
-};
-
 type FileType = string | File;
 
 type StorageType = 'nftStorage' | 'arweave' | string;
@@ -672,11 +626,54 @@ type CommonStructure<T = undefined> = {
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };
 
+type Find = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+
+type History = {
+    sol?: string;
+    account?: string;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
+    tokenAmount?: string;
+    memo?: string;
+    dateTime?: Date;
+    type?: string;
+    sig?: string;
+    innerInstruction?: boolean;
+};
+type FindOptions = {
+    waitTime: number;
+    narrowDown: number;
+};
+
+type OnOk<T extends History | Find> = (ok: T[]) => void;
+type OnErr = (err: Error) => void;
+
 declare const Memo: {
     findByOwner: (target: Pubkey, onOk: OnOk<History>, onErr: OnErr, options?: Partial<FindOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
-    create: (data: string, owner: Pubkey, signer: Secret, options?: Partial<AuthorityOptions>) => Result<CommonStructure, Error>;
+    create: (data: string, owner: Pubkey, signer: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
 };
 
 export { Account, Explorer, ExplorerOptions, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, Transfer, TransferChecked, Try, Validator, ValidatorError, WithMemo, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };
