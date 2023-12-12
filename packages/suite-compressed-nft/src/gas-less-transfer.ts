@@ -11,21 +11,21 @@ import { PartialSignStructure } from '~/types/transaction-builder';
 export namespace CompressedNft {
   /**
    * Transfer with gas-less
-   * @param {Pubkey} assetId
-   * @param {Secret} assetIdOwner
+   * @param {Pubkey} mint
+   * @param {Secret} signer
    * @param {Pubkey} dest
    * @param {Pubkey} feePayer
    * @returns {Promise<Result<PartialSignTransaction[], Error>>}
    */
   export const gasLessTransfer = async (
-    assetId: Pubkey,
-    assetIdOwner: Secret,
+    mint: Pubkey,
+    signer: Secret,
     dest: Pubkey,
     feePayer: Pubkey,
   ): Promise<Result<PartialSignStructure, Error>[]> => {
     const delegate = await Delegate.gasLessDelegate(
-      assetId,
-      assetIdOwner,
+      mint,
+      signer,
       feePayer,
     );
     delegate.unwrap().canSubmit = true;
@@ -38,10 +38,10 @@ export namespace CompressedNft {
         feePayer: feePayer.toPublicKey(),
       });
 
-      const assetIdOwnerKeypair = new Account.Keypair({ secret: assetIdOwner });
+      const assetIdOwnerKeypair = new Account.Keypair({ secret: signer });
       inst.add(
         await Transfer.createTransfer(
-          assetId,
+          mint,
           assetIdOwnerKeypair.pubkey,
           dest,
           feePayer,
