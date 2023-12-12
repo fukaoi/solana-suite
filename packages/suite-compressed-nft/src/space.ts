@@ -14,22 +14,22 @@ import { Constants, debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { MintStructure } from '~/types/transaction-builder';
-import { TreeOptions } from '~/types/compressed-nft';
+import { SpaceOptions } from '~/types/compressed-nft';
 
 export namespace CompressedNft {
-  export class Tree {
-    treeOwner: Pubkey;
-    constructor(treeOwner: Pubkey) {
-      this.treeOwner = treeOwner;
+  export class Space {
+    spaceOwner: Pubkey;
+    constructor(spaceOwner: Pubkey) {
+      this.spaceOwner = spaceOwner;
     }
 
     getAssetId = async (): Promise<Pubkey> => {
       const treeAccount = await ConcurrentMerkleTreeAccount.fromAccountAddress(
         Node.getConnection(),
-        this.treeOwner.toPublicKey(),
+        this.spaceOwner.toPublicKey(),
       );
       const leafIndex = treeAccount.tree.rightMostPath.index - 1;
-      return Account.Pda.getAssetId(this.treeOwner, leafIndex);
+      return Account.Pda.getAssetId(this.spaceOwner, leafIndex);
     };
   }
 
@@ -42,16 +42,16 @@ export namespace CompressedNft {
    * @param {number} maxDepth
    * @param {number} maxBufferSize
    * @param {number} canopyDepth
-   * @param {Partial<TreeOptions>} options
+   * @param {Partial<SpaceOptions>} options
    * @return Promise<Result<MintTransaction, Error>>
    */
-  export const initTree = (
+  export const initSpace = (
     owner: Pubkey,
     signer: Secret,
     maxDepth: number,
     maxBufferSize: number,
     canopyDepth: number,
-    options: Partial<TreeOptions> = {},
+    options: Partial<SpaceOptions> = {},
   ): Promise<Result<MintStructure, Error>> => {
     return Try(async () => {
       const payer = options.feePayer ? options.feePayer : signer;
@@ -68,7 +68,7 @@ export namespace CompressedNft {
       const instructions = [];
 
       debugLog(`# maxDepth: ${maxDepth}, maxBufferSize: ${maxBufferSize}`);
-      debugLog('# tree space: ', space);
+      debugLog('# nft space: ', space);
 
       if (Constants.isDebugging === 'true' || process.env.DEBUG === 'true') {
         debugLog('# space cost: ', await calculateSpaceCost(space));
@@ -120,7 +120,7 @@ export namespace CompressedNft {
    * @param {Pubkey} owner
    * @param {Secret} signer
    * @param {number} spaceSize
-   * @param {Partial<TreeOptions>} options
+   * @param {Partial<SpaceOptions>} options
    *
    * @return Promise<Result<MintTransaction, Error>>
    */
@@ -128,11 +128,11 @@ export namespace CompressedNft {
     owner: Pubkey,
     signer: Secret,
     spaceSize: number,
-    options: Partial<TreeOptions> = {},
+    options: Partial<SpaceOptions> = {},
   ): Promise<Result<MintStructure, Error>> => {
     const { maxDepth, maxBufferSize, canopyDepth } =
       calculateSpaceNumberToDepth(spaceSize);
-    return initTree(
+    return initSpace(
       owner,
       signer,
       maxDepth,
