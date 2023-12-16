@@ -63,16 +63,6 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   console.log('# mint: ', mint);
 
   //////////////////////////////////////////////
-  // Display metadata from blockchain(optional)
-  //////////////////////////////////////////////
-
-  await RegularNft.findByOwner(
-    owner.pubkey,
-    (value) => console.log('# metadata: ', value),
-    (error) => assert.fail(error),
-  );
-
-  //////////////////////////////////////////////
   // TRANSFER RECEIPTS USER FROM THIS LINE
   //////////////////////////////////////////////
 

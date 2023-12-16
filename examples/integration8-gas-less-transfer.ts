@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-// $ npx ts-node examples/integration8-feepayer-partial-sign-transfer
+// $ npx ts-node examples/integration8-gas-less-transfer
 //////////////////////////////////////////////
 
 import assert from 'assert';

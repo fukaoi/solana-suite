@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-// $ npx ts-node examples/integration9-feepayer-partial-sign-nft-mint.ts
+// $ npx ts-node examples/integration9-gas-less-mint.ts
 //////////////////////////////////////////////
 
 import assert from 'assert';
