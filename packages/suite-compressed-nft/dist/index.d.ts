@@ -134,7 +134,7 @@ type NftMetadata = {
     offchain: Offchain;
 };
 
-type TreeOptions = {
+type SpaceOptions = {
     feePayer: Secret$1;
 };
 
@@ -721,9 +721,9 @@ type PartialSignStructure<T = Pubkey$1> = {
 };
 
 declare namespace CompressedNft$1 {
-    class Tree {
-        treeOwner: Pubkey$1;
-        constructor(treeOwner: Pubkey$1);
+    class Space {
+        spaceOwner: Pubkey$1;
+        constructor(spaceOwner: Pubkey$1);
         getAssetId: () => Promise<Pubkey$1>;
     }
     /**
@@ -735,10 +735,10 @@ declare namespace CompressedNft$1 {
      * @param {number} maxDepth
      * @param {number} maxBufferSize
      * @param {number} canopyDepth
-     * @param {Partial<TreeOptions>} options
+     * @param {Partial<SpaceOptions>} options
      * @return Promise<Result<MintTransaction, Error>>
      */
-    const initTree: (owner: Pubkey$1, signer: Secret, maxDepth: number, maxBufferSize: number, canopyDepth: number, options?: Partial<TreeOptions>) => Promise<Result<MintStructure, Error>>;
+    const initSpace: (owner: Pubkey$1, signer: Secret, maxDepth: number, maxBufferSize: number, canopyDepth: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
     /**
      * create a new nft space
      * This function needs only 1 call
@@ -746,11 +746,11 @@ declare namespace CompressedNft$1 {
      * @param {Pubkey} owner
      * @param {Secret} signer
      * @param {number} spaceSize
-     * @param {Partial<TreeOptions>} options
+     * @param {Partial<SpaceOptions>} options
      *
      * @return Promise<Result<MintTransaction, Error>>
      */
-    const createMintSpace: (owner: Pubkey$1, signer: Secret, spaceSize: number, options?: Partial<TreeOptions>) => Promise<Result<MintStructure, Error>>;
+    const createMintSpace: (owner: Pubkey$1, signer: Secret, spaceSize: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
     /**
      * Calculate space cost
      *
@@ -766,15 +766,15 @@ declare const CompressedNft: {
     createTransfer: (assetId: Pubkey$1, assetIdOwner: Pubkey$1, dest: Pubkey$1, delegate?: Pubkey$1 | undefined) => Promise<_solana_web3_js.TransactionInstruction>;
     transfer: (assetId: Pubkey$1, assetIdOwner: Pubkey$1, dest: Pubkey$1, signers: Secret[]) => Promise<Result<CommonStructure, Error>>;
     mintCollection: (owner: Pubkey$1, signer: Secret$1, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
-    Tree: typeof CompressedNft$1.Tree;
-    initTree: (owner: Pubkey$1, signer: Secret, maxDepth: number, maxBufferSize: number, canopyDepth: number, options?: Partial<TreeOptions>) => Promise<Result<MintStructure, Error>>;
-    createMintSpace: (owner: Pubkey$1, signer: Secret, spaceSize: number, options?: Partial<TreeOptions>) => Promise<Result<MintStructure, Error>>;
+    Space: typeof CompressedNft$1.Space;
+    initSpace: (owner: Pubkey$1, signer: Secret, maxDepth: number, maxBufferSize: number, canopyDepth: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
+    createMintSpace: (owner: Pubkey$1, signer: Secret, spaceSize: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
     calculateSpaceCost: (spaceSize: number) => Promise<{
         sol: number;
     }>;
     createVerifyCreator: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
     mint: (owner: Pubkey$1, signer: Secret$1, input: InputNftMetadata, treeOwner: Pubkey$1, collectionMint: Pubkey$1, options?: Partial<MintOptions>) => Promise<Result<MintStructure<CompressedNft$1.Tree>, Error>>;
-    gasLessTransfer: (mint: Pubkey$1, signer: Secret$1, dest: Pubkey$1, feePayer: Pubkey$1) => Promise<Result<PartialSignStructure, Error>[]>;
+    gasLessTransfer: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret$1, dest: Pubkey$1, feePayer: Pubkey$1) => Promise<Result<PartialSignStructure, Error>[]>;
     gasLessDelegate: (assetId: Pubkey$1, assetIdOwner: Secret$1, newDelegate: Pubkey$1) => Promise<Result<PartialSignStructure, Error>>;
     defaultSortBy: Sortable;
     findByOwner: (owner: Pubkey, options?: Partial<FindOptions>) => Promise<Result<CompressedNftMetadata, Error>>;

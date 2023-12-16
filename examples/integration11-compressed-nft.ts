@@ -141,6 +141,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   //transfer nftReceiver => receipt
   const transferInst = await CompressedNft.gasLessTransfer(
     mint,
+    nftReceiver.pubkey,
     nftReceiver.secret,
     receipt.pubkey,
     feePayer.pubkey,

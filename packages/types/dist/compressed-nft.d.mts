@@ -55,8 +55,8 @@ type NftMetadata = {
     offchain: Offchain;
 };
 
-type TreeOptions = {
+type SpaceOptions = {
     feePayer: Secret;
 };
 
-export { Authority, CompressedNftMetadata, Creators, DelegateOptions, MintCollectionOptions, MintOptions, NftMetadata, TreeOptions };
+export { Authority, CompressedNftMetadata, Creators, DelegateOptions, MintCollectionOptions, MintOptions, NftMetadata, SpaceOptions };

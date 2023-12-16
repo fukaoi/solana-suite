@@ -5,7 +5,7 @@ import { CompressedNft as GasLessDelegate } from './gas-less-delegate';
 import { CompressedNft as GasLessTransfer } from './gas-less-transfer';
 import { CompressedNft as Mint } from './mint';
 import { CompressedNft as Collection } from './mint-collection';
-import { CompressedNft as Tree } from './tree';
+import { CompressedNft as Space } from './space';
 import { CompressedNft as Transfer } from './transfer';
 
 import '~/types/transaction-builder';
@@ -19,7 +19,7 @@ export const CompressedNft = {
   ...GasLessDelegate,
   ...GasLessTransfer,
   ...Mint,
-  ...Tree,
+  ...Space,
   ...Collection,
   ...Transfer,
 };

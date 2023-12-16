@@ -7,7 +7,7 @@ import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { debugLog, Result, Try, unixTimestamp, Validator } from '~/shared';
 import { DasApi } from '~/das-api';
-import { CompressedNft as Tree } from './tree';
+import { CompressedNft as Space } from './space';
 import {
   computeCreatorHash,
   computeDataHash,
@@ -122,7 +122,7 @@ export namespace CompressedNft {
     treeOwner: Pubkey,
     collectionMint: Pubkey,
     options: Partial<MintOptions> = {},
-  ): Promise<Result<MintStructure<Tree.Tree>, Error>> => {
+  ): Promise<Result<MintStructure<Space.Tree>, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -244,7 +244,7 @@ export namespace CompressedNft {
       );
 
       if (input.creators) {
-        const assetId = await new Tree.Tree(treeOwner).getAssetId();
+        const assetId = await new Space.Tree(treeOwner).getAssetId();
         instructions.push(
           await createVerifyCreator(
             metadataArgs.creators,
@@ -260,7 +260,7 @@ export namespace CompressedNft {
         instructions,
         [signer.toKeypair()],
         payer.toKeypair(),
-        new Tree.Tree(treeOwner),
+        new Space.Tree(treeOwner),
       );
     });
   };

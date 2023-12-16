@@ -1,6 +1,5 @@
 import { Result, Try } from '~/shared';
 import { Node } from '~/node';
-import { Account } from '~/account';
 import { Pubkey, Secret } from '~/types/account';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Transaction } from '@solana/web3.js';
@@ -12,6 +11,7 @@ export namespace CompressedNft {
   /**
    * Transfer with gas-less
    * @param {Pubkey} mint
+   * @param {Pubkey} owner
    * @param {Secret} signer
    * @param {Pubkey} dest
    * @param {Pubkey} feePayer
@@ -19,15 +19,12 @@ export namespace CompressedNft {
    */
   export const gasLessTransfer = async (
     mint: Pubkey,
+    owner: Pubkey,
     signer: Secret,
     dest: Pubkey,
     feePayer: Pubkey,
   ): Promise<Result<PartialSignStructure, Error>[]> => {
-    const delegate = await Delegate.gasLessDelegate(
-      mint,
-      signer,
-      feePayer,
-    );
+    const delegate = await Delegate.gasLessDelegate(mint, signer, feePayer);
     delegate.unwrap().canSubmit = true;
 
     const transfer = await Try(async () => {
@@ -38,15 +35,7 @@ export namespace CompressedNft {
         feePayer: feePayer.toPublicKey(),
       });
 
-      const assetIdOwnerKeypair = new Account.Keypair({ secret: signer });
-      inst.add(
-        await Transfer.createTransfer(
-          mint,
-          assetIdOwnerKeypair.pubkey,
-          dest,
-          feePayer,
-        ),
-      );
+      inst.add(await Transfer.createTransfer(mint, owner, dest, feePayer));
       inst.recentBlockhash = blockhashObj.blockhash;
 
       return new TransactionBuilder.PartialSign(

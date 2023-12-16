@@ -1,5 +1,5 @@
 import { Secret } from '../account';
 
-export type TreeOptions = {
+export type SpaceOptions = {
   feePayer: Secret;
 };

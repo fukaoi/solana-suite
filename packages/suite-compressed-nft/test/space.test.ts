@@ -14,15 +14,15 @@ test.before(async () => {
 });
 
 test('Get asset id', async (t) => {
-  const treeOwner = '3ThvFMB15aiKSmSP966183RybmDRXfCiedEJMsUEhfaM';
-  const tree = new CompressedNft.Tree(treeOwner);
+  const spaceOwner = '3ThvFMB15aiKSmSP966183RybmDRXfCiedEJMsUEhfaM';
+  const tree = new CompressedNft.Space(spaceOwner);
   const assetId = await tree.getAssetId();
   t.log('# asset id: ', assetId);
   t.true(Account.Keypair.isPubkey(assetId));
 });
 
 test('Create merkle tree', async (t) => {
-  const inst = await CompressedNft.initTree(
+  const inst = await CompressedNft.initSpace(
     owner.pubkey,
     owner.secret,
     3,
