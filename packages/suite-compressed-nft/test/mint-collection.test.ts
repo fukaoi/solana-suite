@@ -21,7 +21,7 @@ test('Create collection', async (t) => {
       royalty: 0,
       uri: 'https://arweave.net/5dfVI6R6bjT241pEUsUHVa1uzSzu8tMUfs1tAnFwikk',
     },
-    {feePayer: feePayer.secret}
+    { feePayer: feePayer.secret },
   );
   (await inst.submit()).match(
     (ok: string) => {

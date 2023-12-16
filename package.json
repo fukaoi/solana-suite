@@ -16,7 +16,7 @@
     "tslib": "^2.6.2",
     "tsup": "^7.2.0",
     "tsx": "^3.13.0",
-    "turbo": "^1.11.1"
+    "turbo": "^1.11.2"
   },
   "repository": "git@github.com:atonoy/solana-suite.git",
   "author": "fukaoi <usapyon2022@gmail.com>",

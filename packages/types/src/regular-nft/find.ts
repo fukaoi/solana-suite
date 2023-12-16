@@ -22,4 +22,3 @@ export type RegularNftMetadata = {
   uses?: Uses | undefined;
   dateTime?: Date | undefined;
 };
-
