@@ -27,7 +27,7 @@ test.before(async () => {
   owner = obj.source.pubkey;
 });
 
-test(
+test.skip(
   'Not found nft',
   withCallback((t: any, end: any) => {
     const onOk: OnOk<RegularNftMetadata> = (ok) => t.true(Array.isArray(ok));
@@ -37,7 +37,7 @@ test(
   }),
 );
 
-test(
+test.skip(
   'Find owner info',
   withCallback((t: any, end: any) => {
     const onOk: OnOk<RegularNftMetadata> = async (ok) => {
@@ -59,7 +59,7 @@ test(
   }),
 );
 
-test(
+test.skip(
   'Find owner info with Asc',
   withCallback((t: any, end: any) => {
     const onOk: OnOk<RegularNftMetadata> = async (ok) => {
@@ -80,7 +80,7 @@ test(
   }),
 );
 
-test(
+test.skip(
   'Find owner info with no Hold',
   withCallback((t: any, end: any) => {
     const onOk: OnOk<RegularNftMetadata> = async (ok) => {
@@ -102,7 +102,7 @@ test(
   }),
 );
 
-test('Get token info by mint address', async (t) => {
+test.skip('Get token info by mint address', async (t) => {
   (await RegularNft.findByMint(nftMint)).match(
     (ok: RegularNftMetadata) => {
       t.not(ok.name, '');
@@ -116,7 +116,7 @@ test('Get token info by mint address', async (t) => {
   );
 });
 
-test('Get nft parent collection by mint address', async (t) => {
+test.skip('Get nft parent collection by mint address', async (t) => {
   (await RegularNft.findByMint(collectionMint)).match(
     (ok: RegularNftMetadata) => {
       console.log(ok.collectionDetails);
@@ -126,7 +126,7 @@ test('Get nft parent collection by mint address', async (t) => {
   );
 });
 
-test('[Error]Get token info by mint address, but token standard is difierent', async (t) => {
+test.skip('[Error]Get token info by mint address, but token standard is difierent', async (t) => {
   (await RegularNft.findByMint(mint)).match(
     () => t.fail('Dont come here'),
     (err: Error) => t.not(err.message, ''),

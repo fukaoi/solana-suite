@@ -13,12 +13,19 @@ test.before(async () => {
 });
 
 test('Create collection', async (t) => {
-  const inst = await RegularNft.mintCollection(source.pubkey, source.secret, {
-    name: 'CollectionNFT',
-    symbol: 'CNFT',
-    royalty: 0,
-    uri: 'https://arweave.net/5dfVI6R6bjT241pEUsUHVa1uzSzu8tMUfs1tAnFwikk',
-  });
+  const inst = await RegularNft.mintCollection(
+    source.pubkey,
+    source.secret,
+    {
+      name: 'CollectionNFT',
+      symbol: 'CNFT',
+      royalty: 0,
+      uri: 'https://arweave.net/5dfVI6R6bjT241pEUsUHVa1uzSzu8tMUfs1tAnFwikk',
+    },
+    {
+      feePayer: feePayer.secret,
+    },
+  );
 
   (await inst.submit()).match(
     (ok: string) => {

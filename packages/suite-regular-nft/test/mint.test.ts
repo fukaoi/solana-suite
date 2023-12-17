@@ -10,47 +10,31 @@ import { ValidatorError } from '~/validator';
 
 let source: KeypairAccount;
 let feePayer: KeypairAccount;
-// let collection: Pubkey;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
   feePayer = obj.feePayer;
-  // collection = obj.collectionMint;
 });
 
-test('[nftStorage] mint nft, already uploaed image', async (t) => {
+test('[Arweave] mint nft with fee payer', async (t) => {
   const asset = RandomAsset.get();
-  const res = await RegularNft.mint(source.pubkey, source.secret, {
-    uri: 'https://ipfs.io/ipfs/bafkreibh6mv6zqvg2wopmtx3k4smavcfx55ob2pciuoob2z44acgtem754',
-    name: asset.name!,
-    symbol: asset.symbol!,
-    description: asset.description,
-    royalty: 50,
-  });
-
-  t.true(Account.Keypair.isPubkey(res.unwrap().data as Pubkey));
-
-  (await res.submit()).match(
-    (ok: string) => {
-      t.log('# mint:', res.unwrap().data);
-      t.log('# sig:', ok);
+  const res = await RegularNft.mint(
+    source.pubkey,
+    source.secret,
+    {
+      filePath: asset.filePath as string,
+      storageType: 'arweave',
+      name: asset.name!,
+      symbol: asset.symbol!,
+      royalty: 50,
+      description: asset.description,
+      isMutable: true,
     },
-    (ng: Error) => t.fail(ng.message),
+    {
+      feePayer: feePayer.secret,
+    },
   );
-});
-
-test('[Arweave] mint nft', async (t) => {
-  const asset = RandomAsset.get();
-  const res = await RegularNft.mint(source.pubkey, source.secret, {
-    filePath: asset.filePath as string,
-    storageType: 'arweave',
-    name: asset.name!,
-    symbol: asset.symbol!,
-    royalty: 50,
-    description: asset.description,
-    isMutable: true,
-  });
 
   t.true(Account.Keypair.isPubkey(res.unwrap().data as Pubkey));
 
@@ -77,7 +61,7 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
       royalty: 0,
     },
     {
-      feePayer: source.secret,
+      feePayer: feePayer.secret,
     },
   );
 

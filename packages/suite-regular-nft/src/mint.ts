@@ -304,6 +304,7 @@ export namespace RegularNft {
         });
       }
 
+      console.log(payer)
       return new TransactionBuilder.Mint(
         instructions,
         keypairs,

@@ -7,11 +7,13 @@ import { Pubkey } from '~/types/account';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
+let feePayer: KeypairAccount;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
   dest = obj.dest;
+  feePayer = obj.feePayer;
 });
 
 test('Transfer nft', async (t) => {
@@ -23,15 +25,20 @@ test('Transfer nft', async (t) => {
     secret: '',
   };
 
-  const mint = await RegularNft.mint(source.pubkey, source.secret, {
-    filePath: asset.filePath as string,
-    storageType: 'arweave',
-    name: asset.name!,
-    symbol: asset.symbol!,
-    royalty: 50,
-    creators: [creator],
-    isMutable: true,
-  });
+  const mint = await RegularNft.mint(
+    source.pubkey,
+    source.secret,
+    {
+      filePath: asset.filePath as string,
+      storageType: 'arweave',
+      name: asset.name!,
+      symbol: asset.symbol!,
+      royalty: 50,
+      creators: [creator],
+      isMutable: true,
+    },
+    { feePayer: feePayer.secret },
+  );
 
   const resMint = await mint.submit();
 
@@ -44,6 +51,7 @@ test('Transfer nft', async (t) => {
       source.pubkey,
       dest.pubkey,
       [source.secret],
+      { feePayer: feePayer.secret },
     )
   ).submit();
 
