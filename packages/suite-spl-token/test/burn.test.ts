@@ -5,6 +5,7 @@ import { SplToken } from '../src/';
 import { KeypairAccount } from '~/types/account';
 
 let source: KeypairAccount;
+let feePayer: KeypairAccount;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;
 const MINT_DECIMAL = 2;
@@ -19,6 +20,7 @@ const TOKEN_METADATA = {
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
+  feePayer = obj.feePayer;
 });
 
 test('Create token, burn token', async (t) => {
@@ -28,6 +30,7 @@ test('Create token, burn token', async (t) => {
     TOKEN_TOTAL_AMOUNT,
     MINT_DECIMAL,
     TOKEN_METADATA,
+    { feePayer: feePayer.secret },
   );
 
   t.true(inst1.isOk, `${inst1.unwrap()}`);
@@ -41,6 +44,7 @@ test('Create token, burn token', async (t) => {
     [source.secret],
     burnAmount,
     MINT_DECIMAL,
+    { feePayer: feePayer.secret },
   );
 
   t.true(inst2.isOk);

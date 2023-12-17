@@ -6,6 +6,7 @@ import { RandomAsset } from 'test-tools/setupAsset';
 import { SplToken } from '../src';
 
 let source: KeypairAccount;
+let feePayer: KeypairAccount;
 let mintStr: string;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;
@@ -14,6 +15,7 @@ const MINT_DECIMAL = 2;
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
+  feePayer = obj.feePayer;
 });
 
 test('Create token', async (t) => {
@@ -30,6 +32,7 @@ test('Create token', async (t) => {
     TOKEN_TOTAL_AMOUNT,
     MINT_DECIMAL,
     tokenMetadata,
+    { feePayer: feePayer.secret },
   );
 
   t.true(inst.isOk, `${inst.unwrap()}`);
@@ -55,6 +58,7 @@ test('Create token, always uploaed image', async (t) => {
     TOKEN_TOTAL_AMOUNT,
     MINT_DECIMAL,
     tokenMetadata,
+    { feePayer: feePayer.secret },
   );
 
   t.true(inst.isOk, `${inst.unwrap()}`);
@@ -94,6 +98,7 @@ test('Create token with creators, freezeAuthority', async (t) => {
     MINT_DECIMAL,
     tokenMetadata,
     {
+      feePayer: feePayer.secret,
       freezeAuthority: freezeAuthority.pubkey,
     },
   );

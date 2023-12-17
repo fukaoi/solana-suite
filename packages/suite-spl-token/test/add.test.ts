@@ -6,6 +6,7 @@ import { KeypairAccount } from '~/types/account';
 import { Pubkey } from '~/types/account';
 
 let source: KeypairAccount;
+let feePayer: KeypairAccount;
 let mint: Pubkey;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;
@@ -21,16 +22,17 @@ const TOKEN_METADATA = {
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
+  feePayer = obj.feePayer;
 });
 
 test('Add minting token', async (t) => {
-  // mint
   const inst = await SplToken.mint(
     source.pubkey,
     source.secret,
     TOKEN_TOTAL_AMOUNT,
     MINT_DECIMAL,
     TOKEN_METADATA,
+    { feePayer: feePayer.secret },
   );
 
   t.true(inst.isOk, `${inst.unwrap()}`);

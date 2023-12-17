@@ -32,6 +32,9 @@ test('Create token, batch transfer', async (t) => {
     TOKEN_TOTAL_AMOUNT,
     MINT_DECIMAL,
     TOKEN_METADATA,
+    {
+      feePayer: feePayer.secret,
+    },
   );
 
   t.true(inst1.isOk, `${inst1.unwrap()}`);

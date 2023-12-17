@@ -8,14 +8,14 @@ export namespace Constants {
     const THRESHHOLD = 7;
     let isDisplay = false;
     export const NFT_STORAGE_API_KEY = `
-        [Warning]
+        [YOU HAVE TO DO]
         --------------------------------------
         You need to update nftStorageApiKey define parameter in solana-suite.json.
         Can get api key from https://nft.storage/
         --------------------------------------
         `;
     export const DAS_API_URL = `
-        [Warning]
+        [YOU HAVE TO DO]
         --------------------------------------
         You need to update dasApiUrl define parameter in solana-suite.json.
         can get api url from https://www.helius.dev/
