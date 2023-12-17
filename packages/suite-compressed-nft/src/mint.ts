@@ -122,7 +122,7 @@ export namespace CompressedNft {
     treeOwner: Pubkey,
     collectionMint: Pubkey,
     options: Partial<MintOptions> = {},
-  ): Promise<Result<MintStructure<Space.Tree>, Error>> => {
+  ): Promise<Result<MintStructure<Space.Space>, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -244,7 +244,7 @@ export namespace CompressedNft {
       );
 
       if (input.creators) {
-        const assetId = await new Space.Tree(treeOwner).getAssetId();
+        const assetId = await new Space.Space(treeOwner).getAssetId();
         instructions.push(
           await createVerifyCreator(
             metadataArgs.creators,
@@ -260,7 +260,7 @@ export namespace CompressedNft {
         instructions,
         [signer.toKeypair()],
         payer.toKeypair(),
-        new Space.Tree(treeOwner),
+        new Space.Space(treeOwner),
       );
     });
   };
