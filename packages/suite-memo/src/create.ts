@@ -2,8 +2,8 @@ import { TransactionInstruction } from '@solana/web3.js';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Constants, Result, Try } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
+import { MemoOptions } from '~/types/memo';
 import bs from 'bs58';
-import { AuthorityOptions } from '~/types/shared';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace Memo {
@@ -16,7 +16,7 @@ export namespace Memo {
     data: string,
     owner: Pubkey,
     signer: Secret,
-    options: Partial<AuthorityOptions> = {},
+    options: Partial<MemoOptions> = {},
   ): Result<CommonStructure, Error> => {
     return Try(() => {
       const feePayer = options.feePayer;

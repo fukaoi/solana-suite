@@ -5,11 +5,13 @@ import { SolNative } from '../src/';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
+let feePayer: KeypairAccount;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
   dest = obj.dest;
+  feePayer = obj.feePayer;
 });
 
 test('transfer feePayerPartialSign', async (t) => {
@@ -19,14 +21,17 @@ test('transfer feePayerPartialSign', async (t) => {
     dest.pubkey,
     [source.secret],
     solAmount,
-    source.pubkey,
+    feePayer.pubkey,
   );
 
-  t.true(serialized.isOk, `${serialized.unwrap()}`);
-  if (serialized.isOk) {
-    t.log(serialized.value);
-    const res = await serialized.value.submit(source.secret);
-    t.true(res.isOk, `${res.unwrap()}`);
-    t.log('# tx signature: ', res.unwrap());
-  }
+  (await serialized.submit(feePayer.secret)).match(
+    (ok) => {
+      t.log('# tx signature: ', ok);
+      t.pass();
+    },
+    (err) => {
+      console.error(err);
+      t.fail(err.message);
+    },
+  );
 });

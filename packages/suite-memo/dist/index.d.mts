@@ -626,6 +626,10 @@ type CommonStructure<T = undefined> = {
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };
 
+type MemoOptions = {
+    feePayer: Secret;
+};
+
 type Find = {
     sol?: string;
     account?: string;
@@ -673,7 +677,7 @@ declare const Memo: {
     findByOwner: (target: Pubkey, onOk: OnOk<History>, onErr: OnErr, options?: Partial<FindOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
-    create: (data: string, owner: Pubkey, signer: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
+    create: (data: string, owner: Pubkey, signer: Secret, options?: Partial<MemoOptions>) => Result<CommonStructure, Error>;
 };
 
 export { Account, Explorer, ExplorerOptions, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, Transfer, TransferChecked, Try, Validator, ValidatorError, WithMemo, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };

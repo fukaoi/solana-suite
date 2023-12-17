@@ -7,17 +7,19 @@ import { Pubkey } from '~/types/account';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
+let feePayer: KeypairAccount;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
   dest = obj.dest;
+  feePayer = obj.feePayer;
 });
 
 test('Is multisig address', async (t) => {
   const signer1 = Account.Keypair.create();
   const signer2 = Account.Keypair.create();
-  const inst = await Multisig.create(2, source.secret, [
+  const inst = await Multisig.create(2, feePayer.secret, [
     signer1.pubkey,
     signer2.pubkey,
   ]);
@@ -47,25 +49,11 @@ test('[Err]Invalid multisig address', async (t) => {
   t.false(res.unwrap());
 });
 
-test('Create account 2 of 2', async (t) => {
-  const signer1 = Account.Keypair.create();
-  const signer2 = Account.Keypair.create();
-  const inst = await Multisig.create(2, dest.secret, [
-    signer1.pubkey,
-    signer2.pubkey,
-  ]);
-
-  t.true(inst.isOk, `${inst.unwrap()}`);
-  const res = await inst.submit();
-  t.true(res.isOk, `${res.unwrap()}`);
-  console.log('# multisig account: ', inst.unwrap().data);
-});
-
 test('Create account 2 of 3', async (t) => {
   const signer1 = Account.Keypair.create();
   const signer2 = Account.Keypair.create();
   const signer3 = Account.Keypair.create();
-  const inst = await Multisig.create(2, source.secret, [
+  const inst = await Multisig.create(2, feePayer.secret, [
     signer1.pubkey,
     signer2.pubkey,
     signer3.pubkey,
@@ -86,7 +74,7 @@ test('[Err] m number less than signers number', async (t) => {
 test('Get multisig info', async (t) => {
   const signer1 = Account.Keypair.create();
   const signer2 = Account.Keypair.create();
-  const inst = await Multisig.create(2, source.secret, [
+  const inst = await Multisig.create(2, feePayer.secret, [
     signer1.pubkey,
     signer2.pubkey,
   ]);

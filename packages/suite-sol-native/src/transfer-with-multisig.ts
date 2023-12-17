@@ -10,7 +10,7 @@ import { TransactionBuilder } from '~/transaction-builder';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
 import { Account } from '~/account';
-import { AuthorityOptions } from '~/types/shared';
+import { TransferOptions } from '~/types/sol-native';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SolNative {
@@ -23,7 +23,7 @@ export namespace SolNative {
     dest: Pubkey,
     signers: Secret[],
     amount: number,
-    options: Partial<AuthorityOptions> = {},
+    options: Partial<TransferOptions> = {},
   ): Promise<Result<CommonStructure, Error>> => {
     return Try(async () => {
       const connection = Node.getConnection();

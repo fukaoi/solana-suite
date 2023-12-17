@@ -77,11 +77,18 @@ test('send memo and sol transfer by owner', async (t) => {
 });
 
 test('send memo and spl-token transfer by owner', async (t) => {
-  const inst = await SplToken.mint(source.pubkey, source.secret, 10000, 4, {
-    name: 'Memo spl-token',
-    symbol: 'MST',
-    uri: 'https://ipfs.io/ipfs/bafkreidm6xq7rognuapkmqweeco6vfo2hsgf7lndqttgxx6nnegc472qgi',
-  });
+  const inst = await SplToken.mint(
+    source.pubkey,
+    source.secret,
+    10000,
+    4,
+    {
+      name: 'Memo spl-token',
+      symbol: 'MST',
+      uri: 'https://ipfs.io/ipfs/bafkreidm6xq7rognuapkmqweeco6vfo2hsgf7lndqttgxx6nnegc472qgi',
+    },
+    { feePayer: feePayer.secret },
+  );
 
   const sig = await inst.submit();
   await Node.confirmedSig(sig.unwrap());
@@ -90,6 +97,7 @@ test('send memo and spl-token transfer by owner', async (t) => {
     `send memo and spl-token transfer: ${datetime}`,
     dest.pubkey,
     dest.secret,
+    { feePayer: feePayer.secret },
   );
 
   const inst2 = await SplToken.transfer(

@@ -4,7 +4,7 @@ import { Pubkey, Secret } from '~/types/account';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Account } from '~/account';
 import { SplToken as Calculate } from './calculate-amount';
-import { AuthorityOptions } from '~/types/shared';
+import { MintOptions } from '~/types/spl-token';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
@@ -14,7 +14,7 @@ export namespace SplToken {
     signers: Secret[],
     totalAmount: number,
     mintDecimal: number,
-    options: Partial<AuthorityOptions> = {},
+    options: Partial<MintOptions> = {},
   ): Promise<Result<CommonStructure<Pubkey>, Error>> => {
     return Try(async () => {
       const payer = options.feePayer ? options.feePayer : signers[0];

@@ -637,9 +637,13 @@ type PartialSignStructure<T = Pubkey> = {
     submit: (feePayer: Secret) => Promise<Result<string, Error>>;
 };
 
+type TransferOptions = {
+    feePayer: Secret;
+};
+
 declare const SolNative: {
-    transferWithMultisig: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, options?: AuthorityOptions) => Promise<Result<CommonStructure, Error>>;
-    transfer: (source: Pubkey, dest: Pubkey, signers: Secret[], amount: number, options?: AuthorityOptions) => Result<CommonStructure, Error>;
+    transferWithMultisig: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, options?: Partial<TransferOptions>) => Promise<Result<CommonStructure, Error>>;
+    transfer: (source: Pubkey, dest: Pubkey, signers: Secret[], amount: number, options?: Partial<TransferOptions>) => Result<CommonStructure, Error>;
     gasLessTransfer: (owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, feePayer: Pubkey) => Promise<Result<PartialSignStructure, Error>>;
     findByOwner: (owner: Pubkey) => Promise<Result<OwnerInfo, Error>>;
 };

@@ -6,7 +6,7 @@ import {
   createThawAccountInstruction,
   getAssociatedTokenAddressSync,
 } from '@solana/spl-token';
-import { AuthorityOptions } from '~/types/shared';
+import { ThawOptions } from '~/types/spl-token';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
@@ -17,13 +17,13 @@ export namespace SplToken {
    * @param {Pubkey} mint             // mint address
    * @param {Pubkey} owner            // current owner
    * @param {Secret} freezeAuthority  // setted freeze authority of nft
-   * @param {Partial<AuthorityOptions>} options  // options
+   * @param {Partial<ThawOptions>} options  // options
    */
   export const thaw = (
     mint: Pubkey,
     owner: Pubkey,
     freezeAuthority: Secret,
-    options: Partial<AuthorityOptions> = {},
+    options: Partial<ThawOptions> = {},
   ): Result<CommonStructure, Error> => {
     const payer = options.feePayer ? options.feePayer : freezeAuthority;
     return Try(() => {

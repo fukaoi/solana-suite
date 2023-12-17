@@ -3,7 +3,7 @@ import { SolNative } from '../src';
 import { Setup } from 'test-tools/setup';
 import { Account } from '~/account';
 import { KeypairAccount } from '~/types/account';
-import { Multisig } from '@solana-suite/multisig';
+import { Multisig } from '~/suite-multisig';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
@@ -19,7 +19,7 @@ test.before(async () => {
 test('transfer transaction with multi sig', async (t) => {
   const signer1 = Account.Keypair.create();
   const signer2 = Account.Keypair.create();
-  const inst1 = await Multisig.create(2, source.secret, [
+  const inst1 = await Multisig.create(2, feePayer.secret, [
     signer1.pubkey,
     signer2.pubkey,
   ]);

@@ -2,7 +2,7 @@ import { SystemProgram } from '@solana/web3.js';
 import { Pubkey, Secret } from '~/types/account';
 import { Result, Try } from '~/shared';
 import { TransactionBuilder } from '~/transaction-builder';
-import { AuthorityOptions } from '~/types/shared';
+import { TransferOptions } from '~/types/sol-native';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SolNative {
@@ -12,7 +12,7 @@ export namespace SolNative {
     dest: Pubkey,
     signers: Secret[],
     amount: number,
-    options: Partial<AuthorityOptions> = {},
+    options: Partial<TransferOptions> = {},
   ): Result<CommonStructure, Error> => {
     return Try(() => {
       const inst = SystemProgram.transfer({

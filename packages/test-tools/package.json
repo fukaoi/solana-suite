@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.7.0",
   "scripts": {
+    "build": "tsup --config build-configs/tsup/base.ts",
+    "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json .",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json . -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json . -c --write"
@@ -12,6 +14,7 @@
     "bs58": "^5.0.0"
   },
   "devDependencies": {
+    "build-configs/tsup": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*"
@@ -31,6 +34,11 @@
       "require": "./setupAsset.ts",
       "import": "./setupAsset.ts",
       "types": "./setupAsset.ts"
+    },
+    "./requestSol": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
     }
   }
 }

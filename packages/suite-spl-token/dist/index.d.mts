@@ -179,38 +179,6 @@ type InputNftMetadata = {
     options?: Options;
 };
 
-type TokenMetadata = {
-    mint: string;
-    name: string;
-    symbol: string;
-    uri: string;
-    royalty: number;
-    offchain: Offchain;
-    tokenAmount: string;
-    attributes?: Attribute | undefined;
-    creators?: Creators[] | undefined;
-    uses?: Uses | undefined;
-    dateTime?: Date | undefined;
-};
-
-type MintOptions = {
-    feePayer: Secret;
-    freezeAuthority: Pubkey;
-};
-type InputTokenMetadata = {
-    name: string;
-    symbol: string;
-    filePath?: FileType;
-    uri?: string;
-    storageType?: StorageType;
-    description?: string;
-    royalty?: number;
-    uses?: Uses;
-    creators?: InputCreators[];
-    attributes?: Attribute[];
-    options?: Options;
-};
-
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
@@ -753,14 +721,58 @@ type PartialSignStructure<T = Pubkey> = {
     submit: (feePayer: Secret) => Promise<Result<string, Error>>;
 };
 
+type BurnOptions = {
+    feePayer: Secret;
+};
+
+type TokenMetadata = {
+    mint: string;
+    name: string;
+    symbol: string;
+    uri: string;
+    royalty: number;
+    offchain: Offchain;
+    tokenAmount: string;
+    attributes?: Attribute | undefined;
+    creators?: Creators[] | undefined;
+    uses?: Uses | undefined;
+    dateTime?: Date | undefined;
+};
+
+type FreezeOptions = {
+    feePayer: Secret;
+};
+
+type MintOptions = {
+    feePayer: Secret;
+    freezeAuthority: Pubkey;
+};
+type InputTokenMetadata = {
+    name: string;
+    symbol: string;
+    filePath?: FileType;
+    uri?: string;
+    storageType?: StorageType;
+    description?: string;
+    royalty?: number;
+    uses?: Uses;
+    creators?: InputCreators[];
+    attributes?: Attribute[];
+    options?: Options;
+};
+
+type ThawOptions = {
+    feePayer: Secret;
+};
+
 declare const SplToken: {
-    transfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, mintDecimal: number, options?: AuthorityOptions) => Promise<Result<CommonStructure, Error>>;
-    thaw: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
+    transfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, mintDecimal: number, options?: Partial<MintOptions>) => Promise<Result<CommonStructure, Error>>;
+    thaw: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<ThawOptions>) => Result<CommonStructure, Error>;
     createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMint: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
     mint: (owner: Pubkey, signer: Secret, totalAmount: number, mintDecimal: number, input: InputTokenMetadata, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
     gasLessTransfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, signers: Secret[], amount: number, mintDecimal: number, feePayer: Pubkey) => Promise<Result<PartialSignStructure, Error>>;
-    freeze: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
+    freeze: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<FreezeOptions>) => Result<CommonStructure, Error>;
     genericFindByOwner: <T extends RegularNftMetadata | TokenMetadata>(owner: Pubkey, callback: (result: Result<T[], Error>) => void, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard, sortable?: SortDirection | undefined, isHolder?: boolean | undefined) => Promise<void>;
     genericFindByMint: <T_1 extends RegularNftMetadata | TokenMetadata>(mint: Pubkey, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard) => Promise<Result<T_1, Error>>;
     findByOwner: (owner: Pubkey, onOk: OnOk<TokenMetadata>, onErr: OnErr, options?: {
@@ -768,8 +780,8 @@ declare const SplToken: {
         isHolder?: boolean | undefined;
     } | undefined) => void;
     findByMint: (mint: Pubkey) => Promise<Result<TokenMetadata, Error>>;
-    burn: (mint: Pubkey, owner: Pubkey, signers: Secret[], burnAmount: number, tokenDecimals: number, options?: AuthorityOptions) => Result<CommonStructure, Error>;
-    add: (token: Pubkey, owner: Pubkey, signers: Secret[], totalAmount: number, mintDecimal: number, options?: AuthorityOptions) => Promise<Result<CommonStructure<Pubkey>, Error>>;
+    burn: (mint: Pubkey, owner: Pubkey, signers: Secret[], burnAmount: number, tokenDecimals: number, options?: Partial<BurnOptions>) => Result<CommonStructure, Error>;
+    add: (token: Pubkey, owner: Pubkey, signers: Secret[], totalAmount: number, mintDecimal: number, options?: Partial<MintOptions>) => Promise<Result<CommonStructure<Pubkey>, Error>>;
 };
 
 export { Account, Explorer, ExplorerOptions, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret, SplToken, Transfer, TransferChecked, Try, Validator, ValidatorError, WithMemo, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };

@@ -768,6 +768,9 @@ importers:
       build-configs/tsconfig:
         specifier: workspace:*
         version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
 
   packages/transaction-builder:
     dependencies:

@@ -7,7 +7,7 @@ import {
   createFreezeAccountInstruction,
   getAssociatedTokenAddressSync,
 } from '@solana/spl-token';
-import { AuthorityOptions } from '~/types/shared';
+import { FreezeOptions } from '~/types/spl-token';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
@@ -22,7 +22,7 @@ export namespace SplToken {
     mint: Pubkey,
     owner: Pubkey,
     freezeAuthority: Secret,
-    options: Partial<AuthorityOptions> = {},
+    options: Partial<FreezeOptions> = {},
   ): Result<CommonStructure, Error> => {
     return Try(() => {
       const payer = options.feePayer ? options.feePayer : freezeAuthority;

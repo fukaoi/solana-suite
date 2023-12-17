@@ -6,7 +6,7 @@ import { Pubkey, Secret } from '~/types/account';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Result, Try } from '~/shared';
 import { SplToken as Calculate } from './calculate-amount';
-import { AuthorityOptions } from '~/types/shared';
+import { BurnOptions } from '~/types/spl-token';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
@@ -16,7 +16,7 @@ export namespace SplToken {
     signers: Secret[],
     burnAmount: number,
     tokenDecimals: number,
-    options: Partial<AuthorityOptions> = {},
+    options: Partial<BurnOptions> = {},
   ): Result<CommonStructure, Error> => {
     return Try(() => {
       const tokenAccount = getAssociatedTokenAddressSync(
