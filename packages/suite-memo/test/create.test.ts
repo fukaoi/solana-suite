@@ -1,5 +1,6 @@
 import test from 'ava';
 import { Setup } from 'test-tools/setup';
+import { requestSol } from 'test-tools';
 import { Memo } from '../src';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
@@ -25,6 +26,7 @@ test.before(async () => {
   source = obj.source;
   dest = obj.dest;
   feePayer = obj.feePayer;
+  await requestSol(source.pubkey, 0.02);
 });
 
 test.beforeEach(function () {
@@ -107,6 +109,7 @@ test('send memo and spl-token transfer by owner', async (t) => {
     [source.secret],
     7777,
     4,
+    { feePayer: feePayer.secret },
   );
 
   (await [inst1, inst2].submit()).match(
