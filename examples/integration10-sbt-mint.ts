@@ -6,7 +6,7 @@ import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
 import { Account, RegularNft } from '@solana-suite/regular-nft';
 import { RandomAsset } from 'test-tools/setupAsset';
-import { requestTransferByKeypair } from './requestTransferByKeypair';
+import { requestSol } from 'test-tools';
 
 (async () => {
   //////////////////////////////////////////////
@@ -22,7 +22,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   if (process.env.AIR_DROP) {
     await Airdrop.request(feePayer.pubkey);
   } else {
-    await requestTransferByKeypair(feePayer.pubkey);
+    await requestSol(feePayer.pubkey);
   }
 
   console.log('# owner: ', owner.pubkey);

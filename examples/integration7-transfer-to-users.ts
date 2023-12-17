@@ -5,8 +5,7 @@
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
 import { Account, Pubkey, Secret, SplToken } from '@solana-suite/spl-token';
-
-import { requestTransferByKeypair } from './requestTransferByKeypair';
+import { requestSol } from 'test-tools';
 import { RandomAsset } from 'test-tools/setupAsset';
 
 const USERS_COUNT = 10;
@@ -40,7 +39,7 @@ const SLEEP_TIME_WAIT = 0;
   if (process.env.AIR_DROP) {
     await Airdrop.request(owner.pubkey);
   } else {
-    await requestTransferByKeypair(owner.pubkey);
+    await requestSol(owner.pubkey);
   }
 
   console.log('# owner: ', owner.pubkey);

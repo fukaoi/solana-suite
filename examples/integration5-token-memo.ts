@@ -12,7 +12,7 @@ import {
 } from '@solana-suite/spl-token';
 import { Memo } from '@solana-suite/memo';
 
-import { requestTransferByKeypair } from './requestTransferByKeypair';
+import { requestSol } from 'test-tools';
 import { RandomAsset } from 'test-tools/setupAsset';
 
 (async () => {
@@ -28,7 +28,7 @@ import { RandomAsset } from 'test-tools/setupAsset';
   if (process.env.AIR_DROP) {
     await Airdrop.request(owner.pubkey);
   } else {
-    await requestTransferByKeypair(owner.pubkey);
+    await requestSol(owner.pubkey);
   }
 
   console.log('# owner: ', owner.pubkey);

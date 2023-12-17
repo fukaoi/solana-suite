@@ -5,7 +5,7 @@
 import assert from 'assert';
 import { Account, Multisig, Node, Pubkey } from '@solana-suite/multisig';
 import { Airdrop } from '@solana-suite/airdrop';
-import { requestTransferByKeypair } from './requestTransferByKeypair';
+import { requestSol } from 'test-tools';
 
 (async () => {
   //////////////////////////////////////////////
@@ -29,7 +29,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
   if (process.env.AIR_DROP) {
     await Airdrop.request(feePayer.pubkey);
   } else {
-    await requestTransferByKeypair(feePayer.pubkey, 0.6);
+    await requestSol(feePayer.pubkey, 0.6);
   }
 
   console.log('# feePayer: ', feePayer.pubkey);

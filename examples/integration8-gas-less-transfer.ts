@@ -6,7 +6,7 @@ import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
 import { SplToken } from '@solana-suite/spl-token';
 import { Account, Pubkey, SolNative } from '@solana-suite/sol-native';
-import { requestTransferByKeypair } from './requestTransferByKeypair';
+import { requestSol } from 'test-tools';
 import { RandomAsset } from 'test-tools/setupAsset';
 
 (async () => {
@@ -21,8 +21,8 @@ import { RandomAsset } from 'test-tools/setupAsset';
     await Airdrop.request(owner.pubkey);
     await Airdrop.request(feePayer.pubkey);
   } else {
-    await requestTransferByKeypair(owner.pubkey);
-    await requestTransferByKeypair(feePayer.pubkey);
+    await requestSol(owner.pubkey);
+    await requestSol(feePayer.pubkey);
   }
 
   console.log('# owner: ', owner.pubkey);

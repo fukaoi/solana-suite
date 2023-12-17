@@ -11,7 +11,7 @@ import {
   sleep,
 } from '@solana-suite/compressed-nft';
 import { RandomAsset } from 'test-tools/setupAsset';
-import { requestTransferByKeypair } from './requestTransferByKeypair';
+import { requestSol } from 'test-tools';
 
 (async () => {
   //////////////////////////////////////////////
@@ -39,7 +39,7 @@ import { requestTransferByKeypair } from './requestTransferByKeypair';
 
   console.log('# space cost: ', cost);
 
-  await requestTransferByKeypair(feePayer.pubkey, cost.sol + 0.1); // need add sol for insufficient fee
+  await requestSol(feePayer.pubkey, cost.sol + 0.1); // need add sol for insufficient fee
   await sleep(2);
 
   const spaceInst = await CompressedNft.createMintSpace(

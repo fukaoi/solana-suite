@@ -4,14 +4,9 @@
 
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
-import {
-  Account,
-  Node,
-  Pubkey,
-  SplToken,
-} from '@solana-suite/spl-token';
+import { Account, Node, Pubkey, SplToken } from '@solana-suite/spl-token';
 
-import { requestTransferByKeypair } from './requestTransferByKeypair';
+import { requestSol } from 'test-tools';
 import { RandomAsset } from 'test-tools/setupAsset';
 
 (async () => {
@@ -27,7 +22,7 @@ import { RandomAsset } from 'test-tools/setupAsset';
   if (process.env.AIR_DROP) {
     await Airdrop.request(owner.pubkey);
   } else {
-    await requestTransferByKeypair(owner.pubkey);
+    await requestSol(owner.pubkey);
   }
 
   console.log('# owner: ', owner);
