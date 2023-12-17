@@ -2,11 +2,11 @@
 // $ npx ts-node examples/integration1-regular-nft.ts
 //////////////////////////////////////////////
 
-import assert from 'assert';
-import { Airdrop } from '@solana-suite/airdrop';
+// import { Airdrop } from '@solana-suite/airdrop';
 import { Account, Node, Pubkey, RegularNft } from '@solana-suite/regular-nft';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { requestSol } from 'test-tools/requestSol';
+import assert from 'assert';
 
 (async () => {
   //////////////////////////////////////////////
@@ -20,7 +20,7 @@ import { requestSol } from 'test-tools/requestSol';
 
   // faucet
   if (process.env.AIR_DROP) {
-    await Airdrop.request(feePayer.pubkey);
+    // await Airdrop.request(feePayer.pubkey);
   } else {
     await requestSol(feePayer.pubkey);
   }

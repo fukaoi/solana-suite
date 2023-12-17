@@ -17,7 +17,8 @@
     "node": ">=16.*"
   },
   "files": [
-    "dist"
+    "dist",
+    "package.json"
   ],
   "license": "MIT",
   "author": "fukaoi <usapyon2022@gmail.com>",
