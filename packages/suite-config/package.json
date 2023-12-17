@@ -40,7 +40,7 @@
   },
   "scripts": {
     "build": "tsup --config ./tsup.config.ts",
-    "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, ava, build-configs'",
+    "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, ava, build-configs, tsup'",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",

@@ -48,13 +48,13 @@
     "@solana/spl-token": "^0.3.8",
     "bs58": "^4.0.1",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
-    "@solana/buffer-layout": "^4.0.1",
     "@solana-suite/config": "workspace:^",
-    "bignumber.js": "^9.1.2"
+    "bignumber.js": "^9.1.2",
+    "@metaplex-foundation/mpl-bubblegum": "^3.0.0",
+    "mpl-bubblegum-instruction": "github:atonoy/mpl-bubblegum-instructions",
+    "bn.js": "^5.2.1"
   },
   "devDependencies": {
-    "@solana-suite/sol-native": "workspace:*",
-    "@solana-suite/spl-token": "workspace:*",
     "test-tools": "workspace:*",
     "@types/bs58": "^4.0.2",
     "build-configs/ava": "workspace:*",

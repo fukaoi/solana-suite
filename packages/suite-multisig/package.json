@@ -50,7 +50,10 @@
     "@solana-suite/config": "workspace:^",
     "bs58": "^4.0.1",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
-    "bignumber.js": "^9.1.2"
+    "bignumber.js": "^9.1.2",
+    "@metaplex-foundation/mpl-bubblegum": "^3.0.0",
+    "mpl-bubblegum-instruction": "github:atonoy/mpl-bubblegum-instructions",
+    "bn.js": "^5.2.1"
   },
   "devDependencies": {
     "test-tools": "workspace:*",

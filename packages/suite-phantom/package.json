@@ -43,7 +43,6 @@
     "publish": "../../scripts/after-publish.mjs"
   },
   "dependencies": {
-    "@solana/buffer-layout": "^4.0.1",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana-suite/config": "workspace:^",
     "@solana/spl-token": "^0.3.8",
@@ -52,7 +51,10 @@
     "nft.storage": "^7.1.1",
     "bn.js": "^5.2.1",
     "bs58": "^4.0.1",
-    "@irys/sdk": "^0.0.3"
+    "@irys/sdk": "^0.0.3",
+    "@metaplex-foundation/mpl-bubblegum": "^3.0.0",
+    "mpl-bubblegum-instruction": "github:atonoy/mpl-bubblegum-instructions",
+    "cross-fetch": "^4.0.0"
   },
   "devDependencies": {
     "build-configs/eslint": "workspace:*",
