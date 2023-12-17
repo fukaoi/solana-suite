@@ -2,6 +2,9 @@
   "name": "test-tools",
   "private": true,
   "version": "0.7.0",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
@@ -14,12 +17,18 @@
     "bs58": "^5.0.0"
   },
   "devDependencies": {
+    "@solana-suite/config": "workspace:^",
     "build-configs/tsup": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*"
   },
   "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
     "./setup": {
       "require": "./setup.ts",
       "import": "./setup.ts",
@@ -34,11 +43,6 @@
       "require": "./setupAsset.ts",
       "import": "./setupAsset.ts",
       "types": "./setupAsset.ts"
-    },
-    "./requestSol": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
     }
   }
 }

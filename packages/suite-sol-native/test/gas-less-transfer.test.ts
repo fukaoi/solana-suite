@@ -1,5 +1,6 @@
 import test from 'ava';
 import { Setup } from 'test-tools/setup';
+import { requestSol } from 'test-tools';
 import { KeypairAccount } from '~/types/account';
 import { SolNative } from '../src/';
 
@@ -12,6 +13,7 @@ test.before(async () => {
   source = obj.source;
   dest = obj.dest;
   feePayer = obj.feePayer;
+  await requestSol(source.pubkey, 0.02);
 });
 
 test('transfer feePayerPartialSign', async (t) => {
