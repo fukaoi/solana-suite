@@ -208,7 +208,8 @@ export namespace RegularNft {
         storageType,
       };
 
-      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(input.royalty);
+      const royalty = input.royalty ? input.royalty : 0;
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(royalty);
       const storageMetadata = Storage.toConvertOffchaindata(
         input,
         sellerFeeBasisPoints,

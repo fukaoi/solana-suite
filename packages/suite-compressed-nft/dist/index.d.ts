@@ -162,7 +162,7 @@ type Options = {
 type InputNftMetadata = {
     name: string;
     symbol: string;
-    royalty: number;
+    royalty?: number;
     storageType?: StorageType;
     filePath?: FileType;
     uri?: string;

@@ -121,7 +121,7 @@ export namespace Validator {
             }
             break;
           case 'royalty':
-            if (key in metadata) {
+            if (key in metadata && metadata.royalty) {
               res = isRoyalty(metadata.royalty);
             }
             break;

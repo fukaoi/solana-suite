@@ -8,7 +8,7 @@ export type Options = { [key: string]: unknown };
 export type InputNftMetadata = {
   name: string;
   symbol: string;
-  royalty: number;
+  royalty?: number;
   storageType?: StorageType;
   filePath?: FileType;
   uri?: string;
