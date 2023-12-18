@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/memo",
-  "version": "0.7.0-beta",
+  "version": "0.7.0",
   "description": "sol-native, spl-token form memo function",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
