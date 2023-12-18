@@ -773,7 +773,7 @@ declare const CompressedNft: {
         sol: number;
     }>;
     createVerifyCreator: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
-    mint: (owner: Pubkey$1, signer: Secret$1, input: InputNftMetadata, treeOwner: Pubkey$1, collectionMint: Pubkey$1, options?: Partial<MintOptions>) => Promise<Result<MintStructure<CompressedNft$1.Tree>, Error>>;
+    mint: (owner: Pubkey$1, signer: Secret$1, input: InputNftMetadata, treeOwner: Pubkey$1, collectionMint: Pubkey$1, options?: Partial<MintOptions>) => Promise<Result<MintStructure<CompressedNft$1.Space>, Error>>;
     gasLessTransfer: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret$1, dest: Pubkey$1, feePayer: Pubkey$1) => Promise<Result<PartialSignStructure, Error>[]>;
     gasLessDelegate: (assetId: Pubkey$1, assetIdOwner: Secret$1, newDelegate: Pubkey$1) => Promise<Result<PartialSignStructure, Error>>;
     defaultSortBy: Sortable;
