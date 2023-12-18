@@ -124,7 +124,7 @@ export namespace CompressedNft {
    *
    * @return Promise<Result<MintTransaction, Error>>
    */
-  export const createMintSpace = async (
+  export const createSpace = async (
     owner: Pubkey,
     signer: Secret,
     spaceSize: number,

@@ -42,7 +42,7 @@ import { requestSol } from 'test-tools';
   await requestSol(feePayer.pubkey, cost.sol + 0.1); // need add sol for insufficient fee
   await sleep(2);
 
-  const spaceInst = await CompressedNft.createMintSpace(
+  const spaceInst = await CompressedNft.createSpace(
     owner.pubkey,
     owner.secret,
     abountMintTotal,
