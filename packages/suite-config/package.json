@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/config",
-  "version": "0.7.0",
+  "version": "0.7.0-beta",
   "description": "solana-suite for config",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -53,13 +53,6 @@
     "commander": "9.3.0"
   },
   "dependencies": {},
-  "devDependencies": {
-    "build-configs/ava": "workspace:*",
-    "build-configs/tsup": "workspace:*",
-    "build-configs/tsconfig": "workspace:*",
-    "build-configs/eslint": "workspace:*",
-    "build-configs/prettier": "workspace:*"
-  },
   "exports": {
     "./search": {
       "require": "./dist/index.js",

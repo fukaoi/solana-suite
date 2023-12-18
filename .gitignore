@@ -3,9 +3,11 @@ tsconfig.tsbuildinfo
 solana-localhost-devnet-keypair
 yarn-error.log
 package-lock.json
+package.json.org
 .yarn/
 .yarnrc.yml
 .gdb_history
 .node-version
 .turbo
 .vscode
+
