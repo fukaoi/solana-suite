@@ -26,13 +26,6 @@
         "test/**/*.ts"
       ]
     },
-    "prepublishOnly": {},
-    "publish": {
-      "cache": false,
-      "dependsOn": [
-        "^prepublishOnly"
-      ]
-    },
     "prettier": {},
     "prettier:fix": {},
     "eslint": {},
