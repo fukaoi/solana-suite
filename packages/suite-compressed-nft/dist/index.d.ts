@@ -750,7 +750,7 @@ declare namespace CompressedNft$1 {
      *
      * @return Promise<Result<MintTransaction, Error>>
      */
-    const createMintSpace: (owner: Pubkey$1, signer: Secret, spaceSize: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
+    const createSpace: (owner: Pubkey$1, signer: Secret, spaceSize: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
     /**
      * Calculate space cost
      *
@@ -768,7 +768,7 @@ declare const CompressedNft: {
     mintCollection: (owner: Pubkey$1, signer: Secret$1, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
     Space: typeof CompressedNft$1.Space;
     initSpace: (owner: Pubkey$1, signer: Secret, maxDepth: number, maxBufferSize: number, canopyDepth: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
-    createMintSpace: (owner: Pubkey$1, signer: Secret, spaceSize: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
+    createSpace: (owner: Pubkey$1, signer: Secret, spaceSize: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
     calculateSpaceCost: (spaceSize: number) => Promise<{
         sol: number;
     }>;
