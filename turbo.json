@@ -2,7 +2,6 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "cache": false,
       "dependsOn": [
         "^build"
       ],
@@ -31,10 +30,6 @@
     "prettier:fix": {},
     "eslint": {},
     "clean": {},
-    "depcheck": {},
-    "dev": {
-      "cache": false,
-      "persistent": true
-    }
+    "depcheck": {}
   }
 }

@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "publish": "pnpm --filter '@solana-suite/*' publish --dry-run"
+    "publish": "pnpm --filter '@solana-suite/*' publish --no-git-checks",
+    "publish:dry": "pnpm --filter '@solana-suite/*' publish --no-git-checks --dry-run"
   },
   "devDependencies": {
     "@types/node": "16.11.7",
