@@ -29,6 +29,7 @@ jobs:
       - name: pnpm install
         run: pnpm install
       - name: check prettier
-        run: pnpm turbo prettier
+        run: pnpm turbo prettier --no-daemon
       - name: check eslint
-        run: pnpm turbo eslint
+        run: pnpm turbo eslint --no-daemon
+

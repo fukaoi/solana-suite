@@ -6,13 +6,11 @@ import { KeypairAccount } from '~/types/account';
 import { Multisig } from '~/suite-multisig';
 
 let source: KeypairAccount;
-let dest: KeypairAccount;
 let feePayer: KeypairAccount;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
-  dest = obj.dest;
   feePayer = obj.feePayer;
 });
 
@@ -36,7 +34,7 @@ test('transfer transaction with multi sig', async (t) => {
 
   const inst2 = await SolNative.transferWithMultisig(
     multisig,
-    dest.pubkey,
+    source.pubkey,
     [signer1.secret, signer2.secret],
     0.01,
     { feePayer: feePayer.secret },

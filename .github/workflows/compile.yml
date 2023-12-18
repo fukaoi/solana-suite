@@ -25,7 +25,7 @@ jobs:
           cache: 'pnpm'
       - name: pnpm install
         run: pnpm install
-      - name: pnpm build
+      - name: pnpm build --no-daemon
         run: pnpm turbo build
       - name: Auto commit
         uses: stefanzweifel/git-auto-commit-action@v4.12.0

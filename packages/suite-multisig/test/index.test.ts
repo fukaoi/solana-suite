@@ -6,13 +6,11 @@ import { KeypairAccount } from '~/types/account';
 import { Pubkey } from '~/types/account';
 
 let source: KeypairAccount;
-let dest: KeypairAccount;
 let feePayer: KeypairAccount;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
-  dest = obj.dest;
   feePayer = obj.feePayer;
 });
 
