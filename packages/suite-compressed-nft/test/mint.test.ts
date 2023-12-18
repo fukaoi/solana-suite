@@ -24,7 +24,6 @@ test.before(async () => {
 test('[nftStorage] mint nft, already uploaed image', async (t) => {
   const asset = RandomAsset.get();
   const inst = await CompressedNft.mint(
-    source.pubkey,
     source.secret,
     {
       uri: 'https://ipfs.io/ipfs/bafkreibh6mv6zqvg2wopmtx3k4smavcfx55ob2pciuoob2z44acgtem754',
@@ -50,7 +49,6 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
 test('[Arweave] mint nft', async (t) => {
   const asset = RandomAsset.get();
   const inst = await CompressedNft.mint(
-    source.pubkey,
     source.secret,
     {
       filePath: asset.filePath as string,
@@ -79,7 +77,6 @@ test('[Arweave] mint nft', async (t) => {
 test('[Nft Storage] mint nft with fee payer', async (t) => {
   const asset = RandomAsset.get();
   const inst = await CompressedNft.mint(
-    source.pubkey,
     source.secret,
     {
       filePath: asset.filePath,
@@ -151,7 +148,6 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
   };
 
   const inst = await CompressedNft.mint(
-    source.pubkey,
     source.secret,
     {
       filePath: asset.filePath as string,
@@ -191,7 +187,6 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
 
 test('[Error]Raise validation error when upload meta data', async (t) => {
   const inst = await CompressedNft.mint(
-    source.pubkey,
     source.secret,
     {
       filePath: 'not found',

@@ -13,7 +13,6 @@ test.before(async () => {
 
 test('Create collection', async (t) => {
   const inst = await CompressedNft.mintCollection(
-    source.pubkey,
     source.secret,
     {
       name: 'CollectionNFT',
