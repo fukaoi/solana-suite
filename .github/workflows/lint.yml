@@ -8,7 +8,6 @@ on:
       - '.github/workflows/*.yml'
       - 'packages/*/package.json'
       - 'package.json'
-      - 'package-lock.json'
     branches: [main]
 
   workflow_dispatch:
@@ -19,17 +18,17 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [18.x, 20.x]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
-      - name: Run yarn install
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: install --frozen-lockfile
-      - run: npm run clean && npm run compile
-      - run: npm run lint
+          cache: 'pnpm'
+      - name: pnpm install
+        run: pnpm install
+      - name: check prettier
+        run: pnpm turbo prettier
+      - name: check eslint
+        run: pnpm turbo eslint

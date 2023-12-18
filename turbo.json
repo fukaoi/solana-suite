@@ -14,7 +14,8 @@
       "dependsOn": [
         "build",
         "eslint",
-        "prettier"
+        "prettier",
+        "depcheck"
       ]
     },
     "test": {

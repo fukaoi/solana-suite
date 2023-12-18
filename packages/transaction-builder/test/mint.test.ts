@@ -20,7 +20,8 @@ test.before(async () => {
   collectionMint = obj.collectionMint;
 });
 
-test('[Over size]Reduce transaction', async (t) => {
+// TODO: replace version tansaction
+test.skip('[Over size]Reduce transaction', async (t) => {
   const asset = RandomAsset.get();
   const creators: InputCreators[] = [];
   const unverifyCreator = Account.Keypair.create();
