@@ -53,6 +53,13 @@
     "commander": "9.3.0"
   },
   "dependencies": {},
+  "devDependencies": {
+    "build-configs/ava": "workspace:*",
+    "build-configs/tsup": "workspace:*",
+    "build-configs/tsconfig": "workspace:*",
+    "build-configs/eslint": "workspace:*",
+    "build-configs/prettier": "workspace:*"
+  },
   "exports": {
     "./search": {
       "require": "./dist/index.js",
