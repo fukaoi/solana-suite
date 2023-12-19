@@ -78,7 +78,6 @@ test('send memo and sol transfer by owner', async (t) => {
 
 test('send memo and spl-token transfer by owner', async (t) => {
   const inst = await SplToken.mint(
-    source.pubkey,
     source.secret,
     10000,
     4,

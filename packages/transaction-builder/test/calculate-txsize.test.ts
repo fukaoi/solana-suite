@@ -70,7 +70,6 @@ test('[Over size]Calculate transaction size', async (t) => {
   };
 
   const inst = await CompressedNft.mint(
-    source.pubkey,
     source.secret,
     {
       filePath: asset.filePath as string,
@@ -156,7 +155,6 @@ test('[Under size]Calculate transaction size', async (t) => {
   };
 
   const inst = await CompressedNft.mint(
-    source.pubkey,
     source.secret,
     {
       filePath: asset.filePath as string,

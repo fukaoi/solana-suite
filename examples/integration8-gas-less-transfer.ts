@@ -36,9 +36,8 @@ import { RandomAsset } from 'test-tools/setupAsset';
   //////////////////////////////////////////////
 
   const inst = await SolNative.gasLessTransfer(
-    owner.pubkey,
+    owner.secret,
     dest.pubkey,
-    [owner.secret],
     0.001,
     feePayer.pubkey,
   );
@@ -72,7 +71,6 @@ import { RandomAsset } from 'test-tools/setupAsset';
   };
 
   const mintInst = await SplToken.mint(
-    tokenOwner.pubkey,
     tokenOwner.secret,
     10000,
     decimals,
@@ -84,9 +82,8 @@ import { RandomAsset } from 'test-tools/setupAsset';
 
   const inst2 = await SplToken.gasLessTransfer(
     mintInst.unwrap().data as Pubkey,
-    tokenOwner.pubkey,
+    tokenOwner.secret,
     dest.pubkey,
-    [tokenOwner.secret],
     100,
     decimals,
     feePayer.pubkey,

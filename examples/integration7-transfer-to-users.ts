@@ -60,7 +60,6 @@ const SLEEP_TIME_WAIT = 0;
   };
 
   const inst1 = await SplToken.mint(
-    owner.pubkey,
     owner.secret,
     totalAmount,
     decimals,

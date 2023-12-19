@@ -40,7 +40,6 @@ import { Account, RegularNft } from '@solana-suite/regular-nft';
   };
 
   const inst = await RegularNft.gasLessMint(
-    owner.pubkey,
     owner.secret,
     metadata,
     feePayer.pubkey,

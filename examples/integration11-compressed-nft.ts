@@ -43,7 +43,6 @@ import { requestSol } from 'test-tools';
   await sleep(2);
 
   const spaceInst = await CompressedNft.createSpace(
-    owner.pubkey,
     owner.secret,
     abountMintTotal,
     { feePayer: feePayer.secret },
@@ -69,7 +68,6 @@ import { requestSol } from 'test-tools';
   console.log('# demo data: ', asset);
 
   const collectionInst = await CompressedNft.mintCollection(
-    owner.pubkey,
     owner.secret,
     {
       filePath: asset.filePath!,
@@ -102,7 +100,6 @@ import { requestSol } from 'test-tools';
   // Usually set custom param
 
   const mintInst = await CompressedNft.mint(
-    owner.pubkey,
     owner.secret,
     {
       filePath: asset.filePath!,
@@ -141,7 +138,6 @@ import { requestSol } from 'test-tools';
   //transfer nftReceiver => receipt
   const transferInst = await CompressedNft.gasLessTransfer(
     mint,
-    nftReceiver.pubkey,
     nftReceiver.secret,
     receipt.pubkey,
     feePayer.pubkey,

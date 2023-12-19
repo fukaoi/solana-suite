@@ -44,7 +44,6 @@ import { RandomAsset } from 'test-tools/setupAsset';
     isMutable: false,
   };
   const inst1 = await SplToken.mint(
-    owner.pubkey,
     owner.secret,
     totalAmount,
     decimals,

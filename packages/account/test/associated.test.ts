@@ -19,13 +19,7 @@ test.before(async () => {
 });
 
 test('Retry getOrCreate', async (t) => {
-  const mintInst = await SplToken.mint(
-    source.pubkey,
-    source.secret,
-    10000,
-    1,
-    TOKEN_METADATA,
-  );
+  const mintInst = await SplToken.mint(source.secret, 10000, 1, TOKEN_METADATA);
 
   await mintInst.submit();
 
