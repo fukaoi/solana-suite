@@ -6,6 +6,11 @@
     "publish": "pnpm --filter '@solana-suite/*' publish --no-git-checks",
     "publish:dry": "pnpm --filter '@solana-suite/*' publish --no-git-checks --dry-run"
   },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
   "devDependencies": {
     "@types/node": "16.11.7",
     "ava": "^5.3.1",
