@@ -47,9 +47,8 @@ test('transfer feePayerPartialSign', async (t) => {
 
   const serialized = await SplToken.gasLessTransfer(
     token,
-    tokenOwner.pubkey,
+    tokenOwner.secret,
     receipt.pubkey,
-    [tokenOwner.secret],
     100,
     MINT_DECIMAL,
     source.pubkey,
