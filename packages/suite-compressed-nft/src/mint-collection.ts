@@ -1,5 +1,5 @@
 import { Result } from '~/shared';
-import { Pubkey, Secret } from '~/types/account';
+import { Secret } from '~/types/account';
 import { RegularNft } from '~/suite-regular-nft';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { MintCollectionOptions } from '~/types/compressed-nft';
@@ -21,7 +21,7 @@ export namespace CompressedNft {
     options: Partial<MintCollectionOptions> = {},
   ): Promise<Result<MintStructure, Error>> => {
     const { feePayer, freezeAuthority } = options;
-    return RegularNft.mintCollection(owner, owner, input, {
+    return RegularNft.mintCollection(owner, input, {
       feePayer,
       freezeAuthority,
     });

@@ -25,7 +25,7 @@ import { debugLog, Result, Try, unixTimestamp } from '~/shared';
 import { Node } from '~/node';
 import { Account } from '~/account';
 import { TransactionBuilder } from '~/transaction-builder';
-import { Pubkey, Secret } from '~/types/account';
+import { Secret } from '~/types/account';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { InputTokenMetadata, MintOptions } from '~/types/spl-token';
 import { Converter } from '~/converter';

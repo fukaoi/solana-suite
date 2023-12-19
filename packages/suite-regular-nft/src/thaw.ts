@@ -21,7 +21,7 @@ export namespace RegularNft {
     mint: Pubkey,
     owner: Pubkey,
     freezeAuthority: Secret,
-    options: Partial<ThrawOptions> = {},
+    options: Partial<ThawOptions> = {},
   ): Result<CommonStructure<unknown>, Error> => {
     return Try(() => {
       const payer = options.feePayer ? options.feePayer : freezeAuthority;

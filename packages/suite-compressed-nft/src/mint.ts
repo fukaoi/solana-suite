@@ -129,7 +129,7 @@ export namespace CompressedNft {
       const { feePayer, receiver, delegate } = options;
       const payer = feePayer ? feePayer : owner;
       const storageType = input.storageType || DEFAULT_STORAGE_TYPE;
-      const ownerPublicKey = owner.toKeypair().publicKey; 
+      const ownerPublicKey = owner.toKeypair().publicKey;
       const leafOwner = receiver ? receiver.toPublicKey() : ownerPublicKey;
       const leafDelegate = delegate
         ? delegate
@@ -216,7 +216,6 @@ export namespace CompressedNft {
 
       debugLog('# input: ', input);
       debugLog('# metadataArgs: ', metadataArgs);
-
 
       const instructions = [];
       instructions.push(

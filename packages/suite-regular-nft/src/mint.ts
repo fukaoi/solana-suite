@@ -15,7 +15,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { debugLog, Result, Try, unixTimestamp } from '~/shared';
-import { Pubkey, Secret } from '~/types/account';
+import { Secret } from '~/types/account';
 import { TransactionBuilder } from '~/transaction-builder';
 import { MintStructure } from '~/types/transaction-builder';
 import { Node } from '~/node';

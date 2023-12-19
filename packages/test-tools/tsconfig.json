@@ -4,12 +4,8 @@
   "display": "test-tools",
   "compilerOptions": {
     "paths": {
-      "~/types/*": [
-        "../types/src/*/index.ts"
-      ],
-      "~/*": [
-        "../*/src/index.ts"
-      ],
+      "~/types/*": ["../types/src/*/index.ts"],
+      "~/*": ["../*/src/index.ts"],
       "~/shared/exports": ["../shared/src/exports.ts"]
     }
   },

@@ -576,6 +576,10 @@ type MintCollectionOptions = {
     collectionSize: number;
 };
 
+type ThawOptions = {
+    feePayer: Secret;
+};
+
 type TransferOptions = {
     feePayer: Secret;
 };
@@ -745,7 +749,7 @@ type PartialSignStructure<T = Pubkey> = {
 
 declare const RegularNft: {
     transfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, ownerOrMultisig: Secret[], options?: Partial<TransferOptions>) => Promise<Result<CommonStructure, Error>>;
-    thaw: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: ThrawOptions) => Result<CommonStructure<unknown>, Error>;
+    thaw: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<ThawOptions>) => Result<CommonStructure<unknown>, Error>;
     DEFAULT_COLLECTION_SIZE: 0;
     mintCollection: (owner: Secret, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
     createVerifyCreator: (mint: _solana_web3_js.PublicKey, creator: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
