@@ -1,6 +1,6 @@
-import { O as Option, C as Creators, U as Uses } from './mint-a48f3fac.js';
-export { c as InputCollection, I as InputCreators, e as InputNftMetadata, M as MintOptions, d as Options, a as UseMethod, b as bignum } from './mint-a48f3fac.js';
-import { Pubkey, Secret } from './account.mjs';
+import { Secret, Pubkey } from './account.mjs';
+import { a as Option, C as Creators, U as Uses } from './mint-74b505a0.js';
+export { d as InputCollection, I as InputCreators, e as InputNftMetadata, M as MintOptions, O as Options, c as UseMethod, b as bignum } from './mint-74b505a0.js';
 import { Offchain } from './storage.mjs';
 import 'bn.js';
 import '@solana/web3.js';
@@ -8,6 +8,10 @@ import './phantom-e9a40784.js';
 import './das-api.mjs';
 import './converter.mjs';
 import '@metaplex-foundation/mpl-token-metadata';
+
+type BurnOptions = {
+    feePayer: Secret;
+};
 
 type GasLessMintOptions = {
     freezeAuthority: Pubkey;
@@ -45,4 +49,12 @@ type MintCollectionOptions = {
     collectionSize: number;
 };
 
-export { Collection, CollectionDetails, Creators, GasLessMintOptions, MintCollectionOptions, Option, RegularNftMetadata, Uses };
+type ThawOptions = {
+    feePayer: Secret;
+};
+
+type TransferOptions = {
+    feePayer: Secret;
+};
+
+export { BurnOptions, Collection, CollectionDetails, Creators, GasLessMintOptions, MintCollectionOptions, Option, RegularNftMetadata, ThawOptions, TransferOptions, Uses };

@@ -10,7 +10,7 @@ export namespace SolNative {
   export const gasLessTransfer = async (
     owner: Pubkey,
     dest: Pubkey,
-    signers: Secret[],
+    ownerOrMultisigi: Secret[],
     amount: number,
     feePayer: Pubkey,
   ): Promise<Result<PartialSignStructure, Error>> => {
@@ -28,7 +28,7 @@ export namespace SolNative {
         }),
       );
 
-      signers.forEach((signer) => {
+      ownerOrMultisigi.forEach((signer) => {
         tx.partialSign(signer.toKeypair());
       });
 
