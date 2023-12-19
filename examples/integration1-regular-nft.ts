@@ -39,7 +39,6 @@ import assert from 'assert';
   //////////////////////////////////////////////
 
   const inst1 = await RegularNft.mint(
-    owner.pubkey,
     owner.secret,
     {
       filePath: asset.filePath!,

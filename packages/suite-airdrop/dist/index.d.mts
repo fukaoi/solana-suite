@@ -252,6 +252,13 @@ type AirdropOptions = {
 };
 
 declare namespace Airdrop {
+    /**
+     * Reuqest airdrop SOL
+     * only devnet, testnet
+     *
+     * @param {Pubkey} pubkey
+     * @return Promise<Result<string, Error>>
+     */
     const request: (pubkey: Pubkey, options?: Partial<AirdropOptions>) => Promise<Result<string, Error>>;
 }
 

@@ -10,7 +10,7 @@ export namespace SolNative {
   export const transfer = (
     source: Pubkey,
     dest: Pubkey,
-    signers: Secret[],
+    ownerOrMultisig: Secret[],
     amount: number,
     options: Partial<TransferOptions> = {},
   ): Result<CommonStructure, Error> => {
@@ -23,11 +23,11 @@ export namespace SolNative {
 
       const payer = options.feePayer
         ? options.feePayer.toKeypair()
-        : signers[0].toKeypair();
+        : ownerOrMultisig[0].toKeypair();
 
       return new TransactionBuilder.Common(
         [inst],
-        signers.map((s) => s.toKeypair()),
+        ownerOrMultisig.map((s) => s.toKeypair()),
         payer,
       );
     });

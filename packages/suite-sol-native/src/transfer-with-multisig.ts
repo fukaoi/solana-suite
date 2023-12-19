@@ -21,14 +21,14 @@ export namespace SolNative {
   export const transferWithMultisig = async (
     owner: Pubkey,
     dest: Pubkey,
-    signers: Secret[],
+    ownerOrMultisig: Secret[],
     amount: number,
     options: Partial<TransferOptions> = {},
   ): Promise<Result<CommonStructure, Error>> => {
     return Try(async () => {
       const connection = Node.getConnection();
-      const payer = options.feePayer ? options.feePayer : signers[0];
-      const keypairs = signers.map((s) => s.toKeypair());
+      const payer = options.feePayer ? options.feePayer : ownerOrMultisig[0];
+      const keypairs = ownerOrMultisig.map((s) => s.toKeypair());
       const wrapped = await createWrappedNativeAccount(
         connection,
         payer.toKeypair(),
@@ -85,7 +85,7 @@ export namespace SolNative {
 
       return new TransactionBuilder.Common(
         instructions,
-        signers.map((s) => s.toKeypair()),
+        ownerOrMultisig.map((s) => s.toKeypair()),
         payer.toKeypair(),
       );
     });

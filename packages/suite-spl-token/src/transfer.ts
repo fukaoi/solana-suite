@@ -12,14 +12,14 @@ export namespace SplToken {
     mint: Pubkey,
     owner: Pubkey,
     dest: Pubkey,
-    signers: Secret[],
+    ownerOrMultisig: Secret[],
     amount: number,
     mintDecimal: number,
     options: Partial<MintOptions> = {},
   ): Promise<Result<CommonStructure, Error>> => {
     return Try(async () => {
-      const payer = options.feePayer ? options.feePayer : signers[0];
-      const keypairs = signers.map((s) => s.toKeypair());
+      const payer = options.feePayer ? options.feePayer : ownerOrMultisig[0];
+      const keypairs = ownerOrMultisig.map((s) => s.toKeypair());
 
       const sourceToken = await Account.Associated.retryGetOrCreate(
         mint,

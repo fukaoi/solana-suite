@@ -9,19 +9,19 @@ import { PartialSignStructure } from '~/types/transaction-builder';
 export namespace CompressedNft {
   /**
    * Create delegate with gas-less
-   * @param {Pubkey} assetId
-   * @param {Secret} assetIdOwner
+   * @param {Pubkey} mint
+   * @param {Secret} owner
    * @param {Pubkey} newDelegate
    * @return {Promise<Result<PartialSignTransaction, Error>>}
    */
   export const gasLessDelegate = async (
-    assetId: Pubkey,
-    assetIdOwner: Secret,
+    mint: Pubkey,
+    owner: Secret,
     newDelegate: Pubkey,
   ): Promise<Result<PartialSignStructure, Error>> => {
     return Try(async () => {
       const inst = await Delegate.createDeleagate(
-        assetId.toPublicKey(),
+        mint.toPublicKey(),
         newDelegate.toPublicKey(),
       );
 
@@ -32,7 +32,7 @@ export namespace CompressedNft {
         feePayer: newDelegate.toPublicKey(),
       });
       tx.add(inst);
-      tx.partialSign(assetIdOwner.toKeypair());
+      tx.partialSign(owner.toKeypair());
       tx.recentBlockhash = blockhashObj.blockhash;
 
       return new TransactionBuilder.PartialSign(

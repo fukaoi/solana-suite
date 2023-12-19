@@ -7,6 +7,13 @@ export namespace Airdrop {
   const DEFAULT_AIRDROP_AMOUNT = 1;
   const MAX_AIRDROP_SOL = 2;
 
+  /**
+   * Reuqest airdrop SOL
+   * only devnet, testnet
+   *
+   * @param {Pubkey} pubkey
+   * @return Promise<Result<string, Error>>
+   */
   export const request = async (
     pubkey: Pubkey,
     options: Partial<AirdropOptions> = {},

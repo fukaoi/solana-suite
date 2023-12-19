@@ -14,6 +14,14 @@ import { TransactionBuilder } from '~/transaction-builder';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace Multisig {
+  /**
+   * Create multisig
+   *
+   * @param {number} m                 //  number of multisig
+   * @param {Secret} feePayer          //  memo owner
+   * @param {Pubkey[]} signerPubkeys   //  signers
+   * @return Promise<Result<CommonStructure<Pubkey>, Error>>
+   */
   export const create = async (
     m: number,
     feePayer: Secret,

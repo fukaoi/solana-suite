@@ -27,7 +27,6 @@ test('Create token', async (t) => {
   };
 
   const inst = await SplToken.mint(
-    source.pubkey,
     source.secret,
     TOKEN_TOTAL_AMOUNT,
     MINT_DECIMAL,
@@ -53,7 +52,6 @@ test('Create token, always uploaed image', async (t) => {
   };
 
   const inst = await SplToken.mint(
-    source.pubkey,
     source.secret,
     TOKEN_TOTAL_AMOUNT,
     MINT_DECIMAL,
@@ -92,7 +90,6 @@ test('Create token with creators, freezeAuthority', async (t) => {
     ],
   };
   const inst = await SplToken.mint(
-    source.pubkey,
     source.secret,
     TOKEN_TOTAL_AMOUNT,
     MINT_DECIMAL,

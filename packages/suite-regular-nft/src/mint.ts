@@ -15,7 +15,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { debugLog, Result, Try, unixTimestamp } from '~/shared';
-import { Pubkey, Secret } from '~/types/account';
+import { Secret } from '~/types/account';
 import { TransactionBuilder } from '~/transaction-builder';
 import { MintStructure } from '~/types/transaction-builder';
 import { Node } from '~/node';
@@ -154,8 +154,7 @@ export namespace RegularNft {
   /**
    * Upload content and NFT mint
    *
-   * @param {Pubkey} owner          // first minted owner
-   * @param {Secret} signer         // owner's Secret
+   * @param {Secret} owner         // owner's Secret
    * @param {InputNftMetadata} input
    * {
    *   name: string               // nft content name
@@ -177,8 +176,7 @@ export namespace RegularNft {
    * @return Promise<Result<MintInstruction, Error>>
    */
   export const mint = async (
-    owner: Pubkey,
-    signer: Secret,
+    owner: Secret,
     input: InputNftMetadata,
     options: Partial<MintOptions> = {},
   ): Promise<Result<MintStructure, Error>> => {
@@ -188,8 +186,9 @@ export namespace RegularNft {
         throw valid.error;
       }
       const { feePayer, freezeAuthority } = options;
-      const payer = feePayer ? feePayer : signer;
+      const payer = feePayer ? feePayer : owner;
       const storageType = input.storageType || DEFAULT_STORAGE_TYPE;
+      const ownerPublicKey = owner.toKeypair().publicKey;
 
       // porperties, Upload content
       let properties;
@@ -263,7 +262,7 @@ export namespace RegularNft {
 
       const instructions = await createMint(
         mint.toPublicKey(),
-        owner.toPublicKey(),
+        ownerPublicKey,
         datav2,
         payer.toKeypair().publicKey,
         isMutable,
@@ -274,7 +273,7 @@ export namespace RegularNft {
         instructions.push(
           createDeleagate(
             mint.toPublicKey(),
-            owner.toPublicKey(),
+            ownerPublicKey,
             freezeAuthority.toPublicKey(),
           ),
         );
@@ -291,7 +290,7 @@ export namespace RegularNft {
         );
       }
 
-      const keypairs = [signer.toKeypair(), mint.toKeypair()];
+      const keypairs = [owner.toKeypair(), mint.toKeypair()];
 
       // creator ---
       if (input.creators) {

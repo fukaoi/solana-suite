@@ -9,16 +9,14 @@ export namespace RegularNft {
 
   export const gasLessTransfer = async (
     mint: Pubkey,
-    owner: Pubkey,
+    owner: Secret,
     dest: Pubkey,
-    signers: Secret[],
     feePayer: Pubkey,
   ): Promise<Result<PartialSignStructure, Error>> => {
     return SplToken.gasLessTransfer(
       mint,
       owner,
       dest,
-      signers,
       NFT_AMOUNT,
       NFT_DECIMALS,
       feePayer,

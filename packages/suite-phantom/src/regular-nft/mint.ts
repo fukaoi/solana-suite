@@ -41,7 +41,8 @@ export namespace PhantomMetaplex {
         input.storageType,
       );
 
-      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(input.royalty);
+      const royalty = input.royalty ? input.royalty : 0;
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(royalty);
       const nftStorageMetadata = Storage.toConvertOffchaindata(
         { ...input, properties },
         sellerFeeBasisPoints,

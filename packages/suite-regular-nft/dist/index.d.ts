@@ -6,14 +6,14 @@ import BN from 'bn.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
-type Pubkey$1 = (string & {
+type Pubkey = (string & {
     [pubKeyNominality]: never;
 }) | string;
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
 type KeypairAccount = {
-    pubkey: Pubkey$1;
+    pubkey: Pubkey;
     secret: Secret;
 };
 type OwnerInfo = {
@@ -29,13 +29,13 @@ declare enum SortDirection {
 type Find = {
     sol?: string;
     account?: string;
-    destination?: Pubkey$1;
-    source?: Pubkey$1;
-    authority?: Pubkey$1;
-    multisigAuthority?: Pubkey$1;
-    signers?: Pubkey$1[];
-    mint?: Pubkey$1;
-    mintAuthority?: Pubkey$1;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
     tokenAmount?: string;
     memo?: string;
     dateTime?: Date;
@@ -47,13 +47,13 @@ type Find = {
 type History = {
     sol?: string;
     account?: string;
-    destination?: Pubkey$1;
-    source?: Pubkey$1;
-    authority?: Pubkey$1;
-    multisigAuthority?: Pubkey$1;
-    signers?: Pubkey$1[];
-    mint?: Pubkey$1;
-    mintAuthority?: Pubkey$1;
+    destination?: Pubkey;
+    source?: Pubkey;
+    authority?: Pubkey;
+    multisigAuthority?: Pubkey;
+    signers?: Pubkey[];
+    mint?: Pubkey;
+    mintAuthority?: Pubkey;
     tokenAmount?: string;
     memo?: string;
     dateTime?: Date;
@@ -64,134 +64,6 @@ type History = {
 
 type OnOk<T extends History | Find> = (ok: T[]) => void;
 type OnErr = (err: Error) => void;
-
-type bignum = number | BN;
-type Option<T> = T | null;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
-};
-type Creators = {
-    address: Pubkey$1;
-    share: number;
-    verified: boolean;
-};
-type InputCreators = {
-    address: Pubkey$1;
-    secret: Secret;
-    share: number;
-};
-
-type GasLessMintOptions = {
-    freezeAuthority: Pubkey$1;
-};
-
-type FileType = string | File;
-
-type StorageType = 'nftStorage' | 'arweave' | string;
-type Offchain = {
-    name?: string;
-    symbol?: string;
-    description?: string;
-    seller_fee_basis_points?: number;
-    image?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    collection?: {
-        name?: string;
-        family?: string;
-        [key: string]: unknown;
-    };
-    collectionDetails?: {
-        kind: string;
-        size: number;
-    };
-    created_at?: number;
-};
-type Properties = {
-    creators?: {
-        address?: string;
-        share?: number;
-        [key: string]: unknown;
-    }[];
-    files?: {
-        type?: string;
-        filePath?: FileType;
-        [key: string]: unknown;
-    }[];
-    [key: string]: unknown;
-};
-type Attribute = {
-    trait_type?: string;
-    value?: string;
-    [key: string]: unknown;
-};
-
-type Collection = {
-    address: Pubkey$1;
-    verified: boolean;
-};
-type CollectionDetails = {
-    __kind: string;
-    size: number;
-};
-type RegularNftMetadata = {
-    mint: string;
-    updateAuthority: string;
-    royalty: number;
-    name: string;
-    symbol: string;
-    uri: string;
-    isMutable: boolean;
-    primarySaleHappened: boolean;
-    editionNonce: Option<number>;
-    offchain: Offchain;
-    collection?: Collection | undefined;
-    collectionDetails?: CollectionDetails | undefined;
-    creators?: Creators[] | undefined;
-    uses?: Uses | undefined;
-    dateTime?: Date | undefined;
-};
-
-type InputCollection = Pubkey$1;
-type Options = {
-    [key: string]: unknown;
-};
-type InputNftMetadata = {
-    name: string;
-    symbol: string;
-    royalty?: number;
-    storageType?: StorageType;
-    filePath?: FileType;
-    uri?: string;
-    isMutable?: boolean;
-    description?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    maxSupply?: bignum;
-    creators?: InputCreators[];
-    uses?: Uses;
-    collection?: InputCollection;
-    options?: Options;
-};
-type MintOptions = {
-    freezeAuthority: Pubkey$1;
-    feePayer: Secret;
-};
-
-type MintCollectionOptions = {
-    feePayer: Secret;
-    freezeAuthority: Pubkey$1;
-    collectionSize: number;
-};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -500,7 +372,7 @@ declare namespace Account$3 {
          * @param {Secret} feePayer
          * @returns Promise<string>
          */
-        const retryGetOrCreate: (mint: Pubkey$1, owner: Pubkey$1, feePayer: Secret) => Promise<string>;
+        const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret) => Promise<string>;
         /**
          * [Main logic]Get Associated token Account.
          * if not created, create new token accouint
@@ -510,7 +382,7 @@ declare namespace Account$3 {
          * @param {Pubkey} feePayer
          * @returns Promise<string>
          */
-        const makeOrCreateInstruction: (mint: Pubkey$1, owner: Pubkey$1, feePayer?: Pubkey$1, allowOwnerOffCurve?: boolean) => Promise<{
+        const makeOrCreateInstruction: (mint: Pubkey, owner: Pubkey, feePayer?: Pubkey, allowOwnerOffCurve?: boolean) => Promise<{
             tokenAccount: string;
             inst: TransactionInstruction | undefined;
         }>;
@@ -520,14 +392,14 @@ declare namespace Account$3 {
 declare namespace Account$2 {
     class Keypair {
         secret: Secret;
-        pubkey: Pubkey$1;
+        pubkey: Pubkey;
         constructor(params: {
-            pubkey?: Pubkey$1;
+            pubkey?: Pubkey;
             secret: Secret;
         });
         toPublicKey(): PublicKey;
         toKeypair(): Keypair;
-        static isPubkey: (value: string) => value is Pubkey$1;
+        static isPubkey: (value: string) => value is Pubkey;
         static isSecret: (value: string) => value is Secret;
         static create: () => Keypair;
         static toKeyPair: (keypair: Keypair) => Keypair;
@@ -536,11 +408,11 @@ declare namespace Account$2 {
 
 declare namespace Account$1 {
     namespace Pda {
-        const getMetadata: (address: Pubkey$1) => PublicKey;
-        const getMasterEdition: (address: Pubkey$1) => PublicKey;
-        const getTreeAuthority: (address: Pubkey$1) => PublicKey;
+        const getMetadata: (address: Pubkey) => PublicKey;
+        const getMasterEdition: (address: Pubkey) => PublicKey;
+        const getTreeAuthority: (address: Pubkey) => PublicKey;
         const getBgumSigner: () => PublicKey;
-        const getAssetId: (address: Pubkey$1, leafIndex: number) => Pubkey$1;
+        const getAssetId: (address: Pubkey, leafIndex: number) => Pubkey;
     }
 }
 
@@ -571,6 +443,146 @@ interface Details {
     actual: string | number;
     limit?: Limit;
 }
+
+type BurnOptions = {
+    feePayer: Secret;
+};
+
+type bignum = number | BN;
+type Option<T> = T | null;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type Creators = {
+    address: Pubkey;
+    share: number;
+    verified: boolean;
+};
+type InputCreators = {
+    address: Pubkey;
+    secret: Secret;
+    share: number;
+};
+
+type GasLessMintOptions = {
+    freezeAuthority: Pubkey;
+};
+
+type FileType = string | File;
+
+type StorageType = 'nftStorage' | 'arweave' | string;
+type Offchain = {
+    name?: string;
+    symbol?: string;
+    description?: string;
+    seller_fee_basis_points?: number;
+    image?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    collection?: {
+        name?: string;
+        family?: string;
+        [key: string]: unknown;
+    };
+    collectionDetails?: {
+        kind: string;
+        size: number;
+    };
+    created_at?: number;
+};
+type Properties = {
+    creators?: {
+        address?: string;
+        share?: number;
+        [key: string]: unknown;
+    }[];
+    files?: {
+        type?: string;
+        filePath?: FileType;
+        [key: string]: unknown;
+    }[];
+    [key: string]: unknown;
+};
+type Attribute = {
+    trait_type?: string;
+    value?: string;
+    [key: string]: unknown;
+};
+
+type Collection = {
+    address: Pubkey;
+    verified: boolean;
+};
+type CollectionDetails = {
+    __kind: string;
+    size: number;
+};
+type RegularNftMetadata = {
+    mint: string;
+    updateAuthority: string;
+    royalty: number;
+    name: string;
+    symbol: string;
+    uri: string;
+    isMutable: boolean;
+    primarySaleHappened: boolean;
+    editionNonce: Option<number>;
+    offchain: Offchain;
+    collection?: Collection | undefined;
+    collectionDetails?: CollectionDetails | undefined;
+    creators?: Creators[] | undefined;
+    uses?: Uses | undefined;
+    dateTime?: Date | undefined;
+};
+
+type InputCollection = Pubkey;
+type Options = {
+    [key: string]: unknown;
+};
+type InputNftMetadata = {
+    name: string;
+    symbol: string;
+    royalty?: number;
+    storageType?: StorageType;
+    filePath?: FileType;
+    uri?: string;
+    isMutable?: boolean;
+    description?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    maxSupply?: bignum;
+    creators?: InputCreators[];
+    uses?: Uses;
+    collection?: InputCollection;
+    options?: Options;
+};
+type MintOptions = {
+    freezeAuthority: Pubkey;
+    feePayer: Secret;
+};
+
+type MintCollectionOptions = {
+    feePayer: Secret;
+    freezeAuthority: Pubkey;
+    collectionSize: number;
+};
+
+type ThawOptions = {
+    feePayer: Secret;
+};
+
+type TransferOptions = {
+    feePayer: Secret;
+};
 
 declare namespace Validator {
     export namespace Message {
@@ -668,8 +680,8 @@ type WithMemo = {
 type Transfer = {
     parsed: {
         info: {
-            destination: Pubkey$1;
-            source: Pubkey$1;
+            destination: Pubkey;
+            source: Pubkey;
             lamports: number;
         };
         type: string;
@@ -680,9 +692,9 @@ type Transfer = {
 type MintTo = {
     parsed: {
         info: {
-            account: Pubkey$1;
-            mint: Pubkey$1;
-            mintAuthority: Pubkey$1;
+            account: Pubkey;
+            mint: Pubkey;
+            mintAuthority: Pubkey;
             tokenAmount: string;
         };
         type: string;
@@ -694,11 +706,11 @@ type MintToChecked = MintTo;
 type TransferChecked = {
     parsed: {
         info: {
-            destination: Pubkey$1;
-            mint: Pubkey$1;
-            multisigAuthority: Pubkey$1;
-            signers: Pubkey$1[];
-            source: Pubkey$1;
+            destination: Pubkey;
+            mint: Pubkey;
+            multisigAuthority: Pubkey;
+            signers: Pubkey[];
+            source: Pubkey;
             tokenAmount: string;
         };
         type: string;
@@ -720,7 +732,7 @@ type CommonStructure<T = undefined> = {
     data?: T;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };
-type MintStructure<T = Pubkey$1> = {
+type MintStructure<T = Pubkey> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     data: T;
@@ -728,7 +740,7 @@ type MintStructure<T = Pubkey$1> = {
     canSubmit?: boolean;
     submit: () => Promise<Result<TransactionSignature, Error>>;
 };
-type PartialSignStructure<T = Pubkey$1> = {
+type PartialSignStructure<T = Pubkey> = {
     hexInstruction: string;
     canSubmit?: boolean;
     data?: T;
@@ -736,24 +748,24 @@ type PartialSignStructure<T = Pubkey$1> = {
 };
 
 declare const RegularNft: {
-    transfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], options?: AuthorityOptions) => Promise<Result<CommonStructure, Error>>;
-    thaw: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, options?: AuthorityOptions) => Result<CommonStructure<unknown>, Error>;
+    transfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, ownerOrMultisig: Secret[], options?: Partial<TransferOptions>) => Promise<Result<CommonStructure, Error>>;
+    thaw: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<ThawOptions>) => Result<CommonStructure<unknown>, Error>;
     DEFAULT_COLLECTION_SIZE: 0;
-    mintCollection: (owner: Pubkey, signer: Secret, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
+    mintCollection: (owner: Secret, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
     createVerifyCreator: (mint: _solana_web3_js.PublicKey, creator: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createDeleagate: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, delegateAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createVerifySizedCollection: (collectionChild: _solana_web3_js.PublicKey, collectionParent: _solana_web3_js.PublicKey, feePayer: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
     createMint: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, nftMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
-    mint: (owner: Pubkey$1, signer: Secret, input: InputNftMetadata, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
-    gasLessTransfer: (mint: Pubkey$1, owner: Pubkey$1, dest: Pubkey$1, signers: Secret[], feePayer: Pubkey$1) => Promise<Result<PartialSignStructure, Error>>;
-    gasLessMint: (owner: Pubkey$1, signer: Secret, input: InputNftMetadata, feePayer: Pubkey$1, options?: Partial<GasLessMintOptions>) => Promise<Result<PartialSignStructure, Error>>;
-    freeze: (mint: Pubkey$1, owner: Pubkey$1, freezeAuthority: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
-    findByOwner: (owner: Pubkey$1, onOk: OnOk<RegularNftMetadata>, onErr: OnErr, options?: {
+    mint: (owner: Secret, input: InputNftMetadata, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
+    gasLessTransfer: (mint: Pubkey, owner: Secret, dest: Pubkey, feePayer: Pubkey) => Promise<Result<PartialSignStructure, Error>>;
+    gasLessMint: (owner: Secret, input: InputNftMetadata, feePayer: Pubkey, options?: Partial<GasLessMintOptions>) => Promise<Result<PartialSignStructure, Error>>;
+    freeze: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
+    findByOwner: (owner: Pubkey, onOk: OnOk<RegularNftMetadata>, onErr: OnErr, options?: {
         sortable?: SortDirection | undefined;
         isHolder?: boolean | undefined;
     } | undefined) => Promise<void>;
-    findByMint: (mint: Pubkey$1) => Promise<Result<RegularNftMetadata, Error>>;
-    burn: (mint: Pubkey$1, owner: Pubkey$1, signer: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
+    findByMint: (mint: Pubkey) => Promise<Result<RegularNftMetadata, Error>>;
+    burn: (mint: Pubkey, owner: Pubkey, ownerOrMultisig: Secret[], options?: Partial<BurnOptions>) => Result<CommonStructure, Error>;
 };
 
-export { Account, Explorer, ExplorerOptions, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey$1 as Pubkey, RegularNft, Secret, Transfer, TransferChecked, Try, Validator, ValidatorError, WithMemo, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };
+export { Account, Explorer, ExplorerOptions, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, RegularNft, Secret, Transfer, TransferChecked, Try, Validator, ValidatorError, WithMemo, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };

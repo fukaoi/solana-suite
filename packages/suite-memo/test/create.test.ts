@@ -40,7 +40,7 @@ test('encode', (t) => {
 });
 
 test('create instruction', (t) => {
-  const res = Memo.create(DUMMY_DATA, source.pubkey, source.secret);
+  const res = Memo.create(DUMMY_DATA, source.secret);
   t.log('# create:', res);
   t.is(typeof res, 'object');
 });
@@ -48,7 +48,6 @@ test('create instruction', (t) => {
 test('send memo by owner with fee payer', async (t) => {
   const inst = Memo.create(
     `{"memo": "send memo by owner", "datetime": ${datetime}}`,
-    MEMO_STOCK.pubkey,
     MEMO_STOCK.secret,
     { feePayer: feePayer.secret },
   );
@@ -61,7 +60,6 @@ test('send memo by owner with fee payer', async (t) => {
 test('send memo and sol transfer by owner', async (t) => {
   const inst1 = Memo.create(
     `send memo and sol transfer: ${datetime}`,
-    MEMO_STOCK.pubkey,
     MEMO_STOCK.secret,
     { feePayer: feePayer.secret },
   );
@@ -80,7 +78,6 @@ test('send memo and sol transfer by owner', async (t) => {
 
 test('send memo and spl-token transfer by owner', async (t) => {
   const inst = await SplToken.mint(
-    source.pubkey,
     source.secret,
     10000,
     4,
@@ -97,7 +94,6 @@ test('send memo and spl-token transfer by owner', async (t) => {
 
   const inst1 = Memo.create(
     `send memo and spl-token transfer: ${datetime}`,
-    dest.pubkey,
     dest.secret,
     { feePayer: feePayer.secret },
   );
@@ -123,7 +119,7 @@ test('send memo and spl-token transfer by owner', async (t) => {
 
 test('[Err] Over max limit', async (t) => {
   const overData = 'a'.repeat(2000);
-  const inst = Memo.create(overData, source.pubkey, source.secret);
+  const inst = Memo.create(overData, source.secret);
 
   const res = await inst.submit();
   t.true(res.isErr);

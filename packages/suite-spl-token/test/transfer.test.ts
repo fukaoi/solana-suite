@@ -27,7 +27,6 @@ test.before(async () => {
 
 test('Create token, batch transfer', async (t) => {
   const inst1 = await SplToken.mint(
-    source.pubkey,
     source.secret,
     TOKEN_TOTAL_AMOUNT,
     MINT_DECIMAL,

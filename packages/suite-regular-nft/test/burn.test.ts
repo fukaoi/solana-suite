@@ -17,7 +17,6 @@ test('[Nft Storage] mint nft and nft burn', async (t) => {
   const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
   const inst1 = await RegularNft.mint(
-    owner.pubkey,
     owner.secret,
     {
       filePath: asset.filePath as string,
@@ -37,10 +36,13 @@ test('[Nft Storage] mint nft and nft burn', async (t) => {
       t.log('# sig:', ok);
       return ok;
     },
-    (ng: Error) => t.fail(ng.message),
+    (ng: Error) => {
+      console.error(ng);
+      t.fail(ng.message);
+    },
   );
 
-  const inst2 = RegularNft.burn(mint!, owner.pubkey, owner.secret, {
+  const inst2 = RegularNft.burn(mint!, owner.pubkey, [owner.secret], {
     feePayer: feePayer.secret,
   });
   (await inst2.submit()).match(

@@ -8,29 +8,27 @@ import { PartialSignStructure } from '~/types/transaction-builder';
 export namespace SolNative {
   const RADIX = 10;
   export const gasLessTransfer = async (
-    owner: Pubkey,
+    owner: Secret,
     dest: Pubkey,
-    signers: Secret[],
     amount: number,
     feePayer: Pubkey,
   ): Promise<Result<PartialSignStructure, Error>> => {
     return Try(async () => {
       const blockHashObj = await Node.getConnection().getLatestBlockhash();
+      const ownerPublicKey = owner.toKeypair().publicKey;
       const tx = new Transaction({
         blockhash: blockHashObj.blockhash,
         lastValidBlockHeight: blockHashObj.lastValidBlockHeight,
         feePayer: feePayer.toPublicKey(),
       }).add(
         SystemProgram.transfer({
-          fromPubkey: owner.toPublicKey(),
+          fromPubkey: ownerPublicKey,
           toPubkey: dest.toPublicKey(),
           lamports: parseInt(`${amount.toLamports()}`, RADIX),
         }),
       );
 
-      signers.forEach((signer) => {
-        tx.partialSign(signer.toKeypair());
-      });
+      tx.partialSign(owner.toKeypair());
 
       const serializedTx = tx.serialize({
         requireAllSignatures: false,

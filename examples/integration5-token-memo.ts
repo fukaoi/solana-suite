@@ -4,12 +4,7 @@
 
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
-import {
-  Account,
-  Node,
-  Pubkey,
-  SplToken,
-} from '@solana-suite/spl-token';
+import { Account, Node, Pubkey, SplToken } from '@solana-suite/spl-token';
 import { Memo } from '@solana-suite/memo';
 
 import { requestSol } from 'test-tools';
@@ -51,7 +46,6 @@ import { RandomAsset } from 'test-tools/setupAsset';
   };
 
   const inst1 = await SplToken.mint(
-    owner.pubkey,
     owner.secret,
     totalAmount,
     decimals,
@@ -73,7 +67,7 @@ import { RandomAsset } from 'test-tools/setupAsset';
   how much progress we have made over the past two years — and
   how much work remains
   `;
-  const inst2 = Memo.create(memoData, owner.pubkey, owner.secret);
+  const inst2 = Memo.create(memoData, owner.secret);
 
   (await [inst1, inst2].submit()).match(
     async (value) => {

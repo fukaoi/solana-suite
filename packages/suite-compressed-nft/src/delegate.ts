@@ -78,22 +78,22 @@ export namespace CompressedNft {
   /**
    * Set delegate
    *
-   * @param {Pubkey} assetId
-   * @param {Secret} signer // new delegate or previous delegate signer
+   * @param {Pubkey} mint   // target mint
+   * @param {Secret} owner   // new delegate or previous delegate signer
    * @param {Partial<DelegateOptions>} options
    * @return Promise<Result<Transaction, Error>>
    */
   export const setDelegate = async (
-    assetId: Pubkey,
-    signer: Secret,
+    mint: Pubkey,
+    owner: Secret,
     options: Partial<DelegateOptions> = {},
   ): Promise<Result<CommonStructure, Error>> => {
     return Try(async () => {
       const newDelegate = options.delegate
         ? options.delegate.toPublicKey()
         : null;
-      const inst = await createDeleagate(assetId.toPublicKey(), newDelegate);
-      return new TransactionBuilder.Common([inst], [signer.toKeypair()]);
+      const inst = await createDeleagate(mint.toPublicKey(), newDelegate);
+      return new TransactionBuilder.Common([inst], [owner.toKeypair()]);
     });
   };
 }

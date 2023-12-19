@@ -14,7 +14,6 @@ test.before(async () => {
 
 test('Create collection', async (t) => {
   const inst = await RegularNft.mintCollection(
-    source.pubkey,
     source.secret,
     {
       name: 'CollectionNFT',
@@ -42,7 +41,6 @@ test('Create collection', async (t) => {
 
 test('Create collection with feePayer', async (t) => {
   const inst = await RegularNft.mintCollection(
-    source.pubkey,
     source.secret,
     {
       name: 'CollectionNFT',

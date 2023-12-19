@@ -15,8 +15,7 @@ import { MintStructure } from '~/types/transaction-builder';
  * create a collection
  * This function needs only 1 call
  *
- * @param {Pubkey} owner
- * @param {Secret} signer
+ * @param {Secret} owner
  * @param {InputNftMetadata} input
  * @param {Partial<MintCollectionOptions>} options
  * @return Promise<Result<Instruction, Error>>
@@ -25,8 +24,7 @@ export namespace RegularNft {
   export const DEFAULT_COLLECTION_SIZE = 0;
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
   export const mintCollection = (
-    owner: Pubkey,
-    signer: Secret,
+    owner: Secret,
     input: InputNftMetadata,
     options: Partial<MintCollectionOptions> = {},
   ): Promise<Result<MintStructure, Error>> => {
@@ -37,8 +35,9 @@ export namespace RegularNft {
       }
 
       const { freezeAuthority, feePayer, collectionSize } = options;
-      const payer = feePayer ? feePayer : signer;
+      const payer = feePayer ? feePayer : owner;
       const storageType = input.storageType || DEFAULT_STORAGE_TYPE;
+      const ownerPublicKey = owner.toKeypair().publicKey;
 
       //--- porperties, Upload content ---
       let properties;
@@ -104,7 +103,7 @@ export namespace RegularNft {
 
       const instructions = await Mint.createMint(
         collectionMint.toPublicKey(),
-        owner.toPublicKey(),
+        ownerPublicKey,
         datav2,
         payer.toKeypair().publicKey,
         isMutable,
@@ -115,7 +114,7 @@ export namespace RegularNft {
         instructions.push(
           Mint.createDeleagate(
             collectionMint.toPublicKey(),
-            owner.toPublicKey(),
+            ownerPublicKey,
             freezeAuthority.toPublicKey(),
           ),
         );
@@ -123,7 +122,7 @@ export namespace RegularNft {
 
       const collections = {
         collectionMetadata: collectionMetadataAccount,
-        collectionAuthority: signer.toKeypair().publicKey,
+        collectionAuthority: owner.toKeypair().publicKey,
         collectionMint: collectionMint.toKeypair().publicKey,
       };
 
@@ -137,7 +136,7 @@ export namespace RegularNft {
 
       return new TransactionBuilder.Mint(
         instructions,
-        [signer.toKeypair(), collectionMint.toKeypair()],
+        [owner.toKeypair(), collectionMint.toKeypair()],
         payer.toKeypair(),
         collectionMint.pubkey,
       );

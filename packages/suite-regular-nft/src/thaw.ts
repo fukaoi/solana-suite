@@ -4,7 +4,7 @@ import { TransactionBuilder } from '~/transaction-builder';
 import { Account } from '~/account';
 import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createThawDelegatedAccountInstruction } from '@metaplex-foundation/mpl-token-metadata';
-import { AuthorityOptions } from '~/types/shared';
+import { ThawOptions } from '~/types/regular-nft';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace RegularNft {
@@ -15,13 +15,13 @@ export namespace RegularNft {
    * @param {Pubkey} mint             // mint address
    * @param {Pubkey} owner            // current owner
    * @param {Secret} freezeAuthority  // setted freeze authority of nft
-   * @param {AuthorityOptions} options          // options
+   * @param {ThawOptions} options     // options
    */
   export const thaw = (
     mint: Pubkey,
     owner: Pubkey,
     freezeAuthority: Secret,
-    options: Partial<AuthorityOptions> = {},
+    options: Partial<ThawOptions> = {},
   ): Result<CommonStructure<unknown>, Error> => {
     return Try(() => {
       const payer = options.feePayer ? options.feePayer : freezeAuthority;

@@ -96,21 +96,21 @@ export namespace CompressedNft {
   /**
    * transfer nft
    *
-   * @param {Pubkey} assetId
-   * @param {Pubkey} assetIdOwner
+   * @param {Pubkey} mint
+   * @param {Pubkey} owner
    * @param {Pubkey} dest
-   * @param {Secret[]} signers
+   * @param {Secret[]} ownerOrMultisig
    * @return Promise<Result<Transaction, Error>>
    */
   export const transfer = async (
-    assetId: Pubkey,
-    assetIdOwner: Pubkey,
+    mint: Pubkey,
+    owner: Pubkey,
     dest: Pubkey,
-    signers: Secret[],
+    ownerOrMultisig: Secret[],
   ): Promise<Result<CommonStructure, Error>> => {
     return Try(async () => {
-      const keypairs = signers.map((s) => s.toKeypair());
-      const inst = await createTransfer(assetId, assetIdOwner, dest);
+      const keypairs = ownerOrMultisig.map((s) => s.toKeypair());
+      const inst = await createTransfer(mint, owner, dest);
       return new TransactionBuilder.Common([inst], keypairs);
     });
   };

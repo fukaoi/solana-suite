@@ -11,19 +11,17 @@ import { PartialSignStructure } from '~/types/transaction-builder';
 export namespace SplToken {
   export const gasLessTransfer = async (
     mint: Pubkey,
-    owner: Pubkey,
+    owner: Secret,
     dest: Pubkey,
-    signers: Secret[],
     amount: number,
     mintDecimal: number,
     feePayer: Pubkey,
   ): Promise<Result<PartialSignStructure, Error>> => {
     return Try(async () => {
-      const keypairs = signers.map((s) => s.toKeypair());
-
+      const ownerPublicKey = owner.toKeypair().publicKey;
       const sourceToken = await Account.Associated.makeOrCreateInstruction(
         mint,
-        owner,
+        ownerPublicKey.toString(),
         feePayer,
       );
 
@@ -48,10 +46,10 @@ export namespace SplToken {
           sourceToken.tokenAccount.toPublicKey(),
           mint.toPublicKey(),
           destToken.tokenAccount.toPublicKey(),
-          owner.toPublicKey(),
+          ownerPublicKey,
           Calculator.calculateAmount(amount, mintDecimal),
           mintDecimal,
-          keypairs,
+          [owner.toKeypair()],
         );
         tx.add(inst2);
       } else {
@@ -60,18 +58,16 @@ export namespace SplToken {
           sourceToken.tokenAccount.toPublicKey(),
           mint.toPublicKey(),
           destToken.tokenAccount.toPublicKey(),
-          owner.toPublicKey(),
+          ownerPublicKey,
           Calculator.calculateAmount(amount, mintDecimal),
           mintDecimal,
-          keypairs,
+          [owner.toKeypair()],
         );
         tx.add(destToken.inst).add(inst2);
       }
 
       tx.recentBlockhash = blockhashObj.blockhash;
-      keypairs.forEach((signer) => {
-        tx.partialSign(signer);
-      });
+      tx.partialSign(owner.toKeypair());
 
       const serializedTx = tx.serialize({
         requireAllSignatures: false,

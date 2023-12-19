@@ -39,7 +39,6 @@ import { requestSol } from 'test-tools';
   //////////////////////////////////////////////
 
   const inst1 = await RegularNft.mint(
-    owner.pubkey,
     owner.secret,
     {
       filePath: asset.filePath!,

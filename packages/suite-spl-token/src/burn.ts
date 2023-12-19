@@ -13,7 +13,7 @@ export namespace SplToken {
   export const burn = (
     mint: Pubkey,
     owner: Pubkey,
-    signers: Secret[],
+    ownerOrMultisig: Secret[],
     burnAmount: number,
     tokenDecimals: number,
     options: Partial<BurnOptions> = {},
@@ -23,8 +23,8 @@ export namespace SplToken {
         mint.toPublicKey(),
         owner.toPublicKey(),
       );
-      const payer = options.feePayer ? options.feePayer : signers[0];
-      const keypairs = signers.map((s) => s.toKeypair());
+      const payer = options.feePayer ? options.feePayer : ownerOrMultisig[0];
+      const keypairs = ownerOrMultisig.map((s) => s.toKeypair());
 
       const inst = createBurnCheckedInstruction(
         tokenAccount,

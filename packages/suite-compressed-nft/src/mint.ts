@@ -93,8 +93,7 @@ export namespace CompressedNft {
   /**
    * Upload content and Compressed NFT mint
    *
-   * @param {Pubkey} owner          // first minted owner
-   * @param {Secret} signer         // owner's Secret
+   * @param {Secret} owner         // owner's Secret
    * @param {InputNftMetadata} input
    * {
    *   name: string               // nft content name
@@ -116,8 +115,7 @@ export namespace CompressedNft {
    * @return Promise<Result<MintTransaction, Error>>
    */
   export const mint = async (
-    owner: Pubkey,
-    signer: Secret,
+    owner: Secret,
     input: InputNftMetadata,
     treeOwner: Pubkey,
     collectionMint: Pubkey,
@@ -129,9 +127,10 @@ export namespace CompressedNft {
         throw valid.error;
       }
       const { feePayer, receiver, delegate } = options;
-      const payer = feePayer ? feePayer : signer;
+      const payer = feePayer ? feePayer : owner;
       const storageType = input.storageType || DEFAULT_STORAGE_TYPE;
-      const leafOwner = receiver ? receiver : owner;
+      const ownerPublicKey = owner.toKeypair().publicKey;
+      const leafOwner = receiver ? receiver.toPublicKey() : ownerPublicKey;
       const leafDelegate = delegate
         ? delegate
         : new Account.Keypair({ secret: payer! }).pubkey;
@@ -224,11 +223,11 @@ export namespace CompressedNft {
           {
             merkleTree: treeOwner.toPublicKey(),
             treeAuthority,
-            treeDelegate: owner.toPublicKey(),
+            treeDelegate: ownerPublicKey,
             payer: payer.toKeypair().publicKey,
-            leafOwner: leafOwner.toPublicKey(), // receiver
+            leafOwner: leafOwner, // receiver
             leafDelegate: leafDelegate.toPublicKey(),
-            collectionAuthority: owner.toPublicKey(),
+            collectionAuthority: ownerPublicKey,
             collectionMint: collectionMint.toPublicKey(),
             collectionMetadata,
             editionAccount: collectionMasterEditionAccount,
@@ -259,7 +258,7 @@ export namespace CompressedNft {
 
       return new TransactionBuilder.Mint(
         instructions,
-        [signer.toKeypair()],
+        [owner.toKeypair()],
         payer.toKeypair(),
         new Space.Space(treeOwner),
       );

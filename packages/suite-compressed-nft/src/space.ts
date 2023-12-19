@@ -37,8 +37,7 @@ export namespace CompressedNft {
    * create a new markle tree
    * This function needs only 1 call
    *
-   * @param {Pubkey} owner
-   * @param {Secret} signer
+   * @param {Secret} owner
    * @param {number} maxDepth
    * @param {number} maxBufferSize
    * @param {number} canopyDepth
@@ -46,15 +45,14 @@ export namespace CompressedNft {
    * @return Promise<Result<MintTransaction, Error>>
    */
   export const initSpace = (
-    owner: Pubkey,
-    signer: Secret,
+    owner: Secret,
     maxDepth: number,
     maxBufferSize: number,
     canopyDepth: number,
     options: Partial<SpaceOptions> = {},
   ): Promise<Result<MintStructure, Error>> => {
     return Try(async () => {
-      const payer = options.feePayer ? options.feePayer : signer;
+      const payer = options.feePayer ? options.feePayer : owner;
       const treeOwner = Account.Keypair.create();
       const space = getConcurrentMerkleTreeAccountSize(
         maxDepth,
@@ -90,7 +88,7 @@ export namespace CompressedNft {
           {
             merkleTree: treeOwner.toKeypair().publicKey,
             treeAuthority,
-            treeCreator: owner.toPublicKey(),
+            treeCreator: owner.toKeypair().publicKey,
             payer: payer.toKeypair().publicKey,
             logWrapper: SPL_NOOP_PROGRAM_ID,
             compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
@@ -106,7 +104,7 @@ export namespace CompressedNft {
 
       return new TransactionBuilder.Mint(
         instructions,
-        [treeOwner.toKeypair(), signer.toKeypair()],
+        [treeOwner.toKeypair(), owner.toKeypair()],
         payer.toKeypair(),
         treeOwner.pubkey,
       );
@@ -117,29 +115,20 @@ export namespace CompressedNft {
    * create a new nft space
    * This function needs only 1 call
    *
-   * @param {Pubkey} owner
-   * @param {Secret} signer
+   * @param {Secret} owner
    * @param {number} spaceSize
    * @param {Partial<SpaceOptions>} options
    *
    * @return Promise<Result<MintTransaction, Error>>
    */
   export const createSpace = async (
-    owner: Pubkey,
-    signer: Secret,
+    owner: Secret,
     spaceSize: number,
     options: Partial<SpaceOptions> = {},
   ): Promise<Result<MintStructure, Error>> => {
     const { maxDepth, maxBufferSize, canopyDepth } =
       calculateSpaceNumberToDepth(spaceSize);
-    return initSpace(
-      owner,
-      signer,
-      maxDepth,
-      maxBufferSize,
-      canopyDepth,
-      options,
-    );
+    return initSpace(owner, maxDepth, maxBufferSize, canopyDepth, options);
   };
 
   /**
