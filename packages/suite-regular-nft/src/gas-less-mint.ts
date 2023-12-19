@@ -17,8 +17,7 @@ export namespace RegularNft {
   /**
    * Upload content and NFT mint with Partial Sign
    *
-   * @param {Pubkey} owner          // first minted owner
-   * @param {Secret} signer         // owner's Secret
+   * @param {Secret} owner         // owner's Secret
    * @param {UserSideInput.NftMetadata} input
    * {
    *   name: string               // nft content name
@@ -41,8 +40,7 @@ export namespace RegularNft {
    * @return Promise<Result<StructPartialSignTransaction, Error>>
    */
   export const gasLessMint = async (
-    owner: Pubkey,
-    signer: Secret,
+    owner: Secret,
     input: InputNftMetadata,
     feePayer: Pubkey,
     options: Partial<GasLessMintOptions> = {},
@@ -54,7 +52,9 @@ export namespace RegularNft {
       }
 
       const storageType = input.storageType || DEFAULT_STORAGE_TYPE;
-      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(input.royalty);
+      const royalty = input.royalty ? input.royalty : 0;
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(royalty);
+      const ownerPublickey = owner.toKeypair().publicKey;
 
       //--- porperties, Upload content ---
       let uri = '';
@@ -112,7 +112,7 @@ export namespace RegularNft {
       const mint = Account.Keypair.create();
       const insts = await Mint.createMint(
         mint.toPublicKey(),
-        owner.toPublicKey(),
+        ownerPublickey,
         datav2,
         feePayer.toPublicKey(),
         isMutable,
@@ -123,7 +123,7 @@ export namespace RegularNft {
         insts.push(
           Mint.createDeleagate(
             mint.toPublicKey(),
-            owner.toPublicKey(),
+            ownerPublickey,
             options.freezeAuthority.toPublicKey(),
           ),
         );
@@ -138,7 +138,7 @@ export namespace RegularNft {
 
       insts.forEach((inst) => tx.add(inst));
       tx.recentBlockhash = blockhashObj.blockhash;
-      [signer, mint].forEach((signer) => tx.partialSign(signer.toKeypair()));
+      [owner, mint].forEach((signer) => tx.partialSign(signer.toKeypair()));
 
       const serializedTx = tx.serialize({
         requireAllSignatures: false,

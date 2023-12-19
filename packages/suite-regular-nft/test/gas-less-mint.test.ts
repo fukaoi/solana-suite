@@ -21,7 +21,6 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
   const freezeAuthority = Account.Keypair.create();
   const asset = RandomAsset.get();
   const serialized = await RegularNft.gasLessMint(
-    owner.pubkey,
     owner.secret,
     {
       filePath: asset.filePath as string,
@@ -74,7 +73,6 @@ test('[Arweave] use case arweave', async (t) => {
   const uri = uploaded.value;
 
   const serialized = await RegularNft.gasLessMint(
-    owner.pubkey,
     owner.secret,
     {
       uri,
@@ -103,7 +101,6 @@ test('[Error]Raise parameter error when not need uri or filePath', async (t) => 
   const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
   const res = await RegularNft.gasLessMint(
-    owner.pubkey,
     owner.secret,
     {
       name: asset.name!,

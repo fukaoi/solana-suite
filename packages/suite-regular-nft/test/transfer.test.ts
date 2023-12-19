@@ -26,7 +26,6 @@ test('Transfer nft', async (t) => {
   };
 
   const mint = await RegularNft.mint(
-    source.pubkey,
     source.secret,
     {
       filePath: asset.filePath as string,

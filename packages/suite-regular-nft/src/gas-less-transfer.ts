@@ -11,14 +11,14 @@ export namespace RegularNft {
     mint: Pubkey,
     owner: Pubkey,
     dest: Pubkey,
-    signers: Secret[],
+    ownerOrMultisig: Secret[],
     feePayer: Pubkey,
   ): Promise<Result<PartialSignStructure, Error>> => {
     return SplToken.gasLessTransfer(
       mint,
       owner,
       dest,
-      signers,
+      ownerOrMultisig,
       NFT_AMOUNT,
       NFT_DECIMALS,
       feePayer,

@@ -20,7 +20,6 @@ test.before(async () => {
 test('[Arweave] mint nft with fee payer', async (t) => {
   const asset = RandomAsset.get();
   const res = await RegularNft.mint(
-    source.pubkey,
     source.secret,
     {
       filePath: asset.filePath as string,
@@ -51,7 +50,6 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
   const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
   const res = await RegularNft.mint(
-    owner.pubkey,
     owner.secret,
     {
       filePath: asset.filePath as string,
@@ -123,7 +121,6 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
   };
 
   const res = await RegularNft.mint(
-    owner.pubkey,
     owner.secret,
     {
       filePath: asset.filePath as string,
@@ -156,7 +153,7 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
 });
 
 test('[Error]Raise validation error when upload meta data', async (t) => {
-  const res = await RegularNft.mint(source.pubkey, source.secret, {
+  const res = await RegularNft.mint(source.secret, {
     filePath: '',
     name: '',
     symbol: 'LONG-SYMBOL-LONG',

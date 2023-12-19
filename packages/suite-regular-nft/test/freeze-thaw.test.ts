@@ -20,7 +20,6 @@ test('Freezing and Thawing a target nft', async (t) => {
   const freezeAuthority = Account.Keypair.create();
   const asset = RandomAsset.get();
   const inst1 = await RegularNft.mint(
-    owner.pubkey,
     owner.secret,
     {
       filePath: asset.filePath as string,
