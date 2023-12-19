@@ -19,7 +19,6 @@ test('Freezing and Thawing a target nft', async (t) => {
   const owner = Account.Keypair.create();
   const freezeAuthority = Account.Keypair.create();
   const inst1 = await SplToken.mint(
-    owner.pubkey,
     owner.secret,
     10000000,
     2,

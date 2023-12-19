@@ -127,8 +127,7 @@ export namespace SplToken {
   /**
    * SPL-TOKEN mint
    *
-   * @param {Pubkey} owner       // token owner
-   * @param {Secret} signer      // token owner Secret
+   * @param {Secret} owner      // token owner Secret
    * @param {number} totalAmount // total number
    * @param {number} mintDecimal // token decimal
    * @param {InputTokenMetadata} input       // token metadata
@@ -136,8 +135,7 @@ export namespace SplToken {
    * @return Promise<Result<MintInstruction, Error>>
    */
   export const mint = async (
-    owner: Pubkey,
-    signer: Secret,
+    owner: Secret,
     totalAmount: number,
     mintDecimal: number,
     input: InputTokenMetadata,
@@ -151,9 +149,10 @@ export namespace SplToken {
 
       const { feePayer, freezeAuthority } = options;
       const storageType = input.storageType || DEFAULT_STORAGE_TYPE;
-      const payer = feePayer ? feePayer : signer;
+      const payer = feePayer ? feePayer : owner;
       input.royalty = 0;
       const sellerFeeBasisPoints = 0;
+      const ownerPublicKey = owner.toKeypair().publicKey;
 
       const storageMetadata = Storage.toConvertOffchaindata(
         input as InputNftMetadata,
@@ -206,7 +205,7 @@ export namespace SplToken {
       const mint = Account.Keypair.create();
       const insts = await createMint(
         mint.toPublicKey(),
-        owner.toPublicKey(),
+        ownerPublicKey,
         totalAmount,
         mintDecimal,
         datav2,
@@ -219,7 +218,7 @@ export namespace SplToken {
         insts.push(
           createFreezeAuthority(
             mint.toPublicKey(),
-            owner.toPublicKey(),
+            ownerPublicKey,
             freezeAuthority.toPublicKey(),
           ),
         );
@@ -227,7 +226,7 @@ export namespace SplToken {
 
       return new TransactionBuilder.Mint(
         insts,
-        [signer.toKeypair(), mint.toKeypair()],
+        [owner.toKeypair(), mint.toKeypair()],
         payer.toKeypair(),
         mint.pubkey,
       );

@@ -27,7 +27,6 @@ test.before(async () => {
 
 test('Add minting token', async (t) => {
   const inst = await SplToken.mint(
-    source.pubkey,
     source.secret,
     TOKEN_TOTAL_AMOUNT,
     MINT_DECIMAL,

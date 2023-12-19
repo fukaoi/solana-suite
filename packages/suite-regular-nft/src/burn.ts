@@ -1,7 +1,6 @@
 import { Result } from '~/shared';
 import { Pubkey, Secret } from '~/types/account';
 import { SplToken } from '~/suite-spl-token';
-import { AuthorityOptions } from '~/types/shared';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace RegularNft {

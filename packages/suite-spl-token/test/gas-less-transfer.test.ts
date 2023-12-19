@@ -31,7 +31,6 @@ test('transfer feePayerPartialSign', async (t) => {
   t.log('# receipt: ', receipt.pubkey);
 
   const inst1 = await SplToken.mint(
-    tokenOwner.pubkey,
     tokenOwner.secret,
     TOKEN_TOTAL_AMOUNT,
     MINT_DECIMAL,

@@ -13,13 +13,13 @@ export namespace SplToken {
     mint: Pubkey,
     owner: Pubkey,
     dest: Pubkey,
-    signers: Secret[],
+    ownerOrMultisig: Secret[],
     amount: number,
     mintDecimal: number,
     feePayer: Pubkey,
   ): Promise<Result<PartialSignStructure, Error>> => {
     return Try(async () => {
-      const keypairs = signers.map((s) => s.toKeypair());
+      const keypairs = ownerOrMultisig.map((s) => s.toKeypair());
 
       const sourceToken = await Account.Associated.makeOrCreateInstruction(
         mint,
