@@ -38,8 +38,9 @@ test('Create merkle tree', async (t) => {
   );
 });
 
-test('Create merkle tree by mint total number', async (t) => {
-  const inst = await CompressedNft.createSpace(owner.secret, 8, {
+test.only('Create merkle tree by mint total number', async (t) => {
+  // const inst = await CompressedNft.createSpace(owner.secret, 8, {
+  const inst = await CompressedNft.createSpace(owner.secret, 1000, {
     feePayer: feePayer.secret,
   });
   (await inst.submit()).match(
