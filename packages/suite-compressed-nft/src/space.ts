@@ -162,7 +162,7 @@ export namespace CompressedNft {
   /// | 14        | (64, 256, 1024, 2048) | node: 16,384
   /// | 20        | (64, 256, 1024, 2048) | node: 1,048,576
   /// | 24        | (64, 256, 512, 1024, 2048) | node: 16,777,216
-  /// | 26        | (64, 256, 512, 1024, 2048) | node: ???
+  /// | 26        | (64, 256, 512, 1024, 2048) | node: 67,108,864
   /// | 30        | (512, 1024, 2048) | node: 1,073,741,824
   const calculateSpaceNumberToDepth = (space: number) => {
     const log2 = Math.ceil(Math.log2(space));
