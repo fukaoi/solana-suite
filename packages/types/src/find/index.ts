@@ -17,11 +17,11 @@ export type Sortable = {
 };
 
 export type FindOptions = {
-  limit?: number;
-  page?: number;
-  sortBy?: Sortable;
-  before?: string;
-  after?: string;
+  limit: number;
+  page: number;
+  sortBy: Sortable;
+  before: string;
+  after: string;
 };
 
 export type Find = {
