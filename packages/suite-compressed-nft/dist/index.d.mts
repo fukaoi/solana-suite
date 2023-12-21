@@ -137,6 +137,7 @@ type NftMetadata = {
 type SpaceOptions = {
     feePayer: Secret$1;
 };
+type SpaceNumber = 8 | 16000 | 100000 | 16700000 | 67000000 | 1000000000;
 
 type bignum = number | BN;
 declare enum UseMethod {
@@ -743,12 +744,12 @@ declare namespace CompressedNft$1 {
      * This function needs only 1 call
      *
      * @param {Secret} owner
-     * @param {number} spaceSize
+     * @param {SpaceNumber} spaceSize
      * @param {Partial<SpaceOptions>} options
      *
      * @return Promise<Result<MintTransaction, Error>>
      */
-    const createSpace: (owner: Secret, spaceSize: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
+    const createSpace: (owner: Secret, spaceSize: SpaceNumber, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
     /**
      * Calculate space cost
      *
@@ -766,7 +767,7 @@ declare const CompressedNft: {
     mintCollection: (owner: Secret$1, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
     Space: typeof CompressedNft$1.Space;
     initSpace: (owner: Secret, maxDepth: number, maxBufferSize: number, canopyDepth: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
-    createSpace: (owner: Secret, spaceSize: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
+    createSpace: (owner: Secret, spaceSize: SpaceNumber, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
     calculateSpaceCost: (spaceSize: number) => Promise<{
         sol: number;
     }>;
