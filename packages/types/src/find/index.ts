@@ -16,13 +16,12 @@ export type Sortable = {
   sortDirection: SortDirection;
 };
 
-// TODO replace Partial?
 export type FindOptions = {
-  limit?: number;
-  page?: number;
-  sortBy?: Sortable;
-  before?: string;
-  after?: string;
+  limit: number;
+  page: number;
+  sortBy: Sortable;
+  before: string;
+  after: string;
 };
 
 export type Find = {

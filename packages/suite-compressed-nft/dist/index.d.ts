@@ -36,11 +36,11 @@ type Sortable = {
     sortDirection: SortDirection;
 };
 type FindOptions = {
-    limit?: number;
-    page?: number;
-    sortBy?: Sortable;
-    before?: string;
-    after?: string;
+    limit: number;
+    page: number;
+    sortBy: Sortable;
+    before: string;
+    after: string;
 };
 
 type DelegateOptions = {
