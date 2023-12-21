@@ -14,14 +14,14 @@
   "devDependencies": {
     "@types/node": "16.11.7",
     "ava": "^5.3.1",
-    "depcheck": "^1.4.6",
-    "eslint": "^8.50.0",
+    "depcheck": "^1.4.7",
+    "eslint": "^8.56.0",
     "prettier": "3.0.3",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.8",
     "tslib": "^2.6.2",
     "tsup": "^7.2.0",
-    "tsx": "^3.13.0",
+    "tsx": "^3.14.0",
     "turbo": "^1.11.2"
   },
   "repository": "git@github.com:atonoy/solana-suite.git",
