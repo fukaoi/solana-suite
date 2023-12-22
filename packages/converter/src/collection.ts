@@ -1,7 +1,10 @@
 import { InternalCollection } from '~/types/converter';
 import { Grouping } from '~/types/das-api';
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Collection, InputCollection, Option } from '~/types/regular-nft';
+import {
+  Collection as CollectionType,
+  InputCollection,
+  Option,
+} from '~/types/regular-nft';
 
 export namespace Converter {
   export namespace Collection {
@@ -20,7 +23,7 @@ export namespace Converter {
 
     export const intoUser = (
       output: Option<InternalCollection>,
-    ): Collection | undefined => {
+    ): CollectionType | undefined => {
       if (!output) {
         return undefined;
       }

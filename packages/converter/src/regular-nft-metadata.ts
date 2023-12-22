@@ -1,12 +1,7 @@
 import { Converter as Collection } from './collection';
 import { Converter as Creators } from './creators';
-import { Converter as Royalty } from './royalty';
-import { convertTimestampToDateTime } from '~/shared';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
-import { AssetAndOffchain } from '~/types/storage';
-import { NftMetadata } from '~/types/compressed-nft';
-import { Pubkey } from '~/types/account';
 
 export namespace Converter {
   export namespace RegularNftMetadata {

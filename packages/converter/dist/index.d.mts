@@ -1,5 +1,5 @@
 import { PublicKey, ParsedTransactionWithMeta, TransactionSignature, Keypair } from '@solana/web3.js';
-import { Metadata as Metadata$1, DataV2 } from '@metaplex-foundation/mpl-token-metadata';
+import { Metadata as Metadata$2, DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import BN from 'bn.js';
 import { MetadataArgs } from 'mpl-bubblegum-instruction';
 
@@ -42,7 +42,7 @@ type InternalCreators = {
     share: number;
 };
 
-type Metadata = {
+type Metadata$1 = {
     name: string;
     symbol: string;
     token_standard: string;
@@ -57,7 +57,7 @@ type Asset = {
     content: {
         json_uri: string;
         files: string[];
-        metadata: Metadata;
+        metadata: Metadata$1;
         links: string[];
     };
     authorities: {
@@ -102,7 +102,7 @@ type Asset = {
 
 type StorageType = 'nftStorage' | 'arweave' | string;
 type MetadataAndOffchain = {
-    onchain: Metadata$1;
+    onchain: Metadata$2;
     offchain: Offchain;
 };
 type AssetAndOffchain = {
@@ -171,6 +171,35 @@ type InputNftMetadata = {
     options?: Options;
 };
 
+type Collection = {
+    address: Pubkey$1;
+    verified: boolean;
+};
+
+declare namespace Converter$d {
+    namespace CompressedNftMetadata {
+        const intoInfra: (input: InputNftMetadata, uri: string, sellerFeeBasisPoints: number) => MetadataArgs;
+    }
+}
+
+declare namespace Converter$c {
+    namespace Collection {
+        const intoInfra: (input: Option<InputCollection> | undefined) => Option<InternalCollection>;
+        const intoUser: (output: Option<InternalCollection>) => Collection | undefined;
+    }
+    namespace CollectionMint {
+        const intoUser: (output: Grouping[]) => Pubkey;
+    }
+}
+
+declare namespace Converter$b {
+    namespace Creators {
+        const intoInfra: (input: Option<InputCreators[]> | undefined) => Option<InternalCreators[]>;
+        const intoCompressedNftInfra: (input: Option<InputCreators[]> | undefined) => InternalCreators[];
+        const intoUser: (output: Option<InternalCreators[]>) => Creators[] | undefined;
+    }
+}
+
 type Authority = {
     address: Pubkey$1;
     scopes: string[];
@@ -180,7 +209,7 @@ type Creators = {
     share: number;
     verified: boolean;
 }[];
-type NftMetadata = {
+type Metadata = {
     mint: Pubkey$1;
     collectionMint: Pubkey$1;
     authorities: Authority[];
@@ -199,28 +228,9 @@ type NftMetadata = {
     offchain: Offchain;
 };
 
-declare namespace Converter$c {
-    namespace CompressedNftMetadata {
-        const intoInfra: (input: InputNftMetadata, uri: string, sellerFeeBasisPoints: number) => MetadataArgs;
-        const intoUser: (output: AssetAndOffchain) => NftMetadata;
-    }
-}
-
-declare namespace Converter$b {
-    namespace Collection {
-        const intoInfra: (input: Option<InputCollection> | undefined) => Option<InternalCollection>;
-        const intoUser: (output: Option<InternalCollection>) => Collection | undefined;
-    }
-    namespace CollectionMint {
-        const intoUser: (output: Grouping[]) => Pubkey;
-    }
-}
-
 declare namespace Converter$a {
-    namespace Creators {
-        const intoInfra: (input: Option<InputCreators[]> | undefined) => Option<InternalCreators[]>;
-        const intoCompressedNftInfra: (input: Option<InputCreators[]> | undefined) => InternalCreators[];
-        const intoUser: (output: Option<InternalCreators[]>) => Creators[] | undefined;
+    namespace Nft {
+        const intoUser: (output: AssetAndOffchain) => Metadata;
     }
 }
 
@@ -290,7 +300,6 @@ declare namespace Converter$8 {
 declare namespace Converter$7 {
     namespace RegularNftMetadata {
         const intoInfra: (input: InputNftMetadata, uri: string, sellerFeeBasisPoints: number) => DataV2;
-        const intoUser: (output: MetadataAndOffchain) => RegularNftMetadata;
     }
 }
 
@@ -596,10 +605,11 @@ declare const Converter: {
     RegularNftMetadata: typeof Converter$7.RegularNftMetadata;
     Mint: typeof Converter$8.Mint;
     Memo: typeof Converter$9.Memo;
-    Creators: typeof Converter$a.Creators;
-    Collection: typeof Converter$b.Collection;
-    CollectionMint: typeof Converter$b.CollectionMint;
-    CompressedNftMetadata: typeof Converter$c.CompressedNftMetadata;
+    Nft: typeof Converter$a.Nft;
+    Creators: typeof Converter$b.Creators;
+    Collection: typeof Converter$c.Collection;
+    CollectionMint: typeof Converter$c.CollectionMint;
+    CompressedNftMetadata: typeof Converter$d.CompressedNftMetadata;
 };
 
 export { Converter };

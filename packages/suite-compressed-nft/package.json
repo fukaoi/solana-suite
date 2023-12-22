@@ -59,7 +59,6 @@
     "nft.storage": "^7.1.1"
   },
   "devDependencies": {
-    "@types/bn.js": "^5.1.2",
     "build-configs/ava": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",

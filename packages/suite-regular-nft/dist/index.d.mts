@@ -22,48 +22,102 @@ type OwnerInfo = {
     owner: string;
 };
 
+type FileType = string | File;
+
+type StorageType = 'nftStorage' | 'arweave' | string;
+type Offchain = {
+    name?: string;
+    symbol?: string;
+    description?: string;
+    seller_fee_basis_points?: number;
+    image?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    collection?: {
+        name?: string;
+        family?: string;
+        [key: string]: unknown;
+    };
+    collectionDetails?: {
+        kind: string;
+        size: number;
+    };
+    created_at?: number;
+};
+type Properties = {
+    creators?: {
+        address?: string;
+        share?: number;
+        [key: string]: unknown;
+    }[];
+    files?: {
+        type?: string;
+        filePath?: FileType;
+        [key: string]: unknown;
+    }[];
+    [key: string]: unknown;
+};
+type Attribute = {
+    trait_type?: string;
+    value?: string;
+    [key: string]: unknown;
+};
+
+type Authority = {
+    address: Pubkey;
+    scopes: string[];
+};
+type Creators = {
+    address: Pubkey;
+    share: number;
+    verified: boolean;
+}[];
+type Metadata = {
+    mint: Pubkey;
+    collectionMint: Pubkey;
+    authorities: Authority[];
+    royalty: number;
+    name: string;
+    symbol: string;
+    uri: string;
+    creators: Creators;
+    treeAddress: Pubkey;
+    isCompressed: boolean;
+    isMutable: boolean;
+    isBurn: boolean;
+    editionNonce: number;
+    primarySaleHappened: boolean;
+    dateTime: Date;
+    offchain: Offchain;
+};
+type NftMetadata = {
+    page: number;
+    total: number;
+    limit: number;
+    metadatas: Metadata[];
+};
+
 declare enum SortDirection {
     Asc = "asc",
     Desc = "desc"
 }
-type Find = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
+declare enum SortBy {
+    Created = "created",
+    Updated = "updated",
+    Recent = "recent_action"
+}
+type Sortable = {
+    sortBy: SortBy;
+    sortDirection: SortDirection;
 };
-
-type History = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
+type FindOptions = {
+    limit?: number;
+    page?: number;
+    sortBy?: Sortable;
+    before?: string;
+    after?: string;
 };
-
-type OnOk<T extends History | Find> = (ok: T[]) => void;
-type OnErr = (err: Error) => void;
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -449,7 +503,6 @@ type BurnOptions = {
 };
 
 type bignum = number | BN;
-type Option<T> = T | null;
 declare enum UseMethod {
     Burn = 0,
     Multiple = 1,
@@ -460,11 +513,6 @@ type Uses = {
     remaining: bignum;
     total: bignum;
 };
-type Creators = {
-    address: Pubkey;
-    share: number;
-    verified: boolean;
-};
 type InputCreators = {
     address: Pubkey;
     secret: Secret;
@@ -473,74 +521,6 @@ type InputCreators = {
 
 type GasLessMintOptions = {
     freezeAuthority: Pubkey;
-};
-
-type FileType = string | File;
-
-type StorageType = 'nftStorage' | 'arweave' | string;
-type Offchain = {
-    name?: string;
-    symbol?: string;
-    description?: string;
-    seller_fee_basis_points?: number;
-    image?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    collection?: {
-        name?: string;
-        family?: string;
-        [key: string]: unknown;
-    };
-    collectionDetails?: {
-        kind: string;
-        size: number;
-    };
-    created_at?: number;
-};
-type Properties = {
-    creators?: {
-        address?: string;
-        share?: number;
-        [key: string]: unknown;
-    }[];
-    files?: {
-        type?: string;
-        filePath?: FileType;
-        [key: string]: unknown;
-    }[];
-    [key: string]: unknown;
-};
-type Attribute = {
-    trait_type?: string;
-    value?: string;
-    [key: string]: unknown;
-};
-
-type Collection = {
-    address: Pubkey;
-    verified: boolean;
-};
-type CollectionDetails = {
-    __kind: string;
-    size: number;
-};
-type RegularNftMetadata = {
-    mint: string;
-    updateAuthority: string;
-    royalty: number;
-    name: string;
-    symbol: string;
-    uri: string;
-    isMutable: boolean;
-    primarySaleHappened: boolean;
-    editionNonce: Option<number>;
-    offchain: Offchain;
-    collection?: Collection | undefined;
-    collectionDetails?: CollectionDetails | undefined;
-    creators?: Creators[] | undefined;
-    uses?: Uses | undefined;
-    dateTime?: Date | undefined;
 };
 
 type InputCollection = Pubkey;
@@ -760,11 +740,9 @@ declare const RegularNft: {
     gasLessTransfer: (mint: Pubkey, owner: Secret, dest: Pubkey, feePayer: Pubkey) => Promise<Result<PartialSignStructure, Error>>;
     gasLessMint: (owner: Secret, input: InputNftMetadata, feePayer: Pubkey, options?: Partial<GasLessMintOptions>) => Promise<Result<PartialSignStructure, Error>>;
     freeze: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
-    findByOwner: (owner: Pubkey, onOk: OnOk<RegularNftMetadata>, onErr: OnErr, options?: {
-        sortable?: SortDirection | undefined;
-        isHolder?: boolean | undefined;
-    } | undefined) => Promise<void>;
-    findByMint: (mint: Pubkey) => Promise<Result<RegularNftMetadata, Error>>;
+    findByOwner: (owner: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;
+    findByMint: (mint: Pubkey) => Promise<Result<Partial<Metadata>, Error>>;
+    findByCollection: (collectionMint: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;
     burn: (mint: Pubkey, owner: Pubkey, ownerOrMultisig: Secret[], options?: Partial<BurnOptions>) => Result<CommonStructure, Error>;
 };
 
