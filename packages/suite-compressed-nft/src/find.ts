@@ -1,8 +1,7 @@
-import { Converter } from '~/converter';
+import { Pubkey } from '~/types/account';
 import { DasApi } from '~/das-api';
-import { debugLog, Result, Try } from '~/shared';
-import { Offchain } from '~/types/storage';
-import { NftMetadata, Metadata } from '~/types/nft';
+import { Result, Try } from '~/shared';
+import { Metadata, NftMetadata } from '~/types/nft';
 import { FindOptions } from '~/types/find';
 
 export namespace CompressedNft {
@@ -18,58 +17,7 @@ export namespace CompressedNft {
     options: Partial<FindOptions> = {},
   ): Promise<Result<NftMetadata, Error>> => {
     return Try(async () => {
-      const defaultOptions = {
-        limit: 1000,
-        page: 1,
-        sortBy: DasApi.defaultSortBy,
-      };
-      const { limit, page, sortBy, before, after } = {
-        ...defaultOptions,
-        ...options,
-      };
-
-      const assets = await DasApi.getAssetsByOwner(
-        owner,
-        limit,
-        page,
-        sortBy,
-        before,
-        after,
-      );
-      if (assets.isErr) {
-        throw assets.error;
-      }
-
-      const items = assets.value.items;
-
-      const metadatas = await Promise.all(
-        items
-          .filter((item) => item.compression.compressed === true)
-          .map(async (item) => {
-            try {
-              const offchain: Offchain = await DasApi.fetchOffchain(
-                item.content.json_uri,
-              );
-              const merged = {
-                onchain: item,
-                offchain: offchain,
-              };
-              return Converter.Nft.intoUser(merged);
-            } catch (err) {
-              debugLog('# Failed fetch offchain url: ', item.content.json_uri);
-              return Converter.Nft.intoUser({
-                onchain: item,
-                offchain: {},
-              });
-            }
-          }),
-      );
-      return {
-        page: assets.value.page,
-        total: assets.value.total,
-        limit: assets.value.limit,
-        metadatas,
-      };
+      return await DasApi.findByOwner(owner, true, options);
     });
   };
 
@@ -81,21 +29,9 @@ export namespace CompressedNft {
    */
   export const findByMint = async (
     mint: Pubkey,
-  ): Promise<Result<Metadata, Error>> => {
+  ): Promise<Result<Partial<Metadata>, Error>> => {
     return Try(async () => {
-      const asset = await DasApi.getAsset(mint);
-      if (asset.isErr) {
-        throw asset.error;
-      }
-
-      const offchain: Offchain = await DasApi.fetchOffchain(
-        asset.value.content.json_uri,
-      );
-      const merged = {
-        onchain: asset.value,
-        offchain: offchain,
-      };
-      return Converter.Nft.intoUser(merged);
+      return await DasApi.findByMint(mint, true);
     });
   };
 
@@ -111,51 +47,7 @@ export namespace CompressedNft {
     options: Partial<FindOptions> = {},
   ): Promise<Result<NftMetadata, Error>> => {
     return Try(async () => {
-      const defaultOptions = {
-        limit: 1000,
-        page: 1,
-        sortBy: DasApi.defaultSortBy,
-      };
-      const { limit, page, sortBy, before, after } = {
-        ...defaultOptions,
-        ...options,
-      };
-
-      const assets = await DasApi.getAssetsByGroup(
-        'collection',
-        collectionMint,
-        limit,
-        page,
-        sortBy,
-        before,
-        after,
-      );
-      if (assets.isErr) {
-        throw assets.error;
-      }
-
-      const items = assets.value.items;
-
-      const metadatas = await Promise.all(
-        items
-          .filter((item) => item.compression.compressed === true)
-          .map(async (item) => {
-            const offchain: Offchain = await DasApi.fetchOffchain(
-              item.content.json_uri,
-            );
-            const merged = {
-              onchain: item,
-              offchain: offchain,
-            };
-            return Converter.Nft.intoUser(merged);
-          }),
-      );
-      return {
-        page: assets.value.page,
-        total: assets.value.total,
-        limit: assets.value.limit,
-        metadatas,
-      };
+      return DasApi.findByCollection(collectionMint, true, options);
     });
   };
 }
