@@ -1,50 +1,53 @@
-import { Result } from '~/shared';
+import { Result, Try } from '~/shared';
+import { DasApi } from '~/das-api';
 import { Pubkey } from '~/types/account';
-import { RegularNftMetadata } from '~/types/regular-nft';
-import { SplToken } from '~/suite-spl-token';
-import { SortDirection } from '~/types/find';
-import { OnErr, OnOk } from '~/types/shared';
-import { TokenStandard } from '@metaplex-foundation/mpl-token-metadata';
+import { Metadata, NftMetadata } from '~/types/nft';
+import { FindOptions } from '~/types/find';
 
 export namespace RegularNft {
   /**
-   * Fetch minted metadata by owner Pubkey
+   * Find nft by owner address
    *
    * @param {Pubkey} owner
-   * @param {OnOk} onOk callback function
-   * @param {OnErr} onErr callback function
-   * @param {{sortable?: Sortable, isHolder?: boolean}} options?
-   * @return Promise<void>
+   * @param {Partial<FindOptions>} options
+   * @return Promise<Result<CompressedNftMetadata, Error>>
    */
   export const findByOwner = async (
     owner: Pubkey,
-    onOk: OnOk<RegularNftMetadata>,
-    onErr: OnErr,
-    options?: { sortable?: SortDirection; isHolder?: boolean },
-  ): Promise<void> => {
-    const sortable = !options?.sortable
-      ? SortDirection.Desc
-      : options?.sortable;
-    const isHolder = !options?.isHolder ? true : false;
-    // HACK: check performance
-    await SplToken.genericFindByOwner(
-      owner,
-      (result: Result<never[], Error>) => result.match(onOk, onErr),
-      TokenStandard.NonFungible,
-      sortable,
-      isHolder,
-    );
+    options: Partial<FindOptions> = {},
+  ): Promise<Result<NftMetadata, Error>> => {
+    return Try(async () => {
+      return await DasApi.findByOwner(owner, false, options);
+    });
   };
 
   /**
-   * Fetch minted metadata by mint address
+   * Find nft by mint address
    *
    * @param {Pubkey} mint
    * @return Promise<Result<NftMetadata, Error>>
    */
   export const findByMint = async (
     mint: Pubkey,
-  ): Promise<Result<RegularNftMetadata, Error>> => {
-    return await SplToken.genericFindByMint(mint, TokenStandard.NonFungible);
+  ): Promise<Result<Partial<Metadata>, Error>> => {
+    return Try(async () => {
+      return await DasApi.findByMint(mint, false);
+    });
+  };
+
+  /**
+   * Find nft by collection mint
+   *
+   * @param {Pubkey} collectionMint
+   * @param {Partial<FindOptions>} options
+   * @return Promise<Result<CompressedNftMetadata, Error>>
+   */
+  export const findByCollection = async (
+    collectionMint: Pubkey,
+    options: Partial<FindOptions> = {},
+  ): Promise<Result<NftMetadata, Error>> => {
+    return Try(async () => {
+      return DasApi.findByCollection(collectionMint, false, options);
+    });
   };
 }

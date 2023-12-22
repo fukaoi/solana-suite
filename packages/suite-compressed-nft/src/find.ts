@@ -1,23 +1,11 @@
 import { Converter } from '~/converter';
 import { DasApi } from '~/das-api';
-import { Result, Try, debugLog } from '~/shared';
+import { debugLog, Result, Try } from '~/shared';
 import { Offchain } from '~/types/storage';
-import { CompressedNftMetadata, NftMetadata } from '~/types/compressed-nft';
-
-import { FindOptions, Sortable, SortBy, SortDirection } from '~/types/find';
+import { NftMetadata, Metadata } from '~/types/nft';
+import { FindOptions } from '~/types/find';
 
 export namespace CompressedNft {
-  //@internal
-  export const defaultSortBy: Sortable = {
-    sortBy: SortBy.Recent,
-    sortDirection: SortDirection.Desc,
-  };
-
-  const fetchOffchain = async (uri: string) => {
-    const json = await (await fetch(uri)).json();
-    return json;
-  };
-
   /**
    * Find nft by owner address
    *
@@ -28,12 +16,12 @@ export namespace CompressedNft {
   export const findByOwner = async (
     owner: Pubkey,
     options: Partial<FindOptions> = {},
-  ): Promise<Result<CompressedNftMetadata, Error>> => {
+  ): Promise<Result<NftMetadata, Error>> => {
     return Try(async () => {
       const defaultOptions = {
         limit: 1000,
         page: 1,
-        sortBy: defaultSortBy,
+        sortBy: DasApi.defaultSortBy,
       };
       const { limit, page, sortBy, before, after } = {
         ...defaultOptions,
@@ -59,17 +47,17 @@ export namespace CompressedNft {
           .filter((item) => item.compression.compressed === true)
           .map(async (item) => {
             try {
-              const offchain: Offchain = await fetchOffchain(
+              const offchain: Offchain = await DasApi.fetchOffchain(
                 item.content.json_uri,
               );
               const merged = {
                 onchain: item,
                 offchain: offchain,
               };
-              return Converter.CompressedNftMetadata.intoUser(merged);
+              return Converter.Nft.intoUser(merged);
             } catch (err) {
               debugLog('# Failed fetch offchain url: ', item.content.json_uri);
-              return Converter.CompressedNftMetadata.intoUser({
+              return Converter.Nft.intoUser({
                 onchain: item,
                 offchain: {},
               });
@@ -93,21 +81,21 @@ export namespace CompressedNft {
    */
   export const findByMint = async (
     mint: Pubkey,
-  ): Promise<Result<NftMetadata, Error>> => {
+  ): Promise<Result<Metadata, Error>> => {
     return Try(async () => {
       const asset = await DasApi.getAsset(mint);
       if (asset.isErr) {
         throw asset.error;
       }
 
-      const offchain: Offchain = await fetchOffchain(
+      const offchain: Offchain = await DasApi.fetchOffchain(
         asset.value.content.json_uri,
       );
       const merged = {
         onchain: asset.value,
         offchain: offchain,
       };
-      return Converter.CompressedNftMetadata.intoUser(merged);
+      return Converter.Nft.intoUser(merged);
     });
   };
 
@@ -121,12 +109,12 @@ export namespace CompressedNft {
   export const findByCollection = async (
     collectionMint: Pubkey,
     options: Partial<FindOptions> = {},
-  ): Promise<Result<CompressedNftMetadata, Error>> => {
+  ): Promise<Result<NftMetadata, Error>> => {
     return Try(async () => {
       const defaultOptions = {
         limit: 1000,
         page: 1,
-        sortBy: defaultSortBy,
+        sortBy: DasApi.defaultSortBy,
       };
       const { limit, page, sortBy, before, after } = {
         ...defaultOptions,
@@ -152,14 +140,14 @@ export namespace CompressedNft {
         items
           .filter((item) => item.compression.compressed === true)
           .map(async (item) => {
-            const offchain: Offchain = await fetchOffchain(
+            const offchain: Offchain = await DasApi.fetchOffchain(
               item.content.json_uri,
             );
             const merged = {
               onchain: item,
               offchain: offchain,
             };
-            return Converter.CompressedNftMetadata.intoUser(merged);
+            return Converter.Nft.intoUser(merged);
           }),
       );
       return {
