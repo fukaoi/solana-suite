@@ -403,9 +403,6 @@ importers:
         specifier: ^7.1.1
         version: 7.1.1(node-fetch@3.3.2)
     devDependencies:
-      '@types/bn.js':
-        specifier: ^5.1.2
-        version: 5.1.2
       build-configs/ava:
         specifier: workspace:*
         version: link:../build-configs/ava
