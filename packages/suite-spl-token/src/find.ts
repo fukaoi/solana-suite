@@ -57,8 +57,8 @@ export namespace SplToken {
 
     const metadatas = await Promise.all(pr);
     console.log(metadatas);
-    const pr2 = metadatas.map((m) => {
-      return fetch(m.data.uri);
+    const pr2 = metadatas.map(async (m) => {
+      return fetch(m.data.uri).then((res) => res.json());
     });
     const jsons = await Promise.all(pr2);
     console.log(jsons);
