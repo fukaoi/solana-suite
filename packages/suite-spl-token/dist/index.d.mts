@@ -22,49 +22,6 @@ type OwnerInfo = {
     owner: string;
 };
 
-declare enum SortDirection {
-    Asc = "asc",
-    Desc = "desc"
-}
-type Find = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-
-type History = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-
-type OnOk<T extends History | Find> = (ok: T[]) => void;
-type OnErr = (err: Error) => void;
-
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
@@ -746,12 +703,7 @@ declare const SplToken: {
     mint: (owner: Secret, totalAmount: number, mintDecimal: number, input: InputTokenMetadata, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
     gasLessTransfer: (mint: Pubkey, owner: Secret, dest: Pubkey, amount: number, mintDecimal: number, feePayer: Pubkey) => Promise<Result<PartialSignStructure, Error>>;
     freeze: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<FreezeOptions>) => Result<CommonStructure, Error>;
-    genericFindByOwner: <T extends unknown>(owner: Pubkey, callback: (result: Result<T[], Error>) => void, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard, sortable?: SortDirection | undefined, isHolder?: boolean | undefined) => Promise<void>;
-    genericFindByMint: <T_1 extends unknown>(mint: Pubkey, tokenStandard: _metaplex_foundation_mpl_token_metadata.TokenStandard) => Promise<Result<T_1, Error>>;
-    findByOwner: (owner: Pubkey, onOk: OnOk<TokenMetadata>, onErr: OnErr, options?: {
-        sortDirection?: SortDirection | undefined;
-        isHolder?: boolean | undefined;
-    } | undefined) => void;
+    findByOwner: (owner: Pubkey) => Promise<Result<TokenMetadata[], Error>>;
     findByMint: (mint: Pubkey) => Promise<Result<TokenMetadata, Error>>;
     burn: (mint: Pubkey, owner: Pubkey, ownerOrMultisig: Secret[], burnAmount: number, tokenDecimals: number, options?: Partial<BurnOptions>) => Result<CommonStructure, Error>;
     add: (token: Pubkey, owner: Pubkey, ownerOrMultisig: Secret[], totalAmount: number, mintDecimal: number, options?: Partial<MintOptions>) => Promise<Result<CommonStructure<Pubkey>, Error>>;
