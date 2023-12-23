@@ -41,27 +41,49 @@ export namespace SplToken {
       },
     );
 
-    for await (const d of info.value) {
+    var middle = Math.floor(info.value.length / 2);
+    var firstHalf = info.value.splice(0, middle);
+    var secondHalf = info.value;
+
+    const pr = info.value.map((d) => {
       const mint = d.account.data.parsed.info.mint as Pubkey;
       const tokenAmount = d.account.data.parsed.info.tokenAmount
         .amount as string;
+      return Metadata.fromAccountAddress(
+        connection,
+        Account.Pda.getMetadata(mint),
+      );
+    });
 
-      let metadata;
-      try {
-        metadata = await Metadata.fromAccountAddress(
-          connection,
-          Account.Pda.getMetadata(mint),
-        );
-      } catch (error) {
-        continue;
-      }
-      debugLog('# findByOwner metadata: ', metadata);
-      const json = await (await fetch(metadata.data.uri)).json();
-      data.push(converter(metadata, json, tokenAmount));
-      // console.log(data);
-    }
+    const metadatas = await Promise.all(pr);
+    console.log(metadatas);
+    const pr2 = metadatas.map((m) => {
+      return fetch(m.data.uri);
+    });
+    const jsons = await Promise.all(pr2);
+    console.log(jsons);
+
+    // for await (const d of info.value) {
+    //   const mint = d.account.data.parsed.info.mint as Pubkey;
+    //   const tokenAmount = d.account.data.parsed.info.tokenAmount
+    //     .amount as string;
+    //
+    //   let metadata;
+    //   try {
+    //     metadata = await Metadata.fromAccountAddress(
+    //       connection,
+    //       Account.Pda.getMetadata(mint),
+    //     );
+    //   } catch (error) {
+    //     continue;
+    //   }
+    //   debugLog('# findByOwner metadata: ', metadata);
+    //   const json = await (await fetch(metadata.data.uri)).json();
+    //   data.push(converter(metadata, json, tokenAmount));
+    // console.log(data);
+    // }
     // console.log('# data size:', data.length);
-    return data;
+    // return data;
   };
 
   /**
