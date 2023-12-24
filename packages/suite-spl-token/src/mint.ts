@@ -38,7 +38,7 @@ export namespace SplToken {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
 
   //@internal
-  const createFreezeAuthority = (
+  export const createFreezeAuthority = (
     mint: PublicKey,
     owner: PublicKey,
     freezeAuthority: PublicKey,
@@ -52,7 +52,7 @@ export namespace SplToken {
   };
 
   //@internal
-  const createMint = async (
+  export const createMint = async (
     mint: PublicKey,
     owner: PublicKey,
     totalAmount: number,
