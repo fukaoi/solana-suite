@@ -41,7 +41,8 @@
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/  -c --write",
     "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs, ~'",
     "prepublishOnly": "../../scripts/before-publish.mjs",
-    "publish": "../../scripts/after-publish.mjs"
+    "publish": "../../scripts/after-publish.mjs",
+    "docs": "typedoc --out docs"
   },
   "dependencies": {
     "@solana/spl-token": "^0.3.8",
