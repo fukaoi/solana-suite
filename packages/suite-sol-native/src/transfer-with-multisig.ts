@@ -16,19 +16,28 @@ import { CommonStructure } from '~/types/transaction-builder';
 export namespace SolNative {
   const RADIX = 10;
 
-  // NOTICE: There is a lamports fluctuation when transfer under 0.001 sol
-  // for multiSig only function
+  /**
+   * Transfer NFT for only multiSig account
+   * NOTICE: There is a lamports fluctuation when transfer under 0.001 sol
+   *
+   * @param {Pubkey} owner              // current multisig owner
+   * @param {Pubkey} dest               // new owner
+   * @param {Secret[]} multisig         // multisig account Secret
+   * @param {number} amount             // want to transfer SOL amount
+   * @param {Partial<TransferOptions>} options       // options
+   * @return {Result<CommonStructure<unknown>, Error> }
+   */
   export const transferWithMultisig = async (
     owner: Pubkey,
     dest: Pubkey,
-    ownerOrMultisig: Secret[],
+    multisig: Secret[],
     amount: number,
     options: Partial<TransferOptions> = {},
   ): Promise<Result<CommonStructure, Error>> => {
     return Try(async () => {
       const connection = Node.getConnection();
-      const payer = options.feePayer ? options.feePayer : ownerOrMultisig[0];
-      const keypairs = ownerOrMultisig.map((s) => s.toKeypair());
+      const payer = options.feePayer ? options.feePayer : multisig[0];
+      const keypairs = multisig.map((s) => s.toKeypair());
       const wrapped = await createWrappedNativeAccount(
         connection,
         payer.toKeypair(),
@@ -85,7 +94,7 @@ export namespace SolNative {
 
       return new TransactionBuilder.Common(
         instructions,
-        ownerOrMultisig.map((s) => s.toKeypair()),
+        multisig.map((s) => s.toKeypair()),
         payer.toKeypair(),
       );
     });

@@ -1,10 +1,16 @@
 import { ParsedAccountData } from '@solana/web3.js';
 import { Result, Try } from '~/shared';
 import { Node } from '~/node';
-import { Pubkey, OwnerInfo } from '~/types/account';
+import { OwnerInfo, Pubkey } from '~/types/account';
 import { TransactionFilter } from '~/transaction-filter';
 
 export namespace SolNative {
+  /**
+   * Find nft by owner address
+   *
+   * @param {Pubkey} owner
+   * @return Promise<Result<OwnerInfo, Error>>
+   */
   export const findByOwner = async (
     owner: Pubkey,
   ): Promise<Result<OwnerInfo, Error>> => {

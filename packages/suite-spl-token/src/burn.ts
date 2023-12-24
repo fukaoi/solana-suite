@@ -10,6 +10,17 @@ import { BurnOptions } from '~/types/spl-token';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
+  /**
+   * Burn existing token
+   *
+   * @param {Pubkey}    mint
+   * @param {Pubkey}    owner
+   * @param {Secret[]}  ownerOrMultisig
+   * @param {number}    burnAmount
+   * @param {number}    tokenDecimals
+   * @param {Partial<BurnOptions>} options
+   * @return Result<CommonStructure, Error>>
+   */
   export const burn = (
     mint: Pubkey,
     owner: Pubkey,

@@ -674,7 +674,7 @@ type OnOk<T extends History | Find> = (ok: T[]) => void;
 type OnErr = (err: Error) => void;
 
 declare const Memo: {
-    findByOwner: (target: Pubkey, onOk: OnOk<History>, onErr: OnErr, options?: Partial<FindOptions>) => Promise<void>;
+    findByOwner: (owner: Pubkey, onOk: OnOk<History>, onErr: OnErr, options?: Partial<FindOptions>) => Promise<void>;
     decode: (encoded: string) => string;
     encode: (data: string) => Buffer;
     create: (data: string, owner: Secret, options?: Partial<MemoOptions>) => Result<CommonStructure, Error>;

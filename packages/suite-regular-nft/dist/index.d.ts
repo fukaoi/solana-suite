@@ -1,8 +1,7 @@
-import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
-import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
+import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -519,6 +518,10 @@ type InputCreators = {
     share: number;
 };
 
+type ThawOptions = {
+    feePayer: Secret;
+};
+
 type GasLessMintOptions = {
     freezeAuthority: Pubkey;
 };
@@ -556,7 +559,7 @@ type MintCollectionOptions = {
     collectionSize: number;
 };
 
-type ThawOptions = {
+type FreezeOptions = {
     feePayer: Secret;
 };
 
@@ -732,14 +735,10 @@ declare const RegularNft: {
     thaw: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<ThawOptions>) => Result<CommonStructure<unknown>, Error>;
     DEFAULT_COLLECTION_SIZE: 0;
     mintCollection: (owner: Secret, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
-    createVerifyCreator: (mint: _solana_web3_js.PublicKey, creator: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
-    createDeleagate: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, delegateAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
-    createVerifySizedCollection: (collectionChild: _solana_web3_js.PublicKey, collectionParent: _solana_web3_js.PublicKey, feePayer: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
-    createMint: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, nftMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
     mint: (owner: Secret, input: InputNftMetadata, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
     gasLessTransfer: (mint: Pubkey, owner: Secret, dest: Pubkey, feePayer: Pubkey) => Promise<Result<PartialSignStructure, Error>>;
     gasLessMint: (owner: Secret, input: InputNftMetadata, feePayer: Pubkey, options?: Partial<GasLessMintOptions>) => Promise<Result<PartialSignStructure, Error>>;
-    freeze: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: AuthorityOptions) => Result<CommonStructure, Error>;
+    freeze: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<FreezeOptions>) => Result<CommonStructure, Error>;
     findByOwner: (owner: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;
     findByMint: (mint: Pubkey) => Promise<Result<Partial<Metadata>, Error>>;
     findByCollection: (collectionMint: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;

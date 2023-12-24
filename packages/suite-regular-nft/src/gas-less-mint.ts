@@ -15,7 +15,7 @@ export namespace RegularNft {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
 
   /**
-   * Upload content and NFT mint with Partial Sign
+   * Mint without solana sol, delegate feepayer for commission
    *
    * @param {Secret} owner         // owner's Secret
    * @param {UserSideInput.NftMetadata} input
@@ -37,7 +37,7 @@ export namespace RegularNft {
    * }
    * @param {Secret} feePayer        // fee payer
    * @param {Partial<GasLessMintOptions>} options         // options
-   * @return Promise<Result<StructPartialSignTransaction, Error>>
+   * @return Promise<Result<PartialSignStructure, Error>>
    */
   export const gasLessMint = async (
     owner: Secret,

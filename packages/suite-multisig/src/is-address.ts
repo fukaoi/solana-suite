@@ -3,6 +3,12 @@ import { Pubkey } from '~/types/account';
 import { Multisig as _Get } from './get-info';
 
 export namespace Multisig {
+  /**
+   * Check if it is a multisig address
+   *
+   * @param {Pubkey} multisig // multisig account
+   * @return Promise<Result<boolean, Error>>
+   */
   export const isAddress = async (
     multisig: Pubkey,
   ): Promise<Result<boolean, Error>> => {

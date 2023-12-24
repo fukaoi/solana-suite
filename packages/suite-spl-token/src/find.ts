@@ -54,7 +54,7 @@ export namespace SplToken {
    * Fetch minted metadata by owner Pubkey
    *
    * @param {Pubkey} owner
-   // * @return void
+   * @return {Promise<Result<TokenMetadata[]| Error>>}
    */
   export const findByOwner = async (
     owner: Pubkey,

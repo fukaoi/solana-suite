@@ -16,7 +16,9 @@ export namespace SplToken {
    * it should set to freezeAuthority when mint()
    * @param {Pubkey} mint             // mint address
    * @param {Pubkey} owner            // current owner
-   * @param {Partial<AuthorityOptions>} options // options
+   * @param {Secret} freezeAuthority  // current owner
+   * @param {Partial<FreezeOptions>} options // options
+   * @return {Result<CommonStructure, Error>}
    */
   export const freeze = (
     mint: Pubkey,

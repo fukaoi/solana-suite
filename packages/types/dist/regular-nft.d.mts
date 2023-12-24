@@ -1,5 +1,5 @@
 import { Secret, Pubkey } from './account.mjs';
-export { C as Creators, c as InputCollection, I as InputCreators, e as InputNftMetadata, M as MintOptions, O as Option, d as Options, U as UseMethod, a as Uses, b as bignum } from './mint-856bfcb9.js';
+export { C as Creators, d as InputCollection, I as InputCreators, e as InputNftMetadata, M as MintOptions, a as Option, O as Options, c as UseMethod, U as Uses, b as bignum } from './mint-74b505a0.js';
 import './storage.mjs';
 import '@solana/web3.js';
 import './phantom-e9a40784.js';
@@ -9,6 +9,10 @@ import '@metaplex-foundation/mpl-token-metadata';
 import 'bn.js';
 
 type BurnOptions = {
+    feePayer: Secret;
+};
+
+type ThawOptions = {
     feePayer: Secret;
 };
 
@@ -26,7 +30,7 @@ type Collection = {
     verified: boolean;
 };
 
-type ThawOptions = {
+type FreezeOptions = {
     feePayer: Secret;
 };
 
@@ -34,4 +38,4 @@ type TransferOptions = {
     feePayer: Secret;
 };
 
-export { BurnOptions, Collection, GasLessMintOptions, MintCollectionOptions, ThawOptions, TransferOptions };
+export { BurnOptions, Collection, FreezeOptions, GasLessMintOptions, MintCollectionOptions, ThawOptions, TransferOptions };

@@ -8,6 +8,15 @@ export namespace RegularNft {
   const NFT_AMOUNT = 1;
   const NFT_DECIMALS = 0;
 
+  /**
+   * Burn existing token
+   *
+   * @param {Pubkey}  mint
+   * @param {Pubkey}  owner
+   * @param {Secret[]}  ownerOrMultisig
+   * @param {Partial<BurnOptions>} options
+   * @return Result<CommonStructure, Error>>
+   */
   export const burn = (
     mint: Pubkey,
     owner: Pubkey,

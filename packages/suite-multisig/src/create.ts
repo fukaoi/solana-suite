@@ -67,6 +67,7 @@ export namespace MultisigInstruction {
   };
 
   /* eslint-disable @typescript-eslint/no-unsafe-argument */
+  // @internal
   export const Layout = struct<{
     m: number;
     n: number;

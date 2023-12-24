@@ -7,6 +7,15 @@ export namespace RegularNft {
   const NFT_AMOUNT = 1;
   const NFT_DECIMALS = 0;
 
+  /**
+   * Transfer without solana sol, delegate feepayer for commission
+   *
+   * @param {Pubkey} mint
+   * @param {Secret} owner
+   * @param {Pubkey} dest
+   * @param {Pubkey} feePayer
+   * @return Promise<Result<PartialSignStructure, Error>>
+   */
   export const gasLessTransfer = async (
     mint: Pubkey,
     owner: Secret,

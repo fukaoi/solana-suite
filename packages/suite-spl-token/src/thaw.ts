@@ -18,6 +18,7 @@ export namespace SplToken {
    * @param {Pubkey} owner            // current owner
    * @param {Secret} freezeAuthority  // setted freeze authority of nft
    * @param {Partial<ThawOptions>} options  // options
+   * @return {Result<CommonStructure, Error>}
    */
   export const thaw = (
     mint: Pubkey,

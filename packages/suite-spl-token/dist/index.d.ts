@@ -1,8 +1,7 @@
-import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
-import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
+import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -698,8 +697,6 @@ type ThawOptions = {
 declare const SplToken: {
     transfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, ownerOrMultisig: Secret[], amount: number, mintDecimal: number, options?: Partial<MintOptions>) => Promise<Result<CommonStructure, Error>>;
     thaw: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<ThawOptions>) => Result<CommonStructure, Error>;
-    createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
-    createMint: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
     mint: (owner: Secret, totalAmount: number, mintDecimal: number, input: InputTokenMetadata, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
     gasLessTransfer: (mint: Pubkey, owner: Secret, dest: Pubkey, amount: number, mintDecimal: number, feePayer: Pubkey) => Promise<Result<PartialSignStructure, Error>>;
     freeze: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<FreezeOptions>) => Result<CommonStructure, Error>;

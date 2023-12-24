@@ -357,7 +357,7 @@ type InputTokenMetadata = {
 
 declare const PhantomSplToken: {
     mint: (input: InputTokenMetadata, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
-    add: (tokenKey: Pubkey, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
+    add: (token: Pubkey, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
 };
 
 export { Metaplex, PhantomSplToken };
