@@ -3,5 +3,6 @@
   "entryPoints": ["packages/suite-airdrop", "packages/suite-memo"],
   "name": "Packages Example",
   "entryPointStrategy": "packages",
-  "includeVersion": true
+  "includeVersion": true,
+  "readme": "none"
 }
