@@ -41,8 +41,7 @@
     "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs, ava, ~'",
     "prepublishOnly": "../../scripts/before-publish.mjs",
     "publish": "../../scripts/after-publish.mjs",
-    "test": "ava --config node_modules/build-configs/ava/base.cjs",
-    "docs": "typedoc --out docs"
+    "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
   "dependencies": {
     "@solana/web3.js": "^1.78.5",
