@@ -14,7 +14,7 @@ import { Constants, debugLog, Result, Try } from '~/shared';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { MintStructure } from '~/types/transaction-builder';
-import { SpaceOptions } from '~/types/compressed-nft';
+import { SpaceNumber, SpaceOptions } from '~/types/compressed-nft';
 
 export namespace CompressedNft {
   export class Space {
@@ -116,14 +116,14 @@ export namespace CompressedNft {
    * This function needs only 1 call
    *
    * @param {Secret} owner
-   * @param {number} spaceSize
+   * @param {SpaceNumber} spaceSize
    * @param {Partial<SpaceOptions>} options
    *
    * @return Promise<Result<MintTransaction, Error>>
    */
   export const createSpace = async (
     owner: Secret,
-    spaceSize: number,
+    spaceSize: SpaceNumber,
     options: Partial<SpaceOptions> = {},
   ): Promise<Result<MintStructure, Error>> => {
     const { maxDepth, maxBufferSize, canopyDepth } =
