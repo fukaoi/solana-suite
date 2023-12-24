@@ -7,6 +7,7 @@ import { Signatures, TransactionFilter } from '~/transaction-filter';
 export namespace Memo {
   /**
    * Find memo message by owner account
+   * @module Memo
    */
   export const findByOwner = async (
     owner: Pubkey,

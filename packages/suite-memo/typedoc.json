@@ -1,4 +1,10 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["src/find.ts", "src/create.ts"]
+  "entryPoints": ["src/index.ts"],
+  "externalPattern": [
+    "~/node*",
+    "~/node/*",
+    "../node/*"
+  ],
+  "readme": "none"
 }

@@ -4,7 +4,5 @@
   "name": "Solana Suite",
   "entryPointStrategy": "packages",
   "includeVersion": true,
-  "readme": "none",
-  "mergeModulesRenameDefaults": true,
-  "mergeModulesMergeMode": "module"
+  "readme": "none"
 }

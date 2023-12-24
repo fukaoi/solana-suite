@@ -4,4 +4,6 @@ import '~/types/transaction-builder';
 import '~/transaction-builder';
 
 export * from '~/shared/exports';
+
+/** @namespace */
 export const Memo = { ...Create, ...Find };
