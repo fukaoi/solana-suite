@@ -152,6 +152,7 @@ export namespace CompressedNft {
     return { sol: lamports.toSol() };
   };
 
+  // @internal
   /// Initialization parameters for an SPL ConcurrentMerkleTree.
   ///
   /// Only the following permutations are valid:

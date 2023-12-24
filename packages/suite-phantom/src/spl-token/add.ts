@@ -12,8 +12,19 @@ import { Account } from '~/account';
 import { PhantomProvider } from '~/types/phantom';
 
 export namespace PhantomSplToken {
+  /**
+   * Adding new token to existing token
+   *
+   * @param {Pubkey}  token
+   * @param {Pubkey}  owner
+   * @param {string}  cluster
+   * @param {number}  totalAmount
+   * @param {number}  mintDecimal
+   * @param {Phantom} phantom //phantom wallet object
+   * @return Promise<Result<string, Error>>
+   */
   export const add = async (
-    tokenKey: Pubkey,
+    token: Pubkey,
     owner: Pubkey,
     cluster: string,
     totalAmount: number,
@@ -26,13 +37,13 @@ export namespace PhantomSplToken {
       const transaction = new Transaction();
 
       const makeInstruction = await Account.Associated.makeOrCreateInstruction(
-        tokenKey,
+        token,
         owner,
       );
       transaction.add(makeInstruction.inst as TransactionInstruction);
       transaction.add(
         createMintToCheckedInstruction(
-          tokenKey.toPublicKey(),
+          token.toPublicKey(),
           makeInstruction.tokenAccount.toPublicKey(),
           owner.toPublicKey(),
           totalAmount,
@@ -53,7 +64,7 @@ export namespace PhantomSplToken {
         const sig = await connection.sendRawTransaction(sign.serialize());
         await Node.confirmedSig(sig);
       }
-      return tokenKey;
+      return token;
     });
   };
 }

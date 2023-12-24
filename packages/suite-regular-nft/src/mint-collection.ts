@@ -18,7 +18,7 @@ import { MintStructure } from '~/types/transaction-builder';
  * @param {Secret} owner
  * @param {InputNftMetadata} input
  * @param {Partial<MintCollectionOptions>} options
- * @return Promise<Result<Instruction, Error>>
+ * @return Promise<Result<MintStructure, Error>>
  */
 export namespace RegularNft {
   export const DEFAULT_COLLECTION_SIZE = 0;

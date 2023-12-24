@@ -13,9 +13,10 @@ export namespace PhantomMetaplex {
   /**
    * Upload content and NFT mint
    *
-   * @param {UserInput.NftMetadata}  input
-   * @param {Phantom} phantom        phantom wallet object
-   * @return Promise<Result<Instruction, Error>>
+   * @param {InputNftMetadata}  input
+   * @param {string}  cluster
+   * @param {Phantom} phantom //phantom wallet object
+   * @return Promise<Result<string, Error | ValidatorError>>
    */
   export const mint = async (
     input: InputNftMetadata,

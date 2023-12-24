@@ -8,14 +8,7 @@ export type Creators = {
   verified: boolean;
 }[];
 
-export type CompressedNftMetadata = {
-  page: number;
-  total: number;
-  limit: number;
-  metadatas: NftMetadata[];
-};
-
-export type NftMetadata = {
+export type Metadata = {
   mint: Pubkey;
   collectionMint: Pubkey;
   authorities: Authority[];
@@ -32,4 +25,11 @@ export type NftMetadata = {
   primarySaleHappened: boolean;
   dateTime: Date;
   offchain: Offchain;
+};
+
+export type NftMetadata = {
+  page: number;
+  total: number;
+  limit: number;
+  metadatas: Metadata[];
 };

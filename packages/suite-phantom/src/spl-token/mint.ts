@@ -11,6 +11,17 @@ import { InputNftMetadata } from '~/types/regular-nft';
 import { Converter } from '~/converter';
 
 export namespace PhantomSplToken {
+  /**
+   * Mint new spl-token
+   *
+   * @param {InputNftMetadata}  input
+   * @param {Pubkey}  owner
+   * @param {string}  cluster
+   * @param {number}  totalAmount
+   * @param {number}  mintDecimal
+   * @param {Phantom} phantom //phantom wallet object
+   * @return Promise<Result<string, Error>>
+   */
   export const mint = async (
     input: InputTokenMetadata,
     owner: Pubkey,

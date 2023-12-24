@@ -1,5 +1,5 @@
 import { Secret } from '../account';
 
-export type FreezeOptions = {
+export type ThawOptions = {
   feePayer: Secret;
 };

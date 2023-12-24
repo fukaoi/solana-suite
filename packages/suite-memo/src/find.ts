@@ -5,8 +5,11 @@ import { FilterType, ModuleName } from '~/types/transaction-filter';
 import { Signatures, TransactionFilter } from '~/transaction-filter';
 
 export namespace Memo {
+  /**
+   * Find memo message by owner account
+   */
   export const findByOwner = async (
-    target: Pubkey,
+    owner: Pubkey,
     onOk: OnOk<History>,
     onErr: OnErr,
     options: Partial<FindOptions> = {},
@@ -22,7 +25,7 @@ export namespace Memo {
         ModuleName.SolNative,
       );
       await Signatures.getForAdress(
-        target,
+        owner,
         parser,
         (result) => result.match(onOk, onErr),
         mergedOptions,

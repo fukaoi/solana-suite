@@ -8,6 +8,18 @@ import { MintOptions } from '~/types/spl-token';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
+  /**
+   * Transfer NFT for only multiSig account
+   *
+   * @param {Pubkey} mint               // minted account
+   * @param {Pubkey} owner              // current multisig owner
+   * @param {Pubkey} dest               // new owner
+   * @param {Secret[]} ownerOrMultisig  // owner or multisig account Secret
+   * @param {number} amount             // want to transfer SOL amount
+   * @param {number} mintDecimal        // minted token decimal
+   * @param {Partial<MintOptions>} options       // options
+   * @return {Result<CommonStructure<unknown>, Error> }
+   */
   export const transfer = async (
     mint: Pubkey,
     owner: Pubkey,

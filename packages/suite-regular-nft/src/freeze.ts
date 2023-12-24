@@ -5,23 +5,24 @@ import { TransactionBuilder } from '~/transaction-builder';
 import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createFreezeDelegatedAccountInstruction } from '@metaplex-foundation/mpl-token-metadata';
 import { Account } from '~/account';
-import { AuthorityOptions } from '~/types/shared';
 import { CommonStructure } from '~/types/transaction-builder';
+import { FreezeOptions } from '~/types/regular-nft';
 
 export namespace RegularNft {
   /**
    * Freezing a target nft
    * it should set to freezeAuthority when mint()
+   *
    * @param {Pubkey} mint             // mint address
    * @param {Pubkey} owner            // current owner
-   * @param {Partial<AuthorityOptions>} options
-   * @return Result<Transaction, Error>
+   * @param {Partial<FreezeOptions>} options
+   * @return Result<CommonStructure, Error>
    */
   export const freeze = (
     mint: Pubkey,
     owner: Pubkey,
     freezeAuthority: Secret,
-    options: Partial<AuthorityOptions> = {},
+    options: Partial<FreezeOptions> = {},
   ): Result<CommonStructure, Error> => {
     return Try(() => {
       const payer = options.feePayer ? options.feePayer : freezeAuthority;

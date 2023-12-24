@@ -1,78 +1,65 @@
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
-import { debugLog, Result } from '~/shared';
-import { SortDirection } from '~/types/find';
-import { RegularNftMetadata } from '~/types/regular-nft';
+import { debugLog, Result, sleep, Try } from '~/shared';
 import { TokenMetadata } from '~/types/spl-token';
 import { Offchain } from '~/types/storage';
-import { OnErr, OnOk } from '~/types/shared';
 import { Converter } from '~/converter';
 import { Account } from '~/account';
-import {
-  Metadata,
-  TokenStandard,
-} from '@metaplex-foundation/mpl-token-metadata';
+import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ParsedAccountData } from '@solana/web3.js';
 import fetch from 'cross-fetch';
 
 export namespace SplToken {
-  const UNABLE_ERROR_REGEX = /Unable to find Metadata account/;
+  const MAX_RETRIES = 10;
+  const RETRY_DELAY = 5;
+  const NFTSTORAGE_GATEWAY = 'nftstorage.link';
 
-  // Sort by latest with unixtimestamp function
-  const sortByUinixTimestamp =
-    <T extends RegularNftMetadata | TokenMetadata>(sortable: SortDirection) =>
-    (a: T, b: T): number => {
-      if (!a.offchain.created_at) {
-        a.offchain.created_at = 0;
-      }
-      if (!b.offchain.created_at) {
-        b.offchain.created_at = 0;
-      }
-      if (sortable === SortDirection.Desc) {
-        return b.offchain.created_at - a.offchain.created_at;
-      } else if (sortable === SortDirection.Asc) {
-        return a.offchain.created_at - b.offchain.created_at;
-      } else {
-        return b.offchain.created_at - a.offchain.created_at;
-      }
-    };
-
-  const converter = <T>(
-    tokenStandard: TokenStandard,
+  const converter = (
     metadata: Metadata,
     json: Offchain,
     tokenAmount: string,
-  ): T => {
-    if (tokenStandard === TokenStandard.Fungible) {
-      return Converter.TokenMetadata.intoUser(
-        {
-          onchain: metadata,
-          offchain: json,
-        },
-        tokenAmount,
-      ) as T;
-    } else if (tokenStandard === TokenStandard.NonFungible) {
-      return Converter.RegularNftMetadata.intoUser({
+  ): TokenMetadata => {
+    return Converter.TokenMetadata.intoUser(
+      {
         onchain: metadata,
         offchain: json,
-      }) as T;
-    } else {
-      throw Error(`No match tokenStandard: ${tokenStandard}`);
+      },
+      tokenAmount,
+    );
+  };
+
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const fetchRetry = async (url: string, retries = 0): Promise<any> => {
+    try {
+      const response = await fetch(url.replace('ipfs.io', NFTSTORAGE_GATEWAY));
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      if (retries < MAX_RETRIES) {
+        debugLog(`Error fetching data from ${url}, ${retries}, ${error}`);
+        await sleep(RETRY_DELAY);
+        return fetchRetry(url, retries + 1);
+      } else {
+        debugLog(`Max retries reached (${MAX_RETRIES})`);
+      }
     }
   };
 
-  export const genericFindByOwner = async <
-    T extends RegularNftMetadata | TokenMetadata,
-  >(
+  /**
+   * Fetch minted metadata by owner Pubkey
+   *
+   * @param {Pubkey} owner
+   * @return {Promise<Result<TokenMetadata[]| Error>>}
+   */
+  export const findByOwner = async (
     owner: Pubkey,
-    callback: (result: Result<T[], Error>) => void,
-    tokenStandard: TokenStandard,
-    sortable?: SortDirection,
-    isHolder?: boolean,
-  ): Promise<void> => {
-    try {
-      let data: T[] = [];
+  ): Promise<Result<TokenMetadata[], Error>> => {
+    return Try(async () => {
       const connection = Node.getConnection();
       const info = await connection.getParsedTokenAccountsByOwner(
         owner.toPublicKey(),
@@ -81,134 +68,31 @@ export namespace SplToken {
         },
       );
 
-      info.value.length === 0 && callback(Result.ok([]));
-
-      for await (const d of info.value) {
-        if (isHolder && d.account.data.parsed.info.tokenAmount.uiAmount < 1) {
-          debugLog(
-            '# findByOwner no hold metadata: ',
-            d.account.data.parsed.info,
-          );
-          continue;
-        }
+      const datas = info.value.map(async (d) => {
         const mint = d.account.data.parsed.info.mint as Pubkey;
         const tokenAmount = d.account.data.parsed.info.tokenAmount
           .amount as string;
-
-        try {
-          const metadata = await Metadata.fromAccountAddress(
-            connection,
-            Account.Pda.getMetadata(mint),
-          );
-          debugLog('# findByOwner metadata: ', metadata);
-          // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
-          if (metadata.tokenStandard !== tokenStandard) {
-            continue;
-          }
-          fetch(metadata.data.uri)
-            .then((response) => {
-              response
-                .json()
-                .then((json: Offchain) => {
-                  data.push(
-                    converter<T>(tokenStandard, metadata, json, tokenAmount),
-                  );
-                  callback(Result.ok(data)); // need this call ?
-                })
-                .catch((e) => {
-                  callback(Result.err(e));
-                })
-                .finally(() => {
-                  const descAlgo = sortByUinixTimestamp<T>(SortDirection.Desc);
-                  const ascAlgo = sortByUinixTimestamp<T>(SortDirection.Asc);
-                  if (sortable === SortDirection.Desc) {
-                    data = data.sort(descAlgo);
-                  } else if (sortable === SortDirection.Asc) {
-                    data = data.sort(ascAlgo);
-                  }
-                  callback(Result.ok(data));
-                });
-            })
-            .catch((e) => {
-              callback(Result.err(e));
-            });
-        } catch (e) {
-          if (e instanceof Error && UNABLE_ERROR_REGEX.test(e.message)) {
-            debugLog('# skip error for old SPL-TOKEN: ', mint);
-            continue;
-          }
+        if (tokenAmount === '1') {
+          return;
         }
-      }
-    } catch (e) {
-      if (e instanceof Error) {
-        callback(Result.err(e));
-      }
-    }
-  };
+        return Metadata.fromAccountAddress(
+          connection,
+          Account.Pda.getMetadata(mint),
+        )
+          .then(async (metadata) => {
+            /* eslint-disable @typescript-eslint/no-explicit-any */
+            return fetchRetry(metadata.data.uri).then((json: any) => {
+              return converter(metadata, json, tokenAmount);
+            });
+          })
+          .catch((err) => debugLog('# [Fetch error]', err));
+      });
 
-  export const genericFindByMint = async <
-    T extends RegularNftMetadata | TokenMetadata,
-  >(
-    mint: Pubkey,
-    tokenStandard: TokenStandard,
-  ): Promise<Result<T, Error>> => {
-    try {
-      const connection = Node.getConnection();
-
-      const metadata = await Metadata.fromAccountAddress(
-        connection,
-        Account.Pda.getMetadata(mint),
+      const filters = (await Promise.all(datas)).filter(
+        (data) => data !== undefined,
       );
-      debugLog('# findByMint metadata: ', metadata);
-      // tokenStandard: 0(NFT) or 2 (SPL-TOKEN)
-      if (metadata.tokenStandard !== tokenStandard) {
-        throw Error('token standards are different');
-      }
-      const info = await connection.getParsedAccountInfo(mint.toPublicKey());
-      const tokenAmount = (info.value?.data as ParsedAccountData).parsed.info
-        .supply as string;
-
-      const response = (await (
-        await fetch(metadata.data.uri)
-      ).json()) as Offchain;
-      return Result.ok(
-        converter<T>(tokenStandard, metadata, response, tokenAmount),
-      );
-    } catch (e) {
-      return Result.err(e as Error);
-    }
-  };
-
-  /**
-   * Fetch minted metadata by owner Pubkey
-   *
-   * @param {Pubkey} owner
-   * @param {OnOk} onOk callback function
-   * @param {OnErr} onErr callback function
-   * @param {{sortable?: Sortable, isHolder?: boolean}} options?
-   * @return void
-   */
-  export const findByOwner = (
-    owner: Pubkey,
-    onOk: OnOk<TokenMetadata>,
-    onErr: OnErr,
-    options?: { sortDirection?: SortDirection; isHolder?: boolean },
-  ): void => {
-    const sortable = !options?.sortDirection
-      ? SortDirection.Desc
-      : options?.sortDirection;
-    const isHolder = !options?.isHolder ? true : false;
-
-    /* eslint-disable @typescript-eslint/no-floating-promises */
-    genericFindByOwner<TokenMetadata>(
-      owner,
-      (result) => {
-        result.match((ok) => onOk(ok), onErr);
-      },
-      TokenStandard.Fungible,
-      sortable,
-      isHolder,
-    );
+      return filters as TokenMetadata[];
+    });
   };
 
   /**
@@ -220,6 +104,27 @@ export namespace SplToken {
   export const findByMint = async (
     mint: Pubkey,
   ): Promise<Result<TokenMetadata, Error>> => {
-    return await genericFindByMint<TokenMetadata>(mint, TokenStandard.Fungible);
+    return Try(async () => {
+      const connection = Node.getConnection();
+
+      const metadata = await Metadata.fromAccountAddress(
+        connection,
+        Account.Pda.getMetadata(mint),
+      );
+      debugLog('# findByMint metadata: ', metadata);
+      if (metadata.tokenStandard === 0) {
+        throw Error(
+          `This mint is not SPL-TOKEN, tokenStandard:${metadata.tokenStandard}`,
+        );
+      }
+      const info = await connection.getParsedAccountInfo(mint.toPublicKey());
+      const tokenAmount = (info.value?.data as ParsedAccountData).parsed.info
+        .supply as string;
+
+      const response = (await (
+        await fetch(metadata.data.uri)
+      ).json()) as Offchain;
+      return converter(metadata, response, tokenAmount);
+    });
   };
 }

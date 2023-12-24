@@ -8,6 +8,17 @@ import { MintOptions } from '~/types/spl-token';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
+  /**
+   * Adding new token to existing token
+   *
+   * @param {Pubkey}  token
+   * @param {Pubkey}  owner
+   * @param {Secret[]}  ownerOrMultisig
+   * @param {number}  totalAmount
+   * @param {number}  mintDecimal
+   * @param {Partial<MintOptions>} options
+   * @return Promise<Result<string, Error>>
+   */
   export const add = async (
     token: Pubkey,
     owner: Pubkey,

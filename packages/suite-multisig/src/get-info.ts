@@ -7,6 +7,7 @@ import { PublicKey } from '@solana/web3.js';
 import { MultisigInstruction } from './create';
 
 export namespace Multisig {
+  //@internal
   export const getInfo = async (
     multisig: Pubkey,
   ): Promise<Result<LayoutObject, Error>> => {

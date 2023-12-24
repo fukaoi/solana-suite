@@ -37,6 +37,7 @@ export namespace RegularNft {
   const NFT_AMOUNT = 1;
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
 
+  //@internal
   export const createVerifyCreator = (mint: PublicKey, creator: PublicKey) => {
     const metadata = Account.Pda.getMetadata(mint.toString());
     return createSignMetadataInstruction({
@@ -45,6 +46,7 @@ export namespace RegularNft {
     });
   };
 
+  //@internal
   export const createDeleagate = (
     mint: PublicKey,
     owner: PublicKey,
@@ -60,6 +62,7 @@ export namespace RegularNft {
     );
   };
 
+  //@internal
   export const createVerifySizedCollection = (
     collectionChild: PublicKey,
     collectionParent: PublicKey,
@@ -81,6 +84,7 @@ export namespace RegularNft {
     });
   };
 
+  //@internal
   export const createMint = async (
     mint: PublicKey,
     owner: PublicKey,

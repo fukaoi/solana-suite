@@ -7,6 +7,16 @@ import { PartialSignStructure } from '~/types/transaction-builder';
 
 export namespace SolNative {
   const RADIX = 10;
+
+  /**
+   * Transfer without solana sol, delegate feepayer for commission
+   *
+   * @param {Secret} owner
+   * @param {Pubkey} dest
+   * @param {number} amount
+   * @param {Pubkey} feePayer
+   * @return Promise<Result<PartialSignStructure, Error>>
+   */
   export const gasLessTransfer = async (
     owner: Secret,
     dest: Pubkey,

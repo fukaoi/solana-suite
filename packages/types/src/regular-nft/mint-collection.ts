@@ -5,3 +5,5 @@ export type MintCollectionOptions = {
   freezeAuthority: Pubkey;
   collectionSize: number;
 };
+
+export type Collection = { address: Pubkey; verified: boolean };

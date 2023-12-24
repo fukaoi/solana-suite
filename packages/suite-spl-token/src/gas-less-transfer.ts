@@ -9,6 +9,17 @@ import { Account } from '~/account';
 import { PartialSignStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
+  /**
+   * Transfer without solana sol, delegate feepayer for commission
+   *
+   * @param {Pubkey} mint
+   * @param {Secret} owner
+   * @param {Pubkey} dest
+   * @param {number} amount
+   * @param {number} mintDecimal
+   * @param {Pubkey} feePayer
+   * @return Promise<Result<PartialSignStructure, Error>>
+   */
   export const gasLessTransfer = async (
     mint: Pubkey,
     owner: Secret,

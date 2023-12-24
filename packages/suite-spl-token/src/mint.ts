@@ -36,6 +36,8 @@ import { MintStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
+
+  //@internal
   export const createFreezeAuthority = (
     mint: PublicKey,
     owner: PublicKey,
@@ -49,6 +51,7 @@ export namespace SplToken {
     );
   };
 
+  //@internal
   export const createMint = async (
     mint: PublicKey,
     owner: PublicKey,

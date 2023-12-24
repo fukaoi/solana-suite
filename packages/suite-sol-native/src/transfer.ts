@@ -7,8 +7,19 @@ import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace SolNative {
   const RADIX = 10;
+
+  /**
+   * Transfer NFT for only multiSig account
+   *
+   * @param {Pubkey} owner              // current multisig owner
+   * @param {Pubkey} dest               // new owner
+   * @param {Secret[]} ownerOrMultisig  // owner or multisig account Secret
+   * @param {number} amount             // want to transfer SOL amount
+   * @param {Partial<TransferOptions>} options       // options
+   * @return {Result<CommonStructure<unknown>, Error> }
+   */
   export const transfer = (
-    source: Pubkey,
+    owner: Pubkey,
     dest: Pubkey,
     ownerOrMultisig: Secret[],
     amount: number,
@@ -16,7 +27,7 @@ export namespace SolNative {
   ): Result<CommonStructure, Error> => {
     return Try(() => {
       const inst = SystemProgram.transfer({
-        fromPubkey: source.toPublicKey(),
+        fromPubkey: owner.toPublicKey(),
         toPubkey: dest.toPublicKey(),
         lamports: parseInt(`${amount.toLamports()}`, RADIX),
       });
