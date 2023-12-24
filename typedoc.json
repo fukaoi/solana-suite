@@ -1,8 +1,10 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["packages/suite-airdrop", "packages/suite-memo"],
-  "name": "Packages Example",
+  "name": "Solana Suite",
   "entryPointStrategy": "packages",
   "includeVersion": true,
-  "readme": "none"
+  "readme": "none",
+  "mergeModulesRenameDefaults": true,
+  "mergeModulesMergeMode": "module"
 }
