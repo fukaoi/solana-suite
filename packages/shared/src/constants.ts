@@ -21,7 +21,7 @@ export namespace Constants {
         can get api url from https://www.helius.dev/
         -------------------------------------- 
         `;
-    export const ANOUNCE = `
+    export const ANNOUNCE = `
         [DEPRECATED]
         --------------------------------------
         Account, Node, toExplorer, Pubkey, Secret have been moved to 
@@ -172,4 +172,4 @@ export namespace Constants {
 }
 
 // Display All Announce
-console.log(Constants.WarnningMessage.ANOUNCE);
+console.log(Constants.WarnningMessage.ANNOUNCE);
