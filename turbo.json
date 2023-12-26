@@ -9,13 +9,14 @@
         "dist/*"
       ]
     },
-    "deploy": {
+    "prepublish": {
       "dependsOn": [
         "^build",
         "eslint",
         "prettier",
         "depcheck"
-      ]
+      ],
+      "cache": false
     },
     "test": {
       "dependsOn": [
