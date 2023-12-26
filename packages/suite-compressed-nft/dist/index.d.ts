@@ -1,26 +1,16 @@
 import * as mpl_bubblegum_instruction from 'mpl-bubblegum-instruction';
 import BN from 'bn.js';
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
-import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
+import { TransactionSignature, PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
 type Pubkey = (string & {
     [pubKeyNominality]: never;
 }) | string;
-type Secret = (string & {
+type Secret$1 = (string & {
     [secretNominality]: never;
 }) | string;
-type KeypairAccount = {
-    pubkey: Pubkey;
-    secret: Secret;
-};
-type OwnerInfo = {
-    sol: number;
-    lamports: number;
-    owner: string;
-};
 
 type FileType = string | File;
 
@@ -126,16 +116,16 @@ type DelegateOptions = {
 type MintOptions = {
     receiver: Pubkey;
     delegate: Pubkey;
-    feePayer: Secret;
+    feePayer: Secret$1;
 };
 
 type MintCollectionOptions = {
     freezeAuthority: Pubkey;
-    feePayer: Secret;
+    feePayer: Secret$1;
 };
 
 type SpaceOptions = {
-    feePayer: Secret;
+    feePayer: Secret$1;
 };
 type SpaceNumber = 8 | 16000 | 100000 | 16700000 | 67000000 | 1000000000;
 
@@ -152,7 +142,7 @@ type Uses = {
 };
 type InputCreators = {
     address: Pubkey;
-    secret: Secret;
+    secret: Secret$1;
     share: number;
 };
 
@@ -191,11 +181,11 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    submit(feePayer?: Secret$1): Promise<Result<TransactionSignature, Error>>;
 }
 declare global {
     interface Array<T> {
-        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+        submit(feePayer?: Secret$1): Promise<Result<TransactionSignature, Error>>;
     }
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
@@ -388,208 +378,6 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-/**
- * convert buffer to Array
- *
- * @param {Buffer} buffer
- * @returns number[]
- */
-declare const bufferToArray: (buffer: Buffer) => number[];
-/**
- * Overwrite JS Object
- *
- * @param {unknown} object
- * @param {OverwriteObject[]} targets
- * @returns Object
- */
-declare const overwriteObject: (object: unknown, targets: {
-    existsKey: string;
-    will: {
-        key: string;
-        value: unknown;
-    };
-}[]) => unknown;
-/**
- * Display log for solana-suite-config.js
- *
- * @param {unknown} data1
- * @param {unknown} data2
- * @param {unknown} data3
- * @param {unknown} data4
- * @returns void
- */
-declare const debugLog: (data1: unknown, data2?: unknown, data3?: unknown, data4?: unknown) => void;
-/**
- * sleep timer
- *
- * @param {number} sec
- * @returns Promise<number>
- */
-declare const sleep: (sec: number) => Promise<number>;
-/**
- * Node.js or Browser js
- *
- * @returns boolean
- */
-declare const isBrowser: () => boolean;
-/**
- * Node.js or Browser js
- *
- * @returns boolean
- */
-declare const isNode: () => boolean;
-/**
- * argument is promise or other
- *
- * @param {unknown} obj
- * @returns boolean
- */
-declare const isPromise: (obj: unknown) => obj is Promise<unknown>;
-/**
- * Try async monad
- *
- * @returns Promise<Result<T, E>>
- */
-declare function Try<T, E extends Error>(asyncblock: () => Promise<T>, finallyInput?: () => void): Promise<Result<T, E>>;
-declare function Try<T, E extends Error>(block: () => T): Result<T, E>;
-/**
- * argument is promise or other
- *
- * @param {number|undefined} created_at
- * @returns Date | undefined
- */
-declare const convertTimestampToDateTime: (created_at: number | undefined) => Date | undefined;
-/**
- * Get unix timestamp
- *
- * @returns number
- */
-declare const unixTimestamp: () => number;
-
-/**
- * Get Associated token Account.
- * if not created, create new token accouint
- *
- * @param {Pubkey} mint
- * @param {Pubkey} owner
- * @param {Secret} feePayer
- * @param {boolean} allowOwnerOffCurve
- * @returns Promise<string | Instruction>
- */
-declare namespace Account$3 {
-    namespace Associated {
-        /**
-         * Retry function if create new token accouint
-         *
-         * @param {Pubkey} mint
-         * @param {Pubkey} owner
-         * @param {Secret} feePayer
-         * @returns Promise<string>
-         */
-        const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret) => Promise<string>;
-        /**
-         * [Main logic]Get Associated token Account.
-         * if not created, create new token accouint
-         *
-         * @param {Pubkey} mint
-         * @param {Pubkey} owner
-         * @param {Pubkey} feePayer
-         * @returns Promise<string>
-         */
-        const makeOrCreateInstruction: (mint: Pubkey, owner: Pubkey, feePayer?: Pubkey, allowOwnerOffCurve?: boolean) => Promise<{
-            tokenAccount: string;
-            inst: TransactionInstruction | undefined;
-        }>;
-    }
-}
-
-declare namespace Account {
-    class Keypair {
-        secret: Secret;
-        pubkey: Pubkey;
-        constructor(params: {
-            pubkey?: Pubkey;
-            secret: Secret;
-        });
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        static isPubkey: (value: string) => value is Pubkey;
-        static isSecret: (value: string) => value is Secret;
-        static create: () => Keypair;
-        static toKeyPair: (keypair: Keypair) => Keypair;
-    }
-}
-
-declare namespace Account {
-    namespace Pda {
-        const getMetadata: (address: Pubkey) => PublicKey;
-        const getMasterEdition: (address: Pubkey) => PublicKey;
-        const getTreeAuthority: (address: Pubkey) => PublicKey;
-        const getBgumSigner: () => PublicKey;
-        const getAssetId: (address: Pubkey, leafIndex: number) => Pubkey;
-    }
-}
-
-declare const Account: {
-    Pda: typeof Account.Pda;
-    Keypair: typeof Account.Keypair;
-    Associated: typeof Account$3.Associated;
-};
-
-declare namespace Node {
-    const getConnection: () => Connection;
-    const changeConnection: (param: {
-        cluster?: string;
-        commitment?: Commitment;
-        customClusterUrl?: string[];
-    }) => void;
-    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
-}
-
-type Condition = 'overMax' | 'underMin';
-interface Limit {
-    threshold: number;
-    condition: Condition;
-}
-interface Details {
-    key: string;
-    message: string;
-    actual: string | number;
-    limit?: Limit;
-}
-
-declare namespace Validator {
-    export namespace Message {
-        const SUCCESS = "success";
-        const SMALL_NUMBER = "too small";
-        const BIG_NUMBER = "too big";
-        const LONG_LENGTH = "too long";
-        const EMPTY = "invalid empty value";
-        const INVALID_URL = "invalid url";
-        const ONLY_NODE_JS = "`string` type is only Node.js";
-    }
-    export const NAME_LENGTH = 32;
-    export const SYMBOL_LENGTH = 10;
-    export const URL_LENGTH = 200;
-    export const ROYALTY_MAX = 100;
-    export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
-    export const ROYALTY_MIN = 0;
-    export const isRoyalty: (royalty: number) => Result<string, ValidatorError>;
-    export const isSellerFeeBasisPoints: (royalty: number) => Result<string, ValidatorError>;
-    export const isName: (name: string) => Result<string, ValidatorError>;
-    export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
-    export const isImageUrl: (image: string) => Result<string, ValidatorError>;
-    export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
-    type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
-    type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<DataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
-    export {};
-}
-declare class ValidatorError extends Error {
-    details: Details[];
-    constructor(message: string, details: Details[]);
-}
-
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -619,85 +407,6 @@ type ExplorerOptions = {
     replacePath: string;
 };
 
-declare enum FilterType {
-    Memo = "memo",
-    Mint = "mint",
-    OnlyMemo = "only-memo",
-    Transfer = "transfer"
-}
-declare enum ModuleName {
-    SolNative = "system",
-    SplToken = "spl-token"
-}
-declare const FilterOptions: {
-    Transfer: {
-        program: string[];
-        action: string[];
-    };
-    Memo: {
-        program: string[];
-        action: string[];
-    };
-    Mint: {
-        program: string[];
-        action: string[];
-    };
-};
-type PostTokenAccount = {
-    account: string;
-    owner: string;
-};
-type WithMemo = {
-    sig: string[];
-    memo: string;
-};
-type Transfer = {
-    parsed: {
-        info: {
-            destination: Pubkey;
-            source: Pubkey;
-            lamports: number;
-        };
-        type: string;
-    };
-    program: string;
-    programId?: PublicKey;
-};
-type MintTo = {
-    parsed: {
-        info: {
-            account: Pubkey;
-            mint: Pubkey;
-            mintAuthority: Pubkey;
-            tokenAmount: string;
-        };
-        type: string;
-    };
-    program: string;
-    programId?: PublicKey;
-};
-type MintToChecked = MintTo;
-type TransferChecked = {
-    parsed: {
-        info: {
-            destination: Pubkey;
-            mint: Pubkey;
-            multisigAuthority: Pubkey;
-            signers: Pubkey[];
-            source: Pubkey;
-            tokenAmount: string;
-        };
-        type: string;
-    };
-    program: string;
-    programId?: PublicKey;
-};
-type Memo = {
-    parsed: string;
-    program: string;
-    programId: PublicKey;
-};
-
 type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
@@ -718,7 +427,7 @@ type PartialSignStructure<T = Pubkey> = {
     hexInstruction: string;
     canSubmit?: boolean;
     data?: T;
-    submit: (feePayer: Secret) => Promise<Result<string, Error>>;
+    submit: (feePayer: Secret$1) => Promise<Result<string, Error>>;
 };
 
 declare namespace CompressedNft$1 {
@@ -761,10 +470,11 @@ declare namespace CompressedNft$1 {
     }>;
 }
 
+/** @namespace */
 declare const CompressedNft: {
     createTransfer: (assetId: Pubkey, assetIdOwner: Pubkey, dest: Pubkey, delegate?: Pubkey | undefined) => Promise<_solana_web3_js.TransactionInstruction>;
     transfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, ownerOrMultisig: Secret[]) => Promise<Result<CommonStructure, Error>>;
-    mintCollection: (owner: Secret, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
+    mintCollection: (owner: Secret$1, input: InputNftMetadata, options?: Partial<MintCollectionOptions>) => Promise<Result<MintStructure, Error>>;
     Space: typeof CompressedNft$1.Space;
     initSpace: (owner: Secret, maxDepth: number, maxBufferSize: number, canopyDepth: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
     createSpace: (owner: Secret, spaceSize: SpaceNumber, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
@@ -772,14 +482,14 @@ declare const CompressedNft: {
         sol: number;
     }>;
     createVerifyCreator: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
-    mint: (owner: Secret, input: InputNftMetadata, treeOwner: Pubkey, collectionMint: Pubkey, options?: Partial<MintOptions>) => Promise<Result<MintStructure<CompressedNft$1.Space>, Error>>;
-    gasLessTransfer: (mint: Pubkey, owner: Secret, dest: Pubkey, feePayer: Pubkey) => Promise<Result<PartialSignStructure, Error>[]>;
-    gasLessDelegate: (mint: Pubkey, owner: Secret, newDelegate: Pubkey) => Promise<Result<PartialSignStructure, Error>>;
+    mint: (owner: Secret$1, input: InputNftMetadata, treeOwner: Pubkey, collectionMint: Pubkey, options?: Partial<MintOptions>) => Promise<Result<MintStructure<CompressedNft$1.Space>, Error>>;
+    gasLessTransfer: (mint: Pubkey, owner: Secret$1, dest: Pubkey, feePayer: Pubkey) => Promise<Result<PartialSignStructure, Error>[]>;
+    gasLessDelegate: (mint: Pubkey, owner: Secret$1, newDelegate: Pubkey) => Promise<Result<PartialSignStructure, Error>>;
     findByOwner: (owner: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;
     findByMint: (mint: Pubkey) => Promise<Result<Partial<Metadata>, Error>>;
     findByCollection: (collectionMint: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;
     createDeleagate: (assetId: _solana_web3_js.PublicKey, newDelegate: _solana_web3_js.PublicKey | null) => Promise<_solana_web3_js.TransactionInstruction>;
-    setDelegate: (mint: Pubkey, owner: Secret, options?: Partial<DelegateOptions>) => Promise<Result<CommonStructure, Error>>;
+    setDelegate: (mint: Pubkey, owner: Secret$1, options?: Partial<DelegateOptions>) => Promise<Result<CommonStructure, Error>>;
 };
 
-export { Account, CompressedNft, Explorer, ExplorerOptions, FilterOptions, FilterType, KeypairAccount, Memo, MintTo, MintToChecked, ModuleName, Node, OwnerInfo, PostTokenAccount, Pubkey, Secret as Secret, Transfer, TransferChecked, Try, Validator, ValidatorError, WithMemo, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };
+export { CompressedNft };

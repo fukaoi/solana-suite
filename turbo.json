@@ -11,10 +11,11 @@
     },
     "deploy": {
       "dependsOn": [
-        "build",
+        "^build",
         "eslint",
         "prettier",
-        "depcheck"
+        "depcheck",
+        "^typedoc"
       ]
     },
     "test": {
@@ -28,6 +29,7 @@
     },
     "prettier": {},
     "prettier:fix": {},
+    "typedoc": {},
     "eslint": {},
     "clean": {},
     "depcheck": {}

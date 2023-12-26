@@ -337,7 +337,8 @@ type ExplorerOptions = {
     replacePath: string;
 };
 
-declare const Metaplex: {
+/** @namespace */
+declare const RegularNft: {
     mint: (input: InputNftMetadata, cluster: string, phantom: PhantomProvider) => Promise<Result<string, Error | ValidatorError>>;
 };
 
@@ -355,9 +356,10 @@ type InputTokenMetadata = {
     options?: Options;
 };
 
+/** @namespace */
 declare const PhantomSplToken: {
     mint: (input: InputTokenMetadata, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
     add: (token: Pubkey, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
 };
 
-export { Metaplex, PhantomSplToken };
+export { PhantomSplToken, RegularNft };
