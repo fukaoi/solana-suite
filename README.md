@@ -70,8 +70,8 @@ single transaction, unnecessary access to the RPC server can be avoided.
 
 # Official Page
 
-:house: <https://atonoy.github.io/solana-suite/>
+:house: <https://www.solana-suite.org>
 
 # Docs
 
-:books: <https://solana-suite.gitbook.io/solana-suite-develpoment-guide/>
+:books: <https://docs.solana-suite.org>
