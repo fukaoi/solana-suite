@@ -4,7 +4,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "publish": "pnpm --filter '@solana-suite/*' publish --no-git-checks",
-    "publish:dry": "pnpm --filter '@solana-suite/*' publish --no-git-checks --dry-run"
+    "prepublish": "pnpm turbo prepublish && pnpm typedoc"
   },
   "workspaces": {
     "packages": [
