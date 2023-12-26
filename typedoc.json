@@ -10,7 +10,7 @@
     "packages/suite-sol-native",
     "packages/suite-spl-token",
   ],
-  "name": "Solana Suite",
+  "name": "Solana Suite API Reference",
   "entryPointStrategy": "packages",
   "includeVersion": true,
   "readme": "none"
