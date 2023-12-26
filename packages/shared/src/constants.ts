@@ -5,7 +5,7 @@ let Config = SolanaJsonConfig;
 
 export namespace Constants {
   export namespace WarnningMessage {
-    const THRESHHOLD = 7;
+    const THRESHHOLD = 50;
     let isDisplay = false;
     export const NFT_STORAGE_API_KEY = `
         [YOU HAVE TO DO]
@@ -20,6 +20,13 @@ export namespace Constants {
         You need to update dasApiUrl define parameter in solana-suite.json.
         can get api url from https://www.helius.dev/
         -------------------------------------- 
+        `;
+    export const ANOUNCE = `
+        [DEPRECATED]
+        --------------------------------------
+        Account, Node, toExplorer, Pubkey, Secret have been moved to 
+        @solana-suite/utils 
+        ------------------------------------- 
         `;
 
     export const calculateProbability = (): boolean => {
@@ -163,3 +170,6 @@ export namespace Constants {
   export const EXPLORER_SOLANAFM_URL = 'https://solana.fm';
   export const EXPLORER_XRAY_URL = 'https://xray.helius.xyz';
 }
+
+// Display All Announce
+console.log(Constants.WarnningMessage.ANOUNCE);
