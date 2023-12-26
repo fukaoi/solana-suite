@@ -19,6 +19,7 @@ export namespace Memo {
    * @param {Secret} owner   //  memo owner
    * @param {Partial<DelegateOptions>} options
    * @return Promise<Result<Transaction, Error>>
+   * @module Memo
    */
   export const create = (
     data: string,

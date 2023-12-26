@@ -21,7 +21,7 @@ import { MintStructure } from '~/types/transaction-builder';
  * @return Promise<Result<MintStructure, Error>>
  */
 export namespace RegularNft {
-  export const DEFAULT_COLLECTION_SIZE = 0;
+  const DEFAULT_COLLECTION_SIZE = 0;
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
   export const mintCollection = (
     owner: Secret,

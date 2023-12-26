@@ -1,3 +1,4 @@
 import { PhantomMetaplex as Mint } from './mint';
 
-export const Metaplex = { ...Mint };
+/** @namespace */
+export const RegularNft = { ...Mint };

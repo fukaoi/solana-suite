@@ -247,17 +247,6 @@ type ExplorerOptions = {
     replacePath: string;
 };
 
-declare enum FilterType {
-    Memo = "memo",
-    Mint = "mint",
-    OnlyMemo = "only-memo",
-    Transfer = "transfer"
-}
-declare enum ModuleName {
-    SolNative = "system",
-    SplToken = "spl-token"
-}
-
 type History = {
     sol?: string;
     account?: string;
@@ -281,6 +270,17 @@ declare namespace Signatures {
         waitTime: number;
         narrowDown: number;
     }, histories?: History[]) => Promise<void>;
+}
+
+declare enum FilterType {
+    Memo = "memo",
+    Mint = "mint",
+    OnlyMemo = "only-memo",
+    Transfer = "transfer"
+}
+declare enum ModuleName {
+    SolNative = "system",
+    SplToken = "spl-token"
 }
 
 declare namespace TransactionFilter {

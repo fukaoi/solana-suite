@@ -8,10 +8,7 @@ import { CompressedNft as Collection } from './mint-collection';
 import { CompressedNft as Space } from './space';
 import { CompressedNft as Transfer } from './transfer';
 
-import '~/types/transaction-builder';
-import '~/types/account';
-import '~/transaction-builder';
-
+/** @namespace */
 export const CompressedNft = {
   // ...Creator,
   ...Delegate,
@@ -23,4 +20,3 @@ export const CompressedNft = {
   ...Collection,
   ...Transfer,
 };
-export * from '~/shared/exports';
