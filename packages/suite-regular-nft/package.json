@@ -64,6 +64,7 @@
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
-    "build-configs/tsup": "workspace:*"
+    "build-configs/tsup": "workspace:*",
+    "build-configs/typedoc": "workspace:*"
   }
 }

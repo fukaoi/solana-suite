@@ -64,6 +64,7 @@
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
     "build-configs/tsup": "workspace:*",
+    "build-configs/typedoc": "workspace:*",
     "test-tools": "workspace:*"
   }
 }

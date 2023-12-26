@@ -6,9 +6,8 @@ import { SplToken as GasLess } from './gas-less-transfer';
 import { SplToken as Mint } from './mint';
 import { SplToken as Thaw } from './thaw';
 import { SplToken as Transfer } from './transfer';
-import '~/types/transaction-builder';
-import '~/transaction-builder';
 
+/** @namespace */
 export const SplToken = {
   ...Add,
   ...Burn,
@@ -19,5 +18,3 @@ export const SplToken = {
   ...Thaw,
   ...Transfer,
 };
-
-export * from '~/shared/exports';

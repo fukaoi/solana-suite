@@ -1,5 +1,4 @@
 {
-  "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["src/index.ts"],
-  "readme": "none"
+  "extends": "build-configs/typedoc/base.json",
+  "entryPoints": ["src/index.ts"]
 }

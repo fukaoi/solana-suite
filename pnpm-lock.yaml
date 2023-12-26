@@ -135,6 +135,8 @@ importers:
 
   packages/build-configs/tsup: {}
 
+  packages/build-configs/typedoc: {}
+
   packages/converter:
     dependencies:
       '@metaplex-foundation/mpl-token-metadata':
@@ -366,6 +368,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      build-configs/typedoc:
+        specifier: workspace:*
+        version: link:../build-configs/typedoc
 
   packages/suite-compressed-nft:
     dependencies:
@@ -424,6 +429,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      build-configs/typedoc:
+        specifier: workspace:*
+        version: link:../build-configs/typedoc
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
@@ -501,6 +509,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      build-configs/typedoc:
+        specifier: workspace:*
+        version: link:../build-configs/typedoc
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
@@ -553,6 +564,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      build-configs/typedoc:
+        specifier: workspace:*
+        version: link:../build-configs/typedoc
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
@@ -608,6 +622,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      build-configs/typedoc:
+        specifier: workspace:*
+        version: link:../build-configs/typedoc
 
   packages/suite-regular-nft:
     dependencies:
@@ -666,6 +683,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      build-configs/typedoc:
+        specifier: workspace:*
+        version: link:../build-configs/typedoc
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
@@ -715,6 +735,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      build-configs/typedoc:
+        specifier: workspace:*
+        version: link:../build-configs/typedoc
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
@@ -773,6 +796,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      build-configs/typedoc:
+        specifier: workspace:*
+        version: link:../build-configs/typedoc
       test-tools:
         specifier: workspace:*
         version: link:../test-tools

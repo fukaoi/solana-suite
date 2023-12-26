@@ -2,8 +2,13 @@
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": [
     "packages/suite-airdrop",
+    "packages/suite-compressed-nft",
+    "packages/suite-memo",
     "packages/suite-multisig",
-    "packages/suite-memo"
+    "packages/suite-phantom",
+    "packages/suite-regular-nft",
+    "packages/suite-sol-native",
+    "packages/suite-spl-token",
   ],
   "name": "Solana Suite",
   "entryPointStrategy": "packages",
