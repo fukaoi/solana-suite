@@ -23,8 +23,7 @@
     "tsup": "^7.2.0",
     "tsx": "^3.14.0",
     "turbo": "^1.11.2",
-    "typedoc": "^0.25.4",
-    "typedoc-plugin-merge-modules": "^5.1.0"
+    "typedoc": "^0.25.4"
   },
   "repository": "git@github.com:atonoy/solana-suite.git",
   "author": "fukaoi <usapyon2022@gmail.com>",

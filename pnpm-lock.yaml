@@ -44,9 +44,6 @@ importers:
       typedoc:
         specifier: ^0.25.4
         version: 0.25.4(typescript@5.3.3)
-      typedoc-plugin-merge-modules:
-        specifier: ^5.1.0
-        version: 5.1.0(typedoc@0.25.4)
 
   packages/account:
     dependencies:
@@ -7715,14 +7712,6 @@ packages:
       call-bind: 1.0.2
       for-each: 0.3.3
       is-typed-array: 1.1.12
-    dev: true
-
-  /typedoc-plugin-merge-modules@5.1.0(typedoc@0.25.4):
-    resolution: {integrity: sha512-jXH27L/wlxFjErgBXleh3opVgjVTXFEuBo68Yfl18S9Oh/IqxK6NV94jlEJ9hl4TXc9Zm2l7Rfk41CEkcCyvFQ==}
-    peerDependencies:
-      typedoc: 0.24.x || 0.25.x
-    dependencies:
-      typedoc: 0.25.4(typescript@5.3.3)
     dev: true
 
   /typedoc@0.25.4(typescript@5.3.3):

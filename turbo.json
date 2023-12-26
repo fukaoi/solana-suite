@@ -14,8 +14,7 @@
         "^build",
         "eslint",
         "prettier",
-        "depcheck",
-        "^typedoc"
+        "depcheck"
       ]
     },
     "test": {
@@ -29,7 +28,6 @@
     },
     "prettier": {},
     "prettier:fix": {},
-    "typedoc": {},
     "eslint": {},
     "clean": {},
     "depcheck": {}
