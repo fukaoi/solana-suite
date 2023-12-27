@@ -1,6 +1,0 @@
-{
-  "cluster": { "type": "localhost-devnet", "customClusterUrl": [] },
-  "debugging": "false",
-  "nftStorageApiKey": "",
-  "dasApiUrl": []
-}
