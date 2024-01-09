@@ -31,5 +31,8 @@
   "packageManager": "pnpm@8.5.1",
   "engines": {
     "npm": "Only pnpm"
+  },
+  "dependencies": {
+    "typedoc-material-theme": "^1.0.2"
   }
 }
