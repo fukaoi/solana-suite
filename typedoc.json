@@ -8,10 +8,14 @@
     "packages/suite-phantom",
     "packages/suite-regular-nft",
     "packages/suite-sol-native",
-    "packages/suite-spl-token",
+    "packages/suite-spl-token"
   ],
   "name": "Solana Suite API Reference",
   "entryPointStrategy": "packages",
   "includeVersion": true,
-  "readme": "none"
+  "readme": "none",
+  "plugin": [
+    "typedoc-material-theme"
+  ],
+  "themeColor": "#8aa8fa"
 }
