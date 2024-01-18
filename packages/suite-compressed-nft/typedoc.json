@@ -1,4 +1,6 @@
 {
   "extends": "build-configs/typedoc/base.json",
-  "entryPoints": ["src/index.ts"]
+  "entryPoints": [
+    "src/index.ts"
+  ]
 }

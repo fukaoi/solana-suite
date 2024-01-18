@@ -17,5 +17,6 @@
   "plugin": [
     "typedoc-material-theme"
   ],
-  "themeColor": "#8aa8fa"
+  "themeColor": "#8aa8fa",
+  "excludeInternal": true
 }
