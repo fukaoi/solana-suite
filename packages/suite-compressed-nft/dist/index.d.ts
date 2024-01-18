@@ -437,18 +437,6 @@ declare namespace CompressedNft$1 {
         getAssetId: () => Promise<Pubkey>;
     }
     /**
-     * create a new markle tree
-     * This function needs only 1 call
-     *
-     * @param {Secret} owner
-     * @param {number} maxDepth
-     * @param {number} maxBufferSize
-     * @param {number} canopyDepth
-     * @param {Partial<SpaceOptions>} options
-     * @return Promise<Result<MintTransaction, Error>>
-     */
-    const initSpace: (owner: Secret, maxDepth: number, maxBufferSize: number, canopyDepth: number, options?: Partial<SpaceOptions>) => Promise<Result<MintStructure, Error>>;
-    /**
      * create a new nft space
      * This function needs only 1 call
      *
