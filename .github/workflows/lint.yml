@@ -34,8 +34,8 @@ jobs:
           cache: 'pnpm'
       - name: pnpm install
         run: pnpm install
-      - name: check prettier
-        run: pnpm turbo prettier --no-daemon
+      - name: fix prettier
+        run: pnpm turbo prettier:fix --no-daemon
       - name: check eslint
         run: pnpm turbo eslint --no-daemon
 
