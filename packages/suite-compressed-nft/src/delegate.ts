@@ -19,7 +19,10 @@ import { Pubkey, Secret } from '~/types/account';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
-  //@internal
+
+  /**
+   * @internal
+   */
   export const createDeleagate = async (
     assetId: PublicKey,
     newDelegate: PublicKey | null,

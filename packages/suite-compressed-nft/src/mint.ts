@@ -35,6 +35,9 @@ import { MintStructure } from '~/types/transaction-builder';
 export namespace CompressedNft {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
 
+  /**
+   * @internal
+   */
   export const createVerifyCreator = async (
     creators: Creator[],
     assetId: PublicKey,

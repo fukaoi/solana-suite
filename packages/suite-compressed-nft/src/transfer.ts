@@ -13,7 +13,9 @@ import { PublicKey, TransactionInstruction } from '@solana/web3.js';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
-  // @internal
+  /**
+   * @internal
+   */
   export const createTransfer = async (
     assetId: Pubkey,
     assetIdOwner: Pubkey,

@@ -34,6 +34,7 @@ export namespace CompressedNft {
   }
 
   /**
+   * @internal
    * create a new markle tree
    * This function needs only 1 call
    *
