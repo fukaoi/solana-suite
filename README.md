@@ -8,8 +8,9 @@
 [code-style-prettier-image]: https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square
 [code-style-prettier-url]: https://github.com/prettier/prettier
 <br />
+
 <p align="center">
-  <img src="https://github.com/atonoy/solana-suite/assets/186659/3c56a448-8b32-419e-a6d1-a84b58e70052" alt="Solana Suite" width="auto" height="auto">
+  <img src="https://github.com/atonoy/solana-suite/assets/186659/e298a7e5-eb59-41b4-8630-be8ba09be403" alt="Solana Suite" width="auto" height="auto">
 </p>
 
 ## What is Solana Suite?
