@@ -20,9 +20,7 @@ To develop Solana applications easily, even for beginners, you can use the Solan
 
 <img src="https://bafkreibolz2wpbpamryvdlcmbqfrit2wyvpx3ayyrjplth2s32ugp5uk2m.ipfs.nftstorage.link/" width="95%" height="95%" />
 
-(* Architecture image)
 
-:star:
 Compared to using web3.js alone, the amount of source code is , allowing you to focus on what you want to do with Solana.Web engineers with little blockchain development experience and no Solana Dapps development experience can learn quickly.
 
 <img src="https://bafybeifakfjcqm5yovpgayes7lkqzr4xfthccbvhlql6no24nmnm4lydre.ipfs.nftstorage.link/" width="95%" height="95%" />
