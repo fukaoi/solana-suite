@@ -44,4 +44,4 @@ adopted by a larger audience.
 
 ### Api reference
 
-<https://api-reference.solana-suite.org>
+<https://solana-suite-api-reference.pages.dev>
