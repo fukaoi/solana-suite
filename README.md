@@ -10,7 +10,7 @@
 
 <br />
 <p align="center">
-  <img src="https://github.com/atonoy/solana-suite/assets/186659/75abde97-fb08-4c1b-83bd-16eed367a942" alt="Solana Suite">
+  <img src="https://github.com/atonoy/solana-suite/assets/186659/75abde97-fb08-4c1b-83bd-16eed367a942" alt="Solana Suite" width="500px" height="284px">
 </p>
 
 ## What is Solana Suite?
