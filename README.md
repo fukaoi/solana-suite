@@ -15,7 +15,7 @@
 
 ## What is Solana Suite?
 
-Solana Suite is an SDK for beginners. Even if you are not familiar with Solana or blockchain, you can create blockchain services by simply calling functions while referring to the documentation.
+Solana Suite is an SDK for Newbies. Even if you are not familiar with Solana or blockchain, you can create blockchain services by simply calling functions while referring to the documentation.
 
 ## Why is Solana Suite create?
 
