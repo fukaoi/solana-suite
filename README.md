@@ -15,23 +15,13 @@
 
 ## What is Solana Suite?
 
-Solana Suite is a client SDK that allows individuals with no prior blockchain
-development experience or web2.0 background to quickly build blockchain services
-without the need to fully understand the intricacies of Solana's specifications.
-With just one function, you can achieve what you want.
+Solana Suite is an SDK for beginners. Even if you are not familiar with Solana or blockchain, you can create blockchain services by simply calling functions while referring to the documentation.
 
 ## Why is Solana Suite create?
 
-There is always a shortage of blockchain engineers, but there is a surplus of
-Web2.0 engineers. I thought that by converting these engineers, we could
-potentially address the shortage of engineers.
+There aren't enough blockchain engineers, but there are plenty of Web2.0 engineers. I thought if we could train these Web2.0 engineers, we might be able to fill the gap in blockchain talent.
 
-I wanted more people to be aware of the greatness of Solana. Solana has a unique
-architecture that sets it apart from other blockchains, which can make it
-challenging to understand. I believed that if there was an SDK that could be
-used without being aware of Solana's specific specifications, it could be
-adopted by a larger audience.
-
+I wanted more people to know about the amazing features of Solana. Solana has a special design that makes it different from other blockchains, making it a bit hard to grasp. I believed that if there was an SDK that didn't require knowing all the details of Solana, more people could use it.
 ## Contents
 
 ### Official Page
