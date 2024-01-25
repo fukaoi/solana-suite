@@ -31,7 +31,7 @@ special design that makes it different from other blockchains, making it a bit
 hard to grasp. I believed that if there was an SDK that didn't require knowing
 all the details of Solana, more people could use it.
 
-## Architecture
+## Architecture Design
 
 In Solana Suite, we do not wrap well-known libraries such as solana/web3.js and
 the Metaplex JS library. Instead, interactions are generated directly from the
