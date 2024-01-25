@@ -7,8 +7,8 @@
 
 [code-style-prettier-image]: https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square
 [code-style-prettier-url]: https://github.com/prettier/prettier
-<br />
 
+<br />
 
 <p align="center">
   <img src="https://github.com/atonoy/solana-suite/assets/186659/30b0b2dc-c636-4f1d-886d-2be008e304ca" alt="Solana Suite" width="70%" height="70%">
@@ -16,13 +16,28 @@
 
 ## What is Solana Suite?
 
-Solana Suite is an SDK for Newbies. Even if you are not familiar with Solana or blockchain, you can create blockchain services by simply calling functions while referring to the documentation.
+Solana Suite is an SDK for Newbies. Even if you are not familiar with Solana or
+blockchain, you can create blockchain services by simply calling functions while
+referring to the documentation.
 
 ## Why is Solana Suite create?
 
-There aren't enough blockchain engineers, but there are plenty of Web2.0 engineers. I thought if we could train these Web2.0 engineers, we might be able to fill the gap in blockchain talent.
+There aren't enough blockchain engineers, but there are plenty of Web2.0
+engineers. I thought if we could train these Web2.0 engineers, we might be able
+to fill the gap in blockchain talent.
 
-I wanted more people to know about the amazing features of Solana. Solana has a special design that makes it different from other blockchains, making it a bit hard to grasp. I believed that if there was an SDK that didn't require knowing all the details of Solana, more people could use it.
+I wanted more people to know about the amazing features of Solana. Solana has a
+special design that makes it different from other blockchains, making it a bit
+hard to grasp. I believed that if there was an SDK that didn't require knowing
+all the details of Solana, more people could use it.
+
+## Architecture
+
+In Solana Suite, we do not wrap well-known libraries such as solana/web3.js and
+the Metaplex JS library. Instead, interactions are generated directly from the
+programs' instructions. This unique architecture allows for cost-effective fee
+management and the implementation of convenient functions within the programs.
+
 ## Contents
 
 ### Official Page
