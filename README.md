@@ -35,4 +35,4 @@ I wanted more people to know about the amazing features of Solana. Solana has a 
 
 ### Api reference
 
-<https://solana-suite-api-reference.pages.dev>
+<https://api-reference.solana-suite.org>
