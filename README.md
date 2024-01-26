@@ -39,7 +39,7 @@ programs' instructions. This unique architecture allows for cost-effective fee
 management and the implementation of convenient functions within the programs.
 
 <p align="center">
-  <img src="https://github.com/atonoy/solana-suite/assets/186659/560044d2-80d8-4c8a-a8e8-a0eb251f3867">
+  <img src="https://github.com/atonoy/solana-suite/assets/186659/d27c5c74-60ec-4f5d-8cda-8888fcccf728">
 </p>
 
 
