@@ -44,13 +44,9 @@
     "publish": "../../scripts/after-publish.mjs"
   },
   "dependencies": {
-    "@solana/spl-token": "^0.3.8",
-    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana/web3.js": "^1.78.5",
     "@solana-suite/config": "workspace:^",
     "bignumber.js": "^9.1.2",
-    "@metaplex-foundation/mpl-bubblegum": "^3.0.0",
-    "mpl-bubblegum-instruction": "github:atonoy/mpl-bubblegum-instructions",
     "bn.js": "^5.2.1",
     "bs58": "^4.0.1"
   },
