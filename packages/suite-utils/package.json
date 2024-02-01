@@ -1,5 +1,5 @@
 {
-  "name": "shared",
+  "name": "@solana-suite/utils",
   "version": "0.7.2",
   "private": true,
   "main": "dist/index.js",
@@ -13,12 +13,9 @@
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@solana-suite/config": "workspace:*",
     "@solana/web3.js": "^1.78.5"
-  },
-  "dependencies": {
-    "commander": "9.3.0"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.3",

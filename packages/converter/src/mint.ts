@@ -1,7 +1,7 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
 import { MintTo } from '~/types/transaction-filter';
 import { History } from '~/types/history';
-import { convertTimestampToDateTime } from '~/shared';
+import { convertTimestampToDateTime } from '~/suite-utils';
 
 export namespace Converter {
   export namespace Mint {

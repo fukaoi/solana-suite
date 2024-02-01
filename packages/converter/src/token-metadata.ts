@@ -3,7 +3,7 @@ import { Converter as _Uses } from './uses';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { InputTokenMetadata, TokenMetadata } from '~/types/spl-token';
 import { MetadataAndOffchain } from '~/types/storage';
-import { convertTimestampToDateTime } from '~/shared';
+import { convertTimestampToDateTime } from '~/suite-utils';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
 export namespace Converter {
