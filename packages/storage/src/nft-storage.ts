@@ -1,5 +1,5 @@
 import { Blob, NFTStorage } from 'nft.storage';
-import { Constants, debugLog, Result, Try } from '~/shared';
+import { Constants, debugLog, Result, Try } from '~/suite-utils';
 import { ProvenanceLayer } from './provenance-layer';
 import { FileType, Offchain } from '~/types/storage';
 

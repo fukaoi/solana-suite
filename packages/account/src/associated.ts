@@ -1,5 +1,5 @@
 import { TransactionInstruction } from '@solana/web3.js';
-import { debugLog, sleep } from '~/shared';
+import { debugLog, sleep } from '~/suite-utils';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { CommonStructure } from '~/types/transaction-builder';

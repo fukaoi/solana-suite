@@ -1,4 +1,4 @@
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { DasApi } from '~/das-api';
 import { Pubkey } from '~/types/account';
 import { Metadata, NftMetadata } from '~/types/nft';

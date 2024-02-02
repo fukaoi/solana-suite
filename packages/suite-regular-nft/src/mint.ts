@@ -14,7 +14,7 @@ import {
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { debugLog, Result, Try, unixTimestamp } from '~/shared';
+import { debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { Secret } from '~/types/account';
 import { TransactionBuilder } from '~/transaction-builder';
 import { MintStructure } from '~/types/transaction-builder';

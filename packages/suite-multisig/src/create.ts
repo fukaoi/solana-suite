@@ -7,7 +7,7 @@ import {
 } from '@solana/web3.js';
 import { blob, struct, u8 } from '@solana/buffer-layout';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
 import { TransactionBuilder } from '~/transaction-builder';

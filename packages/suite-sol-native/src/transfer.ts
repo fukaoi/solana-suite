@@ -1,6 +1,6 @@
 import { SystemProgram } from '@solana/web3.js';
 import { Pubkey, Secret } from '~/types/account';
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { TransactionBuilder } from '~/transaction-builder';
 import { TransferOptions } from '~/types/sol-native';
 import { CommonStructure } from '~/types/transaction-builder';

@@ -1,7 +1,7 @@
 import { createTransferCheckedInstruction } from '@solana/spl-token';
 import { Transaction } from '@solana/web3.js';
 import { Node } from '~/node';
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';
 import { SplToken as Calculator } from './calculate-amount';

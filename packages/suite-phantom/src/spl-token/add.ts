@@ -5,7 +5,7 @@ import {
 
 import { Transaction, TransactionInstruction } from '@solana/web3.js';
 
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
 import { Account } from '~/account';

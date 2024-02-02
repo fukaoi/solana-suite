@@ -1,4 +1,4 @@
-import { Constants, debugLog, Result, Try } from '~/shared';
+import { Constants, debugLog, Result, Try } from '~/suite-utils';
 import { Asset, AssetProof, Assets } from '~/types/das-api';
 import { Sortable } from '~/types/find';
 

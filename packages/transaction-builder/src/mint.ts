@@ -7,7 +7,7 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import { Constants, debugLog, Result, Try } from '~/shared';
+import { Constants, debugLog, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { MAX_RETRIES } from './common';
 import { MintStructure } from '~/types/transaction-builder';

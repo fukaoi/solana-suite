@@ -1,5 +1,5 @@
 import { createSetCollectionSizeInstruction } from '@metaplex-foundation/mpl-token-metadata';
-import { debugLog, Result, Try, unixTimestamp } from '~/shared';
+import { debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { Converter } from '~/converter';
 import { Account } from '~/account';
 import { Storage } from '~/storage';

@@ -1,4 +1,4 @@
-import { Result } from '~/shared';
+import { Result } from '~/suite-utils';
 import { Secret } from '~/types/account';
 import { RegularNft } from '~/suite-regular-nft';
 import { InputNftMetadata } from '~/types/regular-nft';

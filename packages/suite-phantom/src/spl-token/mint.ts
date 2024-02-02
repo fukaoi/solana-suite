@@ -1,6 +1,6 @@
 import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 
-import { debugLog, Result, Try } from '~/shared';
+import { debugLog, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
 import { Storage } from '~/storage';

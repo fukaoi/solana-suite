@@ -7,7 +7,7 @@ import {
   PostTokenAccount,
 } from '~/types/transaction-filter';
 import { History } from '~/types/history';
-import { debugLog } from '~/shared';
+import { debugLog } from '~/suite-utils';
 
 export namespace TransactionFilter {
   const createPostTokenAccountList = (

@@ -20,7 +20,7 @@ import {
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 
-import { debugLog, Result, Try, unixTimestamp } from '~/shared';
+import { debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 
 import { Node } from '~/node';
 import { Account } from '~/account';

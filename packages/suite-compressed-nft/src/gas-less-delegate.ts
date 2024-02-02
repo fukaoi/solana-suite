@@ -3,7 +3,7 @@ import { CompressedNft as Delegate } from './delegate';
 import { Node } from '~/node';
 import { Transaction } from '@solana/web3.js';
 import { TransactionBuilder } from '~/transaction-builder';
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { PartialSignStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {

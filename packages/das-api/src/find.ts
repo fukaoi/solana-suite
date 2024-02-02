@@ -4,7 +4,7 @@ import { Metadata, NftMetadata } from '~/types/nft';
 import { Offchain } from '~/types/storage';
 import { FindOptions, Sortable, SortBy, SortDirection } from '~/types/find';
 import { DasApi as Api } from './api';
-import { debugLog } from '~/shared';
+import { debugLog } from '~/suite-utils';
 
 export namespace DasApi {
   //@internal

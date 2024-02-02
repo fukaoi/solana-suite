@@ -5,7 +5,7 @@ import {
   createWrappedNativeAccount,
 } from '@solana/spl-token';
 
-import { debugLog, Result, Try } from '~/shared';
+import { debugLog, Result, Try } from '~/suite-utils';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';

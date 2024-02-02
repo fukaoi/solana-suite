@@ -1,6 +1,6 @@
 import { Pubkey } from '~/types/account';
 import { DasApi } from '~/das-api';
-import { debugLog, Result, Try } from '~/shared';
+import { debugLog, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { createTransferInstruction } from 'mpl-bubblegum-instruction';
 import {

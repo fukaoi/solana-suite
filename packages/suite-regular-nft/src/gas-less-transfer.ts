@@ -1,4 +1,4 @@
-import { Result } from '~/shared';
+import { Result } from '~/suite-utils';
 import { Pubkey, Secret } from '~/types/account';
 import { PartialSignStructure } from '~/types/transaction-builder';
 import { SplToken } from '~/suite-spl-token';

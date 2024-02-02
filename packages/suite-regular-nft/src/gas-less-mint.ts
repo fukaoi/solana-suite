@@ -1,4 +1,4 @@
-import { debugLog, Result, Try, unixTimestamp } from '~/shared';
+import { debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { Pubkey, Secret } from '~/types/account';
 import { GasLessMintOptions, InputNftMetadata } from '~/types/regular-nft';
 import { Node } from '~/node';
