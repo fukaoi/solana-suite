@@ -260,24 +260,6 @@ type MemoOptions = {
     feePayer: Secret;
 };
 
-type Find = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-
 type History = {
     sol?: string;
     account?: string;
@@ -299,9 +281,6 @@ type FindOptions = {
     waitTime: number;
     narrowDown: number;
 };
-
-type OnOk<T extends History | Find> = (ok: T[]) => void;
-type OnErr = (err: Error) => void;
 
 /** @namespace */
 declare const Memo: {

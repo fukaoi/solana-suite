@@ -1,4 +1,4 @@
-import { AnyObject } from '~/types/shared';
+import { AnyObject } from '~/types/utils';
 import { Constants } from './constants';
 import { Result } from './result';
 

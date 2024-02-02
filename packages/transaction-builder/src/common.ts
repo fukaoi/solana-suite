@@ -8,7 +8,7 @@ import {
 } from '@solana/web3.js';
 
 import { Node } from '~/node';
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export const MAX_RETRIES = 3;

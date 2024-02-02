@@ -1,4 +1,7 @@
-import { TransactionSignature, PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
+import * as _solana_web3_js from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, PublicKey, Keypair, Connection, Commitment } from '@solana/web3.js';
+import BN from 'bn.js';
+import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -8,6 +11,15 @@ type Pubkey = (string & {
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
+type KeypairAccount = {
+    pubkey: Pubkey;
+    secret: Secret;
+};
+type OwnerInfo = {
+    sol: number;
+    lamports: number;
+    owner: string;
+};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -218,6 +230,290 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+/**
+ * convert buffer to Array
+ *
+ * @param {Buffer} buffer
+ * @returns number[]
+ */
+declare const bufferToArray: (buffer: Buffer) => number[];
+/**
+ * Overwrite JS Object
+ *
+ * @param {unknown} object
+ * @param {OverwriteObject[]} targets
+ * @returns Object
+ */
+declare const overwriteObject: (object: unknown, targets: {
+    existsKey: string;
+    will: {
+        key: string;
+        value: unknown;
+    };
+}[]) => unknown;
+/**
+ * Display log for solana-suite-config.js
+ *
+ * @param {unknown} data1
+ * @param {unknown} data2
+ * @param {unknown} data3
+ * @param {unknown} data4
+ * @returns void
+ */
+declare const debugLog: (data1: unknown, data2?: unknown, data3?: unknown, data4?: unknown) => void;
+/**
+ * sleep timer
+ *
+ * @param {number} sec
+ * @returns Promise<number>
+ */
+declare const sleep: (sec: number) => Promise<number>;
+/**
+ * Node.js or Browser js
+ *
+ * @returns boolean
+ */
+declare const isBrowser: () => boolean;
+/**
+ * Node.js or Browser js
+ *
+ * @returns boolean
+ */
+declare const isNode: () => boolean;
+/**
+ * argument is promise or other
+ *
+ * @param {unknown} obj
+ * @returns boolean
+ */
+declare const isPromise: (obj: unknown) => obj is Promise<unknown>;
+/**
+ * Try async monad
+ *
+ * @returns Promise<Result<T, E>>
+ */
+declare function Try<T, E extends Error>(asyncblock: () => Promise<T>, finallyInput?: () => void): Promise<Result<T, E>>;
+declare function Try<T, E extends Error>(block: () => T): Result<T, E>;
+/**
+ * argument is promise or other
+ *
+ * @param {number|undefined} created_at
+ * @returns Date | undefined
+ */
+declare const convertTimestampToDateTime: (created_at: number | undefined) => Date | undefined;
+/**
+ * Get unix timestamp
+ *
+ * @returns number
+ */
+declare const unixTimestamp: () => number;
+
+/**
+ * Get Associated token Account.
+ * if not created, create new token accouint
+ *
+ * @param {Pubkey} mint
+ * @param {Pubkey} owner
+ * @param {Secret} feePayer
+ * @param {boolean} allowOwnerOffCurve
+ * @returns Promise<string | Instruction>
+ */
+declare namespace Account$3 {
+    namespace Associated {
+        /**
+         * Retry function if create new token accouint
+         *
+         * @param {Pubkey} mint
+         * @param {Pubkey} owner
+         * @param {Secret} feePayer
+         * @returns Promise<string>
+         */
+        const retryGetOrCreate: (mint: Pubkey, owner: Pubkey, feePayer: Secret) => Promise<string>;
+        /**
+         * [Main logic]Get Associated token Account.
+         * if not created, create new token accouint
+         *
+         * @param {Pubkey} mint
+         * @param {Pubkey} owner
+         * @param {Pubkey} feePayer
+         * @returns Promise<string>
+         */
+        const makeOrCreateInstruction: (mint: Pubkey, owner: Pubkey, feePayer?: Pubkey, allowOwnerOffCurve?: boolean) => Promise<{
+            tokenAccount: string;
+            inst: TransactionInstruction | undefined;
+        }>;
+    }
+}
+
+declare namespace Account$2 {
+    class Keypair {
+        secret: Secret;
+        pubkey: Pubkey;
+        constructor(params: {
+            pubkey?: Pubkey;
+            secret: Secret;
+        });
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        static isPubkey: (value: string) => value is Pubkey;
+        static isSecret: (value: string) => value is Secret;
+        static create: () => Keypair;
+        static toKeyPair: (keypair: Keypair) => Keypair;
+    }
+}
+
+declare namespace Account$1 {
+    namespace Pda {
+        const getMetadata: (address: Pubkey) => PublicKey;
+        const getMasterEdition: (address: Pubkey) => PublicKey;
+        const getTreeAuthority: (address: Pubkey) => PublicKey;
+        const getBgumSigner: () => PublicKey;
+        const getAssetId: (address: Pubkey, leafIndex: number) => Pubkey;
+    }
+}
+
+declare const Account: {
+    Pda: typeof Account$1.Pda;
+    Keypair: typeof Account$2.Keypair;
+    Associated: typeof Account$3.Associated;
+};
+
+declare namespace Node {
+    const getConnection: () => Connection;
+    const changeConnection: (param: {
+        cluster?: string;
+        commitment?: Commitment;
+        customClusterUrl?: string[];
+    }) => void;
+    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
+}
+
+type Condition = 'overMax' | 'underMin';
+interface Limit {
+    threshold: number;
+    condition: Condition;
+}
+interface Details {
+    key: string;
+    message: string;
+    actual: string | number;
+    limit?: Limit;
+}
+
+type bignum = number | BN;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type InputCreators = {
+    address: Pubkey;
+    secret: Secret;
+    share: number;
+};
+
+type FileType = string | File;
+
+type StorageType = 'nftStorage' | 'arweave' | string;
+type Offchain = {
+    name?: string;
+    symbol?: string;
+    description?: string;
+    seller_fee_basis_points?: number;
+    image?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    collection?: {
+        name?: string;
+        family?: string;
+        [key: string]: unknown;
+    };
+    collectionDetails?: {
+        kind: string;
+        size: number;
+    };
+    created_at?: number;
+};
+type Properties = {
+    creators?: {
+        address?: string;
+        share?: number;
+        [key: string]: unknown;
+    }[];
+    files?: {
+        type?: string;
+        filePath?: FileType;
+        [key: string]: unknown;
+    }[];
+    [key: string]: unknown;
+};
+type Attribute = {
+    trait_type?: string;
+    value?: string;
+    [key: string]: unknown;
+};
+
+type InputCollection = Pubkey;
+type Options = {
+    [key: string]: unknown;
+};
+type InputNftMetadata = {
+    name: string;
+    symbol: string;
+    royalty?: number;
+    storageType?: StorageType;
+    filePath?: FileType;
+    uri?: string;
+    isMutable?: boolean;
+    description?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    maxSupply?: bignum;
+    creators?: InputCreators[];
+    uses?: Uses;
+    collection?: InputCollection;
+    options?: Options;
+};
+
+declare namespace Validator {
+    export namespace Message {
+        const SUCCESS = "success";
+        const SMALL_NUMBER = "too small";
+        const BIG_NUMBER = "too big";
+        const LONG_LENGTH = "too long";
+        const EMPTY = "invalid empty value";
+        const INVALID_URL = "invalid url";
+        const ONLY_NODE_JS = "`string` type is only Node.js";
+    }
+    export const NAME_LENGTH = 32;
+    export const SYMBOL_LENGTH = 10;
+    export const URL_LENGTH = 200;
+    export const ROYALTY_MAX = 100;
+    export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
+    export const ROYALTY_MIN = 0;
+    export const isRoyalty: (royalty: number) => Result<string, ValidatorError>;
+    export const isSellerFeeBasisPoints: (royalty: number) => Result<string, ValidatorError>;
+    export const isName: (name: string) => Result<string, ValidatorError>;
+    export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
+    export const isImageUrl: (image: string) => Result<string, ValidatorError>;
+    export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
+    type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
+    type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
+    type PickMetaplex = Pick<DataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
+    export {};
+}
+declare class ValidatorError extends Error {
+    details: Details[];
+    constructor(message: string, details: Details[]);
+}
+
 declare global {
     interface String {
         toPublicKey(): PublicKey;
@@ -247,47 +543,4 @@ type ExplorerOptions = {
     replacePath: string;
 };
 
-type CommonStructure<T = undefined> = {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    canSubmit?: boolean;
-    data?: T;
-    submit: () => Promise<Result<TransactionSignature, Error>>;
-};
-
-type MemoOptions = {
-    feePayer: Secret;
-};
-
-type History = {
-    sol?: string;
-    account?: string;
-    destination?: Pubkey;
-    source?: Pubkey;
-    authority?: Pubkey;
-    multisigAuthority?: Pubkey;
-    signers?: Pubkey[];
-    mint?: Pubkey;
-    mintAuthority?: Pubkey;
-    tokenAmount?: string;
-    memo?: string;
-    dateTime?: Date;
-    type?: string;
-    sig?: string;
-    innerInstruction?: boolean;
-};
-type FindOptions = {
-    waitTime: number;
-    narrowDown: number;
-};
-
-/** @namespace */
-declare const Memo: {
-    findByOwner: (owner: Pubkey, onOk: OnOk<History>, onErr: OnErr, options?: Partial<FindOptions>) => Promise<void>;
-    decode: (encoded: string) => string;
-    encode: (data: string) => Buffer;
-    create: (data: string, owner: Secret, options?: Partial<MemoOptions>) => Result<CommonStructure, Error>;
-};
-
-export { Memo };
+export { Account as A, Explorer as E, KeypairAccount as K, Node as N, OwnerInfo as O, Pubkey as P, Result as R, Secret as S, Try as T, Validator as V, isNode as a, bufferToArray as b, isPromise as c, debugLog as d, convertTimestampToDateTime as e, ValidatorError as f, ExplorerOptions as g, isBrowser as i, overwriteObject as o, sleep as s, unixTimestamp as u };

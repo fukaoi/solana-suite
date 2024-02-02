@@ -143,6 +143,9 @@ importers:
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
         version: 2.13.0
+      '@solana-suite/utils':
+        specifier: workspace:*
+        version: link:../suite-utils
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.87.1
@@ -262,40 +265,6 @@ importers:
         specifier: workspace:*
         version: link:../build-configs/tsup
 
-  packages/shared:
-    dependencies:
-      '@solana-suite/config':
-        specifier: workspace:*
-        version: link:../suite-config
-      '@solana/web3.js':
-        specifier: ^1.78.5
-        version: 1.87.1
-      commander:
-        specifier: 9.3.0
-        version: 9.3.0
-    devDependencies:
-      '@types/jsdom':
-        specifier: ^21.1.3
-        version: 21.1.3
-      build-configs/ava:
-        specifier: workspace:*
-        version: link:../build-configs/ava
-      build-configs/eslint:
-        specifier: workspace:*
-        version: link:../build-configs/eslint
-      build-configs/prettier:
-        specifier: workspace:*
-        version: link:../build-configs/prettier
-      build-configs/tsconfig:
-        specifier: workspace:*
-        version: link:../build-configs/tsconfig
-      build-configs/tsup:
-        specifier: workspace:*
-        version: link:../build-configs/tsup
-      jsdom:
-        specifier: ^22.1.0
-        version: 22.1.0
-
   packages/storage:
     dependencies:
       '@irys/sdk':
@@ -329,33 +298,9 @@ importers:
 
   packages/suite-airdrop:
     dependencies:
-      '@metaplex-foundation/mpl-bubblegum':
-        specifier: ^3.0.0
-        version: 3.0.0(@metaplex-foundation/umi@0.8.10)
-      '@metaplex-foundation/mpl-token-metadata':
-        specifier: ^2.13.0
-        version: 2.13.0
-      '@solana-suite/config':
-        specifier: workspace:^
-        version: link:../suite-config
-      '@solana/spl-token':
-        specifier: ^0.3.8
-        version: 0.3.8(@solana/web3.js@1.87.1)
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.87.1
-      bignumber.js:
-        specifier: ^9.1.2
-        version: 9.1.2
-      bn.js:
-        specifier: ^5.2.1
-        version: 5.2.1
-      bs58:
-        specifier: ^4.0.1
-        version: 4.0.1
-      mpl-bubblegum-instruction:
-        specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
     devDependencies:
       build-configs/eslint:
         specifier: workspace:*
@@ -379,7 +324,7 @@ importers:
         specifier: ^0.0.3
         version: 0.0.3(arweave@1.14.4)
       '@metaplex-foundation/mpl-bubblegum':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
@@ -803,6 +748,37 @@ importers:
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
+
+  packages/suite-utils:
+    dependencies:
+      '@solana-suite/config':
+        specifier: workspace:*
+        version: link:../suite-config
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.87.6
+    devDependencies:
+      '@types/jsdom':
+        specifier: ^21.1.3
+        version: 21.1.3
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
+      jsdom:
+        specifier: ^22.1.0
+        version: 22.1.0
 
   packages/test-tools:
     dependencies:
@@ -1875,7 +1851,7 @@ packages:
     resolution: {integrity: sha512-B1L94N3ZGMo53b0uOSoznbuM5GBNJ8LwSeznxBxJ+OThvfHQ4B5oMUqb+0zdLRfkKGS7Q6tpHK9P+QK0j3w2cQ==}
     dependencies:
       '@metaplex-foundation/beet': 0.7.1
-      '@solana/web3.js': 1.87.1
+      '@solana/web3.js': 1.87.6
       bs58: 5.0.0
       debug: 4.3.4
     transitivePeerDependencies:
@@ -1916,7 +1892,7 @@ packages:
       '@metaplex-foundation/mpl-token-metadata': 3.0.0-alpha.27(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/mpl-toolbox': 0.9.1(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/umi': 0.8.10
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.3.3
       merkletreejs: 0.3.10
     dev: false
 
@@ -2279,7 +2255,7 @@ packages:
     engines: {node: '>= 10'}
     dependencies:
       '@solana/buffer-layout': 4.0.1
-      '@solana/web3.js': 1.87.1
+      '@solana/web3.js': 1.87.6
       bigint-buffer: 1.1.5
       bignumber.js: 9.1.2
     transitivePeerDependencies:
@@ -2340,7 +2316,7 @@ packages:
     engines: {node: '>= 10'}
     dependencies:
       '@babel/runtime': 7.23.2
-      '@solana/web3.js': 1.87.1
+      '@solana/web3.js': 1.87.6
       bn.js: 5.2.1
       buffer: 6.0.3
       buffer-layout: 1.2.2
@@ -2775,6 +2751,7 @@ packages:
 
   /abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
+    deprecated: Use your platform's native atob() and btoa() methods instead
     dev: true
 
   /abort-controller@3.0.0:
@@ -3980,6 +3957,7 @@ packages:
   /domexception@4.0.0:
     resolution: {integrity: sha512-A2is4PLG+eeSfoTMA95/s4pvAoSo2mKtiM5jlHkAVewmiO8ISFTFKZjH7UAM1Atli/OT/7JHOrJRJiMKUZKYBw==}
     engines: {node: '>=12'}
+    deprecated: Use your platform's native DOMException instead
     dependencies:
       webidl-conversions: 7.0.0
     dev: true
@@ -5721,7 +5699,7 @@ packages:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 12.0.1
-      ws: 8.14.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.15.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -7424,7 +7402,7 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       psl: 1.9.0
-      punycode: 2.3.0
+      punycode: 2.3.1
       universalify: 0.2.0
       url-parse: 1.5.10
     dev: true
@@ -7443,7 +7421,7 @@ packages:
     resolution: {integrity: sha512-2lv/66T7e5yNyhAAC4NaKe5nVavzuGJQVVtRYLyQ2OI8tsJ61PMLlelehb0wi2Hx6+hT/OJUWZcw8MjlSRnxvw==}
     engines: {node: '>=14'}
     dependencies:
-      punycode: 2.3.0
+      punycode: 2.3.1
     dev: true
 
   /tree-kill@1.2.2:
@@ -8038,6 +8016,7 @@ packages:
     dependencies:
       bufferutil: 4.0.8
       utf-8-validate: 5.0.10
+    dev: false
 
   /ws@8.15.1(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     resolution: {integrity: sha512-W5OZiCjXEmk0yZ66ZN82beM5Sz7l7coYxpRkzS+p9PP+ToQry8szKh+61eNktr7EA9DOwvFGhfC605jDHbP6QQ==}
@@ -8053,7 +8032,6 @@ packages:
     dependencies:
       bufferutil: 4.0.8
       utf-8-validate: 5.0.10
-    dev: false
 
   /xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
