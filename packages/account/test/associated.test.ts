@@ -1,4 +1,5 @@
 import test from 'ava';
+import { Node } from '~/node';
 import { SplToken } from '~/suite-spl-token';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
@@ -6,6 +7,7 @@ import { Account } from '../src';
 import { KeypairAccount } from '~/types/account';
 
 let source: KeypairAccount;
+let feePayer: KeypairAccount;
 const TOKEN_METADATA = {
   name: 'solana-suite-token',
   symbol: 'SST',
@@ -16,14 +18,20 @@ const TOKEN_METADATA = {
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
+  feePayer = obj.feePayer;
 });
 
 test('Retry getOrCreate', async (t) => {
-  const mintInst = await SplToken.mint(source.secret, 10000, 1, TOKEN_METADATA);
-
-  await mintInst.submit();
-
-  t.true(mintInst.isOk);
+  const mintInst = await SplToken.mint(
+    source.secret,
+    10000,
+    1,
+    TOKEN_METADATA,
+    { feePayer: feePayer.secret },
+  );
+  const mintRes = await mintInst.submit();
+  t.true(mintRes.isOk);
+  await Node.confirmedSig(mintRes.unwrap());
   const mint = mintInst.unwrap().data!;
   const res = await Account.Associated.retryGetOrCreate(
     mint,

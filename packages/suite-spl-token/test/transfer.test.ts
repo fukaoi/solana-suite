@@ -3,6 +3,7 @@ import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { SplToken } from '../src/';
 import { KeypairAccount } from '~/types/account';
+import { Account } from '../../suite-utils/src/exports';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
@@ -21,7 +22,8 @@ const TOKEN_METADATA = {
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
-  dest = obj.dest;
+  // dest = obj.dest;
+  dest = Account.Keypair.create();
   feePayer = obj.feePayer;
 });
 
