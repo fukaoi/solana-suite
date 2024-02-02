@@ -14,8 +14,11 @@ export namespace DasApi {
   };
 
   export const fetchOffchain = async (uri: string) => {
-    const json = await (await fetch(uri)).json();
-    return json;
+    const response = await fetch(uri);
+    if (response.status !== 200) {
+      return {};
+    }
+    return await response.json();
   };
 
   /**
