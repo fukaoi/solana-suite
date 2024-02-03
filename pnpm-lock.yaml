@@ -405,9 +405,6 @@ importers:
 
   packages/suite-config:
     dependencies:
-      '@solana/web3.js':
-        specifier: ^1.78.5
-        version: 1.87.1
       commander:
         specifier: 9.3.0
         version: 9.3.0
@@ -439,6 +436,9 @@ importers:
       '@solana-suite/config':
         specifier: workspace:^
         version: link:../suite-config
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.87.1)
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.87.1
