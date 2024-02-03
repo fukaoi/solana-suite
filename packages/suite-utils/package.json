@@ -1,10 +1,38 @@
 {
-  "name": "shared",
+  "name": "@solana-suite/utils",
   "version": "0.7.2",
-  "private": true,
+  "description": "Uitlity functions",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "keywords": [
+    "api",
+    "blockchain",
+    "solana",
+    "sdk",
+    "web3.js",
+    "nft"
+  ],
+  "engines": {
+    "node": ">=16.*"
+  },
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "license": "MIT",
+  "author": "fukaoi <usapyon2022@gmail.com>",
+  "homepage": "https://atonoy.github.io/solana-suite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atonoy/solana-suite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/atonoy/solana-suite/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup --config tsup.config.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
@@ -13,12 +41,9 @@
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@solana-suite/config": "workspace:*",
     "@solana/web3.js": "^1.78.5"
-  },
-  "dependencies": {
-    "commander": "9.3.0"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.3",

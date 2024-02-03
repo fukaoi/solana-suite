@@ -1,7 +1,7 @@
 import { createTransferCheckedInstruction } from '@solana/spl-token';
 import { Transaction } from '@solana/web3.js';
 import { Node } from '~/node';
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';
 import { SplToken as Calculator } from './calculate-amount';
@@ -42,7 +42,6 @@ export namespace SplToken {
         feePayer,
       );
 
-      let inst2;
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
 
       const tx = new Transaction({
@@ -51,29 +50,21 @@ export namespace SplToken {
         feePayer: feePayer.toPublicKey(),
       });
 
+      const inst2 = createTransferCheckedInstruction(
+        sourceToken.tokenAccount.toPublicKey(),
+        mint.toPublicKey(),
+        destToken.tokenAccount.toPublicKey(),
+        ownerPublicKey,
+        Calculator.calculateAmount(amount, mintDecimal),
+        mintDecimal,
+        [owner.toKeypair()],
+      );
+
       // return associated token account
       if (!destToken.inst) {
-        inst2 = createTransferCheckedInstruction(
-          sourceToken.tokenAccount.toPublicKey(),
-          mint.toPublicKey(),
-          destToken.tokenAccount.toPublicKey(),
-          ownerPublicKey,
-          Calculator.calculateAmount(amount, mintDecimal),
-          mintDecimal,
-          [owner.toKeypair()],
-        );
         tx.add(inst2);
       } else {
         // return instruction and undecided associated token account
-        inst2 = createTransferCheckedInstruction(
-          sourceToken.tokenAccount.toPublicKey(),
-          mint.toPublicKey(),
-          destToken.tokenAccount.toPublicKey(),
-          ownerPublicKey,
-          Calculator.calculateAmount(amount, mintDecimal),
-          mintDecimal,
-          [owner.toKeypair()],
-        );
         tx.add(destToken.inst).add(inst2);
       }
 

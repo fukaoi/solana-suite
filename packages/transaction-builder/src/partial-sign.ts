@@ -4,7 +4,7 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { Pubkey, Secret } from '~/types/account';
 import { MAX_RETRIES } from './common';

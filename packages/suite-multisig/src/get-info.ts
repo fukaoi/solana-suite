@@ -1,4 +1,4 @@
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { Pubkey } from '~/types/account';
 import { Node } from '~/node';
 import { LayoutObject } from '@solana/buffer-layout';

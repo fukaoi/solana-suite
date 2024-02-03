@@ -1,4 +1,4 @@
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { Pubkey } from '~/types/account';
 import { Multisig as _Get } from './get-info';
 

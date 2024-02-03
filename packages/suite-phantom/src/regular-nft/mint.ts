@@ -2,7 +2,7 @@ import { Transaction, TransactionInstruction } from '@solana/web3.js';
 import { RegularNft } from '~/suite-regular-nft';
 import { Storage } from '~/storage';
 import { Node } from '~/node';
-import { debugLog, Result, Try } from '~/shared';
+import { debugLog, Result, Try } from '~/suite-utils';
 import { Account } from '~/account';
 import { Validator, ValidatorError } from '~/validator';
 import { Converter } from '~/converter';

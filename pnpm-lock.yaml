@@ -43,8 +43,8 @@ importers:
         specifier: ^3.14.0
         version: 3.14.0
       turbo:
-        specifier: ^1.11.2
-        version: 1.11.2
+        specifier: ^1.12.2
+        version: 1.12.2
       typedoc:
         specifier: ^0.25.4
         version: 0.25.4(typescript@5.3.3)
@@ -60,9 +60,6 @@ importers:
       '@solana-suite/config':
         specifier: workspace:*
         version: link:../suite-config
-      '@solana/spl-token':
-        specifier: ^0.3.8
-        version: 0.3.8(@solana/web3.js@1.87.1)
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.87.1
@@ -143,6 +140,9 @@ importers:
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
         version: 2.13.0
+      '@solana-suite/utils':
+        specifier: workspace:*
+        version: link:../suite-utils
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.87.1
@@ -262,40 +262,6 @@ importers:
         specifier: workspace:*
         version: link:../build-configs/tsup
 
-  packages/shared:
-    dependencies:
-      '@solana-suite/config':
-        specifier: workspace:*
-        version: link:../suite-config
-      '@solana/web3.js':
-        specifier: ^1.78.5
-        version: 1.87.1
-      commander:
-        specifier: 9.3.0
-        version: 9.3.0
-    devDependencies:
-      '@types/jsdom':
-        specifier: ^21.1.3
-        version: 21.1.3
-      build-configs/ava:
-        specifier: workspace:*
-        version: link:../build-configs/ava
-      build-configs/eslint:
-        specifier: workspace:*
-        version: link:../build-configs/eslint
-      build-configs/prettier:
-        specifier: workspace:*
-        version: link:../build-configs/prettier
-      build-configs/tsconfig:
-        specifier: workspace:*
-        version: link:../build-configs/tsconfig
-      build-configs/tsup:
-        specifier: workspace:*
-        version: link:../build-configs/tsup
-      jsdom:
-        specifier: ^22.1.0
-        version: 22.1.0
-
   packages/storage:
     dependencies:
       '@irys/sdk':
@@ -330,7 +296,7 @@ importers:
   packages/suite-airdrop:
     dependencies:
       '@metaplex-foundation/mpl-bubblegum':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
@@ -338,9 +304,6 @@ importers:
       '@solana-suite/config':
         specifier: workspace:^
         version: link:../suite-config
-      '@solana/spl-token':
-        specifier: ^0.3.8
-        version: 0.3.8(@solana/web3.js@1.87.1)
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.87.1
@@ -379,7 +342,7 @@ importers:
         specifier: ^0.0.3
         version: 0.0.3(arweave@1.14.4)
       '@metaplex-foundation/mpl-bubblegum':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
@@ -465,7 +428,7 @@ importers:
   packages/suite-memo:
     dependencies:
       '@metaplex-foundation/mpl-bubblegum':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
@@ -473,9 +436,6 @@ importers:
       '@solana-suite/config':
         specifier: workspace:^
         version: link:../suite-config
-      '@solana/spl-token':
-        specifier: ^0.3.8
-        version: 0.3.8(@solana/web3.js@1.87.1)
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.87.1
@@ -520,7 +480,7 @@ importers:
   packages/suite-multisig:
     dependencies:
       '@metaplex-foundation/mpl-bubblegum':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
@@ -578,7 +538,7 @@ importers:
         specifier: ^0.0.3
         version: 0.0.3(arweave@1.14.4)
       '@metaplex-foundation/mpl-bubblegum':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
@@ -633,7 +593,7 @@ importers:
         specifier: ^0.0.3
         version: 0.0.3(arweave@1.14.4)
       '@metaplex-foundation/mpl-bubblegum':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
@@ -694,7 +654,7 @@ importers:
   packages/suite-sol-native:
     dependencies:
       '@metaplex-foundation/mpl-bubblegum':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
@@ -749,7 +709,7 @@ importers:
         specifier: ^0.0.3
         version: 0.0.3(arweave@1.14.4)
       '@metaplex-foundation/mpl-bubblegum':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
@@ -803,6 +763,37 @@ importers:
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
+
+  packages/suite-utils:
+    dependencies:
+      '@solana-suite/config':
+        specifier: workspace:*
+        version: link:../suite-config
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.87.6
+    devDependencies:
+      '@types/jsdom':
+        specifier: ^21.1.3
+        version: 21.1.3
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
+      jsdom:
+        specifier: ^22.1.0
+        version: 22.1.0
 
   packages/test-tools:
     dependencies:
@@ -1875,7 +1866,7 @@ packages:
     resolution: {integrity: sha512-B1L94N3ZGMo53b0uOSoznbuM5GBNJ8LwSeznxBxJ+OThvfHQ4B5oMUqb+0zdLRfkKGS7Q6tpHK9P+QK0j3w2cQ==}
     dependencies:
       '@metaplex-foundation/beet': 0.7.1
-      '@solana/web3.js': 1.87.1
+      '@solana/web3.js': 1.87.6
       bs58: 5.0.0
       debug: 4.3.4
     transitivePeerDependencies:
@@ -1916,7 +1907,7 @@ packages:
       '@metaplex-foundation/mpl-token-metadata': 3.0.0-alpha.27(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/mpl-toolbox': 0.9.1(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/umi': 0.8.10
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.3.3
       merkletreejs: 0.3.10
     dev: false
 
@@ -2279,7 +2270,7 @@ packages:
     engines: {node: '>= 10'}
     dependencies:
       '@solana/buffer-layout': 4.0.1
-      '@solana/web3.js': 1.87.1
+      '@solana/web3.js': 1.87.6
       bigint-buffer: 1.1.5
       bignumber.js: 9.1.2
     transitivePeerDependencies:
@@ -2339,8 +2330,8 @@ packages:
     resolution: {integrity: sha512-LZmYCKcPQDtJgecvWOgT/cnoIQPWjdH+QVyzPcFvyDUiT0DiRjZaam4aqNUyvchLFhzgunv3d9xOoyE34ofdoQ==}
     engines: {node: '>= 10'}
     dependencies:
-      '@babel/runtime': 7.23.2
-      '@solana/web3.js': 1.87.1
+      '@babel/runtime': 7.23.6
+      '@solana/web3.js': 1.87.6
       bn.js: 5.2.1
       buffer: 6.0.3
       buffer-layout: 1.2.2
@@ -2775,6 +2766,7 @@ packages:
 
   /abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
+    deprecated: Use your platform's native atob() and btoa() methods instead
     dev: true
 
   /abort-controller@3.0.0:
@@ -3980,6 +3972,7 @@ packages:
   /domexception@4.0.0:
     resolution: {integrity: sha512-A2is4PLG+eeSfoTMA95/s4pvAoSo2mKtiM5jlHkAVewmiO8ISFTFKZjH7UAM1Atli/OT/7JHOrJRJiMKUZKYBw==}
     engines: {node: '>=12'}
+    deprecated: Use your platform's native DOMException instead
     dependencies:
       webidl-conversions: 7.0.0
     dev: true
@@ -5721,7 +5714,7 @@ packages:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 12.0.1
-      ws: 8.14.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.15.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -7424,7 +7417,7 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       psl: 1.9.0
-      punycode: 2.3.0
+      punycode: 2.3.1
       universalify: 0.2.0
       url-parse: 1.5.10
     dev: true
@@ -7443,7 +7436,7 @@ packages:
     resolution: {integrity: sha512-2lv/66T7e5yNyhAAC4NaKe5nVavzuGJQVVtRYLyQ2OI8tsJ61PMLlelehb0wi2Hx6+hT/OJUWZcw8MjlSRnxvw==}
     engines: {node: '>=14'}
     dependencies:
-      punycode: 2.3.0
+      punycode: 2.3.1
     dev: true
 
   /tree-kill@1.2.2:
@@ -7576,64 +7569,64 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /turbo-darwin-64@1.11.2:
-    resolution: {integrity: sha512-toFmRG/adriZY3hOps7nYCfqHAS+Ci6xqgX3fbo82kkLpC6OBzcXnleSwuPqjHVAaRNhVoB83L5njcE9Qwi2og==}
+  /turbo-darwin-64@1.12.2:
+    resolution: {integrity: sha512-Aq/ePQ5KNx6XGwlZWTVTqpQYfysm1vkwkI6kAYgrX5DjMWn+tUXrSgNx4YNte0F+V4DQ7PtuWX+jRG0h0ZNg0A==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-darwin-arm64@1.11.2:
-    resolution: {integrity: sha512-FCsEDZ8BUSFYEOSC3rrARQrj7x2VOrmVcfrMUIhexTxproRh4QyMxLfr6LALk4ymx6jbDCxWa6Szal8ckldFbA==}
+  /turbo-darwin-arm64@1.12.2:
+    resolution: {integrity: sha512-wTr+dqkwJo/eXE+4SPTSeNBKyyfQJhI6I9sKVlCSBmtaNEqoGNgdVzgMUdqrg9AIFzLIiKO+zhfskNaSWpVFow==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-64@1.11.2:
-    resolution: {integrity: sha512-Vzda/o/QyEske5CxLf0wcu7UUS+7zB90GgHZV4tyN+WZtoouTvbwuvZ3V6b5Wgd3OJ/JwWR0CXDK7Sf4VEMr7A==}
+  /turbo-linux-64@1.12.2:
+    resolution: {integrity: sha512-BggBKrLojGarDaa2zBo+kUR3fmjpd6bLA8Unm3Aa2oJw0UvEi3Brd+w9lNsPZHXXQYBUzNUY2gCdxf3RteWb0g==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-arm64@1.11.2:
-    resolution: {integrity: sha512-bRLwovQRz0yxDZrM4tQEAYV0fBHEaTzUF0JZ8RG1UmZt/CqtpnUrJpYb1VK8hj1z46z9YehARpYCwQ2K0qU4yw==}
+  /turbo-linux-arm64@1.12.2:
+    resolution: {integrity: sha512-v/apSRvVuwYjq1D9MJFsHv2EpGd1S4VoSdZvVfW6FaM06L8CFZa92urNR1svdGYN28YVKwK9Ikc9qudC6t/d5A==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-64@1.11.2:
-    resolution: {integrity: sha512-LgTWqkHAKgyVuLYcEPxZVGPInTjjeCnN5KQMdJ4uQZ+xMDROvMFS2rM93iQl4ieDJgidwHCxxCxaU9u8c3d/Kg==}
+  /turbo-windows-64@1.12.2:
+    resolution: {integrity: sha512-3uDdwXcRGkgopYFdPDpxQiuQjfQ12Fxq0fhj+iGymav0eWA4W4wzYwSdlUp6rT22qOBIzaEsrIspRwx1DsMkNg==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-arm64@1.11.2:
-    resolution: {integrity: sha512-829aVBU7IX0c/B4G7g1VI8KniAGutHhIupkYMgF6xPkYVev2G3MYe6DMS/vsLt9GGM9ulDtdWxWrH5P2ngK8IQ==}
+  /turbo-windows-arm64@1.12.2:
+    resolution: {integrity: sha512-zNIHnwtQfJSjFi7movwhPQh2rfrcKZ7Xv609EN1yX0gEp9GxooCUi2yNnBQ8wTqFjioA2M5hZtGJQ0RrKaEm/Q==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo@1.11.2:
-    resolution: {integrity: sha512-jPC7LVQJzebs5gWf8FmEvsvXGNyKbN+O9qpvv98xpNaM59aS0/Irhd0H0KbcqnXfsz7ETlzOC3R+xFWthC4Z8A==}
+  /turbo@1.12.2:
+    resolution: {integrity: sha512-BcoQjBZ+LJCMdjzWhzQflOinUjek28rWXj07aaaAQ8T3Ehs0JFSjIsXOm4qIbo52G4xk3gFVcUtJhh/QRADl7g==}
     hasBin: true
     optionalDependencies:
-      turbo-darwin-64: 1.11.2
-      turbo-darwin-arm64: 1.11.2
-      turbo-linux-64: 1.11.2
-      turbo-linux-arm64: 1.11.2
-      turbo-windows-64: 1.11.2
-      turbo-windows-arm64: 1.11.2
+      turbo-darwin-64: 1.12.2
+      turbo-darwin-arm64: 1.12.2
+      turbo-linux-64: 1.12.2
+      turbo-linux-arm64: 1.12.2
+      turbo-windows-64: 1.12.2
+      turbo-windows-arm64: 1.12.2
     dev: true
 
   /tweetnacl@1.0.3:
@@ -8038,6 +8031,7 @@ packages:
     dependencies:
       bufferutil: 4.0.8
       utf-8-validate: 5.0.10
+    dev: false
 
   /ws@8.15.1(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     resolution: {integrity: sha512-W5OZiCjXEmk0yZ66ZN82beM5Sz7l7coYxpRkzS+p9PP+ToQry8szKh+61eNktr7EA9DOwvFGhfC605jDHbP6QQ==}
@@ -8053,7 +8047,6 @@ packages:
     dependencies:
       bufferutil: 4.0.8
       utf-8-validate: 5.0.10
-    dev: false
 
   /xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}

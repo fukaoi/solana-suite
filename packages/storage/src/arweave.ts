@@ -1,5 +1,5 @@
 import { ProvenanceLayer } from './provenance-layer';
-import { debugLog, Result, Try } from '~/shared';
+import { debugLog, Result, Try } from '~/suite-utils';
 import { Secret } from '~/types/account';
 import { FileType, Offchain } from '~/types/storage';
 

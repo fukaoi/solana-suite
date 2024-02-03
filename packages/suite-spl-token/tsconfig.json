@@ -9,10 +9,15 @@
       ],
       "~/*": [
         "../*/src/index.ts"
-      ],
-      "~/shared/exports": ["../shared/src/exports.ts"]
+      ]
     }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

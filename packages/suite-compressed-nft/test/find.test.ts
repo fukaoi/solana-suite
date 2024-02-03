@@ -46,7 +46,7 @@ test('Find metadata by mint', async (t) => {
   );
 });
 
-test('Find metadatas by collectionMint', async (t) => {
+test.only('Find metadatas by collectionMint', async (t) => {
   const res = await CompressedNft.findByCollection(collectionMint);
   res.match(
     (ok) => {

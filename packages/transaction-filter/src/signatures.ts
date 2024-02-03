@@ -1,6 +1,6 @@
 import { ParsedTransactionWithMeta } from '@solana/web3.js';
 import { Node } from '~/node';
-import { debugLog, Result, sleep } from '~/shared';
+import { debugLog, Result, sleep } from '~/suite-utils';
 import { Pubkey } from '~/types/account';
 import { History } from '~/types/history';
 

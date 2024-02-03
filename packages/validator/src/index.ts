@@ -1,4 +1,4 @@
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { Converter } from '~/converter';
 import { Details, Limit } from '~/types/validator';
 import { InputNftMetadata } from '~/types/regular-nft';

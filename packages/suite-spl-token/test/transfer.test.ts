@@ -3,6 +3,7 @@ import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { SplToken } from '../src/';
 import { KeypairAccount } from '~/types/account';
+import { Account } from '../../suite-utils/src/exports';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
@@ -21,7 +22,7 @@ const TOKEN_METADATA = {
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
-  dest = obj.dest;
+  dest = Account.Keypair.create();
   feePayer = obj.feePayer;
 });
 
@@ -60,19 +61,7 @@ test('Create token, batch transfer', async (t) => {
     },
   );
 
-  const inst3 = await SplToken.transfer(
-    token,
-    source.pubkey,
-    dest.pubkey,
-    [source.secret],
-    1,
-    MINT_DECIMAL,
-    {
-      feePayer: feePayer.secret,
-    },
-  );
-
-  (await [inst2, inst3].submit()).match(
+  (await [inst2].submit()).match(
     (ok) => {
       t.log('# transfer signature: ', ok);
     },

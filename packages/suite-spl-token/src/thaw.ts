@@ -1,4 +1,4 @@
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';
 import { Account } from '~/account';

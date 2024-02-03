@@ -1,5 +1,5 @@
 import { Pubkey, Secret } from '~/types/account';
-import { Result } from '~/shared';
+import { Result } from '~/suite-utils';
 import {
   Keypair,
   TransactionInstruction,

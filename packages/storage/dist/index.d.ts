@@ -1,4 +1,4 @@
-import { TransactionSignature, PublicKey, Transaction, Keypair } from '@solana/web3.js';
+import { TransactionSignature, PublicKey, Keypair, Transaction } from '@solana/web3.js';
 import BN from 'bn.js';
 
 declare const pubKeyNominality: unique symbol;
@@ -219,6 +219,35 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+declare global {
+    interface String {
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
+    }
+    interface Number {
+        toSol(): number;
+        toLamports(): number;
+    }
+    interface Console {
+        debug(data: unknown, data2?: unknown, data3?: unknown): void;
+    }
+    interface Secret {
+        toKeypair(): Keypair;
+    }
+    interface Pubkey {
+        toPublicKey(): PublicKey;
+    }
+}
+declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm",
+    Xray = "xray"
+}
+type ExplorerOptions = {
+    replacePath: string;
+};
+
 type bignum = number | BN;
 declare enum UseMethod {
     Burn = 0,
@@ -315,35 +344,6 @@ type InputNftMetadata = {
     uses?: Uses;
     collection?: InputCollection;
     options?: Options;
-};
-
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm",
-    Xray = "xray"
-}
-type ExplorerOptions = {
-    replacePath: string;
 };
 
 declare namespace Arweave {

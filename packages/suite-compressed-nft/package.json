@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@irys/sdk": "^0.0.3",
-    "@metaplex-foundation/mpl-bubblegum": "^3.0.0",
+    "@metaplex-foundation/mpl-bubblegum": "3.0.0",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana-suite/config": "workspace:*",
     "@solana/spl-account-compression": "^0.2.0",

@@ -12,14 +12,13 @@ import {
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
 } from '@solana/spl-account-compression';
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { TransactionBuilder } from '~/transaction-builder';
 import { DelegateOptions } from '~/types/compressed-nft';
 import { Pubkey, Secret } from '~/types/account';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
-
   /**
    * @internal
    */

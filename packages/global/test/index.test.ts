@@ -1,6 +1,6 @@
 import test from 'ava';
 import '../src';
-import { Constants } from '~/shared';
+import { Constants } from '~/suite-utils';
 import { Node } from '~/node';
 import { Explorer } from '~/types/global';
 

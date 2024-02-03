@@ -1,6 +1,6 @@
 import { TransactionInstruction } from '@solana/web3.js';
 import { TransactionBuilder } from '~/transaction-builder';
-import { Constants, Result, Try } from '~/shared';
+import { Constants, Result, Try } from '~/suite-utils';
 import { Secret } from '~/types/account';
 import { MemoOptions } from '~/types/memo';
 import bs from 'bs58';

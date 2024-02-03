@@ -4,7 +4,7 @@ import {
 } from '@solana/spl-token';
 import { Pubkey, Secret } from '~/types/account';
 import { TransactionBuilder } from '~/transaction-builder';
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { SplToken as Calculate } from './calculate-amount';
 import { BurnOptions } from '~/types/spl-token';
 import { CommonStructure } from '~/types/transaction-builder';

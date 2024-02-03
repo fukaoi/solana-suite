@@ -1,4 +1,4 @@
-import { overwriteObject, Result } from '~/shared';
+import { overwriteObject, Result } from '~/suite-utils';
 import { Secret } from '~/types/account';
 import {} from '~/types/converter';
 /* eslint-disable @typescript-eslint/no-unused-vars */

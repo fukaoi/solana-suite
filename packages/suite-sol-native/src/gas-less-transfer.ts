@@ -1,5 +1,5 @@
 import { SystemProgram, Transaction } from '@solana/web3.js';
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';

@@ -1,6 +1,6 @@
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Node } from '~/node';
-import { Constants, debugLog } from '~/shared';
+import { Constants, debugLog } from '~/suite-utils';
 import { Account } from '~/account';
 import { BigNumber } from 'bignumber.js';
 import { Explorer, ExplorerOptions } from '~/types/global';

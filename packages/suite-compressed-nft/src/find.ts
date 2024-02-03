@@ -1,6 +1,6 @@
 import { Pubkey } from '~/types/account';
 import { DasApi } from '~/das-api';
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { Metadata, NftMetadata } from '~/types/nft';
 import { FindOptions } from '~/types/find';
 

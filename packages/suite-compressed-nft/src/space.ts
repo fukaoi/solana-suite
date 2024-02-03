@@ -10,7 +10,7 @@ import { PublicKey, SystemProgram } from '@solana/web3.js';
 import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
 import { Account } from '~/account';
 import { Pubkey } from '~/types/account';
-import { Constants, debugLog, Result, Try } from '~/shared';
+import { Constants, debugLog, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { MintStructure } from '~/types/transaction-builder';

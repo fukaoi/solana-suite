@@ -8,8 +8,7 @@ import {
 import { Node } from '~/node';
 import { MAX_RETRIES, TransactionBuilder as Common } from './common';
 import { TransactionBuilder as Mint } from './mint';
-import { Try } from '../../shared/src/shared';
-import { Result } from '../../shared/src/result';
+import { Try, Result } from '~/suite-utils';
 
 export namespace TransactionBuilder {
   export class Batch {

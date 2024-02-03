@@ -13,7 +13,7 @@ const entry = {
   memo: 'src/memo/index.ts',
   phantom: 'src/phantom/index.ts',
   'regular-nft': 'src/regular-nft/index.ts',
-  shared: 'src/shared/index.ts',
+  utils: 'src/utils/index.ts',
   storage: 'src/storage/index.ts',
   'sol-native': 'src/sol-native/index.ts',
   'spl-token': 'src/spl-token/index.ts',

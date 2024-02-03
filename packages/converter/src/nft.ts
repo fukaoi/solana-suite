@@ -1,7 +1,7 @@
 import { Converter as Collection } from './collection';
 import { Converter as Creators } from './creators';
 import { Converter as Royalty } from './royalty';
-import { convertTimestampToDateTime } from '~/shared';
+import { convertTimestampToDateTime } from '~/suite-utils';
 import { AssetAndOffchain } from '~/types/storage';
 import { Metadata } from '~/types/nft';
 import { Pubkey } from '~/types/account';

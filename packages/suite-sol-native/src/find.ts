@@ -1,5 +1,5 @@
 import { ParsedAccountData } from '@solana/web3.js';
-import { Result, Try } from '~/shared';
+import { Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { OwnerInfo, Pubkey } from '~/types/account';
 import { TransactionFilter } from '~/transaction-filter';

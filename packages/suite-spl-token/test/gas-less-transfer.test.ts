@@ -4,8 +4,8 @@ import { RandomAsset } from 'test-tools/setupAsset';
 import { SplToken } from '../src/';
 import { KeypairAccount, Pubkey } from '~/types/account';
 import { Account } from '~/account';
+import { Node } from '~/suite-utils';
 
-let source: KeypairAccount;
 let feePayer: KeypairAccount;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;
@@ -41,7 +41,8 @@ test('transfer feePayerPartialSign', async (t) => {
   );
 
   t.true(inst1.isOk, `${inst1.unwrap()}`);
-  await inst1.submit();
+  const resMint = await inst1.submit();
+  await Node.confirmedSig(resMint.unwrap());
   const token = inst1.unwrap().data as Pubkey;
   t.log('# mint: ', token);
 
@@ -51,13 +52,13 @@ test('transfer feePayerPartialSign', async (t) => {
     receipt.pubkey,
     100,
     MINT_DECIMAL,
-    source.pubkey,
+    feePayer.pubkey,
   );
 
   t.true(serialized.isOk, `${serialized.unwrap()}`);
 
   if (serialized.isOk) {
-    const res = await serialized.value.submit(source.secret);
+    const res = await serialized.value.submit(feePayer.secret);
     t.true(res.isOk, `${res.unwrap()}`);
     t.log('# tx signature: ', res.unwrap());
   }

@@ -1,4 +1,4 @@
-import { Constants, debugLog, isBrowser, isNode } from '~/shared';
+import { Constants, debugLog, isBrowser, isNode } from '~/suite-utils';
 import { FileType, Identity, Tags, UploadableFileType } from '~/types/storage';
 import { PhantomProvider } from '~/types/phantom';
 import Irys, { WebIrys } from '@irys/sdk';

@@ -1,6 +1,6 @@
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
-import { debugLog, Result, sleep, Try } from '~/shared';
+import { debugLog, Result, sleep, Try } from '~/suite-utils';
 import { TokenMetadata } from '~/types/spl-token';
 import { Offchain } from '~/types/storage';
 import { Converter } from '~/converter';

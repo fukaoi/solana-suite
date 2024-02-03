@@ -5,7 +5,7 @@ import { Converter } from '~/converter';
 import { Storage } from '~/storage';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
-import { debugLog, Result, Try, unixTimestamp, Validator } from '~/shared';
+import { debugLog, Result, Try, unixTimestamp, Validator } from '~/suite-utils';
 import { DasApi } from '~/das-api';
 import { CompressedNft as Space } from './space';
 import {

@@ -4,7 +4,7 @@ import { Metadata, NftMetadata } from '~/types/nft';
 import { Offchain } from '~/types/storage';
 import { FindOptions, Sortable, SortBy, SortDirection } from '~/types/find';
 import { DasApi as Api } from './api';
-import { debugLog } from '~/shared';
+import { debugLog } from '~/suite-utils';
 
 export namespace DasApi {
   //@internal
@@ -14,8 +14,11 @@ export namespace DasApi {
   };
 
   export const fetchOffchain = async (uri: string) => {
-    const json = await (await fetch(uri)).json();
-    return json;
+    const response = await fetch(uri);
+    if (response.status !== 200) {
+      return {};
+    }
+    return await response.json();
   };
 
   /**
