@@ -5,7 +5,7 @@
   "compilerOptions": {
     "paths": {
       "~/types/*": ["../types/src/*/index.ts"],
-      "~/*": ["../*/src/index.ts"],
+      "~/*": ["../*/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],

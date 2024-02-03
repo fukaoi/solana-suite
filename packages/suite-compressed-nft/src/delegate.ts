@@ -19,7 +19,6 @@ import { Pubkey, Secret } from '~/types/account';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
-
   /**
    * @internal
    */

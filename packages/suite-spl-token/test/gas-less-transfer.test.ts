@@ -6,7 +6,6 @@ import { KeypairAccount, Pubkey } from '~/types/account';
 import { Account } from '~/account';
 import { Node } from '~/suite-utils';
 
-let source: KeypairAccount;
 let feePayer: KeypairAccount;
 
 const TOKEN_TOTAL_AMOUNT = 10000000;

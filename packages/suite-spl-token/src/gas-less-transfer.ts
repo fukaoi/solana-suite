@@ -42,7 +42,6 @@ export namespace SplToken {
         feePayer,
       );
 
-      let inst2;
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
 
       const tx = new Transaction({
@@ -51,7 +50,7 @@ export namespace SplToken {
         feePayer: feePayer.toPublicKey(),
       });
 
-      inst2 = createTransferCheckedInstruction(
+      const inst2 = createTransferCheckedInstruction(
         sourceToken.tokenAccount.toPublicKey(),
         mint.toPublicKey(),
         destToken.tokenAccount.toPublicKey(),

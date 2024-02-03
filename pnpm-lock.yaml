@@ -298,9 +298,33 @@ importers:
 
   packages/suite-airdrop:
     dependencies:
+      '@metaplex-foundation/mpl-bubblegum':
+        specifier: ^3.0.0
+        version: 3.0.0(@metaplex-foundation/umi@0.8.10)
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0
+      '@solana-suite/config':
+        specifier: workspace:^
+        version: link:../suite-config
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.8(@solana/web3.js@1.87.1)
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.87.1
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
+      bn.js:
+        specifier: ^5.2.1
+        version: 5.2.1
+      bs58:
+        specifier: ^4.0.1
+        version: 4.0.1
+      mpl-bubblegum-instruction:
+        specifier: github:atonoy/mpl-bubblegum-instructions
+        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
     devDependencies:
       build-configs/eslint:
         specifier: workspace:*
@@ -2315,7 +2339,7 @@ packages:
     resolution: {integrity: sha512-LZmYCKcPQDtJgecvWOgT/cnoIQPWjdH+QVyzPcFvyDUiT0DiRjZaam4aqNUyvchLFhzgunv3d9xOoyE34ofdoQ==}
     engines: {node: '>= 10'}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.6
       '@solana/web3.js': 1.87.6
       bn.js: 5.2.1
       buffer: 6.0.3
