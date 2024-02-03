@@ -45,10 +45,6 @@ test('transfer transaction with multi sig', async (t) => {
       t.log('# signature: ', sig);
       t.pass();
     },
-    // (err: Error) => t.fail(err.message),
-    (err: Error) => {
-      console.error(err);
-      t.fail();
-    },
-  );
+    (err: Error) => t.fail(err.message),
+);
 });
