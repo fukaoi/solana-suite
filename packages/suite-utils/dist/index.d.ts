@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { PublicKey, Commitment, TransactionSignature, Keypair, Connection } from '@solana/web3.js';
+import { PublicKey, Commitment, TransactionSignature, TransactionInstruction, Keypair, Connection } from '@solana/web3.js';
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
@@ -368,6 +368,34 @@ declare const convertTimestampToDateTime: (created_at: number | undefined) => Da
  */
 declare const unixTimestamp: () => number;
 
+/**
+ * Get Associated token Account.
+ * if not created, create new token accouint
+ *
+ * @param {Pubkey} mint
+ * @param {Pubkey} owner
+ * @param {Secret} feePayer
+ * @param {boolean} allowOwnerOffCurve
+ * @returns Promise<string | Instruction>
+ */
+declare namespace Account$3 {
+    namespace Associated {
+        /**
+         * [Main logic]Get Associated token Account.
+         * if not created, create new token accouint
+         *
+         * @param {Pubkey} mint
+         * @param {Pubkey} owner
+         * @param {Pubkey} feePayer
+         * @returns Promise<string>
+         */
+        const makeOrCreateInstruction: (mint: Pubkey, owner: Pubkey, feePayer?: Pubkey, allowOwnerOffCurve?: boolean) => Promise<{
+            tokenAccount: string;
+            inst: TransactionInstruction | undefined;
+        }>;
+    }
+}
+
 declare namespace Account$2 {
     class Keypair {
         secret: Secret;
@@ -427,6 +455,7 @@ type ExplorerOptions = {
 declare const Account: {
     Pda: typeof Account$1.Pda;
     Keypair: typeof Account$2.Keypair;
+    Associated: typeof Account$3.Associated;
 };
 
 declare namespace Node {
