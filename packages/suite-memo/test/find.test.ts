@@ -2,7 +2,7 @@ import test from 'ava';
 
 import { Memo } from '../src/';
 import { History } from '~/types/history';
-import { OnErr, OnOk } from '~/types/shared';
+import { OnErr, OnOk } from '~/types/utils';
 
 test('Get Only memo history', async (t) => {
   const onOk: OnOk<History> = (ok) => {
