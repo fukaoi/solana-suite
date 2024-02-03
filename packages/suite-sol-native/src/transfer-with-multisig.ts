@@ -57,7 +57,7 @@ export namespace SolNative {
         0,
       );
 
-      const sourceToken = await Account.Associated.retryGetOrCreate(
+      const sourceToken = await Account.Associated.makeOrCreateInstruction(
         token.toString(),
         owner,
         payer,
@@ -65,7 +65,7 @@ export namespace SolNative {
 
       debugLog('# sourceToken: ', sourceToken);
 
-      const destToken = await Account.Associated.retryGetOrCreate(
+      const destToken = await Account.Associated.makeOrCreateInstruction(
         token.toString(),
         wrapped.toString(),
         payer,
@@ -73,10 +73,14 @@ export namespace SolNative {
 
       debugLog('# destToken: ', destToken);
 
+      if (destToken.inst) {
+        instructions.push(destToken.inst);
+      }
+
       instructions.push(
         createTransferInstruction(
-          sourceToken.toPublicKey(),
-          destToken.toPublicKey(),
+          sourceToken.tokenAccount.toPublicKey(),
+          destToken.tokenAccount.toPublicKey(),
           owner.toPublicKey(),
           parseInt(`${amount}`, RADIX), // No lamports, its sol
           keypairs,
