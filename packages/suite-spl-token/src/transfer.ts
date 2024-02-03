@@ -31,31 +31,37 @@ export namespace SplToken {
   ): Promise<Result<CommonStructure, Error>> => {
     return Try(async () => {
       const payer = options.feePayer ? options.feePayer : ownerOrMultisig[0];
+      const payerPubkey = new Account.Keypair({ secret: payer });
       const keypairs = ownerOrMultisig.map((s) => s.toKeypair());
-
-      const sourceToken = await Account.Associated.retryGetOrCreate(
+      const sourceToken = await Account.Associated.makeOrCreateInstruction(
         mint,
-        owner,
-        payer,
+        owner.toString(),
+        payerPubkey.pubkey,
       );
 
-      const destToken = await Account.Associated.retryGetOrCreate(
+      const destToken = await Account.Associated.makeOrCreateInstruction(
         mint,
         dest,
-        payer,
+        payerPubkey.pubkey,
       );
 
       const inst = createTransferCheckedInstruction(
-        sourceToken.toPublicKey(),
+        sourceToken.tokenAccount.toPublicKey(),
         mint.toPublicKey(),
-        destToken.toPublicKey(),
+        destToken.tokenAccount.toPublicKey(),
         owner.toPublicKey(),
         Calculator.calculateAmount(amount, mintDecimal),
         mintDecimal,
         keypairs,
       );
 
-      return new TransactionBuilder.Common([inst], keypairs, payer.toKeypair());
+      const instructions = destToken.inst ? [destToken.inst, inst] : [inst];
+
+      return new TransactionBuilder.Common(
+        instructions,
+        keypairs,
+        payer.toKeypair(),
+      );
     });
   };
 }
