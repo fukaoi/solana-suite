@@ -36,7 +36,7 @@ test('Retry getOrCreate', async (t) => {
   const res = await Account.Associated.retryGetOrCreate(
     mint,
     source.pubkey,
-    source.secret,
+    feePayer.secret,
   );
 
   t.log('# associated token account: ', res);

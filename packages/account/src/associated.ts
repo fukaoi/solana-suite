@@ -76,7 +76,6 @@ export namespace Account {
           const inst = await get(mint, owner, feePayer, true);
 
           if (inst && typeof inst === 'string') {
-            debugLog('# associatedTokenAccount: ', inst);
             return inst;
           } else if (inst instanceof TransactionBuilder.Common) {
             (await inst.submit()).map(
