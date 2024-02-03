@@ -60,7 +60,8 @@ export namespace SolNative {
       const sourceToken = await Account.Associated.makeOrCreateInstruction(
         token.toString(),
         owner,
-        payer,
+        new Account.Keypair({ secret: payer }).pubkey,
+        true,
       );
 
       debugLog('# sourceToken: ', sourceToken);
@@ -68,11 +69,15 @@ export namespace SolNative {
       const destToken = await Account.Associated.makeOrCreateInstruction(
         token.toString(),
         wrapped.toString(),
-        payer,
+        new Account.Keypair({ secret: payer }).pubkey,
+        true,
       );
 
       debugLog('# destToken: ', destToken);
 
+      if (sourceToken.inst) {
+        instructions.push(sourceToken.inst);
+      }
       if (destToken.inst) {
         instructions.push(destToken.inst);
       }
