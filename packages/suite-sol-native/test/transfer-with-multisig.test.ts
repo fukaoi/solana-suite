@@ -46,5 +46,5 @@ test('transfer transaction with multi sig', async (t) => {
       t.pass();
     },
     (err: Error) => t.fail(err.message),
-);
+  );
 });
