@@ -75,7 +75,7 @@ const updateDasApiUrlConfigFile = (dasApiUrl: string[]): void => {
 };
 
 const showCurrentConfigFile = (): void => {
-  const cjs = readFileSync(Config.JSON_FILE_NAME);
+  const cjs = readFileSync(configPath);
   showMessage(`Current value\n${cjs.toString()}\n`);
 };
 

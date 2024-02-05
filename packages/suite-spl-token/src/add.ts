@@ -31,7 +31,7 @@ export namespace SplToken {
       const payer = options.feePayer ? options.feePayer : ownerOrMultisig[0];
       const keypairs = ownerOrMultisig.map((s) => s.toKeypair());
 
-      const tokenAssociated = await Account.Associated.retryGetOrCreate(
+      const associated = await Account.Associated.makeOrCreateInstruction(
         token,
         owner,
         payer,
@@ -39,15 +39,17 @@ export namespace SplToken {
 
       const inst = createMintToCheckedInstruction(
         token.toPublicKey(),
-        tokenAssociated.toPublicKey(),
+        associated.tokenAccount.toPublicKey(),
         owner.toPublicKey(),
         Calculate.calculateAmount(totalAmount, mintDecimal),
         mintDecimal,
         keypairs,
       );
 
+      const instructions = associated.inst ? [associated.inst, inst] : [inst];
+
       return new TransactionBuilder.Common<Pubkey>(
-        [inst],
+        instructions,
         keypairs,
         payer.toKeypair(),
         token,

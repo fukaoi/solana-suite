@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@solana/web3.js": "^1.78.5",
+    "@solana/spl-token": "^0.3.8",
     "@solana-suite/config": "workspace:*",
     "@metaplex-foundation/mpl-bubblegum": "^3.0.0",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",

@@ -1,6 +1,6 @@
 import { Pubkey } from '~/types/account';
 import { FindOptions, History } from '~/types/history';
-import { OnErr, OnOk } from '~/types/suite-utils';
+import { OnErr, OnOk } from '~/types/utils';
 import { FilterType, ModuleName } from '~/types/transaction-filter';
 import { Signatures, TransactionFilter } from '~/transaction-filter';
 

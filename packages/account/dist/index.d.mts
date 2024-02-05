@@ -1,4 +1,4 @@
-import { PublicKey, Keypair } from '@solana/web3.js';
+import { TransactionInstruction, PublicKey, Keypair } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -8,6 +8,34 @@ type Pubkey = (string & {
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
+
+/**
+ * Get Associated token Account.
+ * if not created, create new token accouint
+ *
+ * @param {Pubkey} mint
+ * @param {Pubkey} owner
+ * @param {Secret} feePayer
+ * @param {boolean} allowOwnerOffCurve
+ * @returns Promise<string | Instruction>
+ */
+declare namespace Account$3 {
+    namespace Associated {
+        /**
+         * [Main logic]Get Associated token Account.
+         * if not created, create new token accouint
+         *
+         * @param {Pubkey} mint
+         * @param {Pubkey} owner
+         * @param {Pubkey} feePayer
+         * @returns Promise<string>
+         */
+        const makeOrCreateInstruction: (mint: Pubkey, owner: Pubkey, feePayer?: Pubkey, allowOwnerOffCurve?: boolean) => Promise<{
+            tokenAccount: string;
+            inst: TransactionInstruction | undefined;
+        }>;
+    }
+}
 
 declare namespace Account$2 {
     class Keypair {
@@ -68,6 +96,7 @@ type ExplorerOptions = {
 declare const Account: {
     Pda: typeof Account$1.Pda;
     Keypair: typeof Account$2.Keypair;
+    Associated: typeof Account$3.Associated;
 };
 
 export { Account };

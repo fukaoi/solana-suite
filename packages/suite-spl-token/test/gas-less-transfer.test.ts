@@ -20,7 +20,6 @@ const TOKEN_METADATA = {
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
-  source = obj.source;
   feePayer = obj.feePayer;
 });
 

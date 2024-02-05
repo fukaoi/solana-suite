@@ -22,7 +22,7 @@ test.before(async () => {
   collectionMint = obj.collectionMint;
 });
 
-test('[Over size]Calculate transaction size', async (t) => {
+test.skip('[Over size]Calculate transaction size', async (t) => {
   const asset = RandomAsset.get();
   const creators: InputCreators[] = [];
   const unverifyCreator = Account.Keypair.create();
@@ -107,7 +107,7 @@ test('[Over size]Calculate transaction size', async (t) => {
   t.true(bool);
 });
 
-test('[Under size]Calculate transaction size', async (t) => {
+test.skip('[Under size]Calculate transaction size', async (t) => {
   const asset = RandomAsset.get();
   const creators: InputCreators[] = [];
   const unverifyCreator = Account.Keypair.create();

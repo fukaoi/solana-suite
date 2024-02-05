@@ -1,7 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "build-configs/tsconfig/base.json",
-
   "display": "@solana-suite/regular-nft",
   "compilerOptions": {
     "paths": {
@@ -10,10 +9,15 @@
       ],
       "~/*": [
         "../*/src/index.ts"
-      ],
-      "~/shared/exports": ["../shared/src/exports.ts"]
+      ]
     }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
