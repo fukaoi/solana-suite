@@ -24,9 +24,9 @@ export namespace Constants {
     // export const ANNOUNCE = `
     //     [DEPRECATED]
     //     --------------------------------------
-    //     Account, Node, toExplorer, Pubkey, Secret have been moved to 
-    //     @solana-suite/utils 
-    //     ------------------------------------- 
+    //     Account, Node, toExplorer, Pubkey, Secret have been moved to
+    //     @solana-suite/utils
+    //     -------------------------------------
     //     `;
 
     export const calculateProbability = (): boolean => {
