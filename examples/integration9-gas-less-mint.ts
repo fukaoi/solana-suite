@@ -6,7 +6,8 @@ import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
 import { requestSol } from 'test-tools';
 import { RandomAsset } from 'test-tools/setupAsset';
-import { Account, RegularNft } from '@solana-suite/regular-nft';
+import { RegularNft } from '@solana-suite/regular-nft';
+import { Account } from '@solana-suite/utils';
 
 (async () => {
   // random create

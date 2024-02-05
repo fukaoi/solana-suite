@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { PublicKey, Commitment, TransactionSignature, TransactionInstruction, Keypair, Connection } from '@solana/web3.js';
+import { PublicKey, Commitment, TransactionSignature, Keypair, TransactionInstruction, Connection } from '@solana/web3.js';
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
@@ -367,6 +367,35 @@ declare const convertTimestampToDateTime: (created_at: number | undefined) => Da
  */
 declare const unixTimestamp: () => number;
 
+declare global {
+    interface String {
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
+    }
+    interface Number {
+        toSol(): number;
+        toLamports(): number;
+    }
+    interface Console {
+        debug(data: unknown, data2?: unknown, data3?: unknown): void;
+    }
+    interface Secret {
+        toKeypair(): Keypair;
+    }
+    interface Pubkey {
+        toPublicKey(): PublicKey;
+    }
+}
+declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm",
+    Xray = "xray"
+}
+type ExplorerOptions = {
+    replacePath: string;
+};
+
 /**
  * Get Associated token Account.
  * if not created, create new token accouint
@@ -421,35 +450,6 @@ declare namespace Account$1 {
         const getAssetId: (address: Pubkey, leafIndex: number) => Pubkey;
     }
 }
-
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm",
-    Xray = "xray"
-}
-type ExplorerOptions = {
-    replacePath: string;
-};
 
 declare const Account: {
     Pda: typeof Account$1.Pda;

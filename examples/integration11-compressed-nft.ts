@@ -3,13 +3,9 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import {
-  Account,
-  CompressedNft,
-  Explorer,
-  Node,
-  sleep,
-} from '@solana-suite/compressed-nft';
+import { CompressedNft } from '@solana-suite/compressed-nft';
+
+import { Account, Explorer, Node, sleep } from '@solana-suite/utils';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { requestSol } from 'test-tools';
 

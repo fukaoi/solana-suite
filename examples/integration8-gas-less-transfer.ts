@@ -5,7 +5,8 @@
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
 import { SplToken } from '@solana-suite/spl-token';
-import { Account, Pubkey, SolNative } from '@solana-suite/sol-native';
+import { SolNative } from '@solana-suite/sol-native';
+import { Account, Pubkey } from '@solana-suite/utils';
 import { requestSol } from 'test-tools';
 import { RandomAsset } from 'test-tools/setupAsset';
 

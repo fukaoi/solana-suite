@@ -2,7 +2,8 @@
 // $ npx ts-node examples/integration3-handling-response
 //////////////////////////////////////////////
 
-import { OwnerInfo, SolNative } from '@solana-suite/sol-native';
+import { SolNative } from '@solana-suite/sol-native';
+import { OwnerInfo } from '@solana-suite/utils';
 
 const DEMO_ADDRESS = 'AorMYhBGmqo8Czp65WLjA42vKaQ5jS69gxyk6KxAsK3x';
 

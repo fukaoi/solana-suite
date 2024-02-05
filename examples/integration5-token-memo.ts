@@ -4,7 +4,8 @@
 
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
-import { Account, Node, Pubkey, SplToken } from '@solana-suite/spl-token';
+import { Account, Node, Pubkey } from '@solana-suite/utils';
+import { SplToken } from '@solana-suite/spl-token';
 import { Memo } from '@solana-suite/memo';
 
 import { requestSol } from 'test-tools';
