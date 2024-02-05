@@ -45,15 +45,8 @@
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
   "dependencies": {
-    "@solana-suite/config": "workspace:*",
-    "@solana/web3.js": "^1.78.5",
-    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
-    "@solana/spl-token": "^0.3.8",
-    "bignumber.js": "^9.1.2",
-    "bs58": "^4.0.1",
-    "bn.js": "^5.2.1",
-    "@metaplex-foundation/mpl-bubblegum": "3.0.0",
-    "mpl-bubblegum-instruction": "github:atonoy/mpl-bubblegum-instructions"
+    "@solana-suite/config": "workspace:^",
+    "@solana/web3.js": "^1.78.5"
   },
   "devDependencies": {
     "build-configs/ava": "workspace:*",

@@ -772,33 +772,12 @@ importers:
 
   packages/suite-utils:
     dependencies:
-      '@metaplex-foundation/mpl-bubblegum':
-        specifier: 3.0.0
-        version: 3.0.0(@metaplex-foundation/umi@0.8.10)
-      '@metaplex-foundation/mpl-token-metadata':
-        specifier: ^2.13.0
-        version: 2.13.0
       '@solana-suite/config':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../suite-config
-      '@solana/spl-token':
-        specifier: ^0.3.8
-        version: 0.3.8(@solana/web3.js@1.87.6)
       '@solana/web3.js':
         specifier: ^1.78.5
         version: 1.87.6
-      bignumber.js:
-        specifier: ^9.1.2
-        version: 9.1.2
-      bn.js:
-        specifier: ^5.2.1
-        version: 5.2.1
-      bs58:
-        specifier: ^4.0.1
-        version: 4.0.1
-      mpl-bubblegum-instruction:
-        specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
     devDependencies:
       build-configs/ava:
         specifier: workspace:*
@@ -2372,22 +2351,6 @@ packages:
       '@solana/buffer-layout': 4.0.1
       '@solana/buffer-layout-utils': 0.2.0
       '@solana/web3.js': 1.87.1
-      buffer: 6.0.3
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - utf-8-validate
-    dev: false
-
-  /@solana/spl-token@0.3.8(@solana/web3.js@1.87.6):
-    resolution: {integrity: sha512-ogwGDcunP9Lkj+9CODOWMiVJEdRtqHAtX2rWF62KxnnSWtMZtV9rDhTrZFshiyJmxDnRL/1nKE1yJHg4jjs3gg==}
-    engines: {node: '>=16'}
-    peerDependencies:
-      '@solana/web3.js': ^1.47.4
-    dependencies:
-      '@solana/buffer-layout': 4.0.1
-      '@solana/buffer-layout-utils': 0.2.0
-      '@solana/web3.js': 1.87.6
       buffer: 6.0.3
     transitivePeerDependencies:
       - bufferutil
