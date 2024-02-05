@@ -8,7 +8,8 @@
     "packages/suite-phantom",
     "packages/suite-regular-nft",
     "packages/suite-sol-native",
-    "packages/suite-spl-token"
+    "packages/suite-spl-token",
+    "packages/suite-utils"
   ],
   "name": "Solana Suite API Reference",
   "entryPointStrategy": "packages",
