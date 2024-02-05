@@ -4,7 +4,8 @@
 
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
-import { Account, Pubkey, Secret, SplToken } from '@solana-suite/spl-token';
+import { SplToken } from '@solana-suite/spl-token';
+import { Account, Pubkey, Secret } from '@solana-suite/utils';
 import { requestSol } from 'test-tools';
 import { RandomAsset } from 'test-tools/setupAsset';
 
@@ -81,7 +82,7 @@ const SLEEP_TIME_WAIT = 0;
 
   let i = 1;
   for (const user of users) {
-    await new Promise(() => setTimeout(() => {}, SLEEP_TIME_WAIT * 1000));
+    await new Promise(() => setTimeout(() => { }, SLEEP_TIME_WAIT * 1000));
     const inst2 = await SplToken.transfer(
       mint,
       owner.pubkey,

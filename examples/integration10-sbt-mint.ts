@@ -4,7 +4,8 @@
 
 import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
-import { Account, RegularNft } from '@solana-suite/regular-nft';
+import { Account } from '@solana-suite/utils';
+import { RegularNft } from '@solana-suite/regular-nft';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { requestSol } from 'test-tools';
 

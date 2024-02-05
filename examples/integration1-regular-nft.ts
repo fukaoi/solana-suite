@@ -3,7 +3,8 @@
 //////////////////////////////////////////////
 
 import { Airdrop } from '@solana-suite/airdrop';
-import { Account, Node, Pubkey, RegularNft } from '@solana-suite/regular-nft';
+import { RegularNft } from '@solana-suite/regular-nft';
+import { Account, Node, Pubkey } from '@solana-suite/utils';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { requestSol } from 'test-tools';
 import assert from 'assert';

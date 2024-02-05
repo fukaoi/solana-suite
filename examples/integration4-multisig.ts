@@ -3,7 +3,8 @@
 //////////////////////////////////////////////
 
 import assert from 'assert';
-import { Account, Multisig, Node, Pubkey } from '@solana-suite/multisig';
+import { Multisig } from '@solana-suite/multisig';
+import { Account, Node, Pubkey } from '@solana-suite/utils';
 import { Airdrop } from '@solana-suite/airdrop';
 import { requestSol } from 'test-tools';
 
