@@ -52,7 +52,7 @@ importers:
   packages/account:
     dependencies:
       '@metaplex-foundation/mpl-bubblegum':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(@metaplex-foundation/umi@0.8.10)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
