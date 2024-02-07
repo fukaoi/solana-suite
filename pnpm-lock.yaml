@@ -322,9 +322,6 @@ importers:
       bs58:
         specifier: ^4.0.1
         version: 4.0.1
-      mpl-bubblegum-instruction:
-        specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
     devDependencies:
       build-configs/eslint:
         specifier: workspace:*
@@ -512,9 +509,6 @@ importers:
       bs58:
         specifier: ^4.0.1
         version: 4.0.1
-      mpl-bubblegum-instruction:
-        specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
     devDependencies:
       build-configs/ava:
         specifier: workspace:*
