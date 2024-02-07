@@ -11,7 +11,7 @@
     },
     "prepublish": {
       "dependsOn": [
-        "^build",
+        "build",
         "eslint",
         "prettier:fix",
         "depcheck"

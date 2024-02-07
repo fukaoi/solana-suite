@@ -1,6 +1,6 @@
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
 import * as _solana_web3_js from '@solana/web3.js';
-import { PublicKey, Keypair, TransactionSignature, TransactionInstruction } from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, Keypair } from '@solana/web3.js';
 import BN from 'bn.js';
 
 declare const pubKeyNominality: unique symbol;
@@ -11,35 +11,6 @@ type Pubkey = (string & {
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
-
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm",
-    Xray = "xray"
-}
-type ExplorerOptions = {
-    replacePath: string;
-};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -250,26 +221,31 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-type bignum = number | BN;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
+type CommonStructure<T = undefined> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    canSubmit?: boolean;
+    data?: T;
+    submit: () => Promise<Result<TransactionSignature, Error>>;
 };
-type Creators = {
-    address: Pubkey;
-    share: number;
-    verified: boolean;
+type MintStructure<T = Pubkey> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    data: T;
+    feePayer: Keypair;
+    canSubmit?: boolean;
+    submit: () => Promise<Result<TransactionSignature, Error>>;
 };
-type InputCreators = {
-    address: Pubkey;
-    secret: Secret;
-    share: number;
+type PartialSignStructure<T = Pubkey> = {
+    hexInstruction: string;
+    canSubmit?: boolean;
+    data?: T;
+    submit: (feePayer: Secret) => Promise<Result<string, Error>>;
+};
+
+type BurnOptions = {
+    feePayer: Secret;
 };
 
 type FileType = string | File;
@@ -314,35 +290,30 @@ type Attribute = {
     [key: string]: unknown;
 };
 
+type bignum = number | BN;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type Creators = {
+    address: Pubkey;
+    share: number;
+    verified: boolean;
+};
+type InputCreators = {
+    address: Pubkey;
+    secret: Secret;
+    share: number;
+};
+
 type Options = {
     [key: string]: unknown;
-};
-
-type CommonStructure<T = undefined> = {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    canSubmit?: boolean;
-    data?: T;
-    submit: () => Promise<Result<TransactionSignature, Error>>;
-};
-type MintStructure<T = Pubkey> = {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    data: T;
-    feePayer: Keypair;
-    canSubmit?: boolean;
-    submit: () => Promise<Result<TransactionSignature, Error>>;
-};
-type PartialSignStructure<T = Pubkey> = {
-    hexInstruction: string;
-    canSubmit?: boolean;
-    data?: T;
-    submit: (feePayer: Secret) => Promise<Result<string, Error>>;
-};
-
-type BurnOptions = {
-    feePayer: Secret;
 };
 
 type TokenMetadata = {
