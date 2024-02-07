@@ -4,7 +4,7 @@ import { RandomAsset } from 'test-tools/setupAsset';
 import { SplToken } from '../src/';
 import { KeypairAccount, Pubkey } from '~/types/account';
 import { Account } from '~/account';
-import { Node } from '~/suite-utils';
+import { Node } from '~/node';
 
 let feePayer: KeypairAccount;
 

@@ -2,7 +2,8 @@ import fs from 'node:fs';
 import bs from 'bs58';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { KeypairAccount } from '~/types/account';
-import { Constants, debugLog, Pubkey, Secret } from '~/suite-utils';
+import { Constants, debugLog } from '~/suite-utils';
+import { Pubkey, Secret } from '~/types/account';
 import { Node } from '~/node';
 import { Account } from '~/account';
 
