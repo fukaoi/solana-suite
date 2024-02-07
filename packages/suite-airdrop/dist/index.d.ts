@@ -1,4 +1,4 @@
-import { PublicKey, Keypair, TransactionSignature } from '@solana/web3.js';
+import { TransactionSignature } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -8,35 +8,6 @@ type Pubkey = (string & {
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
-
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm",
-    Xray = "xray"
-}
-type ExplorerOptions = {
-    replacePath: string;
-};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;

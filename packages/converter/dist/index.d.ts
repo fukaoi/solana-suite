@@ -1,4 +1,4 @@
-import { PublicKey, ParsedTransactionWithMeta, Keypair, TransactionSignature } from '@solana/web3.js';
+import { PublicKey, ParsedTransactionWithMeta, TransactionSignature } from '@solana/web3.js';
 import { Metadata as Metadata$2, DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import BN from 'bn.js';
 import { MetadataArgs } from 'mpl-bubblegum-instruction';
@@ -302,35 +302,6 @@ declare namespace Converter$7 {
         const intoInfra: (input: InputNftMetadata, uri: string, sellerFeeBasisPoints: number) => DataV2;
     }
 }
-
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm",
-    Xray = "xray"
-}
-type ExplorerOptions = {
-    replacePath: string;
-};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;

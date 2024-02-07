@@ -1,10 +1,4 @@
-import { PublicKey, Keypair, TransactionSignature } from '@solana/web3.js';
-
-type InternalCreators = {
-    address: PublicKey;
-    verified: boolean;
-    share: number;
-};
+import { TransactionSignature, PublicKey } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -14,181 +8,6 @@ type Pubkey$1 = (string & {
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
-
-type AssetProof = {
-    leaf: Pubkey$1;
-    node_index: number;
-    proof: Pubkey$1[];
-    root: Pubkey$1;
-    tree_id: Pubkey$1;
-};
-type Metadata$1 = {
-    name: string;
-    symbol: string;
-    token_standard: string;
-};
-type Grouping = {
-    group_key: string;
-    group_value: string;
-};
-type Asset = {
-    interface: string;
-    id: Pubkey$1;
-    content: {
-        json_uri: string;
-        files: string[];
-        metadata: Metadata$1;
-        links: string[];
-    };
-    authorities: {
-        address: Pubkey$1;
-        scopes: string[];
-    }[];
-    compression: {
-        eligible: boolean;
-        compressed: boolean;
-        data_hash: Pubkey$1;
-        creator_hash: Pubkey$1;
-        asset_hash: Pubkey$1;
-        tree: Pubkey$1;
-        seq: number;
-        leaf_id: number;
-    };
-    grouping: Grouping[];
-    royalty: {
-        royalty_model: 'creators' | 'fanout' | 'single';
-        target: null;
-        percent: number;
-        basis_points: number;
-        primary_sale_happened: boolean;
-        locked: boolean;
-    };
-    creators: InternalCreators[];
-    ownership: {
-        frozen: boolean;
-        delegated: boolean;
-        delegate: Pubkey$1;
-        ownership_model: 'single' | 'token';
-        owner: Pubkey$1;
-    };
-    supply: {
-        print_max_supply: number;
-        print_current_supply: number;
-        edition_nonce: number;
-    };
-    mutable: boolean;
-    burnt: boolean;
-};
-type Assets = {
-    total: number;
-    limit: number;
-    page: number;
-    items: Asset[];
-};
-
-type FileType = string | File;
-
-type Offchain = {
-    name?: string;
-    symbol?: string;
-    description?: string;
-    seller_fee_basis_points?: number;
-    image?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    collection?: {
-        name?: string;
-        family?: string;
-        [key: string]: unknown;
-    };
-    collectionDetails?: {
-        kind: string;
-        size: number;
-    };
-    created_at?: number;
-};
-type Properties = {
-    creators?: {
-        address?: string;
-        share?: number;
-        [key: string]: unknown;
-    }[];
-    files?: {
-        type?: string;
-        filePath?: FileType;
-        [key: string]: unknown;
-    }[];
-    [key: string]: unknown;
-};
-type Attribute = {
-    trait_type?: string;
-    value?: string;
-    [key: string]: unknown;
-};
-
-type Authority = {
-    address: Pubkey$1;
-    scopes: string[];
-};
-type Creators = {
-    address: Pubkey$1;
-    share: number;
-    verified: boolean;
-}[];
-type Metadata = {
-    mint: Pubkey$1;
-    collectionMint: Pubkey$1;
-    authorities: Authority[];
-    royalty: number;
-    name: string;
-    symbol: string;
-    uri: string;
-    creators: Creators;
-    treeAddress: Pubkey$1;
-    isCompressed: boolean;
-    isMutable: boolean;
-    isBurn: boolean;
-    editionNonce: number;
-    primarySaleHappened: boolean;
-    dateTime: Date;
-    offchain: Offchain;
-};
-type NftMetadata = {
-    page: number;
-    total: number;
-    limit: number;
-    metadatas: Metadata[];
-};
-
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm",
-    Xray = "xray"
-}
-type ExplorerOptions = {
-    replacePath: string;
-};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -398,6 +217,158 @@ declare namespace Result {
 type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
+
+type InternalCreators = {
+    address: PublicKey;
+    verified: boolean;
+    share: number;
+};
+
+type AssetProof = {
+    leaf: Pubkey$1;
+    node_index: number;
+    proof: Pubkey$1[];
+    root: Pubkey$1;
+    tree_id: Pubkey$1;
+};
+type Metadata$1 = {
+    name: string;
+    symbol: string;
+    token_standard: string;
+};
+type Grouping = {
+    group_key: string;
+    group_value: string;
+};
+type Asset = {
+    interface: string;
+    id: Pubkey$1;
+    content: {
+        json_uri: string;
+        files: string[];
+        metadata: Metadata$1;
+        links: string[];
+    };
+    authorities: {
+        address: Pubkey$1;
+        scopes: string[];
+    }[];
+    compression: {
+        eligible: boolean;
+        compressed: boolean;
+        data_hash: Pubkey$1;
+        creator_hash: Pubkey$1;
+        asset_hash: Pubkey$1;
+        tree: Pubkey$1;
+        seq: number;
+        leaf_id: number;
+    };
+    grouping: Grouping[];
+    royalty: {
+        royalty_model: 'creators' | 'fanout' | 'single';
+        target: null;
+        percent: number;
+        basis_points: number;
+        primary_sale_happened: boolean;
+        locked: boolean;
+    };
+    creators: InternalCreators[];
+    ownership: {
+        frozen: boolean;
+        delegated: boolean;
+        delegate: Pubkey$1;
+        ownership_model: 'single' | 'token';
+        owner: Pubkey$1;
+    };
+    supply: {
+        print_max_supply: number;
+        print_current_supply: number;
+        edition_nonce: number;
+    };
+    mutable: boolean;
+    burnt: boolean;
+};
+type Assets = {
+    total: number;
+    limit: number;
+    page: number;
+    items: Asset[];
+};
+
+type FileType = string | File;
+
+type Offchain = {
+    name?: string;
+    symbol?: string;
+    description?: string;
+    seller_fee_basis_points?: number;
+    image?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    collection?: {
+        name?: string;
+        family?: string;
+        [key: string]: unknown;
+    };
+    collectionDetails?: {
+        kind: string;
+        size: number;
+    };
+    created_at?: number;
+};
+type Properties = {
+    creators?: {
+        address?: string;
+        share?: number;
+        [key: string]: unknown;
+    }[];
+    files?: {
+        type?: string;
+        filePath?: FileType;
+        [key: string]: unknown;
+    }[];
+    [key: string]: unknown;
+};
+type Attribute = {
+    trait_type?: string;
+    value?: string;
+    [key: string]: unknown;
+};
+
+type Authority = {
+    address: Pubkey$1;
+    scopes: string[];
+};
+type Creators = {
+    address: Pubkey$1;
+    share: number;
+    verified: boolean;
+}[];
+type Metadata = {
+    mint: Pubkey$1;
+    collectionMint: Pubkey$1;
+    authorities: Authority[];
+    royalty: number;
+    name: string;
+    symbol: string;
+    uri: string;
+    creators: Creators;
+    treeAddress: Pubkey$1;
+    isCompressed: boolean;
+    isMutable: boolean;
+    isBurn: boolean;
+    editionNonce: number;
+    primarySaleHappened: boolean;
+    dateTime: Date;
+    offchain: Offchain;
+};
+type NftMetadata = {
+    page: number;
+    total: number;
+    limit: number;
+    metadatas: Metadata[];
+};
 
 declare enum SortDirection {
     Asc = "asc",

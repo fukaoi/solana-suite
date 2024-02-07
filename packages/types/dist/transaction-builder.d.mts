@@ -1,6 +1,5 @@
 import { Secret, Pubkey } from './account.mjs';
 import { TransactionSignature, TransactionInstruction, Keypair } from '@solana/web3.js';
-import './global.mjs';
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;

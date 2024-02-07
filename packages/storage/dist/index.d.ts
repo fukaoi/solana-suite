@@ -1,4 +1,4 @@
-import { PublicKey, Keypair, TransactionSignature, Transaction } from '@solana/web3.js';
+import { TransactionSignature, PublicKey, Transaction } from '@solana/web3.js';
 import BN from 'bn.js';
 
 declare const pubKeyNominality: unique symbol;
@@ -9,35 +9,6 @@ type Pubkey = (string & {
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
-
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm",
-    Xray = "xray"
-}
-type ExplorerOptions = {
-    replacePath: string;
-};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -248,23 +219,6 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-type bignum = number | BN;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
-};
-type InputCreators = {
-    address: Pubkey;
-    secret: Secret;
-    share: number;
-};
-
 type PhantomProvider = {
     isPhantom?: boolean;
     publicKey: PublicKey | null;
@@ -323,29 +277,6 @@ type Attribute = {
     [key: string]: unknown;
 };
 
-type InputCollection = Pubkey;
-type Options = {
-    [key: string]: unknown;
-};
-type InputNftMetadata = {
-    name: string;
-    symbol: string;
-    royalty?: number;
-    storageType?: StorageType;
-    filePath?: FileType;
-    uri?: string;
-    isMutable?: boolean;
-    description?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    maxSupply?: bignum;
-    creators?: InputCreators[];
-    uses?: Uses;
-    collection?: InputCollection;
-    options?: Options;
-};
-
 declare namespace Arweave {
     const uploadFile: (filePath: FileType, feePayer: Secret) => Promise<Result<string, Error>>;
     const uploadData: (metadata: Offchain, feePayer: Secret) => Promise<Result<string, Error>>;
@@ -381,6 +312,46 @@ declare namespace NftStorage {
      */
     const uploadData: (storageData: Offchain) => Promise<Result<string, Error>>;
 }
+
+type bignum = number | BN;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type InputCreators = {
+    address: Pubkey;
+    secret: Secret;
+    share: number;
+};
+
+type InputCollection = Pubkey;
+type Options = {
+    [key: string]: unknown;
+};
+type InputNftMetadata = {
+    name: string;
+    symbol: string;
+    royalty?: number;
+    storageType?: StorageType;
+    filePath?: FileType;
+    uri?: string;
+    isMutable?: boolean;
+    description?: string;
+    external_url?: string;
+    attributes?: Attribute[];
+    properties?: Properties;
+    maxSupply?: bignum;
+    creators?: InputCreators[];
+    uses?: Uses;
+    collection?: InputCollection;
+    options?: Options;
+};
 
 declare namespace Storage {
     const toConvertOffchaindata: (input: InputNftMetadata, sellerFeeBasisPoints: number) => Offchain;

@@ -1,6 +1,6 @@
 import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
 import * as _solana_web3_js from '@solana/web3.js';
-import { PublicKey, Keypair, TransactionSignature, TransactionInstruction } from '@solana/web3.js';
+import { TransactionSignature, TransactionInstruction, Keypair } from '@solana/web3.js';
 import BN from 'bn.js';
 
 declare const pubKeyNominality: unique symbol;
@@ -107,35 +107,6 @@ type FindOptions = {
     sortBy: Sortable;
     before: string;
     after: string;
-};
-
-declare global {
-    interface String {
-        toPublicKey(): PublicKey;
-        toKeypair(): Keypair;
-        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
-    }
-    interface Number {
-        toSol(): number;
-        toLamports(): number;
-    }
-    interface Console {
-        debug(data: unknown, data2?: unknown, data3?: unknown): void;
-    }
-    interface Secret {
-        toKeypair(): Keypair;
-    }
-    interface Pubkey {
-        toPublicKey(): PublicKey;
-    }
-}
-declare enum Explorer {
-    Solscan = "solscan",
-    SolanaFM = "solanafm",
-    Xray = "xray"
-}
-type ExplorerOptions = {
-    replacePath: string;
 };
 
 declare abstract class AbstractResult<T, E extends Error> {
@@ -347,6 +318,29 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+type CommonStructure<T = undefined> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    canSubmit?: boolean;
+    data?: T;
+    submit: () => Promise<Result<TransactionSignature, Error>>;
+};
+type MintStructure<T = Pubkey> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    data: T;
+    feePayer: Keypair;
+    canSubmit?: boolean;
+    submit: () => Promise<Result<TransactionSignature, Error>>;
+};
+type PartialSignStructure<T = Pubkey> = {
+    hexInstruction: string;
+    canSubmit?: boolean;
+    data?: T;
+    submit: (feePayer: Secret) => Promise<Result<string, Error>>;
+};
+
 type BurnOptions = {
     feePayer: Secret;
 };
@@ -415,29 +409,6 @@ type FreezeOptions = {
 
 type TransferOptions = {
     feePayer: Secret;
-};
-
-type CommonStructure<T = undefined> = {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    canSubmit?: boolean;
-    data?: T;
-    submit: () => Promise<Result<TransactionSignature, Error>>;
-};
-type MintStructure<T = Pubkey> = {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    data: T;
-    feePayer: Keypair;
-    canSubmit?: boolean;
-    submit: () => Promise<Result<TransactionSignature, Error>>;
-};
-type PartialSignStructure<T = Pubkey> = {
-    hexInstruction: string;
-    canSubmit?: boolean;
-    data?: T;
-    submit: (feePayer: Secret) => Promise<Result<string, Error>>;
 };
 
 /** @namespace */
