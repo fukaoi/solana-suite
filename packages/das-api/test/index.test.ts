@@ -84,3 +84,17 @@ test('Get assets by group', async (t) => {
     (err) => t.fail(err.message),
   );
 });
+
+test.only('Get priority fee estimate', async (t) => {
+  const account = ['JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'];
+  const res = await DasApi.getPriorityFeeEstimate(account);
+  res.match(
+    (ok) => {
+      if (ok) {
+        console.log(ok);
+      }
+      t.pass();
+    },
+    (err) => t.fail(err.message),
+  );
+});

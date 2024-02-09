@@ -5,7 +5,17 @@ import { Sortable } from '~/types/find';
 export namespace DasApi {
   const connect = async (
     method: string,
-    params: (string | Pubkey | Sortable | number | undefined)[],
+    params: (
+      | string
+      | Pubkey
+      | Sortable
+      | number
+      | undefined
+      | Pubkey[]
+      | {
+        [key: string]: unknown;
+      }
+    )[],
   ) => {
     Constants.WarnningMessage.calculateProbability() &&
       console.warn(Constants.WarnningMessage.DAS_API_URL);
@@ -15,11 +25,24 @@ export namespace DasApi {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         jsonrpc: '2.0',
-        method,
-        id: 'compression',
-        params,
+        method: 'getPriorityFeeEstimate',
+        // method,
+        id: 'das-api',
+        // params,
+        params: [
+          {
+            accountKeys: ['JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'],
+            options: {
+              includeAllPriorityFeeLevels: true,
+            },
+          },
+        ],
       }),
     });
+    if (response.status !== 200) {
+      const err = (await response.json()).error.message;
+      return Result.err(Error(err));
+    }
     return (await response.json()).result;
   };
 
@@ -77,6 +100,20 @@ export namespace DasApi {
         page,
         before,
         after,
+      ]);
+    });
+  };
+
+  export const getPriorityFeeEstimate = async (
+    accountKeys: Pubkey[],
+  ): Promise<Result<Assets, Error>> => {
+    return Try(async () => {
+      const options = { includeAllPriorityFeeLevels: true };
+      return await connect('getPriorityFeeEstimate', [
+        {
+          accountKeys,
+          options,
+        },
       ]);
     });
   };
