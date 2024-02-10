@@ -39,7 +39,7 @@ export namespace DasApi {
     return (await response.json()).result;
   };
 
-  export const changeConnection = (url: string): void => {
+  export const changeDasUri = (url: string): void => {
     dasUri = url;
   };
 
