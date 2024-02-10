@@ -86,7 +86,9 @@ test('Get assets by group', async (t) => {
 });
 
 test('Get priority fee estimate', async (t) => {
-  t.log('# Node env: ', process.env.NODE_ENV);
+  const testUri =
+    'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
+  DasApi.changeConnection(testUri);
   const account = ['JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'];
   const res = await DasApi.getPriorityFeeEstimate(account);
   res.match(
