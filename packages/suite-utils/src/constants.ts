@@ -69,7 +69,6 @@ export namespace Constants {
 
   export enum DasApiUrl {
     dev = 'https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92,https://rpc-devnet.helius.xyz?api-key=9f70a843-3274-4ffd-a0a9-323f8b7c0639',
-    test = 'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92',
   }
 
   export enum NftstorageApiKey {
@@ -128,9 +127,6 @@ export namespace Constants {
         return urls[index];
       }
       default: {
-        if (process.env.NODE_ENV === 'test') {
-          return Constants.DasApiUrl.test;
-        }
         const urls = Constants.DasApiUrl.dev.split(',');
         const index = Date.now() % urls.length;
         return urls[index];

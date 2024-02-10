@@ -85,7 +85,7 @@ test('Get assets by group', async (t) => {
   );
 });
 
-test.only('Get priority fee estimate', async (t) => {
+test('Get priority fee estimate', async (t) => {
   t.log('# Node env: ', process.env.NODE_ENV);
   const account = ['JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'];
   const res = await DasApi.getPriorityFeeEstimate(account);

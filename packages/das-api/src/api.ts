@@ -3,6 +3,7 @@ import { Asset, AssetProof, Assets } from '~/types/das-api';
 import { Sortable } from '~/types/find';
 
 export namespace DasApi {
+  let dasUri = '';
   const connect = async (
     method: string,
     params: (
@@ -20,8 +21,8 @@ export namespace DasApi {
     Constants.WarnningMessage.calculateProbability() &&
       console.warn(Constants.WarnningMessage.DAS_API_URL);
     debugLog('# das api url: ', Constants.DAS_API_URL);
-    console.log(Constants.DAS_API_URL);
-    const response = await fetch(Constants.DAS_API_URL, {
+    dasUri = dasUri ? dasUri : Constants.DAS_API_URL;
+    const response = await fetch(dasUri, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
@@ -37,6 +38,8 @@ export namespace DasApi {
     }
     return (await response.json()).result;
   };
+
+  export const changeConnection = (url: string): void => { };
 
   export const getAssetProof = async (
     assetId: string,
