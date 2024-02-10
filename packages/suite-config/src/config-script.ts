@@ -98,7 +98,7 @@ program
 program
   .option(
     '-c --cluster <cluster type>',
-    'connect to cluster type. "prd", "dev", "test", "localhost"',
+    'connect to cluster type. "prd", "dev", "localhost"',
   )
   .option(
     '-cc --custom-cluster <cluster url...>',
@@ -133,15 +133,12 @@ const execCluser = (type: string): void => {
     case 'dev':
       convertedType = 'devnet';
       break;
-    case 'test':
-      convertedType = 'testnet';
-      break;
     case 'localhost':
       convertedType = 'localhost-devnet';
       break;
     default:
       warnMessage(
-        `No match parameter: need parameter is\n"prd", "dev", "test", "localhost", any one of them`,
+        `No match parameter: need parameter is\n"prd", "dev", "localhost", any one of them`,
       );
   }
   updateClusterConfigFile(convertedType);

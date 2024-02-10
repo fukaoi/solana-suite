@@ -20,23 +20,15 @@ export namespace DasApi {
     Constants.WarnningMessage.calculateProbability() &&
       console.warn(Constants.WarnningMessage.DAS_API_URL);
     debugLog('# das api url: ', Constants.DAS_API_URL);
+    console.log(Constants.DAS_API_URL);
     const response = await fetch(Constants.DAS_API_URL, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         jsonrpc: '2.0',
-        method: 'getPriorityFeeEstimate',
-        // method,
+        method,
         id: 'das-api',
-        // params,
-        params: [
-          {
-            accountKeys: ['JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'],
-            options: {
-              includeAllPriorityFeeLevels: true,
-            },
-          },
-        ],
+        params,
       }),
     });
     if (response.status !== 200) {

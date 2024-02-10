@@ -52,7 +52,6 @@ export namespace Constants {
     prd = 'mainnet-beta',
     prdMetaplex = 'mainnet-beta-metaplex',
     dev = 'devnet',
-    test = 'testnet',
     localhost = 'localhost-devnet',
   }
 
@@ -60,7 +59,6 @@ export namespace Constants {
     prd = 'https://api.mainnet-beta.solana.com',
     prdMetaplex = 'https://api.metaplex.solana.com',
     dev = 'https://api.devnet.solana.com',
-    test = 'https://api.testnet.solana.com',
     localhost = 'http://api.devnet.solana.com',
   }
 
@@ -71,6 +69,7 @@ export namespace Constants {
 
   export enum DasApiUrl {
     dev = 'https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92,https://rpc-devnet.helius.xyz?api-key=9f70a843-3274-4ffd-a0a9-323f8b7c0639',
+    test = 'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92',
   }
 
   export enum NftstorageApiKey {
@@ -98,8 +97,6 @@ export namespace Constants {
         return Constants.EndPointUrl.prd;
       case Constants.Cluster.prdMetaplex:
         return Constants.EndPointUrl.prdMetaplex;
-      case Constants.Cluster.test:
-        return Constants.EndPointUrl.test;
       case Constants.Cluster.dev:
         return Constants.EndPointUrl.dev;
       default:
@@ -131,6 +128,9 @@ export namespace Constants {
         return urls[index];
       }
       default: {
+        if (process.env.NODE_ENV === 'test') {
+          return Constants.DasApiUrl.test;
+        }
         const urls = Constants.DasApiUrl.dev.split(',');
         const index = Date.now() % urls.length;
         return urls[index];
