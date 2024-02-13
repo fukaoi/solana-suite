@@ -6,13 +6,20 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
+export type SubmitOptions = {
+  feePayer: Secret;
+  isPriorityFee: boolean;
+};
+
 export type CommonStructure<T = undefined> = {
   instructions: TransactionInstruction[];
   signers: Keypair[];
   feePayer?: Keypair;
   canSubmit?: boolean;
   data?: T;
-  submit: () => Promise<Result<TransactionSignature, Error>>;
+  submit: (
+    options: Partial<SubmitOptions>,
+  ) => Promise<Result<TransactionSignature, Error>>;
 };
 
 export type MintStructure<T = Pubkey> = {
@@ -21,12 +28,16 @@ export type MintStructure<T = Pubkey> = {
   data: T;
   feePayer: Keypair;
   canSubmit?: boolean;
-  submit: () => Promise<Result<TransactionSignature, Error>>;
+  submit: (
+    options: Partial<SubmitOptions>,
+  ) => Promise<Result<TransactionSignature, Error>>;
 };
 
 export type PartialSignStructure<T = Pubkey> = {
   hexInstruction: string;
   canSubmit?: boolean;
   data?: T;
-  submit: (feePayer: Secret) => Promise<Result<string, Error>>;
+  submit: (
+    options: Partial<SubmitOptions>,
+  ) => Promise<Result<string, Error>>;
 };

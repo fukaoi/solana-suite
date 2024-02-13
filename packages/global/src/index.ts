@@ -21,8 +21,6 @@ String.prototype.toExplorerUrl = function (
   let cluster = '';
   if (endPointUrl === Constants.EndPointUrl.prd) {
     cluster = Constants.Cluster.prd;
-  } else if (endPointUrl === Constants.EndPointUrl.test) {
-    cluster = Constants.Cluster.test;
   } else if (endPointUrl === Constants.EndPointUrl.dev) {
     cluster = Constants.Cluster.dev;
   } else {

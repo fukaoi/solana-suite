@@ -10,8 +10,9 @@ import {
 import { Constants, debugLog, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { MAX_RETRIES } from './common';
-import { MintStructure } from '~/types/transaction-builder';
+import { MintStructure, SubmitOptions } from '~/types/transaction-builder';
 import { Pubkey } from '~/types/account';
+import { DasApi } from '~/das-api';
 
 export namespace TransactionBuilder {
   export class Mint<T = Pubkey> implements MintStructure<T> {
@@ -32,7 +33,9 @@ export namespace TransactionBuilder {
       this.feePayer = feePayer;
     }
 
-    submit = async (): Promise<Result<TransactionSignature, Error>> => {
+    submit = async (
+      options: Partial<SubmitOptions> = {},
+    ): Promise<Result<TransactionSignature, Error>> => {
       return Try(async () => {
         if (!(this instanceof Mint)) {
           throw Error('only MintInstruction object that can use this');
@@ -49,8 +52,24 @@ export namespace TransactionBuilder {
         }
 
         this.instructions.forEach((inst) => transaction.add(inst));
+        let programIds: string[] = [];
+        this.instructions.forEach((inst) => {
+          programIds = inst.keys.map((k) => k.pubkey.toString());
+        });
 
-        const options: ConfirmOptions = {
+        if (options.isPriorityFee) {
+          // this.instructions.map((inst) => console.log(inst));
+          console.log(programIds);
+          const estimates = await DasApi.getPriorityFeeEstimate([
+            // 'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4',
+            'BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY',
+          ]);
+          const estimates2 = await DasApi.getPriorityFeeEstimate(programIds);
+          console.log(estimates, estimates2);
+          throw Error('test');
+        }
+
+        const confirmOptions: ConfirmOptions = {
           maxRetries: MAX_RETRIES,
         };
 
@@ -63,7 +82,7 @@ export namespace TransactionBuilder {
           Node.getConnection(),
           transaction,
           finalSigners,
-          options,
+          confirmOptions,
         );
       });
     };

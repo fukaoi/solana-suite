@@ -102,9 +102,10 @@ export namespace CompressedNft {
    * {
    *   name: string               // nft content name
    *   symbol: string             // nft ticker symbol
-   *   filePath: string | File    // nft ticker symbol
    *   royalty: number            // royalty percentage
    *   storageType: 'arweave'|'nftStorage' // Decentralized storage
+   *   uri?: string | File        // uploaded content url
+   *   filePath?: string | File   // upload content
    *   description?: string       // nft content description
    *   external_url?: string      // landing page, home page uri, related url
    *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics

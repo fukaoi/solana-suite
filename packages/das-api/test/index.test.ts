@@ -2,13 +2,16 @@ import test from 'ava';
 import { DasApi } from '../src/';
 import { Setup } from 'test-tools/setup';
 import { KeypairAccount } from '~/types/account';
+import { SystemProgram, Transaction } from '@solana/web3.js';
 
 let source: KeypairAccount;
+let dest: KeypairAccount;
 let collectionMint: Pubkey;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
+  dest = obj.dest;
   collectionMint = obj.collectionMint;
 });
 
@@ -91,6 +94,29 @@ test('Get priority fee estimate', async (t) => {
   DasApi.changeDasUri(testUri);
   const account = ['JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'];
   const res = await DasApi.getPriorityFeeEstimate(account);
+  res.match(
+    (ok) => {
+      if (ok) {
+        console.log(ok);
+      }
+      t.pass();
+    },
+    (err) => t.fail(err.message),
+  );
+});
+
+test('Get priority fee estimate by Transaction', async (t) => {
+  const transferTransaction = new Transaction().add(
+    SystemProgram.transfer({
+      fromPubkey: source.pubkey.toPublicKey(),
+      toPubkey: dest.pubkey.toPublicKey(),
+      lamports: 1,
+    }),
+  );
+  const testUri =
+    'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
+  DasApi.changeDasUri(testUri);
+  const res = await DasApi.getPriorityFeeEstimate(transferTransaction);
   res.match(
     (ok) => {
       if (ok) {

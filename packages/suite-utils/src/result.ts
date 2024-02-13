@@ -4,6 +4,7 @@ import {
   CommonStructure,
   MintStructure,
   PartialSignStructure,
+  SubmitOptions,
 } from '~/types/transaction-builder';
 import { Secret } from '~/types/account';
 
@@ -76,18 +77,16 @@ abstract class AbstractResult<T, E extends Error> {
   /// single TransactionBuilder ////
   /* eslint-disable @typescript-eslint/no-explicit-any */
   async submit(
-    feePayer?: Secret,
+    options: Partial<SubmitOptions> = {},
   ): Promise<Result<TransactionSignature, Error>> {
     const res = this.map(
       async (ok) => {
         debugLog('# result single submit: ', ok);
-        if (feePayer) {
-          const obj = ok as PartialSignStructure;
-          return await obj.submit(feePayer);
-        } else {
-          const obj = ok as CommonStructure | MintStructure;
-          return await obj.submit();
-        }
+        const obj = ok as
+          | CommonStructure
+          | MintStructure
+          | PartialSignStructure;
+        return await obj.submit(options);
       },
       (err) => {
         return err;
@@ -108,7 +107,7 @@ declare global {
   }
 }
 
-Array.prototype.submit = async function (feePayer?: Secret) {
+Array.prototype.submit = async function(feePayer?: Secret) {
   if (feePayer) {
     let i = 1;
     for await (const obj of this) {

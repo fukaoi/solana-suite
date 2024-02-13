@@ -6,10 +6,11 @@ import {
   TransactionInstruction,
   TransactionSignature,
 } from '@solana/web3.js';
+import { DasApi } from '~/das-api';
 
 import { Node } from '~/node';
 import { Result, Try } from '~/suite-utils';
-import { CommonStructure } from '~/types/transaction-builder';
+import { CommonStructure, SubmitOptions } from '~/types/transaction-builder';
 
 export const MAX_RETRIES = 3;
 
@@ -34,7 +35,9 @@ export namespace TransactionBuilder {
       this.data = data;
     }
 
-    submit = async (): Promise<Result<TransactionSignature, Error>> => {
+    submit = async (
+      options: Partial<SubmitOptions> = {},
+    ): Promise<Result<TransactionSignature, Error>> => {
       return Try(async () => {
         if (!(this instanceof Common)) {
           throw Error('only Instruction object that can use this');
@@ -53,7 +56,15 @@ export namespace TransactionBuilder {
 
         this.instructions.forEach((inst) => transaction.add(inst));
 
-        const options: ConfirmOptions = {
+        if (options.isPriorityFee) {
+          this.instructions.map((inst) => console.log(inst));
+          const estimates = await DasApi.getPriorityFeeEstimate([
+            'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4',
+            'BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY'
+          ]);
+        }
+
+        const confirmOptions: ConfirmOptions = {
           maxRetries: MAX_RETRIES,
         };
 
@@ -61,7 +72,7 @@ export namespace TransactionBuilder {
           Node.getConnection(),
           transaction,
           finalSigners,
-          options,
+          confirmOptions,
         );
       });
     };
