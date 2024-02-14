@@ -69,3 +69,12 @@ export type Assets = {
   page: number;
   items: Asset[];
 };
+
+export type PriorityFeeLevels = {
+  min: number;
+  low: number;
+  medium: number;
+  high: number;
+  veryHigh: number;
+  unsafeMax: number;
+};

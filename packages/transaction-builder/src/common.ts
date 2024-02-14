@@ -13,6 +13,7 @@ import { Result, Try } from '~/suite-utils';
 import { CommonStructure, SubmitOptions } from '~/types/transaction-builder';
 
 export const MAX_RETRIES = 3;
+export const MINIMUM_PRIORITY_FEE = 300;
 
 export namespace TransactionBuilder {
   export class Common<T = undefined> implements CommonStructure<T> {

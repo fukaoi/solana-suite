@@ -1,6 +1,6 @@
 import { Transaction } from '@solana/web3.js';
 import { Constants, debugLog, Result, Try } from '~/suite-utils';
-import { Asset, AssetProof, Assets } from '~/types/das-api';
+import { Asset, AssetProof, Assets, PriorityFeeLevels } from '~/types/das-api';
 import { Sortable } from '~/types/find';
 
 export namespace DasApi {
@@ -105,15 +105,17 @@ export namespace DasApi {
 
   export const getPriorityFeeEstimate = async (
     accountOrTransaction: Pubkey[] | Transaction,
-  ): Promise<Result<Assets, Error>> => {
+  ): Promise<Result<PriorityFeeLevels, Error>> => {
     return Try(async () => {
       const options = { includeAllPriorityFeeLevels: true };
-      return await connect('getPriorityFeeEstimate', [
-        {
-          accountOrTransaction,
-          options,
-        },
-      ]);
+      return (
+        await connect('getPriorityFeeEstimate', [
+          {
+            accountOrTransaction,
+            options,
+          },
+        ])
+      ).priorityFeeLevels;
     });
   };
 }
