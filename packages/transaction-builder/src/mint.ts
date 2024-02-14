@@ -1,5 +1,4 @@
 import {
-  ComputeBudgetProgram,
   ConfirmOptions,
   Keypair,
   sendAndConfirmTransaction,
@@ -10,10 +9,10 @@ import {
 
 import { Constants, debugLog, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
-import { MAX_RETRIES, MINIMUM_PRIORITY_FEE } from './common';
+import { TransactionBuilder as PriorityFee } from './priority-fee';
+import { MAX_RETRIES } from './common';
 import { MintStructure, SubmitOptions } from '~/types/transaction-builder';
 import { Pubkey } from '~/types/account';
-import { DasApi } from '~/das-api';
 
 export namespace TransactionBuilder {
   export class Mint<T = Pubkey> implements MintStructure<T> {
@@ -54,44 +53,20 @@ export namespace TransactionBuilder {
 
         this.instructions.forEach((inst) => transaction.add(inst));
 
-        const confirmOptions: ConfirmOptions = {
-          maxRetries: MAX_RETRIES,
-        };
-
         if (Node.getConnection().rpcEndpoint === Constants.EndPointUrl.prd) {
           debugLog('# Change metaplex cluster on mainnet-beta');
           Node.changeConnection({ cluster: Constants.Cluster.prdMetaplex });
         }
 
         if (options.isPriorityFee) {
-          const estimates = await DasApi.getPriorityFeeEstimate(transaction);
-          debugLog('# estimates: ', estimates);
-          try {
-            // priority fee: medium
-            const lamports = estimates.isOk
-              ? estimates.unwrap().medium
-              : MINIMUM_PRIORITY_FEE;
-            debugLog('# lamports: ', lamports);
-            return this.sendTransactionWithPriorityFee(
-              lamports,
-              transaction,
-              finalSigners,
-              confirmOptions,
-            );
-          } catch (error) {
-            debugLog('# priority fee error: ', error);
-            // priority fee: high
-            const lamports = estimates.isOk
-              ? estimates.unwrap().high
-              : MINIMUM_PRIORITY_FEE;
-            return this.sendTransactionWithPriorityFee(
-              lamports,
-              transaction,
-              finalSigners,
-              confirmOptions,
-            );
-          }
+          return await PriorityFee.PriorityFee.submit(
+            transaction,
+            finalSigners,
+          );
         } else {
+          const confirmOptions: ConfirmOptions = {
+            maxRetries: MAX_RETRIES,
+          };
           return await sendAndConfirmTransaction(
             Node.getConnection(),
             transaction,
@@ -100,27 +75,6 @@ export namespace TransactionBuilder {
           );
         }
       });
-    };
-
-    sendTransactionWithPriorityFee = async (
-      lamports: number,
-      transaction: Transaction,
-      finalSigners: Keypair[],
-      confirmOptions: ConfirmOptions,
-    ) => {
-      const computePriceInst = ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: lamports,
-      });
-
-      // priority fee: medium
-      transaction.add(computePriceInst);
-
-      return await sendAndConfirmTransaction(
-        Node.getConnection(),
-        transaction,
-        finalSigners,
-        confirmOptions,
-      );
     };
   }
 }

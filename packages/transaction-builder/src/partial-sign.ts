@@ -6,9 +6,13 @@ import {
 
 import { Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
-import { Pubkey, Secret } from '~/types/account';
+import { Pubkey } from '~/types/account';
 import { MAX_RETRIES } from './common';
-import { PartialSignStructure } from '~/types/transaction-builder';
+import { TransactionBuilder as PriorityFee } from './priority-fee';
+import {
+  PartialSignStructure,
+  SubmitOptions,
+} from '~/types/transaction-builder';
 
 export namespace TransactionBuilder {
   export class PartialSign implements PartialSignStructure {
@@ -23,25 +27,33 @@ export namespace TransactionBuilder {
     }
 
     submit = async (
-      feePayer: Secret,
+      options: Partial<SubmitOptions> = {},
     ): Promise<Result<TransactionSignature, Error>> => {
       return Try(async () => {
         if (!(this instanceof PartialSign)) {
           throw Error('only PartialSignInstruction object that can use this');
         }
 
-        const decode = Buffer.from(this.hexInstruction, 'hex');
-        const transactionFromJson = Transaction.from(decode);
-        transactionFromJson.partialSign(feePayer.toKeypair());
+        if (!options.feePayer) {
+          throw Error('Need feePayer');
+        }
 
-        const options: ConfirmOptions = {
-          maxRetries: MAX_RETRIES,
-        };
-        const wireTransaction = transactionFromJson.serialize();
-        return await Node.getConnection().sendRawTransaction(
-          wireTransaction,
-          options,
-        );
+        const decode = Buffer.from(this.hexInstruction, 'hex');
+        const transaction = Transaction.from(decode);
+        transaction.partialSign(options.feePayer!.toKeypair());
+
+        if (options.isPriorityFee) {
+          return await PriorityFee.PriorityFee.partialSignSubmit(transaction);
+        } else {
+          const confirmOptions: ConfirmOptions = {
+            maxRetries: MAX_RETRIES,
+          };
+          const wireTransaction = transaction.serialize();
+          return await Node.getConnection().sendRawTransaction(
+            wireTransaction,
+            confirmOptions,
+          );
+        }
       });
     };
   }

@@ -6,14 +6,13 @@ import {
   TransactionInstruction,
   TransactionSignature,
 } from '@solana/web3.js';
-import { DasApi } from '~/das-api';
 
 import { Node } from '~/node';
 import { Result, Try } from '~/suite-utils';
 import { CommonStructure, SubmitOptions } from '~/types/transaction-builder';
+import { TransactionBuilder as PriorityFee } from './priority-fee';
 
 export const MAX_RETRIES = 3;
-export const MINIMUM_PRIORITY_FEE = 300;
 
 export namespace TransactionBuilder {
   export class Common<T = undefined> implements CommonStructure<T> {
@@ -58,23 +57,21 @@ export namespace TransactionBuilder {
         this.instructions.forEach((inst) => transaction.add(inst));
 
         if (options.isPriorityFee) {
-          this.instructions.map((inst) => console.log(inst));
-          const estimates = await DasApi.getPriorityFeeEstimate([
-            'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4',
-            'BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY'
-          ]);
+          return await PriorityFee.PriorityFee.submit(
+            transaction,
+            finalSigners,
+          );
+        } else {
+          const confirmOptions: ConfirmOptions = {
+            maxRetries: MAX_RETRIES,
+          };
+          return await sendAndConfirmTransaction(
+            Node.getConnection(),
+            transaction,
+            finalSigners,
+            confirmOptions,
+          );
         }
-
-        const confirmOptions: ConfirmOptions = {
-          maxRetries: MAX_RETRIES,
-        };
-
-        return await sendAndConfirmTransaction(
-          Node.getConnection(),
-          transaction,
-          finalSigners,
-          confirmOptions,
-        );
       });
     };
   }

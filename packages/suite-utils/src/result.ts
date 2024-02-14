@@ -103,19 +103,21 @@ abstract class AbstractResult<T, E extends Error> {
 declare global {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   interface Array<T> {
-    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    submit(
+      optios: Partial<SubmitOptions>,
+    ): Promise<Result<TransactionSignature, Error>>;
   }
 }
 
-Array.prototype.submit = async function(feePayer?: Secret) {
-  if (feePayer) {
+Array.prototype.submit = async function(optios: Partial<SubmitOptions>) {
+  if (optios.feePayer) {
     let i = 1;
     for await (const obj of this) {
       if (obj.isErr) {
         return obj;
       } else if (obj.value.canSubmit) {
         debugLog('# Result batch canSubmit');
-        const sig = await (obj as PartialSignStructure).submit(feePayer);
+        const sig = await (obj as PartialSignStructure).submit(optios);
         if (sig.isErr) {
           return sig;
         }
@@ -124,9 +126,9 @@ Array.prototype.submit = async function(feePayer?: Secret) {
         debugLog('# Result batch other than canSubmit');
         if (this.length == i) {
           // last object
-          return obj.submit(feePayer);
+          return obj.submit(optios);
         }
-        obj.submit(feePayer);
+        obj.submit(optios);
       }
       i++;
     }

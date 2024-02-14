@@ -8,7 +8,8 @@ import {
 import { Node } from '~/node';
 import { MAX_RETRIES, TransactionBuilder as Common } from './common';
 import { TransactionBuilder as Mint } from './mint';
-import { Try, Result } from '~/suite-utils';
+import { Result, Try } from '~/suite-utils';
+import { TransactionBuilder as PriorityFee } from './priority-fee';
 
 export namespace TransactionBuilder {
   export class Batch {
@@ -45,16 +46,22 @@ export namespace TransactionBuilder {
 
         // CalculateTxsize.isMaxTransactionSize(transaction, feePayer.publicKey);
 
-        const options: ConfirmOptions = {
-          maxRetries: MAX_RETRIES,
-        };
-
-        return await sendAndConfirmTransaction(
-          Node.getConnection(),
-          transaction,
-          finalSigners,
-          options,
-        );
+        if (options.isPriorityFee) {
+          return await PriorityFee.PriorityFee.submit(
+            transaction,
+            finalSigners,
+          );
+        } else {
+          const confirmOptions: ConfirmOptions = {
+            maxRetries: MAX_RETRIES,
+          };
+          return await sendAndConfirmTransaction(
+            Node.getConnection(),
+            transaction,
+            finalSigners,
+            confirmOptions,
+          );
+        }
       });
     };
   }
