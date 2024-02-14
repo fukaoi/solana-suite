@@ -6,7 +6,6 @@ import {
   PartialSignStructure,
   SubmitOptions,
 } from '~/types/transaction-builder';
-import { Secret } from '~/types/account';
 
 import { TransactionBuilder } from '~/transaction-builder';
 import { debugLog } from './shared';
@@ -104,20 +103,20 @@ declare global {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   interface Array<T> {
     submit(
-      optios: Partial<SubmitOptions>,
+      options: Partial<SubmitOptions>,
     ): Promise<Result<TransactionSignature, Error>>;
   }
 }
 
-Array.prototype.submit = async function(optios: Partial<SubmitOptions>) {
-  if (optios.feePayer) {
+Array.prototype.submit = async function(options: Partial<SubmitOptions>) {
+  if (options.feePayer) {
     let i = 1;
     for await (const obj of this) {
       if (obj.isErr) {
         return obj;
       } else if (obj.value.canSubmit) {
         debugLog('# Result batch canSubmit');
-        const sig = await (obj as PartialSignStructure).submit(optios);
+        const sig = await (obj as PartialSignStructure).submit(options);
         if (sig.isErr) {
           return sig;
         }
@@ -126,9 +125,9 @@ Array.prototype.submit = async function(optios: Partial<SubmitOptions>) {
         debugLog('# Result batch other than canSubmit');
         if (this.length == i) {
           // last object
-          return obj.submit(optios);
+          return obj.submit(options);
         }
-        obj.submit(optios);
+        obj.submit(options);
       }
       i++;
     }
@@ -144,7 +143,7 @@ Array.prototype.submit = async function(optios: Partial<SubmitOptions>) {
       }
     }
     debugLog('# Result batch submit: ', instructions);
-    return new TransactionBuilder.Batch().submit(instructions);
+    return new TransactionBuilder.Batch().submit(instructions, options);
   }
 };
 

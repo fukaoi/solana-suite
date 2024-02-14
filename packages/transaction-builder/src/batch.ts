@@ -6,15 +6,20 @@ import {
 } from '@solana/web3.js';
 
 import { Node } from '~/node';
-import { MAX_RETRIES, TransactionBuilder as Common } from './common';
-import { TransactionBuilder as Mint } from './mint';
+import { MAX_RETRIES } from './common';
 import { Result, Try } from '~/suite-utils';
 import { TransactionBuilder as PriorityFee } from './priority-fee';
+import {
+  CommonStructure,
+  MintStructure,
+  SubmitOptions,
+} from '~/types/transaction-builder';
 
 export namespace TransactionBuilder {
   export class Batch {
     submit = async (
-      arr: Common.Common[] | Mint.Mint[],
+      arr: CommonStructure[] | MintStructure[],
+      options: Partial<SubmitOptions> = {},
     ): Promise<Result<TransactionSignature, Error>> => {
       return Try(async () => {
         let i = 0;
