@@ -1,4 +1,4 @@
-import { TransactionSignature, TransactionInstruction, Keypair } from '@solana/web3.js';
+import { TransactionInstruction, Keypair, TransactionSignature } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -8,6 +8,19 @@ type Pubkey = (string & {
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
+
+type SubmitOptions = {
+    feePayer: Secret;
+    isPriorityFee: boolean;
+};
+type CommonStructure<T = undefined> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    canSubmit?: boolean;
+    data?: T;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
+};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -21,11 +34,11 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    submit(options?: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
 }
 declare global {
     interface Array<T> {
-        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+        submit(options: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
     }
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
@@ -217,15 +230,6 @@ declare namespace Result {
 type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
-
-type CommonStructure<T = undefined> = {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    canSubmit?: boolean;
-    data?: T;
-    submit: () => Promise<Result<TransactionSignature, Error>>;
-};
 
 type MemoOptions = {
     feePayer: Secret;

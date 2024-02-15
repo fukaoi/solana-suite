@@ -4,6 +4,7 @@ import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';
 import { PartialSignStructure } from '~/types/transaction-builder';
+import { GasLessTransferOptions } from '~/types/sol-native';
 
 export namespace SolNative {
   const RADIX = 10;
@@ -15,6 +16,7 @@ export namespace SolNative {
    * @param {Pubkey} dest
    * @param {number} amount
    * @param {Pubkey} feePayer
+   * @param {Partial<GasLessTransferOptions>} options
    * @return Promise<Result<PartialSignStructure, Error>>
    */
   export const gasLessTransfer = async (
@@ -22,6 +24,7 @@ export namespace SolNative {
     dest: Pubkey,
     amount: number,
     feePayer: Pubkey,
+    options: Partial<GasLessTransferOptions> = {},
   ): Promise<Result<PartialSignStructure, Error>> => {
     return Try(async () => {
       const blockHashObj = await Node.getConnection().getLatestBlockhash();
@@ -38,6 +41,11 @@ export namespace SolNative {
         }),
       );
 
+      if (options.isPriorityFee) {
+        tx.add(
+          await TransactionBuilder.PriorityFee.createPriorityFeeInstruction(tx),
+        );
+      }
       tx.partialSign(owner.toKeypair());
 
       const serializedTx = tx.serialize({

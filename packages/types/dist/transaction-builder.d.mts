@@ -13,11 +13,11 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    submit(options?: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
 }
 declare global {
     interface Array<T> {
-        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+        submit(options: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
     }
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
@@ -210,13 +210,25 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+type SubmitOptions = {
+    feePayer: Secret;
+    isPriorityFee: boolean;
+};
+type PartialSignSubmitOptions = {
+    feePayer: Secret;
+};
+type BatchSubmitOptions = {
+    feePayer: Secret;
+    isPriorityFee: boolean;
+    instructions: CommonStructure[] | MintStructure[];
+};
 type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
     canSubmit?: boolean;
     data?: T;
-    submit: () => Promise<Result<TransactionSignature, Error>>;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
 };
 type MintStructure<T = Pubkey> = {
     instructions: TransactionInstruction[];
@@ -224,13 +236,13 @@ type MintStructure<T = Pubkey> = {
     data: T;
     feePayer: Keypair;
     canSubmit?: boolean;
-    submit: () => Promise<Result<TransactionSignature, Error>>;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
 };
 type PartialSignStructure<T = Pubkey> = {
     hexInstruction: string;
     canSubmit?: boolean;
     data?: T;
-    submit: (feePayer: Secret) => Promise<Result<string, Error>>;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };
 
-export { CommonStructure, MintStructure, PartialSignStructure };
+export { BatchSubmitOptions, CommonStructure, MintStructure, PartialSignStructure, PartialSignSubmitOptions, SubmitOptions };

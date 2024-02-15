@@ -128,14 +128,12 @@ declare namespace Constants {
         prd = "mainnet-beta",
         prdMetaplex = "mainnet-beta-metaplex",
         dev = "devnet",
-        test = "testnet",
         localhost = "localhost-devnet"
     }
     enum EndPointUrl {
         prd = "https://api.mainnet-beta.solana.com",
         prdMetaplex = "https://api.metaplex.solana.com",
         dev = "https://api.devnet.solana.com",
-        test = "https://api.testnet.solana.com",
         localhost = "http://api.devnet.solana.com"
     }
     enum BundlrUrl {
@@ -170,6 +168,89 @@ declare namespace Constants {
     const EXPLORER_XRAY_URL = "https://xray.helius.xyz";
 }
 
+/**
+ * convert buffer to Array
+ *
+ * @param {Buffer} buffer
+ * @returns number[]
+ */
+declare const bufferToArray: (buffer: Buffer) => number[];
+/**
+ * Overwrite JS Object
+ *
+ * @param {unknown} object
+ * @param {OverwriteObject[]} targets
+ * @returns Object
+ */
+declare const overwriteObject: (object: unknown, targets: {
+    existsKey: string;
+    will: {
+        key: string;
+        value: unknown;
+    };
+}[]) => unknown;
+/**
+ * Display log for solana-suite-config.js
+ *
+ * @param {unknown} data1
+ * @param {unknown} data2
+ * @param {unknown} data3
+ * @param {unknown} data4
+ * @returns void
+ */
+declare const debugLog: (data1: unknown, data2?: unknown, data3?: unknown, data4?: unknown) => void;
+/**
+ * sleep timer
+ *
+ * @param {number} sec
+ * @returns Promise<number>
+ */
+declare const sleep: (sec: number) => Promise<number>;
+/**
+ * Node.js or Browser js
+ *
+ * @returns boolean
+ */
+declare const isBrowser: () => boolean;
+/**
+ * Node.js or Browser js
+ *
+ * @returns boolean
+ */
+declare const isNode: () => boolean;
+/**
+ * argument is promise or other
+ *
+ * @param {unknown} obj
+ * @returns boolean
+ */
+declare const isPromise: (obj: unknown) => obj is Promise<unknown>;
+/**
+ * Try async monad
+ *
+ * @returns Promise<Result<T, E>>
+ */
+declare function Try<T, E extends Error>(asyncblock: () => Promise<T>, finallyInput?: () => void): Promise<Result<T, E>>;
+declare function Try<T, E extends Error>(block: () => T): Result<T, E>;
+/**
+ * argument is promise or other
+ *
+ * @param {number|undefined} created_at
+ * @returns Date | undefined
+ */
+declare const convertTimestampToDateTime: (created_at: number | undefined) => Date | undefined;
+/**
+ * Get unix timestamp
+ *
+ * @returns number
+ */
+declare const unixTimestamp: () => number;
+
+type SubmitOptions = {
+    feePayer: Secret;
+    isPriorityFee: boolean;
+};
+
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
@@ -182,11 +263,11 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    submit(options?: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
 }
 declare global {
     interface Array<T> {
-        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+        submit(options: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
     }
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
@@ -378,84 +459,6 @@ declare namespace Result {
 type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
-
-/**
- * convert buffer to Array
- *
- * @param {Buffer} buffer
- * @returns number[]
- */
-declare const bufferToArray: (buffer: Buffer) => number[];
-/**
- * Overwrite JS Object
- *
- * @param {unknown} object
- * @param {OverwriteObject[]} targets
- * @returns Object
- */
-declare const overwriteObject: (object: unknown, targets: {
-    existsKey: string;
-    will: {
-        key: string;
-        value: unknown;
-    };
-}[]) => unknown;
-/**
- * Display log for solana-suite-config.js
- *
- * @param {unknown} data1
- * @param {unknown} data2
- * @param {unknown} data3
- * @param {unknown} data4
- * @returns void
- */
-declare const debugLog: (data1: unknown, data2?: unknown, data3?: unknown, data4?: unknown) => void;
-/**
- * sleep timer
- *
- * @param {number} sec
- * @returns Promise<number>
- */
-declare const sleep: (sec: number) => Promise<number>;
-/**
- * Node.js or Browser js
- *
- * @returns boolean
- */
-declare const isBrowser: () => boolean;
-/**
- * Node.js or Browser js
- *
- * @returns boolean
- */
-declare const isNode: () => boolean;
-/**
- * argument is promise or other
- *
- * @param {unknown} obj
- * @returns boolean
- */
-declare const isPromise: (obj: unknown) => obj is Promise<unknown>;
-/**
- * Try async monad
- *
- * @returns Promise<Result<T, E>>
- */
-declare function Try<T, E extends Error>(asyncblock: () => Promise<T>, finallyInput?: () => void): Promise<Result<T, E>>;
-declare function Try<T, E extends Error>(block: () => T): Result<T, E>;
-/**
- * argument is promise or other
- *
- * @param {number|undefined} created_at
- * @returns Date | undefined
- */
-declare const convertTimestampToDateTime: (created_at: number | undefined) => Date | undefined;
-/**
- * Get unix timestamp
- *
- * @returns number
- */
-declare const unixTimestamp: () => number;
 
 declare namespace Node {
     const getConnection: () => Connection;

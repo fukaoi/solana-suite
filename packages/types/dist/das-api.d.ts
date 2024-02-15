@@ -72,5 +72,13 @@ type Assets = {
     page: number;
     items: Asset[];
 };
+type PriorityFeeLevels = {
+    min: number;
+    low: number;
+    medium: number;
+    high: number;
+    veryHigh: number;
+    unsafeMax: number;
+};
 
-export { Asset, AssetProof, Assets, Grouping, Metadata };
+export { Asset, AssetProof, Assets, Grouping, Metadata, PriorityFeeLevels };

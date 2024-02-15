@@ -18,6 +18,11 @@ type ThawOptions = {
 
 type GasLessMintOptions = {
     freezeAuthority: Pubkey;
+    isPriorityFee: boolean;
+};
+
+type GasLessTransferOptions = {
+    isPriorityFee: boolean;
 };
 
 type MintCollectionOptions = {
@@ -38,4 +43,4 @@ type TransferOptions = {
     feePayer: Secret;
 };
 
-export { BurnOptions, Collection, FreezeOptions, GasLessMintOptions, MintCollectionOptions, ThawOptions, TransferOptions };
+export { BurnOptions, Collection, FreezeOptions, GasLessMintOptions, GasLessTransferOptions, MintCollectionOptions, ThawOptions, TransferOptions };

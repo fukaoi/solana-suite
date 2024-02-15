@@ -1,6 +1,7 @@
 import { Result } from '~/suite-utils';
 import { Pubkey, Secret } from '~/types/account';
 import { PartialSignStructure } from '~/types/transaction-builder';
+import { GasLessTransferOptions } from '~/types/regular-nft';
 import { SplToken } from '~/suite-spl-token';
 
 export namespace RegularNft {
@@ -14,6 +15,7 @@ export namespace RegularNft {
    * @param {Secret} owner
    * @param {Pubkey} dest
    * @param {Pubkey} feePayer
+   * @param {Partial<GasLessTransferOptions>} options
    * @return Promise<Result<PartialSignStructure, Error>>
    */
   export const gasLessTransfer = async (
@@ -21,6 +23,7 @@ export namespace RegularNft {
     owner: Secret,
     dest: Pubkey,
     feePayer: Pubkey,
+    options: Partial<GasLessTransferOptions> = {},
   ): Promise<Result<PartialSignStructure, Error>> => {
     return SplToken.gasLessTransfer(
       mint,
@@ -29,6 +32,7 @@ export namespace RegularNft {
       NFT_AMOUNT,
       NFT_DECIMALS,
       feePayer,
+      options,
     );
   };
 }

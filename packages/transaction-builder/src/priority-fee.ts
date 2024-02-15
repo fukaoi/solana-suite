@@ -38,6 +38,20 @@ export namespace TransactionBuilder {
       }
     };
 
+    export const createPriorityFeeInstruction = async (
+      transaction: Transaction,
+    ) => {
+      const estimates = await DasApi.getPriorityFeeEstimate(transaction);
+      debugLog('# estimates: ', estimates);
+      // priority fee: medium
+      const lamports = estimates.isOk
+        ? estimates.unwrap().medium
+        : MINIMUM_PRIORITY_FEE;
+      return ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: lamports,
+      });
+    };
+
     const sendTransactionWithPriorityFee = async (
       lamports: number,
       transaction: Transaction,

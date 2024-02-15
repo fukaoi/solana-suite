@@ -2,6 +2,7 @@ export * from './burn';
 export * from './common';
 export * from './freeze';
 export * from './gas-less-mint';
+export * from './gas-less-transfer';
 export * from './mint';
 export * from './mint-collection';
 export * from './thaw';

@@ -1,3 +1,4 @@
+import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionSignature, PublicKey } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
@@ -8,6 +9,11 @@ type Pubkey$1 = (string & {
 type Secret = (string & {
     [secretNominality]: never;
 }) | string;
+
+type SubmitOptions = {
+    feePayer: Secret;
+    isPriorityFee: boolean;
+};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -21,11 +27,11 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    submit(options?: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
 }
 declare global {
     interface Array<T> {
-        submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+        submit(options: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
     }
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
@@ -294,6 +300,14 @@ type Assets = {
     page: number;
     items: Asset[];
 };
+type PriorityFeeLevels = {
+    min: number;
+    low: number;
+    medium: number;
+    high: number;
+    veryHigh: number;
+    unsafeMax: number;
+};
 
 type FileType = string | File;
 
@@ -397,10 +411,12 @@ declare const DasApi: {
     findByMint: (mint: Pubkey$1, isCompressed: boolean) => Promise<Partial<Metadata>>;
     findByOwner: (owner: Pubkey$1, isCompressed: boolean, options?: Partial<FindOptions>) => Promise<NftMetadata>;
     findByCollection: (collectionMint: Pubkey$1, isCompressed: boolean, options?: Partial<FindOptions>) => Promise<NftMetadata>;
+    changeDasUri: (url: string) => void;
     getAssetProof: (assetId: string) => Promise<Result<AssetProof, Error>>;
     getAsset: (assetId: Pubkey) => Promise<Result<Asset, Error>>;
     getAssetsByOwner: (ownerAddress: Pubkey, limit?: number, page?: number, sortBy?: Sortable | undefined, before?: string | undefined, after?: string | undefined) => Promise<Result<Assets, Error>>;
     getAssetsByGroup: (groupKey: string, groupValue: Pubkey, limit?: number, page?: number, sortBy?: Sortable | undefined, before?: string | undefined, after?: string | undefined) => Promise<Result<Assets, Error>>;
+    getPriorityFeeEstimate: (accountOrTransaction: _solana_web3_js.Transaction | Pubkey[]) => Promise<Result<PriorityFeeLevels, Error>>;
 };
 
 export { DasApi };

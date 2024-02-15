@@ -137,6 +137,13 @@ export namespace RegularNft {
       });
 
       insts.forEach((inst) => tx.add(inst));
+
+      if (options.isPriorityFee) {
+        tx.add(
+          await TransactionBuilder.PriorityFee.createPriorityFeeInstruction(tx),
+        );
+      }
+
       tx.recentBlockhash = blockhashObj.blockhash;
       [owner, mint].forEach((signer) => tx.partialSign(signer.toKeypair()));
 
