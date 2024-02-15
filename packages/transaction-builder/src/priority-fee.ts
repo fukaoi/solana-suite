@@ -38,33 +38,6 @@ export namespace TransactionBuilder {
       }
     };
 
-    export const partialSignSubmit = async (transaction: Transaction) => {
-      const estimates = await DasApi.getPriorityFeeEstimate(transaction);
-      debugLog('# estimates: ', estimates);
-      try {
-        // priority fee: medium
-        const lamports = estimates.isOk
-          ? estimates.unwrap().medium
-          : MINIMUM_PRIORITY_FEE;
-        debugLog('# lamports: ', lamports);
-        return await sendPartialSignTransactionWithPriorityFee(
-          lamports,
-          transaction,
-        );
-      } catch (error) {
-        debugLog('# priority fee error: ', error);
-        // priority fee: high
-        const lamports = estimates.isOk
-          ? estimates.unwrap().high
-          : MINIMUM_PRIORITY_FEE;
-        debugLog('# lamports: ', lamports);
-        return await sendPartialSignTransactionWithPriorityFee(
-          lamports,
-          transaction,
-        );
-      }
-    };
-
     const sendTransactionWithPriorityFee = async (
       lamports: number,
       transaction: Transaction,
@@ -81,24 +54,6 @@ export namespace TransactionBuilder {
         Node.getConnection(),
         transaction,
         finalSigners,
-        confirmOptions,
-      );
-    };
-
-    const sendPartialSignTransactionWithPriorityFee = async (
-      lamports: number,
-      transaction: Transaction,
-    ) => {
-      const computePriceInst = ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: lamports,
-      });
-      const confirmOptions: ConfirmOptions = {
-        maxRetries: MAX_RETRIES,
-      };
-      transaction.add(computePriceInst);
-      const wireTransaction = transaction.serialize();
-      return await Node.getConnection().sendRawTransaction(
-        wireTransaction,
         confirmOptions,
       );
     };

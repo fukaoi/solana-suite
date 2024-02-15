@@ -143,7 +143,12 @@ Array.prototype.submit = async function(options: Partial<SubmitOptions>) {
       }
     }
     debugLog('# Result batch submit: ', instructions);
-    return new TransactionBuilder.Batch().submit(instructions, options);
+    const batchOptions = {
+      feePayer: options.feePayer,
+      isPriorityFee: options.isPriorityFee,
+      instructions: instructions,
+    };
+    return new TransactionBuilder.Batch().submit(batchOptions);
   }
 };
 

@@ -11,6 +11,16 @@ export type SubmitOptions = {
   isPriorityFee: boolean;
 };
 
+export type PartialSignSubmitOptions = {
+  feePayer: Secret;
+};
+
+export type BatchSubmitOptions = {
+  feePayer: Secret;
+  isPriorityFee: boolean;
+  instructions: CommonStructure[] | MintStructure[];
+};
+
 export type CommonStructure<T = undefined> = {
   instructions: TransactionInstruction[];
   signers: Keypair[];
@@ -37,7 +47,5 @@ export type PartialSignStructure<T = Pubkey> = {
   hexInstruction: string;
   canSubmit?: boolean;
   data?: T;
-  submit: (
-    options: Partial<SubmitOptions>,
-  ) => Promise<Result<string, Error>>;
+  submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };
