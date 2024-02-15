@@ -79,15 +79,16 @@ test('[MintInstruction]Set priority fee', async (t) => {
 
 test.only('[PartialSignStructure]Set priority fee', async (t) => {
   const solAmount = 0.01;
+  const testUri =
+    'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
+  DasApi.changeDasUri(testUri);
   const serialized = await SolNative.gasLessTransfer(
     source.secret,
     dest.pubkey,
     solAmount,
     feePayer.pubkey,
+    { isPriorityFee: true },
   );
-  const testUri =
-    'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
-  DasApi.changeDasUri(testUri);
 
   (await serialized.submit({ feePayer: feePayer.secret })).match(
     (ok) => {
