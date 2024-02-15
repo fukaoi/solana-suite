@@ -77,7 +77,7 @@ test('[MintInstruction]Set priority fee', async (t) => {
   );
 });
 
-test.only('[PartialSignStructure]Set priority fee', async (t) => {
+test('[PartialSignStructure]Set priority fee', async (t) => {
   const solAmount = 0.01;
   const testUri =
     'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
