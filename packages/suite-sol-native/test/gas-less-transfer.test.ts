@@ -25,8 +25,7 @@ test('transfer feePayerPartialSign', async (t) => {
     feePayer.pubkey,
   );
 
-
-  (await serialized.submit(feePayer.secret)).match(
+  (await serialized.submit({feePayer: feePayer.secret})).match(
     (ok) => {
       t.log('# tx signature: ', ok);
       t.pass();

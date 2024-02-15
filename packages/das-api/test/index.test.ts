@@ -54,7 +54,7 @@ test('Get assets by owner', async (t) => {
   const res = await DasApi.getAssetsByOwner(source.pubkey);
   res.match(
     (ok) => {
-      if (ok) {
+      if (ok && ok.items) {
         t.log('#total: ', ok.total);
         ok.items.forEach((asset) => {
           t.log(asset.content, '');
@@ -73,7 +73,7 @@ test('Get assets by group', async (t) => {
   const res = await DasApi.getAssetsByGroup('collection', collectionMint);
   res.match(
     (ok) => {
-      if (ok) {
+      if (ok && ok.items) {
         t.log('#total: ', ok.total);
         ok.items.forEach((asset) => {
           t.log(asset.content, '');

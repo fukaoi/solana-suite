@@ -108,8 +108,8 @@ declare global {
   }
 }
 
-Array.prototype.submit = async function(options: Partial<SubmitOptions>) {
-  if (options.feePayer) {
+Array.prototype.submit = async function(options: Partial<SubmitOptions> = {}) {
+  if (options && options.feePayer) {
     let i = 1;
     for await (const obj of this) {
       if (obj.isErr) {

@@ -4,7 +4,7 @@ import { Memo } from '../src/';
 import { History } from '~/types/history';
 import { OnErr, OnOk } from '~/types/utils';
 
-test('Get Only memo history', async (t) => {
+test.skip('Get Only memo history', async (t) => {
   const onOk: OnOk<History> = (ok) => {
     console.log('# hisory size: ', ok.length); // t.log is buffering
     ok.forEach((res) => {

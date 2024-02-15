@@ -33,7 +33,7 @@ test('Gas-Less Transfer nft', async (t) => {
     feePayer.pubkey,
   );
 
-  const res = await serialized.submit(feePayer.secret);
+  const res = await serialized.submit({feePayer: feePayer.secret});
   res.match(
     (ok) => {
       t.log('# tx signature: ', ok);

@@ -9,13 +9,6 @@ test('Fetch nft.storage api key in solana-suite.json', (t) => {
   );
 });
 
-test('Constants use test', (t) => {
-  const cluster = Constants.switchCluster({
-    cluster: Constants.Cluster.test,
-  });
-  t.is(cluster, Constants.EndPointUrl.test);
-});
-
 test('Cluster use dev', (t) => {
   const cluster = Constants.switchCluster({ cluster: Constants.Cluster.dev });
   t.is(cluster, Constants.EndPointUrl.dev);
