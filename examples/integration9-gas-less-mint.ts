@@ -61,7 +61,7 @@ import { Account } from '@solana-suite/utils';
   // SIGN FEE PAYER AND SUBMIT (Server side)
   //////////////////////////////////////////////
 
-  const res = await inst.unwrap().submit(feePayer.secret);
+  const res = await inst.unwrap().submit({ feePayer: feePayer.secret });
   res.match(
     (ok) => console.log('# tx signature: ', ok),
     (err) => assert.fail(err.message),
