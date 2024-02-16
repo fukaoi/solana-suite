@@ -141,6 +141,6 @@ test.only('[BatchStructure]Set priority fee', async (t) => {
   const testUri =
     'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
   DasApi.changeDasUri(testUri);
-  const sig = await [inst1, inst2].submit({isPriorityFee: true});
+  const sig = await [inst1, inst2].submit({ isPriorityFee: true });
   t.log('# signature: ', sig.unwrap());
 });
