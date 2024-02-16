@@ -23,7 +23,7 @@
     "tsup": "^7.2.0",
     "tsx": "^3.14.0",
     "turbo": "^1.12.4",
-    "typedoc": "^0.25.7"
+    "typedoc": "^0.25.8"
   },
   "repository": "git@github.com:atonoy/solana-suite.git",
   "author": "fukaoi <usapyon2022@gmail.com>",
