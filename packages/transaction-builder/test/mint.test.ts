@@ -69,7 +69,6 @@ test.skip('[Over size]Reduce transaction', async (t) => {
   };
 
   const inst = await CompressedNft.mint(
-    source.pubkey,
     source.secret,
     {
       filePath: asset.filePath as string,

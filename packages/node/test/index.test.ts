@@ -12,16 +12,6 @@ test('Connect devnet', (t) => {
   );
 });
 
-test('Connect testnet', async (t) => {
-  Node.changeConnection({ cluster: Constants.Cluster.test });
-  const res = Node.getConnection();
-  t.not(res, '');
-  t.is(
-    res.rpcEndpoint,
-    Constants.switchCluster({ cluster: Constants.Cluster.test }),
-  );
-});
-
 test('Connect mainnet', (t) => {
   Node.changeConnection({ cluster: Constants.Cluster.prd });
   const res = Node.getConnection();

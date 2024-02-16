@@ -98,12 +98,11 @@ abstract class AbstractResult<T, E extends Error> {
   }
 }
 
-/// Multiple TransactionBuilder ////
 declare global {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   interface Array<T> {
     submit(
-      options: Partial<SubmitOptions>,
+      options?: Partial<SubmitOptions>,
     ): Promise<Result<TransactionSignature, Error>>;
   }
 }

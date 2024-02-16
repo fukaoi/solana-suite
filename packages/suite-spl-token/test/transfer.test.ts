@@ -61,7 +61,7 @@ test('Create token, batch transfer', async (t) => {
     },
   );
 
-  (await [inst2].submit()).match(
+  (await inst2.submit()).match(
     (ok) => {
       t.log('# transfer signature: ', ok);
     },
