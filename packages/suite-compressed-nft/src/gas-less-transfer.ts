@@ -25,11 +25,10 @@ export namespace CompressedNft {
     dest: Pubkey,
     feePayer: Pubkey,
     options: Partial<GassLessTransferOptions> = {},
-  ): Promise<Result<PartialSignStructure, Error>[]> => {
-    const delegate = await Delegate.gasLessDelegate(mint, owner, feePayer);
-    delegate.unwrap().canSubmit = true;
-
-    const transfer = await Try(async () => {
+  ): Promise<Result<PartialSignStructure, Error>> => {
+    return Try(async () => {
+      const delegate = await Delegate.gasLessDelegate(mint, owner, feePayer);
+      await delegate.submit();
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
       const tx = new Transaction({
         lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
@@ -62,6 +61,5 @@ export namespace CompressedNft {
           .toString('hex'),
       );
     });
-    return [delegate, transfer];
   };
 }

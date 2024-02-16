@@ -25,7 +25,6 @@ export type CommonStructure<T = undefined> = {
   instructions: TransactionInstruction[];
   signers: Keypair[];
   feePayer?: Keypair;
-  canSubmit?: boolean;
   data?: T;
   submit: (
     options: Partial<SubmitOptions>,
@@ -37,7 +36,6 @@ export type MintStructure<T = Pubkey> = {
   signers: Keypair[];
   data: T;
   feePayer: Keypair;
-  canSubmit?: boolean;
   submit: (
     options: Partial<SubmitOptions>,
   ) => Promise<Result<TransactionSignature, Error>>;
@@ -45,7 +43,6 @@ export type MintStructure<T = Pubkey> = {
 
 export type PartialSignStructure<T = Pubkey> = {
   hexInstruction: string;
-  canSubmit?: boolean;
   data?: T;
   submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };

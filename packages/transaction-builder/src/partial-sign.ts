@@ -17,12 +17,10 @@ export namespace TransactionBuilder {
   export class PartialSign implements PartialSignStructure {
     hexInstruction: string;
     data?: Pubkey;
-    canSubmit?: boolean;
 
-    constructor(instructions: string, mint?: Pubkey, canSubmit = false) {
+    constructor(instructions: string, mint?: Pubkey) {
       this.hexInstruction = instructions;
       this.data = mint;
-      this.canSubmit = canSubmit;
     }
 
     submit = async (

@@ -1,6 +1,7 @@
-import { TransactionSignature } from '@solana/web3.js';
+import * as _metaplex_foundation_mpl_token_metadata from '@metaplex-foundation/mpl-token-metadata';
+import * as _solana_web3_js from '@solana/web3.js';
+import { TransactionInstruction, Keypair, TransactionSignature } from '@solana/web3.js';
 import BN from 'bn.js';
-import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -14,6 +15,25 @@ type Secret = (string & {
 type SubmitOptions = {
     feePayer: Secret;
     isPriorityFee: boolean;
+};
+type CommonStructure<T = undefined> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: T;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
+};
+type MintStructure<T = Pubkey> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    data: T;
+    feePayer: Keypair;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
+};
+type PartialSignStructure<T = Pubkey> = {
+    hexInstruction: string;
+    data?: T;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };
 
 declare abstract class AbstractResult<T, E extends Error> {
@@ -225,33 +245,12 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-type Condition = 'overMax' | 'underMin';
-interface Limit {
-    threshold: number;
-    condition: Condition;
-}
-interface Details {
-    key: string;
-    message: string;
-    actual: string | number;
-    limit?: Limit;
-}
-
-type bignum = number | BN;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
+type BurnOptions = {
+    feePayer: Secret;
 };
-type InputCreators = {
-    address: Pubkey;
-    secret: Secret;
-    share: number;
+
+type GasLessTransferOptions = {
+    isPriorityFee: boolean;
 };
 
 type FileType = string | File;
@@ -296,59 +295,85 @@ type Attribute = {
     [key: string]: unknown;
 };
 
-type InputCollection = Pubkey;
+type bignum = number | BN;
+declare enum UseMethod {
+    Burn = 0,
+    Multiple = 1,
+    Single = 2
+}
+type Uses = {
+    useMethod: UseMethod;
+    remaining: bignum;
+    total: bignum;
+};
+type Creators = {
+    address: Pubkey;
+    share: number;
+    verified: boolean;
+};
+type InputCreators = {
+    address: Pubkey;
+    secret: Secret;
+    share: number;
+};
+
 type Options = {
     [key: string]: unknown;
 };
-type InputNftMetadata = {
+
+type TokenMetadata = {
+    mint: string;
     name: string;
     symbol: string;
-    royalty?: number;
-    storageType?: StorageType;
+    uri: string;
+    royalty: number;
+    offchain: Offchain;
+    tokenAmount: string;
+    attributes?: Attribute | undefined;
+    creators?: Creators[] | undefined;
+    uses?: Uses | undefined;
+    dateTime?: Date | undefined;
+};
+
+type FreezeOptions = {
+    feePayer: Secret;
+};
+
+type MintOptions = {
+    feePayer: Secret;
+    freezeAuthority: Pubkey;
+};
+type InputTokenMetadata = {
+    name: string;
+    symbol: string;
     filePath?: FileType;
     uri?: string;
-    isMutable?: boolean;
+    storageType?: StorageType;
     description?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    maxSupply?: bignum;
-    creators?: InputCreators[];
+    royalty?: number;
     uses?: Uses;
-    collection?: InputCollection;
+    creators?: InputCreators[];
+    attributes?: Attribute[];
     options?: Options;
 };
 
-declare namespace Validator {
-    export namespace Message {
-        const SUCCESS = "success";
-        const SMALL_NUMBER = "too small";
-        const BIG_NUMBER = "too big";
-        const LONG_LENGTH = "too long";
-        const EMPTY = "invalid empty value";
-        const INVALID_URL = "invalid url";
-        const ONLY_NODE_JS = "`string` type is only Node.js";
-    }
-    export const NAME_LENGTH = 32;
-    export const SYMBOL_LENGTH = 10;
-    export const URL_LENGTH = 200;
-    export const ROYALTY_MAX = 100;
-    export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
-    export const ROYALTY_MIN = 0;
-    export const isRoyalty: (royalty: number) => Result<string, ValidatorError>;
-    export const isSellerFeeBasisPoints: (royalty: number) => Result<string, ValidatorError>;
-    export const isName: (name: string) => Result<string, ValidatorError>;
-    export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
-    export const isImageUrl: (image: string) => Result<string, ValidatorError>;
-    export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
-    type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
-    type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<DataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
-    export {};
-}
-declare class ValidatorError extends Error {
-    details: Details[];
-    constructor(message: string, details: Details[]);
-}
+type ThawOptions = {
+    feePayer: Secret;
+};
 
-export { Validator, ValidatorError };
+/** @namespace */
+declare const SplToken: {
+    transfer: (mint: Pubkey, owner: Pubkey, dest: Pubkey, ownerOrMultisig: Secret[], amount: number, mintDecimal: number, options?: Partial<MintOptions>) => Promise<Result<CommonStructure, Error>>;
+    thaw: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<ThawOptions>) => Result<CommonStructure, Error>;
+    createFreezeAuthority: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, freezeAuthority: _solana_web3_js.PublicKey) => _solana_web3_js.TransactionInstruction;
+    createMint: (mint: _solana_web3_js.PublicKey, owner: _solana_web3_js.PublicKey, totalAmount: number, mintDecimal: number, tokenMetadata: _metaplex_foundation_mpl_token_metadata.DataV2, feePayer: _solana_web3_js.PublicKey, isMutable: boolean) => Promise<_solana_web3_js.TransactionInstruction[]>;
+    mint: (owner: Secret, totalAmount: number, mintDecimal: number, input: InputTokenMetadata, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
+    gasLessTransfer: (mint: Pubkey, owner: Secret, dest: Pubkey, amount: number, mintDecimal: number, feePayer: Pubkey, options?: Partial<GasLessTransferOptions>) => Promise<Result<PartialSignStructure, Error>>;
+    freeze: (mint: Pubkey, owner: Pubkey, freezeAuthority: Secret, options?: Partial<FreezeOptions>) => Result<CommonStructure, Error>;
+    findByOwner: (owner: Pubkey) => Promise<Result<TokenMetadata[], Error>>;
+    findByMint: (mint: Pubkey) => Promise<Result<TokenMetadata, Error>>;
+    burn: (mint: Pubkey, owner: Pubkey, ownerOrMultisig: Secret[], burnAmount: number, tokenDecimals: number, options?: Partial<BurnOptions>) => Result<CommonStructure, Error>;
+    add: (token: Pubkey, owner: Pubkey, ownerOrMultisig: Secret[], totalAmount: number, mintDecimal: number, options?: Partial<MintOptions>) => Promise<Result<CommonStructure<Pubkey>, Error>>;
+};
+
+export { SplToken };

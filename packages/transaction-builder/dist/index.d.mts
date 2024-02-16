@@ -1,6 +1,5 @@
-import { TransactionSignature } from '@solana/web3.js';
-import BN from 'bn.js';
-import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
+import * as _solana_web3_js from '@solana/web3.js';
+import { TransactionInstruction, Keypair, TransactionSignature, Transaction, PublicKey } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -14,6 +13,33 @@ type Secret = (string & {
 type SubmitOptions = {
     feePayer: Secret;
     isPriorityFee: boolean;
+};
+type PartialSignSubmitOptions = {
+    feePayer: Secret;
+};
+type BatchSubmitOptions = {
+    feePayer: Secret;
+    isPriorityFee: boolean;
+    instructions: CommonStructure[] | MintStructure[];
+};
+type CommonStructure<T = undefined> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: T;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
+};
+type MintStructure<T = Pubkey> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    data: T;
+    feePayer: Keypair;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
+};
+type PartialSignStructure<T = Pubkey> = {
+    hexInstruction: string;
+    data?: T;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };
 
 declare abstract class AbstractResult<T, E extends Error> {
@@ -225,130 +251,88 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-type Condition = 'overMax' | 'underMin';
-interface Limit {
-    threshold: number;
-    condition: Condition;
-}
-interface Details {
-    key: string;
-    message: string;
-    actual: string | number;
-    limit?: Limit;
-}
-
-type bignum = number | BN;
-declare enum UseMethod {
-    Burn = 0,
-    Multiple = 1,
-    Single = 2
-}
-type Uses = {
-    useMethod: UseMethod;
-    remaining: bignum;
-    total: bignum;
-};
-type InputCreators = {
-    address: Pubkey;
-    secret: Secret;
-    share: number;
-};
-
-type FileType = string | File;
-
-type StorageType = 'nftStorage' | 'arweave' | string;
-type Offchain = {
-    name?: string;
-    symbol?: string;
-    description?: string;
-    seller_fee_basis_points?: number;
-    image?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    collection?: {
-        name?: string;
-        family?: string;
-        [key: string]: unknown;
-    };
-    collectionDetails?: {
-        kind: string;
-        size: number;
-    };
-    created_at?: number;
-};
-type Properties = {
-    creators?: {
-        address?: string;
-        share?: number;
-        [key: string]: unknown;
-    }[];
-    files?: {
-        type?: string;
-        filePath?: FileType;
-        [key: string]: unknown;
-    }[];
-    [key: string]: unknown;
-};
-type Attribute = {
-    trait_type?: string;
-    value?: string;
-    [key: string]: unknown;
-};
-
-type InputCollection = Pubkey;
-type Options = {
-    [key: string]: unknown;
-};
-type InputNftMetadata = {
-    name: string;
-    symbol: string;
-    royalty?: number;
-    storageType?: StorageType;
-    filePath?: FileType;
-    uri?: string;
-    isMutable?: boolean;
-    description?: string;
-    external_url?: string;
-    attributes?: Attribute[];
-    properties?: Properties;
-    maxSupply?: bignum;
-    creators?: InputCreators[];
-    uses?: Uses;
-    collection?: InputCollection;
-    options?: Options;
-};
-
-declare namespace Validator {
-    export namespace Message {
-        const SUCCESS = "success";
-        const SMALL_NUMBER = "too small";
-        const BIG_NUMBER = "too big";
-        const LONG_LENGTH = "too long";
-        const EMPTY = "invalid empty value";
-        const INVALID_URL = "invalid url";
-        const ONLY_NODE_JS = "`string` type is only Node.js";
+declare namespace TransactionBuilder$5 {
+    class Batch {
+        submit: (options?: Partial<BatchSubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
     }
-    export const NAME_LENGTH = 32;
-    export const SYMBOL_LENGTH = 10;
-    export const URL_LENGTH = 200;
-    export const ROYALTY_MAX = 100;
-    export const SELLER_FEE_BASIS_POINTS_MAX = 10000;
-    export const ROYALTY_MIN = 0;
-    export const isRoyalty: (royalty: number) => Result<string, ValidatorError>;
-    export const isSellerFeeBasisPoints: (royalty: number) => Result<string, ValidatorError>;
-    export const isName: (name: string) => Result<string, ValidatorError>;
-    export const isSymbol: (symbol: string) => Result<string, ValidatorError>;
-    export const isImageUrl: (image: string) => Result<string, ValidatorError>;
-    export const checkAll: <T extends PickNftStorage | PickNftStorageMetaplex | PickMetaplex>(metadata: T) => Result<string, ValidatorError>;
-    type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
-    type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
-    type PickMetaplex = Pick<DataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
-    export {};
-}
-declare class ValidatorError extends Error {
-    details: Details[];
-    constructor(message: string, details: Details[]);
 }
 
-export { Validator, ValidatorError };
+declare namespace TransactionBuilder$4 {
+    class Common<T = undefined> implements CommonStructure<T> {
+        static MAX_TRANSACTION_SIZE: number;
+        instructions: TransactionInstruction[];
+        signers: Keypair[];
+        feePayer?: Keypair;
+        data?: T;
+        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
+        submit: (options?: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
+    }
+}
+
+declare namespace TransactionBuilder$3 {
+    class Mint<T = Pubkey> implements MintStructure<T> {
+        instructions: TransactionInstruction[];
+        signers: Keypair[];
+        feePayer: Keypair;
+        data: T;
+        constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer: Keypair, data: T);
+        submit: (options?: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
+    }
+}
+
+declare namespace TransactionBuilder$2 {
+    class PartialSign implements PartialSignStructure {
+        hexInstruction: string;
+        data?: Pubkey;
+        constructor(instructions: string, mint?: Pubkey);
+        submit: (options?: Partial<PartialSignSubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
+    }
+}
+
+declare namespace TransactionBuilder$1 {
+    namespace PriorityFee {
+        const submit: (transaction: Transaction, signers: Keypair[]) => Promise<string>;
+        const createPriorityFeeInstruction: (transaction: Transaction) => Promise<_solana_web3_js.TransactionInstruction>;
+    }
+}
+
+declare global {
+    interface String {
+        toPublicKey(): PublicKey;
+        toKeypair(): Keypair;
+        toExplorerUrl(explorer?: Explorer, options?: ExplorerOptions): string;
+    }
+    interface Number {
+        toSol(): number;
+        toLamports(): number;
+    }
+    interface Console {
+        debug(data: unknown, data2?: unknown, data3?: unknown): void;
+    }
+    interface Secret {
+        toKeypair(): Keypair;
+    }
+    interface Pubkey {
+        toPublicKey(): PublicKey;
+    }
+}
+declare enum Explorer {
+    Solscan = "solscan",
+    SolanaFM = "solanafm",
+    Xray = "xray"
+}
+type ExplorerOptions = {
+    replacePath: string;
+};
+
+declare const TransactionBuilder: {
+    PriorityFee: typeof TransactionBuilder$1.PriorityFee;
+    PartialSign: typeof TransactionBuilder$2.PartialSign;
+    Common: typeof TransactionBuilder$4.Common;
+    Mint: typeof TransactionBuilder$3.Mint;
+    calculateTxSize: (transaction: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => number;
+    isOverTransactionSize: (transaction: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => boolean;
+    Batch: typeof TransactionBuilder$5.Batch;
+};
+
+export { TransactionBuilder };

@@ -9,7 +9,6 @@ import {
 
 import { TransactionBuilder } from '~/transaction-builder';
 import { debugLog } from './shared';
-import { Node } from '~/node';
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
@@ -107,48 +106,26 @@ declare global {
   }
 }
 
-Array.prototype.submit = async function(options: Partial<SubmitOptions> = {}) {
-  if (options && options.feePayer) {
-    let i = 1;
-    for await (const obj of this) {
-      if (obj.isErr) {
-        return obj;
-      } else if (obj.value.canSubmit) {
-        debugLog('# Result batch canSubmit');
-        const sig = await (obj as PartialSignStructure).submit(options);
-        if (sig.isErr) {
-          return sig;
-        }
-        await Node.confirmedSig(sig.value);
-      } else {
-        debugLog('# Result batch other than canSubmit');
-        if (this.length == i) {
-          // last object
-          return obj.submit(options);
-        }
-        obj.submit(options);
-      }
-      i++;
+// TransactionBuilder.Batch
+Array.prototype.submit = async function (options: Partial<SubmitOptions> = {}) {
+  const instructions: CommonStructure | MintStructure[] = [];
+  for (const obj of this) {
+    if (obj.isErr) {
+      return obj;
+    } else if (obj.isOk) {
+      instructions.push(obj.value);
+    } else {
+      return Result.err(Error('Only Array Instruction object'));
     }
-  } else {
-    const instructions: CommonStructure | MintStructure[] = [];
-    for (const obj of this) {
-      if (obj.isErr) {
-        return obj;
-      } else if (obj.isOk) {
-        instructions.push(obj.value);
-      } else {
-        return Result.err(Error('Only Array Instruction object'));
-      }
-    }
-    debugLog('# Result batch submit: ', instructions);
-    const batchOptions = {
-      feePayer: options.feePayer,
-      isPriorityFee: options.isPriorityFee,
-      instructions: instructions,
-    };
-    return new TransactionBuilder.Batch().submit(batchOptions);
   }
+  debugLog('# Result batch submit: ', instructions);
+  const batchOptions = {
+    feePayer: options.feePayer,
+    isPriorityFee: options.isPriorityFee,
+    instructions: instructions,
+  };
+  return new TransactionBuilder.Batch().submit(batchOptions);
+  // }
 };
 
 class InternalOk<T, E extends Error> extends AbstractResult<T, E> {

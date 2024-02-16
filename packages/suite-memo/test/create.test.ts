@@ -29,7 +29,7 @@ test.before(async () => {
   await requestSol(source.pubkey, 0.02);
 });
 
-test.beforeEach(function() {
+test.beforeEach(function () {
   datetime = new Date();
 });
 

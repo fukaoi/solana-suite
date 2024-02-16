@@ -185,7 +185,6 @@ type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
-    canSubmit?: boolean;
     data?: T;
     submit: (options: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
 };
@@ -194,12 +193,10 @@ type MintStructure<T = Pubkey> = {
     signers: Keypair[];
     data: T;
     feePayer: Keypair;
-    canSubmit?: boolean;
     submit: (options: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
 };
 type PartialSignStructure<T = Pubkey> = {
     hexInstruction: string;
-    canSubmit?: boolean;
     data?: T;
     submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };
@@ -220,7 +217,7 @@ declare abstract class AbstractResult<T, E extends Error> {
 }
 declare global {
     interface Array<T> {
-        submit(options: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
+        submit(options?: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
     }
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
@@ -454,7 +451,7 @@ declare const CompressedNft: {
     }>;
     createVerifyCreator: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
     mint: (owner: Secret$1, input: InputNftMetadata, treeOwner: Pubkey, collectionMint: Pubkey, options?: Partial<MintOptions>) => Promise<Result<MintStructure<CompressedNft$1.Space>, Error>>;
-    gasLessTransfer: (mint: Pubkey, owner: Secret$1, dest: Pubkey, feePayer: Pubkey, options?: Partial<GassLessTransferOptions>) => Promise<Result<PartialSignStructure, Error>[]>;
+    gasLessTransfer: (mint: Pubkey, owner: Secret$1, dest: Pubkey, feePayer: Pubkey, options?: Partial<GassLessTransferOptions>) => Promise<Result<PartialSignStructure, Error>>;
     gasLessDelegate: (mint: Pubkey, owner: Secret$1, newDelegate: Pubkey, options?: Partial<GassLessDelegateOptions>) => Promise<Result<PartialSignStructure, Error>>;
     findByOwner: (owner: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;
     findByMint: (mint: Pubkey) => Promise<Result<Partial<Metadata>, Error>>;

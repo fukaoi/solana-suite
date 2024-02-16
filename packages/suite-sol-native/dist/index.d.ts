@@ -22,13 +22,11 @@ type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];
     signers: Keypair[];
     feePayer?: Keypair;
-    canSubmit?: boolean;
     data?: T;
     submit: (options: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
 };
 type PartialSignStructure<T = Pubkey> = {
     hexInstruction: string;
-    canSubmit?: boolean;
     data?: T;
     submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };
@@ -49,7 +47,7 @@ declare abstract class AbstractResult<T, E extends Error> {
 }
 declare global {
     interface Array<T> {
-        submit(options: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
+        submit(options?: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
     }
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
