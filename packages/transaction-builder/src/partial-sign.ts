@@ -6,41 +6,46 @@ import {
 
 import { Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
-import { Pubkey, Secret } from '~/types/account';
+import { Pubkey } from '~/types/account';
 import { MAX_RETRIES } from './common';
-import { PartialSignStructure } from '~/types/transaction-builder';
+import {
+  PartialSignStructure,
+  PartialSignSubmitOptions,
+} from '~/types/transaction-builder';
 
 export namespace TransactionBuilder {
   export class PartialSign implements PartialSignStructure {
     hexInstruction: string;
     data?: Pubkey;
-    canSubmit?: boolean;
 
-    constructor(instructions: string, mint?: Pubkey, canSubmit = false) {
+    constructor(instructions: string, mint?: Pubkey) {
       this.hexInstruction = instructions;
       this.data = mint;
-      this.canSubmit = canSubmit;
     }
 
     submit = async (
-      feePayer: Secret,
+      options: Partial<PartialSignSubmitOptions> = {},
     ): Promise<Result<TransactionSignature, Error>> => {
       return Try(async () => {
         if (!(this instanceof PartialSign)) {
           throw Error('only PartialSignInstruction object that can use this');
         }
 
-        const decode = Buffer.from(this.hexInstruction, 'hex');
-        const transactionFromJson = Transaction.from(decode);
-        transactionFromJson.partialSign(feePayer.toKeypair());
+        if (!options.feePayer) {
+          throw Error('Need feePayer');
+        }
 
-        const options: ConfirmOptions = {
+        const decode = Buffer.from(this.hexInstruction, 'hex');
+        const transaction = Transaction.from(decode);
+        transaction.partialSign(options.feePayer!.toKeypair());
+
+        const confirmOptions: ConfirmOptions = {
           maxRetries: MAX_RETRIES,
         };
-        const wireTransaction = transactionFromJson.serialize();
+        const wireTransaction = transaction.serialize();
         return await Node.getConnection().sendRawTransaction(
           wireTransaction,
-          options,
+          confirmOptions,
         );
       });
     };

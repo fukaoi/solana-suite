@@ -9,7 +9,8 @@ import {
 
 import { Node } from '~/node';
 import { Result, Try } from '~/suite-utils';
-import { CommonStructure } from '~/types/transaction-builder';
+import { CommonStructure, SubmitOptions } from '~/types/transaction-builder';
+import { TransactionBuilder as PriorityFee } from './priority-fee';
 
 export const MAX_RETRIES = 3;
 
@@ -34,7 +35,9 @@ export namespace TransactionBuilder {
       this.data = data;
     }
 
-    submit = async (): Promise<Result<TransactionSignature, Error>> => {
+    submit = async (
+      options: Partial<SubmitOptions> = {},
+    ): Promise<Result<TransactionSignature, Error>> => {
       return Try(async () => {
         if (!(this instanceof Common)) {
           throw Error('only Instruction object that can use this');
@@ -53,16 +56,22 @@ export namespace TransactionBuilder {
 
         this.instructions.forEach((inst) => transaction.add(inst));
 
-        const options: ConfirmOptions = {
-          maxRetries: MAX_RETRIES,
-        };
-
-        return await sendAndConfirmTransaction(
-          Node.getConnection(),
-          transaction,
-          finalSigners,
-          options,
-        );
+        if (options.isPriorityFee) {
+          return await PriorityFee.PriorityFee.submit(
+            transaction,
+            finalSigners,
+          );
+        } else {
+          const confirmOptions: ConfirmOptions = {
+            maxRetries: MAX_RETRIES,
+          };
+          return await sendAndConfirmTransaction(
+            Node.getConnection(),
+            transaction,
+            finalSigners,
+            confirmOptions,
+          );
+        }
       });
     };
   }

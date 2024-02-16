@@ -6,30 +6,39 @@ import {
 } from '@solana/web3.js';
 
 import { Node } from '~/node';
-import { MAX_RETRIES, TransactionBuilder as Common } from './common';
-import { TransactionBuilder as Mint } from './mint';
-import { Try, Result } from '~/suite-utils';
+import { MAX_RETRIES } from './common';
+import { Result, Try } from '~/suite-utils';
+import { TransactionBuilder as PriorityFee } from './priority-fee';
+import { BatchSubmitOptions } from '~/types/transaction-builder';
 
 export namespace TransactionBuilder {
   export class Batch {
     submit = async (
-      arr: Common.Common[] | Mint.Mint[],
+      options: Partial<BatchSubmitOptions> = {},
     ): Promise<Result<TransactionSignature, Error>> => {
       return Try(async () => {
+        if (!options.instructions) {
+          throw Error('Not found options.instructions');
+        }
+        const commonOrMintInst = options.instructions;
         let i = 0;
-        for (const a of arr) {
-          if (!a.instructions && !a.signers) {
+        for (const inst of commonOrMintInst) {
+          if (!inst.instructions && !inst.signers) {
             throw Error(
               `only Instruction object that can use batchSubmit().
-            Index: ${i}, Set value: ${JSON.stringify(a)}`,
+            Index: ${i}, Set value: ${JSON.stringify(inst)}`,
             );
           }
           i++;
         }
 
-        const instructions = arr.flatMap((a) => a.instructions);
-        const signers = arr.flatMap((a) => a.signers);
-        const feePayers = arr.filter((a) => a.feePayer !== undefined);
+        const instructions = commonOrMintInst.flatMap(
+          (inst) => inst.instructions,
+        );
+        const signers = commonOrMintInst.flatMap((inst) => inst.signers);
+        const feePayers = commonOrMintInst.filter(
+          (inst) => inst.feePayer !== undefined,
+        );
         let feePayer = signers[0];
         if (feePayers.length > 0 && feePayers[0].feePayer) {
           feePayer = feePayers[0].feePayer;
@@ -45,16 +54,22 @@ export namespace TransactionBuilder {
 
         // CalculateTxsize.isMaxTransactionSize(transaction, feePayer.publicKey);
 
-        const options: ConfirmOptions = {
-          maxRetries: MAX_RETRIES,
-        };
-
-        return await sendAndConfirmTransaction(
-          Node.getConnection(),
-          transaction,
-          finalSigners,
-          options,
-        );
+        if (options.isPriorityFee) {
+          return await PriorityFee.PriorityFee.submit(
+            transaction,
+            finalSigners,
+          );
+        } else {
+          const confirmOptions: ConfirmOptions = {
+            maxRetries: MAX_RETRIES,
+          };
+          return await sendAndConfirmTransaction(
+            Node.getConnection(),
+            transaction,
+            finalSigners,
+            confirmOptions,
+          );
+        }
       });
     };
   }

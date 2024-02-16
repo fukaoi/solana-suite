@@ -4,12 +4,11 @@ import {
   CommonStructure,
   MintStructure,
   PartialSignStructure,
+  SubmitOptions,
 } from '~/types/transaction-builder';
-import { Secret } from '~/types/account';
 
 import { TransactionBuilder } from '~/transaction-builder';
 import { debugLog } from './shared';
-import { Node } from '~/node';
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
@@ -76,18 +75,16 @@ abstract class AbstractResult<T, E extends Error> {
   /// single TransactionBuilder ////
   /* eslint-disable @typescript-eslint/no-explicit-any */
   async submit(
-    feePayer?: Secret,
+    options: Partial<SubmitOptions> = {},
   ): Promise<Result<TransactionSignature, Error>> {
     const res = this.map(
       async (ok) => {
         debugLog('# result single submit: ', ok);
-        if (feePayer) {
-          const obj = ok as PartialSignStructure;
-          return await obj.submit(feePayer);
-        } else {
-          const obj = ok as CommonStructure | MintStructure;
-          return await obj.submit();
-        }
+        const obj = ok as
+          | CommonStructure
+          | MintStructure
+          | PartialSignStructure;
+        return await obj.submit(options);
       },
       (err) => {
         return err;
@@ -100,51 +97,35 @@ abstract class AbstractResult<T, E extends Error> {
   }
 }
 
-/// Multiple TransactionBuilder ////
 declare global {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   interface Array<T> {
-    submit(feePayer?: Secret): Promise<Result<TransactionSignature, Error>>;
+    submit(
+      options?: Partial<SubmitOptions>,
+    ): Promise<Result<TransactionSignature, Error>>;
   }
 }
 
-Array.prototype.submit = async function (feePayer?: Secret) {
-  if (feePayer) {
-    let i = 1;
-    for await (const obj of this) {
-      if (obj.isErr) {
-        return obj;
-      } else if (obj.value.canSubmit) {
-        debugLog('# Result batch canSubmit');
-        const sig = await (obj as PartialSignStructure).submit(feePayer);
-        if (sig.isErr) {
-          return sig;
-        }
-        await Node.confirmedSig(sig.value);
-      } else {
-        debugLog('# Result batch other than canSubmit');
-        if (this.length == i) {
-          // last object
-          return obj.submit(feePayer);
-        }
-        obj.submit(feePayer);
-      }
-      i++;
+// TransactionBuilder.Batch
+Array.prototype.submit = async function (options: Partial<SubmitOptions> = {}) {
+  const instructions: CommonStructure | MintStructure[] = [];
+  for (const obj of this) {
+    if (obj.isErr) {
+      return obj;
+    } else if (obj.isOk) {
+      instructions.push(obj.value);
+    } else {
+      return Result.err(Error('Only Array Instruction object'));
     }
-  } else {
-    const instructions: CommonStructure | MintStructure[] = [];
-    for (const obj of this) {
-      if (obj.isErr) {
-        return obj;
-      } else if (obj.isOk) {
-        instructions.push(obj.value);
-      } else {
-        return Result.err(Error('Only Array Instruction object'));
-      }
-    }
-    debugLog('# Result batch submit: ', instructions);
-    return new TransactionBuilder.Batch().submit(instructions);
   }
+  debugLog('# Result batch submit: ', instructions);
+  const batchOptions = {
+    feePayer: options.feePayer,
+    isPriorityFee: options.isPriorityFee,
+    instructions: instructions,
+  };
+  return new TransactionBuilder.Batch().submit(batchOptions);
+  // }
 };
 
 class InternalOk<T, E extends Error> extends AbstractResult<T, E> {

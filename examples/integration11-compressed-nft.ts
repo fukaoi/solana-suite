@@ -140,7 +140,7 @@ import { requestSol } from 'test-tools';
   );
 
   // submit instructions
-  (await transferInst.submit(feePayer.secret)).match(
+  (await transferInst.submit({feePayer: feePayer.secret})).match(
     (value) => console.log('# sig: ', value),
     (error) => assert.fail(error),
   );

@@ -4,4 +4,8 @@ type TransferOptions = {
     feePayer: Secret;
 };
 
-export { TransferOptions };
+type GasLessTransferOptions = {
+    isPriorityFee: boolean;
+};
+
+export { GasLessTransferOptions, TransferOptions };

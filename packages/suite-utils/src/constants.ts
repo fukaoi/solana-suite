@@ -52,7 +52,6 @@ export namespace Constants {
     prd = 'mainnet-beta',
     prdMetaplex = 'mainnet-beta-metaplex',
     dev = 'devnet',
-    test = 'testnet',
     localhost = 'localhost-devnet',
   }
 
@@ -60,7 +59,6 @@ export namespace Constants {
     prd = 'https://api.mainnet-beta.solana.com',
     prdMetaplex = 'https://api.metaplex.solana.com',
     dev = 'https://api.devnet.solana.com',
-    test = 'https://api.testnet.solana.com',
     localhost = 'http://api.devnet.solana.com',
   }
 
@@ -98,8 +96,6 @@ export namespace Constants {
         return Constants.EndPointUrl.prd;
       case Constants.Cluster.prdMetaplex:
         return Constants.EndPointUrl.prdMetaplex;
-      case Constants.Cluster.test:
-        return Constants.EndPointUrl.test;
       case Constants.Cluster.dev:
         return Constants.EndPointUrl.dev;
       default:

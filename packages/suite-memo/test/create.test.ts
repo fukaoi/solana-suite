@@ -64,6 +64,8 @@ test('send memo and sol transfer by owner', async (t) => {
     { feePayer: feePayer.secret },
   );
 
+  await inst1.submit();
+
   const inst2 = SolNative.transfer(
     source.pubkey,
     dest.pubkey,
@@ -71,7 +73,7 @@ test('send memo and sol transfer by owner', async (t) => {
     0.01, // Too low lamports, but  error occurs
   );
 
-  const res = await [inst1, inst2].submit();
+  const res = await inst2.submit();
   t.true(res.isOk);
   t.log('# tx signature: ', res.unwrap());
 });
@@ -98,6 +100,8 @@ test('send memo and spl-token transfer by owner', async (t) => {
     { feePayer: feePayer.secret },
   );
 
+  await inst1.submit();
+
   const inst2 = await SplToken.transfer(
     inst.unwrap().data as Pubkey,
     source.pubkey,
@@ -108,7 +112,7 @@ test('send memo and spl-token transfer by owner', async (t) => {
     { feePayer: feePayer.secret },
   );
 
-  (await [inst1, inst2].submit()).match(
+  (await inst2.submit()).match(
     (ok) => {
       t.pass();
       t.log('# tx signature: ', ok);

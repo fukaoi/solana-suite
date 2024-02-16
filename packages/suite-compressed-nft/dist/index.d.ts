@@ -1,7 +1,7 @@
 import * as mpl_bubblegum_instruction from 'mpl-bubblegum-instruction';
 import BN from 'bn.js';
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionSignature, TransactionInstruction, Keypair } from '@solana/web3.js';
+import { TransactionInstruction, Keypair, TransactionSignature } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -113,6 +113,14 @@ type DelegateOptions = {
     delegate: Pubkey;
 };
 
+type GassLessDelegateOptions = {
+    isPriorityFee: boolean;
+};
+
+type GassLessTransferOptions = {
+    isPriorityFee: boolean;
+};
+
 type MintOptions = {
     receiver: Pubkey;
     delegate: Pubkey;
@@ -169,6 +177,30 @@ type InputNftMetadata = {
     options?: Options;
 };
 
+type SubmitOptions = {
+    feePayer: Secret$1;
+    isPriorityFee: boolean;
+};
+type CommonStructure<T = undefined> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    feePayer?: Keypair;
+    data?: T;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
+};
+type MintStructure<T = Pubkey> = {
+    instructions: TransactionInstruction[];
+    signers: Keypair[];
+    data: T;
+    feePayer: Keypair;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
+};
+type PartialSignStructure<T = Pubkey> = {
+    hexInstruction: string;
+    data?: T;
+    submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
+};
+
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     unwrap(): T;
@@ -181,11 +213,11 @@ declare abstract class AbstractResult<T, E extends Error> {
     chain<X>(ok: (value: T) => Result<X, E>): Result<X, E>;
     chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
     match<U, F>(ok: (value: T) => U, err: (error: E) => F): void | Promise<void>;
-    submit(feePayer?: Secret$1): Promise<Result<TransactionSignature, Error>>;
+    submit(options?: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
 }
 declare global {
     interface Array<T> {
-        submit(feePayer?: Secret$1): Promise<Result<TransactionSignature, Error>>;
+        submit(options?: Partial<SubmitOptions>): Promise<Result<TransactionSignature, Error>>;
     }
 }
 declare class InternalOk<T, E extends Error> extends AbstractResult<T, E> {
@@ -378,29 +410,6 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-type CommonStructure<T = undefined> = {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    feePayer?: Keypair;
-    canSubmit?: boolean;
-    data?: T;
-    submit: () => Promise<Result<TransactionSignature, Error>>;
-};
-type MintStructure<T = Pubkey> = {
-    instructions: TransactionInstruction[];
-    signers: Keypair[];
-    data: T;
-    feePayer: Keypair;
-    canSubmit?: boolean;
-    submit: () => Promise<Result<TransactionSignature, Error>>;
-};
-type PartialSignStructure<T = Pubkey> = {
-    hexInstruction: string;
-    canSubmit?: boolean;
-    data?: T;
-    submit: (feePayer: Secret$1) => Promise<Result<string, Error>>;
-};
-
 declare namespace CompressedNft$1 {
     class Space {
         spaceOwner: Pubkey;
@@ -442,8 +451,8 @@ declare const CompressedNft: {
     }>;
     createVerifyCreator: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
     mint: (owner: Secret$1, input: InputNftMetadata, treeOwner: Pubkey, collectionMint: Pubkey, options?: Partial<MintOptions>) => Promise<Result<MintStructure<CompressedNft$1.Space>, Error>>;
-    gasLessTransfer: (mint: Pubkey, owner: Secret$1, dest: Pubkey, feePayer: Pubkey) => Promise<Result<PartialSignStructure, Error>[]>;
-    gasLessDelegate: (mint: Pubkey, owner: Secret$1, newDelegate: Pubkey) => Promise<Result<PartialSignStructure, Error>>;
+    gasLessTransfer: (mint: Pubkey, owner: Secret$1, dest: Pubkey, feePayer: Pubkey, options?: Partial<GassLessTransferOptions>) => Promise<Result<PartialSignStructure, Error>>;
+    gasLessDelegate: (mint: Pubkey, owner: Secret$1, newDelegate: Pubkey, options?: Partial<GassLessDelegateOptions>) => Promise<Result<PartialSignStructure, Error>>;
     findByOwner: (owner: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;
     findByMint: (mint: Pubkey) => Promise<Result<Partial<Metadata>, Error>>;
     findByCollection: (collectionMint: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;

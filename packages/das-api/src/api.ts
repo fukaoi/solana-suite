@@ -1,26 +1,48 @@
+import { Transaction } from '@solana/web3.js';
 import { Constants, debugLog, Result, Try } from '~/suite-utils';
-import { Asset, AssetProof, Assets } from '~/types/das-api';
+import { Asset, AssetProof, Assets, PriorityFeeLevels } from '~/types/das-api';
 import { Sortable } from '~/types/find';
 
 export namespace DasApi {
+  let dasUri: string;
   const connect = async (
     method: string,
-    params: (string | Pubkey | Sortable | number | undefined)[],
+    params: (
+      | string
+      | Pubkey
+      | Sortable
+      | number
+      | undefined
+      | Pubkey[]
+      | Transaction
+      | {
+          [key: string]: unknown;
+        }
+    )[],
   ) => {
     Constants.WarnningMessage.calculateProbability() &&
       console.warn(Constants.WarnningMessage.DAS_API_URL);
-    debugLog('# das api url: ', Constants.DAS_API_URL);
-    const response = await fetch(Constants.DAS_API_URL, {
+    dasUri = dasUri ? dasUri : Constants.DAS_API_URL;
+    debugLog('# dasUri: ', dasUri);
+    const response = await fetch(dasUri, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         jsonrpc: '2.0',
         method,
-        id: 'compression',
+        id: 'das-api',
         params,
       }),
     });
+    if (response.status !== 200) {
+      const err = (await response.json()).error.message;
+      return Result.err(Error(err));
+    }
     return (await response.json()).result;
+  };
+
+  export const changeDasUri = (url: string): void => {
+    dasUri = url;
   };
 
   export const getAssetProof = async (
@@ -78,6 +100,22 @@ export namespace DasApi {
         before,
         after,
       ]);
+    });
+  };
+
+  export const getPriorityFeeEstimate = async (
+    accountOrTransaction: Pubkey[] | Transaction,
+  ): Promise<Result<PriorityFeeLevels, Error>> => {
+    return Try(async () => {
+      const options = { includeAllPriorityFeeLevels: true };
+      return (
+        await connect('getPriorityFeeEstimate', [
+          {
+            accountOrTransaction,
+            options,
+          },
+        ])
+      ).priorityFeeLevels;
     });
   };
 }

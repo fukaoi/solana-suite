@@ -9,8 +9,9 @@ import {
 
 import { Constants, debugLog, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
+import { TransactionBuilder as PriorityFee } from './priority-fee';
 import { MAX_RETRIES } from './common';
-import { MintStructure } from '~/types/transaction-builder';
+import { MintStructure, SubmitOptions } from '~/types/transaction-builder';
 import { Pubkey } from '~/types/account';
 
 export namespace TransactionBuilder {
@@ -32,7 +33,9 @@ export namespace TransactionBuilder {
       this.feePayer = feePayer;
     }
 
-    submit = async (): Promise<Result<TransactionSignature, Error>> => {
+    submit = async (
+      options: Partial<SubmitOptions> = {},
+    ): Promise<Result<TransactionSignature, Error>> => {
       return Try(async () => {
         if (!(this instanceof Mint)) {
           throw Error('only MintInstruction object that can use this');
@@ -50,21 +53,27 @@ export namespace TransactionBuilder {
 
         this.instructions.forEach((inst) => transaction.add(inst));
 
-        const options: ConfirmOptions = {
-          maxRetries: MAX_RETRIES,
-        };
-
         if (Node.getConnection().rpcEndpoint === Constants.EndPointUrl.prd) {
           debugLog('# Change metaplex cluster on mainnet-beta');
           Node.changeConnection({ cluster: Constants.Cluster.prdMetaplex });
         }
 
-        return await sendAndConfirmTransaction(
-          Node.getConnection(),
-          transaction,
-          finalSigners,
-          options,
-        );
+        if (options.isPriorityFee) {
+          return await PriorityFee.PriorityFee.submit(
+            transaction,
+            finalSigners,
+          );
+        } else {
+          const confirmOptions: ConfirmOptions = {
+            maxRetries: MAX_RETRIES,
+          };
+          return await sendAndConfirmTransaction(
+            Node.getConnection(),
+            transaction,
+            finalSigners,
+            confirmOptions,
+          );
+        }
       });
     };
   }

@@ -29,7 +29,7 @@ test('Gas-less new delegate signer', async (t) => {
     feePayer.pubkey,
   );
 
-  (await obj.unwrap().submit(feePayer.secret)).match(
+  (await obj.unwrap().submit({ feePayer: feePayer.secret })).match(
     (ok) => {
       t.log('# sig: ', ok);
       t.pass();

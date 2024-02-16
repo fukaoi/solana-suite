@@ -26,13 +26,6 @@ test('[SolanaFM][Mainnet-Beta]Create explorer url', (t) => {
   t.true(res);
 });
 
-test('[SolanaFM][Testnet]Create explorer url', (t) => {
-  Node.changeConnection({ cluster: Constants.Cluster.test });
-  const url = SIG.toExplorerUrl(Explorer.SolanaFM);
-  const res = /testnet/.test(url);
-  t.true(res);
-});
-
 test('[SolanaFM][Devnet]Create explorer url', (t) => {
   Node.changeConnection({ cluster: Constants.Cluster.dev });
   const url = SIG.toExplorerUrl(Explorer.SolanaFM);

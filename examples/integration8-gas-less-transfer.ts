@@ -51,7 +51,7 @@ import { RandomAsset } from 'test-tools/setupAsset';
   // SIGN FEE PAYER AND SUBMIT (Server side)
   //////////////////////////////////////////////
 
-  const res = await inst.unwrap().submit(feePayer.secret);
+  const res = await inst.unwrap().submit({ feePayer: feePayer.secret });
   res.match(
     (ok) => console.log('# tx signature: ', ok),
     (err) => assert.fail(err.message),
@@ -98,7 +98,7 @@ import { RandomAsset } from 'test-tools/setupAsset';
   // SIGN FEE PAYER AND SUBMIT (Server side)
   //////////////////////////////////////////////
 
-  const res2 = await inst2.unwrap().submit(feePayer.secret);
+  const res2 = await inst2.unwrap().submit({ feePayer: feePayer.secret });
   res2.match(
     (ok) => console.log('# tx signature: ', ok),
     (err) => assert.fail(err.message),

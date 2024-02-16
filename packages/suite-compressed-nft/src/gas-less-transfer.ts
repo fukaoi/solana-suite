@@ -7,6 +7,7 @@ import { Transaction } from '@solana/web3.js';
 import { CompressedNft as Transfer } from './transfer';
 import { CompressedNft as Delegate } from './gas-less-delegate';
 import { PartialSignStructure } from '~/types/transaction-builder';
+import { GassLessTransferOptions } from '~/types/compressed-nft';
 
 export namespace CompressedNft {
   /**
@@ -15,6 +16,7 @@ export namespace CompressedNft {
    * @param {Secret} owner
    * @param {Pubkey} dest
    * @param {Pubkey} feePayer
+   * @param {Partial<GassLessTransferOptions> } options
    * @returns {Promise<Result<PartialSignTransaction[], Error>>}
    */
   export const gasLessTransfer = async (
@@ -22,19 +24,19 @@ export namespace CompressedNft {
     owner: Secret,
     dest: Pubkey,
     feePayer: Pubkey,
-  ): Promise<Result<PartialSignStructure, Error>[]> => {
-    const delegate = await Delegate.gasLessDelegate(mint, owner, feePayer);
-    delegate.unwrap().canSubmit = true;
-
-    const transfer = await Try(async () => {
+    options: Partial<GassLessTransferOptions> = {},
+  ): Promise<Result<PartialSignStructure, Error>> => {
+    return Try(async () => {
+      const delegate = await Delegate.gasLessDelegate(mint, owner, feePayer);
+      await delegate.submit();
       const blockhashObj = await Node.getConnection().getLatestBlockhash();
-      const inst = new Transaction({
+      const tx = new Transaction({
         lastValidBlockHeight: blockhashObj.lastValidBlockHeight,
         blockhash: blockhashObj.blockhash,
         feePayer: feePayer.toPublicKey(),
       });
 
-      inst.add(
+      tx.add(
         await Transfer.createTransfer(
           mint,
           new Account.Keypair({ secret: owner }).pubkey,
@@ -42,16 +44,22 @@ export namespace CompressedNft {
           feePayer,
         ),
       );
-      inst.recentBlockhash = blockhashObj.blockhash;
+
+      if (options.isPriorityFee) {
+        tx.add(
+          await TransactionBuilder.PriorityFee.createPriorityFeeInstruction(tx),
+        );
+      }
+
+      tx.recentBlockhash = blockhashObj.blockhash;
 
       return new TransactionBuilder.PartialSign(
-        inst
+        tx
           .serialize({
             requireAllSignatures: false,
           })
           .toString('hex'),
       );
     });
-    return [delegate, transfer];
   };
 }

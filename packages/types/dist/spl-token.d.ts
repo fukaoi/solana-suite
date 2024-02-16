@@ -12,6 +12,10 @@ type BurnOptions = {
     feePayer: Secret;
 };
 
+type GasLessTransferOptions = {
+    isPriorityFee: boolean;
+};
+
 type TokenMetadata = {
     mint: string;
     name: string;
@@ -52,4 +56,4 @@ type ThawOptions = {
     feePayer: Secret;
 };
 
-export { BurnOptions, FreezeOptions, InputTokenMetadata, MintOptions, ThawOptions, TokenMetadata };
+export { BurnOptions, FreezeOptions, GasLessTransferOptions, InputTokenMetadata, MintOptions, ThawOptions, TokenMetadata };
