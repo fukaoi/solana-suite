@@ -1,7 +1,7 @@
 import { PublicKey } from '@solana/web3.js';
 import { PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
 import { Pubkey } from '~/types/account';
-import { MPL_BUBBLEGUM_PROGRAM_ID } from '@metaplex-foundation/mpl-bubblegum';
+import { PROGRAM_ADDRESS as MPL_BUBBLEGUM_PROGRAM_ID } from 'mpl-bubblegum-instruction';
 import BN from 'bn.js';
 
 export namespace Account {

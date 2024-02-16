@@ -5,9 +5,11 @@ import {
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
 } from '@solana/spl-account-compression';
-import { MPL_BUBBLEGUM_PROGRAM_ID } from '@metaplex-foundation/mpl-bubblegum';
 import { PublicKey, SystemProgram } from '@solana/web3.js';
-import { createCreateTreeInstruction } from 'mpl-bubblegum-instruction';
+import {
+  createCreateTreeInstruction,
+  PROGRAM_ADDRESS as MPL_BUBBLEGUM_PROGRAM_ID,
+} from 'mpl-bubblegum-instruction';
 import { Account } from '~/account';
 import { Pubkey } from '~/types/account';
 import { Constants, debugLog, Result, Try } from '~/suite-utils';
