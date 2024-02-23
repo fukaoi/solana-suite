@@ -8,12 +8,6 @@
 [code-style-prettier-image]: https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square
 [code-style-prettier-url]: https://github.com/prettier/prettier
 
-<br />
-
-<p align="center">
-  <img src="https://github.com/atonoy/solana-suite/assets/186659/30b0b2dc-c636-4f1d-886d-2be008e304ca" alt="Solana Suite" width="70%" height="70%">
-</p>
-
 ## What is Solana Suite?
 
 Solana Suite is an SDK for Newbies. Even if you are not familiar with Solana or
