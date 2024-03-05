@@ -122,9 +122,8 @@ export namespace Constants {
         if (dasApiUrl.length < 1) {
           throw Error(Constants.WarnningMessage.DAS_API_URL);
         }
-        const urls = Constants.BundlrUrl.prd.split(',');
-        const index = Date.now() % urls.length;
-        return urls[index];
+        const index = Date.now() % dasApiUrl.length;
+        return dasApiUrl[index];
       }
       default: {
         const urls = Constants.DasApiUrl.dev.split(',');

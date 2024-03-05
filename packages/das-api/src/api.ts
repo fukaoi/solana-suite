@@ -16,8 +16,8 @@ export namespace DasApi {
       | Pubkey[]
       | Transaction
       | {
-          [key: string]: unknown;
-        }
+        [key: string]: unknown;
+      }
     )[],
   ) => {
     Constants.WarnningMessage.calculateProbability() &&
