@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/sol-native",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "description": "Solana's Native token, SOL: transfers, history references, multisig transfers, partial signs, and more",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
