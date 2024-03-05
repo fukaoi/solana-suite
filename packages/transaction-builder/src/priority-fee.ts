@@ -22,19 +22,29 @@ export namespace TransactionBuilder {
       debugLog('# estimates: ', estimates);
       try {
         // priority fee: medium
-        const lamports = estimates.isOk
-          ? estimates.unwrap().medium
-          : MINIMUM_PRIORITY_FEE;
+        const lamports =
+          estimates.isOk && estimates.unwrap().medium !== 0
+            ? estimates.unwrap().medium
+            : MINIMUM_PRIORITY_FEE;
         debugLog('# lamports: ', lamports);
-        return sendTransactionWithPriorityFee(lamports, transaction, signers);
+        return await sendTransactionWithPriorityFee(
+          lamports,
+          transaction,
+          signers,
+        );
       } catch (error) {
         debugLog('# priority fee error: ', error);
         // priority fee: high
-        const lamports = estimates.isOk
-          ? estimates.unwrap().high
-          : MINIMUM_PRIORITY_FEE;
+        const lamports =
+          estimates.isOk && estimates.unwrap().high !== 0
+            ? estimates.unwrap().high
+            : MINIMUM_PRIORITY_FEE;
         debugLog('# lamports: ', lamports);
-        return sendTransactionWithPriorityFee(lamports, transaction, signers);
+        return await sendTransactionWithPriorityFee(
+          lamports,
+          transaction,
+          signers,
+        );
       }
     };
 
