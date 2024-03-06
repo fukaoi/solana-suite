@@ -1,6 +1,7 @@
 import test from 'ava';
 import { CompressedNft } from '../src';
 import { Account } from '~/account';
+import { Node } from '~/node';
 import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
@@ -35,9 +36,12 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
     treeOwner,
     collectionMint,
   );
-  (await inst.submit()).match(
+  await (
+    await inst.submit()
+  ).match(
     async (ok: string) => {
       t.log('# sig:', ok);
+      Node.confirmedSig(ok);
       t.pass();
     },
     (ng: Error) => console.error(ng),
@@ -63,9 +67,12 @@ test('[Arweave] mint nft', async (t) => {
     collectionMint,
   );
 
-  (await inst.submit()).match(
+  await (
+    await inst.submit()
+  ).match(
     (ok: string) => {
       t.log('# sig:', ok);
+      Node.confirmedSig(ok);
       t.pass();
     },
     (ng: Error) => t.fail(ng.message),
@@ -90,9 +97,12 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
     { feePayer: feePayer.secret },
   );
 
-  (await inst.submit()).match(
+  await (
+    await inst.submit()
+  ).match(
     async (ok: string) => {
       t.log('# sig:', ok);
+      Node.confirmedSig(ok);
       t.pass();
     },
     (ng: Error) => console.error(ng),
@@ -171,9 +181,12 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
     },
   );
 
-  (await inst.submit()).match(
+  await (
+    await inst.submit()
+  ).match(
     (ok: string) => {
       t.log('# sig:', ok);
+      Node.confirmedSig(ok);
       t.pass();
     },
     (ng: Error) => {

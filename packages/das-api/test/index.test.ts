@@ -34,6 +34,9 @@ test('Get asset proof', async (t) => {
 });
 
 test('Get asset', async (t) => {
+  const testUri =
+    'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
+  DasApi.changeDasUri(testUri);
   const assetId = 'E6eXaU51PE9L46VboqWGUeubrhvR2pk3eTP6ZqAP4vhg';
   const res = await DasApi.getAsset(assetId);
   res.match(
