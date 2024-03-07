@@ -12,6 +12,7 @@ type Secret = (string & {
 type SubmitOptions = {
     feePayer: Secret;
     isPriorityFee: boolean;
+    addSolPriorityFee: number;
 };
 
 declare abstract class AbstractResult<T, E extends Error> {

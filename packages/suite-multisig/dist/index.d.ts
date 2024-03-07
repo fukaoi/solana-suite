@@ -222,6 +222,7 @@ type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E
 type SubmitOptions = {
     feePayer: Secret;
     isPriorityFee: boolean;
+    addSolPriorityFee: number;
 };
 type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];

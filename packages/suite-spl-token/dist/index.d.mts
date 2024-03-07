@@ -15,6 +15,7 @@ type Secret = (string & {
 type SubmitOptions = {
     feePayer: Secret;
     isPriorityFee: boolean;
+    addSolPriorityFee: number;
 };
 type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];
