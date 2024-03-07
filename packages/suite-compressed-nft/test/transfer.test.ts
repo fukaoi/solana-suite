@@ -17,7 +17,7 @@ test.before(async () => {
 
 test.beforeEach(async (t) => {
   const assets = await CompressedNft.findByOwner(source.pubkey, {
-    sortBy: {
+    sort: {
       sortBy: SortBy.Recent,
       sortDirection: SortDirection.Asc,
     },
