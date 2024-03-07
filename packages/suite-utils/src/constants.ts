@@ -1,12 +1,10 @@
 import { Commitment, PublicKey } from '@solana/web3.js';
 import SolanaJsonConfig from '@solana-suite/config/load';
 
-export const Config = SolanaJsonConfig;
+export let Config = SolanaJsonConfig;
 
 export namespace Constants {
   export namespace WarnningMessage {
-    const THRESHHOLD = 50;
-    let isDisplay = false;
     export const NFT_STORAGE_API_KEY = `
         [YOU HAVE TO DO]
         --------------------------------------
@@ -28,16 +26,6 @@ export namespace Constants {
     //     @solana-suite/utils
     //     -------------------------------------
     //     `;
-
-    export const calculateProbability = (): boolean => {
-      const randomValue = Math.random();
-      const probability = 1 / THRESHHOLD;
-      if (!isDisplay && randomValue < probability) {
-        isDisplay = true;
-        return true;
-      }
-      return false;
-    };
   }
 }
 
@@ -45,8 +33,8 @@ export namespace Constants {
   export const currentCluster = Config.cluster.type;
   export const customClusterUrl = Config.cluster.customClusterUrl;
   export const isDebugging = Config.debugging;
-  export const nftStorageApiKey = Config.nftStorageApiKey;
-  export const dasApiUrl = Config.dasApiUrl;
+  export const customNftStorageApiKey = Config.nftStorageApiKey;
+  export const customDasApiUrl = Config.dasApiUrl;
 
   export enum Cluster {
     prd = 'mainnet-beta',
@@ -115,13 +103,20 @@ export namespace Constants {
   };
 
   export const switchDasApi = (env: string): string => {
+    // if setted custom das url, most priority
+    if (customDasApiUrl && customDasApiUrl.length > 0) {
+      const index = Date.now() % customDasApiUrl.length;
+      return customDasApiUrl[index];
+    }
+
     switch (env) {
       case Constants.Cluster.prd: {
-        if (dasApiUrl.length < 1) {
-          throw Error(Constants.WarnningMessage.DAS_API_URL);
+        if (customDasApiUrl.length < 1) {
+          console.warn(Constants.WarnningMessage.DAS_API_URL);
         }
-        const index = Date.now() % dasApiUrl.length;
-        return dasApiUrl[index];
+        const urls = Constants.DasApiUrl.prd.split(',');
+        const index = Date.now() % urls.length;
+        return urls[index];
       }
       default: {
         const urls = Constants.DasApiUrl.dev.split(',');
@@ -132,16 +127,22 @@ export namespace Constants {
   };
 
   export const switchNftStorage = (env: string): string => {
+    // if setted custom nft.storage api key, most priority
+    if (customNftStorageApiKey) {
+      return customNftStorageApiKey;
+    }
+
     switch (env) {
       case Constants.Cluster.prd:
-        if (!nftStorageApiKey) {
-          throw Error(WarnningMessage.NFT_STORAGE_API_KEY);
-        }
-        return nftStorageApiKey;
+        return Constants.NftstorageApiKey.prd;
       default: {
         return Constants.NftstorageApiKey.dev;
       }
     }
+  };
+
+  export const loadConfig = async () => {
+    Config = await import('@solana-suite/config/load');
   };
 
   export const WRAPPED_TOKEN_PROGRAM_ID = new PublicKey(
