@@ -19,7 +19,7 @@ export type Sortable = {
 export type FindOptions = {
   limit: number;
   page: number;
-  sortBy: Sortable;
+  sort: Sortable;
   before: string;
   after: string;
 };

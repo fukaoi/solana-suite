@@ -21,6 +21,7 @@ type Offchain = {
     description?: string;
     seller_fee_basis_points?: number;
     image?: string;
+    animation_url?: string;
     external_url?: string;
     attributes?: Attribute[];
     properties?: Properties;
@@ -104,7 +105,7 @@ type Sortable = {
 type FindOptions = {
     limit: number;
     page: number;
-    sortBy: Sortable;
+    sort: Sortable;
     before: string;
     after: string;
 };
@@ -180,6 +181,7 @@ type InputNftMetadata = {
 type SubmitOptions = {
     feePayer: Secret$1;
     isPriorityFee: boolean;
+    addSolPriorityFee: number;
 };
 type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];

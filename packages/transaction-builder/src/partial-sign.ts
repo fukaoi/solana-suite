@@ -10,7 +10,7 @@ import { Pubkey } from '~/types/account';
 import { MAX_RETRIES } from './common';
 import {
   PartialSignStructure,
-  PartialSignSubmitOptions,
+  SubmitOptions,
 } from '~/types/transaction-builder';
 
 export namespace TransactionBuilder {
@@ -24,7 +24,7 @@ export namespace TransactionBuilder {
     }
 
     submit = async (
-      options: Partial<PartialSignSubmitOptions> = {},
+      options: Partial<SubmitOptions> = {},
     ): Promise<Result<TransactionSignature, Error>> => {
       return Try(async () => {
         if (!(this instanceof PartialSign)) {

@@ -158,25 +158,9 @@ export namespace RegularNft {
   /**
    * Upload content and NFT mint
    *
-   * @param {Secret} owner         // owner's Secret
-   * @param {InputNftMetadata} input
-   * {
-   *   name: string               // nft content name
-   *   symbol: string             // nft ticker symbol
-   *   filePath: string | File    // nft ticker symbol
-   *   royalty: number            // royalty percentage
-   *   storageType: 'arweave'|'nftStorage' // Decentralized storage
-   *   description?: string       // nft content description
-   *   external_url?: string      // landing page, home page uri, related url
-   *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
-   *   properties?: MetadataProperties<Uri> // include file name, uri, supported file type
-   *   collection?: Pubkey           // collections of different colors, shapes, etc.
-   *   creators?: InputCreators[]    // other creators than owner
-   *   uses?: Uses                   // usage feature: burn, single, multiple
-   *   isMutable?: boolean           // enable update()
-   *   options?: [key: string]?: unknown       // optional param, Usually not used.
-   * }
-   * @param {Partial<MintOptions>} options         // options
+   * @param {Secret} owner            // owner's Secret
+   * @param {InputNftMetadata} input  // nft metadata
+   * @param {Partial<MintOptions>} options // options
    * @return Promise<Result<MintInstruction, Error>>
    */
   export const mint = async (

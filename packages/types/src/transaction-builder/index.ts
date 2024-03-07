@@ -9,15 +9,13 @@ import {
 export type SubmitOptions = {
   feePayer: Secret;
   isPriorityFee: boolean;
-};
-
-export type PartialSignSubmitOptions = {
-  feePayer: Secret;
+  addSolPriorityFee: number;
 };
 
 export type BatchSubmitOptions = {
   feePayer: Secret;
   isPriorityFee: boolean;
+  addSolPriorityFee: number;
   instructions: CommonStructure[] | MintStructure[];
 };
 
