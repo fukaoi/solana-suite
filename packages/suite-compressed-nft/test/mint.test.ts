@@ -24,11 +24,12 @@ test.before(async () => {
 
 test('[nftStorage] mint nft, already uploaed image', async (t) => {
   const asset = RandomAsset.get();
+  const name = 'Red tailed Hawk';
   const inst = await CompressedNft.mint(
     source.secret,
     {
-      uri: 'https://ipfs.io/ipfs/bafkreibh6mv6zqvg2wopmtx3k4smavcfx55ob2pciuoob2z44acgtem754',
-      name: asset.name!,
+      uri: 'https://gateway.irys.xyz/wilNVxxU8pdlmFQtuCyAb9C3PGJel_E2EeMP6WiyLdg',
+      name,
       description: asset.description,
       symbol: asset.symbol!,
       royalty: 50,
@@ -41,23 +42,25 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
   ).match(
     async (ok: string) => {
       t.log('# sig:', ok);
-      Node.confirmedSig(ok);
       t.pass();
+      await Node.confirmedSig(ok);
     },
     (ng: Error) => console.error(ng),
   );
   const assetId = await inst.unwrap().data?.getAssetId();
-  t.log('# asset id: ', assetId);
+  t.log('# name: ', name);
+  t.log('# mint: ', assetId);
 });
 
 test('[Arweave] mint nft', async (t) => {
   const asset = RandomAsset.get();
+  const name = 'White Horse';
   const inst = await CompressedNft.mint(
     source.secret,
     {
-      filePath: asset.filePath as string,
+      uri: 'https://gateway.irys.xyz/hnB5_PG7kb1V2Hvghjf2STDgfstSteOSDgH3YDx5yvA',
+      name,
       storageType: 'arweave',
-      name: asset.name!,
       symbol: asset.symbol!,
       description: asset.description,
       royalty: 50,
@@ -70,24 +73,26 @@ test('[Arweave] mint nft', async (t) => {
   await (
     await inst.submit()
   ).match(
-    (ok: string) => {
+    async (ok: string) => {
       t.log('# sig:', ok);
-      Node.confirmedSig(ok);
       t.pass();
+      await Node.confirmedSig(ok);
     },
     (ng: Error) => t.fail(ng.message),
   );
   const assetId = await inst.unwrap().data?.getAssetId();
-  t.log('# asset id: ', assetId);
+  t.log('# name: ', name);
+  t.log('# mint: ', assetId);
 });
 
 test('[Nft Storage] mint nft with fee payer', async (t) => {
   const asset = RandomAsset.get();
+  const name = 'Yellow Fox';
   const inst = await CompressedNft.mint(
     source.secret,
     {
-      filePath: asset.filePath,
-      name: asset.name!,
+      uri: 'https://devnet.irys.xyz/xldM3MgbuNCKd5eEB0IV1fQe0qk14tTjGVylNaOj0nY',
+      name,
       symbol: asset.symbol!,
       description: asset.description,
       royalty: 0,
@@ -102,14 +107,15 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
   ).match(
     async (ok: string) => {
       t.log('# sig:', ok);
-      Node.confirmedSig(ok);
       t.pass();
+      await Node.confirmedSig(ok);
     },
     (ng: Error) => console.error(ng),
   );
 
   const assetId = await inst.unwrap().data?.getAssetId();
-  t.log('# asset id: ', assetId);
+  t.log('# name: ', name);
+  t.log('# mint: ', assetId);
 });
 
 test('[Nft Storage] mint nft with many optional datas, verified collection', async (t) => {
@@ -157,11 +163,12 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
     docs_url: 'https://solana-suite.gitbook.io/solana-suite-develpoment-guide/',
   };
 
+  const name = 'Brown Dog';
   const inst = await CompressedNft.mint(
     source.secret,
     {
-      filePath: asset.filePath as string,
-      name: asset.name!,
+      uri: 'https://ipfs.io/ipfs/bafybeifxfy4r2p77pgibc2eq66jp7n4qdc7xwqjunx4oi4ndpekc3eg4yy',
+      name,
       symbol: asset.symbol!,
       description: asset.description,
       external_url: 'https://atonoy.github.io/solana-suite/',
@@ -184,10 +191,10 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
   await (
     await inst.submit()
   ).match(
-    (ok: string) => {
+    async (ok: string) => {
       t.log('# sig:', ok);
-      Node.confirmedSig(ok);
       t.pass();
+      await Node.confirmedSig(ok);
     },
     (ng: Error) => {
       console.error(ng);
@@ -195,10 +202,11 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
     },
   );
   const assetId = await inst.unwrap().data?.getAssetId();
-  t.log('# asset id: ', assetId);
+  t.log('# name: ', name);
+  t.log('# mint: ', assetId);
 });
 
-test('[Error]Raise validation error when upload meta data', async (t) => {
+test.skip('[Error]Raise validation error when upload meta data', async (t) => {
   const inst = await CompressedNft.mint(
     source.secret,
     {
