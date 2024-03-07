@@ -111,6 +111,15 @@ declare const Account: {
     Associated: typeof Account$3.Associated;
 };
 
+declare const Config: {
+    cluster: {
+        type: string;
+        customClusterUrl: never[];
+    };
+    debugging: string;
+    nftStorageApiKey: string;
+    dasApiUrl: never[];
+};
 declare namespace Constants {
     namespace WarnningMessage {
         const NFT_STORAGE_API_KEY = "\n        [YOU HAVE TO DO]\n        --------------------------------------\n        You need to update nftStorageApiKey define parameter in solana-suite.json.\n        Can get api key from https://nft.storage/\n        --------------------------------------\n        ";
@@ -141,12 +150,13 @@ declare namespace Constants {
         dev = "https://devnet.irys.xyz"
     }
     enum DasApiUrl {
+        prd = "https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92",
         dev = "https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92,https://rpc-devnet.helius.xyz?api-key=9f70a843-3274-4ffd-a0a9-323f8b7c0639"
     }
     enum NftstorageApiKey {
+        prd = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE",
         dev = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE"
     }
-    const loadConfig: () => Promise<void>;
     const switchCluster: (param: {
         cluster?: string;
         customClusterUrl?: string[];
@@ -598,4 +608,4 @@ declare class ValidatorError extends Error {
     constructor(message: string, details: Details[]);
 }
 
-export { Account, Constants, Explorer, ExplorerOptions, KeypairAccount, Node, OwnerInfo, Pubkey, Result, Secret, Try, Validator, ValidatorError, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };
+export { Account, Config, Constants, Explorer, ExplorerOptions, KeypairAccount, Node, OwnerInfo, Pubkey, Result, Secret, Try, Validator, ValidatorError, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };
