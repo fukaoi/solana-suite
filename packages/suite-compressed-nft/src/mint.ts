@@ -114,7 +114,7 @@ export namespace CompressedNft {
    *   isMutable?: boolean           // enable update()
    *   options?: [key: string]?: unknown       // optional param, Usually not used.
    * }
-   * @param {Pubkey} treeOwner      // Previously created treeOwner
+   * @param {Pubkey} spaceOwner      // Previously created space owner
    * @param {Pubkey} collectionMint // Previously created collectionMint
    * @param {Partial<MintOptions>} options         // mint options
    * @return Promise<Result<MintTransaction, Error>>
@@ -122,7 +122,7 @@ export namespace CompressedNft {
   export const mint = async (
     owner: Secret,
     input: InputNftMetadata,
-    treeOwner: Pubkey,
+    spaceOwner: Pubkey,
     collectionMint: Pubkey,
     options: Partial<MintOptions> = {},
   ): Promise<Result<MintStructure<Space.Space>, Error>> => {
@@ -141,7 +141,7 @@ export namespace CompressedNft {
         : new Account.Keypair({ secret: payer! }).pubkey;
 
       const treeAuthority = Account.Pda.getTreeAuthority(
-        treeOwner.toPublicKey().toString(),
+        spaceOwner.toPublicKey().toString(),
       );
       const collectionMetadata = Account.Pda.getMetadata(
         collectionMint.toString(),
@@ -226,7 +226,7 @@ export namespace CompressedNft {
       instructions.push(
         createMintToCollectionV1Instruction(
           {
-            merkleTree: treeOwner.toPublicKey(),
+            merkleTree: spaceOwner.toPublicKey(),
             treeAuthority,
             treeDelegate: ownerPublicKey,
             payer: payer.toKeypair().publicKey,
@@ -249,12 +249,12 @@ export namespace CompressedNft {
       );
 
       if (input.creators) {
-        const assetId = await new Space.Space(treeOwner).getAssetId();
+        const assetId = await new Space.Space(spaceOwner).getAssetId();
         instructions.push(
           await createVerifyCreator(
             metadataArgs.creators,
             assetId.toPublicKey(),
-            treeOwner.toPublicKey(),
+            spaceOwner.toPublicKey(),
             metadataArgs,
             payer.toKeypair().publicKey,
           ),
@@ -265,7 +265,7 @@ export namespace CompressedNft {
         instructions,
         [owner.toKeypair()],
         payer.toKeypair(),
-        new Space.Space(treeOwner),
+        new Space.Space(spaceOwner),
       );
     });
   };

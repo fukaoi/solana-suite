@@ -16,7 +16,7 @@ type Sortable = {
 type FindOptions = {
     limit: number;
     page: number;
-    sortBy: Sortable;
+    sort: Sortable;
     before: string;
     after: string;
 };

@@ -13,13 +13,12 @@ type Secret = (string & {
 type SubmitOptions = {
     feePayer: Secret;
     isPriorityFee: boolean;
-};
-type PartialSignSubmitOptions = {
-    feePayer: Secret;
+    addSolPriorityFee: number;
 };
 type BatchSubmitOptions = {
     feePayer: Secret;
     isPriorityFee: boolean;
+    addSolPriorityFee: number;
     instructions: CommonStructure[] | MintStructure[];
 };
 type CommonStructure<T = undefined> = {
@@ -285,13 +284,13 @@ declare namespace TransactionBuilder$2 {
         hexInstruction: string;
         data?: Pubkey;
         constructor(instructions: string, mint?: Pubkey);
-        submit: (options?: Partial<PartialSignSubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
+        submit: (options?: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
     }
 }
 
 declare namespace TransactionBuilder$1 {
     namespace PriorityFee {
-        const submit: (transaction: Transaction, signers: Keypair[]) => Promise<string>;
+        const submit: (transaction: Transaction, signers: Keypair[], addSolPriorityFee?: number) => Promise<string>;
         const createPriorityFeeInstruction: (transaction: Transaction) => Promise<_solana_web3_js.TransactionInstruction>;
     }
 }

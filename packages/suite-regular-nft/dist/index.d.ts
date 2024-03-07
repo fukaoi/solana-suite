@@ -105,7 +105,7 @@ type Sortable = {
 type FindOptions = {
     limit: number;
     page: number;
-    sortBy: Sortable;
+    sort: Sortable;
     before: string;
     after: string;
 };
@@ -113,6 +113,7 @@ type FindOptions = {
 type SubmitOptions = {
     feePayer: Secret;
     isPriorityFee: boolean;
+    addSolPriorityFee: number;
 };
 type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];

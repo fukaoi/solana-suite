@@ -105,7 +105,7 @@ type Sortable = {
 type FindOptions = {
     limit: number;
     page: number;
-    sortBy: Sortable;
+    sort: Sortable;
     before: string;
     after: string;
 };
@@ -181,6 +181,7 @@ type InputNftMetadata = {
 type SubmitOptions = {
     feePayer: Secret$1;
     isPriorityFee: boolean;
+    addSolPriorityFee: number;
 };
 type CommonStructure<T = undefined> = {
     instructions: TransactionInstruction[];

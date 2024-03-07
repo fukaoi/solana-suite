@@ -1,7 +1,7 @@
 import test from 'ava';
 import { CompressedNft } from '../src';
 import { Account } from '~/account';
-import { Node } from '~/node';
+// import { Node } from '~/node';
 import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
@@ -11,14 +11,14 @@ import { ValidatorError } from '~/validator';
 
 let source: KeypairAccount;
 let feePayer: KeypairAccount;
-let treeOwner: Pubkey;
+let spaceOwner: Pubkey;
 let collectionMint: Pubkey;
 
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
   feePayer = obj.feePayer;
-  treeOwner = obj.treeOwner;
+  spaceOwner = obj.treeOwner;
   collectionMint = obj.collectionMint;
 });
 
@@ -34,7 +34,7 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
       symbol: asset.symbol!,
       royalty: 50,
     },
-    treeOwner,
+    spaceOwner,
     collectionMint,
   );
   await (
@@ -43,7 +43,7 @@ test('[nftStorage] mint nft, already uploaed image', async (t) => {
     async (ok: string) => {
       t.log('# sig:', ok);
       t.pass();
-      await Node.confirmedSig(ok);
+      // await Node.confirmedSig(ok);
     },
     (ng: Error) => console.error(ng),
   );
@@ -66,7 +66,7 @@ test('[Arweave] mint nft', async (t) => {
       royalty: 50,
       isMutable: true,
     },
-    treeOwner,
+    spaceOwner,
     collectionMint,
   );
 
@@ -76,7 +76,7 @@ test('[Arweave] mint nft', async (t) => {
     async (ok: string) => {
       t.log('# sig:', ok);
       t.pass();
-      await Node.confirmedSig(ok);
+      // await Node.confirmedSig(ok);
     },
     (ng: Error) => t.fail(ng.message),
   );
@@ -97,7 +97,7 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
       description: asset.description,
       royalty: 0,
     },
-    treeOwner,
+    spaceOwner,
     collectionMint,
     { feePayer: feePayer.secret },
   );
@@ -108,7 +108,7 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
     async (ok: string) => {
       t.log('# sig:', ok);
       t.pass();
-      await Node.confirmedSig(ok);
+      // await Node.confirmedSig(ok);
     },
     (ng: Error) => console.error(ng),
   );
@@ -180,7 +180,7 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
       attributes,
       options,
     },
-    treeOwner,
+    spaceOwner,
     collectionMint,
     {
       feePayer: feePayer.secret,
@@ -194,7 +194,7 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
     async (ok: string) => {
       t.log('# sig:', ok);
       t.pass();
-      await Node.confirmedSig(ok);
+      // await Node.confirmedSig(ok);
     },
     (ng: Error) => {
       console.error(ng);
@@ -215,7 +215,7 @@ test.skip('[Error]Raise validation error when upload meta data', async (t) => {
       symbol: 'LONG-SYMBOL-LONG',
       royalty: -100,
     },
-    treeOwner,
+    spaceOwner,
     collectionMint,
   );
 

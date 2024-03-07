@@ -213,13 +213,12 @@ type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E
 type SubmitOptions = {
     feePayer: Secret;
     isPriorityFee: boolean;
-};
-type PartialSignSubmitOptions = {
-    feePayer: Secret;
+    addSolPriorityFee: number;
 };
 type BatchSubmitOptions = {
     feePayer: Secret;
     isPriorityFee: boolean;
+    addSolPriorityFee: number;
     instructions: CommonStructure[] | MintStructure[];
 };
 type CommonStructure<T = undefined> = {
@@ -242,4 +241,4 @@ type PartialSignStructure<T = Pubkey> = {
     submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };
 
-export { BatchSubmitOptions, CommonStructure, MintStructure, PartialSignStructure, PartialSignSubmitOptions, SubmitOptions };
+export { BatchSubmitOptions, CommonStructure, MintStructure, PartialSignStructure, SubmitOptions };

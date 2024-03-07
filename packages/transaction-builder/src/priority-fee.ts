@@ -17,17 +17,22 @@ export namespace TransactionBuilder {
     export const submit = async (
       transaction: Transaction,
       signers: Keypair[],
+      addSolPriorityFee?: number,
     ) => {
-      const estimates = await DasApi.getPriorityFeeEstimate(transaction);
-      debugLog('# estimates: ', estimates);
-      // priority fee: medium
-      const lamports =
-        estimates.isOk && estimates.unwrap().medium !== 0
-          ? estimates.unwrap().medium
-          : MINIMUM_PRIORITY_FEE;
-      debugLog('# lamports: ', lamports);
+      let addLamports = 0;
+      if (addSolPriorityFee) {
+        addLamports = addSolPriorityFee.toLamports();
+      } else {
+        const estimates = await DasApi.getPriorityFeeEstimate(transaction);
+        debugLog('# estimates: ', estimates);
+        addLamports =
+          estimates.isOk && estimates.unwrap().medium !== 0
+            ? estimates.unwrap().medium
+            : MINIMUM_PRIORITY_FEE;
+      }
+      debugLog('# lamports: ', addLamports);
       return await sendTransactionWithPriorityFee(
-        lamports,
+        addLamports,
         transaction,
         signers,
       );
