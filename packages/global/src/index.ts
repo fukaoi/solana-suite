@@ -1,5 +1,4 @@
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { Node } from '~/node';
 import { Config, Constants, debugLog } from '~/suite-utils';
 import { Account } from '~/account';
 import { BigNumber } from 'bignumber.js';
@@ -12,7 +11,7 @@ import bs from 'bs58';
  * @see {@link types/global.ts}
  * @returns string
  */
-String.prototype.toExplorerUrl = function(
+String.prototype.toExplorerUrl = function (
   explorer: Explorer = Explorer.Solscan,
   options: Partial<ExplorerOptions> = {},
 ) {
@@ -49,14 +48,17 @@ String.prototype.toExplorerUrl = function(
     // signature
     // for Invalid type "never" of addressOrSignature, so `as string`
     if (explorer === Explorer.SolanaFM) {
-      url = `${Constants.EXPLORER_SOLANAFM_URL}/tx/${addressOrSignature as string
-        }?cluster=${cluster}`;
+      url = `${Constants.EXPLORER_SOLANAFM_URL}/tx/${
+        addressOrSignature as string
+      }?cluster=${cluster}`;
     } else if (explorer === Explorer.Xray) {
-      url = `${Constants.EXPLORER_XRAY_URL}/tx/${addressOrSignature as string
-        }?network=${cluster}`;
+      url = `${Constants.EXPLORER_XRAY_URL}/tx/${
+        addressOrSignature as string
+      }?network=${cluster}`;
     } else {
-      url = `${Constants.EXPLORER_SOLSCAN_URL}/tx/${addressOrSignature as string
-        }?cluster=${cluster}`;
+      url = `${Constants.EXPLORER_SOLSCAN_URL}/tx/${
+        addressOrSignature as string
+      }?cluster=${cluster}`;
     }
   }
   return url;
@@ -68,7 +70,7 @@ String.prototype.toExplorerUrl = function(
  * @see {@link types/global.ts}
  * @returns PublicKey
  */
-String.prototype.toPublicKey = function() {
+String.prototype.toPublicKey = function () {
   if (!Account.Keypair.isPubkey(this.toString())) {
     throw Error(`No match KeyPair.PubKey: ${this.toString()}`);
   }
@@ -81,7 +83,7 @@ String.prototype.toPublicKey = function() {
  * @see {@link types/global.ts}
  * @returns Keypair
  */
-String.prototype.toKeypair = function() {
+String.prototype.toKeypair = function () {
   if (!Account.Keypair.isSecret(this.toString())) {
     throw Error(`No match KeyPair.Secret: ${this.toString()}`);
   }
@@ -95,7 +97,7 @@ String.prototype.toKeypair = function() {
  * @see {@link types/global.ts}
  * @returns number
  */
-Number.prototype.toSol = function() {
+Number.prototype.toSol = function () {
   return BigNumber(this as number)
     .div(LAMPORTS_PER_SOL)
     .toNumber();
@@ -107,7 +109,7 @@ Number.prototype.toSol = function() {
  * @see {@link types/global.ts}
  * @returns number
  */
-Number.prototype.toLamports = function() {
+Number.prototype.toLamports = function () {
   return BigNumber(this as number)
     .times(LAMPORTS_PER_SOL)
     .toNumber();

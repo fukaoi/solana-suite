@@ -14,7 +14,7 @@ test('To input convert', async (t) => {
       },
       {
         type: 'image/gif',
-        filePath: asset.filePath!,
+        uri: 'https://bafkreieqnysit3wcknz24k23r33qhk7bnqlismg5vbvg3uvz2p5ozpx4xu.ipfs.dweb.link/',
       },
     ],
   };

@@ -17,18 +17,30 @@ test.before(async () => {
   feePayer = obj.feePayer;
 });
 
-test('[Arweave] mint nft with fee payer', async (t) => {
+test.only('[Arweave] mint nft with fee payer', async (t) => {
   const asset = RandomAsset.get();
+  const animation_url =
+    'http://ipfs.io/ipfs/bafybeif6mgmbluue73ch5en5ujfhtxg3xbitforwiydqcy6ork5st6gysu';
   const res = await RegularNft.mint(
     source.secret,
     {
       filePath: asset.filePath as string,
+      animation_url,
       storageType: 'arweave',
       name: asset.name!,
       symbol: asset.symbol!,
       royalty: 50,
       description: asset.description,
       isMutable: true,
+      properties: {
+        category: 'video',
+        files: [
+          {
+            type: 'video/mp4',
+            uri: animation_url,
+          },
+        ],
+      },
     },
     {
       feePayer: feePayer.secret,

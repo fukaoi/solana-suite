@@ -263,7 +263,6 @@ type Offchain = {
     description?: string;
     seller_fee_basis_points?: number;
     image?: string;
-    animation_url?: string;
     external_url?: string;
     attributes?: Attribute[];
     properties?: Properties;
@@ -287,8 +286,10 @@ type Properties = {
     files?: {
         type?: string;
         filePath?: FileType;
+        uri?: string;
         [key: string]: unknown;
     }[];
+    category?: string;
     [key: string]: unknown;
 };
 type Attribute = {

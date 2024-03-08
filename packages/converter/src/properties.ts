@@ -22,19 +22,26 @@ export namespace Converter {
 
       const files = await Promise.all(
         input.files.map(async (file) => {
-          if (!file.filePath) {
+          if (!file.filePath && !file.uri) {
             return {};
           }
-          const res = await callbackFunc(file.filePath, storageType, feePayer);
-          if (res.isErr) {
-            throw Error(res.error.message);
+          if (file.filePath) {
+            const res = await callbackFunc(
+              file.filePath!,
+              storageType,
+              feePayer,
+            );
+            if (res.isErr) {
+              throw Error(res.error.message);
+            }
+            return overwriteObject(file, [
+              {
+                existsKey: 'filePath',
+                will: { key: 'uri', value: res.value },
+              },
+            ]);
           }
-          return overwriteObject(file, [
-            {
-              existsKey: 'filePath',
-              will: { key: 'uri', value: res.value },
-            },
-          ]);
+          return file;
         }),
       );
       return { ...input, files } as Properties;
