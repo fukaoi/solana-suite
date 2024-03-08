@@ -1,7 +1,7 @@
 import test from 'ava';
 import { CompressedNft } from '../src';
 import { Account } from '~/account';
-// import { Node } from '~/node';
+import { Node } from '~/node';
 import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
@@ -22,7 +22,7 @@ test.before(async () => {
   collectionMint = obj.collectionMint;
 });
 
-test.only('[nftStorage] mint nft, already uploaed image, animation', async (t) => {
+test('[nftStorage] mint nft, already uploaed image, animation', async (t) => {
   const asset = RandomAsset.get();
   const name = 'Red tailed Hawk';
   const animation_url =
@@ -49,19 +49,21 @@ test.only('[nftStorage] mint nft, already uploaed image, animation', async (t) =
     spaceOwner,
     collectionMint,
   );
-  await (
-    await inst.submit()
-  ).match(
+  const res = (await inst.submit()).map(
     async (ok: string) => {
       t.log('# sig:', ok);
-      t.pass();
-      // await Node.confirmedSig(ok);
+      return ok;
     },
-    (ng: Error) => console.error(ng),
+    (ng: Error) => {
+      throw ng;
+    },
   );
+
+  await Node.confirmedSig(await res.unwrap());
   const assetId = await inst.unwrap().data?.getAssetId();
   t.log('# name: ', name);
   t.log('# mint: ', assetId);
+  t.pass();
 });
 
 test('[Arweave] mint nft', async (t) => {
@@ -82,19 +84,21 @@ test('[Arweave] mint nft', async (t) => {
     collectionMint,
   );
 
-  await (
-    await inst.submit()
-  ).match(
+  const res = (await inst.submit()).map(
     async (ok: string) => {
       t.log('# sig:', ok);
-      t.pass();
-      // await Node.confirmedSig(ok);
+      return ok;
     },
-    (ng: Error) => t.fail(ng.message),
+    (ng: Error) => {
+      throw ng;
+    },
   );
+
+  await Node.confirmedSig(await res.unwrap());
   const assetId = await inst.unwrap().data?.getAssetId();
   t.log('# name: ', name);
   t.log('# mint: ', assetId);
+  t.pass();
 });
 
 test('[Nft Storage] mint nft with fee payer', async (t) => {
@@ -114,20 +118,21 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
     { feePayer: feePayer.secret },
   );
 
-  await (
-    await inst.submit()
-  ).match(
+  const res = (await inst.submit()).map(
     async (ok: string) => {
       t.log('# sig:', ok);
-      t.pass();
-      // await Node.confirmedSig(ok);
+      return ok;
     },
-    (ng: Error) => console.error(ng),
+    (ng: Error) => {
+      throw ng;
+    },
   );
 
+  await Node.confirmedSig(await res.unwrap());
   const assetId = await inst.unwrap().data?.getAssetId();
   t.log('# name: ', name);
   t.log('# mint: ', assetId);
+  t.pass();
 });
 
 test('[Nft Storage] mint nft with many optional datas, verified collection', async (t) => {
@@ -200,25 +205,24 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
     },
   );
 
-  await (
-    await inst.submit()
-  ).match(
+  const res = (await inst.submit()).map(
     async (ok: string) => {
       t.log('# sig:', ok);
-      t.pass();
-      // await Node.confirmedSig(ok);
+      return ok;
     },
     (ng: Error) => {
-      console.error(ng);
-      t.fail(ng.message);
+      throw ng;
     },
   );
+
+  await Node.confirmedSig(await res.unwrap());
   const assetId = await inst.unwrap().data?.getAssetId();
   t.log('# name: ', name);
   t.log('# mint: ', assetId);
+  t.pass();
 });
 
-test.skip('[Error]Raise validation error when upload meta data', async (t) => {
+test('[Error]Raise validation error when upload meta data', async (t) => {
   const inst = await CompressedNft.mint(
     source.secret,
     {
