@@ -22,13 +22,15 @@ test.before(async () => {
   collectionMint = obj.collectionMint;
 });
 
-test('[nftStorage] mint nft, already uploaed image', async (t) => {
+test.only('[nftStorage] mint nft, already uploaed image, animation', async (t) => {
   const asset = RandomAsset.get();
   const name = 'Red tailed Hawk';
   const inst = await CompressedNft.mint(
     source.secret,
     {
       uri: 'https://gateway.irys.xyz/wilNVxxU8pdlmFQtuCyAb9C3PGJel_E2EeMP6WiyLdg',
+      animation_url:
+        'http://ipfs.io/ipfs/bafybeif6mgmbluue73ch5en5ujfhtxg3xbitforwiydqcy6ork5st6gysu',
       name,
       description: asset.description,
       symbol: asset.symbol!,

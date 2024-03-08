@@ -15,6 +15,7 @@ export namespace Storage {
       symbol: input.symbol,
       description: input.description,
       seller_fee_basis_points: sellerFeeBasisPoints,
+      animation_url: input.animation_url,
       external_url: input.external_url,
       attributes: input.attributes,
       properties: input.properties,
