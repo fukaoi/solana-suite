@@ -276,8 +276,10 @@ type Properties = {
     files?: {
         type?: string;
         filePath?: FileType;
+        uri?: string;
         [key: string]: unknown;
     }[];
+    category?: string;
     [key: string]: unknown;
 };
 type Attribute = {
@@ -300,6 +302,7 @@ type InputNftMetadata = {
     isMutable?: boolean;
     description?: string;
     external_url?: string;
+    animation_url?: string;
     attributes?: Attribute[];
     properties?: Properties;
     maxSupply?: bignum;

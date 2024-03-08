@@ -15,6 +15,7 @@ export type InputNftMetadata = {
   isMutable?: boolean;
   description?: string;
   external_url?: string;
+  animation_url?: string;
   attributes?: Attribute[];
   properties?: Properties;
   maxSupply?: bignum;

@@ -250,7 +250,6 @@ type Offchain = {
     description?: string;
     seller_fee_basis_points?: number;
     image?: string;
-    animation_url?: string;
     external_url?: string;
     attributes?: Attribute[];
     properties?: Properties;
@@ -274,8 +273,10 @@ type Properties = {
     files?: {
         type?: string;
         filePath?: FileType;
+        uri?: string;
         [key: string]: unknown;
     }[];
+    category?: string;
     [key: string]: unknown;
 };
 type Attribute = {
@@ -286,7 +287,7 @@ type Attribute = {
 
 declare namespace Arweave {
     const uploadFile: (filePath: FileType, feePayer: Secret) => Promise<Result<string, Error>>;
-    const uploadData: (metadata: Offchain, feePayer: Secret) => Promise<Result<string, Error>>;
+    const uploadData: (storageData: Offchain, feePayer: Secret) => Promise<Result<string, Error>>;
 }
 
 declare namespace ProvenanceLayer {
@@ -351,6 +352,7 @@ type InputNftMetadata = {
     isMutable?: boolean;
     description?: string;
     external_url?: string;
+    animation_url?: string;
     attributes?: Attribute[];
     properties?: Properties;
     maxSupply?: bignum;

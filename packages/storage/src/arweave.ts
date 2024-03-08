@@ -1,5 +1,5 @@
 import { ProvenanceLayer } from './provenance-layer';
-import { debugLog, Result, Try } from '~/suite-utils';
+import { debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { Secret } from '~/types/account';
 import { FileType, Offchain } from '~/types/storage';
 
@@ -16,13 +16,15 @@ export namespace Arweave {
   };
 
   export const uploadData = (
-    metadata: Offchain,
+    storageData: Offchain,
     feePayer: Secret,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
-      debugLog('# upload meta data: ', metadata);
+      // created at by unix timestamp
+      storageData.created_at = unixTimestamp();
+      debugLog('# Will upload offchain: ', storageData);
       return await ProvenanceLayer.uploadData(
-        JSON.stringify(metadata),
+        JSON.stringify(storageData),
         feePayer,
       );
     });

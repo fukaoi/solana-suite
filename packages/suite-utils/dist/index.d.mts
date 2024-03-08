@@ -111,19 +111,27 @@ declare const Account: {
     Associated: typeof Account$3.Associated;
 };
 
+declare let Config: {
+    cluster: {
+        type: string;
+        customClusterUrl: never[];
+    };
+    debugging: string;
+    nftStorageApiKey: string;
+    dasApiUrl: never[];
+};
 declare namespace Constants {
     namespace WarnningMessage {
         const NFT_STORAGE_API_KEY = "\n        [YOU HAVE TO DO]\n        --------------------------------------\n        You need to update nftStorageApiKey define parameter in solana-suite.json.\n        Can get api key from https://nft.storage/\n        --------------------------------------\n        ";
         const DAS_API_URL = "\n        [YOU HAVE TO DO]\n        --------------------------------------\n        You need to update dasApiUrl define parameter in solana-suite.json.\n        can get api url from https://www.helius.dev/\n        -------------------------------------- \n        ";
-        const calculateProbability: () => boolean;
     }
 }
 declare namespace Constants {
     const currentCluster: string;
     const customClusterUrl: never[];
     const isDebugging: string;
-    const nftStorageApiKey: string;
-    const dasApiUrl: never[];
+    const customNftStorageApiKey: string;
+    const customDasApiUrl: never[];
     enum Cluster {
         prd = "mainnet-beta",
         prdMetaplex = "mainnet-beta-metaplex",
@@ -141,12 +149,13 @@ declare namespace Constants {
         dev = "https://devnet.irys.xyz"
     }
     enum DasApiUrl {
-        dev = "https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92,https://rpc-devnet.helius.xyz?api-key=9f70a843-3274-4ffd-a0a9-323f8b7c0639"
+        prd = "https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92",
+        dev = "https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92"
     }
     enum NftstorageApiKey {
+        prd = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE",
         dev = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE"
     }
-    const loadConfig: () => Promise<void>;
     const switchCluster: (param: {
         cluster?: string;
         customClusterUrl?: string[];
@@ -154,6 +163,7 @@ declare namespace Constants {
     const switchBundlr: (env: string) => string;
     const switchDasApi: (env: string) => string;
     const switchNftStorage: (env: string) => string;
+    const loadConfig: () => Promise<void>;
     const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;
     const MEMO_PROGRAM_ID: PublicKey;
     const METAPLEX_PROGRAM_ID: PublicKey;
@@ -509,7 +519,6 @@ type Offchain = {
     description?: string;
     seller_fee_basis_points?: number;
     image?: string;
-    animation_url?: string;
     external_url?: string;
     attributes?: Attribute[];
     properties?: Properties;
@@ -533,8 +542,10 @@ type Properties = {
     files?: {
         type?: string;
         filePath?: FileType;
+        uri?: string;
         [key: string]: unknown;
     }[];
+    category?: string;
     [key: string]: unknown;
 };
 type Attribute = {
@@ -557,6 +568,7 @@ type InputNftMetadata = {
     isMutable?: boolean;
     description?: string;
     external_url?: string;
+    animation_url?: string;
     attributes?: Attribute[];
     properties?: Properties;
     maxSupply?: bignum;
@@ -598,4 +610,4 @@ declare class ValidatorError extends Error {
     constructor(message: string, details: Details[]);
 }
 
-export { Account, Constants, Explorer, ExplorerOptions, KeypairAccount, Node, OwnerInfo, Pubkey, Result, Secret, Try, Validator, ValidatorError, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };
+export { Account, Config, Constants, Explorer, ExplorerOptions, KeypairAccount, Node, OwnerInfo, Pubkey, Result, Secret, Try, Validator, ValidatorError, bufferToArray, convertTimestampToDateTime, debugLog, isBrowser, isNode, isPromise, overwriteObject, sleep, unixTimestamp };

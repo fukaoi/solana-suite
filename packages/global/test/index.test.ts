@@ -1,13 +1,17 @@
 import test from 'ava';
 import '../src';
-import { Constants } from '~/suite-utils';
-import { Node } from '~/node';
 import { Explorer } from '~/types/global';
+import { execSync } from 'child_process';
+import { Constants } from '../../suite-utils/src/constants';
 
 const PUBKEY = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
 const MINT = 'J2DUquFhToJbkEc4YSPuTjhZDXZvRaBUgUX5RW3cSsdr';
 const SIG =
   '3Gs7pb8C9aZ8vkS5k1HrRB24TU4vofCZWM9JtUbMipof1hBmD6rT11css4gYGrgLZ1bp7chyqD7W7Gm8ZdvF9pF8';
+
+test.after(() => {
+  execSync('pnpm solana-suite-config -c localhost');
+});
 
 test('Create explorer url by address', (t) => {
   const res = PUBKEY.toExplorerUrl();
@@ -19,25 +23,28 @@ test('[SolanaFM]Create explorer url by address', (t) => {
   t.not(res, undefined);
 });
 
-test('[SolanaFM][Mainnet-Beta]Create explorer url', (t) => {
-  Node.changeConnection({ cluster: Constants.Cluster.prd });
+test('[SolanaFM][Mainnet-Beta]Create explorer url', async (t) => {
+  execSync('pnpm solana-suite-config -c prd');
+  await Constants.loadConfig();
   const url = SIG.toExplorerUrl(Explorer.SolanaFM);
   const res = /mainnet-beta/.test(url);
-  t.true(res);
+  t.true(res, url);
 });
 
-test('[SolanaFM][Devnet]Create explorer url', (t) => {
-  Node.changeConnection({ cluster: Constants.Cluster.dev });
+test('[SolanaFM][Devnet]Create explorer url', async (t) => {
+  execSync('pnpm solana-suite-config -c dev');
+  await Constants.loadConfig();
   const url = SIG.toExplorerUrl(Explorer.SolanaFM);
   const res = /devnet/.test(url);
-  t.true(res);
+  t.true(res, url);
 });
 
-test('[SolanaFM][Devnet, localhost]Create explorer url', (t) => {
-  Node.changeConnection({ cluster: Constants.Cluster.localhost });
+test('[SolanaFM][Devnet, localhost]Create explorer url', async (t) => {
+  execSync('pnpm solana-suite-config -c localhost');
+  await Constants.loadConfig();
   const url = SIG.toExplorerUrl(Explorer.SolanaFM);
   const res = /devnet/.test(url);
-  t.true(res);
+  t.true(res, url);
 });
 
 test('[Xray]Create explorer url by signature', (t) => {
@@ -53,18 +60,6 @@ test('[Xray]Create explorer url by address', (t) => {
 test('[Xray]Create explorer url by mint address', (t) => {
   const res = MINT.toExplorerUrl(Explorer.Xray, { replacePath: 'token' });
   t.not(res, undefined);
-});
-
-test('[SolanaFM][Devnet, custom]Create explorer url', (t) => {
-  t.log('# default clsuter url: ', Node.getConnection().rpcEndpoint);
-  Node.changeConnection({
-    cluster: Constants.Cluster.dev,
-    customClusterUrl: ['https://dummy-solana-devnet.url'],
-  });
-  t.log('# update clsuter url: ', Node.getConnection().rpcEndpoint);
-  const url = SIG.toExplorerUrl(Explorer.SolanaFM);
-  const res = /devnet/.test(url);
-  t.true(res);
 });
 
 test('to sol', (t) => {

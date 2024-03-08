@@ -1,6 +1,5 @@
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { Node } from '~/node';
-import { Constants, debugLog } from '~/suite-utils';
+import { Config, Constants, debugLog } from '~/suite-utils';
 import { Account } from '~/account';
 import { BigNumber } from 'bignumber.js';
 import { Explorer, ExplorerOptions } from '~/types/global';
@@ -16,14 +15,9 @@ String.prototype.toExplorerUrl = function (
   explorer: Explorer = Explorer.Solscan,
   options: Partial<ExplorerOptions> = {},
 ) {
-  const endPointUrl = Node.getConnection().rpcEndpoint;
-  debugLog('# toExplorerUrl rpcEndpoint:', endPointUrl);
-  let cluster = '';
-  if (endPointUrl === Constants.EndPointUrl.prd) {
-    cluster = Constants.Cluster.prd;
-  } else if (endPointUrl === Constants.EndPointUrl.dev) {
-    cluster = Constants.Cluster.dev;
-  } else {
+  let cluster = Config.cluster.type;
+  debugLog('# clusterType:', cluster);
+  if (cluster !== Constants.Cluster.prd) {
     cluster = Constants.Cluster.dev;
   }
 

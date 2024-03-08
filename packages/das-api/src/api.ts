@@ -16,12 +16,10 @@ export namespace DasApi {
       | Pubkey[]
       | Transaction
       | {
-          [key: string]: unknown;
-        }
+        [key: string]: unknown;
+      }
     )[],
   ) => {
-    Constants.WarnningMessage.calculateProbability() &&
-      console.warn(Constants.WarnningMessage.DAS_API_URL);
     dasUri = dasUri ? dasUri : Constants.DAS_API_URL;
     debugLog('# dasUri: ', dasUri);
     const response = await fetch(dasUri, {
@@ -36,7 +34,7 @@ export namespace DasApi {
     });
     if (response.status !== 200) {
       const err = (await response.json()).error.message;
-      return Result.err(Error(err));
+      throw Error(err);
     }
     return (await response.json()).result;
   };

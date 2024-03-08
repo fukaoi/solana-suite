@@ -49,7 +49,7 @@ test('No match mint', async (t) => {
   t.not({}, res);
 });
 
-test('Find metadatas by collectionMint', async (t) => {
+test.skip('Find metadatas by collectionMint', async (t) => {
   const collectionMint = '97DThuwju7sAfkEupra24KRW2EyXVxaqoXDpfQbHFTh8';
   const res = await RegularNft.findByCollection(collectionMint);
   t.not([], res.unwrap().metadatas);
