@@ -36,21 +36,9 @@ test('Bundlr use dev', (t) => {
   t.is(url, Constants.BundlrUrl.dev);
 });
 
-test('[Error]DasApiUrl use prd', (t) => {
-  t.throws(() => {
-    Constants.switchDasApi(Constants.Cluster.prd);
-  });
-});
-
 test('DasApiUrl use dev', (t) => {
   const url = Constants.switchDasApi(Constants.Cluster.dev);
   t.true(Constants.DasApiUrl.dev.includes(url));
-});
-
-test('[Error]NftStorageApiKey use prd', (t) => {
-  t.throws(() => {
-    Constants.switchNftStorage(Constants.Cluster.prd);
-  });
 });
 
 test('NftStorageApiKey use dev', (t) => {

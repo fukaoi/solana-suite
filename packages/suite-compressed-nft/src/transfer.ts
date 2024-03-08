@@ -23,6 +23,7 @@ export namespace CompressedNft {
     delegate?: Pubkey,
   ): Promise<TransactionInstruction> => {
     const assetProof = await DasApi.getAssetProof(assetId);
+    debugLog('# assetProof: ', assetProof);
     if (assetProof.isErr) {
       throw assetProof.error;
     } else if (assetProof.isOk && assetProof.value.proof.length === 0) {
@@ -30,6 +31,7 @@ export namespace CompressedNft {
     }
 
     const asset = await DasApi.getAsset(assetId);
+    debugLog('# asset: ', asset);
     if (asset.isErr) {
       throw asset.error;
     } else if (asset.isOk && asset.value.ownership.owner !== assetIdOwner) {

@@ -16,8 +16,8 @@ export namespace DasApi {
       | Pubkey[]
       | Transaction
       | {
-          [key: string]: unknown;
-        }
+        [key: string]: unknown;
+      }
     )[],
   ) => {
     dasUri = dasUri ? dasUri : Constants.DAS_API_URL;
@@ -34,7 +34,7 @@ export namespace DasApi {
     });
     if (response.status !== 200) {
       const err = (await response.json()).error.message;
-      return Result.err(Error(err));
+      throw Error(err);
     }
     return (await response.json()).result;
   };
