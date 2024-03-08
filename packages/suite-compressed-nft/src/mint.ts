@@ -5,7 +5,7 @@ import { Converter } from '~/converter';
 import { Storage } from '~/storage';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
-import { debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
+import { debugLog, Result, Try } from '~/suite-utils';
 import { Validator } from '~/validator';
 import { DasApi } from '~/das-api';
 import { CompressedNft as Space } from './space';
@@ -174,9 +174,6 @@ export namespace CompressedNft {
         input,
         sellerFeeBasisPoints,
       );
-
-      // created at by unix timestamp
-      storageMetadata.created_at = unixTimestamp();
 
       let uri!: string;
       // upload file

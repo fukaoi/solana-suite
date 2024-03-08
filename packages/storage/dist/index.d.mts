@@ -286,7 +286,7 @@ type Attribute = {
 
 declare namespace Arweave {
     const uploadFile: (filePath: FileType, feePayer: Secret) => Promise<Result<string, Error>>;
-    const uploadData: (metadata: Offchain, feePayer: Secret) => Promise<Result<string, Error>>;
+    const uploadData: (storageData: Offchain, feePayer: Secret) => Promise<Result<string, Error>>;
 }
 
 declare namespace ProvenanceLayer {

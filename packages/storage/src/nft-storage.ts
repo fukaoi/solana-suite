@@ -1,5 +1,5 @@
 import { Blob, NFTStorage } from 'nft.storage';
-import { Constants, debugLog, Result, Try } from '~/suite-utils';
+import { Constants, debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { ProvenanceLayer } from './provenance-layer';
 import { FileType, Offchain } from '~/types/storage';
 
@@ -53,8 +53,9 @@ export namespace NftStorage {
     storageData: Offchain,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
-      debugLog('# upload metadata: ', storageData);
-
+      // created at by unix timestamp
+      storageData.created_at = unixTimestamp();
+      debugLog('# Will upload offchain: ', storageData);
       const blobJson = new Blob([JSON.stringify(storageData)]);
       const res = await connect().storeBlob(blobJson);
       return createGatewayUrl(res);

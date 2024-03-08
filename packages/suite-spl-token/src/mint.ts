@@ -20,7 +20,7 @@ import {
   DataV2,
 } from '@metaplex-foundation/mpl-token-metadata';
 
-import { debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
+import { debugLog, Result, Try } from '~/suite-utils';
 
 import { Node } from '~/node';
 import { Account } from '~/account';
@@ -161,9 +161,6 @@ export namespace SplToken {
         input as InputNftMetadata,
         input.royalty,
       );
-
-      // created at by unix timestamp
-      storageMetadata.created_at = unixTimestamp();
 
       let uri!: string;
       // upload file

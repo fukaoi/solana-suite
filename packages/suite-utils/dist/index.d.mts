@@ -111,7 +111,7 @@ declare const Account: {
     Associated: typeof Account$3.Associated;
 };
 
-declare const Config: {
+declare let Config: {
     cluster: {
         type: string;
         customClusterUrl: never[];
@@ -163,6 +163,7 @@ declare namespace Constants {
     const switchBundlr: (env: string) => string;
     const switchDasApi: (env: string) => string;
     const switchNftStorage: (env: string) => string;
+    const loadConfig: () => Promise<void>;
     const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;
     const MEMO_PROGRAM_ID: PublicKey;
     const METAPLEX_PROGRAM_ID: PublicKey;
