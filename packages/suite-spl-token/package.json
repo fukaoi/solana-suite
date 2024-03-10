@@ -21,13 +21,13 @@
   ],
   "license": "MIT",
   "author": "fukaoi <usapyon2022@gmail.com>",
-  "homepage": "https://atonoy.github.io/solana-suite",
+  "homepage": "https://fukaoi.github.io/solana-suite",
   "repository": {
     "type": "git",
-    "url": "https://github.com/atonoy/solana-suite.git"
+    "url": "https://github.com/fukaoi/solana-suite.git"
   },
   "bugs": {
-    "url": "https://github.com/atonoy/solana-suite/issues"
+    "url": "https://github.com/fukaoi/solana-suite/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -54,7 +54,7 @@
     "bs58": "^4.0.1",
     "@irys/sdk": "^0.0.3",
     "bn.js": "^5.2.1",
-    "mpl-bubblegum-instruction": "github:atonoy/mpl-bubblegum-instructions"
+    "mpl-bubblegum-instruction": "github:fukaoi/mpl-bubblegum-instructions"
   },
   "devDependencies": {
     "test-tools": "workspace:*",

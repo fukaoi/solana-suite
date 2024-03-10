@@ -1,5 +1,5 @@
 import { Constants, debugLog, Result } from '~/suite-utils';
-import { Commitment, Connection } from '@solana/web3.js';
+import { Commitment, Connection, Finality } from '@solana/web3.js';
 
 export namespace Node {
   const setted = {
@@ -35,7 +35,7 @@ export namespace Node {
 
   export const changeConnection = (param: {
     cluster?: string;
-    commitment?: Commitment;
+    commitment?: Finality;
     customClusterUrl?: string[];
   }): void => {
     // initialize

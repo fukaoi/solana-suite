@@ -1,7 +1,6 @@
 import test from 'ava';
 import { CompressedNft } from '../src';
 import { Account } from '~/account';
-import { Node } from '~/node';
 import { KeypairAccount } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { RandomAsset } from 'test-tools/setupAsset';
@@ -49,20 +48,22 @@ test('[nftStorage] mint nft, already uploaed image, animation', async (t) => {
     spaceOwner,
     collectionMint,
   );
+
   const res = (await inst.submit()).map(
     async (ok: string) => {
       t.log('# sig:', ok);
       return ok;
     },
     (ng: Error) => {
+      t.fail(ng.message);
       throw ng;
     },
   );
 
-  await Node.confirmedSig(await res.unwrap());
-  const assetId = await inst.unwrap().data?.getAssetId();
+  const sig = await res.unwrap();
+  const mint = await CompressedNft.findMintIdBySignature(sig);
   t.log('# name: ', name);
-  t.log('# mint: ', assetId);
+  t.log('# mint: ', mint);
   t.pass();
 });
 
@@ -90,14 +91,15 @@ test('[Arweave] mint nft', async (t) => {
       return ok;
     },
     (ng: Error) => {
+      t.fail(ng.message);
       throw ng;
     },
   );
 
-  await Node.confirmedSig(await res.unwrap());
-  const assetId = await inst.unwrap().data?.getAssetId();
+  const sig = await res.unwrap();
+  const mint = await CompressedNft.findMintIdBySignature(sig);
   t.log('# name: ', name);
-  t.log('# mint: ', assetId);
+  t.log('# mint: ', mint);
   t.pass();
 });
 
@@ -124,14 +126,15 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
       return ok;
     },
     (ng: Error) => {
+      t.fail(ng.message);
       throw ng;
     },
   );
 
-  await Node.confirmedSig(await res.unwrap());
-  const assetId = await inst.unwrap().data?.getAssetId();
+  const sig = await res.unwrap();
+  const mint = await CompressedNft.findMintIdBySignature(sig);
   t.log('# name: ', name);
-  t.log('# mint: ', assetId);
+  t.log('# mint: ', mint);
   t.pass();
 });
 
@@ -211,14 +214,15 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
       return ok;
     },
     (ng: Error) => {
+      t.fail(ng.message);
       throw ng;
     },
   );
 
-  await Node.confirmedSig(await res.unwrap());
-  const assetId = await inst.unwrap().data?.getAssetId();
+  const sig = await res.unwrap();
+  const mint = await CompressedNft.findMintIdBySignature(sig);
   t.log('# name: ', name);
-  t.log('# mint: ', assetId);
+  t.log('# mint: ', mint);
   t.pass();
 });
 
