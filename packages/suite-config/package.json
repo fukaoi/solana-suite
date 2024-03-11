@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/config",
-  "version": "0.7.7",
+  "version": "0.7.8-alpha.1",
   "description": "solana-suite for config",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionInstruction, PublicKey, Keypair, Commitment, TransactionSignature, Connection } from '@solana/web3.js';
+import { TransactionInstruction, PublicKey, Keypair, Finality, TransactionSignature, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 
@@ -167,7 +167,8 @@ declare namespace Constants {
     const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;
     const MEMO_PROGRAM_ID: PublicKey;
     const METAPLEX_PROGRAM_ID: PublicKey;
-    const COMMITMENT: Commitment;
+    const COMMITMENT: Finality;
+    const MAX_TRANSACTION_VERSION: number;
     const NFT_STORAGE_GATEWAY_URL = "https://ipfs.io/ipfs";
     const IRYS_GATEWAY_URL = "https://gateway.irys.xyz";
     const BUNDLR_NETWORK_URL: string;
@@ -475,7 +476,7 @@ declare namespace Node {
     const getConnection: () => Connection;
     const changeConnection: (param: {
         cluster?: string;
-        commitment?: Commitment;
+        commitment?: Finality;
         customClusterUrl?: string[];
     }) => void;
     const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
