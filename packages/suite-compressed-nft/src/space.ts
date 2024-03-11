@@ -1,6 +1,6 @@
 import {
   ALL_DEPTH_SIZE_PAIRS,
-  ConcurrentMerkleTreeAccount,
+  // ConcurrentMerkleTreeAccount,
   getConcurrentMerkleTreeAccountSize,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
@@ -24,15 +24,6 @@ export namespace CompressedNft {
     constructor(spaceOwner: Pubkey) {
       this.spaceOwner = spaceOwner;
     }
-
-    getAssetId = async (): Promise<Pubkey> => {
-      const treeAccount = await ConcurrentMerkleTreeAccount.fromAccountAddress(
-        Node.getConnection(),
-        this.spaceOwner.toPublicKey(),
-      );
-      const leafIndex = treeAccount.tree.rightMostPath.index - 1;
-      return Account.Pda.getAssetId(this.spaceOwner, leafIndex);
-    };
   }
 
   /**
