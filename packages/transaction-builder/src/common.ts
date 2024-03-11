@@ -60,6 +60,7 @@ export namespace TransactionBuilder {
           return await PriorityFee.PriorityFee.submit(
             transaction,
             finalSigners,
+            options.addSolPriorityFee,
           );
         } else {
           const confirmOptions: ConfirmOptions = {

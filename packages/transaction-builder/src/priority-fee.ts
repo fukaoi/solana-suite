@@ -31,10 +31,48 @@ export namespace TransactionBuilder {
             : MINIMUM_PRIORITY_FEE;
       }
       debugLog('# lamports: ', addLamports);
-      return await sendTransactionWithPriorityFee(
-        addLamports,
+      const computePriceInst = ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: addLamports,
+      });
+      const confirmOptions: ConfirmOptions = {
+        maxRetries: MAX_RETRIES,
+      };
+      transaction.add(computePriceInst);
+      return await sendAndConfirmTransaction(
+        Node.getConnection(),
         transaction,
         signers,
+        confirmOptions,
+      );
+    };
+
+    export const submitForPartialSign = async (
+      transaction: Transaction,
+      addSolPriorityFee?: number,
+    ) => {
+      let addLamports = 0;
+      if (addSolPriorityFee) {
+        addLamports = addSolPriorityFee.toLamports();
+      } else {
+        const estimates = await DasApi.getPriorityFeeEstimate(transaction);
+        debugLog('# estimates: ', estimates);
+        addLamports =
+          estimates.isOk && estimates.unwrap().medium !== 0
+            ? estimates.unwrap().medium
+            : MINIMUM_PRIORITY_FEE;
+      }
+      debugLog('# lamports: ', addLamports);
+      const computePriceInst = ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: addLamports,
+      });
+      const confirmOptions: ConfirmOptions = {
+        maxRetries: MAX_RETRIES,
+      };
+      transaction.add(computePriceInst);
+      const wireTransaction = transaction.serialize();
+      return await Node.getConnection().sendRawTransaction(
+        wireTransaction,
+        confirmOptions,
       );
     };
 
@@ -50,26 +88,6 @@ export namespace TransactionBuilder {
       return ComputeBudgetProgram.setComputeUnitPrice({
         microLamports: lamports,
       });
-    };
-
-    const sendTransactionWithPriorityFee = async (
-      lamports: number,
-      transaction: Transaction,
-      finalSigners: Keypair[],
-    ) => {
-      const computePriceInst = ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: lamports,
-      });
-      const confirmOptions: ConfirmOptions = {
-        maxRetries: MAX_RETRIES,
-      };
-      transaction.add(computePriceInst);
-      return await sendAndConfirmTransaction(
-        Node.getConnection(),
-        transaction,
-        finalSigners,
-        confirmOptions,
-      );
     };
   }
 }

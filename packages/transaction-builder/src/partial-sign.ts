@@ -8,6 +8,7 @@ import { Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
 import { MAX_RETRIES } from './common';
+import { TransactionBuilder as PriorityFee } from './priority-fee';
 import {
   PartialSignStructure,
   SubmitOptions,
@@ -39,14 +40,21 @@ export namespace TransactionBuilder {
         const transaction = Transaction.from(decode);
         transaction.partialSign(options.feePayer!.toKeypair());
 
-        const confirmOptions: ConfirmOptions = {
-          maxRetries: MAX_RETRIES,
-        };
-        const wireTransaction = transaction.serialize();
-        return await Node.getConnection().sendRawTransaction(
-          wireTransaction,
-          confirmOptions,
-        );
+        if (options.isPriorityFee) {
+          return await PriorityFee.PriorityFee.submitForPartialSign(
+            transaction,
+            options.addSolPriorityFee,
+          );
+        } else {
+          const confirmOptions: ConfirmOptions = {
+            maxRetries: MAX_RETRIES,
+          };
+          const wireTransaction = transaction.serialize();
+          return await Node.getConnection().sendRawTransaction(
+            wireTransaction,
+            confirmOptions,
+          );
+        }
       });
     };
   }

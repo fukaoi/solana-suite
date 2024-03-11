@@ -1,6 +1,6 @@
 {
   "name": "storage",
-  "version": "0.7.8-alpha.2",
+  "version": "0.7.8-alpha.3",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
