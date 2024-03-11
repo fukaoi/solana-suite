@@ -30,7 +30,7 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 import { MintOptions } from '~/types/compressed-nft';
-import { CommonStructure, MintStructure } from '~/types/transaction-builder';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';

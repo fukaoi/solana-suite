@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/compressed-nft",
-  "version": "0.7.8-alpha.1",
+  "version": "0.7.8-alpha.2",
   "description": "compressed nft module for solana-suite",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -44,6 +44,7 @@
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
   "dependencies": {
+    "mpl-bubblegum-instruction": "github:fukaoi/mpl-bubblegum-instructions",
     "@irys/sdk": "^0.0.3",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana-suite/config": "workspace:*",
@@ -54,7 +55,7 @@
     "bn.js": "^5.2.1",
     "bs58": "^4.0.1",
     "cross-fetch": "^4.0.0",
-    "mpl-bubblegum-instruction": "github:fukaoi/mpl-bubblegum-instructions"
+    "nft.storage": "^7.1.1"
   },
   "devDependencies": {
     "@types/bs58": "^4.0.4",

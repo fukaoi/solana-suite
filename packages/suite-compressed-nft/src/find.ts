@@ -82,7 +82,7 @@ export namespace CompressedNft {
         .keySegments()
         .flat();
 
-      let changeLogEvents: ChangeLogEventV1[] = [];
+      const changeLogEvents: ChangeLogEventV1[] = [];
 
       txResponse!.meta?.innerInstructions?.forEach((compiledIx) => {
         compiledIx.instructions.forEach((innerIx) => {
@@ -98,7 +98,9 @@ export namespace CompressedNft {
                 Buffer.from(bs58.decode(innerIx.data)),
               ),
             );
-          } catch (_) { } //noop, catch error deserialized
+          } catch (_) {
+            //noop, catch error deserialized
+          }
         });
       });
       const leafIndex = changeLogEvents[0].index;

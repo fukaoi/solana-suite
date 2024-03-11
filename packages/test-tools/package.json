@@ -1,7 +1,7 @@
 {
   "name": "test-tools",
   "private": true,
-  "version": "0.7.8-alpha.1",
+  "version": "0.7.8-alpha.2",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
