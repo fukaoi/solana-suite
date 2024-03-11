@@ -116,15 +116,14 @@ import { requestSol } from 'test-tools';
   );
 
   // this is NFT ID
-  (await mintInst.submit()).match(
-    async (value) => {
-      await Node.confirmedSig(value, 'finalized');
-      console.log('# sig: ', value.toExplorerUrl(Explorer.Xray));
-    },
+  const res = (await mintInst.submit()).map(
+    async (value) => value,
     (error) => assert.fail(error),
   );
 
-  const mint = await mintInst.unwrap().data.getAssetId();
+  const sig = await res.unwrap();
+  console.log('# sig: ', sig.toExplorerUrl(Explorer.Xray));
+  const mint = (await CompressedNft.findMintIdBySignature(sig)).unwrap();
   console.log('# mint: ', mint);
 
   // //////////////////////////////////////////////
@@ -140,7 +139,7 @@ import { requestSol } from 'test-tools';
   );
 
   // submit instructions
-  (await transferInst.submit({feePayer: feePayer.secret})).match(
+  (await transferInst.submit({ feePayer: feePayer.secret })).match(
     (value) => console.log('# sig: ', value),
     (error) => assert.fail(error),
   );
