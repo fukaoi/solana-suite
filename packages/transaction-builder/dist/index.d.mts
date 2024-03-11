@@ -291,6 +291,7 @@ declare namespace TransactionBuilder$2 {
 declare namespace TransactionBuilder$1 {
     namespace PriorityFee {
         const submit: (transaction: Transaction, signers: Keypair[], addSolPriorityFee?: number) => Promise<string>;
+        const submitForPartialSign: (transaction: Transaction, addSolPriorityFee?: number) => Promise<string>;
         const createPriorityFeeInstruction: (transaction: Transaction) => Promise<_solana_web3_js.TransactionInstruction>;
     }
 }
