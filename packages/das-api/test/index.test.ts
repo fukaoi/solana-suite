@@ -95,7 +95,7 @@ test('Get priority fee estimate', async (t) => {
   const testUri =
     'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
   DasApi.changeDasUri(testUri);
-  const account = ['JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'];
+  const account = ['BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY'];
   const res = await DasApi.getPriorityFeeEstimate(account);
   res.match(
     (ok) => {
