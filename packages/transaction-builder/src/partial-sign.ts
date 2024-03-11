@@ -4,10 +4,9 @@ import {
   TransactionSignature,
 } from '@solana/web3.js';
 
-import { Result, Try } from '~/suite-utils';
+import { Constants, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
-import { MAX_RETRIES } from './common';
 import { TransactionBuilder as PriorityFee } from './priority-fee';
 import {
   PartialSignStructure,
@@ -38,17 +37,18 @@ export namespace TransactionBuilder {
 
         const decode = Buffer.from(this.hexInstruction, 'hex');
         const transaction = Transaction.from(decode);
-        transaction.partialSign(options.feePayer!.toKeypair());
 
         if (options.isPriorityFee) {
           return await PriorityFee.PriorityFee.submitForPartialSign(
             transaction,
+            options.feePayer.toKeypair(),
             options.addSolPriorityFee,
           );
         } else {
           const confirmOptions: ConfirmOptions = {
-            maxRetries: MAX_RETRIES,
+            maxRetries: Constants.MAX_TRANSACTION_RETRIES,
           };
+          transaction.partialSign(options.feePayer.toKeypair());
           const wireTransaction = transaction.serialize();
           return await Node.getConnection().sendRawTransaction(
             wireTransaction,

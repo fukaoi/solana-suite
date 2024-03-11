@@ -6,9 +6,8 @@ import {
   Transaction,
 } from '@solana/web3.js';
 
-import { debugLog } from '~/suite-utils';
+import { Constants, debugLog } from '~/suite-utils';
 import { Node } from '~/node';
-import { MAX_RETRIES } from './common';
 import { DasApi } from '~/das-api';
 
 export namespace TransactionBuilder {
@@ -35,7 +34,7 @@ export namespace TransactionBuilder {
         microLamports: addLamports,
       });
       const confirmOptions: ConfirmOptions = {
-        maxRetries: MAX_RETRIES,
+        maxRetries: Constants.MAX_TRANSACTION_RETRIES,
       };
       transaction.add(computePriceInst);
       return await sendAndConfirmTransaction(
@@ -48,6 +47,7 @@ export namespace TransactionBuilder {
 
     export const submitForPartialSign = async (
       transaction: Transaction,
+      signer: Keypair,
       addSolPriorityFee?: number,
     ) => {
       let addLamports = 0;
@@ -66,9 +66,10 @@ export namespace TransactionBuilder {
         microLamports: addLamports,
       });
       const confirmOptions: ConfirmOptions = {
-        maxRetries: MAX_RETRIES,
+        maxRetries: Constants.MAX_TRANSACTION_RETRIES,
       };
       transaction.add(computePriceInst);
+      transaction.partialSign(signer);
       const wireTransaction = transaction.serialize();
       return await Node.getConnection().sendRawTransaction(
         wireTransaction,

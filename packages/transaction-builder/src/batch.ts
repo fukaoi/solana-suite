@@ -6,8 +6,7 @@ import {
 } from '@solana/web3.js';
 
 import { Node } from '~/node';
-import { MAX_RETRIES } from './common';
-import { Result, Try } from '~/suite-utils';
+import { Constants, Result, Try } from '~/suite-utils';
 import { TransactionBuilder as PriorityFee } from './priority-fee';
 import { BatchSubmitOptions } from '~/types/transaction-builder';
 
@@ -62,7 +61,7 @@ export namespace TransactionBuilder {
           );
         } else {
           const confirmOptions: ConfirmOptions = {
-            maxRetries: MAX_RETRIES,
+            maxRetries: Constants.MAX_TRANSACTION_RETRIES,
           };
           return await sendAndConfirmTransaction(
             Node.getConnection(),
