@@ -16,8 +16,8 @@ export namespace DasApi {
       | Pubkey[]
       | Transaction
       | {
-        [key: string]: unknown;
-      }
+          [key: string]: unknown;
+        }
     )[],
   ) => {
     dasUri = dasUri ? dasUri : Constants.DAS_API_URL;
