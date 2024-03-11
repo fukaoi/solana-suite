@@ -30,7 +30,7 @@ export namespace TransactionBuilder {
             ? estimates.unwrap().medium
             : MINIMUM_PRIORITY_FEE;
       }
-      debugLog('# lamports: ', addLamports);
+      debugLog('# add sol: ', addLamports.toSol());
       const computePriceInst = ComputeBudgetProgram.setComputeUnitPrice({
         microLamports: addLamports,
       });
@@ -61,7 +61,7 @@ export namespace TransactionBuilder {
             ? estimates.unwrap().medium
             : MINIMUM_PRIORITY_FEE;
       }
-      debugLog('# lamports: ', addLamports);
+      debugLog('# add sol: ', addLamports.toSol());
       const computePriceInst = ComputeBudgetProgram.setComputeUnitPrice({
         microLamports: addLamports,
       });

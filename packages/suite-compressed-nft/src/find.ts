@@ -70,6 +70,7 @@ export namespace CompressedNft {
     signature: string,
   ): Promise<Result<Pubkey, Error>> => {
     return Try(async () => {
+      await Node.confirmedSig(signature, Constants.COMMITMENT);
       const txResponse = await Node.getConnection().getTransaction(signature, {
         commitment: Constants.COMMITMENT,
         maxSupportedTransactionVersion: Constants.MAX_TRANSACTION_VERSION,
