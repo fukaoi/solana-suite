@@ -1,3 +1,4 @@
+import * as mpl_bubblegum_instructions from 'mpl-bubblegum-instructions';
 import BN from 'bn.js';
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionInstruction, Keypair, TransactionSignature } from '@solana/web3.js';
@@ -451,13 +452,14 @@ declare const CompressedNft: {
     calculateSpaceCost: (spaceSize: number) => Promise<{
         sol: number;
     }>;
-    createVerifyCreator: (creators: Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
-    mint: (owner: Secret$1, input: InputNftMetadata, spaceOwner: Pubkey, collectionMint: Pubkey, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
+    createVerifyCreator: (creators: mpl_bubblegum_instructions.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instructions.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
+    mint: (owner: Secret$1, input: InputNftMetadata, spaceOwner: Pubkey, collectionMint: Pubkey, options?: Partial<MintOptions>) => Promise<Result<CommonStructure, Error>>;
     gasLessTransfer: (mint: Pubkey, owner: Secret$1, dest: Pubkey, feePayer: Pubkey, options?: Partial<GassLessTransferOptions>) => Promise<Result<PartialSignStructure, Error>>;
     gasLessDelegate: (mint: Pubkey, owner: Secret$1, newDelegate: Pubkey, options?: Partial<GassLessDelegateOptions>) => Promise<Result<PartialSignStructure, Error>>;
     findByOwner: (owner: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;
     findByMint: (mint: Pubkey) => Promise<Result<Partial<Metadata>, Error>>;
     findByCollection: (collectionMint: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;
+    findMintIdBySignature: (signature: string) => Promise<Result<Pubkey, Error>>;
     createDeleagate: (assetId: _solana_web3_js.PublicKey, newDelegate: _solana_web3_js.PublicKey | null) => Promise<_solana_web3_js.TransactionInstruction>;
     setDelegate: (mint: Pubkey, owner: Secret$1, options?: Partial<DelegateOptions>) => Promise<Result<CommonStructure, Error>>;
 };
