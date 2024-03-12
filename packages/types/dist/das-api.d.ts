@@ -81,4 +81,4 @@ type PriorityFeeLevels = {
     unsafeMax: number;
 };
 
-export { Asset, AssetProof, Assets, Grouping, Metadata, PriorityFeeLevels };
+export type { Asset, AssetProof, Assets, Grouping, Metadata, PriorityFeeLevels };

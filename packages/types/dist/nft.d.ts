@@ -1,7 +1,7 @@
 import { Pubkey } from './account.js';
 import { Offchain } from './storage.js';
 import '@solana/web3.js';
-import './phantom-e9a40784.js';
+import './phantom-aWSz-JUw.js';
 import './das-api.js';
 import './converter.js';
 import '@metaplex-foundation/mpl-token-metadata';
@@ -40,4 +40,4 @@ type NftMetadata = {
     metadatas: Metadata[];
 };
 
-export { Authority, Creators, Metadata, NftMetadata };
+export type { Authority, Creators, Metadata, NftMetadata };

@@ -4,4 +4,4 @@ type MemoOptions = {
     feePayer: Secret;
 };
 
-export { MemoOptions };
+export type { MemoOptions };

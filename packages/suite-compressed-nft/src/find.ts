@@ -66,47 +66,47 @@ export namespace CompressedNft {
    * @param {string} signature
    * @return Promise<Result<Pubkey, Error>>
    */
-  export const findMintIdBySignature = async (
-    signature: string,
-  ): Promise<Result<Pubkey, Error>> => {
-    return Try(async () => {
-      await Node.confirmedSig(signature, Constants.COMMITMENT);
-      const txResponse = await Node.getConnection().getTransaction(signature, {
-        commitment: Constants.COMMITMENT,
-        maxSupportedTransactionVersion: Constants.MAX_TRANSACTION_VERSION,
-      });
-
-      if (!txResponse) throw Error('No txResponse provided');
-
-      const accountKeys = txResponse.transaction.message
-        .getAccountKeys()
-        .keySegments()
-        .flat();
-
-      const changeLogEvents: ChangeLogEventV1[] = [];
-
-      txResponse!.meta?.innerInstructions?.forEach((compiledIx) => {
-        compiledIx.instructions.forEach((innerIx) => {
-          if (
-            SPL_NOOP_PROGRAM_ID.toBase58() !==
-            accountKeys[innerIx.programIdIndex].toBase58()
-          ) {
-            return;
-          }
-          try {
-            changeLogEvents.push(
-              deserializeChangeLogEventV1(
-                Buffer.from(bs58.decode(innerIx.data)),
-              ),
-            );
-          } catch (_) {
-            //noop, catch error deserialized
-          }
-        });
-      });
-      const leafIndex = changeLogEvents[0].index;
-      const spaceOwner = changeLogEvents[0].treeId;
-      return Account.Pda.getAssetId(spaceOwner.toString(), leafIndex);
-    });
-  };
+  // export const findMintIdBySignature = async (
+  //   signature: string,
+  // ): Promise<Result<Pubkey, Error>> => {
+  //   return Try(async () => {
+  //     await Node.confirmedSig(signature, Constants.COMMITMENT);
+  //     const txResponse = await Node.getConnection().getTransaction(signature, {
+  //       commitment: Constants.COMMITMENT,
+  //       maxSupportedTransactionVersion: Constants.MAX_TRANSACTION_VERSION,
+  //     });
+  //
+  //     if (!txResponse) throw Error('No txResponse provided');
+  //
+  //     const accountKeys = txResponse.transaction.message
+  //       .getAccountKeys()
+  //       .keySegments()
+  //       .flat();
+  //
+  //     const changeLogEvents: ChangeLogEventV1[] = [];
+  //
+  //     txResponse!.meta?.innerInstructions?.forEach((compiledIx) => {
+  //       compiledIx.instructions.forEach((innerIx) => {
+  //         if (
+  //           SPL_NOOP_PROGRAM_ID.toBase58() !==
+  //           accountKeys[innerIx.programIdIndex].toBase58()
+  //         ) {
+  //           return;
+  //         }
+  //         try {
+  //           changeLogEvents.push(
+  //             deserializeChangeLogEventV1(
+  //               Buffer.from(bs58.decode(innerIx.data)),
+  //             ),
+  //           );
+  //         } catch (_) {
+  //           //noop, catch error deserialized
+  //         }
+  //       });
+  //     });
+  //     const leafIndex = changeLogEvents[0].index;
+  //     const spaceOwner = changeLogEvents[0].treeId;
+  //     return Account.Pda.getAssetId(spaceOwner.toString(), leafIndex);
+  //   });
+  // };
 }

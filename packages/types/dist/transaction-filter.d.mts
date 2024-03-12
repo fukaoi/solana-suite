@@ -80,4 +80,4 @@ type Memo = {
     programId: PublicKey;
 };
 
-export { FilterOptions, FilterType, Memo, MintTo, MintToChecked, ModuleName, PostTokenAccount, Transfer, TransferChecked, WithMemo };
+export { FilterOptions, FilterType, type Memo, type MintTo, type MintToChecked, ModuleName, type PostTokenAccount, type Transfer, type TransferChecked, type WithMemo };

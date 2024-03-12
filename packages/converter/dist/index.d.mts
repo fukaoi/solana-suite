@@ -1,7 +1,7 @@
 import { PublicKey, ParsedTransactionWithMeta, TransactionSignature } from '@solana/web3.js';
 import { Metadata as Metadata$2, DataV2 } from '@metaplex-foundation/mpl-token-metadata';
 import BN from 'bn.js';
-import { MetadataArgs } from 'mpl-bubblegum-instruction';
+import { MetadataArgs } from 'mpl-bubblegum-instructions';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -515,7 +515,7 @@ declare namespace Result {
     }, {
         [K in keyof T]: T[K] extends Result<unknown, infer E> ? E : never;
     }[keyof T]>;
-    export {};
+    export {  };
 }
 type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;

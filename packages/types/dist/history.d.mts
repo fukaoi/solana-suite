@@ -22,4 +22,4 @@ type FindOptions = {
     narrowDown: number;
 };
 
-export { FindOptions, History };
+export type { FindOptions, History };

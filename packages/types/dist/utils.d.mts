@@ -15,4 +15,4 @@ type OverwriteObject = {
 type OnOk<T extends History | Find> = (ok: T[]) => void;
 type OnErr = (err: Error) => void;
 
-export { AnyObject, OnErr, OnOk, OverwriteObject };
+export type { AnyObject, OnErr, OnOk, OverwriteObject };

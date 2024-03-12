@@ -204,7 +204,7 @@ declare namespace Result {
     }, {
         [K in keyof T]: T[K] extends Result<unknown, infer E> ? E : never;
     }[keyof T]>;
-    export {};
+    export {  };
 }
 type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
@@ -241,4 +241,4 @@ type PartialSignStructure<T = Pubkey> = {
     submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };
 
-export { BatchSubmitOptions, CommonStructure, MintStructure, PartialSignStructure, SubmitOptions };
+export type { BatchSubmitOptions, CommonStructure, MintStructure, PartialSignStructure, SubmitOptions };

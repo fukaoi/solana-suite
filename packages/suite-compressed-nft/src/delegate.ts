@@ -6,7 +6,7 @@ import {
 import { Node } from '~/node';
 import { Account } from '~/account';
 import { DasApi } from '~/das-api';
-import { createDelegateInstruction } from 'mpl-bubblegum-instruction';
+import { createDelegateInstruction } from 'mpl-bubblegum-instructions';
 import {
   ConcurrentMerkleTreeAccount,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,

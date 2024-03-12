@@ -2,7 +2,7 @@ import { Pubkey } from '~/types/account';
 import { DasApi } from '~/das-api';
 import { debugLog, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
-import { createTransferInstruction } from 'mpl-bubblegum-instruction';
+import { createTransferInstruction } from 'mpl-bubblegum-instructions';
 import {
   ConcurrentMerkleTreeAccount,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,

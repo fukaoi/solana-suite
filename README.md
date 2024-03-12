@@ -1,7 +1,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 [![npm version](https://badge.fury.io/js/@solana-suite%2Fcore.png)](https://badge.fury.io/js/@solana-suite%2Fcore)
-![compile workflow](https://github.com/atonoy/solana-suite/actions/workflows/compile.yml/badge.svg)
-![lint workflow](https://github.com/atonoy/solana-suite/actions/workflows/lint.yml/badge.svg)
+![compile workflow](https://github.com/fukaoi/solana-suite/actions/workflows/compile.yml/badge.svg)
+![lint workflow](https://github.com/fukaoi/solana-suite/actions/workflows/lint.yml/badge.svg)
 ![PR](https://img.shields.io/badge/PRs-welcome-orange)
 [![code-style-prettier][code-style-prettier-image]][code-style-prettier-url]
 
@@ -10,7 +10,7 @@
 
 <br />
 <p align="center">
-  <img src="https://github.com/atonoy/solana-suite/assets/186659/b2d5c6f8-80e5-4b5a-ac18-506a6b986867" alt="Solana Suite" width="70%" height="70%">
+  <img src="https://github.com/fukaoi/solana-suite/assets/186659/b2d5c6f8-80e5-4b5a-ac18-506a6b986867" alt="Solana Suite" width="70%" height="70%">
 </p>
 
 ## What is Solana Suite?
@@ -38,7 +38,7 @@ programs' instructions. This unique architecture allows for cost-effective fee
 management and the implementation of convenient functions within the programs.
 
 <p align="center">
-  <img src="https://github.com/atonoy/solana-suite/assets/186659/d27c5c74-60ec-4f5d-8cda-8888fcccf728">
+  <img src="https://github.com/fukaoi/solana-suite/assets/186659/d27c5c74-60ec-4f5d-8cda-8888fcccf728">
 </p>
 
 

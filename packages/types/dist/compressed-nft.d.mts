@@ -28,4 +28,4 @@ type SpaceOptions = {
 };
 type SpaceNumber = 8 | 16000 | 100000 | 16700000 | 67000000 | 1000000000;
 
-export { DelegateOptions, GassLessDelegateOptions, GassLessTransferOptions, MintCollectionOptions, MintOptions, SpaceNumber, SpaceOptions };
+export type { DelegateOptions, GassLessDelegateOptions, GassLessTransferOptions, MintCollectionOptions, MintOptions, SpaceNumber, SpaceOptions };

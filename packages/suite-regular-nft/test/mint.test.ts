@@ -128,7 +128,7 @@ test('[Nft Storage] mint nft with many optional datas, verified collection', asy
   ];
 
   const options = {
-    github_url: 'https://github.com/atonoy/solana-suite',
+    github_url: 'https://github.com/fukaoi/solana-suite',
     docs_url: 'https://solana-suite.gitbook.io/solana-suite-develpoment-guide/',
   };
 

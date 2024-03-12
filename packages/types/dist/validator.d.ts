@@ -10,4 +10,4 @@ interface Details {
     limit?: Limit;
 }
 
-export { Condition, Details, Limit };
+export type { Condition, Details, Limit };

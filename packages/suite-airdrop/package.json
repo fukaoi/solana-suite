@@ -44,7 +44,7 @@
     "publish": "../../scripts/after-publish.mjs"
   },
   "dependencies": {
-    "mpl-bubblegum-instruction": "github:fukaoi/mpl-bubblegum-instructions",
+    "mpl-bubblegum-instructions": "github:fukaoi/mpl-bubblegum-instructions",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana/web3.js": "^1.78.5",
     "@solana/spl-token": "^0.3.8",
