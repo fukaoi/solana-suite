@@ -50,7 +50,7 @@
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana-suite/config": "workspace:^",
     "bignumber.js": "^9.1.2",
-    "mpl-bubblegum-instruction": "github:fukaoi/mpl-bubblegum-instructions",
+    "mpl-bubblegum-instructions": "github:fukaoi/mpl-bubblegum-instructions",
     "bn.js": "^5.2.1"
   },
   "devDependencies": {

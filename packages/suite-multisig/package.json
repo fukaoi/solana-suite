@@ -44,7 +44,7 @@
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
   "dependencies": {
-    "mpl-bubblegum-instruction": "github:fukaoi/mpl-bubblegum-instructions",
+    "mpl-bubblegum-instructions": "github:fukaoi/mpl-bubblegum-instructions",
     "@solana/buffer-layout": "^4.0.1",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",

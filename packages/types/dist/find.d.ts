@@ -38,4 +38,4 @@ type Find = {
     innerInstruction?: boolean;
 };
 
-export { Find, FindOptions, SortBy, SortDirection, Sortable };
+export { type Find, type FindOptions, SortBy, SortDirection, type Sortable };

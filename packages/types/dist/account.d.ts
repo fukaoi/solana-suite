@@ -16,4 +16,4 @@ type OwnerInfo = {
     owner: string;
 };
 
-export { KeypairAccount, OwnerInfo, Pubkey, Secret };
+export type { KeypairAccount, OwnerInfo, Pubkey, Secret };

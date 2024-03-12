@@ -65,7 +65,7 @@ test.skip('[Over size]Calculate transaction size', async (t) => {
   ];
 
   const options = {
-    github_url: 'https://github.com/atonoy/solana-suite',
+    github_url: 'https://github.com/fukaoi/solana-suite',
     docs_url: 'https://solana-suite.gitbook.io/solana-suite-develpoment-guide/',
   };
 
@@ -76,7 +76,7 @@ test.skip('[Over size]Calculate transaction size', async (t) => {
       name: asset.name!,
       symbol: asset.symbol!,
       description: asset.description,
-      external_url: 'https://atonoy.github.io/solana-suite/',
+      external_url: 'https://fukaoi.github.io/solana-suite/',
       royalty: 50,
       isMutable: false,
       creators,
@@ -150,7 +150,7 @@ test.skip('[Under size]Calculate transaction size', async (t) => {
   ];
 
   const options = {
-    github_url: 'https://github.com/atonoy/solana-suite',
+    github_url: 'https://github.com/fukaoi/solana-suite',
     docs_url: 'https://solana-suite.gitbook.io/solana-suite-develpoment-guide/',
   };
 
@@ -161,7 +161,7 @@ test.skip('[Under size]Calculate transaction size', async (t) => {
       name: asset.name!,
       symbol: asset.symbol!,
       description: asset.description,
-      external_url: 'https://atonoy.github.io/solana-suite/',
+      external_url: 'https://fukaoi.github.io/solana-suite/',
       royalty: 50,
       isMutable: false,
       // creators,

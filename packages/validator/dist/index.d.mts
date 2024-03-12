@@ -220,7 +220,7 @@ declare namespace Result {
     }, {
         [K in keyof T]: T[K] extends Result<unknown, infer E> ? E : never;
     }[keyof T]>;
-    export {};
+    export {  };
 }
 type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
@@ -348,7 +348,7 @@ declare namespace Validator {
     type PickNftStorage = Pick<Offchain, 'name' | 'symbol' | 'image' | 'seller_fee_basis_points'>;
     type PickNftStorageMetaplex = Pick<InputNftMetadata, 'name' | 'symbol' | 'royalty' | 'filePath'>;
     type PickMetaplex = Pick<DataV2, 'name' | 'symbol' | 'uri' | 'sellerFeeBasisPoints'>;
-    export {};
+    export {  };
 }
 declare class ValidatorError extends Error {
     details: Details[];

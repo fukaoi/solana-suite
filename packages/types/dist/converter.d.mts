@@ -10,4 +10,4 @@ type InternalCreators = {
     share: number;
 };
 
-export { InternalCollection, InternalCreators };
+export type { InternalCollection, InternalCreators };

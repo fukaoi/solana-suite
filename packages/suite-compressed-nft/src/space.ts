@@ -9,7 +9,7 @@ import { PublicKey, SystemProgram } from '@solana/web3.js';
 import {
   createCreateTreeInstruction,
   PROGRAM_ADDRESS as MPL_BUBBLEGUM_PROGRAM_ID,
-} from 'mpl-bubblegum-instruction';
+} from 'mpl-bubblegum-instructions';
 import { Account } from '~/account';
 import { Pubkey } from '~/types/account';
 import { Constants, debugLog, Result, Try } from '~/suite-utils';

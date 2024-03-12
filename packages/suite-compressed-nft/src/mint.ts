@@ -8,15 +8,15 @@ import { TransactionBuilder } from '~/transaction-builder';
 import { debugLog, Result, Try } from '~/suite-utils';
 import { Validator } from '~/validator';
 import { DasApi } from '~/das-api';
-import {
-  computeCreatorHash,
-  computeDataHash,
-  createMintToCollectionV1Instruction,
-  createVerifyCreatorInstruction,
-  Creator,
-  MetadataArgs,
-  PROGRAM_ID as BUBBLEGUM_PROGRAM_ID,
-} from 'mpl-bubblegum-instruction';
+// import {
+//   computeCreatorHash,
+//   computeDataHash,
+//   createMintToCollectionV1Instruction,
+//   createVerifyCreatorInstruction,
+//   Creator,
+//   MetadataArgs,
+//   PROGRAM_ID as BUBBLEGUM_PROGRAM_ID,
+// } from 'mpl-bubblegum-instructions';
 import {
   ConcurrentMerkleTreeAccount,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
@@ -30,7 +30,7 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 import { MintOptions } from '~/types/compressed-nft';
-import { CommonStructure } from '~/types/transaction-builder';
+import { CommonStructure, MintStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
@@ -124,7 +124,7 @@ export namespace CompressedNft {
     spaceOwner: Pubkey,
     collectionMint: Pubkey,
     options: Partial<MintOptions> = {},
-  ): Promise<Result<CommonStructure, Error>> => {
+  ): Promise<Result<MintStructure, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -257,10 +257,11 @@ export namespace CompressedNft {
       //   );
       // }
 
-      return new TransactionBuilder.Common(
+      return new TransactionBuilder.Mint(
         instructions,
         [owner.toKeypair()],
         payer.toKeypair(),
+        '',
       );
     });
   };

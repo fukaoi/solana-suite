@@ -29,4 +29,4 @@ type ExplorerOptions = {
     replacePath: string;
 };
 
-export { Explorer, ExplorerOptions };
+export { Explorer, type ExplorerOptions };

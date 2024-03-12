@@ -1,4 +1,3 @@
-// import { CompressedNft as Creator } from './creator';
 import { CompressedNft as Delegate } from './delegate';
 import { CompressedNft as Find } from './find';
 import { CompressedNft as GasLessDelegate } from './gas-less-delegate';
@@ -10,7 +9,6 @@ import { CompressedNft as Transfer } from './transfer';
 
 /** @namespace */
 export const CompressedNft = {
-  // ...Creator,
   ...Delegate,
   ...Find,
   ...GasLessDelegate,

@@ -2,4 +2,4 @@ type AirdropOptions = {
     dropAmount: number;
 };
 
-export { AirdropOptions };
+export type { AirdropOptions };

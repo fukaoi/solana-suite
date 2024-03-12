@@ -13,4 +13,4 @@ type PhantomProvider = {
     disconnect(): Promise<void>;
 };
 
-export { PhantomProvider as P, connectOption as c };
+export type { PhantomProvider as P, connectOption as c };

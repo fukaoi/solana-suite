@@ -44,7 +44,6 @@
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
   "dependencies": {
-    "mpl-bubblegum-instruction": "github:fukaoi/mpl-bubblegum-instructions",
     "@irys/sdk": "^0.0.3",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana-suite/config": "workspace:*",
@@ -55,7 +54,8 @@
     "bn.js": "^5.2.1",
     "bs58": "^4.0.1",
     "cross-fetch": "^4.0.0",
-    "nft.storage": "^7.1.1"
+    "nft.storage": "^7.1.1",
+    "mpl-bubblegum-instructions": "github:fukaoi/mpl-bubblegum-instructions"
   },
   "devDependencies": {
     "@types/bs58": "^4.0.4",

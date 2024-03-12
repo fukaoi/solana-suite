@@ -5,7 +5,7 @@ import {
   MetadataArgs,
   TokenProgramVersion,
   TokenStandard,
-} from 'mpl-bubblegum-instruction';
+} from 'mpl-bubblegum-instructions';
 
 export namespace Converter {
   export namespace CompressedNftMetadata {

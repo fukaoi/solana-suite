@@ -1,4 +1,3 @@
-import * as mpl_bubblegum_instruction from 'mpl-bubblegum-instruction';
 import BN from 'bn.js';
 import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionInstruction, Keypair, TransactionSignature } from '@solana/web3.js';
@@ -408,7 +407,7 @@ declare namespace Result {
     }, {
         [K in keyof T]: T[K] extends Result<unknown, infer E> ? E : never;
     }[keyof T]>;
-    export {};
+    export {  };
 }
 type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
@@ -452,14 +451,13 @@ declare const CompressedNft: {
     calculateSpaceCost: (spaceSize: number) => Promise<{
         sol: number;
     }>;
-    createVerifyCreator: (creators: mpl_bubblegum_instruction.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instruction.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
-    mint: (owner: Secret$1, input: InputNftMetadata, spaceOwner: Pubkey, collectionMint: Pubkey, options?: Partial<MintOptions>) => Promise<Result<CommonStructure, Error>>;
+    createVerifyCreator: (creators: Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
+    mint: (owner: Secret$1, input: InputNftMetadata, spaceOwner: Pubkey, collectionMint: Pubkey, options?: Partial<MintOptions>) => Promise<Result<MintStructure, Error>>;
     gasLessTransfer: (mint: Pubkey, owner: Secret$1, dest: Pubkey, feePayer: Pubkey, options?: Partial<GassLessTransferOptions>) => Promise<Result<PartialSignStructure, Error>>;
     gasLessDelegate: (mint: Pubkey, owner: Secret$1, newDelegate: Pubkey, options?: Partial<GassLessDelegateOptions>) => Promise<Result<PartialSignStructure, Error>>;
     findByOwner: (owner: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;
     findByMint: (mint: Pubkey) => Promise<Result<Partial<Metadata>, Error>>;
     findByCollection: (collectionMint: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;
-    findMintIdBySignature: (signature: string) => Promise<Result<Pubkey, Error>>;
     createDeleagate: (assetId: _solana_web3_js.PublicKey, newDelegate: _solana_web3_js.PublicKey | null) => Promise<_solana_web3_js.TransactionInstruction>;
     setDelegate: (mint: Pubkey, owner: Secret$1, options?: Partial<DelegateOptions>) => Promise<Result<CommonStructure, Error>>;
 };

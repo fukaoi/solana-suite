@@ -1,5 +1,5 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
-import { P as PhantomProvider } from './phantom-e9a40784.js';
+import { P as PhantomProvider } from './phantom-aWSz-JUw.js';
 import { Secret } from './account.mjs';
 import { Asset } from './das-api.mjs';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
@@ -67,4 +67,4 @@ type Attribute = {
     [key: string]: unknown;
 };
 
-export { AssetAndOffchain, Attribute, BundlrSigner, FileType, Identity, MetadataAndOffchain, Offchain, PhantomWallet, Properties, StorageType, Tags, UploadableFileType };
+export type { AssetAndOffchain, Attribute, BundlrSigner, FileType, Identity, MetadataAndOffchain, Offchain, PhantomWallet, Properties, StorageType, Tags, UploadableFileType };

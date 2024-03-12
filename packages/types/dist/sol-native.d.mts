@@ -8,4 +8,4 @@ type GasLessTransferOptions = {
     isPriorityFee: boolean;
 };
 
-export { GasLessTransferOptions, TransferOptions };
+export type { GasLessTransferOptions, TransferOptions };
