@@ -47,7 +47,14 @@
   "dependencies": {
     "@solana-suite/config": "workspace:*",
     "@irys/sdk": "^0.0.4",
-    "nft.storage": "^7.1.1"
+    "nft.storage": "^7.1.1",
+    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
+    "@solana/spl-token": "^0.3.8",
+    "@solana/web3.js": "^1.78.5",
+    "bignumber.js": "^9.1.2",
+    "bs58": "^4.0.1",
+    "bn.js": "^5.2.1",
+    "mpl-bubblegum-instructions": "github:fukaoi/mpl-bubblegum-instructions"
   },
   "devDependencies": {
     "build-configs/ava": "workspace:*",
