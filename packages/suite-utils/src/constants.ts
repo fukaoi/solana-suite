@@ -1,4 +1,4 @@
-import { Commitment, PublicKey } from '@solana/web3.js';
+import { Finality, PublicKey } from '@solana/web3.js';
 import SolanaJsonConfig from '@solana-suite/config/load';
 
 export let Config = SolanaJsonConfig;
@@ -154,7 +154,9 @@ export namespace Constants {
   export const METAPLEX_PROGRAM_ID = new PublicKey(
     'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
   );
-  export const COMMITMENT: Commitment = 'confirmed';
+  export const COMMITMENT: Finality = 'confirmed';
+  export const MAX_TRANSACTION_VERSION: number = 0;
+  export const MAX_TRANSACTION_RETRIES = 1;
   export const NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
   export const IRYS_GATEWAY_URL = 'https://gateway.irys.xyz';
   export const BUNDLR_NETWORK_URL = switchBundlr(Config.cluster.type);

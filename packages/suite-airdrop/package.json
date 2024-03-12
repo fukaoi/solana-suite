@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/airdrop",
-  "version": "0.7.7",
+  "version": "0.7.8",
   "description": "request faucet, only devnet",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -22,13 +22,13 @@
   ],
   "license": "MIT",
   "author": "fukaoi <usapyon2022@gmail.com>",
-  "homepage": "https://atonoy.github.io/solana-suite",
+  "homepage": "https://fukaoi.github.io/solana-suite",
   "repository": {
     "type": "git",
-    "url": "https://github.com/atonoy/solana-suite.git"
+    "url": "https://github.com/fukaoi/solana-suite.git"
   },
   "bugs": {
-    "url": "https://github.com/atonoy/solana-suite/issues"
+    "url": "https://github.com/fukaoi/solana-suite/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -44,7 +44,7 @@
     "publish": "../../scripts/after-publish.mjs"
   },
   "dependencies": {
-    "mpl-bubblegum-instruction": "github:atonoy/mpl-bubblegum-instructions",
+    "mpl-bubblegum-instruction": "github:fukaoi/mpl-bubblegum-instructions",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana/web3.js": "^1.78.5",
     "@solana/spl-token": "^0.3.8",

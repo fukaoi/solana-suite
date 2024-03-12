@@ -8,11 +8,9 @@ import {
 } from '@solana/web3.js';
 
 import { Node } from '~/node';
-import { Result, Try } from '~/suite-utils';
+import { Constants, Result, Try } from '~/suite-utils';
 import { CommonStructure, SubmitOptions } from '~/types/transaction-builder';
 import { TransactionBuilder as PriorityFee } from './priority-fee';
-
-export const MAX_RETRIES = 3;
 
 export namespace TransactionBuilder {
   export class Common<T = undefined> implements CommonStructure<T> {
@@ -60,10 +58,11 @@ export namespace TransactionBuilder {
           return await PriorityFee.PriorityFee.submit(
             transaction,
             finalSigners,
+            options.addSolPriorityFee,
           );
         } else {
           const confirmOptions: ConfirmOptions = {
-            maxRetries: MAX_RETRIES,
+            maxRetries: Constants.MAX_TRANSACTION_RETRIES,
           };
           return await sendAndConfirmTransaction(
             Node.getConnection(),

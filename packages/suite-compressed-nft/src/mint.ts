@@ -8,7 +8,6 @@ import { TransactionBuilder } from '~/transaction-builder';
 import { debugLog, Result, Try } from '~/suite-utils';
 import { Validator } from '~/validator';
 import { DasApi } from '~/das-api';
-import { CompressedNft as Space } from './space';
 import {
   computeCreatorHash,
   computeDataHash,
@@ -31,7 +30,7 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 import { MintOptions } from '~/types/compressed-nft';
-import { MintStructure } from '~/types/transaction-builder';
+import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   const DEFAULT_STORAGE_TYPE = 'nftStorage';
@@ -125,7 +124,7 @@ export namespace CompressedNft {
     spaceOwner: Pubkey,
     collectionMint: Pubkey,
     options: Partial<MintOptions> = {},
-  ): Promise<Result<MintStructure<Space.Space>, Error>> => {
+  ): Promise<Result<CommonStructure, Error>> => {
     return Try(async () => {
       const valid = Validator.checkAll<InputNftMetadata>(input);
       if (valid.isErr) {
@@ -245,24 +244,23 @@ export namespace CompressedNft {
         ),
       );
 
-      if (input.creators) {
-        const assetId = await new Space.Space(spaceOwner).getAssetId();
-        instructions.push(
-          await createVerifyCreator(
-            metadataArgs.creators,
-            assetId.toPublicKey(),
-            spaceOwner.toPublicKey(),
-            metadataArgs,
-            payer.toKeypair().publicKey,
-          ),
-        );
-      }
+      // if (input.creators) {
+      //   const assetId = await new Space.Space(spaceOwner).getAssetId();
+      //   instructions.push(
+      //     await createVerifyCreator(
+      //       metadataArgs.creators,
+      //       assetId.toPublicKey(),
+      //       spaceOwner.toPublicKey(),
+      //       metadataArgs,
+      //       payer.toKeypair().publicKey,
+      //     ),
+      //   );
+      // }
 
-      return new TransactionBuilder.Mint(
+      return new TransactionBuilder.Common(
         instructions,
         [owner.toKeypair()],
         payer.toKeypair(),
-        new Space.Space(spaceOwner),
       );
     });
   };

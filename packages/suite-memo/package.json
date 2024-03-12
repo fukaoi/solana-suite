@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/memo",
-  "version": "0.7.7",
+  "version": "0.7.8",
   "description": "sol-native, spl-token form memo function",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -21,13 +21,13 @@
   ],
   "license": "MIT",
   "author": "fukaoi <usapyon2022@gmail.com>",
-  "homepage": "https://atonoy.github.io/solana-suite",
+  "homepage": "https://fukaoi.github.io/solana-suite",
   "repository": {
     "type": "git",
-    "url": "https://github.com/atonoy/solana-suite.git"
+    "url": "https://github.com/fukaoi/solana-suite.git"
   },
   "bugs": {
-    "url": "https://github.com/atonoy/solana-suite/issues"
+    "url": "https://github.com/fukaoi/solana-suite/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -50,7 +50,7 @@
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana-suite/config": "workspace:^",
     "bignumber.js": "^9.1.2",
-    "mpl-bubblegum-instruction": "github:atonoy/mpl-bubblegum-instructions",
+    "mpl-bubblegum-instruction": "github:fukaoi/mpl-bubblegum-instructions",
     "bn.js": "^5.2.1"
   },
   "devDependencies": {

@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -154,7 +150,7 @@ importers:
         version: 4.0.1
       mpl-bubblegum-instruction:
         specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
+        version: github.com/atonoy/mpl-bubblegum-instructions/3f166c9b017fe5cff8ceee6ce751903486ee5e25
     devDependencies:
       '@types/bs58':
         specifier: ^4.0.2
@@ -320,8 +316,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       mpl-bubblegum-instruction:
-        specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
+        specifier: github:fukaoi/mpl-bubblegum-instructions
+        version: github.com/fukaoi/mpl-bubblegum-instructions/3f166c9b017fe5cff8ceee6ce751903486ee5e25
     devDependencies:
       build-configs/eslint:
         specifier: workspace:*
@@ -372,12 +368,15 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       mpl-bubblegum-instruction:
-        specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
+        specifier: github:fukaoi/mpl-bubblegum-instructions
+        version: github.com/fukaoi/mpl-bubblegum-instructions/3f166c9b017fe5cff8ceee6ce751903486ee5e25
       nft.storage:
         specifier: ^7.1.1
         version: 7.1.1(node-fetch@3.3.2)
     devDependencies:
+      '@types/bs58':
+        specifier: ^4.0.4
+        version: 4.0.4
       build-configs/ava:
         specifier: workspace:*
         version: link:../build-configs/ava
@@ -446,8 +445,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       mpl-bubblegum-instruction:
-        specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
+        specifier: github:fukaoi/mpl-bubblegum-instructions
+        version: github.com/fukaoi/mpl-bubblegum-instructions/3f166c9b017fe5cff8ceee6ce751903486ee5e25
     devDependencies:
       '@types/bs58':
         specifier: ^4.0.2
@@ -501,8 +500,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       mpl-bubblegum-instruction:
-        specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
+        specifier: github:fukaoi/mpl-bubblegum-instructions
+        version: github.com/fukaoi/mpl-bubblegum-instructions/3f166c9b017fe5cff8ceee6ce751903486ee5e25
     devDependencies:
       build-configs/ava:
         specifier: workspace:*
@@ -556,8 +555,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       mpl-bubblegum-instruction:
-        specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
+        specifier: github:fukaoi/mpl-bubblegum-instructions
+        version: github.com/fukaoi/mpl-bubblegum-instructions/3f166c9b017fe5cff8ceee6ce751903486ee5e25
       nft.storage:
         specifier: ^7.1.1
         version: 7.1.1(node-fetch@3.3.2)
@@ -602,14 +601,14 @@ importers:
         specifier: ^5.2.1
         version: 5.2.1
       bs58:
-        specifier: ^4.0.1
-        version: 4.0.1
+        specifier: ^5.0.0
+        version: 5.0.0
       cross-fetch:
         specifier: ^4.0.0
         version: 4.0.0
       mpl-bubblegum-instruction:
         specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
+        version: github.com/atonoy/mpl-bubblegum-instructions/3f166c9b017fe5cff8ceee6ce751903486ee5e25
       nft.storage:
         specifier: ^7.1.1
         version: 7.1.1(node-fetch@3.3.2)
@@ -663,8 +662,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       mpl-bubblegum-instruction:
-        specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
+        specifier: github:fukaoi/mpl-bubblegum-instructions
+        version: github.com/fukaoi/mpl-bubblegum-instructions/3f166c9b017fe5cff8ceee6ce751903486ee5e25
     devDependencies:
       build-configs/ava:
         specifier: workspace:*
@@ -718,8 +717,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       mpl-bubblegum-instruction:
-        specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
+        specifier: github:fukaoi/mpl-bubblegum-instructions
+        version: github.com/fukaoi/mpl-bubblegum-instructions/3f166c9b017fe5cff8ceee6ce751903486ee5e25
       nft.storage:
         specifier: ^7.1.1
         version: 7.1.1(node-fetch@3.3.2)
@@ -770,8 +769,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       mpl-bubblegum-instruction:
-        specifier: github:atonoy/mpl-bubblegum-instructions
-        version: github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178
+        specifier: github:fukaoi/mpl-bubblegum-instructions
+        version: github.com/fukaoi/mpl-bubblegum-instructions/3f166c9b017fe5cff8ceee6ce751903486ee5e25
     devDependencies:
       build-configs/ava:
         specifier: workspace:*
@@ -1018,7 +1017,7 @@ packages:
     resolution: {integrity: sha512-mM8eg4yl5D6i3lu2QKPuPH4FArvJ8KhTofbE7jwMUv9KX5mBvwPAqnV3MlyBNqdp9RyRKP6Yck8TrfYrPvX3bg==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      regenerator-runtime: 0.14.0
+      regenerator-runtime: 0.14.1
     dev: false
 
   /@babel/runtime@7.23.6:
@@ -2176,26 +2175,6 @@ packages:
       buffer: 6.0.3
     dev: false
 
-  /@solana/spl-account-compression@0.1.10(@solana/web3.js@1.87.1):
-    resolution: {integrity: sha512-IQAOJrVOUo6LCgeWW9lHuXo6JDbi4g3/RkQtvY0SyalvSWk9BIkHHe4IkAzaQw8q/BxEVBIjz8e9bNYWIAESNw==}
-    engines: {node: '>=16'}
-    peerDependencies:
-      '@solana/web3.js': ^1.50.1
-    dependencies:
-      '@metaplex-foundation/beet': 0.7.1
-      '@metaplex-foundation/beet-solana': 0.4.0
-      '@solana/web3.js': 1.87.1
-      bn.js: 5.2.1
-      borsh: 0.7.0
-      js-sha3: 0.8.0
-      typescript-collections: 1.3.3
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - supports-color
-      - utf-8-validate
-    dev: false
-
   /@solana/spl-account-compression@0.1.10(@solana/web3.js@1.87.6):
     resolution: {integrity: sha512-IQAOJrVOUo6LCgeWW9lHuXo6JDbi4g3/RkQtvY0SyalvSWk9BIkHHe4IkAzaQw8q/BxEVBIjz8e9bNYWIAESNw==}
     engines: {node: '>=16'}
@@ -2362,6 +2341,13 @@ packages:
   /@types/bs58@4.0.2:
     resolution: {integrity: sha512-ytn3FpvB9LRQGxK2vMHD12tgmUhx7TUTbA8A2VbhDVC0eqzgfvoU1rYBOeCl7hJDtTMaOg/Sl9xIOQhkY0G4uw==}
     dependencies:
+      base-x: 3.0.9
+    dev: true
+
+  /@types/bs58@4.0.4:
+    resolution: {integrity: sha512-0IEpMFXXQi2zXaXl9GJ3sRwQo0uEkD+yFOv+FnAU5lkPtcu6h61xb7jc2CFPEZ5BUOaiP13ThuGc9HD4R8lR5g==}
+    dependencies:
+      '@types/node': 16.11.7
       base-x: 3.0.9
     dev: true
 
@@ -6552,10 +6538,6 @@ packages:
       strip-indent: 3.0.0
     dev: false
 
-  /regenerator-runtime@0.14.0:
-    resolution: {integrity: sha512-srw17NI0TUWHuGa5CFGGmhfNIeja30WMBfbslPNhf6JrqQlLN5gcrvig1oqPxiVaXb0oW0XRKtH6Nngs5lKCIA==}
-    dev: false
-
   /regenerator-runtime@0.14.1:
     resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
     dev: false
@@ -6661,7 +6643,7 @@ packages:
   /rpc-websockets@7.6.0:
     resolution: {integrity: sha512-Jgcs8q6t8Go98dEulww1x7RysgTkzpCMelVxZW4hvuyFtOGpeUz9prpr2KjUa/usqxgFCd9Tu3+yhHEP9GVmiQ==}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.6
       eventemitter3: 4.0.7
       uuid: 8.3.2
       ws: 8.14.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -7782,28 +7764,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  github.com/atonoy/mpl-bubblegum-instructions/00f20bb7ed5ddc28e74056afd539a23257f04178:
-    resolution: {tarball: https://codeload.github.com/atonoy/mpl-bubblegum-instructions/tar.gz/00f20bb7ed5ddc28e74056afd539a23257f04178}
-    name: mpl-bubblegum-instruction
-    version: 0.9.0
-    dependencies:
-      '@metaplex-foundation/beet': 0.7.1
-      '@metaplex-foundation/beet-solana': 0.4.0
-      '@metaplex-foundation/cusper': 0.0.2
-      '@metaplex-foundation/mpl-token-metadata': 2.13.0
-      '@solana/spl-account-compression': 0.1.10(@solana/web3.js@1.87.1)
-      '@solana/spl-token': 0.1.8
-      '@solana/web3.js': 1.87.1
-      js-sha3: 0.8.0
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - supports-color
-      - utf-8-validate
-    dev: false
-
   github.com/atonoy/mpl-bubblegum-instructions/3f166c9b017fe5cff8ceee6ce751903486ee5e25:
-    resolution: {tarball: https://codeload.github.com/atonoy/mpl-bubblegum-instructions/tar.gz/3f166c9b017fe5cff8ceee6ce751903486ee5e25}
+    resolution: {commit: 3f166c9b017fe5cff8ceee6ce751903486ee5e25, repo: git+ssh://git@github.com/atonoy/mpl-bubblegum-instructions.git, type: git}
     name: '@metaplex-foundation/mpl-bubblegum'
     version: 0.10.0
     dependencies:
@@ -7821,3 +7783,27 @@ packages:
       - supports-color
       - utf-8-validate
     dev: false
+
+  github.com/fukaoi/mpl-bubblegum-instructions/3f166c9b017fe5cff8ceee6ce751903486ee5e25:
+    resolution: {tarball: https://codeload.github.com/fukaoi/mpl-bubblegum-instructions/tar.gz/3f166c9b017fe5cff8ceee6ce751903486ee5e25}
+    name: '@metaplex-foundation/mpl-bubblegum'
+    version: 0.10.0
+    dependencies:
+      '@metaplex-foundation/beet': 0.7.1
+      '@metaplex-foundation/beet-solana': 0.4.0
+      '@metaplex-foundation/cusper': 0.0.2
+      '@metaplex-foundation/mpl-token-metadata': 2.13.0
+      '@solana/spl-account-compression': 0.1.10(@solana/web3.js@1.87.6)
+      '@solana/spl-token': 0.1.8
+      '@solana/web3.js': 1.87.6
+      js-sha3: 0.8.0
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - supports-color
+      - utf-8-validate
+    dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
