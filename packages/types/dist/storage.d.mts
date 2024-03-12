@@ -1,5 +1,5 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
-import { P as PhantomProvider } from './phantom-aWSz-JUw.js';
+import { P as PhantomProvider } from './phantom-aWSz-JUw.mjs';
 import { Secret } from './account.mjs';
 import { Asset } from './das-api.mjs';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';

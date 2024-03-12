@@ -1,7 +1,7 @@
 import { Pubkey } from './account.mjs';
 import { Offchain } from './storage.mjs';
 import '@solana/web3.js';
-import './phantom-aWSz-JUw.js';
+import './phantom-aWSz-JUw.mjs';
 import './das-api.mjs';
 import './converter.mjs';
 import '@metaplex-foundation/mpl-token-metadata';
