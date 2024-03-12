@@ -37,8 +37,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       tsup:
-        specifier: ^7.2.0
-        version: 7.3.0(ts-node@10.9.2)(typescript@5.4.2)
+        specifier: ^8.0.2
+        version: 8.0.2(ts-node@10.9.2)(typescript@5.4.2)
       tsx:
         specifier: ^3.14.0
         version: 3.14.0
@@ -745,6 +745,58 @@ importers:
       build-configs/typedoc:
         specifier: workspace:*
         version: link:../build-configs/typedoc
+      test-tools:
+        specifier: workspace:*
+        version: link:../test-tools
+
+  packages/suite-storage:
+    dependencies:
+      '@irys/sdk':
+        specifier: ^0.0.4
+        version: 0.0.4(arweave@1.14.4)
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0(fastestsmallesttextencoderdecoder@1.0.22)
+      '@solana-suite/config':
+        specifier: workspace:*
+        version: link:../suite-config
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.11(@solana/web3.js@1.91.0)(fastestsmallesttextencoderdecoder@1.0.22)
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.91.0
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
+      bn.js:
+        specifier: ^5.2.1
+        version: 5.2.1
+      bs58:
+        specifier: ^4.0.1
+        version: 4.0.1
+      mpl-bubblegum-instructions:
+        specifier: github:fukaoi/mpl-bubblegum-instructions
+        version: github.com/fukaoi/mpl-bubblegum-instructions/357842f69922be400fe3f4fb809ced42afab3110(fastestsmallesttextencoderdecoder@1.0.22)
+      nft.storage:
+        specifier: ^7.1.1
+        version: 7.1.1(node-fetch@3.3.2)
+    devDependencies:
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
@@ -3812,6 +3864,12 @@ packages:
   /commander@9.3.0:
     resolution: {integrity: sha512-hv95iU5uXPbK83mjrJKuZyFM/LBAoCV/XhVGkS5Je6tl7sxr6A0ITMw5WoRV46/UaJ46Nllm3Xt7IaJhXTIkzw==}
     engines: {node: ^12.20.0 || >=14}
+    dev: false
+
+  /commander@9.5.0:
+    resolution: {integrity: sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==}
+    engines: {node: ^12.20.0 || >=14}
+    dev: true
 
   /common-path-prefix@3.0.0:
     resolution: {integrity: sha512-QE33hToZseCH3jS0qN96O/bSh3kaw/h+Tq7ngyY9eWDUnTlTNUyqfqvCXioLe5Na5jFsL78ra/wuBU4iuEgd4w==}
@@ -7511,7 +7569,7 @@ packages:
     hasBin: true
     dependencies:
       chokidar: 3.6.0
-      commander: 9.3.0
+      commander: 9.5.0
       globby: 11.1.0
       mylas: 2.1.13
       normalize-path: 3.0.0
@@ -7530,16 +7588,18 @@ packages:
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
 
-  /tsup@7.3.0(ts-node@10.9.2)(typescript@5.4.2):
-    resolution: {integrity: sha512-Ja1eaSRrE+QarmATlNO5fse2aOACYMBX+IZRKy1T+gpyH+jXgRrl5l4nHIQJQ1DoDgEjHDTw8cpE085UdBZuWQ==}
+  /tsup@8.0.2(ts-node@10.9.2)(typescript@5.4.2):
+    resolution: {integrity: sha512-NY8xtQXdH7hDUAZwcQdY/Vzlw9johQsaqf7iwZ6g1DOUlFYQ5/AtVAjTvihhEyeRlGo4dLRVHtrRaL35M1daqQ==}
     engines: {node: '>=18'}
-    deprecated: Breaking node 16
     hasBin: true
     peerDependencies:
+      '@microsoft/api-extractor': ^7.36.0
       '@swc/core': ^1
       postcss: ^8.4.12
       typescript: '>=4.5.0'
     peerDependenciesMeta:
+      '@microsoft/api-extractor':
+        optional: true
       '@swc/core':
         optional: true
       postcss:
