@@ -4,7 +4,7 @@ import { RandomAsset } from 'test-tools/setupAsset';
 import { RegularNft } from '../src/';
 import { Account } from '~/account';
 import { KeypairAccount } from '~/types/account';
-import { Storage } from '~/storage';
+import { Storage } from '~/suite-storage';
 import { Converter } from '~/converter';
 
 let source: KeypairAccount;

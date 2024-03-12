@@ -1,24 +1,55 @@
 {
-  "name": "storage",
+  "name": "@solana-suite/storage",
   "version": "0.7.8",
+  "description": "decentrized file strage library",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "private": true,
+  "keywords": [
+    "api",
+    "blockchain",
+    "solana",
+    "sdk",
+    "storage",
+    "nft.strage",
+    "arweave"
+  ],
+  "engines": {
+    "node": ">=16.*"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "author": "fukaoi <usapyon2022@gmail.com>",
+  "homepage": "https://fukaoi.github.io/solana-suite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fukaoi/solana-suite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fukaoi/solana-suite/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
+    "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs, ava, ~'",
+    "prepublishOnly": "../../scripts/before-publish.mjs",
+    "publish": "../../scripts/after-publish.mjs",
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
   "dependencies": {
+    "@solana-suite/config": "workspace:*",
     "@irys/sdk": "^0.0.4",
     "nft.storage": "^7.1.1"
   },
   "devDependencies": {
-    "@solana-suite/config": "workspace:*",
     "build-configs/ava": "workspace:*",
     "build-configs/eslint": "workspace:*",
     "build-configs/prettier": "workspace:*",

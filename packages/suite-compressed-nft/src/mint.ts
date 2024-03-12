@@ -2,7 +2,7 @@ import { InputNftMetadata } from '~/types/regular-nft';
 import { Pubkey, Secret } from '~/types/account';
 import { Account } from '~/account';
 import { Converter } from '~/converter';
-import { Storage } from '~/storage';
+import { Storage } from '~/suite-storage';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { debugLog, Result, Try } from '~/suite-utils';

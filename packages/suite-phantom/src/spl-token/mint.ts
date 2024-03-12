@@ -3,7 +3,7 @@ import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 import { debugLog, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
-import { Storage } from '~/storage';
+import { Storage } from '~/suite-storage';
 import { SplToken } from '~/suite-spl-token';
 import { PhantomProvider } from '~/types/phantom';
 import { InputTokenMetadata } from '~/types/spl-token';

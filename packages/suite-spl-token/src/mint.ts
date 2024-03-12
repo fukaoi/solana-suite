@@ -31,7 +31,7 @@ import { InputTokenMetadata, MintOptions } from '~/types/spl-token';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
 import { SplToken as Calculate } from './calculate-amount';
-import { Storage } from '~/storage';
+import { Storage } from '~/suite-storage';
 import { MintStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
