@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/airdrop",
-  "version": "0.7.8-alpha.6",
+  "version": "0.7.8",
   "description": "request faucet, only devnet",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
