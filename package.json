@@ -15,7 +15,7 @@
     "@types/node": "16.11.7",
     "ava": "^5.3.1",
     "depcheck": "^1.4.7",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "prettier": "3.0.3",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.8",
@@ -23,7 +23,7 @@
     "tsup": "^7.2.0",
     "tsx": "^3.14.0",
     "turbo": "^1.12.5",
-    "typedoc": "^0.25.8"
+    "typedoc": "^0.25.12"
   },
   "repository": "git@github.com:atonoy/solana-suite.git",
   "author": "fukaoi <usapyon2022@gmail.com>",
