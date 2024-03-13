@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/storage",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "description": "decentrized file strage library",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
