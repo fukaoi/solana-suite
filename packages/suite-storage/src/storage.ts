@@ -6,6 +6,7 @@ import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
 
 export namespace Storage {
+  // @internal
   export const toConvertOffchaindata = (
     input: InputNftMetadata,
     sellerFeeBasisPoints: number,
