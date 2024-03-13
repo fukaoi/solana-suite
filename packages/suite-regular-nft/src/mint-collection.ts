@@ -2,7 +2,7 @@ import { createSetCollectionSizeInstruction } from '@metaplex-foundation/mpl-tok
 import { debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { Converter } from '~/converter';
 import { Account } from '~/account';
-import { Storage } from '~/storage';
+import { Storage } from '~/suite-storage';
 import { Validator } from '~/validator';
 import { TransactionBuilder } from '~/transaction-builder';
 import { InputNftMetadata } from '~/types/regular-nft';

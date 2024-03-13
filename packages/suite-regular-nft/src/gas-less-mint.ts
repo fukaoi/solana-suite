@@ -3,7 +3,7 @@ import { Pubkey, Secret } from '~/types/account';
 import { GasLessMintOptions, InputNftMetadata } from '~/types/regular-nft';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
-import { Storage } from '~/storage';
+import { Storage } from '~/suite-storage';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';
 import { Account } from '~/account';

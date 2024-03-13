@@ -1,7 +1,7 @@
 import test from 'ava';
 import { Converter } from '../src/properties';
 import { RandomAsset } from 'test-tools/setupAsset';
-import { Storage } from '~/storage';
+import { Storage } from '~/suite-storage';
 import { Properties } from '~/types/storage';
 
 test('To input convert', async (t) => {

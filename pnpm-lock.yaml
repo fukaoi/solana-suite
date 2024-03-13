@@ -8,13 +8,13 @@ importers:
 
   .:
     dependencies:
+      '@types/node':
+        specifier: ^20.11.26
+        version: 20.11.26
       typedoc-material-theme:
         specifier: ^1.0.2
         version: 1.0.2(typedoc@0.25.12)
     devDependencies:
-      '@types/node':
-        specifier: 16.11.7
-        version: 16.11.7
       ava:
         specifier: ^5.3.1
         version: 5.3.1
@@ -29,7 +29,7 @@ importers:
         version: 3.0.3
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@16.11.7)(typescript@5.4.2)
+        version: 10.9.2(@types/node@20.11.26)(typescript@5.4.2)
       tsc-alias:
         specifier: ^1.8.8
         version: 1.8.8
@@ -37,8 +37,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       tsup:
-        specifier: ^7.2.0
-        version: 7.3.0(ts-node@10.9.2)(typescript@5.4.2)
+        specifier: ^8.0.2
+        version: 8.0.2(ts-node@10.9.2)(typescript@5.4.2)
       tsx:
         specifier: ^3.14.0
         version: 3.14.0
@@ -264,37 +264,6 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
-
-  packages/storage:
-    dependencies:
-      '@irys/sdk':
-        specifier: ^0.0.4
-        version: 0.0.4(arweave@1.14.4)
-      nft.storage:
-        specifier: ^7.1.1
-        version: 7.1.1(node-fetch@3.3.2)
-    devDependencies:
-      '@solana-suite/config':
-        specifier: workspace:*
-        version: link:../suite-config
-      build-configs/ava:
-        specifier: workspace:*
-        version: link:../build-configs/ava
-      build-configs/eslint:
-        specifier: workspace:*
-        version: link:../build-configs/eslint
-      build-configs/prettier:
-        specifier: workspace:*
-        version: link:../build-configs/prettier
-      build-configs/tsconfig:
-        specifier: workspace:*
-        version: link:../build-configs/tsconfig
-      build-configs/tsup:
-        specifier: workspace:*
-        version: link:../build-configs/tsup
-      test-tools:
-        specifier: workspace:*
-        version: link:../test-tools
 
   packages/suite-airdrop:
     dependencies:
@@ -745,6 +714,58 @@ importers:
       build-configs/typedoc:
         specifier: workspace:*
         version: link:../build-configs/typedoc
+      test-tools:
+        specifier: workspace:*
+        version: link:../test-tools
+
+  packages/suite-storage:
+    dependencies:
+      '@irys/sdk':
+        specifier: ^0.0.4
+        version: 0.0.4(arweave@1.14.4)
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0(fastestsmallesttextencoderdecoder@1.0.22)
+      '@solana-suite/config':
+        specifier: workspace:*
+        version: link:../suite-config
+      '@solana/spl-token':
+        specifier: ^0.3.8
+        version: 0.3.11(@solana/web3.js@1.91.0)(fastestsmallesttextencoderdecoder@1.0.22)
+      '@solana/web3.js':
+        specifier: ^1.78.5
+        version: 1.91.0
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
+      bn.js:
+        specifier: ^5.2.1
+        version: 5.2.1
+      bs58:
+        specifier: ^4.0.1
+        version: 4.0.1
+      mpl-bubblegum-instructions:
+        specifier: github:fukaoi/mpl-bubblegum-instructions
+        version: github.com/fukaoi/mpl-bubblegum-instructions/357842f69922be400fe3f4fb809ced42afab3110(fastestsmallesttextencoderdecoder@1.0.22)
+      nft.storage:
+        specifier: ^7.1.1
+        version: 7.1.1(node-fetch@3.3.2)
+    devDependencies:
+      build-configs/ava:
+        specifier: workspace:*
+        version: link:../build-configs/ava
+      build-configs/eslint:
+        specifier: workspace:*
+        version: link:../build-configs/eslint
+      build-configs/prettier:
+        specifier: workspace:*
+        version: link:../build-configs/prettier
+      build-configs/tsconfig:
+        specifier: workspace:*
+        version: link:../build-configs/tsconfig
+      build-configs/tsup:
+        specifier: workspace:*
+        version: link:../build-configs/tsup
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
@@ -2609,20 +2630,20 @@ packages:
   /@types/bn.js@5.1.5:
     resolution: {integrity: sha512-V46N0zwKRF5Q00AZ6hWtN0T8gGmDUaUzLWQvHFo5yThtVwK/VCenFY3wXVbOvNfajEpsTfQM4IN9k/d6gUVX3A==}
     dependencies:
-      '@types/node': 16.11.7
+      '@types/node': 20.11.26
     dev: true
 
   /@types/bs58@4.0.4:
     resolution: {integrity: sha512-0IEpMFXXQi2zXaXl9GJ3sRwQo0uEkD+yFOv+FnAU5lkPtcu6h61xb7jc2CFPEZ5BUOaiP13ThuGc9HD4R8lR5g==}
     dependencies:
-      '@types/node': 16.11.7
+      '@types/node': 20.11.26
       base-x: 3.0.9
     dev: true
 
   /@types/connect@3.4.38:
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
     dependencies:
-      '@types/node': 16.11.7
+      '@types/node': 20.11.26
     dev: false
 
   /@types/estree@1.0.5:
@@ -2656,8 +2677,10 @@ packages:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
     dev: false
 
-  /@types/node@16.11.7:
-    resolution: {integrity: sha512-QB5D2sqfSjCmTuWcBWyJ+/44bcjO7VbjSbOE0ucoVbAsSNQc4Lt6QkgkVXkTDwkL4z/beecZNDvVX15D4P8Jbw==}
+  /@types/node@20.11.26:
+    resolution: {integrity: sha512-YwOMmyhNnAWijOBQweOJnQPl068Oqd4K3OFbTc6AHJwzweUwwWG3GIFY74OKks2PJUDkQPeddOQES9mLn1CTEQ==}
+    dependencies:
+      undici-types: 5.26.5
 
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -2678,7 +2701,7 @@ packages:
   /@types/ws@7.4.7:
     resolution: {integrity: sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==}
     dependencies:
-      '@types/node': 16.11.7
+      '@types/node': 20.11.26
     dev: false
 
   /@typescript-eslint/eslint-plugin@6.21.0(@typescript-eslint/parser@6.21.0)(eslint@8.57.0)(typescript@5.4.2):
@@ -6692,7 +6715,7 @@ packages:
         optional: true
     dependencies:
       lilconfig: 3.1.1
-      ts-node: 10.9.2(@types/node@16.11.7)(typescript@5.4.2)
+      ts-node: 10.9.2(@types/node@20.11.26)(typescript@5.4.2)
       yaml: 2.4.1
     dev: true
 
@@ -6739,7 +6762,7 @@ packages:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 16.11.7
+      '@types/node': 20.11.26
       long: 4.0.0
     dev: false
 
@@ -7475,7 +7498,7 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /ts-node@10.9.2(@types/node@16.11.7)(typescript@5.4.2):
+  /ts-node@10.9.2(@types/node@20.11.26)(typescript@5.4.2):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -7494,7 +7517,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 16.11.7
+      '@types/node': 20.11.26
       acorn: 8.11.3
       acorn-walk: 8.3.2
       arg: 4.1.3
@@ -7530,16 +7553,18 @@ packages:
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
 
-  /tsup@7.3.0(ts-node@10.9.2)(typescript@5.4.2):
-    resolution: {integrity: sha512-Ja1eaSRrE+QarmATlNO5fse2aOACYMBX+IZRKy1T+gpyH+jXgRrl5l4nHIQJQ1DoDgEjHDTw8cpE085UdBZuWQ==}
+  /tsup@8.0.2(ts-node@10.9.2)(typescript@5.4.2):
+    resolution: {integrity: sha512-NY8xtQXdH7hDUAZwcQdY/Vzlw9johQsaqf7iwZ6g1DOUlFYQ5/AtVAjTvihhEyeRlGo4dLRVHtrRaL35M1daqQ==}
     engines: {node: '>=18'}
-    deprecated: Breaking node 16
     hasBin: true
     peerDependencies:
+      '@microsoft/api-extractor': ^7.36.0
       '@swc/core': ^1
       postcss: ^8.4.12
       typescript: '>=4.5.0'
     peerDependenciesMeta:
+      '@microsoft/api-extractor':
+        optional: true
       '@swc/core':
         optional: true
       postcss:
@@ -7769,6 +7794,9 @@ packages:
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
     dev: true
+
+  /undici-types@5.26.5:
+    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
   /uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}

@@ -2,9 +2,12 @@
   "version": "0.7.8",
   "private": true,
   "scripts": {
+    "test": "pnpm turbo test --no-daemon",
+    "build": "pnpm turbo build --no-daemon",
+    "clean": "pnpm turbo clean --no-daemon && rm -rf node_modules pnpm-lock.yaml && pnpm i && pnpm turbo build --no-daemon",
     "preinstall": "npx only-allow pnpm",
     "publish": "pnpm --filter '@solana-suite/*' publish --no-git-checks",
-    "prepublish": "pnpm turbo prepublish && pnpm typedoc"
+    "prepublish": "pnpm turbo prepublish --no-daemon && pnpm typedoc"
   },
   "workspaces": {
     "packages": [
@@ -12,7 +15,6 @@
     ]
   },
   "devDependencies": {
-    "@types/node": "16.11.7",
     "ava": "^5.3.1",
     "depcheck": "^1.4.7",
     "eslint": "^8.57.0",
@@ -20,7 +22,7 @@
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.8",
     "tslib": "^2.6.2",
-    "tsup": "^7.2.0",
+    "tsup": "^8.0.2",
     "tsx": "^3.14.0",
     "turbo": "^1.12.5",
     "typedoc": "^0.25.12"
@@ -33,6 +35,7 @@
     "npm": "Only pnpm"
   },
   "dependencies": {
+    "@types/node": "^20.11.26",
     "typedoc-material-theme": "^1.0.2"
   }
 }

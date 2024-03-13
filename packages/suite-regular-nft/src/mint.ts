@@ -19,7 +19,7 @@ import { Secret } from '~/types/account';
 import { TransactionBuilder } from '~/transaction-builder';
 import { MintStructure } from '~/types/transaction-builder';
 import { Node } from '~/node';
-import { Storage } from '~/storage';
+import { Storage } from '~/suite-storage';
 import { InputNftMetadata, MintOptions } from '~/types/regular-nft';
 import { Converter } from '~/converter';
 import { Validator } from '~/validator';

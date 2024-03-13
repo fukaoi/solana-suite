@@ -1,6 +1,6 @@
 import { Transaction, TransactionInstruction } from '@solana/web3.js';
 import { RegularNft } from '~/suite-regular-nft';
-import { Storage } from '~/storage';
+import { Storage } from '~/suite-storage';
 import { Node } from '~/node';
 import { debugLog, Result, Try } from '~/suite-utils';
 import { Account } from '~/account';
