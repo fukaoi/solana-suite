@@ -15,7 +15,7 @@
     "arweave"
   ],
   "engines": {
-    "node": ">=16.*"
+    "node": ">=18.*"
   },
   "files": [
     "dist"
