@@ -1,5 +1,5 @@
 {
-  "version": "0.7.9",
+  "version": "0.7.10",
   "private": true,
   "scripts": {
     "test": "pnpm turbo test --no-daemon",
