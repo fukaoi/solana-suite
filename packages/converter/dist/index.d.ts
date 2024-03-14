@@ -149,6 +149,9 @@ type Attribute = {
     value?: string;
     [key: string]: unknown;
 };
+type StorageOptions = {
+    feePayer: Secret;
+};
 
 type InputCollection = Pubkey$1;
 type Options = {
@@ -523,7 +526,7 @@ type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E
 
 declare namespace Converter$6 {
     namespace Properties {
-        const intoInfra: (input: Properties | undefined, callbackFunc: (filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>, storageType: StorageType, feePayer?: Secret) => Promise<Properties>;
+        const intoInfra: (input: Properties | undefined, callbackFunc: (filePath: FileType, storageType: StorageType, options: Partial<StorageOptions>) => Promise<Result<string, Error>>, storageType: StorageType, options?: Partial<StorageOptions>) => Promise<Properties>;
     }
 }
 

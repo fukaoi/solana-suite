@@ -157,7 +157,7 @@ export namespace CompressedNft {
           input.properties,
           Storage.uploadFile,
           storageType,
-          payer,
+          {feePayer: payer},
         );
       }
 
@@ -181,7 +181,7 @@ export namespace CompressedNft {
           storageMetadata,
           input.filePath,
           storageType,
-          payer,
+          { feePayer: payer },
         );
         debugLog('# upload content url: ', uploaded);
         if (uploaded.isErr) {
@@ -194,7 +194,7 @@ export namespace CompressedNft {
         const uploaded = await Storage.uploadData(
           { ...storageMetadata, ...image },
           storageType,
-          payer,
+          { feePayer: payer },
         );
         if (uploaded.isErr) {
           throw uploaded;

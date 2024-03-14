@@ -185,7 +185,7 @@ export namespace RegularNft {
           input.properties,
           Storage.uploadFile,
           storageType,
-          payer,
+          { feePayer: payer },
         );
       }
 
@@ -209,7 +209,7 @@ export namespace RegularNft {
           storageMetadata,
           input.filePath,
           storageType,
-          payer,
+          { feePayer: payer },
         );
         debugLog('# upload content url: ', uploaded);
         if (uploaded.isErr) {
@@ -222,7 +222,7 @@ export namespace RegularNft {
         const uploaded = await Storage.uploadData(
           { ...storageMetadata, ...image },
           storageType,
-          payer,
+          { feePayer: payer },
         );
         if (uploaded.isErr) {
           throw uploaded;

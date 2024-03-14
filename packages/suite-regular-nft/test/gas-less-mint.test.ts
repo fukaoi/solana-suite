@@ -65,7 +65,7 @@ test('[Arweave] use case arweave', async (t) => {
     offchaindata,
     asset.filePath,
     'arweave',
-    source.secret,
+    { feePayer: source.secret },
   );
   if (uploaded.isErr) {
     throw uploaded;

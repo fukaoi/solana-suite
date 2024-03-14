@@ -169,7 +169,7 @@ export namespace SplToken {
           storageMetadata,
           input.filePath,
           storageType,
-          payer,
+          { feePayer: payer },
         );
 
         if (uploaded.isErr) {
@@ -181,7 +181,7 @@ export namespace SplToken {
         const uploaded = await Storage.uploadData(
           { ...storageMetadata, ...image },
           storageType,
-          payer,
+          { feePayer: payer },
         );
         if (uploaded.isErr) {
           throw uploaded;

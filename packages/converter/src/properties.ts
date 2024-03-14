@@ -1,8 +1,11 @@
 import { overwriteObject, Result } from '~/suite-utils';
-import { Secret } from '~/types/account';
-import {} from '~/types/converter';
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { FileType, Properties, StorageType } from '~/types/storage';
+import {
+  FileType,
+  Properties,
+  StorageOptions,
+  StorageType,
+} from '~/types/storage';
 
 export namespace Converter {
   export namespace Properties {
@@ -11,10 +14,10 @@ export namespace Converter {
       callbackFunc: (
         filePath: FileType,
         storageType: StorageType,
-        feePayer?: Secret,
+        options: Partial<StorageOptions>,
       ) => Promise<Result<string, Error>>,
       storageType: StorageType,
-      feePayer?: Secret,
+      options: Partial<StorageOptions> = {},
     ): Promise<Properties> => {
       if (!input || !input.files) {
         return {};
@@ -29,7 +32,7 @@ export namespace Converter {
             const res = await callbackFunc(
               file.filePath!,
               storageType,
-              feePayer,
+              options,
             );
             if (res.isErr) {
               throw Error(res.error.message);
