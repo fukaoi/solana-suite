@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import test from 'ava';
-import { ProvenanceLayer } from '../src/';
+import { ProvenanceLayer } from '../src/provenance-layer';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Setup } from 'test-tools/setup';
 import { KeypairAccount } from '~/types/account';

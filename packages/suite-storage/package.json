@@ -62,7 +62,8 @@
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
     "build-configs/tsup": "workspace:*",
-    "test-tools": "workspace:*"
+    "test-tools": "workspace:*",
+    "build-configs/typedoc": "workspace:*"
   },
   "browser": {
     "fs": false

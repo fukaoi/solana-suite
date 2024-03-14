@@ -766,6 +766,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      build-configs/typedoc:
+        specifier: workspace:*
+        version: link:../build-configs/typedoc
       test-tools:
         specifier: workspace:*
         version: link:../test-tools
@@ -812,6 +815,9 @@ importers:
       build-configs/tsup:
         specifier: workspace:*
         version: link:../build-configs/tsup
+      build-configs/typedoc:
+        specifier: workspace:*
+        version: link:../build-configs/typedoc
 
   packages/test-tools:
     dependencies:
