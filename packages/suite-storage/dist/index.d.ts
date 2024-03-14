@@ -268,6 +268,9 @@ type Attribute = {
     value?: string;
     [key: string]: unknown;
 };
+type StorageOptions = {
+    feePayer: Secret;
+};
 
 type bignum = number | BN;
 declare enum UseMethod {
@@ -313,9 +316,9 @@ type InputNftMetadata = {
 /** @namespace */
 declare const Storage: {
     toConvertOffchaindata: (input: InputNftMetadata, sellerFeeBasisPoints: number) => Offchain;
-    uploadFile: (filePath: FileType, storageType: string, feePayer?: Secret | undefined) => Promise<Result<string, Error>>;
-    uploadData: (input: Offchain, storageType: string, feePayer?: Secret | undefined) => Promise<Result<string, Error>>;
-    upload: (input: Offchain, filePath: FileType, storageType: string, feePayer?: Secret | undefined) => Promise<Result<string, Error>>;
+    uploadFile: (filePath: FileType, storageType: string, options?: Partial<StorageOptions>) => Promise<Result<string, Error>>;
+    uploadData: (input: Offchain, storageType: string, options?: Partial<StorageOptions>) => Promise<Result<string, Error>>;
+    upload: (input: Offchain, filePath: FileType, storageType: string, options?: Partial<StorageOptions>) => Promise<Result<string, Error>>;
 };
 
 export { Storage };

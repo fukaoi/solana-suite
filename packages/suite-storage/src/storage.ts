@@ -1,6 +1,10 @@
 import { Result } from '~/suite-utils';
-import { Secret } from '~/types/account';
-import { FileType, Offchain, StorageType } from '~/types/storage';
+import {
+  FileType,
+  Offchain,
+  StorageOptions,
+  StorageType,
+} from '~/types/storage';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { Arweave } from './arweave';
 import { NftStorage } from './nft-storage';
@@ -29,13 +33,13 @@ export namespace Storage {
   export const uploadFile = async (
     filePath: FileType,
     storageType: StorageType,
-    feePayer?: Secret,
+    options: Partial<StorageOptions> = {},
   ): Promise<Result<string, Error>> => {
     if (storageType === 'arweave') {
-      if (!feePayer) {
+      if (!options.feePayer) {
         throw Error('Arweave needs to have feepayer');
       }
-      return await Arweave.uploadFile(filePath, feePayer);
+      return await Arweave.uploadFile(filePath, options.feePayer);
     } else if (storageType === 'nftStorage') {
       return await NftStorage.uploadFile(filePath);
     } else {
@@ -46,13 +50,13 @@ export namespace Storage {
   export const uploadData = async (
     input: Offchain,
     storageType: StorageType,
-    feePayer?: Secret,
+    options: Partial<StorageOptions> = {},
   ): Promise<Result<string, Error>> => {
     if (storageType === 'arweave') {
-      if (!feePayer) {
+      if (!options.feePayer) {
         throw Error('Arweave needs to have feepayer');
       }
-      return await Arweave.uploadData(input, feePayer);
+      return await Arweave.uploadData(input, options.feePayer);
     } else if (storageType === 'nftStorage') {
       return await NftStorage.uploadData(input);
     } else {
@@ -65,17 +69,17 @@ export namespace Storage {
     input: Offchain,
     filePath: FileType,
     storageType: StorageType,
-    feePayer?: Secret,
+    options: Partial<StorageOptions> = {},
   ): Promise<Result<string, Error>> => {
-    if (storageType === 'arweave' && !feePayer) {
+    if (storageType === 'arweave' && !options.feePayer) {
       throw Error('Arweave needs to have feepayer');
     }
     const storage = await (
-      await uploadFile(filePath, storageType, feePayer)
+      await uploadFile(filePath, storageType, options)
     ).unwrap(
       async (ok: string) => {
         input.image = ok;
-        return await uploadData(input, storageType, feePayer);
+        return await uploadData(input, storageType, options);
       },
       (err: Error) => {
         throw err;

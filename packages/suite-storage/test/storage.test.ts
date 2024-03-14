@@ -65,11 +65,9 @@ test('[nftStorage] Upload metadata json and file', async (t) => {
 
 test('[arweave] Upload file', async (t) => {
   const asset = RandomAsset.get();
-  const res = await Storage.uploadFile(
-    asset.filePath!,
-    'arweave',
-    source.secret,
-  );
+  const res = await Storage.uploadFile(asset.filePath!, 'arweave', {
+    feePayer: source.secret,
+  });
 
   res.match(
     (ok) => {
@@ -90,7 +88,9 @@ test('[arweave] Upload metadata json', async (t) => {
     description: asset.description,
     image: image,
   };
-  const res = await Storage.uploadData(meta, 'arweave', source.secret);
+  const res = await Storage.uploadData(meta, 'arweave', {
+    feePayer: source.secret,
+  });
 
   res.match(
     (ok) => {
@@ -108,12 +108,10 @@ test('[arweave] Upload metadata json and file', async (t) => {
     symbol: asset.symbol,
     description: asset.description,
   };
-  const res = await Storage.upload(
-    meta,
-    asset.filePath,
-    'arweave',
-    source.secret,
-  );
+
+  const res = await Storage.upload(meta, asset.filePath, 'arweave', {
+    feePayer: source.secret,
+  });
 
   res.match(
     (ok) => {
