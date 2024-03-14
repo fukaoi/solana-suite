@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/regular-nft",
-  "version": "0.7.9",
+  "version": "0.7.10",
   "description": "nft module for solana-suite",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
