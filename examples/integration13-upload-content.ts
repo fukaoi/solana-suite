@@ -65,7 +65,7 @@ import assert from 'assert';
   );
 
   ////////////////////////////////////////////////
-  //// (NFF.STORAGE) UPLOAD METADATA(JSON) FOR NFT
+  //// (ARWEAVE) UPLOAD METADATA(JSON) FOR NFT
   ////////////////////////////////////////////////
 
   const meta2 = {
