@@ -66,5 +66,8 @@ type Attribute = {
     value?: string;
     [key: string]: unknown;
 };
+type StorageOptions = {
+    feePayer: Secret;
+};
 
-export type { AssetAndOffchain, Attribute, BundlrSigner, FileType, Identity, MetadataAndOffchain, Offchain, PhantomWallet, Properties, StorageType, Tags, UploadableFileType };
+export type { AssetAndOffchain, Attribute, BundlrSigner, FileType, Identity, MetadataAndOffchain, Offchain, PhantomWallet, Properties, StorageOptions, StorageType, Tags, UploadableFileType };

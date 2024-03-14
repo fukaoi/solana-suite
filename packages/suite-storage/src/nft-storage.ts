@@ -3,6 +3,7 @@ import { Constants, debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { ProvenanceLayer } from './provenance-layer';
 import { FileType, Offchain } from '~/types/storage';
 
+// @internal
 export namespace NftStorage {
   const createGatewayUrl = (cid: string): string =>
     `${Constants.NFT_STORAGE_GATEWAY_URL}/${cid}`;

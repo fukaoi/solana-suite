@@ -1,6 +1,6 @@
 import test from 'ava';
 import { RandomAsset } from 'test-tools/setupAsset';
-import { NftStorage } from '../src/';
+import { NftStorage } from '../src/nft-storage';
 
 test('Upload file', async (t) => {
   const asset = RandomAsset.get();

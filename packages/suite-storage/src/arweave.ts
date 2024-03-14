@@ -3,6 +3,7 @@ import { debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { Secret } from '~/types/account';
 import { FileType, Offchain } from '~/types/storage';
 
+// @internal
 export namespace Arweave {
   export const uploadFile = (
     filePath: FileType,

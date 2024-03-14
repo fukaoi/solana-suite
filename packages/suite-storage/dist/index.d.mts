@@ -1,4 +1,4 @@
-import { TransactionSignature, PublicKey, Transaction } from '@solana/web3.js';
+import { TransactionSignature } from '@solana/web3.js';
 import BN from 'bn.js';
 
 declare const pubKeyNominality: unique symbol;
@@ -225,23 +225,7 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-type PhantomProvider = {
-    isPhantom?: boolean;
-    publicKey: PublicKey | null;
-    signTransaction(transaction: Transaction): Promise<Transaction>;
-    signAllTransactions(transactions: Transaction[]): Promise<Transaction[]>;
-    signMessage(message: Uint8Array): Promise<Uint8Array>;
-    connect(): Promise<void>;
-    disconnect(): Promise<void>;
-};
-
 type FileType = string | File;
-type UploadableFileType = string & File;
-type Identity = Secret | PhantomProvider;
-type Tags = [{
-    name: string;
-    value: string;
-}];
 
 type StorageType = 'nftStorage' | 'arweave' | string;
 type Offchain = {
@@ -284,42 +268,9 @@ type Attribute = {
     value?: string;
     [key: string]: unknown;
 };
-
-declare namespace Arweave {
-    const uploadFile: (filePath: FileType, feePayer: Secret) => Promise<Result<string, Error>>;
-    const uploadData: (storageData: Offchain, feePayer: Secret) => Promise<Result<string, Error>>;
-}
-
-declare namespace ProvenanceLayer {
-    const uploadFile: (uploadFile: FileType, identity: Identity, tags?: Tags) => Promise<string>;
-    const uploadData: (data: string, identity: Identity, tags?: Tags) => Promise<string>;
-    const isNodeable: (value: unknown) => value is string;
-    const isBrowserable: (value: unknown) => value is File;
-    const isUploadable: (value: unknown) => value is UploadableFileType;
-}
-
-declare namespace NftStorage {
-    const uploadFile: (fileType: FileType) => Promise<Result<string, Error>>;
-    /**
-     * Upload content
-     *
-     * @param {Offchain} storageData
-     * {
-     *   name?: {string}                      // nft content name
-     *   symbol?: {string}                    // nft ticker symbol
-     *   description?: {string}               // nft content description
-     *   sellerFeeBasisPoints?: number        // royalty percentage
-     *   image?: {string}                     // uploaded uri of original content
-     *   external_url?: {string}              // landing page, home page uri, related url
-     *   attributes?: {JsonMetadataAttribute[]}     // game character parameter, personality, characteristics
-     *   properties?: {JsonMetadataProperties<Uri>} // included file name, uri, supported file type
-     *   collection?: Collection              // collections of different colors, shapes, etc.
-     *   [key: string]: {unknown}             // optional param, Usually not used.
-     * }
-     * @return Promise<Result<string, Error>>
-     */
-    const uploadData: (storageData: Offchain) => Promise<Result<string, Error>>;
-}
+type StorageOptions = {
+    feePayer: Secret;
+};
 
 type bignum = number | BN;
 declare enum UseMethod {
@@ -362,11 +313,12 @@ type InputNftMetadata = {
     options?: Options;
 };
 
-declare namespace Storage {
-    const toConvertOffchaindata: (input: InputNftMetadata, sellerFeeBasisPoints: number) => Offchain;
-    const uploadFile: (filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
-    const uploadData: (input: Offchain, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
-    const upload: (input: Offchain, filePath: FileType, storageType: StorageType, feePayer?: Secret) => Promise<Result<string, Error>>;
-}
+/** @namespace */
+declare const Storage: {
+    toConvertOffchaindata: (input: InputNftMetadata, sellerFeeBasisPoints: number) => Offchain;
+    uploadFile: (filePath: FileType, storageType: string, options?: Partial<StorageOptions>) => Promise<Result<string, Error>>;
+    uploadData: (input: Offchain, storageType: string, options?: Partial<StorageOptions>) => Promise<Result<string, Error>>;
+    upload: (input: Offchain, filePath: FileType, storageType: string, options?: Partial<StorageOptions>) => Promise<Result<string, Error>>;
+};
 
-export { Arweave, NftStorage, ProvenanceLayer, Storage };
+export { Storage };

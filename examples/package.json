@@ -10,6 +10,7 @@
     "@solana-suite/suite-regular-nft": "../packages/suite-regular-nft/",
     "@solana-suite/suite-compressed-nft": "../packages/suite-compressed-nft/",
     "@solana-suite/suite-utils": "../packages/suite-utils/",
+    "@solana-suite/suite-storage": "../packages/suite-storage/",
     "test-tools": "../packages/test-tools/"
   }
 }

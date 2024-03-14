@@ -1,6 +1,7 @@
 import { Asset } from '../das-api';
 import { FileType } from './irys';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
+import { Secret } from '../account';
 
 export type StorageType = 'nftStorage' | 'arweave' | string;
 
@@ -55,4 +56,8 @@ export type Attribute = {
   trait_type?: string;
   value?: string;
   [key: string]: unknown;
+};
+
+export type StorageOptions = {
+  feePayer: Secret;
 };
