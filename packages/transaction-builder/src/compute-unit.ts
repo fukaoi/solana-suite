@@ -32,20 +32,24 @@ export namespace TransactionBuilder {
       //   }).compileToV0Message(lookupTables),
       // );
 
-      const testVersionedTxn = new Transaction(
-        new TransactionMessage({
-          instructions: testInstructions,
-          payerKey: payer.publicKey,
-          recentBlockhash: PublicKey.default.toString(),
-        }).compileToV0Message(),
-      );
+      // const testVersionedTxn = new Transaction(
+      //   new TransactionMessage({
+      //     instructions: testInstructions,
+      //     payerKey: payer.publicKey,
+      //     recentBlockhash: PublicKey.default.toString(),
+      //   }).compileToV0Message(),
+      // );
 
-      console.log('1');
-
-      const simulation = await Node.getConnection().simulateTransaction(
-        testVersionedTxn,
-        [payer],
-      );
+      const tx = new Transaction();
+      // const blockhashObj = await Node.getConnection().getLatestBlockhash();
+      // tx.lastValidBlockHeight = blockhashObj.lastValidBlockHeight;
+      // tx.recentBlockhash = blockhashObj.blockhash;
+      tx.recentBlockhash = PublicKey.default.toString()
+      instructions.forEach((inst) => tx.add(inst));
+      tx.feePayer = payer.publicKey;
+      tx.verifySignatures(false);
+      console.log(tx);
+      const simulation = await Node.getConnection().simulateTransaction(tx);
 
       debugLog('# simulation: ', simulation);
 
