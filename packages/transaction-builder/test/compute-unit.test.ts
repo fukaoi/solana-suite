@@ -41,8 +41,7 @@ test('Compute instruction unit', async (t) => {
   const properties = {
     files: [
       {
-        filePath:
-          'https://devnet.irys.xyz/wilNVxxU8pdlmFQtuCyAb9C3PGJel_E2EeMP6WiyLdg',
+        uri: 'https://devnet.irys.xyz/wilNVxxU8pdlmFQtuCyAb9C3PGJel_E2EeMP6WiyLdg',
         fileName: 'properties image',
         fileType: 'image/jpg',
       },

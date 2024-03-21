@@ -10,6 +10,7 @@ import {
   // VersionedTransaction,
 } from '@solana/web3.js';
 import { Node } from '~/node';
+import { debugLog } from '../../suite-utils/src/shared';
 
 export namespace TransactionBuilder {
   export namespace ComputeUnit {
@@ -39,10 +40,15 @@ export namespace TransactionBuilder {
         }).compileToV0Message(),
       );
 
+      console.log('1');
+
       const simulation = await Node.getConnection().simulateTransaction(
         testVersionedTxn,
         [payer],
       );
+
+      debugLog('# simulation: ', simulation);
+
       if (simulation.value.err) {
         return undefined;
       }
