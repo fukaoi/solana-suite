@@ -7,6 +7,7 @@ import { KeypairAccount } from '~/types/account';
 import { Pubkey } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { TransactionBuilder } from '../src';
+import { Transaction, TransactionInstruction } from '@solana/web3.js';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
@@ -23,7 +24,7 @@ test.before(async () => {
   collectionMint = obj.collectionMint;
 });
 
-test('Compute transfer instruction unit', async (t) => {
+test('Compute transfer transaction unit', async (t) => {
   const inst = SolNative.transfer(
     source.pubkey,
     dest.pubkey,
@@ -31,11 +32,16 @@ test('Compute transfer instruction unit', async (t) => {
     0.00001,
   );
 
+  const tx = new Transaction();
+  tx.feePayer = feePayer.pubkey.toPublicKey();
+  inst
+    .unwrap()
+    .instructions.forEach((inst: TransactionInstruction) => tx.add(inst));
   const res = await TransactionBuilder.ComputeUnit.simulate(
-    inst.unwrap().instructions,
+    tx,
     feePayer.secret.toKeypair(),
   );
-  t.log(res);
+  t.log('# CU: ', res);
   t.true(res !== undefined && res > 0);
 });
 
@@ -82,7 +88,7 @@ test('Compute NFT mint instruction unit', async (t) => {
     inst.unwrap().instructions,
     feePayer.secret.toKeypair(),
   );
-  t.log(res);
+  t.log('# CU: ', res);
   t.true(res !== undefined && res > 0);
 });
 
@@ -140,6 +146,6 @@ test('Compute cNFT mint instruction unit', async (t) => {
     inst.unwrap().instructions,
     feePayer.secret.toKeypair(),
   );
-  t.log(res);
+  t.log('# CU: ', res);
   t.true(res !== undefined && res > 0);
 });

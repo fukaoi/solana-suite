@@ -14,17 +14,14 @@ export namespace TransactionBuilder {
       payer: Keypair,
     ) => {
       let tx: Transaction;
-      if (
-        instructionsOrTransaction instanceof TransactionInstruction &&
-        Array.isArray(instructionsOrTransaction)
-      ) {
+      if (instructionsOrTransaction instanceof Transaction) {
+        tx = instructionsOrTransaction;
+      } else {
         tx = new Transaction();
         tx.recentBlockhash = PublicKey.default.toString();
         instructionsOrTransaction.forEach((inst) => tx.add(inst));
         tx.feePayer = payer.publicKey;
         tx.verifySignatures(false);
-      } else {
-        tx = instructionsOrTransaction as Transaction;
       }
 
       const simulation = await Node.getConnection().simulateTransaction(tx);
