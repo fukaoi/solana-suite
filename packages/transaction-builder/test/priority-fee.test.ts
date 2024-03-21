@@ -58,3 +58,24 @@ test('[Mint cNFT]estimate priority fee', async (t) => {
   t.log('# priority fee: ', res);
   t.true(res >= 0);
 });
+
+test.only('[CommonInstruction]Submit with priority fee', async (t) => {
+  const solAmount = 0.01;
+  const inst = SolNative.transfer(
+    source.pubkey,
+    dest.pubkey,
+    [source.secret],
+    solAmount,
+  );
+
+  (await inst.submit({ isPriorityFee: true })).match(
+    (ok) => {
+      t.log(ok);
+      t.pass();
+    },
+    (err) => {
+      t.log(err);
+      t.fail(err.message);
+    },
+  );
+});

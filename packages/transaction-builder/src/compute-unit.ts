@@ -1,4 +1,5 @@
 import {
+  ComputeBudgetProgram,
   Keypair,
   PublicKey,
   Transaction,
@@ -8,7 +9,20 @@ import { Node } from '~/node';
 import { debugLog } from '../../suite-utils/src/shared';
 
 export namespace TransactionBuilder {
+  const DEFAULUT_COMPUTE_UNIT = 200_000;
   export namespace ComputeUnit {
+    export const createInstruction = async (
+      instructionsOrTransaction: TransactionInstruction[] | Transaction,
+      payer: Keypair,
+    ) => {
+      const units =
+        (await simulate(instructionsOrTransaction, payer)) ||
+        DEFAULUT_COMPUTE_UNIT;
+      return ComputeBudgetProgram.setComputeUnitLimit({
+        units,
+      });
+    };
+
     export const simulate = async (
       instructionsOrTransaction: TransactionInstruction[] | Transaction,
       payer: Keypair,

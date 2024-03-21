@@ -11,6 +11,7 @@ import { Node } from '~/node';
 import { Constants, Result, Try } from '~/suite-utils';
 import { CommonStructure, SubmitOptions } from '~/types/transaction-builder';
 import { TransactionBuilder as PriorityFee } from './priority-fee';
+import { TransactionBuilder as ComputeUnit } from './compute-unit';
 
 export namespace TransactionBuilder {
   export class Common<T = undefined> implements CommonStructure<T> {
@@ -53,6 +54,13 @@ export namespace TransactionBuilder {
         }
 
         this.instructions.forEach((inst) => transaction.add(inst));
+
+        transaction.add(
+          await ComputeUnit.ComputeUnit.createInstruction(
+            this.instructions,
+            finalSigners[0],
+          ),
+        );
 
         if (options.isPriorityFee) {
           transaction.add(
