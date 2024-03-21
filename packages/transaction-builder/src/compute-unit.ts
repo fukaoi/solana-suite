@@ -10,14 +10,23 @@ import { debugLog } from '../../suite-utils/src/shared';
 export namespace TransactionBuilder {
   export namespace ComputeUnit {
     export const simulate = async (
-      instructions: TransactionInstruction[],
+      instructionsOrTransaction: TransactionInstruction[] | Transaction,
       payer: Keypair,
     ) => {
-      const tx = new Transaction();
-      tx.recentBlockhash = PublicKey.default.toString();
-      instructions.forEach((inst) => tx.add(inst));
-      tx.feePayer = payer.publicKey;
-      tx.verifySignatures(false);
+      let tx: Transaction;
+      if (
+        instructionsOrTransaction instanceof TransactionInstruction &&
+        Array.isArray(instructionsOrTransaction)
+      ) {
+        tx = new Transaction();
+        tx.recentBlockhash = PublicKey.default.toString();
+        instructionsOrTransaction.forEach((inst) => tx.add(inst));
+        tx.feePayer = payer.publicKey;
+        tx.verifySignatures(false);
+      } else {
+        tx = instructionsOrTransaction as Transaction;
+      }
+
       const simulation = await Node.getConnection().simulateTransaction(tx);
 
       if (simulation.value.err) {

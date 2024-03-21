@@ -23,7 +23,7 @@ test.before(async () => {
   collectionMint = obj.collectionMint;
 });
 
-test.only('Compute transfer instruction unit', async (t) => {
+test('Compute transfer instruction unit', async (t) => {
   const inst = SolNative.transfer(
     source.pubkey,
     dest.pubkey,
@@ -35,12 +35,11 @@ test.only('Compute transfer instruction unit', async (t) => {
     inst.unwrap().instructions,
     feePayer.secret.toKeypair(),
   );
-
-  console.log(res);
-  t.pass();
+  t.log(res);
+  t.true(res !== undefined && res > 0);
 });
 
-test.only('Compute NFT mint instruction unit', async (t) => {
+test('Compute NFT mint instruction unit', async (t) => {
   const properties = {
     files: [
       {
@@ -83,8 +82,8 @@ test.only('Compute NFT mint instruction unit', async (t) => {
     inst.unwrap().instructions,
     feePayer.secret.toKeypair(),
   );
-  console.log(res);
-  t.pass();
+  t.log(res);
+  t.true(res !== undefined && res > 0);
 });
 
 test('Compute cNFT mint instruction unit', async (t) => {
@@ -141,6 +140,6 @@ test('Compute cNFT mint instruction unit', async (t) => {
     inst.unwrap().instructions,
     feePayer.secret.toKeypair(),
   );
-  console.log(res);
-  t.pass();
+  t.log(res);
+  t.true(res !== undefined && res > 0);
 });
