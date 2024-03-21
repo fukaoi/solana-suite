@@ -58,22 +58,23 @@ export namespace TransactionBuilder {
         }
 
         if (options.isPriorityFee) {
-          return await PriorityFee.PriorityFee.submit(
-            transaction,
-            finalSigners,
-            options.addSolPriorityFee,
-          );
-        } else {
-          const confirmOptions: ConfirmOptions = {
-            maxRetries: Constants.MAX_TRANSACTION_RETRIES,
-          };
-          return await sendAndConfirmTransaction(
-            Node.getConnection(),
-            transaction,
-            finalSigners,
-            confirmOptions,
+          transaction.add(
+            await PriorityFee.PriorityFee.createInstruction(
+              this.instructions,
+              options.addSolPriorityFee,
+            ),
           );
         }
+
+        const confirmOptions: ConfirmOptions = {
+          maxRetries: Constants.MAX_TRANSACTION_RETRIES,
+        };
+        return await sendAndConfirmTransaction(
+          Node.getConnection(),
+          transaction,
+          finalSigners,
+          confirmOptions,
+        );
       });
     };
   }

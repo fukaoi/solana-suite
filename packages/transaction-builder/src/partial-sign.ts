@@ -39,22 +39,23 @@ export namespace TransactionBuilder {
         const transaction = Transaction.from(decode);
 
         if (options.isPriorityFee) {
-          return await PriorityFee.PriorityFee.submitForPartialSign(
-            transaction,
-            options.feePayer.toKeypair(),
-            options.addSolPriorityFee,
-          );
-        } else {
-          const confirmOptions: ConfirmOptions = {
-            maxRetries: Constants.MAX_TRANSACTION_RETRIES,
-          };
-          transaction.partialSign(options.feePayer.toKeypair());
-          const wireTransaction = transaction.serialize();
-          return await Node.getConnection().sendRawTransaction(
-            wireTransaction,
-            confirmOptions,
+          transaction.add(
+            await PriorityFee.PriorityFee.createInstruction(
+              transaction.instructions,
+              options.addSolPriorityFee,
+            ),
           );
         }
+
+        const confirmOptions: ConfirmOptions = {
+          maxRetries: Constants.MAX_TRANSACTION_RETRIES,
+        };
+        transaction.partialSign(options.feePayer.toKeypair());
+        const wireTransaction = transaction.serialize();
+        return await Node.getConnection().sendRawTransaction(
+          wireTransaction,
+          confirmOptions,
+        );
       });
     };
   }
