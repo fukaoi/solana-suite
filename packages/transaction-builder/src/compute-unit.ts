@@ -10,13 +10,19 @@ import { debugLog } from '../../suite-utils/src/shared';
 
 export namespace TransactionBuilder {
   const DEFAULUT_COMPUTE_UNIT = 200_000;
+  const MINIMUM_COMPUTE_UNIT = 450;
   export namespace ComputeUnit {
     export const createInstruction = async (
       instructionsOrTransaction: TransactionInstruction[] | Transaction,
       payer: Keypair,
     ) => {
       let units = await simulate(instructionsOrTransaction, payer);
-      units = units === 0 || !units ? DEFAULUT_COMPUTE_UNIT : units * 3;
+
+      if (units === 0 || !units) {
+        units = DEFAULUT_COMPUTE_UNIT;
+      } else if (units < MINIMUM_COMPUTE_UNIT) {
+        units = MINIMUM_COMPUTE_UNIT;
+      }
 
       debugLog('# compute units: ', units);
 
