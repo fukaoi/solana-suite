@@ -55,13 +55,6 @@ export namespace TransactionBuilder {
 
         this.instructions.forEach((inst) => transaction.add(inst));
 
-        transaction.add(
-          await ComputeUnit.ComputeUnit.createInstruction(
-            this.instructions,
-            finalSigners[0],
-          ),
-        );
-
         if (options.isPriorityFee) {
           transaction.add(
             await PriorityFee.PriorityFee.createInstruction(
@@ -71,6 +64,12 @@ export namespace TransactionBuilder {
           );
         }
 
+        transaction.add(
+          await ComputeUnit.ComputeUnit.createInstruction(
+            transaction,
+            finalSigners[0],
+          ),
+        );
         const confirmOptions: ConfirmOptions = {
           maxRetries: Constants.MAX_TRANSACTION_RETRIES,
         };
