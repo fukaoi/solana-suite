@@ -49,9 +49,8 @@ export namespace TransactionBuilder {
           lockedWritableAccounts: uniqWritableAccounts,
         });
 
-      debugLog('# get recent priority fees: ', priorityFees);
-
       if (priorityFees.length < 1) {
+        debugLog('# get recent priority fees: ', priorityFees);
         return 0;
       }
 

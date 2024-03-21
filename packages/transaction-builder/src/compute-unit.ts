@@ -15,9 +15,11 @@ export namespace TransactionBuilder {
       instructionsOrTransaction: TransactionInstruction[] | Transaction,
       payer: Keypair,
     ) => {
-      const units =
-        (await simulate(instructionsOrTransaction, payer)) ||
-        DEFAULUT_COMPUTE_UNIT;
+      let units = await simulate(instructionsOrTransaction, payer);
+      units = units === 0 || !units ? DEFAULUT_COMPUTE_UNIT : units * 3;
+
+      debugLog('# compute units: ', units);
+
       return ComputeBudgetProgram.setComputeUnitLimit({
         units,
       });
@@ -42,7 +44,7 @@ export namespace TransactionBuilder {
 
       if (simulation.value.err) {
         debugLog('# Error simulation: ', simulation);
-        return undefined;
+        return 0;
       }
       return simulation.value.unitsConsumed;
     };
