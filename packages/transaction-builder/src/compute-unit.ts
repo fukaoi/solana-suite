@@ -13,15 +13,17 @@ export namespace TransactionBuilder {
   const MINIMUM_COMPUTE_UNIT = 450;
   export namespace ComputeUnit {
     export const createInstruction = async (
-      instructionsOrTransaction: TransactionInstruction[] | Transaction,
+      instructions: TransactionInstruction[],
       payer: Keypair,
     ) => {
-      let units = await simulate(instructionsOrTransaction, payer);
+      let units = await simulate(instructions, payer);
 
       if (units === 0 || !units) {
         units = DEFAULUT_COMPUTE_UNIT;
       } else if (units < MINIMUM_COMPUTE_UNIT) {
         units = MINIMUM_COMPUTE_UNIT;
+      } else {
+        units *= 1.1;
       }
 
       debugLog('# compute units: ', units);

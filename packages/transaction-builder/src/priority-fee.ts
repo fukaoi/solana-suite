@@ -12,11 +12,11 @@ export namespace TransactionBuilder {
     const MAX_RECENT_PRIORITY_FEE_ACCOUNTS = 128;
     export const createInstruction = async (
       instructions: TransactionInstruction[],
-      addSolPriorityFee?: number,
+      addMicroLamportsPriorityFee?: number,
     ) => {
       let addMicroLamports = 0;
-      if (addSolPriorityFee) {
-        addMicroLamports = addSolPriorityFee.toLamports();
+      if (addMicroLamportsPriorityFee) {
+        addMicroLamports = addMicroLamportsPriorityFee;
       } else {
         addMicroLamports = await estimatePriorityFee(instructions);
       }

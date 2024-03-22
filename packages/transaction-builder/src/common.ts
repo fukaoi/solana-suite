@@ -53,23 +53,24 @@ export namespace TransactionBuilder {
           finalSigners = [this.feePayer, ...this.signers];
         }
 
-        this.instructions.forEach((inst) => transaction.add(inst));
-
         if (options.isPriorityFee) {
-          transaction.add(
+          this.instructions.unshift(
             await PriorityFee.PriorityFee.createInstruction(
               this.instructions,
-              options.addSolPriorityFee,
+              options.addMicroLamportsPriorityFee,
             ),
           );
         }
 
-        transaction.add(
+        this.instructions.unshift(
           await ComputeUnit.ComputeUnit.createInstruction(
-            transaction,
+            this.instructions,
             finalSigners[0],
           ),
         );
+
+        this.instructions.forEach((inst) => transaction.add(inst));
+
         const confirmOptions: ConfirmOptions = {
           maxRetries: Constants.MAX_TRANSACTION_RETRIES,
         };

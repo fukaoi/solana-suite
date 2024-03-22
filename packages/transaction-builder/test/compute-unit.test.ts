@@ -7,7 +7,6 @@ import { KeypairAccount } from '~/types/account';
 import { Pubkey } from '~/types/account';
 import { Setup } from 'test-tools/setup';
 import { TransactionBuilder } from '../src';
-import { Transaction, TransactionInstruction } from '@solana/web3.js';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
@@ -32,13 +31,8 @@ test('Compute transfer transaction unit', async (t) => {
     0.00001,
   );
 
-  const tx = new Transaction();
-  tx.feePayer = feePayer.pubkey.toPublicKey();
-  inst
-    .unwrap()
-    .instructions.forEach((inst: TransactionInstruction) => tx.add(inst));
   const res = await TransactionBuilder.ComputeUnit.simulate(
-    tx,
+    inst.unwrap().instructions,
     feePayer.secret.toKeypair(),
   );
   t.log('# CU: ', res);
