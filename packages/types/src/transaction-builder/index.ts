@@ -49,3 +49,14 @@ export type GasLessTransferOptions = {
   isPriorityFee: boolean;
   addSolPriorityFee: number;
 };
+
+export type GasLessDelegateOptions = {
+  isPriorityFee: boolean;
+  addSolPriorityFee: number;
+};
+
+export type GasLessMintOptions = {
+  isPriorityFee: boolean;
+  addSolPriorityFee: number;
+  freezeAuthority: Pubkey;
+};

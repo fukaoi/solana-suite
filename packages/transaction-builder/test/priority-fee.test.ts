@@ -23,7 +23,7 @@ test.before(async () => {
   collectionMint = obj.collectionMint;
 });
 
-test('[Transfer] estimate priority fee', async (t) => {
+test.only('[Transfer] estimate priority fee', async (t) => {
   const solAmount = 0.01;
   const inst = SolNative.transfer(
     source.pubkey,
@@ -39,7 +39,7 @@ test('[Transfer] estimate priority fee', async (t) => {
   t.true(res >= 0);
 });
 
-test('[Mint cNFT] estimate priority fee', async (t) => {
+test.only('[Mint cNFT] estimate priority fee', async (t) => {
   const inst = await CompressedNft.mint(
     source.secret,
     {
@@ -137,7 +137,7 @@ test('[MintInstruction] Submit with priority fee', async (t) => {
   );
 });
 
-test.only('[PartialSignStructure] Submit with priority fee', async (t) => {
+test('[PartialSignStructure] Submit with priority fee', async (t) => {
   const solAmount = 0.01;
   const serialized = await SolNative.gasLessTransfer(
     source.secret,
@@ -159,7 +159,7 @@ test.only('[PartialSignStructure] Submit with priority fee', async (t) => {
   );
 });
 
-test('[BatchStructure]Set priority fee', async (t) => {
+test.only('[BatchStructure] Submit with priority fee', async (t) => {
   const TOKEN_METADATA = {
     name: 'solana-suite-token',
     symbol: 'SST',

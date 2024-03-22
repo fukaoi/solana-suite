@@ -8,6 +8,7 @@ import {
 } from '~/types/transaction-builder';
 
 import { TransactionBuilder } from '~/transaction-builder';
+import { debugLog } from '.';
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
@@ -121,8 +122,8 @@ Array.prototype.submit = async function(options: Partial<SubmitOptions> = {}) {
     isPriorityFee: options.isPriorityFee,
     instructions: instructions,
   };
+  debugLog('# Result batch submit()');
   return new TransactionBuilder.Batch().submit(batchOptions);
-  // }
 };
 
 class InternalOk<T, E extends Error> extends AbstractResult<T, E> {

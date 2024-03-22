@@ -39,7 +39,7 @@ export namespace TransactionBuilder {
         return 0;
       }
       const units = simulation.value.unitsConsumed || DEFAULUT_COMPUTE_UNIT;
-      debugLog('# simulate units: ', units);
+      debugLog('# get simulate transaction: ', units);
       let cu = 0;
       if (units === 0) {
         cu = DEFAULUT_COMPUTE_UNIT;
@@ -47,7 +47,7 @@ export namespace TransactionBuilder {
         // only sol transfer
         cu = MINIMUM_COMPUTE_UNIT;
       } else {
-        cu *= 1.1;
+        cu = Math.trunc(units * 1.1);
       }
       debugLog('# simulate cu: ', cu);
       return cu;

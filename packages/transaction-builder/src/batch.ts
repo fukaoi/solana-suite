@@ -50,7 +50,6 @@ export namespace TransactionBuilder {
           transaction.feePayer = feePayer.publicKey;
           finalSigners = [feePayer, ...signers];
         }
-        instructions.map((inst) => transaction.add(inst));
 
         // CalculateTxsize.isMaxTransactionSize(transaction, feePayer.publicKey);
 
@@ -70,6 +69,7 @@ export namespace TransactionBuilder {
             finalSigners[0],
           ),
         );
+        instructions.map((inst) => transaction.add(inst));
 
         const confirmOptions: ConfirmOptions = {
           maxRetries: Constants.MAX_TRANSACTION_RETRIES,

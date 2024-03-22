@@ -1,7 +1,9 @@
 import { Result } from '~/suite-utils';
 import { Pubkey, Secret } from '~/types/account';
-import { PartialSignStructure } from '~/types/transaction-builder';
-import { GasLessTransferOptions } from '~/types/regular-nft';
+import {
+  GasLessTransferOptions,
+  PartialSignStructure,
+} from '~/types/transaction-builder';
 import { SplToken } from '~/suite-spl-token';
 
 export namespace RegularNft {
