@@ -24,7 +24,7 @@ export namespace TransactionBuilder {
           instructions,
           feePayer,
         );
-        addMicroLamports = microLamports / cu;
+        addMicroLamports = Math.trunc(microLamports / cu);
       } else {
         addMicroLamports = await estimatePriorityFee(instructions);
       }

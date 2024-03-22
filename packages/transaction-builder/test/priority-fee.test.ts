@@ -60,7 +60,7 @@ test('[Mint cNFT] estimate priority fee', async (t) => {
   t.true(res >= 0);
 });
 
-test('[CommonInstruction] Submit with priority fee', async (t) => {
+test.only('[CommonInstruction] Submit with priority fee', async (t) => {
   const solAmount = 0.01;
   const inst = SolNative.transfer(
     source.pubkey,
@@ -70,7 +70,7 @@ test('[CommonInstruction] Submit with priority fee', async (t) => {
   );
 
   (
-    await inst.submit({ isPriorityFee: true, addMicroLamportsPriorityFee: 500 })
+    await inst.submit({ isPriorityFee: true, addSolPriorityFee: 0.00001 })
   ).match(
     (ok) => {
       t.log(ok);
@@ -110,7 +110,7 @@ test.skip('[CommonInstruction] cNFT Submit with priority fee', async (t) => {
   );
 });
 
-test.only('[MintInstruction] Submit with priority fee', async (t) => {
+test('[MintInstruction] Submit with priority fee', async (t) => {
   const inst = await RegularNft.mint(
     source.secret,
     {
