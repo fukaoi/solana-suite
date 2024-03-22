@@ -12,25 +12,28 @@ import { TransactionBuilder as ComputeUnit } from './compute-unit';
 export namespace TransactionBuilder {
   export namespace PriorityFee {
     const MAX_RECENT_PRIORITY_FEE_ACCOUNTS = 128;
+    const MICRO_LAMPORTS_PER_LAMPORT = 1_000_000;
+
     export const createInstruction = async (
       instructions: TransactionInstruction[],
       addSolPriorityFee?: number,
       feePayer?: Keypair,
     ) => {
-      let addMicroLamports = 0;
+      let unitPrice = 0;
       if (addSolPriorityFee && feePayer) {
-        const microLamports = addSolPriorityFee.toLamports() * 1_000_000;
+        const microLamports =
+          addSolPriorityFee.toLamports() * MICRO_LAMPORTS_PER_LAMPORT;
         const cu = await ComputeUnit.ComputeUnit.simulate(
           instructions,
           feePayer,
         );
-        addMicroLamports = Math.trunc(microLamports / cu);
+        unitPrice = Math.trunc(microLamports / cu);
       } else {
-        addMicroLamports = await estimatePriorityFee(instructions);
+        unitPrice = await estimatePriorityFee(instructions);
       }
-      debugLog('# add microLamports: ', addMicroLamports);
+      debugLog('# unit price(microLamports): ', unitPrice);
       return ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: addMicroLamports,
+        microLamports: unitPrice,
       });
     };
 
