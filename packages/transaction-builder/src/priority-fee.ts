@@ -1,22 +1,30 @@
 import {
   ComputeBudgetProgram,
+  Keypair,
   RecentPrioritizationFees,
   TransactionInstruction,
 } from '@solana/web3.js';
 
 import { debugLog } from '~/suite-utils';
 import { Node } from '~/node';
+import { TransactionBuilder as ComputeUnit } from './compute-unit';
 
 export namespace TransactionBuilder {
   export namespace PriorityFee {
     const MAX_RECENT_PRIORITY_FEE_ACCOUNTS = 128;
     export const createInstruction = async (
       instructions: TransactionInstruction[],
-      addMicroLamportsPriorityFee?: number,
+      addSolPriorityFee?: number,
+      feePayer?: Keypair,
     ) => {
       let addMicroLamports = 0;
-      if (addMicroLamportsPriorityFee) {
-        addMicroLamports = addMicroLamportsPriorityFee;
+      if (addSolPriorityFee && feePayer) {
+        const microLamports = addSolPriorityFee.toLamports() * 1_000_000;
+        const cu = await ComputeUnit.ComputeUnit.simulate(
+          instructions,
+          feePayer,
+        );
+        addMicroLamports = microLamports / cu;
       } else {
         addMicroLamports = await estimatePriorityFee(instructions);
       }

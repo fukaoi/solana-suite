@@ -18,9 +18,10 @@ export namespace TransactionBuilder {
     ) => {
       let units = await simulate(instructions, payer);
 
-      if (units === 0 || !units) {
+      if (units === 0) {
         units = DEFAULUT_COMPUTE_UNIT;
       } else if (units < MINIMUM_COMPUTE_UNIT) {
+        // only sol transfer
         units = MINIMUM_COMPUTE_UNIT;
       } else {
         units *= 1.1;
@@ -36,7 +37,7 @@ export namespace TransactionBuilder {
     export const simulate = async (
       instructionsOrTransaction: TransactionInstruction[] | Transaction,
       payer: Keypair,
-    ) => {
+    ): Promise<number> => {
       let tx: Transaction;
       if (instructionsOrTransaction instanceof Transaction) {
         tx = instructionsOrTransaction;
@@ -54,7 +55,7 @@ export namespace TransactionBuilder {
         debugLog('# Error simulation: ', simulation);
         return 0;
       }
-      return simulation.value.unitsConsumed;
+      return simulation.value.unitsConsumed || DEFAULUT_COMPUTE_UNIT;
     };
   }
 }

@@ -9,13 +9,13 @@ import {
 export type SubmitOptions = {
   feePayer: Secret;
   isPriorityFee: boolean;
-  addMicroLamportsPriorityFee: number;
+  addSolPriorityFee: number;
 };
 
 export type BatchSubmitOptions = {
   feePayer: Secret;
   isPriorityFee: boolean;
-  addMicroLamportsPriorityFee: number;
+  addSolPriorityFee: number;
   instructions: CommonStructure[] | MintStructure[];
 };
 

@@ -57,7 +57,8 @@ export namespace TransactionBuilder {
           this.instructions.unshift(
             await PriorityFee.PriorityFee.createInstruction(
               this.instructions,
-              options.addMicroLamportsPriorityFee,
+              options.addSolPriorityFee,
+              finalSigners[0],
             ),
           );
         }
