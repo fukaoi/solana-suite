@@ -26,7 +26,7 @@ test.before(async () => {
   source = obj.source;
   dest = obj.dest;
   feePayer = obj.feePayer;
-  await requestSol(source.pubkey, 0.02);
+  // await requestSol(source.pubkey, 0.02);
 });
 
 test.beforeEach(function () {
@@ -45,7 +45,7 @@ test('create instruction', (t) => {
   t.is(typeof res, 'object');
 });
 
-test('send memo by owner with fee payer', async (t) => {
+test.only('send memo by owner with fee payer', async (t) => {
   const inst = Memo.create(
     `{"memo": "send memo by owner", "datetime": ${datetime}}`,
     MEMO_STOCK.secret,

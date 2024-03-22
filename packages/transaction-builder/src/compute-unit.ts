@@ -10,13 +10,15 @@ import { debugLog } from '../../suite-utils/src/shared';
 
 export namespace TransactionBuilder {
   const DEFAULUT_COMPUTE_UNIT = 200_000;
+  const DEFAULUT_THRESHOLD_MULTIPLIED = 1.1;
   const MINIMUM_COMPUTE_UNIT = 450;
   export namespace ComputeUnit {
     export const createInstruction = async (
       instructions: TransactionInstruction[],
       payer: Keypair,
+      thresholdMultiplied?: number,
     ) => {
-      const units = await simulate(instructions, payer);
+      const units = await simulate(instructions, payer, thresholdMultiplied);
       return ComputeBudgetProgram.setComputeUnitLimit({
         units,
       });
@@ -25,6 +27,7 @@ export namespace TransactionBuilder {
     export const simulate = async (
       instructions: TransactionInstruction[],
       payer: Keypair,
+      thresholdMultiplied: number = DEFAULUT_THRESHOLD_MULTIPLIED,
     ): Promise<number> => {
       const tx = new Transaction();
       tx.recentBlockhash = PublicKey.default.toString();
@@ -47,7 +50,7 @@ export namespace TransactionBuilder {
         // only sol transfer
         cu = MINIMUM_COMPUTE_UNIT;
       } else {
-        cu = Math.trunc(units * 1.1);
+        cu = Math.trunc(units * thresholdMultiplied);
       }
       debugLog('# simulate cu: ', cu);
       return cu;
