@@ -7,7 +7,6 @@ import {
 import { Constants, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
-import { TransactionBuilder as PriorityFee } from './priority-fee';
 import {
   PartialSignStructure,
   SubmitOptions,
@@ -37,16 +36,6 @@ export namespace TransactionBuilder {
 
         const decode = Buffer.from(this.hexInstruction, 'hex');
         const transaction = Transaction.from(decode);
-
-        if (options.isPriorityFee) {
-          transaction.add(
-            await PriorityFee.PriorityFee.createInstruction(
-              transaction.instructions,
-              options.addSolPriorityFee,
-            ),
-          );
-        }
-
         const confirmOptions: ConfirmOptions = {
           maxRetries: Constants.MAX_TRANSACTION_RETRIES,
         };

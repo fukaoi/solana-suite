@@ -16,38 +16,21 @@ export namespace TransactionBuilder {
       instructions: TransactionInstruction[],
       payer: Keypair,
     ) => {
-      let units = await simulate(instructions, payer);
-
-      if (units === 0) {
-        units = DEFAULUT_COMPUTE_UNIT;
-      } else if (units < MINIMUM_COMPUTE_UNIT) {
-        // only sol transfer
-        units = MINIMUM_COMPUTE_UNIT;
-      } else {
-        units *= 1.1;
-      }
-
-      debugLog('# compute units: ', units);
-
+      const units = await simulate(instructions, payer);
       return ComputeBudgetProgram.setComputeUnitLimit({
         units,
       });
     };
 
     export const simulate = async (
-      instructionsOrTransaction: TransactionInstruction[] | Transaction,
+      instructions: TransactionInstruction[],
       payer: Keypair,
     ): Promise<number> => {
-      let tx: Transaction;
-      if (instructionsOrTransaction instanceof Transaction) {
-        tx = instructionsOrTransaction;
-      } else {
-        tx = new Transaction();
-        tx.recentBlockhash = PublicKey.default.toString();
-        instructionsOrTransaction.forEach((inst) => tx.add(inst));
-        tx.feePayer = payer.publicKey;
-        tx.verifySignatures(false);
-      }
+      const tx = new Transaction();
+      tx.recentBlockhash = PublicKey.default.toString();
+      instructions.forEach((inst) => tx.add(inst));
+      tx.feePayer = payer.publicKey;
+      tx.verifySignatures(false);
 
       const simulation = await Node.getConnection().simulateTransaction(tx);
 
@@ -55,7 +38,19 @@ export namespace TransactionBuilder {
         debugLog('# Error simulation: ', simulation);
         return 0;
       }
-      return simulation.value.unitsConsumed || DEFAULUT_COMPUTE_UNIT;
+      const units = simulation.value.unitsConsumed || DEFAULUT_COMPUTE_UNIT;
+      debugLog('# simulate units: ', units);
+      let cu = 0;
+      if (units === 0) {
+        cu = DEFAULUT_COMPUTE_UNIT;
+      } else if (units < MINIMUM_COMPUTE_UNIT) {
+        // only sol transfer
+        cu = MINIMUM_COMPUTE_UNIT;
+      } else {
+        cu *= 1.1;
+      }
+      debugLog('# simulate cu: ', cu);
+      return cu;
     };
   }
 }

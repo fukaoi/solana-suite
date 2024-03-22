@@ -44,3 +44,8 @@ export type PartialSignStructure<T = Pubkey> = {
   data?: T;
   submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };
+
+export type GasLessTransferOptions = {
+  isPriorityFee: boolean;
+  addSolPriorityFee: number;
+};

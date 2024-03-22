@@ -8,6 +8,7 @@ import {
 import { Node } from '~/node';
 import { Constants, Result, Try } from '~/suite-utils';
 import { TransactionBuilder as PriorityFee } from './priority-fee';
+import { TransactionBuilder as ComputeUnit } from './compute-unit';
 import { BatchSubmitOptions } from '~/types/transaction-builder';
 
 export namespace TransactionBuilder {
@@ -54,13 +55,22 @@ export namespace TransactionBuilder {
         // CalculateTxsize.isMaxTransactionSize(transaction, feePayer.publicKey);
 
         if (options.isPriorityFee) {
-          transaction.add(
+          instructions.unshift(
             await PriorityFee.PriorityFee.createInstruction(
               instructions,
               options.addSolPriorityFee,
+              finalSigners[0],
             ),
           );
         }
+
+        instructions.unshift(
+          await ComputeUnit.ComputeUnit.createInstruction(
+            instructions,
+            finalSigners[0],
+          ),
+        );
+
         const confirmOptions: ConfirmOptions = {
           maxRetries: Constants.MAX_TRANSACTION_RETRIES,
         };

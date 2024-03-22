@@ -8,7 +8,6 @@ import {
 } from '~/types/transaction-builder';
 
 import { TransactionBuilder } from '~/transaction-builder';
-import { debugLog } from './shared';
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
@@ -79,7 +78,6 @@ abstract class AbstractResult<T, E extends Error> {
   ): Promise<Result<TransactionSignature, Error>> {
     const res = this.map(
       async (ok) => {
-        debugLog('# result single submit: ', ok);
         const obj = ok as
           | CommonStructure
           | MintStructure
@@ -107,7 +105,7 @@ declare global {
 }
 
 // TransactionBuilder.Batch
-Array.prototype.submit = async function (options: Partial<SubmitOptions> = {}) {
+Array.prototype.submit = async function(options: Partial<SubmitOptions> = {}) {
   const instructions: CommonStructure | MintStructure[] = [];
   for (const obj of this) {
     if (obj.isErr) {
@@ -118,7 +116,6 @@ Array.prototype.submit = async function (options: Partial<SubmitOptions> = {}) {
       return Result.err(Error('Only Array Instruction object'));
     }
   }
-  debugLog('# Result batch submit: ', instructions);
   const batchOptions = {
     feePayer: options.feePayer,
     isPriorityFee: options.isPriorityFee,

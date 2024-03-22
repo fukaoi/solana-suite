@@ -9,6 +9,7 @@ import {
 
 import { Constants, debugLog, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
+import { TransactionBuilder as ComputeUnit } from './compute-unit';
 import { TransactionBuilder as PriorityFee } from './priority-fee';
 import { MintStructure, SubmitOptions } from '~/types/transaction-builder';
 import { Pubkey } from '~/types/account';
@@ -58,14 +59,21 @@ export namespace TransactionBuilder {
         }
 
         if (options.isPriorityFee) {
-          transaction.add(
+          this.instructions.unshift(
             await PriorityFee.PriorityFee.createInstruction(
               this.instructions,
               options.addSolPriorityFee,
+              finalSigners[0],
             ),
           );
         }
 
+        this.instructions.unshift(
+          await ComputeUnit.ComputeUnit.createInstruction(
+            this.instructions,
+            finalSigners[0],
+          ),
+        );
         const confirmOptions: ConfirmOptions = {
           maxRetries: Constants.MAX_TRANSACTION_RETRIES,
         };
