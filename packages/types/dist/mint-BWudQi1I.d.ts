@@ -53,4 +53,4 @@ type MintOptions = {
     feePayer: Secret;
 };
 
-export { type Creators as C, type InputCreators as I, type MintOptions as M, type Options as O, type Uses as U, type Option as a, type bignum as b, UseMethod as c, type InputCollection as d, type InputNftMetadata as e };
+export { type Creators as C, type InputCreators as I, type MintOptions as M, type Option as O, UseMethod as U, type Uses as a, type bignum as b, type InputCollection as c, type Options as d, type InputNftMetadata as e };

@@ -159,7 +159,7 @@ test('[PartialSignStructure] Submit with priority fee', async (t) => {
   );
 });
 
-test.only('[BatchStructure] Submit with priority fee', async (t) => {
+test('[BatchStructure] Submit with priority fee', async (t) => {
   const TOKEN_METADATA = {
     name: 'solana-suite-token',
     symbol: 'SST',

@@ -31,6 +31,10 @@ type PartialSignStructure<T = Pubkey> = {
     data?: T;
     submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };
+type GasLessTransferOptions = {
+    isPriorityFee: boolean;
+    addSolPriorityFee: number;
+};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -243,10 +247,6 @@ type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E
 
 type TransferOptions = {
     feePayer: Secret;
-};
-
-type GasLessTransferOptions = {
-    isPriorityFee: boolean;
 };
 
 /** @namespace */

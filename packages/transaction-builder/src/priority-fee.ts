@@ -100,8 +100,8 @@ export namespace TransactionBuilder {
         recentFees.length % 2 !== 0
           ? recentFees[mid].prioritizationFee
           : (recentFees[mid - 1].prioritizationFee +
-            recentFees[mid].prioritizationFee) /
-          2;
+              recentFees[mid].prioritizationFee) /
+            2;
 
       debugLog('# median fee: ', medianFee);
 

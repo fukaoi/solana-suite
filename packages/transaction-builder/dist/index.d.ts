@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionInstruction, Keypair, TransactionSignature, Transaction, PublicKey } from '@solana/web3.js';
+import { TransactionInstruction, Keypair, TransactionSignature, PublicKey } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -250,13 +250,13 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-declare namespace TransactionBuilder$5 {
+declare namespace TransactionBuilder$6 {
     class Batch {
         submit: (options?: Partial<BatchSubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
     }
 }
 
-declare namespace TransactionBuilder$4 {
+declare namespace TransactionBuilder$5 {
     class Common<T = undefined> implements CommonStructure<T> {
         static MAX_TRANSACTION_SIZE: number;
         instructions: TransactionInstruction[];
@@ -265,6 +265,13 @@ declare namespace TransactionBuilder$4 {
         data?: T;
         constructor(instructions: TransactionInstruction[], signers: Keypair[], feePayer?: Keypair, data?: T);
         submit: (options?: Partial<SubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
+    }
+}
+
+declare namespace TransactionBuilder$4 {
+    namespace ComputeUnit {
+        const createInstruction: (instructions: TransactionInstruction[], payer: Keypair) => Promise<TransactionInstruction>;
+        const simulate: (instructions: TransactionInstruction[], payer: Keypair) => Promise<number>;
     }
 }
 
@@ -290,9 +297,8 @@ declare namespace TransactionBuilder$2 {
 
 declare namespace TransactionBuilder$1 {
     namespace PriorityFee {
-        const submit: (transaction: Transaction, signers: Keypair[], addSolPriorityFee?: number) => Promise<string>;
-        const submitForPartialSign: (transaction: Transaction, signer: Keypair, addSolPriorityFee?: number) => Promise<string>;
-        const createPriorityFeeInstruction: (transaction: Transaction) => Promise<_solana_web3_js.TransactionInstruction>;
+        const createInstruction: (instructions: TransactionInstruction[], addSolPriorityFee?: number, feePayer?: Keypair) => Promise<TransactionInstruction>;
+        const estimatePriorityFee: (instructions: TransactionInstruction[]) => Promise<number>;
     }
 }
 
@@ -328,11 +334,12 @@ type ExplorerOptions = {
 declare const TransactionBuilder: {
     PriorityFee: typeof TransactionBuilder$1.PriorityFee;
     PartialSign: typeof TransactionBuilder$2.PartialSign;
-    Common: typeof TransactionBuilder$4.Common;
     Mint: typeof TransactionBuilder$3.Mint;
+    ComputeUnit: typeof TransactionBuilder$4.ComputeUnit;
+    Common: typeof TransactionBuilder$5.Common;
     calculateTxSize: (transaction: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => number;
     isOverTransactionSize: (transaction: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => boolean;
-    Batch: typeof TransactionBuilder$5.Batch;
+    Batch: typeof TransactionBuilder$6.Batch;
 };
 
 export { TransactionBuilder };

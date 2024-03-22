@@ -135,6 +135,15 @@ type PartialSignStructure<T = Pubkey> = {
     data?: T;
     submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };
+type GasLessTransferOptions = {
+    isPriorityFee: boolean;
+    addSolPriorityFee: number;
+};
+type GasLessMintOptions = {
+    isPriorityFee: boolean;
+    addSolPriorityFee: number;
+    freezeAuthority: Pubkey;
+};
 
 declare abstract class AbstractResult<T, E extends Error> {
     protected abstract _chain<X, U extends Error>(ok: (value: T) => Result<X, U>, err: (error: E) => Result<X, U>): Result<X, U>;
@@ -368,15 +377,6 @@ type InputCreators = {
 
 type ThawOptions = {
     feePayer: Secret;
-};
-
-type GasLessMintOptions = {
-    freezeAuthority: Pubkey;
-    isPriorityFee: boolean;
-};
-
-type GasLessTransferOptions = {
-    isPriorityFee: boolean;
 };
 
 type InputCollection = Pubkey;

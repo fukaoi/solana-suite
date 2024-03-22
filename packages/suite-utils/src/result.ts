@@ -106,7 +106,7 @@ declare global {
 }
 
 // TransactionBuilder.Batch
-Array.prototype.submit = async function(options: Partial<SubmitOptions> = {}) {
+Array.prototype.submit = async function (options: Partial<SubmitOptions> = {}) {
   const instructions: CommonStructure | MintStructure[] = [];
   for (const obj of this) {
     if (obj.isErr) {
