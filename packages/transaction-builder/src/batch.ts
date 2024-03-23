@@ -9,6 +9,7 @@ import { Node } from '~/node';
 import { Constants, Result, Try } from '~/suite-utils';
 import { TransactionBuilder as PriorityFee } from './priority-fee';
 import { TransactionBuilder as ComputeUnit } from './compute-unit';
+import { TransactionBuilder as Retry } from './retry';
 import { BatchSubmitOptions } from '~/types/transaction-builder';
 
 export namespace TransactionBuilder {
@@ -74,12 +75,24 @@ export namespace TransactionBuilder {
         const confirmOptions: ConfirmOptions = {
           maxRetries: Constants.MAX_TRANSACTION_RETRIES,
         };
-        return await sendAndConfirmTransaction(
-          Node.getConnection(),
-          transaction,
-          finalSigners,
-          confirmOptions,
-        );
+
+        try {
+          return await sendAndConfirmTransaction(
+            Node.getConnection(),
+            transaction,
+            finalSigners,
+            confirmOptions,
+          );
+        } catch (error) {
+          if (Retry.Retry.isComputeBudgetError(error)) {
+            return await Retry.Retry.submit(
+              transaction,
+              finalSigners,
+              confirmOptions,
+            );
+          }
+          throw error;
+        }
       });
     };
   }

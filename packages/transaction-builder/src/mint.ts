@@ -11,6 +11,7 @@ import { Constants, debugLog, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { TransactionBuilder as ComputeUnit } from './compute-unit';
 import { TransactionBuilder as PriorityFee } from './priority-fee';
+import { TransactionBuilder as Retry } from './retry';
 import { MintStructure, SubmitOptions } from '~/types/transaction-builder';
 import { Pubkey } from '~/types/account';
 
@@ -51,8 +52,6 @@ export namespace TransactionBuilder {
           finalSigners = [this.feePayer, ...this.signers];
         }
 
-        this.instructions.forEach((inst) => transaction.add(inst));
-
         if (Node.getConnection().rpcEndpoint === Constants.EndPointUrl.prd) {
           debugLog('# Change metaplex cluster on mainnet-beta');
           Node.changeConnection({ cluster: Constants.Cluster.prdMetaplex });
@@ -74,15 +73,30 @@ export namespace TransactionBuilder {
             finalSigners[0],
           ),
         );
+
+        this.instructions.forEach((inst) => transaction.add(inst));
+
         const confirmOptions: ConfirmOptions = {
           maxRetries: Constants.MAX_TRANSACTION_RETRIES,
         };
-        return await sendAndConfirmTransaction(
-          Node.getConnection(),
-          transaction,
-          finalSigners,
-          confirmOptions,
-        );
+
+        try {
+          return await sendAndConfirmTransaction(
+            Node.getConnection(),
+            transaction,
+            finalSigners,
+            confirmOptions,
+          );
+        } catch (error) {
+          if (Retry.Retry.isComputeBudgetError(error)) {
+            return await Retry.Retry.submit(
+              transaction,
+              finalSigners,
+              confirmOptions,
+            );
+          }
+          throw error;
+        }
       });
     };
   }
