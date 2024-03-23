@@ -1,5 +1,5 @@
 import * as _solana_web3_js from '@solana/web3.js';
-import { TransactionInstruction, Keypair, TransactionSignature, PublicKey } from '@solana/web3.js';
+import { TransactionInstruction, Keypair, TransactionSignature, SendTransactionError, Transaction, ConfirmOptions, PublicKey } from '@solana/web3.js';
 
 declare const pubKeyNominality: unique symbol;
 declare const secretNominality: unique symbol;
@@ -250,13 +250,13 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
-declare namespace TransactionBuilder$6 {
+declare namespace TransactionBuilder$7 {
     class Batch {
         submit: (options?: Partial<BatchSubmitOptions>) => Promise<Result<TransactionSignature, Error>>;
     }
 }
 
-declare namespace TransactionBuilder$5 {
+declare namespace TransactionBuilder$6 {
     class Common<T = undefined> implements CommonStructure<T> {
         static MAX_TRANSACTION_SIZE: number;
         instructions: TransactionInstruction[];
@@ -268,14 +268,14 @@ declare namespace TransactionBuilder$5 {
     }
 }
 
-declare namespace TransactionBuilder$4 {
+declare namespace TransactionBuilder$5 {
     namespace ComputeUnit {
-        const createInstruction: (instructions: TransactionInstruction[], payer: Keypair) => Promise<TransactionInstruction>;
-        const simulate: (instructions: TransactionInstruction[], payer: Keypair) => Promise<number>;
+        const createInstruction: (instructions: TransactionInstruction[], payer: Keypair, thresholdMultiplied?: number) => Promise<TransactionInstruction>;
+        const simulate: (instructions: TransactionInstruction[], payer: Keypair, thresholdMultiplied?: number) => Promise<number>;
     }
 }
 
-declare namespace TransactionBuilder$3 {
+declare namespace TransactionBuilder$4 {
     class Mint<T = Pubkey> implements MintStructure<T> {
         instructions: TransactionInstruction[];
         signers: Keypair[];
@@ -286,7 +286,7 @@ declare namespace TransactionBuilder$3 {
     }
 }
 
-declare namespace TransactionBuilder$2 {
+declare namespace TransactionBuilder$3 {
     class PartialSign implements PartialSignStructure {
         hexInstruction: string;
         data?: Pubkey;
@@ -295,10 +295,18 @@ declare namespace TransactionBuilder$2 {
     }
 }
 
-declare namespace TransactionBuilder$1 {
+declare namespace TransactionBuilder$2 {
     namespace PriorityFee {
         const createInstruction: (instructions: TransactionInstruction[], addSolPriorityFee?: number, feePayer?: Keypair) => Promise<TransactionInstruction>;
         const estimatePriorityFee: (instructions: TransactionInstruction[]) => Promise<number>;
+    }
+}
+
+declare namespace TransactionBuilder$1 {
+    namespace Retry {
+        const isComputeBudgetError: (error: unknown) => error is SendTransactionError;
+        const submit: (transaction: Transaction, finalSigners: Keypair[], confirmOptions: ConfirmOptions) => Promise<string>;
+        const submitForPartialSign: (transaction: Transaction, finalSigner: Keypair, confirmOptions: ConfirmOptions) => Promise<string>;
     }
 }
 
@@ -332,14 +340,15 @@ type ExplorerOptions = {
 };
 
 declare const TransactionBuilder: {
-    PriorityFee: typeof TransactionBuilder$1.PriorityFee;
-    PartialSign: typeof TransactionBuilder$2.PartialSign;
-    Mint: typeof TransactionBuilder$3.Mint;
-    ComputeUnit: typeof TransactionBuilder$4.ComputeUnit;
-    Common: typeof TransactionBuilder$5.Common;
+    Retry: typeof TransactionBuilder$1.Retry;
+    PriorityFee: typeof TransactionBuilder$2.PriorityFee;
+    PartialSign: typeof TransactionBuilder$3.PartialSign;
+    Mint: typeof TransactionBuilder$4.Mint;
+    ComputeUnit: typeof TransactionBuilder$5.ComputeUnit;
+    Common: typeof TransactionBuilder$6.Common;
     calculateTxSize: (transaction: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => number;
     isOverTransactionSize: (transaction: _solana_web3_js.Transaction, feePayer: _solana_web3_js.PublicKey) => boolean;
-    Batch: typeof TransactionBuilder$6.Batch;
+    Batch: typeof TransactionBuilder$7.Batch;
 };
 
 export { TransactionBuilder };

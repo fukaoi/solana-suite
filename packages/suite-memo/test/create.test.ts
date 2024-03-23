@@ -26,10 +26,10 @@ test.before(async () => {
   source = obj.source;
   dest = obj.dest;
   feePayer = obj.feePayer;
-  // await requestSol(source.pubkey, 0.02);
+  await requestSol(source.pubkey, 0.02);
 });
 
-test.beforeEach(function() {
+test.beforeEach(function () {
   datetime = new Date();
 });
 
