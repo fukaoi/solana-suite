@@ -2,30 +2,19 @@ import {
   ConfirmOptions,
   Keypair,
   sendAndConfirmTransaction,
-  SendTransactionError,
   Transaction,
   TransactionInstruction,
   TransactionSignature,
 } from '@solana/web3.js';
 
 import { Node } from '~/node';
-import { Constants, debugLog, Result, Try } from '~/suite-utils';
+import { Constants, Result, Try } from '~/suite-utils';
 import { CommonStructure, SubmitOptions } from '~/types/transaction-builder';
 import { TransactionBuilder as PriorityFee } from './priority-fee';
 import { TransactionBuilder as ComputeUnit } from './compute-unit';
-import { type } from 'os';
+import { TransactionBuilder as Retry } from './retry';
 
 export namespace TransactionBuilder {
-  export const isComputeBudgetError = (
-    error: unknown,
-  ): error is SendTransactionError => {
-    return (
-      typeof error === 'object' &&
-      error != null &&
-      'message' in error &&
-      (error.message as string).includes('ComputeBudget')
-    );
-  };
   export class Common<T = undefined> implements CommonStructure<T> {
     static MAX_TRANSACTION_SIZE = 1232;
 
@@ -95,20 +84,8 @@ export namespace TransactionBuilder {
             confirmOptions,
           );
         } catch (error) {
-          console.log('EEEEEEEEEEEEEEEEEE', typeof error);
-          if (isComputeBudgetError(error)) {
-            debugLog('# Retry transaction, reset compute budget instruction');
-            delete this.instructions[0];
-            this.instructions.unshift(
-              await ComputeUnit.ComputeUnit.createInstruction(
-                this.instructions,
-                finalSigners[0],
-                2,
-              ),
-            );
-
-            return await sendAndConfirmTransaction(
-              Node.getConnection(),
+          if (Retry.Retry.isComputeBudgetError(error)) {
+            return await Retry.Retry.submit(
               transaction,
               finalSigners,
               confirmOptions,

@@ -7,13 +7,13 @@ import { Setup } from 'test-tools/setup';
 import { TransactionBuilder } from '../src';
 import { RegularNft } from '~/suite-regular-nft';
 import { SplToken } from '~/suite-spl-token';
+import { Memo } from '~/suite-memo';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
 let feePayer: KeypairAccount;
 let treeOwner: Pubkey;
 let collectionMint: Pubkey;
-
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
@@ -144,7 +144,7 @@ test('[PartialSignStructure] Submit with priority fee', async (t) => {
     dest.pubkey,
     solAmount,
     feePayer.pubkey,
-    // { isPriorityFee: true },
+    { isPriorityFee: true },
   );
 
   (await serialized.submit({ feePayer: feePayer.secret })).match(
@@ -159,7 +159,7 @@ test('[PartialSignStructure] Submit with priority fee', async (t) => {
   );
 });
 
-test('[BatchStructure] Submit with priority fee', async (t) => {
+test.only('[BatchStructure] Submit with priority fee', async (t) => {
   const TOKEN_METADATA = {
     name: 'solana-suite-token',
     symbol: 'SST',
@@ -195,4 +195,17 @@ test('[BatchStructure] Submit with priority fee', async (t) => {
 
   const sig = await [inst1, inst2].submit({ isPriorityFee: true });
   t.log('# signature: ', sig.unwrap());
+});
+
+test('Raise compute unit error, Retry transaction', async (t) => {
+  const datetime = new Date();
+  const inst = Memo.create(
+    `{"memo": "send memo by owner", "datetime": ${datetime}}`,
+    source.secret,
+    { feePayer: feePayer.secret },
+  );
+
+  const res = await inst.submit();
+  t.true(res.isOk, res.unwrap());
+  t.log('# tx signature: ', res.unwrap());
 });

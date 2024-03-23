@@ -29,7 +29,7 @@ test.before(async () => {
   // await requestSol(source.pubkey, 0.02);
 });
 
-test.beforeEach(function () {
+test.beforeEach(function() {
   datetime = new Date();
 });
 
@@ -43,18 +43,6 @@ test('create instruction', (t) => {
   const res = Memo.create(DUMMY_DATA, source.secret);
   t.log('# create:', res);
   t.is(typeof res, 'object');
-});
-
-test.only('send memo by owner with fee payer', async (t) => {
-  const inst = Memo.create(
-    `{"memo": "send memo by owner", "datetime": ${datetime}}`,
-    MEMO_STOCK.secret,
-    { feePayer: feePayer.secret },
-  );
-
-  const res = await inst.submit();
-  t.true(res.isOk, res.unwrap());
-  t.log('# tx signature: ', res.unwrap());
 });
 
 test('send memo and sol transfer by owner', async (t) => {

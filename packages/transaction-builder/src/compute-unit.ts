@@ -36,11 +36,6 @@ export namespace TransactionBuilder {
       tx.verifySignatures(false);
 
       const simulation = await Node.getConnection().simulateTransaction(tx);
-
-      if (simulation.value.err) {
-        debugLog('# Error simulation: ', simulation);
-        return 0;
-      }
       const units = simulation.value.unitsConsumed || DEFAULUT_COMPUTE_UNIT;
       debugLog('# get simulate transaction: ', units);
       let cu = 0;
