@@ -11,6 +11,7 @@ import {
   PartialSignStructure,
   SubmitOptions,
 } from '~/types/transaction-builder';
+import { TransactionBuilder as Retry } from './retry';
 
 export namespace TransactionBuilder {
   export class PartialSign implements PartialSignStructure {
@@ -39,12 +40,24 @@ export namespace TransactionBuilder {
         const confirmOptions: ConfirmOptions = {
           maxRetries: Constants.MAX_TRANSACTION_RETRIES,
         };
-        transaction.partialSign(options.feePayer.toKeypair());
-        const wireTransaction = transaction.serialize();
-        return await Node.getConnection().sendRawTransaction(
-          wireTransaction,
-          confirmOptions,
-        );
+
+        try {
+          transaction.partialSign(options.feePayer.toKeypair());
+          const wireTransaction = transaction.serialize();
+          return await Node.getConnection().sendRawTransaction(
+            wireTransaction,
+            confirmOptions,
+          );
+        } catch (error) {
+          if (Retry.Retry.isComputeBudgetError(error)) {
+            return await Retry.Retry.submitForPartialSign(
+              transaction,
+              options.feePayer.toKeypair(),
+              confirmOptions,
+            );
+          }
+          throw error;
+        }
       });
     };
   }

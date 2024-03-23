@@ -36,13 +36,32 @@ export namespace TransactionBuilder {
           RETRY_MULTIPLIED,
         );
 
-      const res = await sendAndConfirmTransaction(
+      return await sendAndConfirmTransaction(
         Node.getConnection(),
         transaction,
         finalSigners,
         confirmOptions,
       );
-      return res;
+    };
+
+    export const submitForPartialSign = async (
+      transaction: Transaction,
+      finalSigner: Keypair,
+      confirmOptions: ConfirmOptions,
+    ) => {
+      debugLog('# Retry the Transaction due to a compute budget error');
+      transaction.instructions[0] =
+        await ComputeUnit.ComputeUnit.createInstruction(
+          transaction.instructions,
+          finalSigner,
+          RETRY_MULTIPLIED,
+        );
+      transaction.partialSign(finalSigner);
+      const wireTransaction = transaction.serialize();
+      return await Node.getConnection().sendRawTransaction(
+        wireTransaction,
+        confirmOptions,
+      );
     };
   }
 }
