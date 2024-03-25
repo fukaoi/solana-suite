@@ -8,6 +8,8 @@ import {
 import { Node } from '~/node';
 import { Constants, Result, Try } from '~/suite-utils';
 import { TransactionBuilder as PriorityFee } from './priority-fee';
+import { TransactionBuilder as ComputeUnit } from './compute-unit';
+import { TransactionBuilder as Retry } from './retry';
 import { BatchSubmitOptions } from '~/types/transaction-builder';
 
 export namespace TransactionBuilder {
@@ -49,26 +51,47 @@ export namespace TransactionBuilder {
           transaction.feePayer = feePayer.publicKey;
           finalSigners = [feePayer, ...signers];
         }
-        instructions.map((inst) => transaction.add(inst));
 
         // CalculateTxsize.isMaxTransactionSize(transaction, feePayer.publicKey);
 
         if (options.isPriorityFee) {
-          return await PriorityFee.PriorityFee.submit(
-            transaction,
-            finalSigners,
-            options.addSolPriorityFee,
+          instructions.unshift(
+            await PriorityFee.PriorityFee.createInstruction(
+              instructions,
+              options.addSolPriorityFee,
+              finalSigners[0],
+            ),
           );
-        } else {
-          const confirmOptions: ConfirmOptions = {
-            maxRetries: Constants.MAX_TRANSACTION_RETRIES,
-          };
+        }
+
+        instructions.unshift(
+          await ComputeUnit.ComputeUnit.createInstruction(
+            instructions,
+            finalSigners[0],
+          ),
+        );
+        instructions.map((inst) => transaction.add(inst));
+
+        const confirmOptions: ConfirmOptions = {
+          maxRetries: Constants.MAX_TRANSACTION_RETRIES,
+        };
+
+        try {
           return await sendAndConfirmTransaction(
             Node.getConnection(),
             transaction,
             finalSigners,
             confirmOptions,
           );
+        } catch (error) {
+          if (Retry.Retry.isComputeBudgetError(error)) {
+            return await Retry.Retry.submit(
+              transaction,
+              finalSigners,
+              confirmOptions,
+            );
+          }
+          throw error;
         }
       });
     };

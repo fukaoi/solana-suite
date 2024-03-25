@@ -7,7 +7,7 @@ import { Pubkey, Secret } from '~/types/account';
 import { SplToken as Calculator } from './calculate-amount';
 import { Account } from '~/account';
 import { PartialSignStructure } from '~/types/transaction-builder';
-import { GasLessTransferOptions } from '~/types/spl-token';
+import { GasLessTransferOptions } from '~/types/transaction-builder';
 
 export namespace SplToken {
   /**
@@ -72,10 +72,20 @@ export namespace SplToken {
       }
 
       if (options.isPriorityFee) {
-        tx.add(
-          await TransactionBuilder.PriorityFee.createPriorityFeeInstruction(tx),
+        tx.instructions.unshift(
+          await TransactionBuilder.PriorityFee.createInstruction(
+            tx.instructions,
+            options.addSolPriorityFee,
+          ),
         );
       }
+
+      tx.instructions.unshift(
+        await TransactionBuilder.ComputeUnit.createInstruction(
+          tx.instructions,
+          owner.toKeypair(),
+        ),
+      );
 
       tx.recentBlockhash = blockhashObj.blockhash;
       tx.partialSign(owner.toKeypair());

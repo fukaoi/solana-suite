@@ -11,6 +11,8 @@ import { Node } from '~/node';
 import { Constants, Result, Try } from '~/suite-utils';
 import { CommonStructure, SubmitOptions } from '~/types/transaction-builder';
 import { TransactionBuilder as PriorityFee } from './priority-fee';
+import { TransactionBuilder as ComputeUnit } from './compute-unit';
+import { TransactionBuilder as Retry } from './retry';
 
 export namespace TransactionBuilder {
   export class Common<T = undefined> implements CommonStructure<T> {
@@ -52,24 +54,44 @@ export namespace TransactionBuilder {
           finalSigners = [this.feePayer, ...this.signers];
         }
 
+        if (options.isPriorityFee) {
+          this.instructions.unshift(
+            await PriorityFee.PriorityFee.createInstruction(
+              this.instructions,
+              options.addSolPriorityFee,
+              finalSigners[0],
+            ),
+          );
+        }
+
+        this.instructions.unshift(
+          await ComputeUnit.ComputeUnit.createInstruction(
+            this.instructions,
+            finalSigners[0],
+          ),
+        );
+
         this.instructions.forEach((inst) => transaction.add(inst));
 
-        if (options.isPriorityFee) {
-          return await PriorityFee.PriorityFee.submit(
-            transaction,
-            finalSigners,
-            options.addSolPriorityFee,
-          );
-        } else {
-          const confirmOptions: ConfirmOptions = {
-            maxRetries: Constants.MAX_TRANSACTION_RETRIES,
-          };
+        const confirmOptions: ConfirmOptions = {
+          maxRetries: Constants.MAX_TRANSACTION_RETRIES,
+        };
+        try {
           return await sendAndConfirmTransaction(
             Node.getConnection(),
             transaction,
             finalSigners,
             confirmOptions,
           );
+        } catch (error) {
+          if (Retry.Retry.isComputeBudgetError(error)) {
+            return await Retry.Retry.submit(
+              transaction,
+              finalSigners,
+              confirmOptions,
+            );
+          }
+          throw error;
         }
       });
     };

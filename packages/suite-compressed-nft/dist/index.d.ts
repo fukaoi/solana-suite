@@ -115,14 +115,6 @@ type DelegateOptions = {
     delegate: Pubkey;
 };
 
-type GassLessDelegateOptions = {
-    isPriorityFee: boolean;
-};
-
-type GassLessTransferOptions = {
-    isPriorityFee: boolean;
-};
-
 type MintOptions = {
     receiver: Pubkey;
     delegate: Pubkey;
@@ -203,6 +195,14 @@ type PartialSignStructure<T = Pubkey> = {
     hexInstruction: string;
     data?: T;
     submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
+};
+type GasLessTransferOptions = {
+    isPriorityFee: boolean;
+    addSolPriorityFee: number;
+};
+type GasLessDelegateOptions = {
+    isPriorityFee: boolean;
+    addSolPriorityFee: number;
 };
 
 declare abstract class AbstractResult<T, E extends Error> {
@@ -454,8 +454,8 @@ declare const CompressedNft: {
     }>;
     createVerifyCreator: (creators: mpl_bubblegum_instructions.Creator[], assetId: _solana_web3_js.PublicKey, treeOwner: _solana_web3_js.PublicKey, metadata: mpl_bubblegum_instructions.MetadataArgs, feePayer: _solana_web3_js.PublicKey) => Promise<_solana_web3_js.TransactionInstruction>;
     mint: (owner: Secret$1, input: InputNftMetadata, spaceOwner: Pubkey, collectionMint: Pubkey, options?: Partial<MintOptions>) => Promise<Result<CommonStructure, Error>>;
-    gasLessTransfer: (mint: Pubkey, owner: Secret$1, dest: Pubkey, feePayer: Pubkey, options?: Partial<GassLessTransferOptions>) => Promise<Result<PartialSignStructure, Error>>;
-    gasLessDelegate: (mint: Pubkey, owner: Secret$1, newDelegate: Pubkey, options?: Partial<GassLessDelegateOptions>) => Promise<Result<PartialSignStructure, Error>>;
+    gasLessTransfer: (mint: Pubkey, owner: Secret$1, dest: Pubkey, feePayer: Pubkey, options?: Partial<GasLessTransferOptions>) => Promise<Result<PartialSignStructure, Error>>;
+    gasLessDelegate: (mint: Pubkey, owner: Secret$1, newDelegate: Pubkey, options?: Partial<GasLessDelegateOptions>) => Promise<Result<PartialSignStructure, Error>>;
     findByOwner: (owner: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;
     findByMint: (mint: Pubkey) => Promise<Result<Partial<Metadata>, Error>>;
     findByCollection: (collectionMint: Pubkey, options?: Partial<FindOptions>) => Promise<Result<NftMetadata, Error>>;

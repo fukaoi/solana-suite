@@ -1,6 +1,6 @@
 import { Secret, Pubkey } from './account.mjs';
 import { Offchain, Attribute, FileType, StorageType } from './storage.mjs';
-import { C as Creators, U as Uses, I as InputCreators, O as Options } from './mint-BjeG6jbU.mjs';
+import { C as Creators, a as Uses, I as InputCreators, d as Options } from './mint-DhknbGuT.mjs';
 import '@solana/web3.js';
 import './phantom-aWSz-JUw.mjs';
 import './das-api.mjs';
@@ -10,10 +10,6 @@ import 'bn.js';
 
 type BurnOptions = {
     feePayer: Secret;
-};
-
-type GasLessTransferOptions = {
-    isPriorityFee: boolean;
 };
 
 type TokenMetadata = {
@@ -56,4 +52,4 @@ type ThawOptions = {
     feePayer: Secret;
 };
 
-export type { BurnOptions, FreezeOptions, GasLessTransferOptions, InputTokenMetadata, MintOptions, ThawOptions, TokenMetadata };
+export type { BurnOptions, FreezeOptions, InputTokenMetadata, MintOptions, ThawOptions, TokenMetadata };

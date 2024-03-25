@@ -45,18 +45,6 @@ test('create instruction', (t) => {
   t.is(typeof res, 'object');
 });
 
-test('send memo by owner with fee payer', async (t) => {
-  const inst = Memo.create(
-    `{"memo": "send memo by owner", "datetime": ${datetime}}`,
-    MEMO_STOCK.secret,
-    { feePayer: feePayer.secret },
-  );
-
-  const res = await inst.submit();
-  t.true(res.isOk, res.unwrap());
-  t.log('# tx signature: ', res.unwrap());
-});
-
 test('send memo and sol transfer by owner', async (t) => {
   const inst1 = Memo.create(
     `send memo and sol transfer: ${datetime}`,

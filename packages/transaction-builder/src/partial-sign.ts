@@ -7,11 +7,11 @@ import {
 import { Constants, Result, Try } from '~/suite-utils';
 import { Node } from '~/node';
 import { Pubkey } from '~/types/account';
-import { TransactionBuilder as PriorityFee } from './priority-fee';
 import {
   PartialSignStructure,
   SubmitOptions,
 } from '~/types/transaction-builder';
+import { TransactionBuilder as Retry } from './retry';
 
 export namespace TransactionBuilder {
   export class PartialSign implements PartialSignStructure {
@@ -37,23 +37,26 @@ export namespace TransactionBuilder {
 
         const decode = Buffer.from(this.hexInstruction, 'hex');
         const transaction = Transaction.from(decode);
+        const confirmOptions: ConfirmOptions = {
+          maxRetries: Constants.MAX_TRANSACTION_RETRIES,
+        };
 
-        if (options.isPriorityFee) {
-          return await PriorityFee.PriorityFee.submitForPartialSign(
-            transaction,
-            options.feePayer.toKeypair(),
-            options.addSolPriorityFee,
-          );
-        } else {
-          const confirmOptions: ConfirmOptions = {
-            maxRetries: Constants.MAX_TRANSACTION_RETRIES,
-          };
+        try {
           transaction.partialSign(options.feePayer.toKeypair());
           const wireTransaction = transaction.serialize();
           return await Node.getConnection().sendRawTransaction(
             wireTransaction,
             confirmOptions,
           );
+        } catch (error) {
+          if (Retry.Retry.isComputeBudgetError(error)) {
+            return await Retry.Retry.submitForPartialSign(
+              transaction,
+              options.feePayer.toKeypair(),
+              confirmOptions,
+            );
+          }
+          throw error;
         }
       });
     };

@@ -157,7 +157,7 @@ export namespace CompressedNft {
           input.properties,
           Storage.uploadFile,
           storageType,
-          {feePayer: payer},
+          { feePayer: payer },
         );
       }
 

@@ -8,7 +8,7 @@ import {
 } from '~/types/transaction-builder';
 
 import { TransactionBuilder } from '~/transaction-builder';
-import { debugLog } from './shared';
+import { debugLog } from '.';
 
 abstract class AbstractResult<T, E extends Error> {
   protected abstract _chain<X, U extends Error>(
@@ -79,7 +79,6 @@ abstract class AbstractResult<T, E extends Error> {
   ): Promise<Result<TransactionSignature, Error>> {
     const res = this.map(
       async (ok) => {
-        debugLog('# result single submit: ', ok);
         const obj = ok as
           | CommonStructure
           | MintStructure
@@ -118,14 +117,13 @@ Array.prototype.submit = async function (options: Partial<SubmitOptions> = {}) {
       return Result.err(Error('Only Array Instruction object'));
     }
   }
-  debugLog('# Result batch submit: ', instructions);
   const batchOptions = {
     feePayer: options.feePayer,
     isPriorityFee: options.isPriorityFee,
     instructions: instructions,
   };
+  debugLog('# Result batch submit()');
   return new TransactionBuilder.Batch().submit(batchOptions);
-  // }
 };
 
 class InternalOk<T, E extends Error> extends AbstractResult<T, E> {

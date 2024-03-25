@@ -1,6 +1,7 @@
 import { debugLog, Result, Try } from '~/suite-utils';
 import { Pubkey, Secret } from '~/types/account';
-import { GasLessMintOptions, InputNftMetadata } from '~/types/regular-nft';
+import { InputNftMetadata } from '~/types/regular-nft';
+import { GasLessMintOptions } from '~/types/transaction-builder';
 import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Storage } from '~/suite-storage';
@@ -137,10 +138,20 @@ export namespace RegularNft {
       insts.forEach((inst) => tx.add(inst));
 
       if (options.isPriorityFee) {
-        tx.add(
-          await TransactionBuilder.PriorityFee.createPriorityFeeInstruction(tx),
+        tx.instructions.unshift(
+          await TransactionBuilder.PriorityFee.createInstruction(
+            tx.instructions,
+            options.addSolPriorityFee,
+          ),
         );
       }
+
+      tx.instructions.unshift(
+        await TransactionBuilder.ComputeUnit.createInstruction(
+          tx.instructions,
+          owner.toKeypair(),
+        ),
+      );
 
       tx.recentBlockhash = blockhashObj.blockhash;
       [owner, mint].forEach((signer) => tx.partialSign(signer.toKeypair()));

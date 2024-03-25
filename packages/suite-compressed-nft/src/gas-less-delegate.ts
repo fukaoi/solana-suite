@@ -4,8 +4,10 @@ import { Node } from '~/node';
 import { Transaction } from '@solana/web3.js';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Result, Try } from '~/suite-utils';
-import { PartialSignStructure } from '~/types/transaction-builder';
-import { GassLessDelegateOptions } from '~/types/compressed-nft';
+import {
+  GasLessDelegateOptions,
+  PartialSignStructure,
+} from '~/types/transaction-builder';
 
 export namespace CompressedNft {
   /**
@@ -20,7 +22,7 @@ export namespace CompressedNft {
     mint: Pubkey,
     owner: Secret,
     newDelegate: Pubkey,
-    options: Partial<GassLessDelegateOptions> = {},
+    options: Partial<GasLessDelegateOptions> = {},
   ): Promise<Result<PartialSignStructure, Error>> => {
     return Try(async () => {
       const inst = await Delegate.createDeleagate(
@@ -37,10 +39,20 @@ export namespace CompressedNft {
       tx.add(inst);
 
       if (options.isPriorityFee) {
-        tx.add(
-          await TransactionBuilder.PriorityFee.createPriorityFeeInstruction(tx),
+        tx.instructions.unshift(
+          await TransactionBuilder.PriorityFee.createInstruction(
+            tx.instructions,
+            options.addSolPriorityFee,
+          ),
         );
       }
+
+      tx.instructions.unshift(
+        await TransactionBuilder.ComputeUnit.createInstruction(
+          tx.instructions,
+          owner.toKeypair(),
+        ),
+      );
 
       tx.partialSign(owner.toKeypair());
       tx.recentBlockhash = blockhashObj.blockhash;

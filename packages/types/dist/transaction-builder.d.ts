@@ -240,5 +240,18 @@ type PartialSignStructure<T = Pubkey> = {
     data?: T;
     submit: (options: Partial<SubmitOptions>) => Promise<Result<string, Error>>;
 };
+type GasLessTransferOptions = {
+    isPriorityFee: boolean;
+    addSolPriorityFee: number;
+};
+type GasLessDelegateOptions = {
+    isPriorityFee: boolean;
+    addSolPriorityFee: number;
+};
+type GasLessMintOptions = {
+    isPriorityFee: boolean;
+    addSolPriorityFee: number;
+    freezeAuthority: Pubkey;
+};
 
-export type { BatchSubmitOptions, CommonStructure, MintStructure, PartialSignStructure, SubmitOptions };
+export type { BatchSubmitOptions, CommonStructure, GasLessDelegateOptions, GasLessMintOptions, GasLessTransferOptions, MintStructure, PartialSignStructure, SubmitOptions };

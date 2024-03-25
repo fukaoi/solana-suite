@@ -4,7 +4,7 @@ import { Node } from '~/node';
 import { TransactionBuilder } from '~/transaction-builder';
 import { Pubkey, Secret } from '~/types/account';
 import { PartialSignStructure } from '~/types/transaction-builder';
-import { GasLessTransferOptions } from '~/types/sol-native';
+import { GasLessTransferOptions } from '~/types/transaction-builder';
 
 export namespace SolNative {
   const RADIX = 10;
@@ -42,10 +42,21 @@ export namespace SolNative {
       );
 
       if (options.isPriorityFee) {
-        tx.add(
-          await TransactionBuilder.PriorityFee.createPriorityFeeInstruction(tx),
+        tx.instructions.unshift(
+          await TransactionBuilder.PriorityFee.createInstruction(
+            tx.instructions,
+            options.addSolPriorityFee,
+          ),
         );
       }
+
+      tx.instructions.unshift(
+        await TransactionBuilder.ComputeUnit.createInstruction(
+          tx.instructions,
+          owner.toKeypair(),
+        ),
+      );
+
       tx.partialSign(owner.toKeypair());
 
       const serializedTx = tx.serialize({

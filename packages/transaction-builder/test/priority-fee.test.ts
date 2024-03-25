@@ -1,19 +1,19 @@
 import test from 'ava';
 import { CompressedNft } from '~/suite-compressed-nft';
-import { SplToken } from '~/suite-spl-token';
 import { SolNative } from '~/suite-sol-native';
 import { KeypairAccount } from '~/types/account';
 import { Pubkey } from '~/types/account';
 import { Setup } from 'test-tools/setup';
-import { RandomAsset } from 'test-tools/setupAsset';
-import { DasApi } from '~/das-api';
+import { TransactionBuilder } from '../src';
+import { RegularNft } from '~/suite-regular-nft';
+import { SplToken } from '~/suite-spl-token';
+import { Memo } from '~/suite-memo';
 
 let source: KeypairAccount;
 let dest: KeypairAccount;
 let feePayer: KeypairAccount;
 let treeOwner: Pubkey;
 let collectionMint: Pubkey;
-
 test.before(async () => {
   const obj = await Setup.generateKeyPair();
   source = obj.source;
@@ -23,7 +23,7 @@ test.before(async () => {
   collectionMint = obj.collectionMint;
 });
 
-test('[CommonInstruction]Set priority fee', async (t) => {
+test.only('[Transfer] estimate priority fee', async (t) => {
   const solAmount = 0.01;
   const inst = SolNative.transfer(
     source.pubkey,
@@ -32,23 +32,14 @@ test('[CommonInstruction]Set priority fee', async (t) => {
     solAmount,
   );
 
-  const testUri =
-    'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
-  DasApi.changeDasUri(testUri);
-
-  (await inst.submit({ isPriorityFee: true })).match(
-    (ok) => {
-      t.log(ok);
-      t.pass();
-    },
-    (err) => {
-      t.log(err);
-      t.fail(err.message);
-    },
+  const res = await TransactionBuilder.PriorityFee.estimatePriorityFee(
+    inst.unwrap().instructions,
   );
+  t.log('# priority fee: ', res);
+  t.true(res >= 0);
 });
 
-test('[MintInstruction]Set priority fee', async (t) => {
+test.only('[Mint cNFT] estimate priority fee', async (t) => {
   const inst = await CompressedNft.mint(
     source.secret,
     {
@@ -63,9 +54,51 @@ test('[MintInstruction]Set priority fee', async (t) => {
     },
   );
 
-  const testUri =
-    'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
-  DasApi.changeDasUri(testUri);
+  const res = await TransactionBuilder.PriorityFee.estimatePriorityFee(
+    inst.unwrap().instructions,
+  );
+  t.log('# priority fee: ', res);
+  t.true(res >= 0);
+});
+
+test('[CommonInstruction] Submit with priority fee', async (t) => {
+  const solAmount = 0.01;
+  const inst = SolNative.transfer(
+    source.pubkey,
+    dest.pubkey,
+    [source.secret],
+    solAmount,
+  );
+
+  // 0.00001SOL => 10000Lamports => 10000000000MicroLamports
+  (
+    await inst.submit({ isPriorityFee: true, addSolPriorityFee: 0.00001 })
+  ).match(
+    (ok) => {
+      t.log(ok);
+      t.pass();
+    },
+    (err) => {
+      t.log(err);
+      t.fail(err.message);
+    },
+  );
+});
+
+test('[CommonInstruction] cNFT Submit with priority fee', async (t) => {
+  const inst = await CompressedNft.mint(
+    source.secret,
+    {
+      uri: 'https://ipfs.io/ipfs/bafkreifttd3wb3jfwh6ouumnukidh32u47kpr4qhm7n4rpol5iytsvb5tu',
+      name: 'priority test',
+      symbol: 'PRTEST',
+    },
+    treeOwner,
+    collectionMint,
+    {
+      feePayer: feePayer.secret,
+    },
+  );
 
   (await inst.submit({ isPriorityFee: true })).match(
     (ok) => {
@@ -79,11 +112,33 @@ test('[MintInstruction]Set priority fee', async (t) => {
   );
 });
 
-test('[PartialSignStructure]Set priority fee', async (t) => {
+test('[MintInstruction] Submit with priority fee', async (t) => {
+  const inst = await RegularNft.mint(
+    source.secret,
+    {
+      uri: 'https://ipfs.io/ipfs/bafkreifttd3wb3jfwh6ouumnukidh32u47kpr4qhm7n4rpol5iytsvb5tu',
+      name: 'priority test',
+      symbol: 'PRTEST',
+    },
+    {
+      feePayer: feePayer.secret,
+    },
+  );
+
+  (await inst.submit({ isPriorityFee: true })).match(
+    (ok) => {
+      t.log(ok);
+      t.pass();
+    },
+    (err) => {
+      t.log(err);
+      t.fail(err.message);
+    },
+  );
+});
+
+test('[PartialSignStructure] Submit with priority fee', async (t) => {
   const solAmount = 0.01;
-  const testUri =
-    'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
-  DasApi.changeDasUri(testUri);
   const serialized = await SolNative.gasLessTransfer(
     source.secret,
     dest.pubkey,
@@ -104,12 +159,12 @@ test('[PartialSignStructure]Set priority fee', async (t) => {
   );
 });
 
-test('[BatchStructure]Set priority fee', async (t) => {
+test.only('[BatchStructure] Submit with priority fee', async (t) => {
   const TOKEN_METADATA = {
     name: 'solana-suite-token',
     symbol: 'SST',
     royalty: 50,
-    filePath: RandomAsset.get().filePath as string,
+    uri: 'https://ipfs.io/ipfs/bafkreifttd3wb3jfwh6ouumnukidh32u47kpr4qhm7n4rpol5iytsvb5tu',
     isMutable: false,
   };
 
@@ -138,9 +193,19 @@ test('[BatchStructure]Set priority fee', async (t) => {
 
   t.true(inst2.isOk);
 
-  const testUri =
-    'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92';
-  DasApi.changeDasUri(testUri);
   const sig = await [inst1, inst2].submit({ isPriorityFee: true });
   t.log('# signature: ', sig.unwrap());
+});
+
+test('Raise compute unit error, Retry transaction', async (t) => {
+  const datetime = new Date();
+  const inst = Memo.create(
+    `{"memo": "send memo by owner", "datetime": ${datetime}}`,
+    source.secret,
+    { feePayer: feePayer.secret },
+  );
+
+  const res = await inst.submit();
+  t.true(res.isOk, res.unwrap());
+  t.log('# tx signature: ', res.unwrap());
 });
