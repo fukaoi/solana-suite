@@ -7,7 +7,7 @@ import { Airdrop } from '@solana-suite/airdrop';
 import { requestSol } from 'test-tools';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { RegularNft } from '@solana-suite/regular-nft';
-import { Account } from '@solana-suite/utils';
+import { Account, Result } from '@solana-suite/utils';
 
 (async () => {
   // random create
@@ -61,7 +61,9 @@ import { Account } from '@solana-suite/utils';
   // SIGN FEE PAYER AND SUBMIT (Server side)
   //////////////////////////////////////////////
 
-  const res = await inst.unwrap().submit({ feePayer: feePayer.secret });
+  // Wrap with a Result object
+  const obj = Result.ok(inst.unwrap().hexInstruction);
+  const res = await obj.submit({ feePayer: feePayer.secret });
   res.match(
     (ok) => console.log('# tx signature: ', ok),
     (err) => assert.fail(err.message),

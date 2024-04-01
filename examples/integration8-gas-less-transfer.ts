@@ -6,7 +6,7 @@ import assert from 'assert';
 import { Airdrop } from '@solana-suite/airdrop';
 import { SplToken } from '@solana-suite/spl-token';
 import { SolNative } from '@solana-suite/sol-native';
-import { Account, Pubkey } from '@solana-suite/utils';
+import { Account, Pubkey, Result } from '@solana-suite/utils';
 import { requestSol } from 'test-tools';
 import { RandomAsset } from 'test-tools/setupAsset';
 
@@ -98,7 +98,9 @@ import { RandomAsset } from 'test-tools/setupAsset';
   // SIGN FEE PAYER AND SUBMIT (Server side)
   //////////////////////////////////////////////
 
-  const res2 = await inst2.unwrap().submit({ feePayer: feePayer.secret });
+  // Wrap with a Result object
+  const obj = Result.ok(inst2.unwrap().hexInstruction);
+  const res2 = await obj.submit({ feePayer: feePayer.secret });
   res2.match(
     (ok) => console.log('# tx signature: ', ok),
     (err) => assert.fail(err.message),
