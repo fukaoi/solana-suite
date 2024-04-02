@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/multisig",
-  "version": "0.7.11",
+  "version": "0.7.12",
   "description": "create, fetch history for multisig",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
