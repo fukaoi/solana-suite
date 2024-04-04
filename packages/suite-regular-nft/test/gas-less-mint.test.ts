@@ -5,7 +5,6 @@ import { RegularNft } from '../src/';
 import { Account } from '~/account';
 import { KeypairAccount } from '~/types/account';
 import { Storage } from '~/suite-storage';
-import { Converter } from '~/converter';
 
 let source: KeypairAccount;
 let feePayer: KeypairAccount;
@@ -49,24 +48,12 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
 });
 
 test('[Arweave] use case arweave', async (t) => {
-  const royalty = 60;
   const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
-  const sellerFeeBasisPoints = Converter.Royalty.intoInfra(royalty);
 
-  const offchaindata = {
-    name: asset.name,
-    symbol: asset.symbol,
-    description: 'upload meta and content',
-    seller_fee_basis_points: sellerFeeBasisPoints,
-  };
-
-  const uploaded = await Storage.upload(
-    offchaindata,
-    asset.filePath,
-    'arweave',
-    { feePayer: source.secret },
-  );
+  const uploaded = await Storage.uploadFile(asset.filePath, 'arweave', {
+    feePayer: feePayer.secret,
+  });
   if (uploaded.isErr) {
     throw uploaded;
   }
@@ -78,7 +65,8 @@ test('[Arweave] use case arweave', async (t) => {
       uri,
       name: asset.name!,
       symbol: asset.symbol!,
-      royalty,
+      royalty: 60,
+      description: 'uploaded content file in arweave',
       isMutable: true,
     },
     feePayer.pubkey,
