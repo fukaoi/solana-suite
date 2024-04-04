@@ -53,36 +53,56 @@ export namespace RegularNft {
       }
 
       const storageType = input.storageType || DEFAULT_STORAGE_TYPE;
-      const royalty = input.royalty ? input.royalty : 0;
-      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(royalty);
       const ownerPublickey = owner.toKeypair().publicKey;
 
       //--- porperties, Upload content ---
-      let uri = '';
-      if (input.filePath) {
-        const properties = await Converter.Properties.intoInfra(
+      let properties;
+      if (input.properties) {
+        properties = await Converter.Properties.intoInfra(
           input.properties,
           Storage.uploadFile,
           storageType,
         );
+      }
 
-        const storageMetadata = Storage.toConvertOffchaindata(
-          { ...input, properties },
-          sellerFeeBasisPoints,
-        );
+      input = {
+        ...input,
+        properties,
+        storageType,
+      };
 
+      const royalty = input.royalty ? input.royalty : 0;
+      const sellerFeeBasisPoints = Converter.Royalty.intoInfra(royalty);
+
+      const storageMetadata = Storage.toConvertOffchaindata(
+        { ...input, properties },
+        sellerFeeBasisPoints,
+      );
+
+      let uri!: string;
+      // upload file
+      if (input.filePath) {
         const uploaded = await Storage.upload(
           storageMetadata,
           input.filePath,
+          storageType,
+        );
+        debugLog('# upload content url: ', uploaded);
+        if (uploaded.isErr) {
+          throw uploaded;
+        }
+        uri = uploaded.value;
+        // uploaded file
+      } else if (input.uri) {
+        const image = { image: input.uri };
+        const uploaded = await Storage.uploadData(
+          { ...storageMetadata, ...image },
           storageType,
         );
         if (uploaded.isErr) {
           throw uploaded;
         }
         uri = uploaded.value;
-        debugLog('# upload content url: ', uploaded);
-      } else if (input.uri) {
-        uri = input.uri;
       } else {
         throw Error(`Must set filePath' or 'uri'`);
       }
