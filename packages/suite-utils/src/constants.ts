@@ -158,6 +158,7 @@ export namespace Constants {
   export const MAX_TRANSACTION_VERSION: number = 0;
   export const MAX_TRANSACTION_RETRIES = 1;
   export const NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
+  export const FILEBADE_GATEWAY_URL = 'https://ipfs.filebase.io/ipfs/';
   export const IRYS_GATEWAY_URL = 'https://gateway.irys.xyz';
   export const BUNDLR_NETWORK_URL = switchBundlr(Config.cluster.type);
   export const DAS_API_URL = switchDasApi(Config.cluster.type);
