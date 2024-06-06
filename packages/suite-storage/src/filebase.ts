@@ -1,15 +1,27 @@
-import { Blob, NFTStorage } from 'nft.storage';
 import { Constants, debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { ProvenanceLayer } from './provenance-layer';
 import { FileType, Offchain } from '~/types/storage';
+import {
+  PutObjectCommand,
+  PutObjectOutput,
+  S3Client,
+} from '@aws-sdk/client-s3';
 
 // @internal
 export namespace Filebase {
+  const BUCKET_NAME = 'solana-suite';
   const createGatewayUrl = (cid: string): string =>
     `${Constants.FILEBADE_GATEWAY_URL}/${cid}`;
 
   const connect = () => {
-    return new NFTStorage({ token: Constants.NFT_STORAGE_API_KEY });
+    return new S3Client({
+      credentials: {
+        accessKeyId: Constants.FILEBASE_ACCESSKEY,
+        secretAccessKey: Constants.FILEBASE_SECRET,
+      },
+      endpoint: 'https://s3.filebase.com',
+      region: 'us-east-1',
+    });
   };
 
   export const uploadFile = async (
@@ -26,9 +38,27 @@ export namespace Filebase {
         file = Buffer.from(fileType as ArrayBuffer);
       }
 
-      const blobImage = new Blob([file]);
-      const res = await connect().storeBlob(blobImage);
-      return createGatewayUrl(res);
+      const command = new PutObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: `demo-file-${new Date()}`,
+        Body: file,
+      });
+
+      command.middlewareStack.add((next) => async (args) => {
+        const response = await next(args);
+        if (!(response.response as HttpResponse).statusCode) {
+          return response;
+        }
+        const cid = response.response.headers['x-amz-meta-cid'];
+        debugLog('# response: ', response);
+        response.output.$metadata.cfId = cid;
+        return response;
+      });
+      const res = await connect().send(command);
+      if (!res.$metadata.cfId) {
+        throw Error('Can not fetch CID');
+      }
+      return createGatewayUrl(res.$metadata.cfId);
     });
   };
 
