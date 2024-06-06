@@ -1,1 +1,13 @@
-{"cluster":{"type":"localhost-devnet","customClusterUrl":[]},"debugging":"false","nftStorageApiKey":"","dasApiUrl":[]}
+{
+  "cluster": {
+    "type": "localhost-devnet",
+    "customClusterUrl": []
+  },
+  "debugging": "false",
+  "nftStorageApiKey": "",
+  "dasApiUrl": [],
+  "filebase": {
+    "accessKey": "",
+    "secret": ""
+  }
+}

@@ -12,6 +12,13 @@ export namespace Constants {
         Can get api key from https://nft.storage/
         --------------------------------------
         `;
+    export const FILEBASE_CREDENTIAL = `
+        [YOU HAVE TO DO]
+        --------------------------------------
+        You need to update Filebase credential(accessKey and secret) define parameter in solana-suite.json.
+        Can get credential from https://nft.storage/
+        --------------------------------------
+        `;
     export const DAS_API_URL = `
         [YOU HAVE TO DO]
         --------------------------------------
@@ -19,13 +26,6 @@ export namespace Constants {
         can get api url from https://www.helius.dev/
         -------------------------------------- 
         `;
-    // export const ANNOUNCE = `
-    //     [DEPRECATED]
-    //     --------------------------------------
-    //     Account, Node, toExplorer, Pubkey, Secret have been moved to
-    //     @solana-suite/utils
-    //     -------------------------------------
-    //     `;
   }
 }
 
@@ -126,6 +126,16 @@ export namespace Constants {
     }
   };
 
+  export const switchFilebaseCredential = (): {
+    accessKey: string;
+    secret: string;
+  } => {
+    if (!Config.filebase.accessKey || !Config.filebase.secret) {
+      throw Error(Constants.WarnningMessage.DAS_API_URL);
+    }
+    return Config.filebase;
+  };
+
   export const switchNftStorage = (env: string): string => {
     // if setted custom nft.storage api key, most priority
     if (customNftStorageApiKey) {
@@ -161,6 +171,8 @@ export namespace Constants {
   export const FILEBADE_GATEWAY_URL = 'https://ipfs.filebase.io/ipfs/';
   export const IRYS_GATEWAY_URL = 'https://gateway.irys.xyz';
   export const BUNDLR_NETWORK_URL = switchBundlr(Config.cluster.type);
+  export const FILEBASE_ACCESSKEY = switchFilebaseCredential().accessKey;
+  export const FILEBASE_SECRET = switchFilebaseCredential().secret;
   export const DAS_API_URL = switchDasApi(Config.cluster.type);
   export const NFT_STORAGE_API_KEY = switchNftStorage(Config.cluster.type);
   export const EXPLORER_SOLSCAN_URL = 'https://solscan.io';
