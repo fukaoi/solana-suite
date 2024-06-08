@@ -2,6 +2,7 @@
   "name": "@solana-suite/phantom",
   "version": "0.7.15",
   "description": "Library spl-token/nft mint for phantom wallet",
+  "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "keywords": [
@@ -33,7 +34,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup --config tsup.config.ts",
+    "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ -c",

@@ -12,4 +12,5 @@ export type PhantomProvider = {
   signMessage(message: Uint8Array): Promise<Uint8Array>;
   connect(): Promise<void>;
   disconnect(): Promise<void>;
+  isConnected(): boolean;
 };
