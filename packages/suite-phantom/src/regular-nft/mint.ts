@@ -9,7 +9,7 @@ import { Converter } from '~/converter';
 import { PhantomProvider } from '~/types/phantom';
 import { InputNftMetadata } from '~/types/regular-nft';
 
-export namespace PhantomMetaplex {
+export namespace PhantomRegularNft {
   /**
    * Upload content and NFT mint
    *

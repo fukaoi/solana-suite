@@ -1,4 +1,4 @@
-import defineConfig from "./node_modules/build-configs/tsup/base";
+import defineConfig from "../build-configs/tsup/base";
 
 const format = ["esm"];
 defineConfig.format = format;

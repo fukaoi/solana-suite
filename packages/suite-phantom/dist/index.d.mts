@@ -1,4 +1,4 @@
-import { TransactionSignature, PublicKey, Transaction } from '@solana/web3.js';
+import { TransactionSignature, Keypair, Transaction, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 
 declare const pubKeyNominality: unique symbol;
@@ -254,6 +254,14 @@ type InputCreators = {
     share: number;
 };
 
+type InitializeMint = {
+    mint: Keypair;
+    tx: Transaction;
+};
+
+type connectOption = {
+    onlyIfTrusted: false;
+};
 type PhantomProvider = {
     isPhantom?: boolean;
     publicKey: PublicKey | null;
@@ -318,7 +326,7 @@ declare class ValidatorError extends Error {
 }
 
 /** @namespace */
-declare const RegularNft: {
+declare const PhantomRegularNft: {
     mint: (input: InputNftMetadata, cluster: string, phantom: PhantomProvider) => Promise<Result<string, Error | ValidatorError>>;
 };
 
@@ -342,4 +350,4 @@ declare const PhantomSplToken: {
     add: (token: Pubkey, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
 };
 
-export { PhantomSplToken, RegularNft };
+export { type InitializeMint, type PhantomProvider, PhantomRegularNft, PhantomSplToken, type connectOption };
