@@ -20,12 +20,12 @@
     "eslint": "^8.57.0",
     "prettier": "3.0.3",
     "ts-node": "^10.9.2",
-    "tsc-alias": "^1.8.8",
-    "tslib": "^2.6.2",
-    "tsup": "^8.0.2",
+    "tsc-alias": "^1.8.10",
+    "tslib": "^2.6.3",
+    "tsup": "^8.1.0",
     "tsx": "^3.14.0",
-    "turbo": "^1.13.0",
-    "typedoc": "^0.25.12"
+    "turbo": "^1.13.4",
+    "typedoc": "^0.25.13"
   },
   "repository": "git@github.com:fukaoi/solana-suite.git",
   "author": "fukaoi <usapyon2022@gmail.com>",
@@ -35,7 +35,7 @@
     "npm": "Only pnpm"
   },
   "dependencies": {
-    "@types/node": "^20.11.26",
+    "@types/node": "^20.14.2",
     "typedoc-material-theme": "^1.0.2"
   }
 }
