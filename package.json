@@ -30,7 +30,7 @@
   "repository": "git@github.com:fukaoi/solana-suite.git",
   "author": "fukaoi <usapyon2022@gmail.com>",
   "license": "MIT",
-  "packageManager": "pnpm@8.5.1",
+  "packageManager": "pnpm@9.2.0",
   "engines": {
     "npm": "Only pnpm"
   },
