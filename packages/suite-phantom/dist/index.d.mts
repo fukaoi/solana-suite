@@ -237,7 +237,12 @@ interface Details {
     limit?: Limit;
 }
 
+type BurnOptions = {
+    feePayer: Secret;
+};
+
 type bignum = number | BN;
+type Option<T> = T | null;
 declare enum UseMethod {
     Burn = 0,
     Multiple = 1,
@@ -248,10 +253,19 @@ type Uses = {
     remaining: bignum;
     total: bignum;
 };
+type Creators = {
+    address: Pubkey;
+    share: number;
+    verified: boolean;
+};
 type InputCreators = {
     address: Pubkey;
     secret: Secret;
     share: number;
+};
+
+type ThawOptions = {
+    feePayer: Secret;
 };
 
 type InitializeMint = {
@@ -319,6 +333,28 @@ type InputNftMetadata = {
     collection?: InputCollection;
     options?: Options;
 };
+type MintOptions = {
+    freezeAuthority: Pubkey;
+    feePayer: Secret;
+};
+
+type MintCollectionOptions = {
+    feePayer: Secret;
+    freezeAuthority: Pubkey;
+    collectionSize: number;
+};
+type Collection = {
+    address: Pubkey;
+    verified: boolean;
+};
+
+type FreezeOptions = {
+    feePayer: Secret;
+};
+
+type TransferOptions = {
+    feePayer: Secret;
+};
 
 declare class ValidatorError extends Error {
     details: Details[];
@@ -350,4 +386,4 @@ declare const PhantomSplToken: {
     add: (token: Pubkey, owner: Pubkey, cluster: string, totalAmount: number, mintDecimal: number, phantom: PhantomProvider) => Promise<Result<string, Error>>;
 };
 
-export { type InitializeMint, type PhantomProvider, PhantomRegularNft, PhantomSplToken, type connectOption };
+export { type BurnOptions, type Collection, type Creators, type FreezeOptions, type InitializeMint, type InputCollection, type InputCreators, type InputNftMetadata, type MintCollectionOptions, type MintOptions, type Option, type Options, type PhantomProvider, PhantomRegularNft, PhantomSplToken, type ThawOptions, type TransferOptions, UseMethod, type Uses, type bignum, type connectOption };
