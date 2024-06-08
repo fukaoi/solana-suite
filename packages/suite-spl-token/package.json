@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/spl-token",
-  "version": "0.7.14",
+  "version": "0.7.15",
   "description": "SPL-TOKEN: transfers, history references, multisig transfers, partial signs, and more",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
