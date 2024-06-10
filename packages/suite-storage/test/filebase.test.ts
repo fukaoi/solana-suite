@@ -11,7 +11,10 @@ test('Upload file', async (t) => {
       t.pass();
       t.log(`# nft.storage content url: ${ok}`);
     },
-    (err) => t.fail(err.message),
+    (err) => {
+      console.error(err);
+      t.fail(err.message);
+    },
   );
 });
 

@@ -5,56 +5,66 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 // @internal
 export namespace Filebase {
-  const BUCKET_NAME = 'solana-suite';
+  // const BUCKET_NAME = 'solana-suite';
+  const BUCKET_NAME = 'firedancer';
   const createGatewayUrl = (cid: string): string =>
     `${Constants.FILEBADE_GATEWAY_URL}/${cid}`;
 
   const connect = () => {
     return new S3Client({
       credentials: {
-        accessKeyId: Constants.FILEBASE_CREDENTIAL.accessKey,
-        secretAccessKey: Constants.FILEBASE_CREDENTIAL.secret,
+        accessKeyId: Constants.FILEBASE_ACCESS_KEYS.key,
+        secretAccessKey: Constants.FILEBASE_ACCESS_KEYS.secret,
       },
       endpoint: 'https://s3.filebase.com',
       region: 'us-east-1',
     });
   };
 
+  const put = async (fileName: string, file: Buffer | string) => {
+    debugLog('# fileName: ', fileName);
+    debugLog('# file: ', file);
+
+    const command = new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: fileName,
+      Body: file,
+    });
+
+    command.middlewareStack.add((next) => async (args) => {
+      const response = await next(args);
+      if (!(response.response as HttpResponse).statusCode) {
+        return response;
+      }
+      const cid = response.response.headers['x-amz-meta-cid'];
+      response.output.$metadata.cfId = cid;
+      debugLog('# response: ', response);
+      return response;
+    });
+    const res = await connect().send(command);
+    if (!res.$metadata.cfId) {
+      throw Error('Can not fetch CID');
+    }
+    return createGatewayUrl(res.$metadata.cfId);
+  };
+
   export const uploadFile = async (
     fileType: FileType,
   ): Promise<Result<string, Error>> => {
     return Try(async () => {
-      debugLog('# upload content: ', fileType);
       let file!: Buffer;
+      let fileName!: string;
       if (ProvenanceLayer.isNodeable(fileType)) {
+        fileName = fileType.split('/').pop()!;
         file = (await import('fs')).readFileSync(fileType);
       } else if (ProvenanceLayer.isBrowserable(fileType)) {
+        fileName = fileType.name;
         file = Buffer.from(await fileType.arrayBuffer());
       } else {
+        fileName = 'No name(for ArrayBuffer)';
         file = Buffer.from(fileType as ArrayBuffer);
       }
-
-      const command = new PutObjectCommand({
-        Bucket: BUCKET_NAME,
-        Key: `demo-file-${new Date()}`,
-        Body: file,
-      });
-
-      command.middlewareStack.add((next) => async (args) => {
-        const response = await next(args);
-        if (!(response.response as HttpResponse).statusCode) {
-          return response;
-        }
-        const cid = response.response.headers['x-amz-meta-cid'];
-        debugLog('# response: ', response);
-        response.output.$metadata.cfId = cid;
-        return response;
-      });
-      const res = await connect().send(command);
-      if (!res.$metadata.cfId) {
-        throw Error('Can not fetch CID');
-      }
-      return createGatewayUrl(res.$metadata.cfId);
+      return put(fileName, file);
     });
   };
 
@@ -82,28 +92,10 @@ export namespace Filebase {
     return Try(async () => {
       // created at by unix timestamp
       storageData.created_at = unixTimestamp();
-      debugLog('# Will upload offchain: ', storageData);
-      const command = new PutObjectCommand({
-        Bucket: BUCKET_NAME,
-        Key: `text-${new Date()}`,
-        Body: JSON.stringify(storageData),
-      });
-
-      command.middlewareStack.add((next) => async (args) => {
-        const response = await next(args);
-        if (!(response.response as HttpResponse).statusCode) {
-          return response;
-        }
-        const cid = response.response.headers['x-amz-meta-cid'];
-        debugLog('# response: ', response);
-        response.output.$metadata.cfId = cid;
-        return response;
-      });
-      const res = await connect().send(command);
-      if (!res.$metadata.cfId) {
-        throw Error('Can not fetch CID');
-      }
-      return createGatewayUrl(res.$metadata.cfId);
+      return put(
+        `${storageData.name}(metadata.json)`,
+        JSON.stringify(storageData),
+      );
     });
   };
 }

@@ -67,7 +67,7 @@ export namespace Constants {
 
   export const FilebaseCredential = {
     dev: {
-      accessKey: '9CA51CEFF9FF98CB91CF',
+      key: '9CA51CEFF9FF98CB91CF',
       secret: 'CgjYuMvs2NdFGbLPyFDSWESaO05nobQ9mp16PPDo',
     },
   };
@@ -136,12 +136,12 @@ export namespace Constants {
   export const switchFilebaseCredential = (
     env: string,
   ): {
-    accessKey: string;
+    key: string;
     secret: string;
   } => {
     switch (env) {
       case Constants.Cluster.prd: {
-        if (!Config.filebase.accessKey || !Config.filebase.secret) {
+        if (!Config.filebase.key || !Config.filebase.secret) {
           throw Error(Constants.WarnningMessage.FILEBASE_CREDENTIAL);
         }
         return Config.filebase;
@@ -184,10 +184,10 @@ export namespace Constants {
   export const MAX_TRANSACTION_VERSION: number = 0;
   export const MAX_TRANSACTION_RETRIES = 1;
   export const NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
-  export const FILEBADE_GATEWAY_URL = 'https://ipfs.filebase.io/ipfs/';
+  export const FILEBADE_GATEWAY_URL = 'https://ipfs.filebase.io/ipfs';
   export const IRYS_GATEWAY_URL = 'https://gateway.irys.xyz';
   export const BUNDLR_NETWORK_URL = switchBundlr(Config.cluster.type);
-  export const FILEBASE_CREDENTIAL = switchFilebaseCredential(
+  export const FILEBASE_ACCESS_KEYS = switchFilebaseCredential(
     Config.cluster.type,
   );
   export const DAS_API_URL = switchDasApi(Config.cluster.type);

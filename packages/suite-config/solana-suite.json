@@ -7,7 +7,7 @@
   "nftStorageApiKey": "",
   "dasApiUrl": [],
   "filebase": {
-    "accessKey": "",
+    "key": "",
     "secret": ""
   }
 }
