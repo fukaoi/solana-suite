@@ -32,11 +32,12 @@ export namespace Filebase {
     });
 
     command.middlewareStack.add((next) => async (args) => {
-      const response = await next(args);
-      if (!(response.response as HttpResponse).statusCode) {
+      /* eslint @typescript-eslint/no-explicit-any: off */
+      const { response }: { response: any } = await next(args);
+      if (!response.httpsStatusCode) {
         return response;
       }
-      const cid = response.response.headers['x-amz-meta-cid'];
+      const cid = response.headers['x-amz-meta-cid'];
       response.output.$metadata.cfId = cid;
       debugLog('# response: ', response);
       return response;
