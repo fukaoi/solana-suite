@@ -16,7 +16,7 @@ export namespace Constants {
         [YOU HAVE TO DO]
         --------------------------------------
         You need to update Filebase credential(accessKey and secret) define parameter in solana-suite.json.
-        Can get credential from https://nft.storage/
+        Can get credential from https://filebase.com/
         --------------------------------------
         `;
     export const DAS_API_URL = `
@@ -64,6 +64,13 @@ export namespace Constants {
     prd = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE',
     dev = prd,
   }
+
+  export const FilebaseCredential = {
+    dev: {
+      accessKey: '9CA51CEFF9FF98CB91CF',
+      secret: 'CgjYuMvs2NdFGbLPyFDSWESaO05nobQ9mp16PPDo',
+    },
+  };
 
   export const switchCluster = (param: {
     cluster?: string;
@@ -126,14 +133,23 @@ export namespace Constants {
     }
   };
 
-  export const switchFilebaseCredential = (): {
+  export const switchFilebaseCredential = (
+    env: string,
+  ): {
     accessKey: string;
     secret: string;
   } => {
-    if (!Config.filebase.accessKey || !Config.filebase.secret) {
-      throw Error(Constants.WarnningMessage.DAS_API_URL);
+    switch (env) {
+      case Constants.Cluster.prd: {
+        if (!Config.filebase.accessKey || !Config.filebase.secret) {
+          throw Error(Constants.WarnningMessage.FILEBASE_CREDENTIAL);
+        }
+        return Config.filebase;
+      }
+      default: {
+        return FilebaseCredential.dev;
+      }
     }
-    return Config.filebase;
   };
 
   export const switchNftStorage = (env: string): string => {
@@ -171,8 +187,9 @@ export namespace Constants {
   export const FILEBADE_GATEWAY_URL = 'https://ipfs.filebase.io/ipfs/';
   export const IRYS_GATEWAY_URL = 'https://gateway.irys.xyz';
   export const BUNDLR_NETWORK_URL = switchBundlr(Config.cluster.type);
-  export const FILEBASE_ACCESSKEY = switchFilebaseCredential().accessKey;
-  export const FILEBASE_SECRET = switchFilebaseCredential().secret;
+  export const FILEBASE_CREDENTIAL = switchFilebaseCredential(
+    Config.cluster.type,
+  );
   export const DAS_API_URL = switchDasApi(Config.cluster.type);
   export const NFT_STORAGE_API_KEY = switchNftStorage(Config.cluster.type);
   export const EXPLORER_SOLSCAN_URL = 'https://solscan.io';

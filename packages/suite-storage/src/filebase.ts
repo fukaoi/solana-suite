@@ -3,7 +3,6 @@ import { ProvenanceLayer } from './provenance-layer';
 import { FileType, Offchain } from '~/types/storage';
 import {
   PutObjectCommand,
-  PutObjectOutput,
   S3Client,
 } from '@aws-sdk/client-s3';
 
