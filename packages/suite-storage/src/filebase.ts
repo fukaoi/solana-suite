@@ -1,10 +1,7 @@
 import { Constants, debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { ProvenanceLayer } from './provenance-layer';
 import { FileType, Offchain } from '~/types/storage';
-import {
-  PutObjectCommand,
-  S3Client,
-} from '@aws-sdk/client-s3';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 // @internal
 export namespace Filebase {
@@ -15,8 +12,8 @@ export namespace Filebase {
   const connect = () => {
     return new S3Client({
       credentials: {
-        accessKeyId: Constants.FILEBASE_ACCESSKEY,
-        secretAccessKey: Constants.FILEBASE_SECRET,
+        accessKeyId: Constants.FILEBASE_CREDENTIAL.accessKey,
+        secretAccessKey: Constants.FILEBASE_CREDENTIAL.secret,
       },
       endpoint: 'https://s3.filebase.com',
       region: 'us-east-1',
@@ -86,9 +83,27 @@ export namespace Filebase {
       // created at by unix timestamp
       storageData.created_at = unixTimestamp();
       debugLog('# Will upload offchain: ', storageData);
-      const blobJson = new Blob([JSON.stringify(storageData)]);
-      const res = await connect().storeBlob(blobJson);
-      return createGatewayUrl(res);
+      const command = new PutObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: `text-${new Date()}`,
+        Body: JSON.stringify(storageData),
+      });
+
+      command.middlewareStack.add((next) => async (args) => {
+        const response = await next(args);
+        if (!(response.response as HttpResponse).statusCode) {
+          return response;
+        }
+        const cid = response.response.headers['x-amz-meta-cid'];
+        debugLog('# response: ', response);
+        response.output.$metadata.cfId = cid;
+        return response;
+      });
+      const res = await connect().send(command);
+      if (!res.$metadata.cfId) {
+        throw Error('Can not fetch CID');
+      }
+      return createGatewayUrl(res.$metadata.cfId);
     });
   };
 }
