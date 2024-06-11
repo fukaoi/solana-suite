@@ -1,7 +1,11 @@
 import { Constants, debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { ProvenanceLayer } from './provenance-layer';
 import { FileType, Offchain } from '~/types/storage';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  ListBucketsCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 
 // @internal
 export namespace Filebase {
@@ -98,5 +102,16 @@ export namespace Filebase {
         JSON.stringify(storageData),
       );
     });
+  };
+
+  /**
+   * Check if a bucket exists in Filebase, and create it if it does not exist.
+   *
+   * @return Promise<Result<string, Error>>
+   */
+  export const existCreateBucket = async (bucketName: string) => {
+    const command = new ListBucketsCommand();
+    const { Buckets } = await connect().send(command);
+    console.log(Buckets);
   };
 }
