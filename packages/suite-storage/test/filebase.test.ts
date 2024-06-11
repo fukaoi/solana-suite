@@ -34,3 +34,8 @@ test('Upload metadata json', async (t) => {
     (err: Error) => t.fail(err.message),
   );
 });
+
+test('Check and Create bucket', async (t) => {
+  await Filebase.checkAndCreateBucket('solana-suite');
+  t.pass();
+});

@@ -2,6 +2,7 @@ import { Constants, debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { ProvenanceLayer } from './provenance-layer';
 import { FileType, Offchain } from '~/types/storage';
 import {
+  CreateBucketCommand,
   ListBucketsCommand,
   PutObjectCommand,
   S3Client,
@@ -9,8 +10,7 @@ import {
 
 // @internal
 export namespace Filebase {
-  // const BUCKET_NAME = 'solana-suite';
-  const BUCKET_NAME = 'firedancer';
+  const BUCKET_NAME = 'solana-suite';
   const createGatewayUrl = (cid: string): string =>
     `${Constants.FILEBADE_GATEWAY_URL}/${cid}`;
 
@@ -28,6 +28,8 @@ export namespace Filebase {
   const put = async (fileName: string, file: Buffer | string) => {
     debugLog('# fileName: ', fileName);
     debugLog('# file: ', file);
+
+    await checkAndCreateBucket(BUCKET_NAME);
 
     const command = new PutObjectCommand({
       Bucket: BUCKET_NAME,
@@ -106,12 +108,23 @@ export namespace Filebase {
 
   /**
    * Check if a bucket exists in Filebase, and create it if it does not exist.
-   *
-   * @return Promise<Result<string, Error>>
+   * @param {string} bucketName
+   * @return Promise<void>
    */
-  export const existCreateBucket = async (bucketName: string) => {
+  export const checkAndCreateBucket = async (
+    bucketName: string,
+  ): Promise<void> => {
     const command = new ListBucketsCommand();
     const { Buckets } = await connect().send(command);
-    console.log(Buckets);
+    debugLog('# Buckets: ', Buckets);
+    if (Buckets) {
+      if (!Buckets.find((bucket) => bucket.Name === bucketName)) {
+        const command = new CreateBucketCommand({ Bucket: bucketName });
+        await connect().send(command);
+      }
+    } else {
+      const command = new CreateBucketCommand({ Bucket: bucketName });
+      await connect().send(command);
+    }
   };
 }
