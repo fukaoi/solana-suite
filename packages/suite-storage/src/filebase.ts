@@ -3,7 +3,9 @@ import { ProvenanceLayer } from './provenance-layer';
 import { FileType, Offchain } from '~/types/storage';
 import {
   CreateBucketCommand,
+  DeleteObjectsCommand,
   ListBucketsCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -53,6 +55,34 @@ export namespace Filebase {
       throw Error('Can not fetch CID');
     }
     return createGatewayUrl(res.$metadata.cfId);
+  };
+
+  /**
+   * Delete files uploaded in the past day, but files on IPFS cannot be removed.
+   * @return Promise<void>
+   */
+  export const remove = async (): Promise<Result<boolean, Error>> => {
+    return Try(async () => {
+      const listCommand = new ListObjectsV2Command({ Bucket: BUCKET_NAME });
+      const lists = await connect().send(listCommand);
+      console.log('#lists: ', lists);
+
+      const deleteLists = lists.Contents?.filter(
+        (list) => list.LastModified! < new Date(),
+      );
+      if (!deleteLists || deleteLists?.length < 1) {
+        return true;
+      }
+
+      const command = new DeleteObjectsCommand({
+        Bucket: BUCKET_NAME,
+        Delete: {
+          Objects: deleteLists,
+        },
+      });
+      await connect().send(command);
+      return true;
+    });
   };
 
   export const uploadFile = async (
