@@ -40,7 +40,7 @@ test('Check and Create bucket', async (t) => {
   t.pass();
 });
 
-test.only('Remove objects in buckets', async (t) => {
+test('Remove objects in buckets', async (t) => {
   const res = await Filebase.remove();
   res.match(
     async (ok) => {

@@ -56,7 +56,6 @@ export namespace Filebase {
     });
 
     const res = await connect().send(command);
-    console.log(res);
     if (!res.$metadata.cfId) {
       throw Error('Not fetch CID');
     }
@@ -88,7 +87,9 @@ export namespace Filebase {
           Objects: fileNames,
         },
       });
-      await connect().send(command);
+      try {
+        await connect().send(command);
+      } catch { }
       return true;
     });
   };
