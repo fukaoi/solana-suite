@@ -45,17 +45,18 @@
     "test": "ava --config node_modules/build-configs/ava/base.cjs"
   },
   "dependencies": {
-    "@solana-suite/config": "workspace:*",
-    "@irys/sdk": "^0.0.4",
-    "nft.storage": "^7.1.1",
-    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@aws-sdk/client-s3": "^3.590.0",
+    "@irys/sdk": "^0.0.4",
+    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
+    "@smithy/middleware-stack": "^3.0.1",
+    "@solana-suite/config": "workspace:*",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
     "bignumber.js": "^9.1.2",
-    "bs58": "^4.0.1",
     "bn.js": "^5.2.1",
-    "mpl-bubblegum-instructions": "github:fukaoi/mpl-bubblegum-instructions"
+    "bs58": "^4.0.1",
+    "mpl-bubblegum-instructions": "github:fukaoi/mpl-bubblegum-instructions",
+    "nft.storage": "^7.1.1"
   },
   "devDependencies": {
     "build-configs/ava": "workspace:*",
@@ -63,8 +64,8 @@
     "build-configs/prettier": "workspace:*",
     "build-configs/tsconfig": "workspace:*",
     "build-configs/tsup": "workspace:*",
-    "test-tools": "workspace:*",
-    "build-configs/typedoc": "workspace:*"
+    "build-configs/typedoc": "workspace:*",
+    "test-tools": "workspace:*"
   },
   "browser": {
     "fs": false

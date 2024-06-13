@@ -10,6 +10,8 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 
+import type { HttpResponse } from '@smithy/protocol-http';
+
 // @internal
 export namespace Filebase {
   const BUCKET_NAME = 'solana-suite';
@@ -41,43 +43,49 @@ export namespace Filebase {
 
     command.middlewareStack.add((next) => async (args) => {
       /* eslint @typescript-eslint/no-explicit-any: off */
-      const { response }: { response: any } = await next(args);
-      debugLog('# response: ', response);
-      if (!response.httpsStatusCode) {
+      const response = await next(args);
+      const httpsResponse = response.response as HttpResponse;
+      if (!httpsResponse.httpsStatusCode) {
         return response;
       }
-      const cid = response.headers['x-amz-meta-cid'];
+      const cid = httpsResponse.headers['x-amz-meta-cid'];
+      debugLog('#cid: ', cid);
       response.output.$metadata.cfId = cid;
+      debugLog('#response: ', response);
       return response;
     });
+
     const res = await connect().send(command);
+    console.log(res);
     if (!res.$metadata.cfId) {
-      throw Error('Can not fetch CID');
+      throw Error('Not fetch CID');
     }
     return createGatewayUrl(res.$metadata.cfId);
   };
 
   /**
-   * Delete files uploaded in the past day, but files on IPFS cannot be removed.
+   * Delete files uploaded in the now, but files on IPFS cannot be removed.
    * @return Promise<void>
    */
   export const remove = async (): Promise<Result<boolean, Error>> => {
     return Try(async () => {
       const listCommand = new ListObjectsV2Command({ Bucket: BUCKET_NAME });
       const lists = await connect().send(listCommand);
+
       console.log('#lists: ', lists);
 
-      const deleteLists = lists.Contents?.filter(
-        (list) => list.LastModified! < new Date(),
-      );
-      if (!deleteLists || deleteLists?.length < 1) {
-        return true;
+      if (!lists.Contents) {
+        return false;
       }
+
+      const fileNames = lists?.Contents?.map((list) => {
+        return { Key: list.Key?.toString() };
+      });
 
       const command = new DeleteObjectsCommand({
         Bucket: BUCKET_NAME,
         Delete: {
-          Objects: deleteLists,
+          Objects: fileNames,
         },
       });
       await connect().send(command);

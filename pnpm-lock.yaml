@@ -348,7 +348,7 @@ importers:
         version: https://codeload.github.com/fukaoi/mpl-bubblegum-instructions/tar.gz/357842f69922be400fe3f4fb809ced42afab3110(bufferutil@4.0.8)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(utf-8-validate@5.0.10)
       nft.storage:
         specifier: ^7.1.1
-        version: 7.1.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))
+        version: 7.1.1(encoding@0.1.13)(node-fetch@3.3.2)
     devDependencies:
       '@types/bs58':
         specifier: ^4.0.4
@@ -732,6 +732,9 @@ importers:
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^2.13.0
         version: 2.13.0(bufferutil@4.0.8)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(utf-8-validate@5.0.10)
+      '@smithy/middleware-stack':
+        specifier: ^3.0.1
+        version: 3.0.1
       '@solana-suite/config':
         specifier: workspace:*
         version: link:../suite-config
@@ -755,7 +758,7 @@ importers:
         version: https://codeload.github.com/fukaoi/mpl-bubblegum-instructions/tar.gz/357842f69922be400fe3f4fb809ced42afab3110(bufferutil@4.0.8)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(utf-8-validate@5.0.10)
       nft.storage:
         specifier: ^7.1.1
-        version: 7.1.1(encoding@0.1.13)(node-fetch@3.3.2)
+        version: 7.1.1(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))
     devDependencies:
       build-configs/ava:
         specifier: workspace:*
@@ -1929,8 +1932,8 @@ packages:
     resolution: {integrity: sha512-I1vKG1foI+oPgG9r7IMY1S+xBnmAn1ISqployvqkwHoSb8VPsngHDTOgYGYBonuOKndaWRUGJZrKYYLB+Ane6w==}
     engines: {node: '>=16.0.0'}
 
-  '@smithy/middleware-stack@3.0.0':
-    resolution: {integrity: sha512-+H0jmyfAyHRFXm6wunskuNAqtj7yfmwFB6Fp37enytp2q047/Od9xetEaUbluyImOlGnGpaVGaVfjwawSr+i6Q==}
+  '@smithy/middleware-stack@3.0.1':
+    resolution: {integrity: sha512-fS5uT//y1SlBdkzIvgmWQ9FufwMXrHSSbuR25ygMy1CRDIZkcBMoF4oTMYNfR9kBlVBcVzlv7joFdNrFuQirPA==}
     engines: {node: '>=16.0.0'}
 
   '@smithy/node-config-provider@3.1.0':
@@ -1975,6 +1978,10 @@ packages:
 
   '@smithy/types@3.0.0':
     resolution: {integrity: sha512-VvWuQk2RKFuOr98gFhjca7fkBS+xLLURT8bUjk5XQoV0ZLm7WPwWPPY3/AwzTLuUBDeoKDCthfe1AsTUWaSEhw==}
+    engines: {node: '>=16.0.0'}
+
+  '@smithy/types@3.1.0':
+    resolution: {integrity: sha512-qi4SeCVOUPjhSSZrxxB/mB8DrmuSFUcJnD9KXjuP+7C3LV/KFV4kpuUSH3OHDZgQB9TEH/1sO/Fq/5HyaK9MPw==}
     engines: {node: '>=16.0.0'}
 
   '@smithy/url-parser@3.0.0':
@@ -5196,7 +5203,7 @@ snapshots:
       '@smithy/middleware-endpoint': 3.0.1
       '@smithy/middleware-retry': 3.0.3
       '@smithy/middleware-serde': 3.0.0
-      '@smithy/middleware-stack': 3.0.0
+      '@smithy/middleware-stack': 3.0.1
       '@smithy/node-config-provider': 3.1.0
       '@smithy/node-http-handler': 3.0.0
       '@smithy/protocol-http': 4.0.0
@@ -5242,7 +5249,7 @@ snapshots:
       '@smithy/middleware-endpoint': 3.0.1
       '@smithy/middleware-retry': 3.0.3
       '@smithy/middleware-serde': 3.0.0
-      '@smithy/middleware-stack': 3.0.0
+      '@smithy/middleware-stack': 3.0.1
       '@smithy/node-config-provider': 3.1.0
       '@smithy/node-http-handler': 3.0.0
       '@smithy/protocol-http': 4.0.0
@@ -5285,7 +5292,7 @@ snapshots:
       '@smithy/middleware-endpoint': 3.0.1
       '@smithy/middleware-retry': 3.0.3
       '@smithy/middleware-serde': 3.0.0
-      '@smithy/middleware-stack': 3.0.0
+      '@smithy/middleware-stack': 3.0.1
       '@smithy/node-config-provider': 3.1.0
       '@smithy/node-http-handler': 3.0.0
       '@smithy/protocol-http': 4.0.0
@@ -5330,7 +5337,7 @@ snapshots:
       '@smithy/middleware-endpoint': 3.0.1
       '@smithy/middleware-retry': 3.0.3
       '@smithy/middleware-serde': 3.0.0
-      '@smithy/middleware-stack': 3.0.0
+      '@smithy/middleware-stack': 3.0.1
       '@smithy/node-config-provider': 3.1.0
       '@smithy/node-http-handler': 3.0.0
       '@smithy/protocol-http': 4.0.0
@@ -6651,9 +6658,9 @@ snapshots:
       '@smithy/types': 3.0.0
       tslib: 2.6.3
 
-  '@smithy/middleware-stack@3.0.0':
+  '@smithy/middleware-stack@3.0.1':
     dependencies:
-      '@smithy/types': 3.0.0
+      '@smithy/types': 3.1.0
       tslib: 2.6.3
 
   '@smithy/node-config-provider@3.1.0':
@@ -6714,13 +6721,17 @@ snapshots:
   '@smithy/smithy-client@3.1.1':
     dependencies:
       '@smithy/middleware-endpoint': 3.0.1
-      '@smithy/middleware-stack': 3.0.0
+      '@smithy/middleware-stack': 3.0.1
       '@smithy/protocol-http': 4.0.0
       '@smithy/types': 3.0.0
       '@smithy/util-stream': 3.0.1
       tslib: 2.6.3
 
   '@smithy/types@3.0.0':
+    dependencies:
+      tslib: 2.6.3
+
+  '@smithy/types@3.1.0':
     dependencies:
       tslib: 2.6.3
 

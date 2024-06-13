@@ -39,3 +39,21 @@ test('Check and Create bucket', async (t) => {
   await Filebase.checkAndCreateBucket('solana-suite');
   t.pass();
 });
+
+test.only('Remove objects in buckets', async (t) => {
+  const asset = RandomAsset.get();
+  const res = await Filebase.uploadFile(asset.filePath!);
+  console.log(res);
+
+  res.match(
+    async (ok) => {
+      t.log(`# nft.storage content url: ${ok}`);
+      // const res = await Filebase.remove();
+      // t.true(res.unwrap());
+    },
+    (err) => {
+      console.error(err);
+      t.fail(err.message);
+    },
+  );
+});
