@@ -29,7 +29,7 @@ test('Upload metadata json', async (t) => {
   res.match(
     (ok) => {
       t.pass();
-      t.log(`# nft.storage content url: ${ok}`);
+      t.log(`# filebase ipfs url: ${ok}`);
     },
     (err: Error) => t.fail(err.message),
   );
@@ -41,15 +41,10 @@ test('Check and Create bucket', async (t) => {
 });
 
 test.only('Remove objects in buckets', async (t) => {
-  const asset = RandomAsset.get();
-  const res = await Filebase.uploadFile(asset.filePath!);
-  console.log(res);
-
+  const res = await Filebase.remove();
   res.match(
     async (ok) => {
-      t.log(`# nft.storage content url: ${ok}`);
-      // const res = await Filebase.remove();
-      // t.true(res.unwrap());
+      t.true(ok);
     },
     (err) => {
       console.error(err);

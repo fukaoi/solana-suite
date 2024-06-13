@@ -45,7 +45,7 @@ export namespace Filebase {
       /* eslint @typescript-eslint/no-explicit-any: off */
       const response = await next(args);
       const httpsResponse = response.response as HttpResponse;
-      if (!httpsResponse.httpsStatusCode) {
+      if (!httpsResponse.reason) {
         return response;
       }
       const cid = httpsResponse.headers['x-amz-meta-cid'];
@@ -72,7 +72,7 @@ export namespace Filebase {
       const listCommand = new ListObjectsV2Command({ Bucket: BUCKET_NAME });
       const lists = await connect().send(listCommand);
 
-      console.log('#lists: ', lists);
+      debugLog('#lists: ', lists);
 
       if (!lists.Contents) {
         return false;

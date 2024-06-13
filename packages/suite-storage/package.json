@@ -48,7 +48,7 @@
     "@aws-sdk/client-s3": "^3.590.0",
     "@irys/sdk": "^0.0.4",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
-    "@smithy/middleware-stack": "^3.0.1",
+    "@smithy/protocol-http": "^4.0.1",
     "@solana-suite/config": "workspace:*",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
