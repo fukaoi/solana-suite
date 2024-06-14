@@ -6,11 +6,16 @@ import { Config } from './search-config';
 
 const program = new Command();
 
+type Filebase = {
+  key: string;
+  secret: string;
+};
+
 let configPath: string;
 let parsed: {
   cluster: { type: string; customClusterUrl: string[] };
   debugging: string;
-  nftStorageApiKey: string;
+  filebase: Filebase;
   dasApiUrl: string[];
 };
 const VERSION = '0.5';
@@ -60,8 +65,8 @@ const updateClusterUrlConfigFile = (customClusterUrl: string[]): void => {
   clearCache();
 };
 
-const updateNftStorageConfigFile = (apiKey: string): void => {
-  parsed['nftStorageApiKey'] = apiKey;
+const updateFilebaseConfigFile = (filebase: Filebase): void => {
+  parsed['filebase'] = filebase;
   writeFileSync(configPath, JSON.stringify(parsed));
   successMessage();
   clearCache();
@@ -109,8 +114,8 @@ program
     'display debug log on terminal. defalut "false" ',
   )
   .option(
-    '-n --nftstorage <apikey>',
-    'Set apikey of nft.storage. "eyJhbGciO..."',
+    '-f --filebase <key> <secret>',
+    'Set filebase key and secret. "9CA51CEFF9FF98CB91CF" "CgjYuMvs2NdFGbLPyFDSWESaO05nobQ9mp16PPDo" ',
   )
   .option(
     '-das --das-api-url <digital asset api url...>',
@@ -171,12 +176,12 @@ const execDebug = (bool: string): void => {
   updateDebugConfigFile(bool);
 };
 
-const execNftstorage = (apiKey: string): void => {
-  if (apiKey.length < 230) {
-    warnMessage('Not found api key');
+const execFilebase = (filebase: Filebase): void => {
+  if (filebase.key.length < 1 || filebase.secret.length < 1) {
+    warnMessage('Not found filebase key or secret');
     process.exit(0);
   }
-  updateNftStorageConfigFile(apiKey);
+  updateFilebaseConfigFile(filebase);
 };
 
 const execDasApiUrl = (url: string[]): void => {
@@ -211,8 +216,8 @@ if (options.cluster) {
   execCustomCluster(options.customCluster);
 } else if (options.debug) {
   execDebug(options.debug);
-} else if (options.nftstorage) {
-  execNftstorage(options.nftstorage);
+} else if (options.filebase) {
+  execFilebase(options.filebase);
 } else if (options.dasApiUrl) {
   execDasApiUrl(options.dasApiUrl);
 } else if (options.show) {

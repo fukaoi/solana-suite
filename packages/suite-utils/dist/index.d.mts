@@ -117,7 +117,6 @@ declare let Config: {
         customClusterUrl: never[];
     };
     debugging: string;
-    nftStorageApiKey: string;
     dasApiUrl: never[];
     filebase: {
         key: string;
