@@ -140,9 +140,13 @@ export namespace Constants {
   };
 
   export const loadConfig = async () => {
-    Config = await import('@solana-suite/config/load', {
-      assert: { type: 'json' },
-    });
+    const { default: loadedConfig } = await import(
+      '@solana-suite/config/load',
+      {
+        assert: { type: 'json' },
+      }
+    );
+    Config = loadedConfig;
   };
 
   export const WRAPPED_TOKEN_PROGRAM_ID = new PublicKey(

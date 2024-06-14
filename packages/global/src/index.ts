@@ -15,6 +15,7 @@ String.prototype.toExplorerUrl = function (
   explorer: Explorer = Explorer.Solscan,
   options: Partial<ExplorerOptions> = {},
 ) {
+  console.log('# config in global', Config);
   let cluster = Config.cluster.type;
   debugLog('# clusterType:', cluster);
   if (cluster !== Constants.Cluster.prd) {
