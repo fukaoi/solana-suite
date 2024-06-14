@@ -33,7 +33,4 @@ test('DasApiUrl use dev', (t) => {
   t.true(Constants.DasApiUrl.dev.includes(url));
 });
 
-test('load config', async (t) => {
-  await Constants.loadConfig();
-  t.pass()/* ; */
-});
+

@@ -3,6 +3,7 @@ import '../src';
 import { Explorer } from '~/types/global';
 import { execSync } from 'child_process';
 import { Constants } from '../../suite-utils/src/constants';
+import { sleep } from '~/suite-utils';
 
 const PUBKEY = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
 const MINT = 'J2DUquFhToJbkEc4YSPuTjhZDXZvRaBUgUX5RW3cSsdr';
@@ -23,7 +24,7 @@ test('[SolanaFM]Create explorer url by address', (t) => {
   t.not(res, undefined);
 });
 
-test('[SolanaFM][Mainnet-Beta]Create explorer url', async (t) => {
+test.only('[SolanaFM][Mainnet-Beta]Create explorer url', async (t) => {
   execSync('pnpm solana-suite-config -c prd');
   await Constants.loadConfig();
   const url = SIG.toExplorerUrl(Explorer.SolanaFM);

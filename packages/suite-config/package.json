@@ -46,7 +46,7 @@
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
     "prepublishOnly": "../../scripts/before-publish.mjs",
     "publish": "../../scripts/after-publish.mjs",
-    "test": "ava --config node_modules/build-configs/ava/base.cjs"
+    "test": "ava --config node_modules/build-configs/ava/base.cjs test/*"
   },
   "dependencies": {
     "commander": "9.3.0"
