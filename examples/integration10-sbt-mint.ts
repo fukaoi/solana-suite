@@ -46,7 +46,6 @@ import { requestSol } from 'test-tools';
       name: 'First Soul Bound Token',
       symbol: 'SBT',
       royalty: 0,
-      storageType: 'nftStorage',
     },
     {
       feePayer: feePayer.secret,

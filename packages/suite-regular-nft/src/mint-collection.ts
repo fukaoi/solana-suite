@@ -22,7 +22,7 @@ import { MintStructure } from '~/types/transaction-builder';
  */
 export namespace RegularNft {
   const DEFAULT_COLLECTION_SIZE = 0;
-  const DEFAULT_STORAGE_TYPE = 'nftStorage';
+  const DEFAULT_STORAGE_TYPE = 'filebase';
   export const mintCollection = (
     owner: Secret,
     input: InputNftMetadata,

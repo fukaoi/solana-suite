@@ -23,7 +23,7 @@ test('To input convert', async (t) => {
     input,
     /* @ts-ignore */
     Storage.uploadFile,
-    'nftStorage',
+    'filebase',
   );
 
   if (!output || !output.files) {

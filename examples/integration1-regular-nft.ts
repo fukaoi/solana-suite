@@ -46,7 +46,6 @@ import assert from 'assert';
       name: asset.name!,
       symbol: 'SAMPLE',
       royalty: 7,
-      storageType: 'nftStorage',
       isMutable: true,
       external_url: 'https://external_url',
     },

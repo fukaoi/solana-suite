@@ -21,7 +21,7 @@ test.before(async () => {
   collectionMint = obj.collectionMint;
 });
 
-test('[nftStorage] mint nft, already uploaed image, animation', async (t) => {
+test('[filebae] mint nft, already uploaed image, animation', async (t) => {
   const asset = RandomAsset.get();
   const name = 'Red tailed Hawk';
   const animation_url =

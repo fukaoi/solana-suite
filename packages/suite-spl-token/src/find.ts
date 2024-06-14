@@ -13,7 +13,6 @@ import fetch from 'cross-fetch';
 export namespace SplToken {
   const MAX_RETRIES = 10;
   const RETRY_DELAY = 5;
-  const NFTSTORAGE_GATEWAY = 'nftstorage.link';
 
   const converter = (
     metadata: Metadata,
@@ -32,7 +31,7 @@ export namespace SplToken {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const fetchRetry = async (url: string, retries = 0): Promise<any> => {
     try {
-      const response = await fetch(url.replace('ipfs.io', NFTSTORAGE_GATEWAY));
+      const response = await fetch(url);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

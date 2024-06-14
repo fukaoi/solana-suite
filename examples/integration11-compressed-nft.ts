@@ -70,7 +70,6 @@ import { requestSol } from 'test-tools';
       name: 'NFTCollection',
       symbol: 'Ingr11',
       royalty: 0,
-      storageType: 'nftStorage',
       isMutable: true,
     },
     {
@@ -102,7 +101,6 @@ import { requestSol } from 'test-tools';
       name: asset.name!,
       symbol: 'SAMPLE',
       royalty: 20,
-      storageType: 'nftStorage',
       isMutable: true,
       external_url: 'https://external_url',
     },

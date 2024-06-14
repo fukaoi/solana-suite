@@ -33,7 +33,7 @@ import { MintOptions } from '~/types/compressed-nft';
 import { CommonStructure } from '~/types/transaction-builder';
 
 export namespace CompressedNft {
-  const DEFAULT_STORAGE_TYPE = 'nftStorage';
+  const DEFAULT_STORAGE_TYPE = 'filebase';
 
   /**
    * @internal
@@ -102,7 +102,7 @@ export namespace CompressedNft {
    *   name: string               // nft content name
    *   symbol: string             // nft ticker symbol
    *   royalty: number            // royalty percentage
-   *   storageType: 'arweave'|'nftStorage' // Decentralized storage
+   *   storageType: 'arweave'|'filebase' // Decentralized storage
    *   uri?: string | File        // uploaded content url
    *   filePath?: string | File   // upload content
    *   description?: string       // nft content description

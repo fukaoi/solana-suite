@@ -35,7 +35,7 @@ import {
 
 export namespace RegularNft {
   const NFT_AMOUNT = 1;
-  const DEFAULT_STORAGE_TYPE = 'nftStorage';
+  const DEFAULT_STORAGE_TYPE = 'filebase';
 
   //@internal
   export const createVerifyCreator = (mint: PublicKey, creator: PublicKey) => {

@@ -13,7 +13,7 @@ import { Transaction } from '@solana/web3.js';
 import { PartialSignStructure } from '~/types/transaction-builder';
 
 export namespace RegularNft {
-  const DEFAULT_STORAGE_TYPE = 'nftStorage';
+  const DEFAULT_STORAGE_TYPE = 'filebase';
 
   /**
    * Mint without solana sol, delegate feepayer for commission
@@ -25,7 +25,7 @@ export namespace RegularNft {
    *   symbol: string             // nft ticker symbol
    *   filePath: string | File    // nft ticker symbol
    *   royalty: number            // royalty percentage
-   *   storageType: 'arweave'|'nftStorage' // royalty percentage
+   *   storageType: 'arweave'|'filebase' // royalty percentage
    *   description?: string       // nft content description
    *   external_url?: string      // landing page, home page uri, related url
    *   attributes?: MetadataAttribute[]     // game character parameter, personality, characteristics
