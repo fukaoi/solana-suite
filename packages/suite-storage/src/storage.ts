@@ -7,7 +7,7 @@ import {
 } from '~/types/storage';
 import { InputNftMetadata } from '~/types/regular-nft';
 import { Arweave } from './arweave';
-import { NftStorage } from './nft-storage';
+import { Filebase } from './filebase';
 
 export namespace Storage {
   /* @internal */
@@ -41,7 +41,7 @@ export namespace Storage {
       }
       return await Arweave.uploadFile(filePath, options.feePayer);
     } else if (storageType === 'nftStorage') {
-      return await NftStorage.uploadFile(filePath);
+      return await Filebase.uploadFile(filePath);
     } else {
       throw Error('Not found storageType');
     }
@@ -58,7 +58,7 @@ export namespace Storage {
       }
       return await Arweave.uploadData(input, options.feePayer);
     } else if (storageType === 'nftStorage') {
-      return await NftStorage.uploadData(input);
+      return await Filebase.uploadData(input);
     } else {
       throw Error('Not found storageType');
     }
