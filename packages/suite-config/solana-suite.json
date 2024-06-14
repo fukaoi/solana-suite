@@ -1,12 +1,1 @@
-{
-  "cluster": {
-    "type": "localhost-devnet",
-    "customClusterUrl": []
-  },
-  "debugging": "false",
-  "dasApiUrl": [],
-  "filebase": {
-    "key": "",
-    "secret": ""
-  }
-}
+{"cluster":{"type":"localhost-devnet","customClusterUrl":[]},"debugging":"false","dasApiUrl":[],"filebase":{"key":"","secret":""}}
