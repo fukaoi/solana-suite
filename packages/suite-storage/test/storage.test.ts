@@ -18,7 +18,7 @@ test('[nftStorage] Upload file', async (t) => {
   res.match(
     (ok) => {
       t.pass();
-      t.log(`# nft.storage content url: ${ok}`);
+      t.log(`# ipfst url: ${ok}`);
     },
     (err) => t.fail(err.message),
   );
@@ -39,7 +39,7 @@ test('[nftStorage] Upload metadata json', async (t) => {
   res.match(
     (ok) => {
       t.pass();
-      t.log(`# nft.storage content url: ${ok}`);
+      t.log(`# ipfst url: ${ok}`);
     },
     (err: Error) => t.fail(err.message),
   );
@@ -57,7 +57,7 @@ test('[nftStorage] Upload metadata json and file', async (t) => {
   res.match(
     (ok) => {
       t.pass();
-      t.log(`# nft.storage content url: ${ok}`);
+      t.log(`# ipfst url: ${ok}`);
     },
     (err: Error) => t.fail(err.message),
   );

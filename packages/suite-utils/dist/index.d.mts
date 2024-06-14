@@ -126,7 +126,6 @@ declare let Config: {
 };
 declare namespace Constants {
     namespace WarnningMessage {
-        const NFT_STORAGE_API_KEY = "\n        [YOU HAVE TO DO]\n        --------------------------------------\n        You need to update nftStorageApiKey define parameter in solana-suite.json.\n        Can get api key from https://nft.storage/\n        --------------------------------------\n        ";
         const FILEBASE_CREDENTIAL = "\n        [YOU HAVE TO DO]\n        --------------------------------------\n        You need to update Filebase credential(accessKey and secret) define parameter in solana-suite.json.\n        Can get credential from https://filebase.com/\n        --------------------------------------\n        ";
         const DAS_API_URL = "\n        [YOU HAVE TO DO]\n        --------------------------------------\n        You need to update dasApiUrl define parameter in solana-suite.json.\n        can get api url from https://www.helius.dev/\n        -------------------------------------- \n        ";
     }
@@ -157,10 +156,6 @@ declare namespace Constants {
         prd = "https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92",
         dev = "https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92"
     }
-    enum NftstorageApiKey {
-        prd = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE",
-        dev = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE"
-    }
     const FilebaseCredential: {
         dev: {
             key: string;
@@ -177,7 +172,6 @@ declare namespace Constants {
         key: string;
         secret: string;
     };
-    const switchNftStorage: (env: string) => string;
     const loadConfig: () => Promise<void>;
     const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;
     const MEMO_PROGRAM_ID: PublicKey;
@@ -194,7 +188,6 @@ declare namespace Constants {
         secret: string;
     };
     const DAS_API_URL: string;
-    const NFT_STORAGE_API_KEY: string;
     const EXPLORER_SOLSCAN_URL = "https://solscan.io";
     const EXPLORER_SOLANAFM_URL = "https://solana.fm";
     const EXPLORER_XRAY_URL = "https://xray.helius.xyz";

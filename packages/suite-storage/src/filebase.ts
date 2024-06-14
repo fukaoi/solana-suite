@@ -89,7 +89,9 @@ export namespace Filebase {
       });
       try {
         await connect().send(command);
-      } catch { }
+      } catch {
+        //noop
+      }
       return true;
     });
   };

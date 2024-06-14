@@ -5,13 +5,6 @@ export let Config = SolanaJsonConfig;
 
 export namespace Constants {
   export namespace WarnningMessage {
-    export const NFT_STORAGE_API_KEY = `
-        [YOU HAVE TO DO]
-        --------------------------------------
-        You need to update nftStorageApiKey define parameter in solana-suite.json.
-        Can get api key from https://nft.storage/
-        --------------------------------------
-        `;
     export const FILEBASE_CREDENTIAL = `
         [YOU HAVE TO DO]
         --------------------------------------
@@ -58,11 +51,6 @@ export namespace Constants {
   export enum DasApiUrl {
     prd = 'https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92',
     dev = 'https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92',
-  }
-
-  export enum NftstorageApiKey {
-    prd = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE',
-    dev = prd,
   }
 
   export const FilebaseCredential = {
@@ -152,21 +140,6 @@ export namespace Constants {
     }
   };
 
-  export const switchNftStorage = (env: string): string => {
-    // if setted custom nft.storage api key, most priority
-    if (customNftStorageApiKey) {
-      return customNftStorageApiKey;
-    }
-
-    switch (env) {
-      case Constants.Cluster.prd:
-        return Constants.NftstorageApiKey.prd;
-      default: {
-        return Constants.NftstorageApiKey.dev;
-      }
-    }
-  };
-
   export const loadConfig = async () => {
     Config = await import('@solana-suite/config/load');
   };
@@ -191,7 +164,6 @@ export namespace Constants {
     Config.cluster.type,
   );
   export const DAS_API_URL = switchDasApi(Config.cluster.type);
-  export const NFT_STORAGE_API_KEY = switchNftStorage(Config.cluster.type);
   export const EXPLORER_SOLSCAN_URL = 'https://solscan.io';
   export const EXPLORER_SOLANAFM_URL = 'https://solana.fm';
   export const EXPLORER_XRAY_URL = 'https://xray.helius.xyz';

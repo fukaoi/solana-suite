@@ -9,7 +9,7 @@ test('Upload file', async (t) => {
   res.match(
     (ok) => {
       t.pass();
-      t.log(`# nft.storage content url: ${ok}`);
+      t.log(`# filebase ipfs url: ${ok}`);
     },
     (err) => {
       console.error(err);
