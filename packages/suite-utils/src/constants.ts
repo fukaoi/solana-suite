@@ -1,7 +1,5 @@
 import { Finality, PublicKey } from '@solana/web3.js';
 import SolanaJsonConfig from '@solana-suite/config/load';
-import { assert } from 'console';
-import { type } from 'os';
 
 export let Config = SolanaJsonConfig;
 
