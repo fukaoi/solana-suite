@@ -10,7 +10,7 @@ import assert from 'assert';
 
 (async () => {
   ////////////////////////////////////////////////
-  //// (NFT.STORAGE) UPLOAD CONTENT FILE(IMAGE, MOVIE) FOR NFT
+  //// (Filebase) UPLOAD CONTENT FILE(IMAGE, MOVIE) FOR NFT
   ////////////////////////////////////////////////
 
   const feePayer = Account.Keypair.create();
@@ -23,14 +23,14 @@ import assert from 'assert';
 
   const contentUrl = resFile.map(
     (ok) => {
-      console.log(`# (nft.storage)content url: ${ok}`);
+      console.log(`# (filebase)content url: ${ok}`);
       return ok;
     },
     (err) => assert.fail(err.message),
   );
 
   ////////////////////////////////////////////////
-  //// (NFT.STORAGE) UPLOAD METADATA(JSON) FOR NFT
+  //// (filebase) UPLOAD METADATA(JSON) FOR NFT
   ////////////////////////////////////////////////
 
   const meta = {
@@ -43,7 +43,7 @@ import assert from 'assert';
 
   resMetadata.match(
     (ok) => {
-      console.log(`# (nft.storage)cmetadata url: ${ok}`);
+      console.log(`# (filebase)cmetadata url: ${ok}`);
     },
     (err: Error) => assert.fail(err.message),
   );

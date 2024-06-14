@@ -13,7 +13,7 @@ test.before(async () => {
   feePayer = obj.feePayer;
 });
 
-test('[Nft Storage] mint nft and nft burn', async (t) => {
+test('[Filebase] mint nft and nft burn', async (t) => {
   const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
   const inst1 = await RegularNft.mint(

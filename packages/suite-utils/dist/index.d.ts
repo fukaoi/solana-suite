@@ -134,7 +134,6 @@ declare namespace Constants {
     const currentCluster: string;
     const customClusterUrl: never[];
     const isDebugging: string;
-    const customNftStorageApiKey: string;
     const customDasApiUrl: never[];
     enum Cluster {
         prd = "mainnet-beta",
@@ -179,7 +178,6 @@ declare namespace Constants {
     const COMMITMENT: Finality;
     const MAX_TRANSACTION_VERSION: number;
     const MAX_TRANSACTION_RETRIES = 1;
-    const NFT_STORAGE_GATEWAY_URL = "https://ipfs.io/ipfs";
     const FILEBADE_GATEWAY_URL = "https://ipfs.filebase.io/ipfs";
     const IRYS_GATEWAY_URL = "https://gateway.irys.xyz";
     const BUNDLR_NETWORK_URL: string;
