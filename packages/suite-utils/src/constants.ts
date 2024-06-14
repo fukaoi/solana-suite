@@ -1,5 +1,7 @@
 import { Finality, PublicKey } from '@solana/web3.js';
 import SolanaJsonConfig from '@solana-suite/config/load';
+import { assert } from 'console';
+import { type } from 'os';
 
 export let Config = SolanaJsonConfig;
 
@@ -140,7 +142,9 @@ export namespace Constants {
   };
 
   export const loadConfig = async () => {
-    Config = await import('@solana-suite/config/load');
+    Config = await import('@solana-suite/config/load', {
+      assert: { type: 'json' },
+    });
   };
 
   export const WRAPPED_TOKEN_PROGRAM_ID = new PublicKey(

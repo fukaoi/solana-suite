@@ -32,3 +32,8 @@ test('DasApiUrl use dev', (t) => {
   const url = Constants.switchDasApi(Constants.Cluster.dev);
   t.true(Constants.DasApiUrl.dev.includes(url));
 });
+
+test('load config', async (t) => {
+  await Constants.loadConfig();
+  t.pass()/* ; */
+});
