@@ -756,9 +756,6 @@ importers:
       mpl-bubblegum-instructions:
         specifier: github:fukaoi/mpl-bubblegum-instructions
         version: https://codeload.github.com/fukaoi/mpl-bubblegum-instructions/tar.gz/357842f69922be400fe3f4fb809ced42afab3110(bufferutil@4.0.8)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(utf-8-validate@5.0.10)
-      nft.storage:
-        specifier: ^7.1.1
-        version: 7.1.1(encoding@0.1.13)(node-fetch@3.3.2)
     devDependencies:
       build-configs/ava:
         specifier: workspace:*

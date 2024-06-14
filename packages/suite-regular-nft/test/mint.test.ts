@@ -58,7 +58,7 @@ test.only('[Arweave] mint nft with fee payer', async (t) => {
   );
 });
 
-test('[Nft Storage] mint nft with fee payer', async (t) => {
+test('[Filebase] mint nft with fee payer', async (t) => {
   const owner = Account.Keypair.create();
   const asset = RandomAsset.get();
   const res = await RegularNft.mint(
@@ -86,7 +86,7 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
   );
 });
 
-test('[Nft Storage] mint nft with many optional datas, verified collection', async (t) => {
+test('[Filebase] mint nft with many optional datas, verified collection', async (t) => {
   const asset = RandomAsset.get();
   const creators: InputCreators[] = [];
   const unverifyCreator = Account.Keypair.create();

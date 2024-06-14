@@ -14,7 +14,7 @@ type Secret = (string & {
 
 type FileType = string | File;
 
-type StorageType = 'nftStorage' | 'arweave' | string;
+type StorageType = 'filebase' | 'arweave' | string;
 type Offchain = {
     name?: string;
     symbol?: string;
