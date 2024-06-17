@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
-    "test": "ava --config node_modules/build-configs/ava/base.cjs test/*",
+    "test": "ava --config node_modules/build-configs/ava/base.cjs ",
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test -c --write"

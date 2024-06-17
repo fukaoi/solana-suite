@@ -42,7 +42,7 @@
     "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs, ava, ~'",
     "prepublishOnly": "../../scripts/before-publish.mjs",
     "publish": "../../scripts/after-publish.mjs",
-    "test": "ava --config node_modules/build-configs/ava/base.cjs test/*"
+    "test": "ava --config node_modules/build-configs/ava/base.cjs "
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.590.0",
