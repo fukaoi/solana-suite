@@ -42,7 +42,8 @@
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "publish": "../../scripts/after-publish.mjs",
     "prepublishOnly": "../../scripts/before-publish.mjs",
-    "test": "ava --config node_modules/build-configs/ava/base.cjs "
+    "test": "ava --config node_modules/build-configs/ava/base.cjs ",
+    "test:all": "ava --config node_modules/build-configs/ava/base.cjs test/*"
   },
   "dependencies": {
     "@solana-suite/config": "workspace:*",

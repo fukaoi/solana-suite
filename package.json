@@ -2,7 +2,7 @@
   "version": "0.7.15",
   "private": true,
   "scripts": {
-    "test": "pnpm turbo test --no-daemon",
+    "test": "pnpm --filter '@solana-suite/*' test:all",
     "build": "pnpm turbo build --no-daemon",
     "clean": "pnpm turbo clean --no-daemon && rm -rf node_modules pnpm-lock.yaml && pnpm i && pnpm turbo build --no-daemon",
     "preinstall": "npx only-allow pnpm",
