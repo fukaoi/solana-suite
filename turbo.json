@@ -13,8 +13,7 @@
       "dependsOn": [
         "build",
         "eslint",
-        "prettier:fix",
-        "depcheck"
+        "prettier:fix"
       ],
       "cache": false
     },
