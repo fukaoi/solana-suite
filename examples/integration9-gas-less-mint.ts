@@ -36,7 +36,6 @@ import { Account, Result } from '@solana-suite/utils';
     royalty: 10,
     description: 'solana suite nft',
     filePath: RandomAsset.get().filePath as string,
-    storageType: 'nftStorage',
     isMutable: false,
   };
 

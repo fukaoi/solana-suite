@@ -3,7 +3,7 @@ import { FileType } from './irys';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { Secret } from '../account';
 
-export type StorageType = 'nftStorage' | 'arweave' | string;
+export type StorageType = 'filebase' | 'arweave' | string;
 
 export type MetadataAndOffchain = {
   onchain: Metadata;

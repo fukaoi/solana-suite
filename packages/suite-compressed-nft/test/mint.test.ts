@@ -21,7 +21,7 @@ test.before(async () => {
   collectionMint = obj.collectionMint;
 });
 
-test('[nftStorage] mint nft, already uploaed image, animation', async (t) => {
+test('[filebae] mint nft, already uploaed image, animation', async (t) => {
   const asset = RandomAsset.get();
   const name = 'Red tailed Hawk';
   const animation_url =
@@ -103,7 +103,7 @@ test('[Arweave] mint nft', async (t) => {
   t.pass();
 });
 
-test('[Nft Storage] mint nft with fee payer', async (t) => {
+test('[Filebase] mint nft with fee payer', async (t) => {
   const asset = RandomAsset.get();
   const name = 'Yellow Fox';
   const inst = await CompressedNft.mint(
@@ -138,7 +138,7 @@ test('[Nft Storage] mint nft with fee payer', async (t) => {
   t.pass();
 });
 
-test('[Nft Storage] mint nft with many optional datas, verified collection', async (t) => {
+test('[FIlebase] mint nft with many optional datas, verified collection', async (t) => {
   const asset = RandomAsset.get();
   const creators: InputCreators[] = [];
   const unverifyCreator = Account.Keypair.create();

@@ -5,7 +5,10 @@ test('load solana-suite.json', (t) => {
   t.like(config, {
     cluster: { type: 'localhost-devnet', customClusterUrl: [] },
     debugging: 'false',
-    nftStorageApiKey: '',
+    filebase: {
+      key: '',
+      secret: '',
+    },
     dasApiUrl: [],
   });
 });

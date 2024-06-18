@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": [
         "^build"
@@ -17,15 +17,6 @@
         "depcheck"
       ],
       "cache": false
-    },
-    "test": {
-      "dependsOn": [
-        "build"
-      ],
-      "inputs": [
-        "src/**/*.ts",
-        "test/**/*.ts"
-      ]
     },
     "prettier": {},
     "prettier:fix": {},

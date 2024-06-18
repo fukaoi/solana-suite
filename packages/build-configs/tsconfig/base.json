@@ -12,7 +12,7 @@
     "noEmit": true,
     "moduleResolution": "Bundler",
     "target": "ESNext",
-    "module": "ES2020",
+    "module": "ESNext",
     "resolveJsonModule": true,
     "stripInternal": true,
     "outDir": "dist",

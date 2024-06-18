@@ -67,7 +67,6 @@ import { RandomAsset } from 'test-tools/setupAsset';
     symbol: 'SST',
     royalty: 50,
     filePath: RandomAsset.get().filePath as string,
-    storageType: 'nftStorage',
     isMutable: false,
   };
 

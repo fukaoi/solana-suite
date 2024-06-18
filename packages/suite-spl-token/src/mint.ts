@@ -35,7 +35,7 @@ import { Storage } from '~/suite-storage';
 import { MintStructure } from '~/types/transaction-builder';
 
 export namespace SplToken {
-  const DEFAULT_STORAGE_TYPE = 'nftStorage';
+  const DEFAULT_STORAGE_TYPE = 'filebase';
 
   //@internal
   export const createFreezeAuthority = (

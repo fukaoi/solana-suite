@@ -100,7 +100,7 @@ type Asset = {
     burnt: boolean;
 };
 
-type StorageType = 'nftStorage' | 'arweave' | string;
+type StorageType = 'filebase' | 'arweave' | string;
 type MetadataAndOffchain = {
     onchain: Metadata$2;
     offchain: Offchain;

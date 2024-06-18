@@ -11,20 +11,20 @@ test.before(async () => {
   source = obj.source;
 });
 
-test('[nftStorage] Upload file', async (t) => {
+test('[filebase] Upload file', async (t) => {
   const asset = RandomAsset.get();
-  const res = await Storage.uploadFile(asset.filePath!, 'nftStorage');
+  const res = await Storage.uploadFile(asset.filePath!, 'filebase');
 
   res.match(
     (ok) => {
       t.pass();
-      t.log(`# nft.storage content url: ${ok}`);
+      t.log(`# ipfst url: ${ok}`);
     },
     (err) => t.fail(err.message),
   );
 });
 
-test('[nftStorage] Upload metadata json', async (t) => {
+test('[filebase] Upload metadata json', async (t) => {
   const asset = RandomAsset.get();
   const image =
     'https://ipfs.io/ipfs/bafkreihot4ala2cozjqgnlwhia2ujtqjuyrekfzyktmg2vajnnkrlihfnm';
@@ -34,30 +34,30 @@ test('[nftStorage] Upload metadata json', async (t) => {
     description: asset.description,
     image: image,
   };
-  const res = await Storage.uploadData(meta, 'nftStorage');
+  const res = await Storage.uploadData(meta, 'filebase');
 
   res.match(
     (ok) => {
       t.pass();
-      t.log(`# nft.storage content url: ${ok}`);
+      t.log(`# ipfst url: ${ok}`);
     },
     (err: Error) => t.fail(err.message),
   );
 });
 
-test('[nftStorage] Upload metadata json and file', async (t) => {
+test('[filebase] Upload metadata json and file', async (t) => {
   const asset = RandomAsset.get();
   const meta = {
     name: asset.name,
     symbol: asset.symbol,
     description: asset.description,
   };
-  const res = await Storage.upload(meta, asset.filePath, 'nftStorage');
+  const res = await Storage.upload(meta, asset.filePath, 'filebase');
 
   res.match(
     (ok) => {
       t.pass();
-      t.log(`# nft.storage content url: ${ok}`);
+      t.log(`# ipfst url: ${ok}`);
     },
     (err: Error) => t.fail(err.message),
   );

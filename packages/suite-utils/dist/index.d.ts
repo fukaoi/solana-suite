@@ -117,12 +117,15 @@ declare let Config: {
         customClusterUrl: never[];
     };
     debugging: string;
-    nftStorageApiKey: string;
     dasApiUrl: never[];
+    filebase: {
+        key: string;
+        secret: string;
+    };
 };
 declare namespace Constants {
     namespace WarnningMessage {
-        const NFT_STORAGE_API_KEY = "\n        [YOU HAVE TO DO]\n        --------------------------------------\n        You need to update nftStorageApiKey define parameter in solana-suite.json.\n        Can get api key from https://nft.storage/\n        --------------------------------------\n        ";
+        const FILEBASE_CREDENTIAL = "\n        [YOU HAVE TO DO]\n        --------------------------------------\n        You need to update Filebase credential(accessKey and secret) define parameter in solana-suite.json.\n        Can get credential from https://filebase.com/\n        --------------------------------------\n        ";
         const DAS_API_URL = "\n        [YOU HAVE TO DO]\n        --------------------------------------\n        You need to update dasApiUrl define parameter in solana-suite.json.\n        can get api url from https://www.helius.dev/\n        -------------------------------------- \n        ";
     }
 }
@@ -130,7 +133,6 @@ declare namespace Constants {
     const currentCluster: string;
     const customClusterUrl: never[];
     const isDebugging: string;
-    const customNftStorageApiKey: string;
     const customDasApiUrl: never[];
     enum Cluster {
         prd = "mainnet-beta",
@@ -152,17 +154,22 @@ declare namespace Constants {
         prd = "https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92",
         dev = "https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92"
     }
-    enum NftstorageApiKey {
-        prd = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE",
-        dev = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE"
-    }
+    const FilebaseCredential: {
+        dev: {
+            key: string;
+            secret: string;
+        };
+    };
     const switchCluster: (param: {
         cluster?: string;
         customClusterUrl?: string[];
     }) => string;
     const switchBundlr: (env: string) => string;
     const switchDasApi: (env: string) => string;
-    const switchNftStorage: (env: string) => string;
+    const switchFilebaseCredential: (env: string) => {
+        key: string;
+        secret: string;
+    };
     const loadConfig: () => Promise<void>;
     const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;
     const MEMO_PROGRAM_ID: PublicKey;
@@ -170,11 +177,14 @@ declare namespace Constants {
     const COMMITMENT: Finality;
     const MAX_TRANSACTION_VERSION: number;
     const MAX_TRANSACTION_RETRIES = 1;
-    const NFT_STORAGE_GATEWAY_URL = "https://ipfs.io/ipfs";
+    const FILEBADE_GATEWAY_URL = "https://ipfs.filebase.io/ipfs";
     const IRYS_GATEWAY_URL = "https://gateway.irys.xyz";
     const BUNDLR_NETWORK_URL: string;
+    const FILEBASE_ACCESS_KEYS: {
+        key: string;
+        secret: string;
+    };
     const DAS_API_URL: string;
-    const NFT_STORAGE_API_KEY: string;
     const EXPLORER_SOLSCAN_URL = "https://solscan.io";
     const EXPLORER_SOLANAFM_URL = "https://solana.fm";
     const EXPLORER_XRAY_URL = "https://xray.helius.xyz";
@@ -514,7 +524,7 @@ type InputCreators = {
 
 type FileType = string | File;
 
-type StorageType = 'nftStorage' | 'arweave' | string;
+type StorageType = 'filebase' | 'arweave' | string;
 type Offchain = {
     name?: string;
     symbol?: string;

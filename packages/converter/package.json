@@ -11,14 +11,16 @@
     "eslint": "eslint -c node_modules/build-configs/eslint/base.json ./src ./test",
     "prettier": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c",
     "prettier:fix": "prettier --config node_modules/build-configs/prettier/base.json ./src/ ./test/ -c --write",
-    "test": "ava --config node_modules/build-configs/ava/base.cjs"
+    "test": "ava --config node_modules/build-configs/ava/base.cjs ",
+    "test:all": "ava --config node_modules/build-configs/ava/base.cjs test/*"
   },
   "dependencies": {
-    "@solana-suite/utils": "workspace:*",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
-    "mpl-bubblegum-instructions": "github:fukaoi/mpl-bubblegum-instructions",
+    "@solana-suite/utils": "workspace:*",
     "@solana/web3.js": "^1.78.5",
-    "bs58": "^4.0.1"
+    "bs58": "^4.0.1",
+    "fastestsmallesttextencoderdecoder": "^1.0.22",
+    "mpl-bubblegum-instructions": "github:fukaoi/mpl-bubblegum-instructions"
   },
   "devDependencies": {
     "@types/bs58": "^4.0.2",

@@ -288,7 +288,7 @@ type PhantomProvider = {
 
 type FileType = string | File;
 
-type StorageType = 'nftStorage' | 'arweave' | string;
+type StorageType = 'filebase' | 'arweave' | string;
 type Properties = {
     creators?: {
         address?: string;

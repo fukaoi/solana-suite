@@ -5,11 +5,11 @@ export let Config = SolanaJsonConfig;
 
 export namespace Constants {
   export namespace WarnningMessage {
-    export const NFT_STORAGE_API_KEY = `
+    export const FILEBASE_CREDENTIAL = `
         [YOU HAVE TO DO]
         --------------------------------------
-        You need to update nftStorageApiKey define parameter in solana-suite.json.
-        Can get api key from https://nft.storage/
+        You need to update Filebase credential(accessKey and secret) define parameter in solana-suite.json.
+        Can get credential from https://filebase.com/
         --------------------------------------
         `;
     export const DAS_API_URL = `
@@ -19,13 +19,6 @@ export namespace Constants {
         can get api url from https://www.helius.dev/
         -------------------------------------- 
         `;
-    // export const ANNOUNCE = `
-    //     [DEPRECATED]
-    //     --------------------------------------
-    //     Account, Node, toExplorer, Pubkey, Secret have been moved to
-    //     @solana-suite/utils
-    //     -------------------------------------
-    //     `;
   }
 }
 
@@ -33,7 +26,6 @@ export namespace Constants {
   export const currentCluster = Config.cluster.type;
   export const customClusterUrl = Config.cluster.customClusterUrl;
   export const isDebugging = Config.debugging;
-  export const customNftStorageApiKey = Config.nftStorageApiKey;
   export const customDasApiUrl = Config.dasApiUrl;
 
   export enum Cluster {
@@ -60,10 +52,12 @@ export namespace Constants {
     dev = 'https://devnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92',
   }
 
-  export enum NftstorageApiKey {
-    prd = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERGMjcyN2VkODZhRGU1RTMyZDZDZEJlODc0YzRFNDlEODY1OWZmOEMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMDI2NDk0MzcwNiwibmFtZSI6ImRlbW8ifQ.d4J70mikxRB8a5vwNu6SO5HDA8JaueuseAj7Q_ytMCE',
-    dev = prd,
-  }
+  export const FilebaseCredential = {
+    dev: {
+      key: '9CA51CEFF9FF98CB91CF',
+      secret: 'CgjYuMvs2NdFGbLPyFDSWESaO05nobQ9mp16PPDo',
+    },
+  };
 
   export const switchCluster = (param: {
     cluster?: string;
@@ -126,23 +120,34 @@ export namespace Constants {
     }
   };
 
-  export const switchNftStorage = (env: string): string => {
-    // if setted custom nft.storage api key, most priority
-    if (customNftStorageApiKey) {
-      return customNftStorageApiKey;
-    }
-
+  export const switchFilebaseCredential = (
+    env: string,
+  ): {
+    key: string;
+    secret: string;
+  } => {
     switch (env) {
-      case Constants.Cluster.prd:
-        return Constants.NftstorageApiKey.prd;
+      case Constants.Cluster.prd: {
+        if (!Config.filebase.key || !Config.filebase.secret) {
+          throw Error(Constants.WarnningMessage.FILEBASE_CREDENTIAL);
+        }
+        return Config.filebase;
+      }
       default: {
-        return Constants.NftstorageApiKey.dev;
+        return FilebaseCredential.dev;
       }
     }
   };
 
   export const loadConfig = async () => {
-    Config = await import('@solana-suite/config/load');
+    const { default: loadedConfig } = await import(
+      '@solana-suite/config/load',
+      {
+        with: { type: 'json' },
+      }
+    );
+    Config = loadedConfig;
+    console.log('##############', Config);
   };
 
   export const WRAPPED_TOKEN_PROGRAM_ID = new PublicKey(
@@ -157,11 +162,13 @@ export namespace Constants {
   export const COMMITMENT: Finality = 'confirmed';
   export const MAX_TRANSACTION_VERSION: number = 0;
   export const MAX_TRANSACTION_RETRIES = 1;
-  export const NFT_STORAGE_GATEWAY_URL = 'https://ipfs.io/ipfs';
+  export const FILEBADE_GATEWAY_URL = 'https://ipfs.filebase.io/ipfs';
   export const IRYS_GATEWAY_URL = 'https://gateway.irys.xyz';
   export const BUNDLR_NETWORK_URL = switchBundlr(Config.cluster.type);
+  export const FILEBASE_ACCESS_KEYS = switchFilebaseCredential(
+    Config.cluster.type,
+  );
   export const DAS_API_URL = switchDasApi(Config.cluster.type);
-  export const NFT_STORAGE_API_KEY = switchNftStorage(Config.cluster.type);
   export const EXPLORER_SOLSCAN_URL = 'https://solscan.io';
   export const EXPLORER_SOLANAFM_URL = 'https://solana.fm';
   export const EXPLORER_XRAY_URL = 'https://xray.helius.xyz';

@@ -15,7 +15,7 @@ test.before(async () => {
   feePayer = obj.feePayer;
 });
 
-test('[Nft Storage] mint nft with fee payer', async (t) => {
+test('[Filebase] mint nft with fee payer', async (t) => {
   const owner = Account.Keypair.create();
   const freezeAuthority = Account.Keypair.create();
   const asset = RandomAsset.get();

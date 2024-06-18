@@ -17,7 +17,7 @@ type Tags = [{
     value: string;
 }];
 
-type StorageType = 'nftStorage' | 'arweave' | string;
+type StorageType = 'filebase' | 'arweave' | string;
 type MetadataAndOffchain = {
     onchain: Metadata;
     offchain: Offchain;

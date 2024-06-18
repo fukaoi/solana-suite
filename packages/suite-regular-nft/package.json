@@ -41,14 +41,15 @@
     "depcheck": "depcheck --ignores='build-configs/*, @typescript-eslint/*, build-configs, ava, ~'",
     "publish": "../../scripts/after-publish.mjs",
     "prepublishOnly": "../../scripts/before-publish.mjs",
-    "test": "ava --config node_modules/build-configs/ava/base.cjs"
+    "test": "ava --config node_modules/build-configs/ava/base.cjs ",
+    "test:all": "ava --config node_modules/build-configs/ava/base.cjs test/*"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.590.0",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.5",
     "bignumber.js": "^9.1.2",
-    "nft.storage": "^7.1.1",
     "bs58": "^5.0.0",
     "@solana-suite/config": "workspace:*",
     "@irys/sdk": "^0.0.3",

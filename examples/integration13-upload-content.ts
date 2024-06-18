@@ -10,12 +10,12 @@ import assert from 'assert';
 
 (async () => {
   ////////////////////////////////////////////////
-  //// (NFT.STORAGE) UPLOAD CONTENT FILE(IMAGE, MOVIE) FOR NFT
+  //// (Filebase) UPLOAD CONTENT FILE(IMAGE, MOVIE) FOR NFT
   ////////////////////////////////////////////////
 
   const feePayer = Account.Keypair.create();
   const asset = RandomAsset.get();
-  const resFile = await Storage.uploadFile(asset.filePath!, 'nftStorage');
+  const resFile = await Storage.uploadFile(asset.filePath!, 'filebase');
   console.log('# owner: ', feePayer.pubkey);
 
   await requestSol(feePayer.pubkey, 0.01);
@@ -23,14 +23,14 @@ import assert from 'assert';
 
   const contentUrl = resFile.map(
     (ok) => {
-      console.log(`# (nft.storage)content url: ${ok}`);
+      console.log(`# (filebase)content url: ${ok}`);
       return ok;
-    },
+    } 
     (err) => assert.fail(err.message),
   );
 
   ////////////////////////////////////////////////
-  //// (NFT.STORAGE) UPLOAD METADATA(JSON) FOR NFT
+  //// (filebase) UPLOAD METADATA(JSON) FOR NFT
   ////////////////////////////////////////////////
 
   const meta = {
@@ -39,11 +39,11 @@ import assert from 'assert';
     description: asset.description,
     image: contentUrl.unwrap(),
   };
-  const resMetadata = await Storage.uploadData(meta, 'nftStorage');
+  const resMetadata = await Storage.uploadData(meta, 'filebase');
 
   resMetadata.match(
     (ok) => {
-      console.log(`# (nft.storage)cmetadata url: ${ok}`);
+      console.log(`# (filebase)cmetadata url: ${ok}`);
     },
     (err: Error) => assert.fail(err.message),
   );
