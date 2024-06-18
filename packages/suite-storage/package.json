@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/storage",
-  "version": "0.7.17",
+  "version": "0.7.18",
   "description": "decentrized file storage library",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

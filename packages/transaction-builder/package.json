@@ -1,6 +1,6 @@
 {
   "name": "transaction-builder",
-  "version": "0.7.17",
+  "version": "0.7.18",
   "private": true,
   "main": "dist/index.js",
   "module": "dist/index.mjs",

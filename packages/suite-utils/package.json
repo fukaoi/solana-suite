@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/utils",
-  "version": "0.7.17",
+  "version": "0.7.18",
   "description": "Uitlity functions",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
