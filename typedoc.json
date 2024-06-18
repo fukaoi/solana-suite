@@ -3,7 +3,6 @@
   "entryPoints": [
     "packages/suite-airdrop",
     "packages/suite-compressed-nft",
-    "packages/suite-memo",
     "packages/suite-multisig",
     "packages/suite-phantom",
     "packages/suite-regular-nft",
