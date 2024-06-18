@@ -114,7 +114,7 @@ program
     'display debug log on terminal. defalut "false" ',
   )
   .option(
-    '-f --filebase <key> <secret>',
+    '-f --filebase <key> <secret...>',
     'Set filebase key and secret. "9CA51CEFF9FF98CB91CF" "CgjYuMvs2NdFGbLPyFDSWESaO05nobQ9mp16PPDo" ',
   )
   .option(
@@ -176,12 +176,12 @@ const execDebug = (bool: string): void => {
   updateDebugConfigFile(bool);
 };
 
-const execFilebase = (filebase: Filebase): void => {
-  if (filebase.key.length < 1 || filebase.secret.length < 1) {
+const execFilebase = (filebase: string[]): void => {
+  if (filebase.length < 2) {
     warnMessage('Not found filebase key or secret');
     process.exit(0);
   }
-  updateFilebaseConfigFile(filebase);
+  updateFilebaseConfigFile({ key: filebase[0], secret: filebase[1] });
 };
 
 const execDasApiUrl = (url: string[]): void => {
@@ -217,6 +217,7 @@ if (options.cluster) {
 } else if (options.debug) {
   execDebug(options.debug);
 } else if (options.filebase) {
+  console.log(options);
   execFilebase(options.filebase);
 } else if (options.dasApiUrl) {
   execDasApiUrl(options.dasApiUrl);
