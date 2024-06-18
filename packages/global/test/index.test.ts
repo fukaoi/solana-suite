@@ -1,7 +1,6 @@
 import test from 'ava';
 import '../src';
 import { Explorer } from '~/types/global';
-import { Constants } from '../../suite-utils/src/constants';
 
 const PUBKEY = '2xCW38UaYTaBtEqChPG7h7peidnxPS8UDAMLFKkKCJ5U';
 const MINT = 'J2DUquFhToJbkEc4YSPuTjhZDXZvRaBUgUX5RW3cSsdr';
