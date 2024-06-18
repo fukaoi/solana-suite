@@ -134,6 +134,9 @@ export namespace Constants {
         return Config.filebase;
       }
       default: {
+        if (Config.filebase.key || Config.filebase.secret) {
+          return Config.filebase;
+        }
         return FilebaseCredential.dev;
       }
     }
