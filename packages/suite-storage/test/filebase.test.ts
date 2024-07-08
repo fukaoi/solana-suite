@@ -35,11 +35,6 @@ test('Upload metadata json', async (t) => {
   );
 });
 
-test('Check and Create bucket', async (t) => {
-  await Filebase.checkAndCreateBucket('solana-suite');
-  t.pass();
-});
-
 test('Remove objects in buckets', async (t) => {
   const res = await Filebase.remove();
   res.match(

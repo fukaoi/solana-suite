@@ -4,7 +4,6 @@ import { FileType, Offchain } from '~/types/storage';
 import {
   CreateBucketCommand,
   DeleteObjectsCommand,
-  ListBucketsCommand,
   ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
@@ -33,15 +32,16 @@ export namespace Filebase {
     debugLog('# fileName: ', fileName);
     debugLog('# file: ', file);
 
-    await checkAndCreateBucket(BUCKET_NAME);
+    const createCommand = new CreateBucketCommand({ Bucket: BUCKET_NAME });
+    await connect().send(createCommand);
 
-    const command = new PutObjectCommand({
+    const putCommand = new PutObjectCommand({
       Bucket: BUCKET_NAME,
       Key: fileName,
       Body: file,
     });
 
-    command.middlewareStack.add((next) => async (args) => {
+    putCommand.middlewareStack.add((next) => async (args) => {
       /* eslint @typescript-eslint/no-explicit-any: off */
       const response = await next(args);
       const httpsResponse = response.response as HttpResponse;
@@ -55,7 +55,7 @@ export namespace Filebase {
       return response;
     });
 
-    const res = await connect().send(command);
+    const res = await connect().send(putCommand);
     if (!res.$metadata.cfId) {
       throw Error('Not fetch CID');
     }
@@ -145,27 +145,5 @@ export namespace Filebase {
         JSON.stringify(storageData),
       );
     });
-  };
-
-  /**
-   * Check if a bucket exists in Filebase, and create it if it does not exist.
-   * @param {string} bucketName
-   * @return Promise<void>
-   */
-  export const checkAndCreateBucket = async (
-    bucketName: string,
-  ): Promise<void> => {
-    const command = new ListBucketsCommand();
-    const { Buckets } = await connect().send(command);
-    debugLog('# Buckets: ', Buckets);
-    if (Buckets) {
-      if (!Buckets.find((bucket) => bucket.Name === bucketName)) {
-        const command = new CreateBucketCommand({ Bucket: bucketName });
-        await connect().send(command);
-      }
-    } else {
-      const command = new CreateBucketCommand({ Bucket: bucketName });
-      await connect().send(command);
-    }
   };
 }
