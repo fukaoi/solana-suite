@@ -47,9 +47,6 @@ export namespace Filebase {
       /* eslint @typescript-eslint/no-explicit-any: off */
       const response = await next(args);
       const httpsResponse = response.response as HttpResponse;
-      if (!httpsResponse.reason) {
-        return response;
-      }
       const cid = httpsResponse.headers['x-amz-meta-cid'];
       debugLog('#cid: ', cid);
       response.output.$metadata.cfId = cid;
