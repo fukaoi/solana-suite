@@ -1,6 +1,6 @@
 {
   "name": "transaction-filter",
-  "version": "0.7.19",
+  "version": "0.7.20",
   "private": true,
   "main": "dist/index.js",
   "module": "dist/index.mjs",

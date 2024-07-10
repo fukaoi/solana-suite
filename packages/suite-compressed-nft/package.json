@@ -1,6 +1,6 @@
 {
   "name": "@solana-suite/compressed-nft",
-  "version": "0.7.19",
+  "version": "0.7.20",
   "description": "compressed nft module for solana-suite",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
