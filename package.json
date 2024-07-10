@@ -1,5 +1,5 @@
 {
-  "version": "0.7.19",
+  "version": "0.7.20",
   "private": true,
   "scripts": {
     "test": "pnpm --filter '@solana-suite/*' test:all",
