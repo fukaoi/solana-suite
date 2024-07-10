@@ -1,4 +1,3 @@
-import * as _solana_web3_js from '@solana/web3.js';
 import { TransactionInstruction, PublicKey, Keypair, Finality, TransactionSignature, Connection, Commitment } from '@solana/web3.js';
 import BN from 'bn.js';
 import { DataV2 } from '@metaplex-foundation/mpl-token-metadata';
@@ -483,6 +482,32 @@ type Result<T, E extends Error = Error> = Result.Ok<T, E> | Result.Err<T, E>;
 type OkType<R extends Result<unknown>> = R extends Result<infer O> ? O : never;
 type ErrType<R extends Result<unknown>> = R extends Result<unknown, infer E> ? E : never;
 
+/**
+ * Extra contextual information for RPC responses
+ */
+type Context = {
+    slot: number;
+};
+/**
+ * RPC Response with extra contextual information
+ */
+type RpcResponseAndContext<T> = {
+    /** response context */
+    context: Context;
+    /** response value */
+    value: T;
+};
+/**
+ * Signature result
+ */
+type SignatureResult = {
+    err: TransactionError | null;
+};
+/**
+ * Transaction error
+ */
+type TransactionError = {} | string;
+
 declare namespace Node {
     const getConnection: () => Connection;
     const changeConnection: (param: {
@@ -490,7 +515,7 @@ declare namespace Node {
         commitment?: Finality;
         customClusterUrl?: string[];
     }) => void;
-    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Err<_solana_web3_js.RpcResponseAndContext<_solana_web3_js.SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
+    const confirmedSig: (signature: string, commitment?: Commitment) => Promise<Result.Ok<RpcResponseAndContext<SignatureResult>, Error> | Result.Err<RpcResponseAndContext<SignatureResult>, Error> | Result.Ok<never, any> | Result.Err<never, any>>;
 }
 
 type Condition = 'overMax' | 'underMin';

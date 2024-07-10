@@ -2,18 +2,22 @@ import { Constants, debugLog, Result, Try, unixTimestamp } from '~/suite-utils';
 import { ProvenanceLayer } from './provenance-layer';
 import { FileType, Offchain } from '~/types/storage';
 import {
-  CreateBucketCommand,
   DeleteObjectsCommand,
   ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
 
+import pino from 'pino';
 import type { HttpResponse } from '@smithy/protocol-http';
 
 // @internal
 export namespace Filebase {
   const BUCKET_NAME = 'solana-suite';
+  const LOG_LEVEL =
+    Constants.isDebugging == 'true' || process.env.DEBUG === 'true'
+      ? 'debug'
+      : 'warn';
   const createGatewayUrl = (cid: string): string =>
     `${Constants.FILEBADE_GATEWAY_URL}/${cid}`;
 
@@ -25,15 +29,13 @@ export namespace Filebase {
       },
       endpoint: 'https://s3.filebase.com',
       region: 'us-east-1',
+      logger: pino({ level: LOG_LEVEL }),
     });
   };
 
   const put = async (fileName: string, file: Buffer | string) => {
     debugLog('# fileName: ', fileName);
     debugLog('# file: ', file);
-
-    const createCommand = new CreateBucketCommand({ Bucket: BUCKET_NAME });
-    await connect().send(createCommand);
 
     const putCommand = new PutObjectCommand({
       Bucket: BUCKET_NAME,
@@ -109,7 +111,7 @@ export namespace Filebase {
         fileName = fileType.name;
         file = Buffer.from(await fileType.arrayBuffer());
       } else {
-        fileName = 'No name(for ArrayBuffer)';
+        fileName = `${Date.now()}`;
         file = Buffer.from(fileType as ArrayBuffer);
       }
       return put(fileName, file);
