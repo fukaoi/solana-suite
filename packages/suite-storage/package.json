@@ -56,7 +56,8 @@
     "bignumber.js": "^9.1.2",
     "bn.js": "^5.2.1",
     "bs58": "^4.0.1",
-    "mpl-bubblegum-instructions": "github:fukaoi/mpl-bubblegum-instructions"
+    "mpl-bubblegum-instructions": "github:fukaoi/mpl-bubblegum-instructions",
+    "pino": "^9.2.0"
   },
   "devDependencies": {
     "build-configs/ava": "workspace:*",
