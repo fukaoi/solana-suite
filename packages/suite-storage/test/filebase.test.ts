@@ -1,6 +1,8 @@
 import test from 'ava';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Filebase } from '../src/filebase';
+import { Constants } from '~/suite-utils';
+import { execSync } from 'child_process';
 
 test('Upload file', async (t) => {
   const asset = RandomAsset.get();
@@ -40,6 +42,25 @@ test('Remove objects in buckets', async (t) => {
   res.match(
     async (ok) => {
       t.true(ok);
+    },
+    (err) => {
+      console.error(err);
+      t.fail(err.message);
+    },
+  );
+});
+
+test('Upload file  with custom parameter', async (t) => {
+  execSync(
+    'pnpm solana-suite-config -f 9CA51CEFF9FF98CB91CF CgjYuMvs2NdFGbLPyFDSWESaO05nobQ9mp16PPDo firedancer',
+  );
+  const asset = RandomAsset.get();
+  const res = await Filebase.uploadFile(asset.filePath!);
+
+  res.match(
+    (ok) => {
+      t.pass();
+      t.log(`# filebase ipfs url: ${ok}`);
     },
     (err) => {
       console.error(err);

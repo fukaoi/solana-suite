@@ -9,6 +9,7 @@ const program = new Command();
 type Filebase = {
   key: string;
   secret: string;
+  bucket: string;
 };
 
 let configPath: string;
@@ -114,8 +115,8 @@ program
     'display debug log on terminal. defalut "false" ',
   )
   .option(
-    '-f --filebase <key> <secret...>',
-    'Set filebase key and secret. "9CA51CEFF9FF98CB91CF" "CgjYuMvs2NdFGbLPyFDSWESaO05nobQ9mp16PPDo" ',
+    '-f --filebase <key> <secret> <bucket...>',
+    'Set filebase key and secret. "9CA51CEFF9FF98CB91CF" "CgjYuMvs2NdFGbLPyFDSWESaO05nobQ9mp16PPDo" "MyStorage"  ',
   )
   .option(
     '-das --das-api-url <digital asset api url...>',
@@ -177,11 +178,15 @@ const execDebug = (bool: string): void => {
 };
 
 const execFilebase = (filebase: string[]): void => {
-  if (filebase.length < 2) {
+  if (filebase.length < 3) {
     warnMessage('Not found filebase key or secret');
     process.exit(0);
   }
-  updateFilebaseConfigFile({ key: filebase[0], secret: filebase[1] });
+  updateFilebaseConfigFile({
+    key: filebase[0],
+    secret: filebase[1],
+    bucket: filebase[2],
+  });
 };
 
 const execDasApiUrl = (url: string[]): void => {
