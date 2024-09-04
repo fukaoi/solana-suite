@@ -2,9 +2,9 @@
   "name": "test-tools",
   "private": true,
   "version": "0.7.20",
+  "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup --config build-configs/tsup/base.ts",
     "clean": "rm -rf dist/ && rm -rf node_modules",
@@ -25,24 +25,24 @@
   },
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/index.mjs"
     },
     "./setup": {
+      "types": "./setup.ts",
       "require": "./setup.ts",
-      "import": "./setup.ts",
-      "types": "./setup.ts"
+      "import": "./setup.ts"
     },
     "./assets": {
+      "types": "./assets",
       "require": "./assets",
-      "import": "./assets",
-      "types": "./assets"
+      "import": "./assets"
     },
     "./setupAsset": {
+      "types": "./setupAsset.ts",
       "require": "./setupAsset.ts",
-      "import": "./setupAsset.ts",
-      "types": "./setupAsset.ts"
+      "import": "./setupAsset.ts"
     }
   }
 }

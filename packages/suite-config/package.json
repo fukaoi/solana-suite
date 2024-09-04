@@ -61,14 +61,14 @@
   },
   "exports": {
     "./search": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/index.mjs"
     },
     "./load": {
+      "types": "./solana-suite.json",
       "require": "./solana-suite.json",
-      "import": "./solana-suite.json",
-      "types": "./solana-suite.json"
+      "import": "./solana-suite.json"
     }
   }
 }
