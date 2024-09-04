@@ -417,9 +417,9 @@ declare const DasApi: {
     changeDasUri: (url: string) => void;
     getAssetProof: (assetId: string) => Promise<Result<AssetProof, Error>>;
     getAsset: (assetId: Pubkey) => Promise<Result<Asset, Error>>;
-    getAssetsByOwner: (ownerAddress: Pubkey, limit?: number, page?: number, sortBy?: Sortable | undefined, before?: string | undefined, after?: string | undefined) => Promise<Result<Assets, Error>>;
-    getAssetsByGroup: (groupKey: string, groupValue: Pubkey, limit?: number, page?: number, sortBy?: Sortable | undefined, before?: string | undefined, after?: string | undefined) => Promise<Result<Assets, Error>>;
-    getPriorityFeeEstimate: (accountOrTransaction: _solana_web3_js.Transaction | Pubkey[]) => Promise<Result<PriorityFeeLevels, Error>>;
+    getAssetsByOwner: (ownerAddress: Pubkey, limit?: number, page?: number, sortBy?: Sortable, before?: string, after?: string) => Promise<Result<Assets, Error>>;
+    getAssetsByGroup: (groupKey: string, groupValue: Pubkey, limit?: number, page?: number, sortBy?: Sortable, before?: string, after?: string) => Promise<Result<Assets, Error>>;
+    getPriorityFeeEstimate: (accountOrTransaction: Pubkey[] | _solana_web3_js.Transaction) => Promise<Result<PriorityFeeLevels, Error>>;
 };
 
 export { DasApi };

@@ -316,9 +316,9 @@ type InputNftMetadata = {
 /** @namespace */
 declare const Storage: {
     toConvertOffchaindata: (input: InputNftMetadata, sellerFeeBasisPoints: number) => Offchain;
-    uploadFile: (filePath: FileType, storageType: string, options?: Partial<StorageOptions>) => Promise<Result<string, Error>>;
-    uploadData: (input: Offchain, storageType: string, options?: Partial<StorageOptions>) => Promise<Result<string, Error>>;
-    upload: (input: Offchain, filePath: FileType, storageType: string, options?: Partial<StorageOptions>) => Promise<Result<string, Error>>;
+    uploadFile: (filePath: FileType, storageType: StorageType, options?: Partial<StorageOptions>) => Promise<Result<string, Error>>;
+    uploadData: (input: Offchain, storageType: StorageType, options?: Partial<StorageOptions>) => Promise<Result<string, Error>>;
+    upload: (input: Offchain, filePath: FileType, storageType: StorageType, options?: Partial<StorageOptions>) => Promise<Result<string, Error>>;
 };
 
 export { Storage };

@@ -13,7 +13,6 @@ import type { HttpResponse } from '@smithy/protocol-http';
 
 // @internal
 export namespace Filebase {
-  const BUCKET_NAME = 'solana-suite';
   const LOG_LEVEL =
     Constants.isDebugging == 'true' || process.env.DEBUG === 'true'
       ? 'debug'
@@ -38,7 +37,7 @@ export namespace Filebase {
     debugLog('# file: ', file);
 
     const putCommand = new PutObjectCommand({
-      Bucket: BUCKET_NAME,
+      Bucket: Constants.FILEBASE_ACCESS_KEYS.bucket,
       Key: fileName,
       Body: file,
     });
@@ -67,7 +66,9 @@ export namespace Filebase {
    */
   export const remove = async (): Promise<Result<boolean, Error>> => {
     return Try(async () => {
-      const listCommand = new ListObjectsV2Command({ Bucket: BUCKET_NAME });
+      const listCommand = new ListObjectsV2Command({
+        Bucket: Constants.FILEBASE_ACCESS_KEYS.bucket,
+      });
       const lists = await connect().send(listCommand);
 
       debugLog('#lists: ', lists);
@@ -81,7 +82,7 @@ export namespace Filebase {
       });
 
       const command = new DeleteObjectsCommand({
-        Bucket: BUCKET_NAME,
+        Bucket: Constants.FILEBASE_ACCESS_KEYS.bucket,
         Delete: {
           Objects: fileNames,
         },

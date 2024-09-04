@@ -17,7 +17,7 @@ export namespace Constants {
         --------------------------------------
         You need to update dasApiUrl define parameter in solana-suite.json.
         can get api url from https://www.helius.dev/
-        -------------------------------------- 
+        --------------------------------------
         `;
   }
 }
@@ -56,6 +56,7 @@ export namespace Constants {
     dev: {
       key: '9CA51CEFF9FF98CB91CF',
       secret: 'CgjYuMvs2NdFGbLPyFDSWESaO05nobQ9mp16PPDo',
+      bucket: 'solana-suite',
     },
   };
 
@@ -125,16 +126,25 @@ export namespace Constants {
   ): {
     key: string;
     secret: string;
+    bucket: string;
   } => {
     switch (env) {
       case Constants.Cluster.prd: {
-        if (!Config.filebase.key || !Config.filebase.secret) {
+        if (
+          !Config.filebase.key ||
+          !Config.filebase.secret ||
+          !Config.filebase.bucket
+        ) {
           throw Error(Constants.WarnningMessage.FILEBASE_CREDENTIAL);
         }
         return Config.filebase;
       }
       default: {
-        if (Config.filebase.key || Config.filebase.secret) {
+        if (
+          Config.filebase.key &&
+          Config.filebase.secret &&
+          Config.filebase.bucket
+        ) {
           return Config.filebase;
         }
         return FilebaseCredential.dev;

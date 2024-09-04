@@ -120,12 +120,13 @@ declare let Config: {
     filebase: {
         key: string;
         secret: string;
+        bucket: string;
     };
 };
 declare namespace Constants {
     namespace WarnningMessage {
         const FILEBASE_CREDENTIAL = "\n        [YOU HAVE TO DO]\n        --------------------------------------\n        You need to update Filebase credential(accessKey and secret) define parameter in solana-suite.json.\n        Can get credential from https://filebase.com/\n        --------------------------------------\n        ";
-        const DAS_API_URL = "\n        [YOU HAVE TO DO]\n        --------------------------------------\n        You need to update dasApiUrl define parameter in solana-suite.json.\n        can get api url from https://www.helius.dev/\n        -------------------------------------- \n        ";
+        const DAS_API_URL = "\n        [YOU HAVE TO DO]\n        --------------------------------------\n        You need to update dasApiUrl define parameter in solana-suite.json.\n        can get api url from https://www.helius.dev/\n        --------------------------------------\n        ";
     }
 }
 declare namespace Constants {
@@ -157,6 +158,7 @@ declare namespace Constants {
         dev: {
             key: string;
             secret: string;
+            bucket: string;
         };
     };
     const switchCluster: (param: {
@@ -168,6 +170,7 @@ declare namespace Constants {
     const switchFilebaseCredential: (env: string) => {
         key: string;
         secret: string;
+        bucket: string;
     };
     const loadConfig: () => Promise<void>;
     const WRAPPED_TOKEN_PROGRAM_ID: PublicKey;
@@ -182,6 +185,7 @@ declare namespace Constants {
     const FILEBASE_ACCESS_KEYS: {
         key: string;
         secret: string;
+        bucket: string;
     };
     const DAS_API_URL: string;
     const EXPLORER_SOLSCAN_URL = "https://solscan.io";
