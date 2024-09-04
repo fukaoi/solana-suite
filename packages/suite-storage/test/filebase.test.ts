@@ -1,7 +1,6 @@
 import test from 'ava';
 import { RandomAsset } from 'test-tools/setupAsset';
 import { Filebase } from '../src/filebase';
-import { Constants } from '~/suite-utils';
 import { execSync } from 'child_process';
 
 test('Upload file', async (t) => {
