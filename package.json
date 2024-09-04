@@ -20,10 +20,10 @@
     "prettier": "3.0.3",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
-    "tslib": "^2.6.3",
-    "tsup": "^8.1.0",
+    "tslib": "^2.7.0",
+    "tsup": "^8.2.4",
     "tsx": "^3.14.0",
-    "turbo": "^2.0.3",
+    "turbo": "^2.1.1",
     "typedoc": "^0.25.13"
   },
   "repository": "git@github.com:fukaoi/solana-suite.git",
@@ -34,8 +34,8 @@
     "npm": "Only pnpm"
   },
   "dependencies": {
-    "@types/node": "^20.14.2",
-    "typedoc-material-theme": "^1.0.2"
+    "@types/node": "^20.16.4",
+    "typedoc-material-theme": "^1.1.0"
   },
   "name": "solana-suite"
 }
