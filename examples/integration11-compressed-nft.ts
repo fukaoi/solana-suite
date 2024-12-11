@@ -29,9 +29,9 @@ import { requestSol } from 'test-tools';
   // CREATE NFT SPACE, ONCE CALL
   //////////////////////////////////////////////
 
-  const abountMintTotal = 8; // abount mint total number
+  const aountMintTotal = 8; // amount mint total number
 
-  const cost = await CompressedNft.calculateSpaceCost(abountMintTotal); // [optional]calculate space cost
+  const cost = await CompressedNft.calculateSpaceCost(amountMintTotal); // [optional]calculate space cost
 
   console.log('# space cost: ', cost);
 
@@ -40,7 +40,7 @@ import { requestSol } from 'test-tools';
 
   const spaceInst = await CompressedNft.createSpace(
     owner.secret,
-    abountMintTotal,
+    amountMintTotal,
     { feePayer: feePayer.secret },
   );
 
